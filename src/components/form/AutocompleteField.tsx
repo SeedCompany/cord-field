@@ -119,6 +119,7 @@ export function AutocompleteField<
             {...ChipProps}
             label={getOptionLabel(option)}
             {...getTagProps({ index })}
+            key={index}
           />
         ))
       }

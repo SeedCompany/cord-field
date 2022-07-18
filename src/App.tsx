@@ -40,12 +40,12 @@ const theme = createTheme();
  * Order still matters (the first is the outer most component)
  */
 export const appProviders = [
-  <ThemeProvider theme={theme} children={<></>} />,
-  <LocalizationProvider dateAdapter={LuxonUtils as any} children={<></>} />,
-  <SnackbarProvider />, // needed by apollo
-  <ApolloProvider />,
-  <UploadManagerProvider />,
-  <UploadProvider />,
+  <ThemeProvider key="theme" theme={theme} children={[]} />,
+  <LocalizationProvider key="i10n" dateAdapter={LuxonUtils as any} />,
+  <SnackbarProvider key="snackbar" />, // needed by apollo
+  <ApolloProvider key="apollo" />,
+  <UploadManagerProvider key="upload-manager" />,
+  <UploadProvider key="upload" />,
 ];
 
 export const App = () => (

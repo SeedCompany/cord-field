@@ -1,6 +1,7 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link as MUILink, LinkProps as MUILinkProps } from '@material-ui/core';
 import React, { forwardRef } from 'react';
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link as RRLink, LinkProps as RRLinkProps } from 'react-router-dom';
 import { Merge } from 'type-fest';
 
@@ -23,18 +24,19 @@ interface ExternalProps extends BaseProps {
  * Combines MUI Link with react router for internal routing
  * and <a> for external routing.
  */
-export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
-  ({ external, to, children, ...props }, ref) => {
-    const other: any = {
-      ref,
-      component: external ? 'a' : RRLink,
-      ...(external ? { href: to } : { to }),
-    };
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(function Link(
+  { external, to, children, ...props },
+  ref
+) {
+  const other: any = {
+    ref,
+    component: external ? 'a' : RRLink,
+    ...(external ? { href: to } : { to }),
+  };
 
-    return (
-      <MUILink {...props} {...other}>
-        {children}
-      </MUILink>
-    );
-  }
-);
+  return (
+    <MUILink {...props} {...other}>
+      {children}
+    </MUILink>
+  );
+});

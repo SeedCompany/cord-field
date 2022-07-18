@@ -203,6 +203,7 @@ export function LookupField<
             {...ChipProps}
             label={getOptionLabel(option)}
             {...getTagProps({ index })}
+            key={index}
           />
         ))
       }

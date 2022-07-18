@@ -101,7 +101,7 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
     <Table
       columns={columns}
       data={tableData}
-      components={{ Toolbar: () => <></> }}
+      components={{ Toolbar: () => null }}
     />
   );
 };

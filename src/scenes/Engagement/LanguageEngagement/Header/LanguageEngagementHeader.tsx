@@ -170,7 +170,7 @@ export const LanguageEngagementHeader = ({
               ptRegistryId.value &&
               `Paratext Registry ID: ${ptRegistryId.value}`
             }
-            empty={'Enter Paratext Registry ID'}
+            empty="Enter Paratext Registry ID"
           />
         </Grid>
         <BooleanProperty

@@ -88,6 +88,7 @@ export const SearchResults = () => {
 const displayItem = (
   item: SearchResult
 ): [exact: string | ReactElement, card: ReactElement] | ReactElement | null => {
+  /* eslint-disable react/jsx-key -- type is tuple not array */
   switch (item.__typename) {
     case 'InternshipProject':
     case 'TranslationProject':
@@ -123,6 +124,7 @@ const displayItem = (
       console.error(`Unknown type ${item.__typename} returned from search`);
       return null;
   }
+  /* eslint-enable react/jsx-key */
 };
 
 const PlaceholderCard = ({

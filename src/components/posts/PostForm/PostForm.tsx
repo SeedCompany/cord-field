@@ -53,7 +53,7 @@ export const PostForm = <T, R = void>({
           name="type"
           options={PostTypeList}
           variant="outlined"
-          defaultValue={'Note'}
+          defaultValue="Note"
         />
       </Grid>
       <Grid item xs>
@@ -63,7 +63,7 @@ export const PostForm = <T, R = void>({
           options={shareabilityList(includeMembership)}
           variant="outlined"
           getOptionLabel={labelFrom(PostShareabilityLabels)}
-          defaultValue={'Internal'}
+          defaultValue="Internal"
         />
       </Grid>
     </Grid>

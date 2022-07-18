@@ -48,8 +48,8 @@ export const ProgressReportsList = () => {
       type="Progress"
       pageTitleSuffix={engagement?.project.name.value ?? 'A Project'}
       breadcrumbs={[
-        <ProjectBreadcrumb data={engagement?.project} />,
-        <EngagementBreadcrumb data={engagement} />,
+        <ProjectBreadcrumb key="project" data={engagement?.project} />,
+        <EngagementBreadcrumb key="engagement" data={engagement} />,
       ]}
       reports={engagement?.progressReports.items}
       onRowClick={handleRowClick}

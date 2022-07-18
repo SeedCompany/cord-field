@@ -44,7 +44,9 @@ export const PeriodicReportsList = ({
         <Breadcrumbs
           children={[
             ...breadcrumbs,
-            <Breadcrumb to=".">{reportTypeName}</Breadcrumb>,
+            <Breadcrumb to="." key="report">
+              {reportTypeName}
+            </Breadcrumb>,
           ]}
         />
 

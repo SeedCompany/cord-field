@@ -213,6 +213,7 @@ export function VersesField({
                 deleteIcon: classes.chipDeleteIcon,
               }}
               className={classes.chip}
+              key={index}
             />
           );
         });

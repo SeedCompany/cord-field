@@ -55,9 +55,12 @@ if (isBrowser) {
 const root = document.getElementById('root');
 
 const clientOnlyProviders = [
-  <BrowserRouter basename={basePathOfUrl(process.env.PUBLIC_URL)} />,
-  <HelmetProvider children={<></>} />,
-  <DndProvider backend={HTML5Backend} />,
+  <BrowserRouter
+    key="router"
+    basename={basePathOfUrl(process.env.PUBLIC_URL)}
+  />,
+  <HelmetProvider key="helmet" children={[]} />,
+  <DndProvider key="dnd" backend={HTML5Backend} />,
 ];
 
 void Promise.all(setup).then(() => {

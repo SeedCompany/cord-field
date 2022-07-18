@@ -1,6 +1,7 @@
 import { CardActionArea, CardActionAreaProps } from '@material-ui/core';
 import * as React from 'react';
 import { forwardRef } from 'react';
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps } from 'react-router-dom';
 import { Merge } from 'type-fest';
 
@@ -20,7 +21,7 @@ interface ExternalProps extends BaseProps {
 export const CardActionAreaLink = forwardRef<
   HTMLAnchorElement,
   CardActionAreaLinkProps
->(({ external, to, children, ...props }, ref) => {
+>(function CardActionAreaLink({ external, to, children, ...props }, ref) {
   const other: any = {
     ref,
     component: external ? 'a' : Link,

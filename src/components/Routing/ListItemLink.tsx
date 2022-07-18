@@ -1,5 +1,6 @@
 import { ListItem, ListItemProps } from '@material-ui/core';
 import React, { forwardRef } from 'react';
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps, useMatch } from 'react-router-dom';
 import { assert } from 'ts-essentials';
 import { Merge } from 'type-fest';
@@ -33,7 +34,10 @@ interface ExternalProps extends BaseProps {
  * by passing in `selected={false}`.
  */
 export const ListItemLink = forwardRef<HTMLAnchorElement, ListItemLinkProps>(
-  ({ external, to, children, exact = false, ...props }, ref) => {
+  function ListItemLink(
+    { external, to, children, exact = false, ...props },
+    ref
+  ) {
     const path = typeof to === 'string' ? to : to.pathname!;
     const active = useMatch({ path, end: exact });
 

@@ -34,7 +34,7 @@ export const ProjectReports = ({ type }: { type: ReportType }) => {
     <PeriodicReportsList
       type={type}
       reports={data?.project.reports.items}
-      breadcrumbs={[<ProjectBreadcrumb data={data?.project} />]}
+      breadcrumbs={[<ProjectBreadcrumb key="project" data={data?.project} />]}
       pageTitleSuffix={data?.project.name.value ?? 'A Project'}
     />
   );

@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import { GQLOperations } from '~/api';
 import { ChildrenProp, isTypename } from '~/common';
 import { useDialog } from '../../Dialog';
@@ -100,38 +106,46 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
   const [previewDialogState, openFilePreview, fileToPreview] =
     useDialog<NonDirectoryActionItem>();
 
-  const actions = {
-    rename: (item: FilesActionItem) => renameFile(item),
-    download: (item: FilesActionItem) => void downloadFile(item),
-    history: (item: FileActionItem, actions: FileAction[]) =>
-      showVersions({ item, actions }),
-    delete: (item: FilesActionItem) => deleteFile(item),
-  };
+  const actions = useMemo(
+    () => ({
+      rename: (item: FilesActionItem) => renameFile(item),
+      download: (item: FilesActionItem) => void downloadFile(item),
+      history: (item: FileActionItem, actions: FileAction[]) =>
+        showVersions({ item, actions }),
+      delete: (item: FilesActionItem) => deleteFile(item),
+    }),
+    [deleteFile, downloadFile, renameFile, showVersions]
+  );
 
-  const handleFileActionClick = (params: HandleFileActionClickParams) => {
-    const isHistoryAction = (
-      params: HandleFileActionClickParams
-    ): params is HistoryActionClickParams =>
-      params.action === FileAction.History;
-    isHistoryAction(params)
-      ? actions.history(params.item, params.versionActions)
-      : actions[params.action](params.item);
-  };
+  const handleFileActionClick = useCallback(
+    (params: HandleFileActionClickParams) => {
+      const isHistoryAction = (
+        params: HandleFileActionClickParams
+      ): params is HistoryActionClickParams =>
+        params.action === FileAction.History;
+      isHistoryAction(params)
+        ? actions.history(params.item, params.versionActions)
+        : actions[params.action](params.item);
+    },
+    [actions]
+  );
 
   const deleteRefetches =
     fileNodeToDelete?.__typename === 'FileVersion'
       ? GQLOperations.Query.FileVersions
       : GQLOperations.Query.ProjectDirectory;
 
+  const context = useMemo(
+    () => ({
+      handleFileActionClick,
+      previewPage,
+      setPreviewPage,
+      openFilePreview,
+    }),
+    [handleFileActionClick, previewPage, setPreviewPage, openFilePreview]
+  );
   return (
-    <FileActionsContext.Provider
-      value={{
-        handleFileActionClick,
-        previewPage,
-        setPreviewPage,
-        openFilePreview,
-      }}
-    >
+    <FileActionsContext.Provider value={context}>
       <>
         {children}
         <RenameFile item={fileNodeToRename} {...renameState} />

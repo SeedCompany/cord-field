@@ -1,5 +1,6 @@
 import { Button, ButtonProps } from '@material-ui/core';
 import React, { forwardRef } from 'react';
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps } from 'react-router-dom';
 import { Merge } from 'type-fest';
 
@@ -23,7 +24,7 @@ interface ExternalProps extends BaseProps {
  * and <a> for external routing.
  */
 export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  ({ external, to, children, ...props }, ref) => {
+  function ButtonLink({ external, to, children, ...props }, ref) {
     const other: any = {
       ref,
       component: external ? 'a' : Link,

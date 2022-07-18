@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { ClassNameMap } from '@material-ui/core/styles/withStyles';
 
 /**

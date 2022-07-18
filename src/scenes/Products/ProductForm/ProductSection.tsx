@@ -73,7 +73,7 @@ export const ProductSection = ({
           }`}
         </Typography>
       )}
-      renderCollapsed={() => <></>}
+      renderCollapsed={() => null}
     >
       {(props) => {
         const ProductField = productFieldMap[productType];

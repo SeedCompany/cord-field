@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-imports */
+/* eslint-disable @seedcompany/no-restricted-imports */
 import { createMuiTheme, Theme } from '@material-ui/core';
 import { ThemeOptions as MuiThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { Overrides } from '@material-ui/core/styles/overrides';
