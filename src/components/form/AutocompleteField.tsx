@@ -27,6 +27,20 @@ export type AutocompleteFieldProps<
     ChipProps?: ChipProps;
     // Allowed but ignored from useAutocompleteQuery
     root?: unknown;
+
+    // Removed string from option type if freeSolo is true. This is causing problems
+    // with TS inference. https://github.com/mui/material-ui/issues/33561
+    /**
+     * Used to determine the string value for a given option.
+     * It's used to fill the input (and the list box options if `renderOption` is not provided).
+     *
+     * If used in free solo mode, it must accept both the type of the options and a string.
+     *
+     * @param {T} option
+     * @returns {string}
+     * @default (option) => option.label ?? option
+     */
+    getOptionLabel?: (option: T) => string;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     | 'value'
@@ -36,6 +50,7 @@ export type AutocompleteFieldProps<
     | 'renderTags'
     | 'filterSelectedOptions'
     | 'ChipProps'
+    | 'getOptionLabel'
   >;
 
 /**
