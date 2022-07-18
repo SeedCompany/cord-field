@@ -1,19 +1,23 @@
-import { Paper, withStyles } from '@mui/material';
+import { Paper } from '@mui/material';
+import { withStyles } from 'tss-react/mui';
 
 export type TableProps<_RowData extends Record<string, any>> = any;
 
-export const Container = withStyles(() => ({
-  rounded: {
-    // Fix border radius when Toolbar is omitted.
-    // Actual component rendering problem div is inaccessible, so we've gone up
-    // to its parent. Here's the src producing it:
-    // https://github.com/mbrn/material-table/blob/e81700a/src/material-table.js#L1196-L1199
-    '& > div': {
-      borderRadius: 'inherit',
-    },
-  },
+export const Container = withStyles(
   // This is the default Container, only `elevation` and styles above have changed.
-}))((props) => <Paper elevation={8} {...props} />);
+  (props) => <Paper elevation={8} {...props} />,
+  () => ({
+    rounded: {
+      // Fix border radius when Toolbar is omitted.
+      // Actual component rendering problem div is inaccessible, so we've gone up
+      // to its parent. Here's the src producing it:
+      // https://github.com/mbrn/material-table/blob/e81700a/src/material-table.js#L1196-L1199
+      '& > div': {
+        borderRadius: 'inherit',
+      },
+    },
+  })
+);
 
 export const Cell = (..._props: any) => <div>cell</div>;
 
