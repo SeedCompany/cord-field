@@ -1,6 +1,6 @@
-import { Card, CardProps, makeStyles } from '@mui/material';
-import clsx from 'clsx';
-import { Children, Fragment } from 'react';
+import { Card, CardProps } from '@mui/material';
+import { Children, ComponentType, Fragment } from 'react';
+import { withStyles } from 'tss-react/mui';
 import { applyBreakpoint, BreakpointAt } from '~/common';
 import { ResponsiveDivider } from '../ResponsiveDivider';
 
@@ -8,27 +8,23 @@ export interface CardGroupProps extends CardProps {
   horizontal?: BreakpointAt;
 }
 
-const useStyles = makeStyles(
-  ({ breakpoints }) => ({
-    root: (props: CardGroupProps) => ({
+const CardGroupRoot = withStyles(
+  Card as ComponentType<CardGroupProps>,
+  ({ breakpoints }, props: CardGroupProps) => ({
+    root: {
       display: 'flex',
       flexDirection: 'column',
       ...applyBreakpoint(breakpoints, props.horizontal, {
         flexDirection: 'row',
       }),
-    }),
-  }),
-  {
-    classNamePrefix: 'CardGroup',
-  }
+    },
+  })
 );
 
 export const CardGroup = (props: CardGroupProps) => {
   const { children, ...rest } = props;
-  const classes = useStyles(props);
-
   return (
-    <Card {...rest} className={clsx(classes.root, rest.className)}>
+    <CardGroupRoot {...rest}>
       {Children.map(children, (child, index) => (
         <Fragment key={index}>
           {index % 2 ? (
@@ -37,6 +33,6 @@ export const CardGroup = (props: CardGroupProps) => {
           {child}
         </Fragment>
       ))}
-    </Card>
+    </CardGroupRoot>
   );
 };
