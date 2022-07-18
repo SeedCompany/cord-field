@@ -3,13 +3,11 @@ import {
   ButtonProps,
   CircularProgress,
   CircularProgressProps,
-  makeStyles,
-  PropTypes,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { ErrorButton } from '../ErrorButton';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
   // This is to center spinner within button, while maintaining consistent button width.
   // If we were to replace the button text, the button size could change which we want to
   // avoid because the buttons shifting around is jarring for the user. Esp since the
@@ -29,11 +27,10 @@ const useStyles = makeStyles({
   },
 });
 
-export interface ProgressButtonProps extends Omit<ButtonProps, 'color'> {
+export interface ProgressButtonProps extends ButtonProps {
   /** Show progress? */
   progress?: boolean;
   progressProps?: CircularProgressProps;
-  color?: PropTypes.Color | 'error';
 }
 
 /**
@@ -45,13 +42,12 @@ export const ProgressButton = ({
   progress = false,
   progressProps,
   children,
-  color,
   ...rest
 }: ProgressButtonProps) => {
-  const { progressWrapper, hidden } = useStyles();
+  const { classes } = useStyles();
+  const { progressWrapper, hidden } = classes;
   const theme = useTheme();
-  const { MuiButton = {} } = theme.props || {};
-  const { size = rest.size } = MuiButton;
+  const size = theme.components?.MuiButton?.defaultProps?.size ?? rest.size;
 
   const inner = (
     <>
@@ -68,11 +64,5 @@ export const ProgressButton = ({
     </>
   );
 
-  return color === 'error' ? (
-    <ErrorButton {...rest}>{inner}</ErrorButton>
-  ) : (
-    <Button color={color} {...rest}>
-      {inner}
-    </Button>
-  );
+  return <Button {...rest}>{inner}</Button>;
 };
