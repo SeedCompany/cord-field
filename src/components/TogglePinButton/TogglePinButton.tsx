@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { makeStyles, Theme, Tooltip, TooltipProps } from '@mui/material';
-import clsx from 'clsx';
+import { Tooltip, TooltipProps } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { addItemToList, ListIdentifier, removeItemFromList } from '~/api';
 import { IconButton, IconButtonProps } from '../IconButton';
@@ -10,14 +10,14 @@ import {
   TogglePinnedDocument,
 } from './TogglePinButton.graphql';
 
-const useStyles = makeStyles<Theme, { pinned?: boolean }>(
-  ({ transitions }) => ({
-    label: ({ pinned }) => ({
+const useStyles = makeStyles<{ pinned: boolean }>()(
+  ({ transitions }, { pinned }) => ({
+    root: {
       transition: transitions.create('transform', {
         duration: transitions.duration.short,
       }),
       transform: pinned ? 'none' : 'rotate(45deg)',
-    }),
+    },
   })
 );
 
@@ -40,7 +40,7 @@ export const TogglePinButton = ({
   TooltipProps,
   ...rest
 }: TogglePinButtonProps) => {
-  const classes = useStyles({ pinned: object?.pinned });
+  const { classes, cx } = useStyles({ pinned: object?.pinned ?? false });
 
   const [togglePinned] = useMutation(TogglePinnedDocument, {
     update: (cache, result, options) => {
@@ -98,7 +98,7 @@ export const TogglePinButton = ({
       loading={rest.loading || !object}
       classes={{
         ...rest.classes,
-        label: clsx(classes.label, rest.classes?.label),
+        root: cx(classes.root, rest.classes?.root),
       }}
     >
       <Icon fontSize="inherit" />
