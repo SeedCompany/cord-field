@@ -225,9 +225,8 @@ export const FileActionsMenu = (props: FileActionsMenuProps) => {
     <Menu
       id="file-actions-menu"
       open={Boolean(props.anchorEl)}
-      getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
+      transformOrigin={{ vertical: parseInt(spacing(-2)), horizontal: 'right' }}
       {...menuProps}
     >
       {menuActions.map((action) => {

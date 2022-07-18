@@ -49,7 +49,6 @@ export const CreateButtonMenu = (props: CreateButtonMenuProps) => {
         anchorEl={anchorEl}
         keepMounted
         onClose={closeAddMenu}
-        getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'center',

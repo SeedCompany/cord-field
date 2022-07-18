@@ -35,9 +35,11 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
         id="profile-menu"
         keepMounted
         open={Boolean(props.anchorEl)}
-        getContentAnchorEl={null}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
+        transformOrigin={{
+          vertical: parseInt(spacing(-2)),
+          horizontal: 'right',
+        }}
         classes={{ paper: classes.menu }}
         {...props}
       >
