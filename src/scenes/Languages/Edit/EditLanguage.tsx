@@ -3,15 +3,11 @@ import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { UpdateLanguage } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';
-import {
-  LanguageForm,
-  LanguageFormProps,
-  LanguageFormValues,
-} from '../LanguageForm';
+import { LanguageForm, LanguageFormProps } from '../LanguageForm';
 import { UpdateLanguageDocument } from './EditLanguage.graphql';
 
 export type EditLanguageProps = Except<
-  LanguageFormProps<LanguageFormValues<UpdateLanguage>>,
+  LanguageFormProps<UpdateLanguage>,
   'onSubmit' | 'initialValues'
 >;
 
@@ -53,7 +49,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
   );
 
   return (
-    <LanguageForm<LanguageFormValues<UpdateLanguage>>
+    <LanguageForm<UpdateLanguage>
       title="Edit Language"
       {...props}
       initialValues={initialValues}
