@@ -12,7 +12,7 @@ import {
   TabContext,
   TabPanel,
 } from '@material-ui/lab';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { simpleSwitch } from '~/common';
 import { useNumberFormatter } from '../../../components/Formatters';

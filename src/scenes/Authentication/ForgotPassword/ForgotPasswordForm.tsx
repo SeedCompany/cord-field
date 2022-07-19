@@ -1,5 +1,4 @@
 import { makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import {
   EmailField,

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { setIn } from 'final-form';
 import { compact, keyBy, pick, startCase } from 'lodash';
-import React, { ComponentType, useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
 import {

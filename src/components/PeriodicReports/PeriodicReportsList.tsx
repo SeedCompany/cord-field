@@ -1,5 +1,5 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ReportType } from '~/api/schema.graphql';
 import { Breadcrumb } from '../Breadcrumb';

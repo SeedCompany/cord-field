@@ -1,7 +1,6 @@
 import { makeStyles, Tooltip, TooltipProps } from '@material-ui/core';
 import { Skeleton, SkeletonProps } from '@material-ui/lab';
 import clsx from 'clsx';
-import * as React from 'react';
 import { Except } from 'type-fest';
 import { ChildrenProp } from '~/common';
 

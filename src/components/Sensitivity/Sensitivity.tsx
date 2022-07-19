@@ -3,7 +3,6 @@ import { VerifiedUserOutlined } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { meanBy } from 'lodash';
-import * as React from 'react';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
 
 const possible: SensitivityType[] = ['Low', 'Medium', 'High'];

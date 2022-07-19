@@ -1,5 +1,5 @@
 import { compact } from 'lodash';
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { ChildrenProp } from '~/common';
 
 export const FieldGroupContext = createContext('');

@@ -1,5 +1,4 @@
 import { ToggleButton } from '@material-ui/lab';
-import React from 'react';
 import {
   ProgressMeasurement,
   ProgressMeasurementLabels,

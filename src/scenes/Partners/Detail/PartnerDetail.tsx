@@ -11,7 +11,6 @@ import {
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import { Many } from 'lodash';
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { listOrPlaceholders, square } from '~/common';

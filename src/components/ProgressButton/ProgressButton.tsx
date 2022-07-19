@@ -7,7 +7,6 @@ import {
   PropTypes,
   useTheme,
 } from '@material-ui/core';
-import * as React from 'react';
 import { ErrorButton } from '../ErrorButton';
 
 const useStyles = makeStyles({

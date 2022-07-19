@@ -1,6 +1,6 @@
 import * as rtfToHTML from '@iarna/rtf-to-html';
 import parse from 'html-react-parser';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 

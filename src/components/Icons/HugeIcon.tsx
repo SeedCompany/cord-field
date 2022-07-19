@@ -1,6 +1,5 @@
 import { makeStyles, SvgIconProps } from '@material-ui/core';
 import { cloneElement, isValidElement, ReactElement } from 'react';
-import * as React from 'react';
 import { Avatar, AvatarProps } from '../Avatar';
 
 const useStyles = makeStyles(({ palette }) => ({

@@ -2,7 +2,6 @@ import {
   ApolloProvider as BaseApolloProvider,
   getApolloContext,
 } from '@apollo/client';
-import * as React from 'react';
 import { useContext, useState } from 'react';
 import { ChildrenProp } from '~/common';
 import { createClient } from './createClient';

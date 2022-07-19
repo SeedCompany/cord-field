@@ -7,7 +7,6 @@ import {
   MenuProps,
 } from '@material-ui/core';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons';
-import React from 'react';
 
 interface PostListItemMenuProps extends Partial<MenuProps> {
   onEdit: () => void;

@@ -1,6 +1,6 @@
 import { Chip, ChipProps, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { Except, SetRequired } from 'type-fest';
 import { SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';

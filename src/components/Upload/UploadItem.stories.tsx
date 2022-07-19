@@ -1,7 +1,6 @@
 import { Card } from '@material-ui/core';
 import { action } from '@storybook/addon-actions';
 import { number, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { UploadItem as UI } from './UploadItem';
 
 export default { title: 'Components/Upload/UploadItem' };

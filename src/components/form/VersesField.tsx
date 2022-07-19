@@ -11,7 +11,7 @@ import {
   AutocompleteRenderInputParams,
 } from '@material-ui/lab';
 import { isEqual, uniqWith } from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Except } from 'type-fest';
 import {
   formatScriptureRange,

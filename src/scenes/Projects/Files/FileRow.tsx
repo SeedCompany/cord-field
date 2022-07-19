@@ -3,7 +3,7 @@ import { makeStyles, useForkRef } from '@material-ui/core';
 import clsx from 'clsx';
 import { MTableBodyRow } from 'material-table';
 import { useSnackbar } from 'notistack';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import { addItemToList, removeItemFromList } from '~/api';

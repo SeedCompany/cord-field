@@ -6,7 +6,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import * as React from 'react';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
 import { FundingAccountCardFragment } from './FundingAccountCard.graphql';

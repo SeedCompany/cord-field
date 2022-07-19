@@ -1,6 +1,5 @@
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
-import React from 'react';
 import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatus,

@@ -1,6 +1,5 @@
 import { InputAdornment, makeStyles } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import * as React from 'react';
 import { Form } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '../../../../components/form';

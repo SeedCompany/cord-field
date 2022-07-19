@@ -1,6 +1,5 @@
 import { Box } from '@material-ui/core';
 import { boolean, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { SecuredMethodologies } from '../../api';
 import { csv } from '../../util';
 import { MethodologiesCard as Card } from './MethodologiesCard';

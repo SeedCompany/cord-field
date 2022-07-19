@@ -1,6 +1,5 @@
 import { Card } from '@material-ui/core';
 import { boolean } from '@storybook/addon-knobs';
-import React from 'react';
 import { PartnershipSummary as PS } from './PartnershipSummary';
 import { PartnershipSummaryFragment } from './PartnershipSummary.graphql';
 import { PartnershipItemFragment } from './PartnershpItem.graphql';

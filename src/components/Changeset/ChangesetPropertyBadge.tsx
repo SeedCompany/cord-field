@@ -1,5 +1,4 @@
 import { identity } from 'lodash';
-import * as React from 'react';
 import { ReactNode } from 'react';
 import { Entity } from '~/api';
 import { UnsecuredProp, unwrapSecured } from '~/common';

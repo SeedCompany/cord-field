@@ -1,6 +1,5 @@
 import { Button, makeStyles, ModalProps, Typography } from '@material-ui/core';
 import { CloudDownload } from '@material-ui/icons';
-import React from 'react';
 import { NonDirectoryActionItem } from '../FileActions';
 import { useDownloadFile } from '../hooks';
 

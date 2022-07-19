@@ -1,5 +1,5 @@
 import { FormApi, FormState } from 'final-form';
-import React, { ComponentType, useState } from 'react';
+import { ComponentType, useState } from 'react';
 import { Except, Merge, UnionToIntersection } from 'type-fest';
 import { FieldGroup, SecuredEditableKeys } from '../../../components/form';
 import { CompletionSection } from './CompletionSection';

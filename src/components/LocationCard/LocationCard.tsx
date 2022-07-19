@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import * as React from 'react';
 import { LocationTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { FormattedDateTime } from '../Formatters';

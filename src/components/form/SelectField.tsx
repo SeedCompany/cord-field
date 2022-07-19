@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 import { identity } from 'lodash';
 import { ReactNode } from 'react';
-import * as React from 'react';
 import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';

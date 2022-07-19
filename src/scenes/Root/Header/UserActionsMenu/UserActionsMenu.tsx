@@ -11,7 +11,6 @@ import {
   VisibilityOff as HideIcon,
   Visibility as ShowIcon,
 } from '@material-ui/icons';
-import React from 'react';
 import { useUpload, useUploadManager } from '../../../../components/Upload';
 
 const useStyles = makeStyles(({ spacing }) => ({

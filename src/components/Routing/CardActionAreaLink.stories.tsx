@@ -1,5 +1,4 @@
 import { Box, Card, CardContent, Grid, Typography } from '@material-ui/core';
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { CardActionAreaLink } from './CardActionAreaLink';
 

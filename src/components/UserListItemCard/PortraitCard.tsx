@@ -8,7 +8,6 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
-import * as React from 'react';
 import { square } from '~/common';
 import { Avatar } from '../Avatar';
 import { ButtonLink, CardActionAreaLink } from '../Routing';

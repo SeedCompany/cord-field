@@ -10,7 +10,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { FormApi } from 'final-form';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import {
   Form,
   FormProps,

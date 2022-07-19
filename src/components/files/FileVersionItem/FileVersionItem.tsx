@@ -5,7 +5,6 @@ import {
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import React from 'react';
 import { useDateTimeFormatter } from '../../Formatters';
 import {
   FileActionsPopup as ActionsMenu,

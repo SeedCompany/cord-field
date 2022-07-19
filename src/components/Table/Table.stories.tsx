@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, number, select, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { Table as TableComponent } from './Table';
 
 export default { title: 'Components/Table' };

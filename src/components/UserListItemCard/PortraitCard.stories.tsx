@@ -1,5 +1,4 @@
 import { boolean, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { UserListItemCardPortrait as UserCard } from './PortraitCard';
 import { UserListItemFragment } from './UserListItem.graphql';
 

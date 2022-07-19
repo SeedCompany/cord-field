@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { FolderOpen, Language, Person } from '@material-ui/icons';
 import { ComponentType } from 'react';
-import * as React from 'react';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { CreateButtonMenu } from '../Creates';

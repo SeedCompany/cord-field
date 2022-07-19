@@ -14,7 +14,6 @@ import {
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import clsx from 'clsx';
 import { sortBy } from 'lodash';
-import * as React from 'react';
 import {
   createContext,
   FocusEvent,

@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { makeStyles, Theme, Tooltip, TooltipProps } from '@material-ui/core';
 import clsx from 'clsx';
-import * as React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList, ListIdentifier, removeItemFromList } from '~/api';
 import { IconButton, IconButtonProps } from '../IconButton';

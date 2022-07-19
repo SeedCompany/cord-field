@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import React from 'react';
 import { Except } from 'type-fest';
 import { removeItemFromList } from '~/api';
 import {

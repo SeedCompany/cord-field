@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client';
-import React from 'react';
 import { useChangesetAwareIdFromUrl } from '../../components/Changeset';
 import { NotFoundPage } from '../../components/Error';
 import { EngagementDocument } from './Engagement.graphql';

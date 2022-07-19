@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { User } from '../../../api';
 import { SortButtonDialog, SortValue } from '../../../components/Sort';
 import { UserSortOptions } from './UserSortOptions';

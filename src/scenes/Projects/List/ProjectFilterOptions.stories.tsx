@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { ProjectFilterOptions } from './ProjectFilterOptions';
 

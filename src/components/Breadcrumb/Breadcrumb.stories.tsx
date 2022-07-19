@@ -1,5 +1,4 @@
 import { Breadcrumbs as BreadCrumbs } from '@material-ui/core';
-import React from 'react';
 import { AddCurrentPath } from '../Routing/decorators.stories';
 import { Breadcrumb } from './Breadcrumb';
 

@@ -2,7 +2,6 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { useState } from 'react';
-import * as React from 'react';
 import { CalendarDate, Nullable, SecuredProp } from '~/common';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';

@@ -1,6 +1,5 @@
 import { number, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
-import React from 'react';
 import { FundingAccountCard as Card } from './FundingAccountCard';
 
 export default { title: 'Components' };

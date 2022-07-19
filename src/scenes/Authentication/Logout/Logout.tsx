@@ -1,5 +1,4 @@
 import { useApolloClient, useMutation } from '@apollo/client';
-import * as React from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthWaiting } from '../AuthWaiting';

@@ -19,7 +19,7 @@ import {
   Event as UpdateDate,
 } from '@material-ui/icons';
 import { startCase } from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IconButton, IconButtonProps } from '../../IconButton';
 import { FileAction } from './FileAction.enum';

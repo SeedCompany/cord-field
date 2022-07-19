@@ -1,6 +1,5 @@
 import { makeStyles, SvgIcon, SvgIconProps } from '@material-ui/core';
 import clsx from 'clsx';
-import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useUserAgent } from '../../../hooks';
 

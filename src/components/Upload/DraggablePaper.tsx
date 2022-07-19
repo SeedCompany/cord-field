@@ -1,5 +1,5 @@
 import { Paper, PaperProps } from '@material-ui/core';
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useWindowSize } from 'react-use';
 

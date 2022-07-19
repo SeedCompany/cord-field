@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Container } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React from 'react';
 import { Except } from 'type-fest';
 import { removeItemFromList } from '~/api';
 import {

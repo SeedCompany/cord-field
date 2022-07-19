@@ -9,7 +9,6 @@ import {
   WithStyles,
 } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
-import * as React from 'react';
 
 const styles = (theme: Theme) =>
   createStyles({

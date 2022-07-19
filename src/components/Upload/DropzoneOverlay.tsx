@@ -1,6 +1,5 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import React from 'react';
 
 /**
  * This component requires a parent with a `position` value,

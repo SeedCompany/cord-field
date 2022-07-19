@@ -2,7 +2,6 @@ import { ButtonProps, Grid, GridProps, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { times } from 'lodash';
 import { ReactNode, RefObject, useRef } from 'react';
-import * as React from 'react';
 import { Entity, isNetworkRequestInFlight, PaginatedListOutput } from '~/api';
 import { UseStyles } from '~/common';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';

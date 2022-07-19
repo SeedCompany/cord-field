@@ -1,5 +1,4 @@
 import { Skeleton } from '@material-ui/lab';
-import * as React from 'react';
 import { Except } from 'type-fest';
 import { Nullable, SecuredProp } from '~/common';
 import { Redacted, RedactedProps } from '../Redacted';

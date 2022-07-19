@@ -1,6 +1,5 @@
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { DateRange } from '@material-ui/icons';
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import {
   EngagementStatusLabels,

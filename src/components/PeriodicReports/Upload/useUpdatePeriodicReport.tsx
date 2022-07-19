@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Edit } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
 import { getErrorInfo, isErrorCode } from '~/api';
 import { ProductStepLabels } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';

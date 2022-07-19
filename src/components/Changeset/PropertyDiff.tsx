@@ -1,6 +1,5 @@
 import { fade, Grid, makeStyles, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import * as React from 'react';
 import { ReactNode } from 'react';
 
 const useStyles = makeStyles(({ palette, shape, spacing }) => ({

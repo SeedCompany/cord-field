@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { onUpdateInvalidateProps, removeItemFromList } from '~/api';
 import { PeriodType, UpdatePartnershipInput } from '~/api/schema.graphql';

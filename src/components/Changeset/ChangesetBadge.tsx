@@ -12,7 +12,6 @@ import {
 } from '@material-ui/icons';
 import clsx from 'clsx';
 import { startCase } from 'lodash';
-import * as React from 'react';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
 import { simpleSwitch, UseStyles } from '~/common';
 import { BadgeWithTooltip } from '../BadgeWithTooltip';

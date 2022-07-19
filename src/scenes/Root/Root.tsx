@@ -1,5 +1,4 @@
 import loadable from '@loadable/component';
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { NotFoundRoute } from '../../components/Error';
 import { useIdentifyInLogRocket, useSession } from '../../components/Session';

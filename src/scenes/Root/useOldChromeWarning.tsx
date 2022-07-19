@@ -1,5 +1,4 @@
 import { useSnackbar } from 'notistack';
-import React from 'react';
 import { useIsomorphicEffect, useUserAgent } from '../../hooks';
 
 export const useOldChromeWarning = () => {

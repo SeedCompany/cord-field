@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import * as React from 'react';
 
 const useStyles = makeStyles(({ shape }) => ({
   loading: {

@@ -1,6 +1,5 @@
 import { Box } from '@material-ui/core';
 import { boolean, number } from '@storybook/addon-knobs';
-import React from 'react';
 import { FilesOverviewCard as Card } from './FilesOverviewCard';
 
 export default { title: 'components' };

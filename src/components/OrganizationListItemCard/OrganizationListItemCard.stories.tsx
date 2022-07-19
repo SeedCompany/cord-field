@@ -1,5 +1,4 @@
 import { boolean, text } from '@storybook/addon-knobs';
-import * as React from 'react';
 import { OrganizationListItemFragment } from './OrganizationListItem.graphql';
 import { OrganizationListItemCard as OLIC } from './OrganizationListItemCard';
 

@@ -10,7 +10,6 @@ import { Skeleton } from '@material-ui/lab';
 import { CSSProperties } from '@material-ui/styles';
 import clsx from 'clsx';
 import { forwardRef } from 'react';
-import * as React from 'react';
 import { Except } from 'type-fest';
 
 const colorStyle = (color: PaletteColor): CSSProperties => ({

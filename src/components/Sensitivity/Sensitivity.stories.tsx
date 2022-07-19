@@ -1,5 +1,4 @@
 import { boolean, select } from '@storybook/addon-knobs';
-import React from 'react';
 import { Sensitivity as SensitivityComponent } from './Sensitivity';
 
 export default { title: 'Components' };

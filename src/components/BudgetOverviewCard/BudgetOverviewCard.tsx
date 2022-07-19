@@ -1,5 +1,4 @@
 import { AccountBalance } from '@material-ui/icons';
-import * as React from 'react';
 import {
   FieldOverviewCard,
   FieldOverviewCardProps,

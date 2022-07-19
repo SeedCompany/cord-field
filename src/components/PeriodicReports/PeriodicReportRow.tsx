@@ -1,5 +1,4 @@
 import { MTableBodyRow } from 'material-table';
-import React from 'react';
 import { PaperTooltip } from '../PaperTooltip';
 import { ReportRow } from './PeriodicReportsTable';
 

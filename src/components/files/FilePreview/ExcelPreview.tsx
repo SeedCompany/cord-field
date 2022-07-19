@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';

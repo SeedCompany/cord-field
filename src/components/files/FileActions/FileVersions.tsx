@@ -10,7 +10,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
@@ -60,12 +60,12 @@ export const FileVersions = (props: FileVersionsProps) => {
       <List dense>
         {loading
           ? [0, 1, 2].map((item) => (
-              <React.Fragment key={item}>
+              <Fragment key={item}>
                 <div className={classes.skeleton}>
                   <Skeleton variant="rect" width={400} height={50} />
                 </div>
                 {item < 2 && <Divider />}
-              </React.Fragment>
+              </Fragment>
             ))
           : versions.map((version, index) => (
               <Fragment key={version.id}>

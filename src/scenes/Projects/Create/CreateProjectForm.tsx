@@ -1,4 +1,3 @@
-import React from 'react';
 import { CreateProjectInput, ProjectTypeList } from '~/api/schema.graphql';
 import {
   DialogForm,

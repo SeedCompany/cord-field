@@ -1,6 +1,5 @@
 import { MutationFunctionOptions, useMutation } from '@apollo/client';
 import { Typography } from '@material-ui/core';
-import React from 'react';
 import { Except } from 'type-fest';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';

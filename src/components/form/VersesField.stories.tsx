@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { Form } from 'react-final-form';
 import { SubmitButton } from '.';
 import { books } from '../../common/biblejs';

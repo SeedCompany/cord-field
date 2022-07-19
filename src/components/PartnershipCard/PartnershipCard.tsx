@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React from 'react';
 import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatusLabels,

@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Tooltip, Typography } from '@material-ui/core';
 import { DeleteOutline } from '@material-ui/icons';
-import * as React from 'react';
 import { removeItemFromList } from '~/api';
 import { callAll } from '~/common';
 import {

@@ -1,5 +1,4 @@
 import { Box, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 import { UploadFile, UploadState } from './Reducer/uploadTypings';
 import { UploadItem } from './UploadItem';
 

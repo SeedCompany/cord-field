@@ -8,7 +8,6 @@ import {
   Cancel as CancelIcon,
   CheckCircle as CheckIcon,
 } from '@material-ui/icons';
-import React from 'react';
 import { UploadFile } from './Reducer';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({

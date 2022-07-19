@@ -1,5 +1,4 @@
 import type { Path, To } from 'history';
-import * as React from 'react';
 import { createContext, ReactElement, useContext } from 'react';
 import type {
   NavigateFunction,

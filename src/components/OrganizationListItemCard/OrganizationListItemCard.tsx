@@ -8,7 +8,6 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { random } from 'lodash';
-import React from 'react';
 import { CardActionAreaLink } from '../Routing';
 import { OrganizationListItemFragment } from './OrganizationListItem.graphql';
 

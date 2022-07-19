@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { Edit, SkipNextRounded as SkipIcon } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useWindowSize } from 'react-use';
 import { Breadcrumb } from '../../../components/Breadcrumb';

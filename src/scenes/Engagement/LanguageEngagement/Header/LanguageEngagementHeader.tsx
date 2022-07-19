@@ -6,7 +6,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { DateRange, Edit } from '@material-ui/icons';
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, Many } from '~/common';

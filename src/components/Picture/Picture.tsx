@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { toFinite } from 'lodash';
-import React, { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useMountedState } from 'react-use';
 import { Merge } from 'type-fest';

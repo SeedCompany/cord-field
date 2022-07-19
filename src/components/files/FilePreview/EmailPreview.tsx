@@ -2,7 +2,6 @@ import MsgReader from '@freiraum/msgreader';
 import { makeStyles, Typography } from '@material-ui/core';
 import parseHtml from 'html-react-parser';
 import { DateTime } from 'luxon';
-import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { mapFromList } from '~/common';
 import { FormattedDateTime } from '../../Formatters';
