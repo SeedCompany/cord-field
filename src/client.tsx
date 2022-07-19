@@ -1,10 +1,9 @@
 import { loadableReady } from '@loadable/component';
 import Cookies from 'js-cookie';
 import { Settings, Zone } from 'luxon';
-import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import ReactDOM from 'react-dom';
+import { hydrate } from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { basePathOfUrl } from '~/common';
@@ -40,10 +39,14 @@ if (process.env.NODE_ENV !== 'production') {
     // Do hacking to show dates easier
     await import('./common/hacky-inspect-dates');
 
-    const whyDidYouRender = await import(
-      '@welldone-software/why-did-you-render'
-    );
-    whyDidYouRender.default(React);
+    // Setup why did you render
+    const [React, whyDidYouRender] = await Promise.all([
+      import('react').then((m) => m.default),
+      import('@welldone-software/why-did-you-render').then((m) => m.default),
+    ]);
+    whyDidYouRender(React, {
+      // ...WDYR options
+    });
   };
   setup.push(devSetUp());
 }
@@ -64,7 +67,7 @@ const clientOnlyProviders = [
 ];
 
 void Promise.all(setup).then(() => {
-  ReactDOM.hydrate(
+  hydrate(
     <Nest elements={clientOnlyProviders}>
       <App />
     </Nest>,

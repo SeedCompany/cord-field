@@ -1,5 +1,11 @@
 {
-  "presets": ["razzle/babel"],
+  "presets": [
+    ["razzle/babel", {
+      "preset-react": {
+        "runtime": "automatic"
+      }
+    }]
+  ],
   "plugins": [
     ["transform-rename-import", {
       "replacements": [
