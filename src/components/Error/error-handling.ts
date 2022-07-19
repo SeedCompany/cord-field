@@ -20,7 +20,7 @@ export const renderError = (e: unknown, renderers?: ErrorRenderers) => {
     // remove unhandled codes
     .filter(identity)
     // normalize renderers to a standard function shape
-    .map((r) => resolveRenderer(r))
+    .map((r: ErrorRenderer<any>) => resolveRenderer(r))
     // In order to build the next function for each renderer we need to start
     // from the end and work backwards
     .reverse()
