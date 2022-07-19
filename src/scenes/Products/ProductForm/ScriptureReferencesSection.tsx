@@ -47,12 +47,12 @@ export const ScriptureReferencesSection = ({
       title="Scripture Reference"
       renderCollapsed={() => {
         if (book && bookSelection === 'full') {
-          return <ToggleButton selected children={book} />;
+          return <ToggleButton selected children={book} value="full" />;
         }
 
         if (book && unspecifiedScripture) {
           return (
-            <ToggleButton selected>
+            <ToggleButton selected value="partialUnspecified">
               {getUnspecifiedScriptureDisplay({
                 book,
                 ...unspecifiedScripture,
