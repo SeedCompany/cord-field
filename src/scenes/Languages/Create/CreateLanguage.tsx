@@ -5,15 +5,11 @@ import { addItemToList } from '~/api';
 import { CreateLanguage as CreateLanguageType } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';
 import { ButtonLink } from '../../../components/Routing';
-import {
-  LanguageForm,
-  LanguageFormProps,
-  LanguageFormValues,
-} from '../LanguageForm';
+import { LanguageForm, LanguageFormProps } from '../LanguageForm';
 import { CreateLanguageDocument } from './CreateLanguage.graphql';
 
 export type CreateLanguageProps = Except<
-  LanguageFormProps<LanguageFormValues<CreateLanguageType>>,
+  LanguageFormProps<CreateLanguageType>,
   'onSubmit'
 >;
 export const CreateLanguage = (props: CreateLanguageProps) => {
@@ -26,7 +22,7 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <LanguageForm<LanguageFormValues<CreateLanguageType>>
+    <LanguageForm<CreateLanguageType>
       title="Create Language"
       {...props}
       onSubmit={async ({ language: { sponsorEstimatedEndFY, ...rest } }) => {

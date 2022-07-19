@@ -22,29 +22,29 @@ import {
   matchFieldIfSame,
   NumberField,
   SecuredField,
+  SelectField,
   SubmitError,
   TextField,
+  YearField,
 } from '../../../components/form';
-import { SelectField } from '../../../components/form/SelectField';
 import { max, minLength, required } from '../../../components/form/validators';
-import { YearField } from '../../../components/form/YearField';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.graphql';
 import { LanguageFormFragment } from './LangugeForm.graphql';
 
-export interface LanguageFormValues<T extends UpdateLanguage | CreateLanguage> {
-  language: Except<T, 'sponsorEstimatedEndDate'> & {
+type LanguageMutation = UpdateLanguage | CreateLanguage;
+
+export interface LanguageFormValues<Mutation extends LanguageMutation> {
+  language: Except<Mutation, 'sponsorEstimatedEndDate'> & {
     sponsorEstimatedEndFY?: Nullable<number>;
   };
 }
 
-export type LanguageFormProps<T> = DialogFormProps<
-  T,
-  LanguageListItemFragment
-> & {
-  /** The pre-existing language to edit */
-  language?: LanguageFormFragment;
-};
+export type LanguageFormProps<Mutation extends LanguageMutation> =
+  DialogFormProps<LanguageFormValues<Mutation>, LanguageListItemFragment> & {
+    /** The pre-existing language to edit */
+    language?: LanguageFormFragment;
+  };
 
 const useStyles = makeStyles()(() => ({
   content: {
@@ -57,10 +57,10 @@ const decorators = [
   matchFieldIfSame(`language.name`, `language.displayName`),
 ];
 
-export const LanguageForm = <T extends any>({
+export const LanguageForm = <Mutation extends LanguageMutation>({
   language,
   ...rest
-}: LanguageFormProps<T>) => {
+}: LanguageFormProps<Mutation>) => {
   const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const maxPopulation = useMemo(
@@ -91,11 +91,7 @@ export const LanguageForm = <T extends any>({
             : next(e),
       }}
     >
-      {({
-        values,
-      }: {
-        values: Partial<LanguageFormValues<CreateLanguage | UpdateLanguage>>;
-      }) => {
+      {({ values }: { values: Partial<LanguageFormValues<Mutation>> }) => {
         return (
           <Grid container spacing={3} className={classes.content}>
             <Grid item xs={12}>
