@@ -160,7 +160,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                           placeholder="#####"
                           accept={/\d/g}
                           formatInput={(value) =>
-                            (value.match(/[\d]+/g) || []).join('').substr(0, 5)
+                            (value.match(/\d+/g) || []).join('').slice(0, 5)
                           }
                           validate={(value) =>
                             !value || value.length === 5
@@ -369,9 +369,9 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
 const SignLanguageCodeField = (props: FormattedTextFieldProps) => {
   return (
     <FormattedTextField
-      accept={/[a-zA-Z0-9]/g}
+      accept={/[a-zA-Z\d]/g}
       formatInput={(value) =>
-        (value.match(/[a-zA-Z0-9]+/g) || []).join('').substr(0, 4)
+        (value.match(/[a-zA-Z\d]+/g) || []).join('').slice(0, 4)
       }
       replace={(value) => value.toUpperCase()}
       validate={(value) =>
