@@ -31,10 +31,15 @@ export const DisplaySimpleProperty = ({
         loading
       ) : label && value ? (
         <>
-          <Typography variant="inherit" {...LabelProps}>
+          <Typography component="span" variant="inherit" {...LabelProps}>
             {label}:&nbsp;
           </Typography>
-          <Typography variant="inherit" color="textSecondary" {...ValueProps}>
+          <Typography
+            component="span"
+            variant="inherit"
+            color="text.secondary"
+            {...ValueProps}
+          >
             {value}
           </Typography>
         </>
