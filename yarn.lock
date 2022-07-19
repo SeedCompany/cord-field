@@ -6612,11 +6612,7 @@ __metadata:
     webpack-dynamic-public-path: ^1.0.8
     xlsx: ^0.18.5
   dependenciesMeta:
-    core-js:
-      built: false
     core-js-pure:
-      built: false
-    date-fns:
       built: false
   languageName: unknown
   linkType: soft

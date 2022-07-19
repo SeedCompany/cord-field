@@ -197,13 +197,7 @@
     "watchpack-chokidar2/chokidar": "^3.5.3"
   },
   "dependenciesMeta": {
-    "core-js": {
-      "built": false
-    },
     "core-js-pure": {
-      "built": false
-    },
-    "date-fns": {
       "built": false
     }
   }
