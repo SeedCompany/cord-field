@@ -256,6 +256,7 @@ const restrictedImports = [
       '@mui/system/*',
       '@mui/x-date-pickers/*',
       '@mui/x-date-pickers-pro/*',
+      '!themeAugmentation',
     ],
     message: `Import from library root instead. Leave code splitting to toolchain.`,
     replacement: ({ path, localName }) => ({

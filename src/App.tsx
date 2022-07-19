@@ -1,17 +1,15 @@
-import LuxonUtils from '@date-io/luxon';
 import { ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import { ApolloProvider } from './api';
+import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
 import { UploadManagerProvider, UploadProvider } from './components/Upload';
 import { SensitiveOperations } from './scenes/Authentication';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
-
-// TODO Reimplement date picker
-const LocalizationProvider = ({ children }: any) => children;
 
 const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
 if (logRocketAppId) {
@@ -40,7 +38,7 @@ if (logRocketAppId) {
  */
 export const appProviders = [
   <ThemeProvider key="theme" theme={createTheme()} />,
-  <LocalizationProvider key="i10n" dateAdapter={LuxonUtils} />,
+  <LocalizationProvider key="i10n" dateAdapter={LuxonCalenderDateUtils} />,
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,
   <UploadManagerProvider key="upload-manager" />,
