@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { pick } from 'lodash';
-import React from 'react';
 import {
   ProductMethodology as Methodology,
   ProductApproachLabels,

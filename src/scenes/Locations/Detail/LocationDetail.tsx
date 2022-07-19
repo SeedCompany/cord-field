@@ -3,7 +3,6 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { LocationTypeLabels } from '~/api/schema.graphql';

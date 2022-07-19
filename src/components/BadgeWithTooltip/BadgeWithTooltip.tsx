@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { ReactElement, ReactNode } from 'react';
+import { Children, ReactElement, ReactNode } from 'react';
 
 /**
  * Allows a badge to have a tooltip.
@@ -26,7 +25,7 @@ export const BadgeWithTooltip = ({
   tooltip: (content: ReactElement) => ReactElement;
   children: ReactNode;
 }) => {
-  const children = React.Children.toArray(childrenProp);
+  const children = Children.toArray(childrenProp);
   return (
     <span {...props}>
       {children.slice(0, -1)}

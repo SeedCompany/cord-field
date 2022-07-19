@@ -6,7 +6,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import * as React from 'react';
 import { ReactElement, ReactNode } from 'react';
 import { square } from '~/common';
 import { Avatar } from '../../../../components/Avatar';

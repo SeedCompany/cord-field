@@ -1,6 +1,5 @@
 import { Button } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import * as React from 'react';
 import { sleep } from '../../util';
 import { SubmitError, TextField } from '../form';
 import { DialogForm as DF } from './DialogForm';

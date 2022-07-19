@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogContent } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-import * as React from 'react';
 import { useDialog } from '../Dialog';
 import { DialogTitle } from '../Dialog/DialogTitle';
 import { SortControl, SortControlProps } from './SortControl';

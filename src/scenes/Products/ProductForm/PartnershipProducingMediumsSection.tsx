@@ -1,5 +1,4 @@
 import { List, ListItem, Typography } from '@material-ui/core';
-import React from 'react';
 import { ProductMedium, ProductMediumLabels } from '~/api/schema.graphql';
 import { AutocompleteField } from '../../../components/form';
 import { PartnershipForLabelFragment } from '../Detail/ProductDetail.graphql';

@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
 import { identity } from 'lodash';
-import React, { useCallback, useLayoutEffect } from 'react';
+import { useCallback, useLayoutEffect } from 'react';
 import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';

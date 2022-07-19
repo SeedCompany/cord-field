@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
-import React from 'react';
 import { Form } from 'react-final-form';
 import { Code } from '../Debug';
 import { NumberField } from './NumberField';

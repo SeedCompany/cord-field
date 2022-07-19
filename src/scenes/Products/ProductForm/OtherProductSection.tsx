@@ -1,4 +1,3 @@
-import React from 'react';
 import { TextField } from '../../../components/form';
 import { DefaultAccordion } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';

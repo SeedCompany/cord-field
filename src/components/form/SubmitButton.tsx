@@ -1,7 +1,6 @@
 import { FORM_ERROR, setIn } from 'final-form';
 import { cloneDeep, omit } from 'lodash';
-import { useMemo } from 'react';
-import * as React from 'react';
+import { Children, useMemo } from 'react';
 import { useForm, useFormState } from 'react-final-form';
 import { ProgressButton, ProgressButtonProps } from '../ProgressButton';
 
@@ -116,7 +115,7 @@ export const SubmitButton = ({
       }
       progress={spinner && submitting && values.submitAction === action}
     >
-      {React.Children.count(children) ? children : 'Submit'}
+      {Children.count(children) ? children : 'Submit'}
     </ProgressButton>
   );
 };

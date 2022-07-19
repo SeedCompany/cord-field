@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { CreateButton as CB } from './CreateButton';
 
 export default { title: 'Components/Buttons' };

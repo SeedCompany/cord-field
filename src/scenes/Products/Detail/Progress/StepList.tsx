@@ -1,5 +1,4 @@
 import { Grid, Typography } from '@material-ui/core';
-import React from 'react';
 import { ProgressMeasurement } from '~/api/schema.graphql';
 import { useDialog } from '../../../../components/Dialog';
 import {

@@ -1,5 +1,4 @@
 import { Card, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 import { getChangeset } from '~/api';
 import { IdFragment } from '~/common';
 import { List, useListQuery } from '../../../components/List';

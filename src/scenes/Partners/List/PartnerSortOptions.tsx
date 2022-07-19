@@ -1,5 +1,4 @@
 import { ComponentType } from 'react';
-import * as React from 'react';
 import { Partner } from '~/api/schema.graphql';
 import { SortOption, SortOptionProps } from '../../../components/Sort';
 

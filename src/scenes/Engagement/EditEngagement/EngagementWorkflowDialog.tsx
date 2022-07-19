@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import React from 'react';
 import { Except } from 'type-fest';
 import {
   EngagementStatus,

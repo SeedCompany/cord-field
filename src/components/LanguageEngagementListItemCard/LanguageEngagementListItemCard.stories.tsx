@@ -1,5 +1,4 @@
 import { number, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { EngagementStatus } from '../../api';
 import { LanguageEngagementListItemCard as Card } from './LanguageEngagementListItemCard';
 

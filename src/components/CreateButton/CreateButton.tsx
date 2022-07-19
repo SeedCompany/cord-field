@@ -1,4 +1,3 @@
-import React from 'react';
 import { ErrorButton, ErrorButtonProps } from '../ErrorButton';
 
 export type CreateButtonProps = ErrorButtonProps;

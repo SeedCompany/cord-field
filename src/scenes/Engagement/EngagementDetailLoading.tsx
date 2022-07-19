@@ -1,7 +1,6 @@
 import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React from 'react';
 import { Breadcrumb } from '../../components/Breadcrumb';
 import { DataButton } from '../../components/DataButton';
 import { Fab } from '../../components/Fab';

@@ -13,7 +13,7 @@ import {
   TabPanel,
 } from '@material-ui/lab';
 import { omit, pickBy } from 'lodash';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Language } from '~/api/schema.graphql';
 import { simpleSwitch } from '~/common';

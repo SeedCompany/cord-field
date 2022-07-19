@@ -18,7 +18,7 @@ import MaterialTable, {
   MaterialTableProps,
   MTableCell,
 } from 'material-table';
-import React, { forwardRef, useMemo } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { Merge } from 'type-fest';
 
 export type TableProps<RowData extends Record<string, any>> = Merge<

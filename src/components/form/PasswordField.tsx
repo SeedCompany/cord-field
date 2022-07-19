@@ -1,6 +1,6 @@
 import { IconButton, IconButtonProps, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import React, { ComponentType, useState } from 'react';
+import { ComponentType, useState } from 'react';
 import { Except } from 'type-fest';
 import { TextField, TextFieldProps } from './TextField';
 

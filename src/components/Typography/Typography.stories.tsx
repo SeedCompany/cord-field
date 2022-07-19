@@ -1,6 +1,5 @@
 import { Typography as TP, TypographyVariant } from '@material-ui/core';
 import { boolean, select } from '@storybook/addon-knobs';
-import React from 'react';
 
 export default { title: 'Components' };
 

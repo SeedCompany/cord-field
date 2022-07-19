@@ -1,5 +1,4 @@
 import { Typography, TypographyProps } from '@material-ui/core';
-import * as React from 'react';
 import { useFormState } from 'react-final-form';
 
 /**

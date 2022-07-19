@@ -12,7 +12,7 @@ import {
   Minimize as MinimizeIcon,
 } from '@material-ui/icons';
 import clsx from 'clsx';
-import React, { memo, ReactNode, useState } from 'react';
+import { memo, ReactNode, useState } from 'react';
 import { useMountedState } from 'react-use';
 import { ChildrenProp } from '~/common';
 import { useSession } from '../Session';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { UserListItemCardLandscape as UserCard } from './LandscapeCard';
 import { generateUserListItem } from './PortraitCard.stories';
 

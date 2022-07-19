@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Except } from 'type-fest';
 import { Nullable } from '~/common';
 import { SecuredBreadcrumb, SecuredBreadcrumbProps } from '../Breadcrumb';

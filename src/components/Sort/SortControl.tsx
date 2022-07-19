@@ -1,7 +1,6 @@
 import { RadioGroup } from '@material-ui/core';
 import { isString } from 'lodash';
 import { ReactNode } from 'react';
-import * as React from 'react';
 import { Order } from '~/api/schema.graphql';
 
 export interface SortValue<T> {

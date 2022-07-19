@@ -1,5 +1,5 @@
 import loadable, { LoadableComponentMethods } from '@loadable/component';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import {
   ChangesetAwareTableProps,
   ChangesetRowData,

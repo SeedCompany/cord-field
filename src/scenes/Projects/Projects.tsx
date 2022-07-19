@@ -1,5 +1,4 @@
 import loadable from '@loadable/component';
-import React from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { splicePath } from '~/common';
 import { ChangesetContext } from '../../components/Changeset';

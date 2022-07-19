@@ -1,6 +1,5 @@
 import { fade, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import * as React from 'react';
 import { useDrop } from 'react-dnd';
 import { Breadcrumb, BreadcrumbProps } from '../../../components/Breadcrumb';
 import { DndFileNode, DropOnDirResult } from './util';

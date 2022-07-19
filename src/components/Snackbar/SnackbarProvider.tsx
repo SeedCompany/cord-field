@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import { Report as ErrorIcon } from '@material-ui/icons';
 import { SnackbarProvider as BaseSnackbarProvider } from 'notistack';
-import * as React from 'react';
 import { ChildrenProp } from '~/common';
 
 const useStyles = makeStyles(({ palette }) => ({

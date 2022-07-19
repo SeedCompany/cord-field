@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { UpdatePostInput } from '~/api/schema.graphql';
 import { PostForm, PostFormProps } from '../PostForm';

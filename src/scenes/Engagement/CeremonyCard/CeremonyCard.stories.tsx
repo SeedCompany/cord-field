@@ -1,5 +1,4 @@
 import { boolean, select } from '@storybook/addon-knobs';
-import React from 'react';
 import { date } from '../../../components/knobs.stories';
 import { CeremonyCard as Card } from './CeremonyCard';
 

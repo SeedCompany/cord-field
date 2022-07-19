@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Except } from 'type-fest';
 import { fileIcon } from '../files/fileTypes';

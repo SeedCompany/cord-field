@@ -14,7 +14,6 @@ import clsx from 'clsx';
 import { To } from 'history';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
-import * as React from 'react';
 import { useDateTimeFormatter } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';

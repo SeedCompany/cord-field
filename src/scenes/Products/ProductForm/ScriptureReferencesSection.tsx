@@ -1,5 +1,4 @@
 import { ToggleButton } from '@material-ui/lab';
-import React from 'react';
 import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
 import {
   entries,

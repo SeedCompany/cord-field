@@ -1,6 +1,5 @@
 import { Grid } from '@material-ui/core';
 import { without } from 'lodash';
-import React from 'react';
 import {
   PostShareability,
   PostShareabilityLabels,

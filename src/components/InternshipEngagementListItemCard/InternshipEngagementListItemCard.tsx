@@ -7,7 +7,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import * as React from 'react';
 import {
   EngagementStatusLabels,
   InternshipPositionLabels,

@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core';
-import * as React from 'react';
 import { HeaderSearch } from './HeaderSearch';
 import { ProfileToolbar } from './ProfileToolbar';
 

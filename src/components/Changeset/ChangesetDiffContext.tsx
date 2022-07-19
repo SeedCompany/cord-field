@@ -1,5 +1,4 @@
 import { useApolloClient } from '@apollo/client';
-import * as React from 'react';
 import { createContext, useCallback, useContext, useMemo } from 'react';
 import { Entity } from '~/api';
 import { ChildrenProp, IdFragment, mapFromList, Nullable } from '~/common';

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
-import React, { ComponentType, useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
   FinancialReportingTypeLabels,

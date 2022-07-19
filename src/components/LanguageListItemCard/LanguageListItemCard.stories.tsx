@@ -1,5 +1,4 @@
 import { boolean, number, select, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { LanguageListItemFragment } from './LanguageListItem.graphql';
 import { LanguageListItemCard } from './LanguageListItemCard';
 

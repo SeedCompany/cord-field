@@ -6,7 +6,7 @@ import {
 } from 'express';
 import { Request } from 'jest-express/lib/request';
 import { Response } from 'jest-express/lib/response';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
 import { ChildrenProp } from '~/common';

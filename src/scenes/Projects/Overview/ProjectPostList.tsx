@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useListQuery } from '../../../components/List';
 import { PostableIdFragment } from '../../../components/posts/PostableId.graphql';
 import { PostList } from '../../../components/posts/PostList';

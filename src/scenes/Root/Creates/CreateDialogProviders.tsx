@@ -1,5 +1,4 @@
 import { noop } from 'lodash';
-import * as React from 'react';
 import { createContext } from 'react';
 import { Power } from '~/api/schema.graphql';
 import { ChildrenProp } from '~/common';

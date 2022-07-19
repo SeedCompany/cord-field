@@ -1,6 +1,6 @@
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link as MUILink, LinkProps as MUILinkProps } from '@material-ui/core';
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link as RRLink, LinkProps as RRLinkProps } from 'react-router-dom';
 import { Merge } from 'type-fest';

@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { AssignmentOutlined, BarChart, ShowChart } from '@material-ui/icons';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ReportType } from '~/api/schema.graphql';
 import { Many, simpleSwitch } from '~/common';

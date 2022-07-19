@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { CreateNewFolder, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';

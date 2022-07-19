@@ -1,4 +1,3 @@
-import React from 'react';
 import { CalendarDate, isSecured, Nullable } from '~/common';
 import { Redacted } from '../Redacted';
 import {

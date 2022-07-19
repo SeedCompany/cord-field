@@ -7,6 +7,24 @@ const roots = fs
 
 /** @type import('@seedcompany/eslint-plugin/dist/rules/no-restricted-imports').ImportRestriction[] */
 const restrictedImports = [
+  {
+    path: 'react',
+    importNames: 'default',
+    message: [
+      'Import specific things instead.',
+      'Also the global import is no longer necessary for JSX compilation.',
+    ].join('\n'),
+  },
+  {
+    path: 'react',
+    importNames: ['FC', 'FunctionalComponent'],
+    message: [
+      'This is deprecated as is the implicit children prop.',
+      'Declare type for props explicitly on the first argument instead.',
+      'We also have a ChildrenProp type shortcut.',
+    ].join('\n'),
+  },
+
   // As noted in https://github.com/mui-org/material-ui/releases/tag/v4.5.1
   {
     path: '@material-ui/styles',
@@ -71,10 +89,6 @@ const config = {
   plugins: ['@seedcompany'],
   extends: ['plugin:@seedcompany/react'],
   rules: {
-    // TODO Remove with React 18
-    'react/jsx-uses-react': 'warn',
-    'react/react-in-jsx-scope': 'warn',
-
     // TODO Remove and fix
     // Allow `extends any` for TSX
     // This makes the distinction that it's a generic instead of JSX

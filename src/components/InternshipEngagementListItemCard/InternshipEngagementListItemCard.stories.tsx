@@ -1,5 +1,4 @@
 import { text } from '@storybook/addon-knobs';
-import React from 'react';
 import { EngagementStatus } from '../../api';
 import { date } from '../knobs.stories';
 import { InternshipEngagementListItemCard as Card } from './InternshipEngagementListItemCard';

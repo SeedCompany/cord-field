@@ -1,6 +1,5 @@
 import { Box } from '@material-ui/core';
 import { boolean, number, select, text } from '@storybook/addon-knobs';
-import React from 'react';
 import {
   ProjectStatusList,
   ProjectStepList,

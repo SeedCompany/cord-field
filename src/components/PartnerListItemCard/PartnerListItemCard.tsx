@@ -8,7 +8,6 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { random } from 'lodash';
-import React from 'react';
 import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';

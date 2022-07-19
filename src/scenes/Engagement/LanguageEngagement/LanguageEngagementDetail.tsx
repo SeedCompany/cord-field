@@ -1,6 +1,5 @@
 import { Card, Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import React from 'react';
 import { Fab } from '../../../components/Fab';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';

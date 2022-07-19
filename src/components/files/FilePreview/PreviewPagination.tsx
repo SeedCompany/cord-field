@@ -1,6 +1,6 @@
 import { Grid } from '@material-ui/core';
 import { Pagination, PaginationProps } from '@material-ui/lab';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { ChildrenProp } from '~/common';
 import { useFileActions } from '../FileActions';
 

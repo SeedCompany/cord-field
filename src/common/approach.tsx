@@ -4,7 +4,7 @@ import {
   PlayCircleFilled,
   Translate,
 } from '@material-ui/icons';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { ProductApproach, ProductMethodology } from '~/api/schema.graphql';
 import { entries, mapFromList } from './array-helpers';
 

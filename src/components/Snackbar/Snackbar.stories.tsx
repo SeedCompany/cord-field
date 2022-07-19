@@ -3,7 +3,6 @@ import { Close } from '@material-ui/icons';
 import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import { OptionsObject, useSnackbar } from 'notistack';
-import * as React from 'react';
 
 export default {
   title: 'Components/Snackbar',

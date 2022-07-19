@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import * as React from 'react';
 import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';

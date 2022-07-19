@@ -10,7 +10,6 @@ import {
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,

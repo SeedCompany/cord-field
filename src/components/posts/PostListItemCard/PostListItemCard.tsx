@@ -10,7 +10,6 @@ import {
 import { MoreVert } from '@material-ui/icons';
 import clsx from 'clsx';
 import { useState } from 'react';
-import * as React from 'react';
 import { PostShareabilityLabels } from '~/api/schema.graphql';
 import { canEditAny, square } from '~/common';
 import { useDialog } from '../../Dialog';

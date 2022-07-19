@@ -10,7 +10,7 @@ import { ExpandMore } from '@material-ui/icons';
 import clsx from 'clsx';
 import { FormState } from 'final-form';
 import { get, startCase } from 'lodash';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Except } from 'type-fest';
 import { useFieldName } from '../../../components/form';
 import { ProductKey } from './ProductFormFields';

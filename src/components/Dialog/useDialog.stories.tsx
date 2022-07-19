@@ -9,7 +9,6 @@ import {
   ListItemText,
   Typography,
 } from '@material-ui/core';
-import * as React from 'react';
 import { useDialog } from './useDialog';
 
 export default {

@@ -1,5 +1,4 @@
 import { Group } from '@material-ui/icons';
-import * as React from 'react';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
 import { ProjectMemberListFragment } from './ProjectMembersSummary.graphql';
 

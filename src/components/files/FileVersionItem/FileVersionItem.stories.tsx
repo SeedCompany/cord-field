@@ -1,7 +1,6 @@
 import { Box } from '@material-ui/core';
 import { optionsKnob, text } from '@storybook/addon-knobs';
 import { DateTime } from 'luxon';
-import React from 'react';
 import { FileAction } from '../FileActions';
 import { FileVersionItem as FVI } from './FileVersionItem';
 

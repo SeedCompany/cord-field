@@ -1,5 +1,4 @@
 import { Group, GroupWork } from '@material-ui/icons';
-import React from 'react';
 import { MemberListSummary } from '../MemberListSummary';
 import { members } from '../MemberListSummary/MemberListSummary.stories';
 import { CardGroup as CG } from './CardGroup';

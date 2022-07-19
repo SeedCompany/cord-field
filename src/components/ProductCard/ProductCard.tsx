@@ -13,7 +13,6 @@ import {
   Movie,
   SvgIconComponent,
 } from '@material-ui/icons';
-import React from 'react';
 import { idForUrl } from '../Changeset';
 import { HugeIcon } from '../Icons';
 import { CardActionAreaLink } from '../Routing';

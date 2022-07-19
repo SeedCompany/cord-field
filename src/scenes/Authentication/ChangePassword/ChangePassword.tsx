@@ -2,7 +2,6 @@ import { useMutation } from '@apollo/client';
 import { Grid, makeStyles } from '@material-ui/core';
 import { Mutator } from 'final-form';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
 import { Except } from 'type-fest';
 import { MutationChangePasswordArgs } from '~/api/schema.graphql';
 import {

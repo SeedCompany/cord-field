@@ -2,7 +2,6 @@ import { Typography } from '@material-ui/core';
 import { To } from 'history';
 import { isString } from 'lodash';
 import { forwardRef, ReactNode } from 'react';
-import * as React from 'react';
 import { useMatch } from 'react-router-dom';
 import { Link, LinkProps } from '../Routing';
 

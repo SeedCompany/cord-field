@@ -14,7 +14,7 @@ import {
   Value,
 } from '@material-ui/lab';
 import { camelCase, last, uniqBy, upperFirst } from 'lodash';
-import React, {
+import {
   ComponentType,
   useCallback,
   useEffect,

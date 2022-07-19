@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import { CreateNewFolder } from '@material-ui/icons';
 import { select } from '@storybook/addon-knobs';
-import * as React from 'react';
 import { Avatar as A, AvatarProps } from './Avatar';
 
 export default {

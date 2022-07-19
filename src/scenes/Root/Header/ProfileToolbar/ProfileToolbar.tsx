@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import { AccountCircle, MoreVert, NotificationsNone } from '@material-ui/icons';
 import { useState } from 'react';
-import * as React from 'react';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
 import { UserActionsMenu } from '../UserActionsMenu';

@@ -2,7 +2,6 @@ import { useQuery } from '@apollo/client';
 import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { startCase } from 'lodash';
 import { ReactElement } from 'react';
-import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Error } from '../../components/Error';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';

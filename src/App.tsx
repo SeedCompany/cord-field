@@ -3,7 +3,6 @@ import { ThemeProvider } from '@material-ui/core';
 import { LocalizationProvider } from '@material-ui/pickers';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
-import * as React from 'react';
 import { ApolloProvider } from './api';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';

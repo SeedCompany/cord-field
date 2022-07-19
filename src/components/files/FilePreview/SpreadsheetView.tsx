@@ -1,5 +1,5 @@
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { XLSX$Utils } from 'xlsx';
 import { useFileActions } from '../FileActions';
 

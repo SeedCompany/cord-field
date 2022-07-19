@@ -2,7 +2,6 @@
 import { IconButton, Link } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import React from 'react';
 import { useIsomorphicEffect } from '../../hooks';
 
 export const useNonProdWarning = () => {

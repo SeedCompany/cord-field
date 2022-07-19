@@ -1,6 +1,5 @@
 import { Button, ButtonProps, fade, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import React from 'react';
 import { Except } from 'type-fest';
 
 const useStyles = makeStyles(({ palette }) => ({

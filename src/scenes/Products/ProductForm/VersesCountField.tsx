@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { getBookTotalVerses } from '../../../common/biblejs';
 import { NumberField, NumberFieldProps } from '../../../components/form';

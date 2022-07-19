@@ -6,7 +6,6 @@ import {
   useRadioGroup,
 } from '@material-ui/core';
 import { ReactNode } from 'react';
-import * as React from 'react';
 import { Order } from '~/api/schema.graphql';
 
 const useStyles = makeStyles(({ typography, spacing }) => ({
