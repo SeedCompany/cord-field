@@ -18,10 +18,6 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
   },
-  cordIcon: {
-    fontSize: 40,
-    color: 'inherit',
-  },
   copyright: {
     fontWeight: typography.fontWeightLight,
   },
@@ -34,7 +30,7 @@ export const SidebarHeader = () => {
     <div className={classes.root}>
       <SwooshBackground />
       <div className={classes.floating}>
-        <CordIcon className={classes.cordIcon} />
+        <CordIcon sx={{ color: 'inherit', fontSize: 40 }} />
         <Typography
           className={classes.copyright}
           display="block"
