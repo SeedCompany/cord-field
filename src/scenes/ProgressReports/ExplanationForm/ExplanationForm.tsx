@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { Form } from 'react-final-form';
-import { labelFrom } from '~/common';
+import { displayGroupOfVarianceReason, labelFrom, labelsFrom } from '~/common';
 import {
   ProgressVarianceReason,
   ProgressVarianceReasonGroups,
@@ -17,10 +17,14 @@ import {
 import { UpdateProgressReportDocument as UpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
 import { ExplanationOfVarianceFormFragment as ProgressReport } from './ExplanationForm.graphql';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(({ spacing }) => ({
   saveButton: {
     display: 'flex',
     justifyContent: 'flex-end',
+    marginLeft: spacing(100),
+  },
+  reasonInfo: {
+    marginLeft: spacing(1.5),
   },
 }));
 
@@ -39,11 +43,14 @@ export const ExplanationForm = ({
   progressReport,
   setState,
 }: UpdateExplanationFormParams) => {
-  console.log(setState);
   const classes = useStyles();
   const [updateProgressReport] = useMutation(UpdatePeriodicReport);
+  const varianceReasons = progressReport?.varianceReasons.value;
 
-  const [selected, setSelected] = React.useState('');
+  const initialSelected = varianceReasons
+    ? displayGroupOfVarianceReason(varianceReasons)[0]
+    : '';
+  const [selected, setSelected] = React.useState(initialSelected);
 
   const changedSelectOptionHandler = (event: any) => {
     setSelected(event.target.value);
@@ -70,8 +77,9 @@ export const ExplanationForm = ({
     <Form
       onSubmit={submit}
       initialValues={{
-        varianceReasons: progressReport?.varianceReasons,
-        varianceExplanation: progressReport?.varianceExplanation,
+        varianceReasons: progressReport?.varianceReasons.value,
+        varianceExplanation: progressReport?.varianceExplanation.value,
+        status: initialSelected,
         id: progressReport?.id,
       }}
     >
@@ -106,13 +114,13 @@ export const ExplanationForm = ({
               />
             </Grid>
             <Grid item xs={12}>
-              <Grid item xs={10} />
-              <Grid item xs={2}>
+              <Grid item>
                 <SubmitButton
                   color="primary"
                   size="medium"
                   fullWidth={false}
                   disableElevation
+                  className={classes.saveButton}
                 >
                   Save
                 </SubmitButton>
@@ -130,5 +138,36 @@ export const ExplanationForm = ({
 export const ExplanationInfo = ({
   progressReport,
 }: UpdateExplanationFormParams) => {
-  return <Typography>{progressReport?.varianceReasons}</Typography>;
+  const varianceReasons = progressReport?.varianceReasons.value;
+  const classes = useStyles();
+
+  return (
+    <Grid direction="column">
+      <Grid container>
+        <Grid item>
+          <Typography variant="subtitle1">
+            {varianceReasons
+              ? displayGroupOfVarianceReason(varianceReasons)[0]?.toUpperCase()
+              : 'No Status'}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="subtitle1"
+            className={classes.reasonInfo}
+            color="textSecondary"
+          >
+            {varianceReasons
+              ? labelsFrom(ProgressVarianceReasonLabels)(varianceReasons)
+              : 'No Reason(s) Provided'}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid>
+        <Typography variant="body2" color="textSecondary">
+          {progressReport?.varianceExplanation.value}
+        </Typography>
+      </Grid>
+    </Grid>
+  );
 };

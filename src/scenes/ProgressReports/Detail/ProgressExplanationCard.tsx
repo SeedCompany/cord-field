@@ -1,13 +1,13 @@
 import {
   Card,
   CardContent,
-  CardHeader,
   Grid,
-  Icon,
+  IconButton,
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import { AccessTime } from '@material-ui/icons';
+import { AccessTime, Close, Edit } from '@material-ui/icons';
+import { some } from 'lodash';
 import React from 'react';
 import {
   ExplanationForm,
@@ -22,22 +22,13 @@ const useStyles = makeStyles(({ spacing }) => ({
   cardHeaderText: {
     marginLeft: spacing(0.5),
   },
-  editButton: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: spacing(0.5),
-  },
   varianceHeader: {
     display: 'flex',
     flexDirection: 'row',
   },
-  root: {
-    // flex: 1,
-    // display: 'flex',
-    // flexDirection: 'column',
-    // justifyContent: 'space-evenly',
-    // width: '100%',
-    // height: '100%'
+  editButton: {
+    marginLeft: spacing(82),
+    marginTop: spacing(-1),
   },
   cardActions: {
     display: 'flex',
@@ -50,8 +41,6 @@ const useStyles = makeStyles(({ spacing }) => ({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'flextStart',
-    // position: 'relative',
-    // bottom: spacing(2)
   },
   explanationReason: {
     display: 'flex',
@@ -69,21 +58,35 @@ interface ProgressExplanationCardProps {
 export const ProgressExplanationCard = ({
   explanation,
 }: ProgressExplanationCardProps) => {
-  let isEditing = true;
+  const [isEditing, setIsEdit] = React.useState(
+    some(explanation) ? false : true
+  );
 
   function setMode(mode: boolean) {
-    isEditing = mode;
+    setIsEdit(mode);
   }
 
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
+    <Card>
       <CardContent>
         <Grid container item sm={12} className={classes.cardHeader}>
           <AccessTime />
           <Typography className={classes.cardHeaderText} variant="h4">
             Progress Status
           </Typography>
+          <IconButton
+            className={classes.editButton}
+            onClick={() => {
+              setIsEdit(!isEditing);
+            }}
+          >
+            {!isEditing ? (
+              <Edit fontSize="inherit" />
+            ) : (
+              <Close fontSize="inherit" />
+            )}
+          </IconButton>
         </Grid>
         {isEditing ? (
           <ExplanationForm progressReport={explanation} setState={setMode} />
