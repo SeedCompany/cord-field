@@ -1,7 +1,9 @@
 import { GraphQLEnumType, GraphQLEnumValue } from 'graphql';
 import { groupBy, lowerCase, mapValues } from 'lodash';
 import { titleCase } from 'title-case';
-import { mapFromList } from '~/common';
+// codegen isn't setup for path aliases
+// noinspection ES6PreferShortImport
+import { mapFromList } from '../../../common/array-helpers';
 import {
   addExportedConst,
   tsMorphPlugin,
