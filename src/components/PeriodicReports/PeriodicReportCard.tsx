@@ -125,7 +125,12 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
                 report={dueCurrently}
                 className={classes.relevantReport}
               />
-              <Divider orientation="vertical" flexItem variant="middle" />
+              <Divider
+                orientation="vertical"
+                flexItem
+                variant="middle"
+                sx={{ mx: 2 }}
+              />
               <ReportInfo
                 title="Next"
                 report={dueNext}
