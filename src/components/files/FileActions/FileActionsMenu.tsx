@@ -33,13 +33,6 @@ import {
 } from './FileActionsContext';
 
 const useStyles = makeStyles()(({ spacing }) => ({
-  listItemIcon: {
-    marginRight: spacing(2),
-    minWidth: 'unset',
-  },
-  listItemText: {
-    textTransform: 'capitalize',
-  },
   newVersionItem: {
     display: 'flex',
     justifyContent: 'center',
@@ -205,18 +198,10 @@ export const FileActionsMenu = (props: FileActionsMenuProps) => {
     const Icon = actionIcons[menuItem];
     return (
       <>
-        <ListItemIcon className={classes.listItemIcon}>
+        <ListItemIcon>
           <Icon fontSize="small" />
         </ListItemIcon>
-        <ListItemText
-          className={classes.listItemText}
-          primary={
-            menuItem === FileAction.UpdateReceivedDate ||
-            menuItem === FileAction.EditSkipReason
-              ? startCase(menuItem)
-              : menuItem
-          }
-        />
+        <ListItemText primary={startCase(menuItem)} />
       </>
     );
   };
