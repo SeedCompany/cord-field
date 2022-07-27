@@ -1,13 +1,13 @@
 import { useMutation } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
+import { useState } from 'react';
 import { Form } from 'react-final-form';
-import { displayGroupOfVarianceReason, labelFrom, labelsFrom } from '~/common';
 import {
-  ProgressVarianceReason,
   ProgressVarianceReasonGroups,
   ProgressVarianceReasonLabels,
-} from '../../../api';
+} from '~/api/schema/enumLists/enumLists.generated';
+import { ProgressVarianceReason } from '~/api/schema/schema.graphql';
+import { displayGroupOfVarianceReason, labelFrom, labelsFrom } from '~/common';
 import {
   SelectField,
   SubmitButton,
@@ -50,7 +50,7 @@ export const ExplanationForm = ({
   const initialSelected = varianceReasons
     ? displayGroupOfVarianceReason(varianceReasons)[0]
     : '';
-  const [selected, setSelected] = React.useState(initialSelected);
+  const [selected, setSelected] = useState(initialSelected);
 
   const changedSelectOptionHandler = (event: any) => {
     setSelected(event.target.value);
