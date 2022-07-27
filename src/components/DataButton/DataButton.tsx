@@ -38,6 +38,7 @@ export const DataButton = <T extends any>({
   const btn = (
     <Button
       variant="outlined"
+      color="secondary"
       {...props}
       startIcon={showData ? startIcon : undefined}
     >
