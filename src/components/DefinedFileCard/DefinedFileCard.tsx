@@ -125,7 +125,6 @@ const FileCardMeta = ({
   return (
     <Typography
       className={classes.fileMeta}
-      color="initial"
       variant="caption"
       component="p"
       gutterBottom
@@ -259,11 +258,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                 />
               )}
               <div className={classes.info}>
-                <Typography
-                  className={classes.fileName}
-                  color="initial"
-                  variant="h4"
-                >
+                <Typography className={classes.fileName} variant="h4">
                   {label}
                 </Typography>
                 <div className={classes.fileInfo}>
