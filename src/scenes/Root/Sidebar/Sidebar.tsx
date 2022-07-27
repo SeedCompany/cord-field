@@ -48,7 +48,7 @@ export const Sidebar = () => {
 
   return (
     <ThemeProvider theme={sidebarTheme}>
-      <Paper square className={classes.root}>
+      <Paper elevation={0} square className={classes.root}>
         <SidebarHeader />
         <div className={classes.content}>
           <CreateButtonMenu fullWidth className={classes.createNewItem} />
