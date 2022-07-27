@@ -99,11 +99,10 @@ export const FieldOverviewCard = ({
       >
         <HugeIcon icon={icon} loading={!data} />
         <div className={classes.rightContent}>
-          <Typography color="initial" variant="h4">
+          <Typography variant="h4">
             {loading ? <Skeleton width="80%" /> : data ? title : ''}
           </Typography>
           <Typography
-            color="initial"
             variant="h1"
             className={cx({
               [classes.emptyValue]: data && !data.value,

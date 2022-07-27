@@ -116,7 +116,7 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
           )}
 
           <div className={classes.rightContent}>
-            <Typography color="initial" variant="h4" paragraph>
+            <Typography variant="h4" paragraph>
               {`${type} Reports`}
             </Typography>
             <div className={classes.relevantReports}>
