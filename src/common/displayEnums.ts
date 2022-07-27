@@ -35,9 +35,12 @@ export const displayProductTypes = (type: ProductTypes) =>
 
 export const displayGroupOfVarianceReason = (
   reasons: readonly ProgressVarianceReason[]
-) =>
-  [...new Set (reasons.map((val) =>
-    Object.keys(ProgressVarianceReasonGroups).find((key) =>
-      ProgressVarianceReasonGroups[key]?.includes(val)
+) => [
+  ...new Set(
+    reasons.map((val) =>
+      Object.keys(ProgressVarianceReasonGroups).find((key) =>
+        ProgressVarianceReasonGroups[key]?.includes(val)
+      )
     )
-  ))];
+  ),
+];

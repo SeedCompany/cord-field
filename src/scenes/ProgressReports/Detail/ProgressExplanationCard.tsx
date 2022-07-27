@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { AccessTime, Close, Edit } from '@material-ui/icons';
 import { some } from 'lodash';
-import React from 'react';
+import { useState } from 'react';
 import {
   ExplanationForm,
   ExplanationInfo,
@@ -58,9 +58,7 @@ interface ProgressExplanationCardProps {
 export const ProgressExplanationCard = ({
   explanation,
 }: ProgressExplanationCardProps) => {
-  const [isEditing, setIsEdit] = React.useState(
-    some(explanation) ? false : true
-  );
+  const [isEditing, setIsEdit] = useState(some(explanation) ? false : true);
 
   function setMode(mode: boolean) {
     setIsEdit(mode);

@@ -19,7 +19,7 @@ export type SelectFieldProps<T, Multiple extends boolean | undefined> = Except<
 > & {
   options: readonly T[];
   getOptionLabel?: (option: T) => string;
-  // Is there any operations to add to the onChange event? 
+  // Is there any operations to add to the onChange event?
   onChange?: (event: any) => void;
   // This can be a label to show an empty option or a rendered EnumOption.
   defaultOption?: string | ReactNode;
@@ -54,7 +54,7 @@ export function SelectField<T, Multiple extends boolean | undefined>({
 }: SelectFieldProps<T, Multiple>) {
   const getOptionLabel = getOptionLabelProp ?? identity;
 
-  const { input, meta, rest} = useField<T, Multiple>({
+  const { input, meta, rest } = useField<T, Multiple>({
     ...props,
     multiple,
     allowNull: !multiple,
