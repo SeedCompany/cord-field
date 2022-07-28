@@ -101,7 +101,7 @@ export const TogglePinButton = ({
         root: cx(classes.root, rest.classes?.root),
       }}
     >
-      <Icon fontSize="inherit" />
+      <Icon fontSize={rest.size ? 'inherit' : undefined} />
     </IconButton>
   );
 
