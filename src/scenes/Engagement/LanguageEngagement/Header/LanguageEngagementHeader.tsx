@@ -70,70 +70,74 @@ export const LanguageEngagementHeader = ({
           <EngagementBreadcrumb data={engagement} />
         </Breadcrumbs>
       </Grid>
-      <Grid item container spacing={3} alignItems="center">
-        <Grid item className={langName ? undefined : classes.nameRedacted}>
-          <Typography
-            variant="h2"
-            {...(language
-              ? { component: Link, to: `/languages/${language.id}` }
-              : {})}
-          >
-            {langName ?? (
-              <Redacted
-                info={`You do not have permission to view this engagement's ${
-                  language ? 'name' : 'language'
-                }`}
-                width="100%"
-              />
-            )}
-          </Typography>
-        </Grid>
-        {editable && (
-          <Grid item>
-            <Tooltip title="Update First Scripture and Luke Partnership">
-              <Fab
-                color="primary"
-                aria-label="Update language engagement"
-                onClick={() =>
-                  show([
-                    'firstScripture',
-                    'lukePartnership',
-                    'openToInvestorVisit',
-                  ])
-                }
-              >
-                <Edit />
-              </Fab>
-            </Tooltip>
+      <Grid item>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item className={langName ? undefined : classes.nameRedacted}>
+            <Typography
+              variant="h2"
+              {...(language
+                ? { component: Link, to: `/languages/${language.id}` }
+                : {})}
+            >
+              {langName ?? (
+                <Redacted
+                  info={`You do not have permission to view this engagement's ${
+                    language ? 'name' : 'language'
+                  }`}
+                  width="100%"
+                />
+              )}
+            </Typography>
           </Grid>
-        )}
-        <Grid item>
-          <DeleteEngagement
-            project={engagement.project}
-            engagement={engagement}
-          />
+          {editable && (
+            <Grid item>
+              <Tooltip title="Update First Scripture and Luke Partnership">
+                <Fab
+                  color="primary"
+                  aria-label="Update language engagement"
+                  onClick={() =>
+                    show([
+                      'firstScripture',
+                      'lukePartnership',
+                      'openToInvestorVisit',
+                    ])
+                  }
+                >
+                  <Edit />
+                </Fab>
+              </Tooltip>
+            </Grid>
+          )}
+          <Grid item>
+            <DeleteEngagement
+              project={engagement.project}
+              engagement={engagement}
+            />
+          </Grid>
         </Grid>
       </Grid>
-      <Grid item container spacing={3} alignItems="center">
-        <Grid item>
-          <Typography variant="h4">
-            Language Engagement
-            {engagement.project.presetInventory.value && (
-              <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
-                <PresetInventoryIconFilled
-                  color="action"
-                  className={classes.presetInventory}
-                  aria-label="preset inventory"
-                />
-              </Tooltip>
-            )}
-          </Typography>
-        </Grid>
+      <Grid item>
+        <Grid item container spacing={3} alignItems="center">
+          <Grid item>
+            <Typography variant="h4">
+              Language Engagement
+              {engagement.project.presetInventory.value && (
+                <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
+                  <PresetInventoryIconFilled
+                    color="action"
+                    className={classes.presetInventory}
+                    aria-label="preset inventory"
+                  />
+                </Tooltip>
+              )}
+            </Typography>
+          </Grid>
 
-        <Grid item>
-          <Typography variant="body2" color="textSecondary">
-            Updated <FormattedDateTime date={engagement.modifiedAt} />
-          </Typography>
+          <Grid item>
+            <Typography variant="body2" color="textSecondary">
+              Updated <FormattedDateTime date={engagement.modifiedAt} />
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
       <Grid item container spacing={1} alignItems="center">
