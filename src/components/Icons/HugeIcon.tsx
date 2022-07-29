@@ -4,10 +4,12 @@ import { makeStyles } from 'tss-react/mui';
 import { Avatar, AvatarProps } from '../Avatar';
 
 const useStyles = makeStyles()(({ palette }) => ({
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   root: {
     width: 64,
     height: 64,
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   colorDefault: {
     color: palette.info.main,
     backgroundColor: palette.grey[200],

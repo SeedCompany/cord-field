@@ -13,9 +13,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
   menuHeading: {
     padding: spacing(1, 2, 2, 2),
   },
-  uploadButtonText: {
-    marginLeft: spacing(1),
-  },
 }));
 
 // Menu looks for disabled prop to skip over when choosing

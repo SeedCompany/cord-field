@@ -21,9 +21,6 @@ const useStyles = makeStyles()(({ breakpoints, spacing }) => {
       display: 'flex',
       justifyContent: 'space-between',
     },
-    skeletonRight: {
-      marginLeft: 'auto',
-    },
   };
 });
 export interface OrganizationListItemCardProps {

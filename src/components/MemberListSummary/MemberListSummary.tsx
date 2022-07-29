@@ -27,9 +27,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
   avatarGroup: {
     marginRight: spacing(1),
   },
-  skeletonText: {
-    marginLeft: spacing(1),
-  },
   memberNames: {
     flexGrow: 1,
   },

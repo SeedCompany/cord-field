@@ -15,11 +15,13 @@ import { useFieldName } from '../../../components/form';
 import { ProductKey } from './ProductFormFields';
 
 export const useStyles = makeStyles()(({ spacing, typography, palette }) => ({
+  // eslint-disable-next-line tss-unused-classes/unused-classes -- used in other files, refactor this
   section: {
     '&:not(:last-child)': {
       marginBottom: spacing(2),
     },
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes -- used in other files, refactor this
   label: {
     fontWeight: typography.weight.bold,
   },

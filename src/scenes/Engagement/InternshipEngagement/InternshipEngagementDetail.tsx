@@ -35,27 +35,22 @@ import { EngagementQuery } from '../Engagement.graphql';
 import { UploadInternshipEngagementGrowthPlanDocument } from '../Files';
 import { MentorCard } from './MentorCard';
 
-const useStyles = makeStyles()(
-  ({ spacing, breakpoints, palette, typography }) => ({
-    root: {
-      flex: 1,
-      overflowY: 'auto',
-      padding: spacing(4),
-    },
-    main: {
-      maxWidth: breakpoints.values.md,
-    },
-    nameRedacted: {
-      width: '50%',
-    },
-    infoColor: {
-      color: palette.info.main,
-    },
-    dropzoneText: {
-      fontSize: typography.h2.fontSize,
-    },
-  })
-);
+const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
+  root: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: spacing(4),
+  },
+  main: {
+    maxWidth: breakpoints.values.md,
+  },
+  nameRedacted: {
+    width: '50%',
+  },
+  infoColor: {
+    color: palette.info.main,
+  },
+}));
 
 export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
   const { classes } = useStyles();

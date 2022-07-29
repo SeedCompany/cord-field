@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 
 const useStyles = makeStyles()(({ palette }) => ({
+  /* eslint-disable tss-unused-classes/unused-classes */
   variantSuccess: {
     backgroundColor: palette.success.main,
   },
@@ -16,6 +17,7 @@ const useStyles = makeStyles()(({ palette }) => ({
   variantWarning: {
     backgroundColor: palette.warning.main,
   },
+  /* eslint-enable tss-unused-classes/unused-classes */
 }));
 
 const icons = {

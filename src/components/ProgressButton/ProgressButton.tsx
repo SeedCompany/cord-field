@@ -45,14 +45,13 @@ export const ProgressButton = ({
   ...rest
 }: ProgressButtonProps) => {
   const { classes } = useStyles();
-  const { progressWrapper, hidden } = classes;
   const theme = useTheme();
   const size = theme.components?.MuiButton?.defaultProps?.size ?? rest.size;
 
   const inner = (
     <>
       {progress ? (
-        <div className={progressWrapper}>
+        <div className={classes.progressWrapper}>
           <CircularProgress
             size={size === 'large' ? 26 : size === 'small' ? 16 : 20}
             color={!rest.disabled ? 'inherit' : 'primary'}
@@ -60,7 +59,7 @@ export const ProgressButton = ({
           />
         </div>
       ) : null}
-      <span className={progress ? hidden : undefined}>{children}</span>
+      <span className={progress ? classes.hidden : undefined}>{children}</span>
     </>
   );
 

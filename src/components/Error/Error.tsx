@@ -12,9 +12,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
     overflow: 'auto',
     padding: spacing(4, 0, 0, 4),
   },
-  header: {
-    marginBottom: spacing(4),
-  },
   buttons: {
     marginTop: spacing(3),
   },

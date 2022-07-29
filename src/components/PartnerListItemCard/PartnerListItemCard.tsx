@@ -24,9 +24,6 @@ const useStyles = makeStyles()(({ breakpoints, spacing }) => {
       display: 'flex',
       justifyContent: 'space-between',
     },
-    skeletonRight: {
-      marginLeft: 'auto',
-    },
     pin: {
       position: 'absolute',
       top: 5,

@@ -25,10 +25,6 @@ const useStyles = makeStyles()(({ spacing, typography }) => {
       width: '100%',
       position: 'relative',
     },
-    card: {
-      display: 'flex',
-      alignItems: 'initial',
-    },
     cardContent: {
       flex: 1,
       padding: spacing(2, 3),

@@ -41,12 +41,15 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
     height: '100%',
     width: '100%',
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   Low: {
     backgroundColor: grey[400],
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   Medium: {
     backgroundColor: palette.warning.main,
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   High: {
     backgroundColor: palette.error.main,
   },
