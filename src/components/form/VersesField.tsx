@@ -3,7 +3,6 @@ import {
   AutocompleteProps,
   AutocompleteRenderInputParams,
   Chip,
-  ChipProps,
   TextField,
   TextFieldProps,
 } from '@mui/material';
@@ -207,7 +206,7 @@ export function VersesField({
               {...getTagProps({ index })}
               classes={{
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                ...((ChipProps as ChipProps)?.classes ?? {}),
+                ...(ChipProps?.classes ?? {}),
                 deleteIcon: classes.chipDeleteIcon,
               }}
               className={classes.chip}
