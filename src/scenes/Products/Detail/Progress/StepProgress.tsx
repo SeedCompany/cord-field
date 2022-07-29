@@ -36,7 +36,7 @@ export const StepProgress = ({
       </Grid>
 
       <Grid item xs>
-        <Card variant="outlined">
+        <Card variant="outlined" elevation={0}>
           <CardActionArea onClick={onClick}>
             <Grid
               item
