@@ -250,6 +250,7 @@ const restrictedImports = [
       '@mui/material/*',
       '!@mui/material/styles',
       '!@mui/material/colors',
+      '!@mui/material/transitions',
       '!@mui/material/utils',
       '@mui/icons-material/*',
       '@mui/lab/*',

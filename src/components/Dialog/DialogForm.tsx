@@ -8,8 +8,13 @@ import {
   DialogProps,
   DialogTitle,
 } from '@mui/material';
+import {
+  TransitionHandlerProps,
+  TransitionProps,
+} from '@mui/material/transitions';
 import { FormApi } from 'final-form';
-import { ReactNode } from 'react';
+import { isFunction, mergeWith } from 'lodash';
+import { ReactNode, useMemo, useRef } from 'react';
 import {
   Form,
   FormProps,
@@ -18,7 +23,8 @@ import {
 } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
 import { Except, Promisable } from 'type-fest';
-import { ErrorHandlers, handleFormError, inChangesetVar } from '../../api';
+import { ErrorHandlers, handleFormError, inChangesetVar } from '~/api';
+import { callAll } from '~/common';
 import { ChangesetModificationWarning } from '../Changeset/ChangesetModificationWarning';
 import {
   blurOnSubmit,
@@ -85,12 +91,11 @@ export type DialogFormProps<T, R = void> = Omit<
       | 'success',
     form: FormApi<T>
   ) => void;
-  onExited?: () => void;
-  DialogProps?: Omit<DialogProps, 'open' | 'onClose' | 'onExited'>;
+  DialogProps?: Omit<DialogProps, 'open' | 'onClose'>;
   children?:
     | ReactNode
     | ((props: Except<FormRenderProps<T>, 'handleSubmit'>) => ReactNode);
-};
+} & Pick<DialogProps, 'TransitionProps'>;
 
 const useStyles = makeStyles()(() => ({
   spacer: {
@@ -119,17 +124,30 @@ export function DialogForm<T, R = void>({
   onSuccess,
   errorHandlers,
   onClose,
-  onExited,
   fieldsPrefix = '',
   children,
-  DialogProps = {},
+  DialogProps,
   onSubmit,
   changesetAware,
   disableChangesetWarning,
+  TransitionProps,
   ...FormProps
 }: DialogFormProps<T, R>) {
   const { classes } = useStyles();
   const inChangeset = useReactiveVar(inChangesetVar);
+  const formRef = useRef<FormApi<T> | undefined>();
+
+  const mergedTransitionProps: TransitionProps = useMemo(() => {
+    const ourTransitionProps: TransitionHandlerProps = {
+      onExited: () => formRef.current?.reset(),
+    };
+    return mergeWith(
+      DialogProps?.TransitionProps,
+      TransitionProps,
+      ourTransitionProps,
+      (a, b) => (isFunction(a) && isFunction(b) ? callAll(a, b) : b)
+    );
+  }, [DialogProps?.TransitionProps, TransitionProps]);
 
   return (
     <Form<T>
@@ -158,6 +176,7 @@ export function DialogForm<T, R = void>({
       }}
     >
       {({ handleSubmit, submitting, form, ...rest }) => {
+        formRef.current = form;
         const renderedForm = (
           <Dialog
             fullWidth
@@ -172,7 +191,7 @@ export function DialogForm<T, R = void>({
             }}
             aria-labelledby={title ? 'dialog-form' : undefined}
             PaperProps={{
-              ...DialogProps.PaperProps,
+              ...DialogProps?.PaperProps,
               // @ts-expect-error MUI types don't model this correctly.
               component: 'form',
             }}
@@ -182,13 +201,7 @@ export function DialogForm<T, R = void>({
             // keyboard navigation and accessibility. Maybe this can be removed
             // with MUI v5.
             disableEnforceFocus
-            TransitionProps={{
-              onExited: () => {
-                // TODO migrate onExited prop to TransitionProps
-                onExited?.();
-                form.reset();
-              },
-            }}
+            TransitionProps={mergedTransitionProps}
           >
             {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
             <DialogContent>
