@@ -1,8 +1,14 @@
 import { Cancel, CloudUpload } from '@mui/icons-material';
 import { Typography } from '@mui/material';
+import { keyframes } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportLabel } from './ReportLabel';
+
+const upAndDown = keyframes({
+  '0%, 100%': { transform: 'translateY(-4px)' },
+  '50%': { transform: 'translateY(4px)' },
+});
 
 const useStyles = makeStyles()(({ palette, shape, transitions }) => ({
   drop: {
@@ -26,11 +32,7 @@ const useStyles = makeStyles()(({ palette, shape, transitions }) => ({
     margin: '4px 0 8px',
   },
   uploadIcon: {
-    animation: '$UpAndDown 1s ease-in-out infinite',
-  },
-  '@keyframes UpAndDown': {
-    '0%, 100%': { transform: 'translateY(-4px)' },
-    '50%': { transform: 'translateY(4px)' },
+    animation: `${upAndDown} 1s ease-in-out infinite`,
   },
 }));
 
