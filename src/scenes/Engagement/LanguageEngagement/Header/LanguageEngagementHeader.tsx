@@ -73,21 +73,23 @@ export const LanguageEngagementHeader = ({
       <Grid item>
         <Grid container spacing={3} alignItems="center">
           <Grid item className={langName ? undefined : classes.nameRedacted}>
-            <Typography
-              variant="h2"
-              {...(language
-                ? { component: Link, to: `/languages/${language.id}` }
-                : {})}
-            >
-              {langName ?? (
+            {language ? (
+              <Link variant="h2" to={`/languages/${language.id}`}>
+                {langName ?? (
+                  <Redacted
+                    info="You do not have permission to view this engagement's name"
+                    width="100%"
+                  />
+                )}
+              </Link>
+            ) : (
+              <Typography variant="h2">
                 <Redacted
-                  info={`You do not have permission to view this engagement's ${
-                    language ? 'name' : 'language'
-                  }`}
+                  info="You do not have permission to view this engagement's language"
                   width="100%"
                 />
-              )}
-            </Typography>
+              </Typography>
+            )}
           </Grid>
           {editable && (
             <Grid item>

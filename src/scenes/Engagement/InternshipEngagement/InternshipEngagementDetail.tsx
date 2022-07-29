@@ -96,21 +96,23 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                     item
                     className={name ? undefined : classes.nameRedacted}
                   >
-                    <Typography
-                      variant="h2"
-                      {...(intern
-                        ? { component: Link, to: `/users/${intern.id}` }
-                        : {})}
-                    >
-                      {name ?? (
+                    {intern ? (
+                      <Link variant="h2" to={`/users/${intern.id}`}>
+                        {name ?? (
+                          <Redacted
+                            info="You do not have permission to view this engagement's name"
+                            width="100%"
+                          />
+                        )}
+                      </Link>
+                    ) : (
+                      <Typography variant="h2">
                         <Redacted
-                          info={`You do not have permission to view this engagement's ${
-                            intern ? 'name' : 'intern'
-                          }`}
+                          info="You do not have permission to view this engagement's intern"
                           width="100%"
                         />
-                      )}
-                    </Typography>
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item>
                     <DeleteEngagement
