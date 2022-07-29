@@ -16,6 +16,7 @@ import { DateTime } from 'luxon';
 import { useContext, useRef } from 'react';
 import { Except } from 'type-fest';
 import { CalendarDate, Nullable } from '~/common';
+import { AllowFormCloseContext } from './AllowClose';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 import { required as requiredValidator, Validator } from './validators';
@@ -105,6 +106,8 @@ export const DateField = ({
     hasError
   );
 
+  const allowFormClose = useContext(AllowFormCloseContext);
+
   return (
     <DatePicker<CalendarDate | null | undefined>
       views={['year', 'month', 'day']}
@@ -125,10 +128,12 @@ export const DateField = ({
       value={value}
       onOpen={() => {
         open.current = true;
+        allowFormClose(input.name, false);
         onFocus();
       }}
       onClose={() => {
         open.current = false;
+        allowFormClose(input.name, true);
         onBlur();
       }}
       onChange={onChange}
