@@ -5,12 +5,15 @@ import { makeStyles } from 'tss-react/mui';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
 
 const useStyles = makeStyles()(({ palette }) => ({
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   Low: {
     color: grey[400],
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   Medium: {
     color: palette.warning.main,
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   High: {
     color: palette.error.main,
   },

@@ -21,10 +21,6 @@ const useStyles = makeStyles()(() => ({
   actionArea: {
     flex: 1,
   },
-  content: {
-    display: 'flex',
-    alignItems: 'center',
-  },
   icon: {
     fontSize: 80,
   },

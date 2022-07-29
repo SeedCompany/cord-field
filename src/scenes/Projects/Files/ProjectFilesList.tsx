@@ -53,22 +53,9 @@ const useStyles = makeStyles()(({ palette, spacing, breakpoints }) => ({
     width: '100%',
     height: '100%',
   },
-  headerContainer: {
-    margin: spacing(3, 0),
-    display: 'flex',
-  },
-  toolbarContainer: {
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    padding: spacing(1),
-    width: '100%',
-  },
   tableWrapper: {
     margin: spacing(4, 4, 4, 0),
     maxWidth: breakpoints.values.md,
-  },
-  folderLink: {
-    color: 'inherit',
   },
   fileName: {
     cursor: 'pointer',

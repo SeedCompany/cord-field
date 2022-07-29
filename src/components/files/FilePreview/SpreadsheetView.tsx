@@ -4,7 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 import { XLSX$Utils } from 'xlsx';
 import { useFileActions } from '../FileActions';
 
-const useStyles = makeStyles()(({ spacing }) => {
+const useStyles = makeStyles()(() => {
   const backgroundColor = '#e6e6e6';
   const borderColor = '#d8d8df';
   const headerBorderColor = '#d1cacb';
@@ -15,9 +15,6 @@ const useStyles = makeStyles()(({ spacing }) => {
     textAlign: 'center',
   } as const;
   return {
-    sheetHeader: {
-      marginBottom: spacing(2),
-    },
     container: {
       '& h2': {
         fontFamily: 'Arial',

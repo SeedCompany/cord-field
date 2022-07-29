@@ -40,17 +40,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
-  productList: {
-    padding: 0,
-    margin: spacing(0, 0, 1),
-  },
-  centerItems: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  iconSpacing: {
-    marginRight: spacing(1),
-  },
   presetInventory: {
     verticalAlign: 'bottom',
     marginLeft: spacing(1),

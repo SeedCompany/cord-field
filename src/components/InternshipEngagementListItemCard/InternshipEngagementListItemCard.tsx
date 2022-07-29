@@ -31,25 +31,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
-  leftContent: {
-    flex: 1,
-  },
-  rightContent: {
-    flex: 1,
-    textAlign: 'right',
-    marginLeft: spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  centerItems: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: spacing(2),
-  },
-  iconSpacing: {
-    marginRight: spacing(1),
-  },
 }));
 
 export type InternshipEngagementListItemCardProps =

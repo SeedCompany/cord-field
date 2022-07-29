@@ -21,7 +21,7 @@ import { useUploadManager } from './UploadManagerContext';
 const PAPER_WIDTH = 360;
 
 const useStyles = makeStyles<void, 'collapsed'>()(
-  ({ palette, spacing }, _props, classes) => ({
+  ({ spacing }, _props, classes) => ({
     root: {
       pointerEvents: 'none',
     },
@@ -59,9 +59,6 @@ const useStyles = makeStyles<void, 'collapsed'>()(
       [`&.${classes.collapsed}`]: {
         display: 'none',
       },
-    },
-    noUploadsText: {
-      color: palette.grey[400],
     },
     collapsed: {}, // here to pacify TypeScript
   })
