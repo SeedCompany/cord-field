@@ -196,11 +196,6 @@ export function DialogForm<T, R = void>({
               component: 'form',
             }}
             onSubmit={handleSubmit}
-            // This breaks MUI date picker's popup. This I believe is an acceptable
-            // compromise. Clicking off the dialog still closes it. It only affects
-            // keyboard navigation and accessibility. Maybe this can be removed
-            // with MUI v5.
-            disableEnforceFocus
             TransitionProps={mergedTransitionProps}
           >
             {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
