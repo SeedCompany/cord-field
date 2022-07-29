@@ -54,6 +54,7 @@ export const ProjectChangeRequestListItem = ({
           className={data ? undefined : classes.titleLoading}
         >
           <Typography
+            component="span"
             variant="inherit"
             color="primary"
             display="inline"
@@ -63,6 +64,7 @@ export const ProjectChangeRequestListItem = ({
           </Typography>
           <span className={classes.dash}>—</span>
           <Typography
+            component="span"
             variant="inherit"
             display="inline"
             style={data ? undefined : { width: '40%' }}
