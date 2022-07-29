@@ -14,7 +14,7 @@ import {
 } from '@mui/material/transitions';
 import { FormApi } from 'final-form';
 import { isFunction, mergeWith } from 'lodash';
-import { ReactNode, useMemo, useRef } from 'react';
+import { ReactNode, useCallback, useMemo, useRef } from 'react';
 import {
   Form,
   FormProps,
@@ -26,14 +26,14 @@ import { Except, Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError, inChangesetVar } from '~/api';
 import { callAll } from '~/common';
 import { ChangesetModificationWarning } from '../Changeset/ChangesetModificationWarning';
+import { AllowFormCloseContext } from '../form/AllowClose';
 import {
   blurOnSubmit,
-  FieldGroup,
   focusFirstFieldRegistered,
   focusFirstFieldWithSubmitError,
-  SubmitButton,
-  SubmitButtonProps,
-} from '../form';
+} from '../form/decorators';
+import { FieldGroup } from '../form/FieldGroup';
+import { SubmitButton, SubmitButtonProps } from '../form/SubmitButton';
 
 export type DialogFormProps<T, R = void> = Omit<
   FormProps<T>,
@@ -149,6 +149,11 @@ export function DialogForm<T, R = void>({
     );
   }, [DialogProps?.TransitionProps, TransitionProps]);
 
+  const fieldsPreventingClose = useRef(new Set());
+  const allowDialogClose = useCallback((key: string, allowed: boolean) => {
+    fieldsPreventingClose.current[allowed ? 'delete' : 'add'](key);
+  }, []);
+
   return (
     <Form<T>
       decorators={defaultDecorators}
@@ -184,7 +189,7 @@ export function DialogForm<T, R = void>({
             {...DialogProps}
             open={open}
             onClose={(e, reason) => {
-              if (submitting) {
+              if (submitting || fieldsPreventingClose.current.size > 0) {
                 return;
               }
               onClose?.(reason, form);
@@ -247,7 +252,9 @@ export function DialogForm<T, R = void>({
 
         return (
           <FieldGroup replace prefix={fieldsPrefix}>
-            {renderedForm}
+            <AllowFormCloseContext.Provider value={allowDialogClose}>
+              {renderedForm}
+            </AllowFormCloseContext.Provider>
           </FieldGroup>
         );
       }}
