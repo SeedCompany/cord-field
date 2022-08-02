@@ -1,5 +1,5 @@
 import { Components, Theme } from '@mui/material';
-import { alpha as fade, lighten } from '@mui/material/styles';
+import { alpha as fade } from '@mui/material/styles';
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 
@@ -147,55 +147,20 @@ export const appComponents = ({
       },
     },
     MuiToggleButtonGroup: {
-      styleOverrides: {
-        root: {
-          backgroundColor: palette.background.paper,
-        },
-        grouped: {
-          borderRadius: 'inherit', // conform to grouped radius
-          // re-apply default MUI styles that are removed below
-          '&.MuiToggleButton-root.Mui-selected': {
-            '& + &': {
-              borderLeft: 0,
-              marginLeft: 0,
-            },
-          },
-        },
+      defaultProps: {
+        color: 'info',
       },
     },
     MuiToggleButton: {
+      defaultProps: {
+        color: 'info',
+      },
       styleOverrides: {
         root: {
           textTransform: 'none',
-          color: palette.text.primary,
+          borderRadius: 14,
           '&:not(.MuiToggleButtonGroup-grouped)': {
-            backgroundColor: palette.background.paper,
-            borderRadius: 14, // if not grouped use this
             margin: spacing(1),
-          },
-          // $selected twice to increase specificity over selector above
-          '&$selected$selected': {
-            backgroundColor: '#2D9CDB',
-            color: palette.getContrastText('#2D9CDB'),
-            '&:hover': {
-              backgroundColor: lighten('#2D9CDB', 0.15),
-            },
-            '&$disabled': {
-              color: palette.getContrastText(fade('#2D9CDB', 0.4)),
-              backgroundColor: fade('#2D9CDB', 0.4),
-            },
-          },
-          // Remove spacing tweaks from MUI that assume the buttons are
-          // right next to each other without spacing.
-          // This selector has to match MUI's definition exactly
-          // because the nulls are merged/applied in JS not CSS.
-          // We revert this change above in ToggleButtonGroup, so that it only
-          // applies to grouped buttons and not single ones.
-          '&$selected': {
-            '& + &': {
-              borderLeft: null,
-              marginLeft: null,
-            },
           },
         },
       },
