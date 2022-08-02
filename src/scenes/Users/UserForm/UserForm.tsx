@@ -128,7 +128,7 @@ export const UserForm = <T, R = void>({
               label="About"
               multiline
               placeholder="Enter About"
-              inputProps={{ rowsMin: 2 }}
+              minRows={2}
               {...props}
             />
           )}

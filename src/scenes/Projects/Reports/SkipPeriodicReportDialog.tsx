@@ -75,7 +75,7 @@ export const SkipPeriodicReportDialog = ({
         label="Reason"
         placeholder="Why is this report being skipped?"
         multiline
-        inputProps={{ rowsMin: 2 }}
+        minRows={2}
       />
     </DialogForm>
   );

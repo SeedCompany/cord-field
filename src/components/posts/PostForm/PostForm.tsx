@@ -72,7 +72,7 @@ export const PostForm = <T, R = void>({
           variant="outlined"
           multiline
           placeholder="Say something..."
-          inputProps={{ rowsMin: 4 }}
+          minRows={4}
           validate={[required, minLength()]}
           {...props}
         />
