@@ -3,7 +3,7 @@ import { SkipNextRounded } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { PaperTooltip } from '../PaperTooltip';
 import { Redacted } from '../Redacted';

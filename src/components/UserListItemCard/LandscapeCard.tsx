@@ -1,9 +1,8 @@
 import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import * as React from 'react';
+import { square } from '~/common';
 import { UsersQueryVariables } from '../../scenes/Users/List/users.graphql';
-import { square } from '../../util';
 import { Avatar } from '../Avatar';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';

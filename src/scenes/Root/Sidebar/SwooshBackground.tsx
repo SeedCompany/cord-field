@@ -1,7 +1,5 @@
 import { makeStyles, SvgIcon, SvgIconProps } from '@material-ui/core';
 import clsx from 'clsx';
-import * as React from 'react';
-import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useUserAgent } from '../../../hooks';
 
@@ -12,10 +10,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const SwooshBackground: FC<SvgIconProps> = ({
+export const SwooshBackground = ({
   classes: classesProp,
   ...rest
-}) => {
+}: SvgIconProps) => {
   const classes = useStyles();
   const ua = useUserAgent();
   const isSafari = ua.includes('Safari') && !ua.includes('Chrome');

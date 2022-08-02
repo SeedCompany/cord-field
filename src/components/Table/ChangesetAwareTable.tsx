@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import { Components, MTableBodyRow } from 'material-table';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { ChangesetBadge, DiffMode } from '../Changeset';
 import { Cell, Container, Table, TableProps } from './Table';
 

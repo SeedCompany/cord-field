@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
-import React from 'react';
 import { Except } from 'type-fest';
-import { CreateFundingAccountInput } from '../../../../api';
+import { CreateFundingAccountInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,

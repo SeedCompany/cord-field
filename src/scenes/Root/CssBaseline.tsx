@@ -1,5 +1,4 @@
 import { makeStyles, CssBaseline as MuiCssBaseline } from '@material-ui/core';
-import * as React from 'react';
 
 const useStyles = makeStyles(() => ({
   // Use @global basically never

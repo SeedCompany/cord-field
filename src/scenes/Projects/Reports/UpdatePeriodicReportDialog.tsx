@@ -1,7 +1,8 @@
 import { pick } from 'lodash';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdatePeriodicReportInput } from '../../../api';
+import { UpdatePeriodicReportInput } from '~/api/schema.graphql';
+import { ExtractStrict, many, Many } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -13,7 +14,6 @@ import {
 } from '../../../components/form';
 import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.graphql';
 import { useUpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/useUpdatePeriodicReport';
-import { ExtractStrict, many, Many } from '../../../util';
 
 export type EditablePeriodicReportField = ExtractStrict<
   keyof UpdatePeriodicReportInput,

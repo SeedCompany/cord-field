@@ -1,6 +1,6 @@
 import { IconButton, IconButtonProps, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import React, { ComponentType, FC, useState } from 'react';
+import { ComponentType, useState } from 'react';
 import { Except } from 'type-fest';
 import { TextField, TextFieldProps } from './TextField';
 
@@ -9,13 +9,13 @@ export type PasswordFieldProps = Except<TextFieldProps, 'type' | 'name'> & {
   VisibilityToggle?: ComponentType<ToggleProps>;
   VisibilityToggleProps?: Partial<ToggleProps>;
 };
-export const PasswordField: FC<PasswordFieldProps> = ({
+export const PasswordField = ({
   name = 'password',
   VisibilityToggle,
   VisibilityToggleProps,
   InputProps,
   ...rest
-}) => {
+}: PasswordFieldProps) => {
   const [visible, setVisible] = useState(false);
   const Toggle = VisibilityToggle || PasswordIconToggle;
 

@@ -1,5 +1,4 @@
 import { Box, makeStyles, Typography } from '@material-ui/core';
-import React, { FC } from 'react';
 import { UploadFile, UploadState } from './Reducer/uploadTypings';
 import { UploadItem } from './UploadItem';
 
@@ -14,7 +13,7 @@ interface UploadItemsProps {
   state: UploadState;
 }
 
-export const UploadItems: FC<UploadItemsProps> = (props) => {
+export const UploadItems = (props: UploadItemsProps) => {
   const {
     state: { submittedFiles },
     removeUpload,

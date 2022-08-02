@@ -2,7 +2,7 @@ import { ErrorHandler } from '@apollo/client/link/error';
 import { IconButton } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 export const useErrorRendererRef = () => {
   // Using ref to store error handler function, so it can be swapped on each

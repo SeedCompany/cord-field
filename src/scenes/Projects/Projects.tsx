@@ -1,11 +1,10 @@
 import loadable from '@loadable/component';
-import React from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { splicePath } from '~/common';
 import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { Navigate } from '../../components/Routing';
 import { useBetaFeatures } from '../../components/Session';
-import { splicePath } from '../../util';
 
 const PartnershipList = loadable(() => import('../Partnerships/List'), {
   resolveComponent: (m) => m.PartnershipList,

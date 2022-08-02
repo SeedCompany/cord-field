@@ -5,7 +5,6 @@ import {
   ListItemText,
   makeStyles,
 } from '@material-ui/core';
-import React, { FC } from 'react';
 import { useDateTimeFormatter } from '../../Formatters';
 import {
   FileActionsPopup as ActionsMenu,
@@ -34,7 +33,7 @@ interface FileVersionItemProps {
   actions: FileAction[];
 }
 
-export const FileVersionItem: FC<FileVersionItemProps> = (props) => {
+export const FileVersionItem = (props: FileVersionItemProps) => {
   const classes = useStyles();
   const formatDate = useDateTimeFormatter();
   const { openFilePreview } = useFileActions();

@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import parse from 'html-react-parser';
 import mammoth, { MammothOptions } from 'mammoth';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const WordPreview: FC<PreviewerProps> = (props) => {
+export const WordPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<ReturnType<typeof parse> | null>(null);
   const classes = useStyles();

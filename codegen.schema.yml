@@ -43,7 +43,7 @@ generates:
           placement: prepend
           content: |
             import { DateTime } from 'luxon';
-            import { CalendarDate } from '~/util';
+            import { CalendarDate } from '~/common';
     config:
       scalars:
         Date: CalendarDate

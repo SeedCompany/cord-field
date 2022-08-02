@@ -6,11 +6,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import * as React from 'react';
 import { ReactElement, ReactNode } from 'react';
+import { square } from '~/common';
 import { Avatar } from '../../../../components/Avatar';
 import { UserListItemCardPortrait as UserCard } from '../../../../components/UserListItemCard';
-import { square } from '../../../../util';
 import { MentorCardFragment } from './MentorCard.graphql';
 
 const useStyles = makeStyles(({ palette }) => ({

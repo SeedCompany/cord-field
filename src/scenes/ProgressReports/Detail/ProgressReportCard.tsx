@@ -1,5 +1,4 @@
 import { Tooltip } from '@material-ui/core';
-import React from 'react';
 import {
   DefinedFileCard,
   DefinedFileCardProps,

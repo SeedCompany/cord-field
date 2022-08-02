@@ -8,13 +8,12 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React from 'react';
 import {
   ApproachIcons,
   displayMethodology,
+  listOrPlaceholders,
   MethodologyToApproach,
-} from '../../api';
-import { listOrPlaceholders } from '../../util';
+} from '~/common';
 import { MethodologiesCardFragment } from './MethodologiesCard.graphql';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({

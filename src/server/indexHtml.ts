@@ -1,7 +1,7 @@
 import { ChunkExtractor } from '@loadable/server';
 import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
 import { HelmetServerState as HelmetData } from 'react-helmet-async';
-import { trailingSlash } from '../util';
+import { trailingSlash } from '~/common';
 
 export const indexHtml = ({
   helmet,

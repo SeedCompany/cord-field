@@ -1,7 +1,7 @@
 import { identity } from 'lodash';
-import * as React from 'react';
 import { ReactNode } from 'react';
-import { Entity, UnsecuredProp, unwrapSecured } from '../../api';
+import { Entity } from '~/api';
+import { UnsecuredProp, unwrapSecured } from '~/common';
 import { ChangesetBadge } from './ChangesetBadge';
 import {
   EntityFromChangesetDiff,

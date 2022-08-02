@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client';
 import { Alert } from '@material-ui/lab';
 import { isBoolean } from 'lodash';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { ProductStepLabels, ProgressMeasurement } from '~/api/schema';
+import { ProductStepLabels, ProgressMeasurement } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,

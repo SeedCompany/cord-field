@@ -7,7 +7,7 @@ import {
   Switch,
   SwitchProps,
 } from '@material-ui/core';
-import React, { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 
@@ -21,7 +21,7 @@ export type SwitchFieldProps = FieldConfig<boolean> & {
     offIsNull?: boolean;
   };
 
-export const SwitchField: FC<SwitchFieldProps> = ({
+export const SwitchField = ({
   label,
   labelPlacement,
   helperText,
@@ -30,7 +30,7 @@ export const SwitchField: FC<SwitchFieldProps> = ({
   margin,
   variant,
   ...props
-}) => {
+}: SwitchFieldProps) => {
   const { input, meta, ref, rest } = useField({
     defaultValue: offIsNull ? null : false,
     allowNull: offIsNull,

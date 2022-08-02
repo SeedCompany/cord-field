@@ -2,7 +2,6 @@ import { Box } from '@material-ui/core';
 import { AccountBalance } from '@material-ui/icons';
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { dateTime } from '../knobs.stories';
 import { AddCurrentPath } from '../Routing/decorators.stories';
 import { FieldOverviewCard as Card } from './FieldOverviewCard';

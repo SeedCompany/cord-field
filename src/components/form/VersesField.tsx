@@ -11,7 +11,7 @@ import {
   AutocompleteRenderInputParams,
 } from '@material-ui/lab';
 import { isEqual, uniqWith } from 'lodash';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Except } from 'type-fest';
 import {
   formatScriptureRange,
@@ -20,7 +20,7 @@ import {
   ScriptureError,
   ScriptureRange,
   validateScriptureRange,
-} from '../../util/biblejs';
+} from '../../common/biblejs';
 import { FieldConfig, useField } from './useField';
 import {
   areListsDeepEqual,
@@ -213,6 +213,7 @@ export function VersesField({
                 deleteIcon: classes.chipDeleteIcon,
               }}
               className={classes.chip}
+              key={index}
             />
           );
         });

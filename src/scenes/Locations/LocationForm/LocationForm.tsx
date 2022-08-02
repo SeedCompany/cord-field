@@ -1,12 +1,11 @@
 import { Grid } from '@material-ui/core';
-import React from 'react';
 import { Merge } from 'type-fest';
 import {
   CreateLocation,
   LocationTypeLabels,
   LocationTypeList,
   UpdateLocation,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

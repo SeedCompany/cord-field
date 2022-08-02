@@ -1,4 +1,3 @@
-import React from 'react';
 import { ProfileMenu as PM } from './ProfileMenu';
 
 export default { title: 'Scenes/Root/Header' };

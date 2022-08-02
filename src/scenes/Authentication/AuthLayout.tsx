@@ -1,6 +1,6 @@
 import { makeStyles, ThemeProvider } from '@material-ui/core';
-import React, { FC } from 'react';
 import { Outlet } from 'react-router-dom';
+import { ChildrenProp } from '~/common';
 import { Picture } from '../../components/Picture';
 import { createTheme } from '../../theme';
 import backgroundImg from './background.png';
@@ -29,7 +29,7 @@ const useStyles = makeStyles(
 
 const authTheme = createTheme({ dark: true });
 
-const ThemedLayout: FC = ({ children }) => {
+const ThemedLayout = ({ children }: ChildrenProp) => {
   const classes = useStyles(); // has auth theme applied
   return (
     <ThemeProvider theme={authTheme}>
@@ -41,7 +41,7 @@ const ThemedLayout: FC = ({ children }) => {
   );
 };
 
-export const AuthLayout: FC = (props) => (
+export const AuthLayout = (props: ChildrenProp) => (
   <ThemeProvider theme={authTheme}>
     <ThemedLayout {...props} />
   </ThemeProvider>

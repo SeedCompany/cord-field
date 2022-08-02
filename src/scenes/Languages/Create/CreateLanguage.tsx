@@ -1,13 +1,10 @@
 import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
-import React from 'react';
 import { Except } from 'type-fest';
-import {
-  addItemToList,
-  CreateLanguage as CreateLanguageType,
-} from '../../../api';
+import { addItemToList } from '~/api';
+import { CreateLanguage as CreateLanguageType } from '~/api/schema.graphql';
+import { CalendarDate } from '~/common';
 import { ButtonLink } from '../../../components/Routing';
-import { CalendarDate } from '../../../util';
 import {
   LanguageForm,
   LanguageFormProps,

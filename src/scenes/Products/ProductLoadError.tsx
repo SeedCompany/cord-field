@@ -1,4 +1,3 @@
-import React from 'react';
 import { Except } from 'type-fest';
 import { Error, ErrorProps } from '../../components/Error';
 

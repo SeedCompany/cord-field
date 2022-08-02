@@ -1,7 +1,6 @@
 import { Grid } from '@material-ui/core';
 import { memoize } from 'lodash';
-import React from 'react';
-import { RoleLabels, RoleList } from '~/api/schema';
+import { RoleLabels, RoleList } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

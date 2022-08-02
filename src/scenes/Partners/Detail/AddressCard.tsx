@@ -8,8 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
-import { canEditAny } from '../../../api';
+import { canEditAny } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
@@ -42,11 +41,11 @@ interface AddressCardProps {
   className?: string;
 }
 
-export const AddressCard: FC<AddressCardProps> = ({
+export const AddressCard = ({
   partner,
   className,
   onEdit,
-}) => {
+}: AddressCardProps) => {
   const classes = useStyles();
 
   // TODO: Implement full address saving and parsing (st, city, state, etc)

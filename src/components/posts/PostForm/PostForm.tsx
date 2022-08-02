@@ -1,12 +1,11 @@
 import { Grid } from '@material-ui/core';
 import { without } from 'lodash';
-import React from 'react';
 import {
   PostShareability,
   PostShareabilityLabels,
   PostShareabilityList,
   PostTypeList,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -53,7 +52,7 @@ export const PostForm = <T, R = void>({
           name="type"
           options={PostTypeList}
           variant="outlined"
-          defaultValue={'Note'}
+          defaultValue="Note"
         />
       </Grid>
       <Grid item xs>
@@ -63,7 +62,7 @@ export const PostForm = <T, R = void>({
           options={shareabilityList(includeMembership)}
           variant="outlined"
           getOptionLabel={labelFrom(PostShareabilityLabels)}
-          defaultValue={'Internal'}
+          defaultValue="Internal"
         />
       </Grid>
     </Grid>

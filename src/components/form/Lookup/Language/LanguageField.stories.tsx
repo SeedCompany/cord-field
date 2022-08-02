@@ -1,12 +1,12 @@
 import { action } from '@storybook/addon-actions';
-import React, { FC } from 'react';
 import { Form } from 'react-final-form';
+import { ChildrenProp } from '~/common';
 import { FieldSpy } from '../../FieldSpy';
 import { LanguageField } from './LanguageField';
 
 export default { title: 'Components/Forms/Fields/Lookup/Language' };
 
-const FF: FC = ({ children }) => (
+const FF = ({ children }: ChildrenProp) => (
   <Form
     onSubmit={action('submit')}
     initialValues={{

@@ -13,9 +13,10 @@ import {
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import { DateTime } from 'luxon';
-import React, { FC, forwardRef, ReactNode } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CreateDefinedFileVersionInput, SecuredProp } from '../../api';
+import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
+import { SecuredProp } from '~/common';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -114,12 +115,12 @@ interface FileCardMetaProps {
   text: ReactNode;
 }
 
-const FileCardMeta: FC<FileCardMetaProps> = ({
+const FileCardMeta = ({
   canRead,
   loading,
   resourceType,
   text,
-}) => {
+}: FileCardMetaProps) => {
   const classes = useStyles();
   return (
     <Typography

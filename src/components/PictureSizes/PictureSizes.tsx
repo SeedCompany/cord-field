@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useDebugValue,
-} from 'react';
+import { createContext, ReactNode, useContext, useDebugValue } from 'react';
 
 const PictureSizesContext = createContext('100vw');
 

@@ -1,19 +1,21 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
+import {
+  callAll,
+  entries,
+  getFullBookRange,
+  isFullBookRange,
+  mapFromList,
+  removeScriptureTypename,
+} from '~/common';
 import { handleFormError, removeItemFromList } from '../../../api';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { callAll, entries, mapFromList } from '../../../util';
-import {
-  getFullBookRange,
-  isFullBookRange,
-  removeScriptureTypename,
-} from '../../../util/biblejs';
 import {
   ProductForm,
   ProductFormProps,

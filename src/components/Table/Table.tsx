@@ -6,10 +6,10 @@ import {
   withStyles,
 } from '@material-ui/core';
 import {
-  Check,
-  Clear,
-  Edit,
-  ArrowDownward as SortArrow,
+  Check as CheckIcon,
+  Clear as ClearIcon,
+  Edit as EditIcon,
+  ArrowDownward as SortArrowIcon,
 } from '@material-ui/icons';
 import { startCase } from 'lodash';
 import MaterialTable, {
@@ -18,7 +18,7 @@ import MaterialTable, {
   MaterialTableProps,
   MTableCell,
 } from 'material-table';
-import React, { forwardRef, useMemo } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { Merge } from 'type-fest';
 
 export type TableProps<RowData extends Record<string, any>> = Merge<
@@ -29,10 +29,18 @@ export type TableProps<RowData extends Record<string, any>> = Merge<
 >;
 
 const defaultIcons: Icons = {
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <SortArrow {...props} ref={ref} />),
+  Check: forwardRef(function Check(props, ref) {
+    return <CheckIcon {...props} ref={ref} />;
+  }),
+  Clear: forwardRef(function Clear(props, ref) {
+    return <ClearIcon {...props} ref={ref} />;
+  }),
+  Edit: forwardRef(function Edit(props, ref) {
+    return <EditIcon {...props} ref={ref} />;
+  }),
+  SortArrow: forwardRef(function SortArrow(props, ref) {
+    return <SortArrowIcon {...props} ref={ref} />;
+  }),
 };
 
 export const Container = withStyles(() => ({

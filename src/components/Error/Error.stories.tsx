@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { boolean } from '@storybook/addon-knobs';
 import { GraphQLError } from 'graphql';
-import React from 'react';
 import { Error as ErrorComponent } from './Error';
 
 export default { title: 'Components/Error' };

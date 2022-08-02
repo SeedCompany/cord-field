@@ -1,10 +1,7 @@
 import { StoreObject } from '@apollo/client/utilities';
-import {
-  IdFragment,
-  ProductProgress,
-  StepProgress,
-  Storable,
-} from '../../../api';
+import { Storable } from '~/api';
+import { ProductProgress, StepProgress } from '~/api/schema.graphql';
+import { IdFragment } from '~/common';
 import { modifyProgressRelatingToEngagement } from '../ProgressRefsRelatingToEngagement';
 import { CreateDirectScriptureProductMutation as CreateProductMutation } from './CreateProduct.graphql';
 

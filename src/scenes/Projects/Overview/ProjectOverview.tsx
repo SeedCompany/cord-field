@@ -3,11 +3,10 @@ import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Add, DateRange, Edit, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React, { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { ProjectStepLabels } from '~/api/schema';
-import { labelFrom } from '~/common';
+import { ProjectStepLabels } from '~/api/schema.graphql';
+import { labelFrom, Many } from '~/common';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
@@ -37,7 +36,6 @@ import { Redacted } from '../../../components/Redacted';
 import { SensitivityIcon } from '../../../components/Sensitivity';
 import { useBetaFeatures } from '../../../components/Session';
 import { TogglePinButton } from '../../../components/TogglePinButton';
-import { Many } from '../../../util';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
@@ -105,7 +103,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
   },
 }));
 
-export const ProjectOverview: FC = () => {
+export const ProjectOverview = () => {
   const classes = useStyles();
   const { projectId, changesetId } = useProjectId();
   const beta = useBetaFeatures();

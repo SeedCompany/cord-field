@@ -1,4 +1,3 @@
-import React from 'react';
 import { Except } from 'type-fest';
 import { DialogForm, DialogFormProps } from '../Dialog/DialogForm';
 import { DropzoneField, SubmitError } from '../form';

@@ -1,8 +1,6 @@
 import { SvgIcon, SvgIconProps } from '@material-ui/core';
-import * as React from 'react';
-import { FC } from 'react';
 
-export const PushPinIconFilled: FC<SvgIconProps> = (props) => (
+export const PushPinIconFilled = (props: SvgIconProps) => (
   <SvgIcon {...props} viewBox="0 0 24 24">
     <g>
       <rect fill="none" height="24" width="24" />

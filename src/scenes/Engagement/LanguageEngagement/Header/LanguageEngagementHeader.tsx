@@ -6,10 +6,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import { DateRange, Edit } from '@material-ui/icons';
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { EngagementStatusLabels } from '~/api/schema';
-import { canEditAny, labelFrom } from '~/common';
+import { EngagementStatusLabels } from '~/api/schema.graphql';
+import { canEditAny, labelFrom, Many } from '~/common';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { DataButton } from '../../../../components/DataButton';
 import { useDialog } from '../../../../components/Dialog';
@@ -23,7 +22,6 @@ import { PresetInventoryIconFilled } from '../../../../components/Icons';
 import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
-import { Many } from '../../../../util';
 import { DeleteEngagement } from '../../Delete';
 import { EngagementToDeleteFragment } from '../../Delete/DeleteEngagement.graphql';
 import {
@@ -171,7 +169,7 @@ export const LanguageEngagementHeader = ({
               ptRegistryId.value &&
               `Paratext Registry ID: ${ptRegistryId.value}`
             }
-            empty={'Enter Paratext Registry ID'}
+            empty="Enter Paratext Registry ID"
           />
         </Grid>
         <BooleanProperty

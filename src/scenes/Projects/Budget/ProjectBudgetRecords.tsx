@@ -1,7 +1,7 @@
 import { useApolloClient, useMutation } from '@apollo/client';
 import { sortBy, sumBy } from 'lodash';
 import { Column, Components } from 'material-table';
-import React, { FC, useMemo } from 'react';
+import { useMemo } from 'react';
 import { onUpdateChangeFragment, readFragment } from '~/api';
 import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
 import {
@@ -36,7 +36,7 @@ interface ProjectBudgetRecordsProps {
   loading: boolean;
 }
 
-export const ProjectBudgetRecords: FC<ProjectBudgetRecordsProps> = (props) => {
+export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
   const { loading, budget } = props;
   const formatCurrency = useCurrencyFormatter();
   const apollo = useApolloClient();

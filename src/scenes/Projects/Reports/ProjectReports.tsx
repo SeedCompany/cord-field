@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
-import React from 'react';
-import { ReportType } from '../../../api';
+import { ReportType } from '~/api/schema.graphql';
 import { Error } from '../../../components/Error';
 import { PeriodicReportsList } from '../../../components/PeriodicReports/PeriodicReportsList';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -34,7 +33,7 @@ export const ProjectReports = ({ type }: { type: ReportType }) => {
     <PeriodicReportsList
       type={type}
       reports={data?.project.reports.items}
-      breadcrumbs={[<ProjectBreadcrumb data={data?.project} />]}
+      breadcrumbs={[<ProjectBreadcrumb key="project" data={data?.project} />]}
       pageTitleSuffix={data?.project.name.value ?? 'A Project'}
     />
   );

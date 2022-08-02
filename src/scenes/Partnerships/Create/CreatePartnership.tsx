@@ -1,12 +1,9 @@
 import { useMutation } from '@apollo/client';
-import React from 'react';
 import { Except } from 'type-fest';
-import {
-  addItemToList,
-  CreatePartnership as CreatePartnershipType,
-} from '../../../api';
+import { addItemToList } from '~/api';
+import { CreatePartnership as CreatePartnershipType } from '~/api/schema.graphql';
+import { callAll } from '~/common';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
-import { callAll } from '../../../util';
 import { updateOldPrimaryPartnership } from '../Edit';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
 import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';

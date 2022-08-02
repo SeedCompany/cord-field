@@ -1,4 +1,4 @@
-import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers/types';
+import { PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
 import { GraphQLSchema } from 'graphql';
 import {
   CodeBlockWriter,

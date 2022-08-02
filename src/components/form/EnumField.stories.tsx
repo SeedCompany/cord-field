@@ -2,7 +2,6 @@ import { Box } from '@material-ui/core';
 import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import { startCase } from 'lodash';
-import React from 'react';
 import { Form } from 'react-final-form';
 import { Except } from 'type-fest';
 import { csv } from '../../util';

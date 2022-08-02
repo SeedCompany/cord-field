@@ -1,8 +1,7 @@
-// eslint-disable-next-line no-restricted-imports -- need an external link
+// eslint-disable-next-line @seedcompany/no-restricted-imports -- need an external link
 import { IconButton, Link } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { useSnackbar } from 'notistack';
-import React from 'react';
 import { useIsomorphicEffect } from '../../hooks';
 
 export const useNonProdWarning = () => {

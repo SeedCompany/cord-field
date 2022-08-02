@@ -1,6 +1,5 @@
 import { Button, ButtonProps, fade, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import React, { FC } from 'react';
 import { Except } from 'type-fest';
 
 const useStyles = makeStyles(({ palette }) => ({
@@ -25,10 +24,10 @@ const useStyles = makeStyles(({ palette }) => ({
 
 export type ErrorButtonProps = Except<ButtonProps, 'color'>;
 
-export const ErrorButton: FC<ErrorButtonProps> = ({
+export const ErrorButton = ({
   classes: classesProp = {},
   ...rest
-}) => {
+}: ErrorButtonProps) => {
   const classes = useStyles();
   return (
     <Button

@@ -4,13 +4,12 @@ import {
   IconButton as MUIIconButton,
   IconButtonProps as MUIIconButtonProps,
 } from '@material-ui/core';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Palette, PaletteColor } from '@material-ui/core/styles/createPalette';
 import { Skeleton } from '@material-ui/lab';
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @seedcompany/no-restricted-imports
 import { CSSProperties } from '@material-ui/styles';
 import clsx from 'clsx';
-import * as React from 'react';
 import { forwardRef } from 'react';
 import { Except } from 'type-fest';
 

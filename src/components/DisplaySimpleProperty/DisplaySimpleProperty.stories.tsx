@@ -1,5 +1,4 @@
 import { boolean, select, text } from '@storybook/addon-knobs';
-import * as React from 'react';
 import { DisplaySimpleProperty as DSP } from './DisplaySimpleProperty';
 
 export default {

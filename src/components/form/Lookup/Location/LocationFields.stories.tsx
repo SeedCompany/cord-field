@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
-import React, { FC } from 'react';
 import { Form } from 'react-final-form';
+import { ChildrenProp } from '~/common';
 import { FieldSpy } from '../../FieldSpy';
 import {
   FieldRegionField,
@@ -11,7 +11,7 @@ import {
 
 export default { title: 'Components/Forms/Fields/Lookup/Location' };
 
-const FF: FC = ({ children }) => (
+const FF = ({ children }: ChildrenProp) => (
   <Form
     onSubmit={action('submit')}
     initialValues={{

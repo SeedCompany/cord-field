@@ -1,15 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import { addItemToList, handleFormError } from '../../../api';
+import { addItemToList, handleFormError } from '~/api';
+import { callAll, entries, getFullBookRange, mapFromList } from '~/common';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { callAll, entries, mapFromList } from '../../../util';
-import { getFullBookRange } from '../../../util/biblejs';
 import {
   ProductForm,
   ProductFormProps,

@@ -8,7 +8,6 @@ import {
   Cancel as CancelIcon,
   CheckCircle as CheckIcon,
 } from '@material-ui/icons';
-import React, { FC } from 'react';
 import { UploadFile } from './Reducer';
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
@@ -56,7 +55,7 @@ interface UploadItemProps {
   onClear: () => void;
 }
 
-export const UploadItem: FC<UploadItemProps> = (props) => {
+export const UploadItem = (props: UploadItemProps) => {
   const { file, onClear } = props;
   const { error, fileName, percentCompleted, uploadId, completedAt } = file;
   const classes = useStyles();

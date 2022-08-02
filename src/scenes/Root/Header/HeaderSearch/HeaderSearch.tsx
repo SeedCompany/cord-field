@@ -1,7 +1,5 @@
 import { InputAdornment, makeStyles } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import { FC } from 'react';
-import * as React from 'react';
 import { Form } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '../../../../components/form';
@@ -22,7 +20,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
   },
 }));
 
-export const HeaderSearch: FC = () => {
+export const HeaderSearch = () => {
   const classes = useStyles();
   const [{ q: search = '' }] = useSearch();
   const navigate = useNavigate();

@@ -6,8 +6,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import clsx from 'clsx';
-import { FC } from 'react';
-import * as React from 'react';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
 import { FundingAccountCardFragment } from './FundingAccountCard.graphql';
@@ -32,10 +30,10 @@ interface FundingAccountCardProps {
   fundingAccount: FundingAccountCardFragment;
 }
 
-export const FundingAccountCard: FC<FundingAccountCardProps> = ({
+export const FundingAccountCard = ({
   className,
   fundingAccount,
-}) => {
+}: FundingAccountCardProps) => {
   const classes = useStyles();
 
   return (

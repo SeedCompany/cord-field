@@ -1,8 +1,7 @@
 import { Card, CardProps, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import * as React from 'react';
 import { Children, Fragment } from 'react';
-import { applyBreakpoint, BreakpointAt } from '../../util';
+import { applyBreakpoint, BreakpointAt } from '~/common';
 import { ResponsiveDivider } from '../ResponsiveDivider';
 
 export interface CardGroupProps extends CardProps {

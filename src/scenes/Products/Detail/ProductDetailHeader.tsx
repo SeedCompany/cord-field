@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';

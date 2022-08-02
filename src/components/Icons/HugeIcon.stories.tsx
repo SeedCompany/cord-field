@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core';
 import { Home } from '@material-ui/icons';
-import * as React from 'react';
 import { CordIcon } from './CordIcon';
 import { HugeIcon } from './HugeIcon';
 

@@ -1,8 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
-import React from 'react';
 import { Except } from 'type-fest';
-import { CreateLocation as CreateLocationType } from '../../../api';
+import { CreateLocation as CreateLocationType } from '~/api/schema.graphql';
 import { ButtonLink } from '../../../components/Routing';
 import {
   LocationForm,

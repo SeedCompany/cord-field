@@ -1,5 +1,5 @@
 import { plugin as basePlugin } from '@graphql-codegen/named-operations-object';
-import type { PluginFunction } from '@graphql-codegen/plugin-helpers/types';
+import type { PluginFunction } from '@graphql-codegen/plugin-helpers';
 
 export const plugin: PluginFunction = async (...args) => {
   const result = await basePlugin(...args);

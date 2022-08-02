@@ -7,15 +7,14 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { ReactNode } from 'react';
-import { ProductMediumLabels, ProductStepLabels } from '~/api/schema';
-import { displayMethodologyWithLabel } from '~/common';
+import { ReactNode } from 'react';
+import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
+import { displayMethodologyWithLabel, mapFromList } from '~/common';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
 import { Link } from '../../../components/Routing';
-import { mapFromList } from '../../../util';
 import { ProductDetailFragment as Product } from './ProductDetail.graphql';
 
 const useStyles = makeStyles(() => ({

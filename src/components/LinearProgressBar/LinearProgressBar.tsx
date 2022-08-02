@@ -1,6 +1,5 @@
 import { Box, LinearProgress, Typography } from '@material-ui/core';
-import * as React from 'react';
-import { ProgressMeasurement } from '../../api';
+import { ProgressMeasurement } from '~/api/schema.graphql';
 
 interface LinearProgressBarProps {
   value: number;

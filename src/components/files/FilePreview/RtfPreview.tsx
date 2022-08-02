@@ -1,10 +1,10 @@
 import * as rtfToHTML from '@iarna/rtf-to-html';
 import parse from 'html-react-parser';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
-export const RtfPreview: FC<PreviewerProps> = (props) => {
+export const RtfPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<ReturnType<typeof parse> | null>(null);
 

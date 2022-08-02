@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
-import * as React from 'react';
-import { FC, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { ChildrenProp } from '~/common';
 import { inChangesetVar } from '../../api';
 import {
   UpdateProjectChangeRequest,
@@ -18,7 +18,7 @@ import { useChangesetAwareIdFromUrl } from './useChangesetAwareIdFromUrl';
  * It displays the changeset banner before its children.
  * This has to be used in a spot where an ID with changeset is already in context.
  */
-export const ChangesetContext: FC = ({ children }) => {
+export const ChangesetContext = ({ children }: ChildrenProp) => {
   const params = useParams();
   // First route param key with a ~ in its value
   const key = useMemo(

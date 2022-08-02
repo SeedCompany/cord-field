@@ -11,9 +11,9 @@ import {
 import { Add, Edit } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import { Many } from 'lodash';
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { listOrPlaceholders, square } from '~/common';
 import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
@@ -24,7 +24,6 @@ import { IconButton } from '../../../components/IconButton';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { TogglePinButton } from '../../../components/TogglePinButton';
 import { UserListItemCardPortrait } from '../../../components/UserListItemCard';
-import { listOrPlaceholders, square } from '../../../util';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
 import { AddressCard } from './AddressCard';
@@ -170,7 +169,7 @@ export const PartnerDetail = () => {
                 redacted="You do not have permission to view Status"
                 children={partner?.active.value ? 'Active' : 'Inactive'}
                 loading={!partner}
-                empty={'Enter Status'}
+                empty="Enter Status"
               />
             </Grid>
             <Grid item>
@@ -182,7 +181,7 @@ export const PartnerDetail = () => {
                   partner?.pmcEntityCode.value &&
                   `PMC Entity Code: ${partner.pmcEntityCode.value}`
                 }
-                empty={'Enter PMC Entity Code'}
+                empty="Enter PMC Entity Code"
                 loading={!partner}
               />
             </Grid>

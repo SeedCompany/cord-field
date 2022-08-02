@@ -1,8 +1,8 @@
+import { isTypename } from '~/common';
 import {
   FileNodeInfo_Directory_Fragment as Directory,
   FileNodeInfo_File_Fragment,
 } from '../../../components/files/files.graphql';
-import { isTypename } from '../../../util';
 
 export type { Directory };
 

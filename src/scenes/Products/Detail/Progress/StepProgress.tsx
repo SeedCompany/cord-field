@@ -6,8 +6,7 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import React from 'react';
-import { ProductStepLabels, ProgressMeasurement } from '~/api/schema';
+import { ProductStepLabels, ProgressMeasurement } from '~/api/schema.graphql';
 import { StepProgressFragment } from './ProductProgress.graphql';
 import { ProgressIcon } from './ProgressIcon';
 

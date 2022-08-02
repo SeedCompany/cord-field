@@ -1,6 +1,5 @@
 import { List, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Home as HomeIcon, Launch, Lock } from '@material-ui/icons';
-import React from 'react';
 import { ListItemLink as LIL } from './ListItemLink';
 
 export default { title: 'Components/Routing' };

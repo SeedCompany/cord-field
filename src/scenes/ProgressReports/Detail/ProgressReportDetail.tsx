@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { Edit, SkipNextRounded as SkipIcon } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useWindowSize } from 'react-use';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -54,7 +53,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const ProgressReportDetail: FC = () => {
+export const ProgressReportDetail = () => {
   const classes = useStyles();
   const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
   const windowSize = useWindowSize();
@@ -92,9 +91,10 @@ export const ProgressReportDetail: FC = () => {
         <Helmet title="Progress Report" />
         <Breadcrumbs
           children={[
-            <ProjectBreadcrumb data={engagement?.project} />,
-            <EngagementBreadcrumb data={engagement} />,
+            <ProjectBreadcrumb key="project" data={engagement?.project} />,
+            <EngagementBreadcrumb key="engagement" data={engagement} />,
             <Breadcrumb
+              key="report-list"
               to={
                 engagement
                   ? `/engagements/${idForUrl(engagement)}/reports/progress`
@@ -103,7 +103,7 @@ export const ProgressReportDetail: FC = () => {
             >
               {!report ? <Skeleton width={200} /> : 'Progress Reports'}
             </Breadcrumb>,
-            <Breadcrumb to=".">
+            <Breadcrumb key="report" to=".">
               {!report ? (
                 <Skeleton width={200} />
               ) : (

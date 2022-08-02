@@ -1,15 +1,15 @@
 import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
-import React, { ComponentType, useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
   FinancialReportingTypeLabels,
   FinancialReportingTypeList,
   PartnerTypeList,
   UpdatePartner,
-} from '~/api/schema';
-import { labelFrom } from '~/common';
+} from '~/api/schema.graphql';
+import { ExtractStrict, labelFrom, Many, many } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -22,7 +22,6 @@ import {
 } from '../../../components/form';
 import { UserField, UserLookupItem } from '../../../components/form/Lookup';
 import { isLength } from '../../../components/form/validators';
-import { ExtractStrict, many, Many } from '../../../util';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdateOrganizationNameDocument } from './EditOrganizationName.graphql';
 import { UpdatePartnerDocument } from './EditPartner.graphql';

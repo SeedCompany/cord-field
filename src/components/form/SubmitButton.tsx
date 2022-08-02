@@ -1,7 +1,6 @@
 import { FORM_ERROR, setIn } from 'final-form';
 import { cloneDeep, omit } from 'lodash';
-import { FC, useMemo } from 'react';
-import * as React from 'react';
+import { Children, useMemo } from 'react';
 import { useForm, useFormState } from 'react-final-form';
 import { ProgressButton, ProgressButtonProps } from '../ProgressButton';
 
@@ -31,13 +30,13 @@ export interface SubmitAction<T extends string = string> {
  * A Submit Button for a form. Handles when button should be disabled
  * and when to show progress spinner (if enabled).
  */
-export const SubmitButton: FC<SubmitButtonProps> = ({
+export const SubmitButton = ({
   children,
   spinner = true,
   action,
   disabled,
   ...rest
-}) => {
+}: SubmitButtonProps) => {
   const form = useForm('SubmitButton');
   const {
     hasValidationErrors,
@@ -116,7 +115,7 @@ export const SubmitButton: FC<SubmitButtonProps> = ({
       }
       progress={spinner && submitting && values.submitAction === action}
     >
-      {React.Children.count(children) ? children : 'Submit'}
+      {Children.count(children) ? children : 'Submit'}
     </ProgressButton>
   );
 };

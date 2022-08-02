@@ -2,7 +2,7 @@ import { ApolloCache, useQuery } from '@apollo/client';
 import { pickBy } from 'lodash';
 import LogRocket from 'logrocket';
 import { useEffect } from 'react';
-import { SessionOutput } from '../../api';
+import { SessionOutput } from '~/api/schema.graphql';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
 import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
 import { LoggedInUserFragment, SessionDocument } from './session.graphql';

@@ -7,18 +7,17 @@ import {
   Response as ExpressResponse,
 } from 'express';
 import { pickBy } from 'lodash';
-import React from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
-import ReactDOMServer from 'react-dom/server';
+import { renderToString } from 'react-dom/server';
 import { FilledContext, HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
-import { createClient } from '../api/client/createClient';
-import { ErrorCache } from '../api/client/links/errorCache.link';
+import { createClient } from '~/api/client/createClient';
+import { ErrorCache } from '~/api/client/links/errorCache.link';
+import { basePathOfUrl, trailingSlash } from '~/common';
 import { App } from '../App';
 import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
 import { RequestContext } from '../hooks';
-import { basePathOfUrl, trailingSlash } from '../util';
 import { indexHtml } from './indexHtml';
 
 const basePath = basePathOfUrl(process.env.PUBLIC_URL);
@@ -47,7 +46,7 @@ export const renderServerSideApp = async (
     tree: <ServerApp req={req} apollo={apollo} helmetContext={helmetContext} />,
     renderFunction: (tree) => {
       resetServerContext();
-      return ReactDOMServer.renderToString(
+      return renderToString(
         location.wrap(sheets.collect(extractor.collectChunks(tree)))
       );
     },
@@ -84,10 +83,18 @@ const ServerApp = ({
 }) => (
   <Nest
     elements={[
-      <HelmetProvider context={helmetContext || {}} children={<></>} />,
-      <RequestContext.Provider value={req} children={<></>} />,
-      <StaticRouter basename={basePath} location={req.originalUrl} />,
-      <ApolloProvider client={apollo} children={<></>} />,
+      <HelmetProvider
+        key="helmet"
+        context={helmetContext || {}}
+        children={[]}
+      />,
+      <RequestContext.Provider key="req" value={req} />,
+      <StaticRouter
+        key="router"
+        basename={basePath}
+        location={req.originalUrl}
+      />,
+      <ApolloProvider key="apollo" client={apollo} children={[]} />,
     ]}
   >
     <App />

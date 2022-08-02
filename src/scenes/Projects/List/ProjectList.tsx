@@ -13,16 +13,16 @@ import {
   TabPanel,
 } from '@material-ui/lab';
 import { omit, pickBy } from 'lodash';
-import React, { FC, useRef } from 'react';
+import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Project } from '../../../api';
+import { Project } from '~/api/schema.graphql';
+import { simpleSwitch } from '~/common';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
 import { ProjectListItemCard as ProjectCard } from '../../../components/ProjectListItemCard';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
-import { simpleSwitch } from '../../../util';
 import {
   ProjectFilterOptions,
   useProjectFilters,
@@ -51,7 +51,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const ProjectList: FC = () => {
+export const ProjectList = () => {
   const sort = useSort<Project>();
   const [filters, setFilters] = useProjectFilters();
   const list = useListQuery(ProjectListDocument, {

@@ -1,8 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { select, text } from '@storybook/addon-knobs';
-import React from 'react';
-import { FinancialReportingTypeList, PartnershipAgreementStatusList } from '~/api/schema';
-import { csv } from '../../util';
+import { FinancialReportingTypeList, PartnershipAgreementStatusList } from '~/api/schema.graphql';
+import { csv } from '~/common';
 import { date, dateTime } from '../knobs.stories';
 import { PartnershipCard } from './PartnershipCard';
 import { PartnershipCardFragment } from './PartnershipCard.graphql';

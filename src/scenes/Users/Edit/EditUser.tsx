@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { Maybe, UpdateUserInput } from '../../../api';
+import { Maybe, UpdateUserInput } from '~/api/schema.graphql';
 import { UserForm, UserFormProps } from '../UserForm';
 import { UpdateUserDocument } from './EditUser.graphql';
 

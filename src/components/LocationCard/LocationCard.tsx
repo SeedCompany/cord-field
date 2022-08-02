@@ -7,9 +7,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import { FC } from 'react';
-import * as React from 'react';
-import { LocationTypeLabels } from '~/api/schema';
+import { LocationTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { FormattedDateTime } from '../Formatters';
 import { ProgressButton } from '../ProgressButton';
@@ -41,13 +39,13 @@ export interface LocationCardProps {
   removing?: boolean;
 }
 
-export const LocationCard: FC<LocationCardProps> = ({
+export const LocationCard = ({
   location,
   className,
   loading,
   onRemove,
   removing,
-}) => {
+}: LocationCardProps) => {
   const { id, name, locationType, createdAt } = location ?? {};
   const classes = useStyles();
   return (

@@ -1,10 +1,9 @@
 import loadable from '@loadable/component';
-import React from 'react';
 import { Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { splicePath } from '~/common';
 import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { Navigate } from '../../components/Routing';
-import { splicePath } from '../../util';
 import { Engagement } from './Engagement';
 
 const CreateProduct = loadable(() => import('../Products'), {

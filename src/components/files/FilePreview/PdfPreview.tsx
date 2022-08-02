@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Document, DocumentProps, Page, pdfjs } from 'react-pdf';
 import { useFileActions } from '../FileActions/FileActionsContext';
 import { PreviewerProps } from './FilePreview';
@@ -9,7 +9,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pd
 
 type LoadedPdf = Parameters<NonNullable<DocumentProps['onLoadSuccess']>>[0];
 
-export const PdfPreview: FC<PreviewerProps> = (props) => {
+export const PdfPreview = (props: PreviewerProps) => {
   const { file, setPreviewLoading, setPreviewError } = props;
   const [numberOfPages, setNumberOfPages] = useState(1);
   const { previewPage } = useFileActions();

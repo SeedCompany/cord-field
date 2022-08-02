@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
-import { GqlObject, GqlTypeOf, SecuredProp } from '../../api';
-import { Nullable } from '../../util';
+import { GqlObject, GqlTypeOf } from '~/api';
+import { Nullable, SecuredProp } from '~/common';
 
 export interface SecuredFieldRenderProps<Name extends string = string> {
   name: Name;

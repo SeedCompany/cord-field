@@ -1,4 +1,4 @@
-import { CreateStoryInput } from '../../../../api';
+import { CreateStoryInput } from '~/api/schema.graphql';
 import { CreateStory } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/Story/CreateStory';
 import { LookupField } from '../../index';
 import {

@@ -1,7 +1,7 @@
 import { useSnackbar } from 'notistack';
 import { PartialDeep } from 'type-fest';
-import { Directory, File, FileVersion } from '../../../api';
-import { saveAs } from '../../../util/FileSaver';
+import { Directory, File, FileVersion } from '~/api/schema.graphql';
+import { saveAs } from '../../../common/FileSaver';
 import { useGetFileDownloadUrl } from './useGetFileDownloadUrl';
 
 type DownloadableFile = PartialDeep<Directory | File | FileVersion>;

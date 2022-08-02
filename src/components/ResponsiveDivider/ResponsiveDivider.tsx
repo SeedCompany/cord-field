@@ -1,5 +1,5 @@
 import { Divider, DividerProps, withStyles } from '@material-ui/core';
-import { applyBreakpoint, BreakpointAt } from '../../util';
+import { applyBreakpoint, BreakpointAt } from '~/common';
 
 export interface ResponsiveDividerProps extends DividerProps {
   vertical?: BreakpointAt;

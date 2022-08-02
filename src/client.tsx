@@ -1,15 +1,14 @@
 import { loadableReady } from '@loadable/component';
 import Cookies from 'js-cookie';
 import { Settings, Zone } from 'luxon';
-import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import ReactDOM from 'react-dom';
+import { hydrate } from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
+import { basePathOfUrl } from '~/common';
 import { App } from './App';
 import { Nest } from './components/Nest';
-import { basePathOfUrl } from './util';
 
 // Set current timezone in cookie so server can render with it.
 // This isn't great as a change to this or first load will cause the server to
@@ -34,16 +33,20 @@ if (process.env.NODE_ENV !== 'production') {
       window,
       await import('lodash').then((_) => ({ _ })),
       await import('luxon'),
-      await import('./util/CalenderDate'),
+      await import('./common/CalenderDate'),
       await import('js-cookie').then((Cookies) => ({ Cookies }))
     );
     // Do hacking to show dates easier
-    await import('./util/hacky-inspect-dates');
+    await import('./common/hacky-inspect-dates');
 
-    const whyDidYouRender = await import(
-      '@welldone-software/why-did-you-render'
-    );
-    whyDidYouRender.default(React);
+    // Setup why did you render
+    const [React, whyDidYouRender] = await Promise.all([
+      import('react').then((m) => m.default),
+      import('@welldone-software/why-did-you-render').then((m) => m.default),
+    ]);
+    whyDidYouRender(React, {
+      // ...WDYR options
+    });
   };
   setup.push(devSetUp());
 }
@@ -55,13 +58,16 @@ if (isBrowser) {
 const root = document.getElementById('root');
 
 const clientOnlyProviders = [
-  <BrowserRouter basename={basePathOfUrl(process.env.PUBLIC_URL)} />,
-  <HelmetProvider children={<></>} />,
-  <DndProvider backend={HTML5Backend} />,
+  <BrowserRouter
+    key="router"
+    basename={basePathOfUrl(process.env.PUBLIC_URL)}
+  />,
+  <HelmetProvider key="helmet" children={[]} />,
+  <DndProvider key="dnd" backend={HTML5Backend} />,
 ];
 
 void Promise.all(setup).then(() => {
-  ReactDOM.hydrate(
+  hydrate(
     <Nest elements={clientOnlyProviders}>
       <App />
     </Nest>,

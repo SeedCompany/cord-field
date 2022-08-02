@@ -1,9 +1,8 @@
 import { makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import * as React from 'react';
+import { Nullable } from '~/common';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
-import { Nullable } from '../../util';
 import { Breadcrumb, BreadcrumbProps } from '../Breadcrumb';
 import { Redacted } from '../Redacted';
 import { SensitivityIcon } from '../Sensitivity';

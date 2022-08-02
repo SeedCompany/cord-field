@@ -1,4 +1,3 @@
-import React from 'react';
 import { TextField } from '../../../components/form';
 import { DefaultAccordion } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';
@@ -16,7 +15,7 @@ export const OtherProductSection = ({
       name="title"
       {...accordionState}
       title="Title & Description"
-      renderCollapsed={() => <></>}
+      renderCollapsed={() => null}
     >
       <TextField
         name="title"

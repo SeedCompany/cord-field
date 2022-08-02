@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
-import React from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { Except, Merge } from 'type-fest';
 import {
@@ -12,7 +11,7 @@ import {
   UpdateDerivativeScriptureProduct,
   UpdateDirectScriptureProduct,
   UpdateOtherProduct,
-} from '../../../api';
+} from '~/api/schema.graphql';
 import {
   SubmitAction,
   SubmitButton,

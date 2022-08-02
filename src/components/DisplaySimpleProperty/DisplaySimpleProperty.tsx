@@ -1,6 +1,6 @@
 import { Typography, TypographyProps } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 export type DisplaySimplePropertyProps = TypographyProps & {
   label?: string;

@@ -19,7 +19,7 @@ import {
   Event as UpdateDate,
 } from '@material-ui/icons';
 import { startCase } from 'lodash';
-import React, { FC, useState } from 'react';
+import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { IconButton, IconButtonProps } from '../../IconButton';
 import { FileAction } from './FileAction.enum';
@@ -86,10 +86,10 @@ const actionIcons = {
   [FileAction.EditSkipReason]: EditSkipReason,
 };
 
-export const FileActionsPopup: FC<FileActionsPopupProps> = ({
+export const FileActionsPopup = ({
   IconButtonProps,
   ...props
-}) => {
+}: FileActionsPopupProps) => {
   const [anchor, setAnchor] = useState<MenuProps['anchorEl']>();
 
   const openAddMenu = (e: React.MouseEvent) => {
@@ -117,7 +117,7 @@ const isFileVersion = (
   props: FileActionsPopupProps
 ): props is VersionPopupProps => props.item.__typename === 'FileVersion';
 
-export const FileActionsMenu: FC<FileActionsMenuProps> = (props) => {
+export const FileActionsMenu = (props: FileActionsMenuProps) => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const { item, actions, ...rest } = props;

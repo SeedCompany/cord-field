@@ -7,9 +7,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import { FC } from 'react';
-import * as React from 'react';
-import { ProjectStatusLabels } from '~/api/schema';
+import { ProjectStatusLabels } from '~/api/schema.graphql';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -82,10 +80,10 @@ export interface ProjectListItemCardProps {
   className?: string;
 }
 
-export const ProjectListItemCard: FC<ProjectListItemCardProps> = ({
+export const ProjectListItemCard = ({
   project,
   className,
-}) => {
+}: ProjectListItemCardProps) => {
   const classes = useStyles();
   const location = project?.primaryLocation.value?.name.value;
 

@@ -1,4 +1,4 @@
-import { CreateLocation as CreateLocationType } from '~/api/schema';
+import { CreateLocation as CreateLocationType } from '~/api/schema.graphql';
 import {
   DisplayFieldRegionFragment as FieldRegionLookupItem,
   DisplayFieldZoneFragment as FieldZoneLookupItem,

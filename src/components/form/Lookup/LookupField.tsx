@@ -14,7 +14,7 @@ import {
   Value,
 } from '@material-ui/lab';
 import { camelCase, last, uniqBy, upperFirst } from 'lodash';
-import React, {
+import {
   ComponentType,
   useCallback,
   useEffect,
@@ -22,7 +22,8 @@ import React, {
   useState,
 } from 'react';
 import { Except, SetOptional, SetRequired } from 'type-fest';
-import { isNetworkRequestInFlight, Power } from '../../../api';
+import { isNetworkRequestInFlight } from '~/api';
+import { Power } from '~/api/schema.graphql';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
 import { useSession } from '../../Session';
@@ -202,6 +203,7 @@ export function LookupField<
             {...ChipProps}
             label={getOptionLabel(option)}
             {...getTagProps({ index })}
+            key={index}
           />
         ))
       }

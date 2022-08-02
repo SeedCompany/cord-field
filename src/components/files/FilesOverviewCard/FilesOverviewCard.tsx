@@ -1,5 +1,4 @@
 import { LibraryBooksOutlined } from '@material-ui/icons';
-import React, { FC } from 'react';
 import {
   FieldOverviewCard,
   FieldOverviewCardProps,
@@ -10,12 +9,12 @@ export interface BudgetOverviewCardProps extends FieldOverviewCardProps {
   total?: number;
 }
 
-export const FilesOverviewCard: FC<BudgetOverviewCardProps> = ({
+export const FilesOverviewCard = ({
   redacted,
   className,
   loading,
   total,
-}) => {
+}: BudgetOverviewCardProps) => {
   const formatNumber = useNumberFormatter();
   return (
     <FieldOverviewCard

@@ -1,5 +1,4 @@
 import { select, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { ButtonLink, ButtonLinkProps } from './ButtonLink';
 
 export default {

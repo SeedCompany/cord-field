@@ -1,5 +1,5 @@
 import { Box } from '@material-ui/core';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Code } from '../Debug';
 

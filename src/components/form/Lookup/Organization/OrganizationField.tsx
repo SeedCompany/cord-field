@@ -1,4 +1,4 @@
-import { CreateOrganizationInput } from '../../../../api';
+import { CreateOrganizationInput } from '~/api/schema.graphql';
 import { CreateOrganization } from '../../../../scenes/Organizations/Create';
 import { LookupField } from '../../index';
 import {

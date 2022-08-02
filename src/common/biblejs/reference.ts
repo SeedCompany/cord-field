@@ -1,7 +1,8 @@
 import { groupBy, isEqual, sum } from 'lodash';
-import { ScriptureFragment, UnspecifiedScripturePortion } from '../../api';
+import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
+import { ScriptureFragment } from '../fragments';
+import { Nullable } from '../types';
 import { books } from './bibleBooks';
-import { Nullable } from '..';
 
 interface ScriptureReference {
   book: string;

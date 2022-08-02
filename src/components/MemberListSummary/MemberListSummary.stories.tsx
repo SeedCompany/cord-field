@@ -1,7 +1,6 @@
 import { Card } from '@material-ui/core';
 import { Group } from '@material-ui/icons';
 import { number, text } from '@storybook/addon-knobs';
-import React from 'react';
 import seedRandom from 'seedrandom';
 import {
   MemberListSummary,

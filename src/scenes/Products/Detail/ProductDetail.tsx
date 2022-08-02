@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
 import { Grid, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,

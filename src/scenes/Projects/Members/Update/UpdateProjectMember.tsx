@@ -1,11 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Container } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React from 'react';
 import { Except } from 'type-fest';
-import { removeItemFromList } from '~/api';
-import { RoleLabels, RoleList, UpdateProjectMemberInput } from '~/api/schema';
-import { labelFrom } from '~/common';
+import { onUpdateInvalidateObject, removeItemFromList } from '~/api';
+import {
+  RoleLabels,
+  RoleList,
+  UpdateProjectMemberInput,
+} from '~/api/schema.graphql';
+import { callAll, labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,7 +19,7 @@ import {
   SubmitError,
 } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { callAll } from '../../../../util';
+import { useSession } from '../../../../components/Session';
 import { ProjectMembersQuery } from '../List/ProjectMembers.graphql';
 import {
   DeleteProjectMemberDocument,
@@ -46,6 +49,7 @@ export const UpdateProjectMember = ({
   userRoles,
   ...props
 }: UpdateProjectMemberProps) => {
+  const { session } = useSession();
   const [updateProjectMember] = useMutation(UpdateProjectMemberDocument);
 
   const { data, loading } = useQuery(GetUserRolesDocument, {
@@ -60,10 +64,13 @@ export const UpdateProjectMember = ({
         listId: 'projectMembers',
         item: { id: projectMemberId },
       }),
-      removeItemFromList({
-        listId: [project, 'team'],
-        item: { id: projectMemberId },
-      })
+      session?.id === userId
+        ? // Invalidate whole project if removing self as that can have major authorization implications
+          onUpdateInvalidateObject(project)
+        : removeItemFromList({
+            listId: [project, 'team'],
+            item: { id: projectMemberId },
+          })
     ),
   });
 

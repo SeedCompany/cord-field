@@ -1,4 +1,4 @@
-import { CreatePersonInput } from '../../../../api';
+import { CreatePersonInput } from '~/api/schema.graphql';
 import { CreateUser } from '../../../../scenes/Users/Create';
 import { LookupField } from '../../index';
 import {

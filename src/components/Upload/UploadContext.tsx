@@ -1,12 +1,13 @@
 import { useMutation } from '@apollo/client';
-import React, {
+import {
   createContext,
-  FC,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useReducer,
 } from 'react';
+import { ChildrenProp } from '~/common';
 import * as actions from './Reducer/uploadActions';
 import { initialState } from './Reducer/uploadInitialState';
 import { uploadReducer } from './Reducer/uploadReducer';
@@ -30,7 +31,7 @@ export const UploadContext =
   createContext<typeof initialUploadContext>(initialUploadContext);
 UploadContext.displayName = 'UploadContext';
 
-export const UploadProvider: FC = ({ children }) => {
+export const UploadProvider = ({ children }: ChildrenProp) => {
   const [state, dispatch] = useReducer(uploadReducer, initialState);
   const { setIsManagerOpen } = useUploadManager();
   const { submittedFiles } = state;
@@ -94,10 +95,13 @@ export const UploadProvider: FC = ({ children }) => {
     }
   }, [submittedFiles, handleFileAdded, setUploadingStatus]);
 
+  const context = useMemo(
+    () => ({ addFilesToUploadQueue, removeCompletedUploads }),
+    [addFilesToUploadQueue, removeCompletedUploads]
+  );
+
   return (
-    <UploadContext.Provider
-      value={{ addFilesToUploadQueue, removeCompletedUploads }}
-    >
+    <UploadContext.Provider value={context}>
       {children}
       <UploadManager removeCompletedUploads={removeCompletedUploads}>
         <UploadItems state={state} removeUpload={removeUpload} />

@@ -1,6 +1,7 @@
 import { isPlainObject } from 'lodash';
 import { ConditionalKeys } from 'type-fest';
-import { has, Nullable } from '../util';
+import { has } from './array-helpers';
+import { Nullable } from './types';
 
 interface Readable {
   canRead: boolean;

@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { Clear as ClearIcon } from '@material-ui/icons';
 import clsx from 'clsx';
-import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Except } from 'type-fest';
 import { fileIcon } from '../files/fileTypes';
@@ -105,32 +104,30 @@ export function DropzoneField({
         </Typography>
       </div>
       {currentFiles.length > 0 && (
-        <>
-          <List dense className={classes.files}>
-            {currentFiles.map((file, index) => {
-              const { name, type } = file;
-              const Icon = fileIcon(type);
-              return (
-                <ListItem key={index}>
-                  <ListItemIcon>
-                    <Icon />
-                  </ListItemIcon>
-                  <ListItemText primary={name} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="remove"
-                      size="small"
-                      onClick={() => handleRemoveFileClick(index)}
-                    >
-                      <ClearIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              );
-            })}
-          </List>
-        </>
+        <List dense className={classes.files}>
+          {currentFiles.map((file, index) => {
+            const { name, type } = file;
+            const Icon = fileIcon(type);
+            return (
+              <ListItem key={index}>
+                <ListItemIcon>
+                  <Icon />
+                </ListItemIcon>
+                <ListItemText primary={name} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    aria-label="remove"
+                    size="small"
+                    onClick={() => handleRemoveFileClick(index)}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
       )}
     </div>
   );

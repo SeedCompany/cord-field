@@ -12,15 +12,15 @@ import {
   TabContext,
   TabPanel,
 } from '@material-ui/lab';
-import React, { FC, useRef } from 'react';
+import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { User } from '../../../api';
+import { User } from '~/api/schema.graphql';
+import { simpleSwitch } from '~/common';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
 import { SortButtonDialog, useSort } from '../../../components/Sort';
 import { UserListItemCardLandscape as UserCard } from '../../../components/UserListItemCard';
-import { simpleSwitch } from '../../../util';
 import { useUserFilters } from './UserFilterOptions';
 import { UsersDocument } from './users.graphql';
 import { UserSortOptions } from './UserSortOptions';
@@ -45,7 +45,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const UserList: FC = () => {
+export const UserList = () => {
   const sort = useSort<User>();
   const [filters, setFilters] = useUserFilters();
   const list = useListQuery(UsersDocument, {

@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import { startCase } from 'lodash';
-import React from 'react';
 import { Form } from 'react-final-form';
 import { csv } from '../../util';
 import { AutocompleteField } from './AutocompleteField';

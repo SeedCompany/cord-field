@@ -1,12 +1,11 @@
 import { useMutation } from '@apollo/client';
-import React from 'react';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
 import {
   CreateProjectChangeRequestInput,
   ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

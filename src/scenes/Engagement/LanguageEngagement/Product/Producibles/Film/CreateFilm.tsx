@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
-import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, CreateFilmInput } from '../../../../../../api';
+import { addItemToList } from '~/api';
+import { CreateFilmInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,

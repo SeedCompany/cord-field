@@ -1,5 +1,4 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core';
-import React, { FC } from 'react';
 
 const useStyles = makeStyles(({ breakpoints }) => ({
   text: {
@@ -12,7 +11,7 @@ interface PreviewErrorProps {
   errorText: string;
 }
 
-export const PreviewError: FC<PreviewErrorProps> = (props) => {
+export const PreviewError = (props: PreviewErrorProps) => {
   const { errorText } = props;
   const classes = useStyles();
   return (

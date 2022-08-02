@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import { isPlainObject } from 'lodash';
-import React, { ElementType, isValidElement, ReactNode } from 'react';
+import { ElementType, isValidElement, ReactNode } from 'react';
 import { getErrorInfo } from '~/api';
 import { ButtonLink, StatusCode, useNavigate } from '../Routing';
 import { ErrorRenderers, renderError } from './error-handling';

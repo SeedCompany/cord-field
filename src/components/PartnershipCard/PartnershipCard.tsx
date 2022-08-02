@@ -9,11 +9,10 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React, { FC } from 'react';
 import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatusLabels,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';
@@ -44,11 +43,11 @@ export interface PartnershipCardProps {
   className?: string;
 }
 
-export const PartnershipCard: FC<PartnershipCardProps> = ({
+export const PartnershipCard = ({
   partnership,
   onEdit,
   className,
-}) => {
+}: PartnershipCardProps) => {
   const classes = useStyles();
 
   const name = partnership?.partner.value?.organization.value?.name.value;

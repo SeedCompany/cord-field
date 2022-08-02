@@ -1,5 +1,5 @@
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
-import React, { FC, useEffect } from 'react';
+import { useEffect } from 'react';
 import { XLSX$Utils } from 'xlsx';
 import { useFileActions } from '../FileActions';
 
@@ -91,7 +91,7 @@ export function jsonToTableRows(rows: RowData): TableCellData[][] {
   );
 }
 
-const RenderedSheet: FC<Omit<SheetData, 'name'>> = (props) => {
+const RenderedSheet = (props: Omit<SheetData, 'name'>) => {
   const { rows, columns } = props;
   return (
     <table>
@@ -124,7 +124,7 @@ const RenderedSheet: FC<Omit<SheetData, 'name'>> = (props) => {
   );
 };
 
-export const SpreadsheetView: FC<SpreadSheetViewProps> = (props) => {
+export const SpreadsheetView = (props: SpreadSheetViewProps) => {
   const classes = useStyles();
   const { data } = props;
   const { previewPage, setPreviewPage } = useFileActions();

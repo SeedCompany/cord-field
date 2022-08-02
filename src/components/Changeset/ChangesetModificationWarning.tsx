@@ -1,6 +1,5 @@
 import { ChangeHistory as ChangeIcon } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
-import * as React from 'react';
 
 interface Props {
   variant?: 'modifying' | 'ignoring';

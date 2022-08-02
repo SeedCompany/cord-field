@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import React, { FC } from 'react';
+import { ChildrenProp } from '~/common';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Code: FC<{ json?: any; className?: string }> = ({
+export const Code = ({
   className,
   json,
   children,
-}) => {
+}: { json?: any; className?: string } & ChildrenProp) => {
   const classes = useStyles();
   return (
     <pre className={clsx(classes.root, className)}>

@@ -11,8 +11,9 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import clsx from 'clsx';
-import React, { FC, useMemo } from 'react';
-import { canEditAny, UpdateCeremonyInput } from '../../../api';
+import { useMemo } from 'react';
+import { UpdateCeremonyInput } from '~/api/schema.graphql';
+import { canEditAny } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { DateField, FieldGroup, SubmitError } from '../../../components/form';
@@ -52,10 +53,10 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
 
 type CeremonyCardProps = Partial<CeremonyCardFragment>;
 
-export const CeremonyCard: FC<CeremonyCardProps> = ({
+export const CeremonyCard = ({
   canRead,
   value: ceremony,
-}) => {
+}: CeremonyCardProps) => {
   const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
 

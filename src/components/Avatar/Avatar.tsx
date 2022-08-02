@@ -4,7 +4,6 @@ import {
   AvatarProps as MuiAvatarProps,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import * as React from 'react';
 
 export interface AvatarProps extends MuiAvatarProps {
   loading?: boolean;

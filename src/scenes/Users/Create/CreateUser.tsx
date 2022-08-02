@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
-import React from 'react';
 import { Except } from 'type-fest';
-import { addItemToList, CreatePersonInput } from '../../../api';
+import { addItemToList } from '~/api';
+import { CreatePersonInput } from '~/api/schema.graphql';
 import { ButtonLink } from '../../../components/Routing';
 import { UserForm, UserFormProps } from '../UserForm';
 import {

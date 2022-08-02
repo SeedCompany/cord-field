@@ -7,7 +7,7 @@ import {
   FormControlProps,
   FormHelperText,
 } from '@material-ui/core';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 

@@ -5,8 +5,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
-import { FC } from 'react';
-import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
@@ -35,7 +33,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const ProjectMembersList: FC = () => {
+export const ProjectMembersList = () => {
   const classes = useStyles();
   const { projectId, changesetId } = useProjectId();
   const { root: data, ...list } = useListQuery(ProjectMembersDocument, {

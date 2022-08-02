@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { CreateNewFolder, Publish } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
@@ -86,7 +86,7 @@ const useStyles = makeStyles(({ palette, spacing, breakpoints }) => ({
   },
 }));
 
-const ProjectFilesListWrapped: FC = () => {
+const ProjectFilesListWrapped = () => {
   const classes = useStyles();
   const { spacing } = useTheme();
   const navigate = useNavigate();
@@ -352,7 +352,7 @@ const ProjectFilesListWrapped: FC = () => {
   );
 };
 
-export const ProjectFilesList: FC = () => (
+export const ProjectFilesList = () => (
   <FileActionsContextProvider>
     <ProjectFilesListWrapped />
   </FileActionsContextProvider>

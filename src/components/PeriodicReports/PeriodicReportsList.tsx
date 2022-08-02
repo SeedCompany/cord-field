@@ -1,7 +1,7 @@
 import { Breadcrumbs, makeStyles, Typography } from '@material-ui/core';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { ReportType } from '../../api';
+import { ReportType } from '~/api/schema.graphql';
 import { Breadcrumb } from '../Breadcrumb';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportsTable, ReportRow } from './PeriodicReportsTable';
@@ -44,7 +44,9 @@ export const PeriodicReportsList = ({
         <Breadcrumbs
           children={[
             ...breadcrumbs,
-            <Breadcrumb to=".">{reportTypeName}</Breadcrumb>,
+            <Breadcrumb to="." key="report">
+              {reportTypeName}
+            </Breadcrumb>,
           ]}
         />
 

@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
-import React from 'react';
 import { Form } from 'react-final-form';
 import { PasswordField as PF } from './PasswordField';
 

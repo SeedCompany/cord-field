@@ -1,8 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
 import { startCase } from 'lodash';
-import { FC, ReactElement } from 'react';
-import * as React from 'react';
+import { ReactElement } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Error } from '../../components/Error';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';
@@ -31,7 +30,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
   },
 }));
 
-export const SearchResults: FC = () => {
+export const SearchResults = () => {
   const classes = useStyles();
 
   const [{ q: query }] = useSearch();
@@ -88,6 +87,7 @@ export const SearchResults: FC = () => {
 const displayItem = (
   item: SearchResult
 ): [exact: string | ReactElement, card: ReactElement] | ReactElement | null => {
+  /* eslint-disable react/jsx-key -- type is tuple not array */
   switch (item.__typename) {
     case 'InternshipProject':
     case 'TranslationProject':
@@ -123,6 +123,7 @@ const displayItem = (
       console.error(`Unknown type ${item.__typename} returned from search`);
       return null;
   }
+  /* eslint-enable react/jsx-key */
 };
 
 const PlaceholderCard = ({

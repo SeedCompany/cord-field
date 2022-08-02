@@ -1,13 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import React from 'react';
 import { Except } from 'type-fest';
 import {
   ProjectStep,
   ProjectStepLabels,
   ProjectStepList,
   TransitionType,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

@@ -1,11 +1,10 @@
 import { Tooltip } from '@material-ui/core';
-import * as React from 'react';
 import {
   ProjectStatusLabels,
   ProjectStatusList,
   ProjectTypeList,
   SensitivityList,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { EnumField, SwitchField } from '../../../components/form';
 import {

@@ -1,8 +1,6 @@
 import { makeStyles, SvgIconProps, Tooltip } from '@material-ui/core';
 import { Star } from '@material-ui/icons';
 import clsx from 'clsx';
-import { FC } from 'react';
-import * as React from 'react';
 
 const useStyles = makeStyles(() => ({
   primary: {
@@ -10,10 +8,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const PartnershipPrimaryIcon: FC<SvgIconProps> = ({
+export const PartnershipPrimaryIcon = ({
   className,
   ...rest
-}) => {
+}: SvgIconProps) => {
   const classes = useStyles();
 
   return (

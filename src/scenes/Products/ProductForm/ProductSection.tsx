@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core';
-import React, { ComponentType, useEffect } from 'react';
-import { displayProductTypes } from '../../../api';
+import { ComponentType, useEffect } from 'react';
+import { displayProductTypes } from '~/common';
 import { FieldConfig } from '../../../components/form';
 import {
   EthnoArtField,
@@ -73,7 +73,7 @@ export const ProductSection = ({
           }`}
         </Typography>
       )}
-      renderCollapsed={() => <></>}
+      renderCollapsed={() => null}
     >
       {(props) => {
         const ProductField = productFieldMap[productType];

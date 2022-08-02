@@ -9,8 +9,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import React, { FC } from 'react';
-import { FinancialReportingTypeLabels, PartnerTypeLabels } from '~/api/schema';
+import {
+  FinancialReportingTypeLabels,
+  PartnerTypeLabels,
+} from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';
@@ -41,11 +43,11 @@ interface PartnerTypesCardProps {
   className?: string;
 }
 
-export const PartnerTypesCard: FC<PartnerTypesCardProps> = ({
+export const PartnerTypesCard = ({
   partner,
   className,
   onEdit,
-}) => {
+}: PartnerTypesCardProps) => {
   const classes = useStyles();
 
   const canEdit = canEditAny(

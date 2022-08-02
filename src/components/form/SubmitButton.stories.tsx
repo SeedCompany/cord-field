@@ -1,7 +1,6 @@
 import { Box } from '@material-ui/core';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import { useSnackbar } from 'notistack';
-import React from 'react';
 import { Form } from 'react-final-form';
 import { sleep } from '../../util';
 import { SubmitButton as SB, SubmitAction } from './SubmitButton';

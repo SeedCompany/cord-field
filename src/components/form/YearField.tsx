@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { NumberField, NumberFieldProps } from './NumberField';
 import { max, min } from './validators';
 

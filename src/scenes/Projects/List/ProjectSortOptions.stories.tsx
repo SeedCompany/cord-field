@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Project } from '../../../api';
 import { SortButtonDialog, SortValue } from '../../../components/Sort';
 import { ProjectSortOptions } from './ProjectSortOptions';

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { setIn } from 'final-form';
 import { compact, keyBy, pick, startCase } from 'lodash';
-import React, { ComponentType, FC, useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
 import {
@@ -10,10 +10,13 @@ import {
   InternshipProgramLabels,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
-} from '~/api/schema';
+} from '~/api/schema.graphql';
 import {
   DisplayLocationFragment,
+  ExtractStrict,
   labelFrom,
+  Many,
+  many,
   MethodologyToApproach,
 } from '~/common';
 import {
@@ -32,7 +35,6 @@ import {
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { LocationField, UserField } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
-import { ExtractStrict, many, Many } from '../../../util';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql';
 import {
@@ -166,11 +168,11 @@ export type EditEngagementDialogProps = Except<
   editFields?: Many<EditableEngagementField>;
 };
 
-export const EditEngagementDialog: FC<EditEngagementDialogProps> = ({
+export const EditEngagementDialog = ({
   engagement,
   editFields: editFieldsProp,
   ...props
-}) => {
+}: EditEngagementDialogProps) => {
   const editFields = useMemo(
     () => many(editFieldsProp ?? []),
     [editFieldsProp]

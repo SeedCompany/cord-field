@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { FORM_ERROR } from 'final-form';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
 import { useMountedState } from 'react-use';

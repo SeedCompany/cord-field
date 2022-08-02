@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -10,7 +10,7 @@ import {
   TableRow,
 } from './SpreadsheetView';
 
-export const ExcelPreview: FC<PreviewerProps> = (props) => {
+export const ExcelPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [sheets, setSheets] = useState<SheetData[]>([]);
 

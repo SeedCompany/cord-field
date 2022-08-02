@@ -2,9 +2,8 @@ import MsgReader from '@freiraum/msgreader';
 import { makeStyles, Typography } from '@material-ui/core';
 import parseHtml from 'html-react-parser';
 import { DateTime } from 'luxon';
-import * as React from 'react';
-import { FC, useCallback, useEffect, useState } from 'react';
-import { mapFromList } from '../../../util';
+import { useCallback, useEffect, useState } from 'react';
+import { mapFromList } from '~/common';
 import { FormattedDateTime } from '../../Formatters';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -27,7 +26,7 @@ export const parseEmail = (buffer: ArrayBuffer) => {
 };
 export type Email = ReturnType<typeof parseEmail>;
 
-export const EmailPreview: FC<PreviewerProps> = (props) => {
+export const EmailPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
 

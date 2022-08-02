@@ -1,5 +1,4 @@
-import React from 'react';
-import { CreateOrganizationInput } from '../../../api';
+import { CreateOrganizationInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,

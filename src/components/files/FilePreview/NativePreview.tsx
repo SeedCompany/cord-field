@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core';
-import React, { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const NativePreview: FC<NativePreviewerProps> = (props) => {
+export const NativePreview = (props: NativePreviewerProps) => {
   const classes = useStyles();
   const { file, type, previewLoading, setPreviewLoading } = props;
   const [url, setUrl] = useState<string | undefined>();

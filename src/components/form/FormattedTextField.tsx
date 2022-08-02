@@ -1,6 +1,6 @@
 import { TextField, TextFieldProps } from '@material-ui/core';
 import { identity } from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRifm } from 'rifm';
 import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';

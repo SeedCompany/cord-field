@@ -1,6 +1,5 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import React, { FC } from 'react';
 
 /**
  * This component requires a parent with a `position` value,
@@ -41,7 +40,7 @@ interface DropzoneOverlayProps {
   message?: string;
 }
 
-export const DropzoneOverlay: FC<DropzoneOverlayProps> = (props) => {
+export const DropzoneOverlay = (props: DropzoneOverlayProps) => {
   const classes = useStyles();
   const {
     classes: classNames,

@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
@@ -10,7 +10,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const PlainTextPreview: FC<PreviewerProps> = (props) => {
+export const PlainTextPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
   const classes = useStyles();

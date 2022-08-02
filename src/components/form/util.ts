@@ -1,7 +1,7 @@
 import { difference, differenceWith, isEmpty, isEqual } from 'lodash';
 import { MutableRefObject, ReactNode, useCallback, useRef } from 'react';
 import { FieldMetaState, useFormState } from 'react-final-form';
-import { Nullable } from '../../util';
+import { Nullable } from '~/common';
 
 export const useIsSubmitting = () => {
   const { submitting } = useFormState({ subscription: { submitting: true } });

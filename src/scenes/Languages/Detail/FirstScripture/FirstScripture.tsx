@@ -5,7 +5,6 @@ import {
   NotInterested,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import * as React from 'react';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { FirstScriptureFragment } from './FirstScripture.graphql';

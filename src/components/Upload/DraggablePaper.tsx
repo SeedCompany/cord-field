@@ -1,19 +1,13 @@
 import { Paper, PaperProps } from '@material-ui/core';
-import React, {
-  FC,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { useWindowSize } from 'react-use';
 
 const initialPosition = { x: null as null | number, y: null as null | number };
 
-export const DraggablePaper: FC<PaperProps & { isCollapsed: boolean }> = ({
+export const DraggablePaper = ({
   ...props
-}) => {
+}: PaperProps & { isCollapsed: boolean }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const paperRef = useRef<HTMLDivElement>(null);

@@ -1,7 +1,6 @@
 import { MutationFunctionOptions, useMutation } from '@apollo/client';
-import React from 'react';
 import { Except } from 'type-fest';
-import { RenameFileInput } from '../../../api';
+import { RenameFileInput } from '~/api/schema.graphql';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError, TextField } from '../../form';
 import { parseFileNameAndExtension } from '../../Formatters';

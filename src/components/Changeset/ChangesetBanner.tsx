@@ -5,7 +5,6 @@ import {
   Edit as EditIcon,
 } from '@material-ui/icons';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import * as React from 'react';
 import { IconButton } from '../IconButton';
 
 const useStyles = makeStyles(({ spacing, breakpoints }) => ({

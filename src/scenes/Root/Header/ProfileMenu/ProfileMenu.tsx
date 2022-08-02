@@ -7,7 +7,6 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import * as React from 'react';
 import { useDialog } from '../../../../components/Dialog';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';
