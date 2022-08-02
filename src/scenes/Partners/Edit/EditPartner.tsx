@@ -99,12 +99,7 @@ const fieldMapping: Record<
       />
     ) : null,
   address: ({ props }) => (
-    <TextField
-      {...props}
-      label="Address"
-      multiline
-      inputProps={{ rowsMin: 2 }}
-    />
+    <TextField {...props} label="Address" multiline minRows={2} />
   ),
   organizationName: ({ props }) => (
     <TextField {...props} required label="Organization Name" />

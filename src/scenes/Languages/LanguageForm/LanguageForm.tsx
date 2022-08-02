@@ -351,7 +351,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                       multiline
                       placeholder="Enter Reasoning"
                       helperText="Why is this language a Least of These partnership?"
-                      inputProps={{ rowsMin: 2 }}
+                      minRows={2}
                       {...props}
                     />
                   )}

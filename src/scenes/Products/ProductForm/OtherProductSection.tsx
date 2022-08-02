@@ -30,7 +30,7 @@ export const OtherProductSection = ({
         placeholder="Optionally enter product description"
         margin="none"
         multiline
-        inputProps={{ rowsMin: 2 }}
+        minRows={2}
       />
     </DefaultAccordion>
   );
