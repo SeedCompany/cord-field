@@ -171,12 +171,13 @@ export const appComponents = ({
         },
       },
     },
-    MuiTableRow: {
+    MuiDataGrid: {
       styleOverrides: {
         root: {
-          // Remove dangling divider
-          '&:last-child td': {
-            borderBottom: 'none',
+          // Don't wrap table in border if directly in a card, since the
+          // elevated card is a good enough distinction.
+          '.MuiCard-root > &': {
+            border: 'none',
           },
         },
       },
