@@ -4,6 +4,9 @@ fragment EngagementBreadcrumb on Engagement {
     ...ProjectBreadcrumb
   }
   ... on LanguageEngagement {
+    products {
+      total
+    }
     language {
       value {
         id

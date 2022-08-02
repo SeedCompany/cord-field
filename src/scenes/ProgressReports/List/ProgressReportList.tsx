@@ -42,6 +42,9 @@ export const ProgressReportsList = () => {
     navigate(`/progress-reports/${idForUrl(row.report)}`);
   };
 
+  const totalProducts = engagement?.products.total ?? 0; // just doing this so eslint and typescript don't yell at me.
+  const hasProducts = totalProducts > 0;
+
   return (
     <PeriodicReportsList
       type="Progress"
@@ -51,6 +54,7 @@ export const ProgressReportsList = () => {
         <EngagementBreadcrumb key="engagement" data={engagement} />,
       ]}
       reports={engagement?.progressReports.items}
+      disableNewVersionAction={!hasProducts}
       onRowClick={handleRowClick}
     />
   );

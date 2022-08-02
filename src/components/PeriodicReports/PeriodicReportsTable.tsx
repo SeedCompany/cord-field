@@ -48,6 +48,7 @@ type PeriodicReportsTableProps = Except<
   'columns' | 'components' | 'data'
 > & {
   data?: readonly PeriodicReportFragment[];
+  disableNewVersionAction?: boolean;
 };
 
 export const PeriodicReportsTableInContext = ({
@@ -129,7 +130,9 @@ export const PeriodicReportsTableInContext = ({
               FileAction.Delete,
               FileAction.Rename
             )
-          : reportFile.canEdit && !report.skippedReason.value
+          : reportFile.canEdit &&
+            !report.skippedReason.value &&
+            !props.disableNewVersionAction
           ? [FileAction.NewVersion]
           : [];
 

@@ -59,7 +59,10 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
           <Grid item lg={5} container direction="column" spacing={3}>
             <Grid item container spacing={3}>
               <Grid item container className={classes.details}>
-                <ProgressReports engagement={engagement} />
+                <ProgressReports
+                  engagement={engagement}
+                  hasGoals={engagement.products.total > 0}
+                />
               </Grid>
               <Grid item container className={classes.details}>
                 <PlanningSpreadsheet engagement={engagement} />
