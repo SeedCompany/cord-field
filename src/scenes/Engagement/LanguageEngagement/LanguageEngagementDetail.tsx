@@ -82,8 +82,18 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
               </Grid>
             </Grid>
           </Grid>
-          <ResponsiveDivider vertical="lgUp" spacing={3} />
-          <Grid item xs md lg container direction="column" spacing={2}>
+          <Grid item xs={12} md={12} lg="auto" container>
+            <ResponsiveDivider vertical="lgUp" />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={12}
+            lg
+            container
+            direction="column"
+            spacing={2}
+          >
             <Grid item container spacing={2} alignItems="center">
               <Grid item component={Typography} variant="h3" paragraph>
                 Goals
