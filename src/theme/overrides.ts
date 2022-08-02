@@ -1,7 +1,13 @@
-import { Components, Theme } from '@mui/material';
+import type {
+  Components,
+  ComponentsOverrides,
+  ComponentsProps,
+  Theme,
+} from '@mui/material';
 import { alpha as fade } from '@mui/material/styles';
+import type { DataGridProps } from '@mui/x-data-grid';
 import type {} from '@mui/x-date-pickers/themeAugmentation';
-import type {} from '@mui/x-data-grid/themeAugmentation';
+import type {} from '@mui/x-data-grid/themeAugmentation/overrides';
 
 export const appComponents = ({
   spacing,
@@ -211,3 +217,17 @@ export const appComponents = ({
     },
   };
 };
+
+// Remove when MUI fixes theme augmentation for DataGrid
+// It currently doesn't declare the Theme generic, so TS doesn't apply it.
+declare module '@mui/material/styles' {
+  interface ComponentsPropsList {
+    MuiDataGrid: DataGridProps;
+  }
+  interface Components<Theme = unknown> {
+    MuiDataGrid?: {
+      defaultProps?: ComponentsProps['MuiDataGrid'];
+      styleOverrides?: ComponentsOverrides<Theme>['MuiDataGrid'];
+    };
+  }
+}
