@@ -1,15 +1,12 @@
-import {
-  Add as AddIcon,
-  ChangeHistory as ChangeIcon,
-  Remove as RemoveIcon,
-} from '@mui/icons-material';
 import { Badge, Grid, TooltipProps, Typography } from '@mui/material';
 import { startCase } from 'lodash';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { simpleSwitch, UseStyles } from '~/common';
+import { UseStyles } from '~/common';
 import { BadgeWithTooltip } from '../BadgeWithTooltip';
 import { PaperTooltip } from '../PaperTooltip';
+import { DiffMode } from './ChangesetDiffContext';
+import { ChangesetIcon } from './ChangesetIcon';
 
 const useStyles = makeStyles<
   ChangesetBadgeOwnProps,
@@ -63,7 +60,7 @@ const useStyles = makeStyles<
 
 interface ChangesetBadgeOwnProps {
   children: ReactNode;
-  mode?: 'added' | 'removed' | 'changed';
+  mode?: DiffMode;
   disableOutline?: boolean;
   moreInfo?: ReactNode;
   TooltipProps?: Omit<TooltipProps, 'title' | 'children'>;
@@ -83,11 +80,6 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
   if (!mode) {
     return <>{children}</>;
   }
-  const Icon = simpleSwitch(mode, {
-    added: AddIcon,
-    changed: ChangeIcon,
-    removed: RemoveIcon,
-  })!;
 
   return (
     <Badge
@@ -109,7 +101,9 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
           {content}
         </PaperTooltip>
       )}
-      badgeContent={<Icon color="inherit" className={classes.icon} />}
+      badgeContent={
+        <ChangesetIcon mode={mode} color="inherit" className={classes.icon} />
+      }
       classes={{
         root: classes.root,
         badge: cx({

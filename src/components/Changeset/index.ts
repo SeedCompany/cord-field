@@ -1,5 +1,6 @@
 export * from './ChangesetModificationWarning';
 export * from './ChangesetBadge';
+export * from './ChangesetIcon';
 export * from './ChangesetPropertyBadge';
 export {
   useChangesetDiffItem,
