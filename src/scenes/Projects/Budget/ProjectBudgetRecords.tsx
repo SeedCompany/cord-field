@@ -2,7 +2,11 @@ import { Card } from '@mui/material';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { sortBy } from 'lodash';
 import { useMemo } from 'react';
-import { SecuredProp } from '~/common';
+import { IdFragment, SecuredProp } from '~/common';
+import {
+  changesetGridComponents,
+  useDeletedItemsOfChangeset,
+} from '../../../components/Changeset';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import {
   BudgetRecordFragment as BudgetRecord,
@@ -21,13 +25,17 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
   const { loading, budget } = props;
   const formatCurrency = useCurrencyFormatter();
 
+  const deletedRecords = useDeletedItemsOfChangeset(isBudgetRecord);
   const rows = useMemo(() => {
-    const raw: readonly BudgetRecord[] = budget?.value?.records ?? [];
+    const raw: readonly BudgetRecord[] = [
+      ...(budget?.value?.records ?? []),
+      ...deletedRecords,
+    ];
     return sortBy(raw, [
       (record) => record.fiscalYear.value,
       (record) => record.organization.value?.name.value ?? '',
     ]);
-  }, [budget]);
+  }, [budget, deletedRecords]);
 
   const columns: Array<GridColDef<BudgetRecord>> = [
     {
@@ -50,6 +58,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       headerAlign: 'right',
       valueGetter: getSecuredValue,
       valueFormatter: ({ value }) => formatCurrency(value ?? 0),
+      changesetAware: true,
     },
   ];
 
@@ -61,6 +70,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         loading={loading}
         components={{
           Footer: () => null,
+          ...changesetGridComponents,
         }}
         initialState={{
           sorting: { sortModel: [{ field: 'fiscalYear', sort: 'asc' }] },
@@ -71,6 +81,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         }}
         autoHeight
         disableColumnMenu
+        isRowSelectable={() => false}
         sx={{
           '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
             {
@@ -81,3 +92,6 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
     </Card>
   );
 };
+
+const isBudgetRecord = (obj: IdFragment): obj is BudgetRecord =>
+  obj.__typename === 'BudgetRecord';

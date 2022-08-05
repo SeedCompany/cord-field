@@ -11,3 +11,4 @@ export type { DiffMode, ChangesetItemFilterFn } from './ChangesetDiffContext';
 export * from './ChangesetContext';
 export * from './PropertyDiff';
 export * from './useChangesetAwareIdFromUrl';
+export * from './Grid';
