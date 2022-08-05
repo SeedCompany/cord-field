@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
 import { Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
-import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -10,7 +9,6 @@ import { FileActionsContextProvider } from '../../../components/files/FileAction
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { Table } from '../../../components/Table';
 import { useProjectId } from '../useProjectId';
 import {
   ProjectBudgetDocument,
@@ -46,9 +44,6 @@ export const ProjectBudget = () => {
   const { data, loading, error } = useQuery(ProjectBudgetDocument, {
     variables: { id: projectId, changeset: changesetId },
   });
-
-  // Don't wait for data to load table js code
-  useEffect(() => Table.preload(), []);
 
   const budget = data?.project.budget;
 
