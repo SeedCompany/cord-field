@@ -51,7 +51,7 @@ export const ChangesetCell = (props: GridCellProps) => {
   const classes = useUtilityClasses(ownerState);
 
   const column = apiRef.current.getColumn(props.field);
-  if (!column.changesetAware) {
+  if (!column.changesetAware || props.cellMode === 'edit') {
     return <GridCell {...props} />;
   }
 
