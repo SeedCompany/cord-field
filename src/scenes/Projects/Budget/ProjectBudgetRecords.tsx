@@ -16,7 +16,7 @@ import {
   changesetGridComponents,
   useDeletedItemsOfChangeset,
 } from '../../../components/Changeset';
-import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
+import { useCurrencyColumn } from '../../../components/Grid/useCurrencyColumn';
 import {
   BudgetRecordFragment as BudgetRecord,
   CalculateNewTotalFragmentDoc as CalculateNewTotal,
@@ -44,7 +44,6 @@ const setSecuredValue =
 
 export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
   const { loading, budget } = props;
-  const formatCurrency = useCurrencyFormatter();
   const [updateBudgetRecord, { client: apollo }] = useMutation(UpdateRecord, {
     update: onUpdateChangeFragment({
       object: budget?.value ?? undefined,
@@ -85,12 +84,9 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       headerName: 'Amount',
       field: 'amount',
       flex: 1,
-      align: 'right',
-      headerAlign: 'right',
-      type: 'number',
+      ...useCurrencyColumn(),
       valueGetter: getSecuredValue,
       valueSetter: setSecuredValue('amount'),
-      valueFormatter: ({ value }) => formatCurrency(value ?? 0),
       changesetAware: true,
       editable: true,
     },

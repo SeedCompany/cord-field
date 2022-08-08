@@ -73,6 +73,7 @@
     "react-final-form": "patch:react-final-form@npm:6.5.8#.yarn/patches/react-final-form.patch",
     "react-helmet-async": "^1.3.0",
     "react-intersection-observer": "^9.1.0",
+    "react-number-format": "^4.9.3",
     "react-pdf": "^5.7.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
