@@ -97,7 +97,11 @@ export const ChangesetCell = (props: GridCellProps) => {
       return <GridCell {...props} />;
     }
     moreInfo = (
-      <PropertyDiff previous={previousFormatted} current={valueFormatted} />
+      <PropertyDiff
+        previous={previousFormatted}
+        current={valueFormatted}
+        sx={props.align === 'right' ? { alignItems: 'flex-end' } : undefined}
+      />
     );
   }
 
