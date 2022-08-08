@@ -7,7 +7,7 @@ import {
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
 import { PeriodicReportsList } from '../../../components/PeriodicReports';
-import { ReportRow } from '../../../components/PeriodicReports/PeriodicReportsTable';
+import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.graphql';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProgressReportsDocument } from './ProgressReportList.graphql';
 
@@ -38,8 +38,8 @@ export const ProgressReportsList = () => {
       ? data.engagement
       : undefined;
 
-  const handleRowClick = (row: ReportRow) => {
-    navigate(`/progress-reports/${idForUrl(row.report)}`);
+  const handleRowClick = (report: PeriodicReportFragment) => {
+    navigate(`/progress-reports/${idForUrl(report)}`);
   };
 
   return (

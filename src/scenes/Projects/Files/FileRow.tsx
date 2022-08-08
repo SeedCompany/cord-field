@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { useForkRef } from '@mui/material/utils';
+import { GridRow, GridRowProps } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
@@ -15,9 +16,6 @@ import {
   FileOrDirectory,
   isDirectory,
 } from './util';
-
-// TODO Reimplement table
-const MTableBodyRow = 'div';
 
 const useStyles = makeStyles<void, 'isOver'>()(
   ({ palette, transitions }, _props, classes) => ({
@@ -47,9 +45,11 @@ const useStyles = makeStyles<void, 'isOver'>()(
   })
 );
 
-export const FileRow = (props: any) => {
-  const parent = props.data.parent as Directory;
-  const node = props.data.item as FileOrDirectory;
+export const FileRow = ({
+  parent,
+  ...props
+}: GridRowProps & { parent: Directory }) => {
+  const node = props.row as FileOrDirectory;
   const [{ isOver, canDrop, draggingItem }, dropRef] = useDrop(
     () => ({
       accept: DndFileNode,
@@ -61,7 +61,7 @@ export const FileRow = (props: any) => {
         canDrop: monitor.canDrop(),
       }),
     }),
-    [props.data]
+    [props.row]
   );
   const { enqueueSnackbar } = useSnackbar();
   const [moveNode] = useMutation(MoveFileNodeDocument);
@@ -103,7 +103,7 @@ export const FileRow = (props: any) => {
         });
       },
     }),
-    [props.data]
+    [props.row]
   );
 
   // Hide drag preview so we can use a custom one.
@@ -115,17 +115,21 @@ export const FileRow = (props: any) => {
   const { classes, cx } = useStyles();
 
   return (
-    <MTableBodyRow
-      {...props}
-      innerRef={ref}
-      className={cx({
-        [props.className ?? '']: true,
-        [classes.root]: true,
-        [classes.isDragging]: isDragging,
-        [classes.acceptsDrop]: Boolean(draggingItem && !isDragging && canDrop),
-        [classes.rejectsDrop]: Boolean(draggingItem && !isDragging && !canDrop),
-        [classes.isOver]: isOver && !isDragging,
-      })}
-    />
+    <div ref={ref as any}>
+      <GridRow
+        {...props}
+        className={cx({
+          [classes.root]: true,
+          [classes.isDragging]: isDragging,
+          [classes.acceptsDrop]: Boolean(
+            draggingItem && !isDragging && canDrop
+          ),
+          [classes.rejectsDrop]: Boolean(
+            draggingItem && !isDragging && !canDrop
+          ),
+          [classes.isOver]: isOver && !isDragging,
+        })}
+      />
+    </div>
   );
 };
