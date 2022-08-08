@@ -1,9 +1,10 @@
+import { Box, Card } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { sortBy, uniq } from 'lodash';
 import { useMemo } from 'react';
 import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
 import { bookIndexFromName } from '../../../common/biblejs';
 import { Link } from '../../../components/Routing';
-import { Table } from '../../../components/Table';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
 
 interface ProductTableProps {
@@ -11,7 +12,11 @@ interface ProductTableProps {
   products: readonly ProgressOfProductForReportFragment[];
 }
 
-type RowData = { label: string; data: ProgressOfProductForReportFragment } & {
+type RowData = {
+  id: string;
+  label: string;
+  data: ProgressOfProductForReportFragment;
+} & {
   [K in ProductStep]?: string;
 };
 
@@ -30,36 +35,46 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
     );
   }, [products]);
 
-  const columns = [
+  const columns: Array<GridColDef<RowData>> = [
     {
-      title: category,
+      headerName: category,
       field: 'label',
-      headerStyle: {
-        fontSize: '24px',
-      },
-      render: ({ data }: RowData) => (
+      minWidth: 200,
+      maxWidth: 400,
+      renderHeader: () => <Box sx={{ fontSize: 24 }}>{category}</Box>,
+      renderCell: ({ row: { data } }) => (
         <Link to={`../../../products/${data.product.id}`}>
           {data.product.label}
         </Link>
       ),
     },
-    ...steps.map((step) => ({
-      title:
-        step === 'ExegesisAndFirstDraft' ? (
-          <>Exegesis&nbsp;& First&nbsp;Draft</>
-        ) : (
-          ProductStepLabels[step]
-        ),
-      field: step,
-      render: (row: RowData) =>
-        row[step] ? (
-          row[step]
-        ) : row.data.steps.find((s) => s.step === step) ? (
-          ''
-        ) : (
-          <>&mdash;</>
-        ),
-    })),
+    ...steps.map(
+      (step): GridColDef<RowData> => ({
+        renderHeader: () => {
+          const label = ProductStepLabels[step];
+          const sep = ['&', ' '].find((sep) => label.includes(sep)) ?? '\0';
+          const [one, two] = label.split(sep, 2);
+          return (
+            <Box sx={{ lineHeight: 'initial' }}>
+              <div>
+                {one} {sep}
+              </div>
+              {two && <div>{two}</div>}
+            </Box>
+          );
+        },
+        field: step,
+        width: 100,
+        renderCell: ({ row }) =>
+          row[step] ? (
+            row[step]
+          ) : row.data.steps.find((s) => s.step === step) ? (
+            ''
+          ) : (
+            <>&mdash;</>
+          ),
+      })
+    ),
   ];
 
   const tableData = (
@@ -76,6 +91,7 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
   ).map((progress) => {
     const product = progress.product;
     const row: RowData = {
+      id: product.id,
       data: progress,
       label: product.label ?? '',
     };
@@ -97,10 +113,16 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
   });
 
   return (
-    <Table
-      columns={columns}
-      data={tableData}
-      components={{ Toolbar: () => null }}
-    />
+    <Card sx={{ maxWidth: 'lg' }}>
+      <DataGrid<RowData>
+        columns={columns}
+        rows={tableData}
+        autoHeight
+        disableColumnMenu
+        components={{
+          Footer: () => null,
+        }}
+      />
+    </Card>
   );
 };

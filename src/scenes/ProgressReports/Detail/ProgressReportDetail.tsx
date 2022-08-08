@@ -6,11 +6,11 @@ import {
   CardContent,
   Grid,
   Skeleton,
+  Stack,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { useWindowSize } from 'react-use';
 import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import {
@@ -34,15 +34,19 @@ import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
     position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
   },
   main: {
+    flex: 1,
     padding: spacing(4),
-    maxWidth: breakpoints.values.md,
+    display: 'flex',
+    flexDirection: 'column',
   },
   header: {
     marginTop: spacing(3),
@@ -56,7 +60,6 @@ const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
 export const ProgressReportDetail = () => {
   const { classes } = useStyles();
   const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
-  const windowSize = useWindowSize();
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
@@ -179,7 +182,7 @@ export const ProgressReportDetail = () => {
         </Grid>
 
         {report?.skippedReason.value ? (
-          <Grid container direction="column" spacing={2}>
+          <Grid container direction="column" spacing={2} maxWidth="sm">
             <Grid item component={Typography} variant="h3">
               Skipped
             </Grid>
@@ -211,8 +214,8 @@ export const ProgressReportDetail = () => {
               )}
             </Typography>
 
-            <Grid container direction="column" spacing={3}>
-              <Grid item container spacing={3}>
+            <Stack spacing={3} flex={1}>
+              <Grid container spacing={3} maxWidth="md">
                 <Grid item xs={12} md={7} container>
                   <ProgressSummaryCard
                     loading={!report}
@@ -231,17 +234,8 @@ export const ProgressReportDetail = () => {
                   )}
                 </Grid>
               </Grid>
-              <ProductTableList
-                products={report?.progress}
-                style={{
-                  maxWidth:
-                    windowSize.width !== Infinity
-                      ? // window - sidebar - margin
-                        windowSize.width - 248 - 8 * 2
-                      : undefined,
-                }}
-              />
-            </Grid>
+              <ProductTableList products={report?.progress} />
+            </Stack>
           </>
         )}
       </main>
