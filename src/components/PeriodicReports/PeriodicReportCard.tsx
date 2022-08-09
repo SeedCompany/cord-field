@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
-import { Many, simpleSwitch } from '~/common';
+import { Many, simpleSwitch, StyleProps } from '~/common';
 import {
   EditablePeriodicReportField,
   UpdatePeriodicReportDialog,
@@ -63,7 +63,7 @@ const useStyles = makeStyles()(({ spacing }) => ({
   },
 }));
 
-export interface PeriodicReportCardProps {
+export interface PeriodicReportCardProps extends StyleProps {
   type: ReportType;
   dueCurrently?: SecuredPeriodicReportFragment;
   dueNext?: SecuredPeriodicReportFragment;
@@ -73,7 +73,7 @@ export interface PeriodicReportCardProps {
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
   const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
   const needsUpload =
@@ -102,7 +102,12 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
 
   return (
     <>
-      <Card {...getRootProps()} tabIndex={-1} className={classes.root}>
+      <Card
+        {...getRootProps()}
+        tabIndex={-1}
+        className={cx(classes.root, props.className)}
+        sx={props.sx}
+      >
         <CardActionAreaLink to={link} className={classes.topArea}>
           {!disableIcon && (
             <HugeIcon

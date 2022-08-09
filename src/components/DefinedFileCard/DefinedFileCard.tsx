@@ -16,7 +16,7 @@ import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
-import { SecuredProp } from '~/common';
+import { SecuredProp, StyleProps } from '~/common';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -92,7 +92,7 @@ const useStyles = makeStyles()(({ palette, spacing, typography }) => ({
   },
 }));
 
-export interface DefinedFileCardProps {
+export interface DefinedFileCardProps extends StyleProps {
   label: ReactNode;
   resourceType: string;
   securedFile: SecuredProp<FileNode>;
@@ -144,7 +144,7 @@ const FileCardMeta = ({
 
 export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
   function DefinedFileCard(props, ref) {
-    const { classes } = useStyles();
+    const { classes, cx } = useStyles();
     const {
       label,
       resourceType,
@@ -153,6 +153,8 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       parentId,
       disableIcon,
       onUpload,
+      className,
+      sx,
       ...rest
     } = props;
     const { value: file, canRead, canEdit } = securedFile;
@@ -221,7 +223,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
     const Icon = !file && canEdit ? AddIcon : NotPermittedIcon;
 
     const card = (
-      <Card {...getRootProps()} className={classes.root}>
+      <Card {...getRootProps()} className={cx(classes.root, className)} sx={sx}>
         <input {...getInputProps()} name="defined_file_version_uploader" />
         <DropzoneOverlay
           classes={{ text: classes.dropzoneText }}

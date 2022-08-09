@@ -7,7 +7,15 @@ import { FileActionsContextProvider } from '../../../components/files/FileAction
 import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
 import { ProgressReportFragment } from './ProgressReportDetail.graphql';
 
-interface Props extends Pick<DefinedFileCardProps, 'onUpload' | 'disableIcon'> {
+interface Props
+  extends Omit<
+    DefinedFileCardProps,
+    | 'label'
+    | 'uploadMutationDocument'
+    | 'parentId'
+    | 'resourceType'
+    | 'securedFile'
+  > {
   progressReport: ProgressReportFragment;
 }
 

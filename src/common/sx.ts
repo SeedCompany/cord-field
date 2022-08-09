@@ -2,6 +2,11 @@ import { SxProps, Theme } from '@mui/material/styles';
 
 export type Sx = SxProps<Theme>;
 
+export interface StyleProps {
+  sx?: Sx;
+  className?: string;
+}
+
 /**
  * Normalize sx prop for extension
  * @example
