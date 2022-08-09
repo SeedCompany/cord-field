@@ -20,7 +20,7 @@ export function FilterButtonDialog<T>({
   return (
     <>
       <Badge badgeContent={keys(values).length} color="primary">
-        <Button variant="outlined" onClick={() => open()}>
+        <Button variant="outlined" color="secondary" onClick={() => open()}>
           Filter Options
         </Button>
       </Badge>

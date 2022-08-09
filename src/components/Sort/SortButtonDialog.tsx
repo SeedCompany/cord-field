@@ -19,7 +19,7 @@ export function SortButtonDialog<T>({
 
   return (
     <>
-      <Button variant="outlined" onClick={() => open()}>
+      <Button variant="outlined" color="secondary" onClick={() => open()}>
         Sort Options
       </Button>
       <Dialog fullWidth maxWidth="xs" {...state}>
