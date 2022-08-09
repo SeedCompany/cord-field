@@ -41,31 +41,33 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
           <Breadcrumb to=".">Goal</Breadcrumb>
         </Breadcrumbs>
       </Grid>
-      <Grid item container spacing={3} alignItems="center">
-        <Grid
-          item
-          className={product?.label ? undefined : classes.nameRedacted}
-        >
-          <Typography variant="h2">
-            {product?.label ?? (
-              <Redacted
-                info={`You do not have permission to view this product's label`}
-                width="100%"
-              />
-            )}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Tooltip title="Edit Goal">
-            <Fab
-              color="primary"
-              // @ts-expect-error it works. These generics are hard to express.
-              component={Link}
-              to="edit"
-            >
-              <Edit />
-            </Fab>
-          </Tooltip>
+      <Grid item>
+        <Grid container spacing={3} alignItems="center">
+          <Grid
+            item
+            className={product?.label ? undefined : classes.nameRedacted}
+          >
+            <Typography variant="h2">
+              {product?.label ?? (
+                <Redacted
+                  info={`You do not have permission to view this product's label`}
+                  width="100%"
+                />
+              )}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Tooltip title="Edit Goal">
+              <Fab
+                color="primary"
+                // @ts-expect-error it works. These generics are hard to express.
+                component={Link}
+                to="edit"
+              >
+                <Edit />
+              </Fab>
+            </Tooltip>
+          </Grid>
         </Grid>
       </Grid>
       <Grid item>
