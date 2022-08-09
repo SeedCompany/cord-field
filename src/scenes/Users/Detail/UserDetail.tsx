@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useInterval } from 'react-use';
 import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { RoleLabels } from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
@@ -92,7 +93,7 @@ export const UserDetail = () => {
               object={user}
               label="Person"
               listId="users"
-              listFilter={(args: UsersQueryVariables) =>
+              listFilter={(args: PartialDeep<UsersQueryVariables>) =>
                 args.input?.filter?.pinned ?? false
               }
             />

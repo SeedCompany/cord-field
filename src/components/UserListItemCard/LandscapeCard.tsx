@@ -1,5 +1,6 @@
 import { Card, CardContent, Skeleton, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { square } from '~/common';
 import { UsersQueryVariables } from '../../scenes/Users/List/users.graphql';
 import { Avatar } from '../Avatar';
@@ -73,7 +74,7 @@ export const UserListItemCardLandscape = ({
         object={user}
         label="Person"
         listId="users"
-        listFilter={(args: UsersQueryVariables) =>
+        listFilter={(args: PartialDeep<UsersQueryVariables>) =>
           args.input?.filter?.pinned ?? false
         }
         className={classes.pin}

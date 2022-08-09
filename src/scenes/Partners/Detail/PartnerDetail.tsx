@@ -13,6 +13,7 @@ import { Many } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { listOrPlaceholders, square } from '~/common';
 import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
@@ -146,8 +147,8 @@ export const PartnerDetail = () => {
               object={partner}
               label="Partner"
               listId="partners"
-              listFilter={(args: PartnersQueryVariables) =>
-                args.input.filter?.pinned ?? false
+              listFilter={(args: PartialDeep<PartnersQueryVariables>) =>
+                args.input?.filter?.pinned ?? false
               }
             />
           </header>

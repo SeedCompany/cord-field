@@ -4,6 +4,7 @@ import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { ProjectStepLabels } from '~/api/schema.graphql';
 import { labelFrom, Many } from '~/common';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
@@ -269,8 +270,8 @@ export const ProjectOverview = () => {
               object={projectOverviewData?.project}
               label="Project"
               listId="projects"
-              listFilter={(args: ProjectListQueryVariables) =>
-                args.input.filter?.pinned ?? false
+              listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
+                args.input?.filter?.pinned ?? false
               }
             />
           </header>

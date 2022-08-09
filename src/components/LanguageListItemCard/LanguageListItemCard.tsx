@@ -1,5 +1,6 @@
 import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
@@ -130,8 +131,8 @@ export const LanguageListItemCard = ({
         object={language}
         label="Language"
         listId="languages"
-        listFilter={(args: LanguagesQueryVariables) =>
-          args.input.filter?.pinned ?? false
+        listFilter={(args: PartialDeep<LanguagesQueryVariables>) =>
+          args.input?.filter?.pinned ?? false
         }
         className={classes.pin}
       />

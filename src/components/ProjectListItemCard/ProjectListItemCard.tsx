@@ -1,5 +1,6 @@
 import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { ProjectStatusLabels } from '~/api/schema.graphql';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
@@ -205,8 +206,8 @@ export const ProjectListItemCard = ({
         object={project}
         label="Project"
         listId="projects"
-        listFilter={(args: ProjectListQueryVariables) =>
-          args.input.filter?.pinned ?? false
+        listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
+          args.input?.filter?.pinned ?? false
         }
         className={classes.pin}
       />

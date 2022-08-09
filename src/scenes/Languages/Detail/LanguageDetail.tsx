@@ -4,6 +4,7 @@ import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { removeItemFromList } from '~/api';
 import { canEditAny, listOrPlaceholders } from '~/common';
 import { BooleanProperty } from '../../../components/BooleanProperty';
@@ -142,8 +143,8 @@ export const LanguageDetail = () => {
               object={language}
               label="Language"
               listId="languages"
-              listFilter={(args: LanguagesQueryVariables) =>
-                args.input.filter?.pinned ?? false
+              listFilter={(args: PartialDeep<LanguagesQueryVariables>) =>
+                args.input?.filter?.pinned ?? false
               }
             />
           </div>

@@ -1,6 +1,7 @@
 import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { random } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
@@ -70,8 +71,8 @@ export const PartnerListItemCard = ({
         object={partner}
         label="Partner"
         listId="partners"
-        listFilter={(args: PartnersQueryVariables) =>
-          args.input.filter?.pinned ?? false
+        listFilter={(args: PartialDeep<PartnersQueryVariables>) =>
+          args.input?.filter?.pinned ?? false
         }
         className={classes.pin}
         size="small"
