@@ -1,12 +1,10 @@
-import { makeStyles, useTheme } from '@material-ui/core';
-import { SkipNextRounded as SkipIcon } from '@material-ui/icons';
+import { SkipNextRounded as SkipIcon } from '@mui/icons-material';
+import { Box } from '@mui/material';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { Many, without } from 'lodash';
-import { DateTime } from 'luxon';
-import { Column } from 'material-table';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Except } from 'type-fest';
-import { CalendarDate } from '~/common';
 import { SkipPeriodicReportDialog } from '../../scenes/Projects/Reports/SkipPeriodicReportDialog';
 import {
   EditablePeriodicReportField,
@@ -21,31 +19,14 @@ import {
   useFileActions,
 } from '../files/FileActions';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
-import { Table } from '../Table';
-import { TableProps } from '../Table/Table';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportRow } from './PeriodicReportRow';
 import { ReportLabel } from './ReportLabel';
 import { useUpdatePeriodicReport } from './Upload/useUpdatePeriodicReport';
 
-export interface ReportRow {
-  report: PeriodicReportFragment;
-  period: CalendarDate;
-  modifiedBy: string;
-  modifiedAt?: DateTime;
-}
-
-const useStyles = makeStyles(() => ({
-  label: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '1',
-  },
-}));
-
 type PeriodicReportsTableProps = Except<
-  TableProps<ReportRow>,
-  'columns' | 'components' | 'data'
+  DataGridProps<PeriodicReportFragment>,
+  'columns' | 'rows'
 > & {
   data?: readonly PeriodicReportFragment[];
 };
@@ -64,42 +45,33 @@ export const PeriodicReportsTableInContext = ({
   const [editState, editField, fieldsBeingEdited] =
     useDialog<Many<EditablePeriodicReportField>>();
 
-  const rowsData = (data ?? []).map(
-    (report): ReportRow => ({
-      report,
-      period: report.start,
-      modifiedBy: report.reportFile.value?.modifiedBy.fullName || '',
-      modifiedAt: report.reportFile.value?.modifiedAt,
-    })
-  );
-
-  const classes = useStyles();
-  const theme = useTheme();
-
-  const columns: Array<Column<ReportRow>> = [
+  const columns: Array<GridColDef<PeriodicReportFragment>> = [
     {
-      title: 'Period',
-      defaultSort: 'desc',
-      render: ({ report }) => (
-        <span className={classes.label}>
+      headerName: 'Period',
+      field: 'start',
+      width: 100,
+      renderCell: ({ row: report }) => (
+        <Box component="span" display="inline-flex" alignItems="center" gap="1">
           <ReportLabel report={report} />
           {report.skippedReason.value && <SkipIcon fontSize="small" />}
-        </span>
+        </Box>
       ),
-      customSort: (row1, row2) =>
-        row1.period.toMillis() - row2.period.toMillis(),
+      sortingOrder: ['desc', 'asc'], // no "unsorted"
     },
     {
-      title: 'Submitted By',
+      headerName: 'Submitted By',
       field: 'modifiedBy',
-      render: ({ modifiedBy, report }) => {
-        return report.skippedReason.value ? <>&mdash;</> : modifiedBy;
-      },
+      width: 200,
+      valueGetter: ({ row }) => row.reportFile.value?.modifiedBy.fullName,
+      renderCell: ({ row: report, value }) =>
+        report.skippedReason.value ? <>&mdash;</> : value,
     },
     {
-      title: 'Submitted Date',
+      headerName: 'Submitted Date',
       field: 'modifiedAt',
-      render: ({ report }) =>
+      width: 150,
+      valueGetter: ({ row }) => row.reportFile.value?.modifiedAt,
+      renderCell: ({ row: report }) =>
         report.skippedReason.value ? (
           <>&mdash;</>
         ) : (
@@ -107,9 +79,10 @@ export const PeriodicReportsTableInContext = ({
         ),
     },
     {
-      title: 'Received Date',
+      headerName: 'Received Date',
       field: 'receivedDate',
-      render: ({ report }) =>
+      width: 150,
+      renderCell: ({ row: report }) =>
         report.skippedReason.value ? (
           <>&mdash;</>
         ) : (
@@ -117,11 +90,12 @@ export const PeriodicReportsTableInContext = ({
         ),
     },
     {
-      title: '',
-      field: 'item',
+      headerName: '',
+      field: 'report',
+      flex: 1,
       align: 'right',
-      sorting: false,
-      render: ({ report }) => {
+      sortable: false,
+      renderCell: ({ row: report }) => {
         const reportFile = report.reportFile;
         const fileActions = reportFile.value
           ? without(
@@ -205,21 +179,40 @@ export const PeriodicReportsTableInContext = ({
         />
       ) : null}
 
-      <Table<ReportRow>
-        isLoading={!data}
+      <DataGrid<PeriodicReportFragment>
+        loading={!data}
+        density="compact"
+        initialState={{
+          sorting: {
+            sortModel: [{ field: 'start', sort: 'desc' }],
+          },
+        }}
+        disableColumnMenu
+        disableSelectionOnClick
+        autoHeight
+        sx={{
+          '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
+          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
+            '&:focus, &:focus-within': { outline: 'none' },
+          },
+          '& .MuiDataGrid-columnHeader:nth-last-of-type(-n+2) .MuiDataGrid-columnSeparator--sideRight':
+            {
+              display: 'none',
+            },
+        }}
         {...props}
-        data={rowsData}
+        rows={data ?? []}
         components={{
-          // No toolbar since it's just empty space, we don't use it for anything.
-          Toolbar: () => null,
           Row: PeriodicReportRow,
+          Footer: () => null,
+          ...props.components,
         }}
         columns={columns}
-        onRowClick={(rowData) => {
+        onRowClick={(params, event, details) => {
           if (props.onRowClick) {
-            props.onRowClick(rowData);
+            props.onRowClick(params, event, details);
           } else {
-            const { report } = rowData;
+            const report = params.row as PeriodicReportFragment;
             if (!report.reportFile.canRead) {
               enqueueSnackbar(
                 `You don't have permission to view this report file`
@@ -234,18 +227,6 @@ export const PeriodicReportsTableInContext = ({
               // TODO Upload
             }
           }
-        }}
-        options={{
-          padding: 'dense',
-          thirdSortClick: false,
-          draggable: false,
-          rowStyle: ({ report }: ReportRow) =>
-            report.skippedReason.value
-              ? {
-                  color: theme.palette.text.disabled,
-                }
-              : {},
-          ...props.options,
         }}
       />
     </>

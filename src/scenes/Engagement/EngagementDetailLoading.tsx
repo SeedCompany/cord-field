@@ -1,6 +1,6 @@
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { Edit } from '@mui/icons-material';
+import { Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../components/Breadcrumb';
 import { DataButton } from '../../components/DataButton';
 import { Fab } from '../../components/Fab';
@@ -8,7 +8,7 @@ import { FieldOverviewCard } from '../../components/FieldOverviewCard';
 import { ProjectBreadcrumb } from '../../components/ProjectBreadcrumb';
 import { CeremonyCard } from './CeremonyCard';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -20,7 +20,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const EngagementDetailLoading = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.root}>

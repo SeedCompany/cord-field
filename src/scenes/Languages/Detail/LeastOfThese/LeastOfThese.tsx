@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { PaperTooltip } from '../../../../components/PaperTooltip';
 import { LeastOfTheseFragment } from './LeastOfThese.graphql';
@@ -19,7 +19,7 @@ export const LeastOfThese = ({ language }: LeastOfTheseProps) => {
           {!reason ? (
             node
           ) : (
-            <PaperTooltip title={reason} interactive placement="bottom-start">
+            <PaperTooltip title={reason} placement="bottom-start">
               {node}
             </PaperTooltip>
           )}

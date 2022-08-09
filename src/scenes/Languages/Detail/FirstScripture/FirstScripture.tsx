@@ -1,15 +1,15 @@
-import { makeStyles, Typography } from '@material-ui/core';
 import {
   Check,
   IndeterminateCheckBox,
   NotInterested,
-} from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/icons-material';
+import { Skeleton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { FirstScriptureFragment } from './FirstScripture.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -23,13 +23,13 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (!data) {
     return (
       <div className={classes.root}>
         <Skeleton
-          variant="circle"
+          variant="circular"
           width={24}
           height={24}
           className={classes.icon}

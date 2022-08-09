@@ -1,8 +1,8 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from 'tss-react/mui';
 import { HeaderSearch } from './HeaderSearch';
 import { ProfileToolbar } from './ProfileToolbar';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     padding: spacing(4, 4, 1, 4),
     display: 'flex',
@@ -12,7 +12,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const Header = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <header className={classes.root}>

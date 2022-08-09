@@ -1,6 +1,6 @@
+import { Close } from '@mui/icons-material';
 // eslint-disable-next-line @seedcompany/no-restricted-imports -- need an external link
-import { IconButton, Link } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import { IconButton, Link } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useIsomorphicEffect } from '../../hooks';
 
@@ -23,7 +23,7 @@ export const useNonProdWarning = () => {
       {
         variant: 'warning',
         autoHideDuration: 30_000,
-        action: (key: string) => (
+        action: (key) => (
           <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
             <Close />
           </IconButton>

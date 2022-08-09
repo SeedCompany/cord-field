@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from '@material-ui/core';
+import { SvgIcon, SvgIconProps } from '@mui/material';
 
 export const PeopleJoinedIcon = (props: SvgIconProps) => (
   <SvgIcon {...props} viewBox="0 0 40 40">

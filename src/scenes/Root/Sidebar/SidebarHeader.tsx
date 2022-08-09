@@ -1,8 +1,9 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { CordIcon } from '../../../components/Icons';
 import { SwooshBackground } from './SwooshBackground';
 
-const useStyles = makeStyles(({ spacing, typography }) => ({
+const useStyles = makeStyles()(({ spacing, typography }) => ({
   root: {
     position: 'relative',
   },
@@ -17,23 +18,19 @@ const useStyles = makeStyles(({ spacing, typography }) => ({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
   },
-  cordIcon: {
-    fontSize: 40,
-    color: 'inherit',
-  },
   copyright: {
     fontWeight: typography.fontWeightLight,
   },
 }));
 
 export const SidebarHeader = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.root}>
       <SwooshBackground />
       <div className={classes.floating}>
-        <CordIcon className={classes.cordIcon} />
+        <CordIcon sx={{ color: 'inherit', fontSize: 40 }} />
         <Typography
           className={classes.copyright}
           display="block"

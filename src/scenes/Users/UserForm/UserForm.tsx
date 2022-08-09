@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { memoize } from 'lodash';
 import { RoleLabels, RoleList } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
@@ -128,7 +128,7 @@ export const UserForm = <T, R = void>({
               label="About"
               multiline
               placeholder="Enter About"
-              inputProps={{ rowsMin: 2 }}
+              minRows={2}
               {...props}
             />
           )}

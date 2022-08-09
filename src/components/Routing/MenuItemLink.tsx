@@ -1,13 +1,12 @@
-import { MenuItem, MenuItemProps } from '@material-ui/core';
+import { MenuItem, MenuItemProps } from '@mui/material';
 import { forwardRef } from 'react';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps } from 'react-router-dom';
-import { assert } from 'ts-essentials';
 import { Merge } from 'type-fest';
 
 export type MenuItemLinkProps = InternalProps | ExternalProps;
 
-type BaseProps = Omit<MenuItemProps<'a'>, 'button' | 'component' | 'href'>;
+type BaseProps = Omit<MenuItemProps<'a'>, 'component' | 'href'>;
 
 interface InternalProps extends Merge<BaseProps, LinkProps> {
   external?: false;
@@ -25,17 +24,13 @@ interface ExternalProps extends BaseProps {
  */
 export const MenuItemLink = forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
   function MenuItemLink({ external, to, children, ...props }, ref) {
-    if (external) {
-      assert(typeof to === 'string');
-      return (
-        <MenuItem {...props} href={to} button ref={ref} component="a">
-          {children}
-        </MenuItem>
-      );
-    }
-
     return (
-      <MenuItem {...props} to={to} button ref={ref} component={Link}>
+      <MenuItem
+        {...props}
+        ref={ref}
+        {...(external ? { href: to } : { to })}
+        component={external ? 'a' : Link}
+      >
         {children}
       </MenuItem>
     );

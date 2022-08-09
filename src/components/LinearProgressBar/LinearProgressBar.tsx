@@ -1,4 +1,4 @@
-import { Box, LinearProgress, Typography } from '@material-ui/core';
+import { Box, LinearProgress, Typography } from '@mui/material';
 import { ProgressMeasurement } from '~/api/schema.graphql';
 
 interface LinearProgressBarProps {

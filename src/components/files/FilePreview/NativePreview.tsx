@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core';
 import { useEffect, useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import type { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
@@ -13,14 +13,14 @@ export interface NativePreviewerProps extends PreviewerProps {
   type: NativePreviewType;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   media: {
     maxWidth: 800,
   },
 }));
 
 export const NativePreview = (props: NativePreviewerProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { file, type, previewLoading, setPreviewLoading } = props;
   const [url, setUrl] = useState<string | undefined>();
   useEffect(() => {

@@ -1,8 +1,7 @@
 import { useQuery } from '@apollo/client';
-import { Breadcrumbs, Grid, makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import { useEffect } from 'react';
+import { Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { Error } from '../../../components/Error';
@@ -10,7 +9,6 @@ import { FileActionsContextProvider } from '../../../components/files/FileAction
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { Table } from '../../../components/Table';
 import { useProjectId } from '../useProjectId';
 import {
   ProjectBudgetDocument,
@@ -18,7 +16,7 @@ import {
 } from './ProjectBudget.graphql';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => ({
+const useStyles = makeStyles()(({ breakpoints, spacing }) => ({
   root: {
     overflowY: 'auto',
   },
@@ -39,16 +37,13 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => ({
 }));
 
 export const ProjectBudget = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const formatCurrency = useCurrencyFormatter();
 
   const { data, loading, error } = useQuery(ProjectBudgetDocument, {
     variables: { id: projectId, changeset: changesetId },
   });
-
-  // Don't wait for data to load table js code
-  useEffect(() => Table.preload(), []);
 
   const budget = data?.project.budget;
 

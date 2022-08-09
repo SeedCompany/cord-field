@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { isBoolean } from 'lodash';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';

@@ -1,14 +1,11 @@
-import {
-  FormControlLabel,
-  FormLabel,
-  makeStyles,
-  Radio,
-  useRadioGroup,
-} from '@material-ui/core';
+import { FormControlLabel, FormLabel, Radio } from '@mui/material';
+// eslint-disable-next-line @seedcompany/no-restricted-imports
+import { useRadioGroup } from '@mui/material/RadioGroup';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Order } from '~/api/schema.graphql';
 
-const useStyles = makeStyles(({ typography, spacing }) => ({
+const useStyles = makeStyles()(({ typography, spacing }) => ({
   label: {
     fontWeight: typography.weight.bold,
     margin: spacing(2, 0, 1),
@@ -32,7 +29,7 @@ export function SortOption<T>({
   defaultOrder = 'ASC',
   default: defaultVal = false,
 }: SortOptionProps<T>) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const ascNode = asc ? (
     <ActualSortOption
       order="ASC"
@@ -90,7 +87,7 @@ function ActualSortOption<T>({
         // Ignore types and fake event to send to RadioGroup which will convert
         // it back to SortValue. This is so we don't have to use our own context
         // to pass onChange callback from SortControl down to SortOptions.
-        onChange?.(
+        onChange(
           {
             target: {
               value: defaultVal

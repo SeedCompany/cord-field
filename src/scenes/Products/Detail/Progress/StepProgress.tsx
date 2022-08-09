@@ -3,14 +3,14 @@ import {
   CardActionArea,
   Grid,
   LinearProgress,
-  makeStyles,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { ProductStepLabels, ProgressMeasurement } from '~/api/schema.graphql';
 import { StepProgressFragment } from './ProductProgress.graphql';
 import { ProgressIcon } from './ProgressIcon';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   infoArea: {
     padding: spacing(1),
   },
@@ -27,7 +27,7 @@ export const StepProgress = ({
   progress: StepProgressFragment;
   onClick?: () => void;
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const progressValue = completed.value || 0;
   return (
     <Grid container wrap="nowrap" alignItems="center" spacing={2}>
@@ -36,13 +36,13 @@ export const StepProgress = ({
       </Grid>
 
       <Grid item xs>
-        <Card variant="outlined">
+        <Card variant="outlined" elevation={0}>
           <CardActionArea onClick={onClick}>
             <Grid
               item
               container
               alignItems="center"
-              justify="space-between"
+              justifyContent="space-between"
               spacing={1}
               className={classes.infoArea}
             >

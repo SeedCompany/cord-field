@@ -1,8 +1,9 @@
-import { Button, ButtonProps, fade, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { Button, ButtonProps } from '@mui/material';
+import { alpha as fade } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles()(({ palette }) => ({
   text: {
     color: palette.error.main,
     '&:hover': {
@@ -28,14 +29,14 @@ export const ErrorButton = ({
   classes: classesProp = {},
   ...rest
 }: ErrorButtonProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
     <Button
       {...rest}
       classes={{
         ...classes,
-        text: clsx(classes.text, classesProp.text),
-        contained: clsx(classes.contained, classesProp.contained),
+        text: cx(classes.text, classesProp.text),
+        contained: cx(classes.contained, classesProp.contained),
       }}
     />
   );

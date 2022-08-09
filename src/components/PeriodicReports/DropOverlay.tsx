@@ -1,10 +1,16 @@
-import { makeStyles, Typography } from '@material-ui/core';
-import { Cancel, CloudUpload } from '@material-ui/icons';
-import clsx from 'clsx';
+import { Cancel, CloudUpload } from '@mui/icons-material';
+import { Typography } from '@mui/material';
+import { keyframes } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportLabel } from './ReportLabel';
 
-const useStyles = makeStyles(({ palette, shape, transitions }) => ({
+const upAndDown = keyframes({
+  '0%, 100%': { transform: 'translateY(-4px)' },
+  '50%': { transform: 'translateY(4px)' },
+});
+
+const useStyles = makeStyles()(({ palette, shape, transitions }) => ({
   drop: {
     position: 'absolute',
     inset: 2,
@@ -26,11 +32,7 @@ const useStyles = makeStyles(({ palette, shape, transitions }) => ({
     margin: '4px 0 8px',
   },
   uploadIcon: {
-    animation: '$UpAndDown 1s ease-in-out infinite',
-  },
-  '@keyframes UpAndDown': {
-    '0%, 100%': { transform: 'translateY(-4px)' },
-    '50%': { transform: 'translateY(4px)' },
+    animation: `${upAndDown} 1s ease-in-out infinite`,
   },
 }));
 
@@ -41,16 +43,16 @@ export const DropOverlay = ({
   report?: SecuredPeriodicReportFragment;
   show: boolean;
 }) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const file = report?.value?.reportFile;
   return (
-    <div className={clsx(classes.drop, show && classes.dropActive)}>
+    <div className={cx(classes.drop, show && classes.dropActive)}>
       {file?.canEdit ? (
         <CloudUpload
           fontSize="large"
           color="action"
-          className={clsx(classes.icon, classes.uploadIcon)}
+          className={cx(classes.icon, classes.uploadIcon)}
         />
       ) : (
         <Cancel fontSize="large" color="error" className={classes.icon} />

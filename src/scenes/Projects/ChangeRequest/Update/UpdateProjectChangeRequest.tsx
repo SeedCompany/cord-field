@@ -130,7 +130,7 @@ export const UpdateProjectChangeRequest = ({
         variant="outlined"
         required
         multiline
-        inputProps={{ rowsMin: 2 }}
+        minRows={2}
       />
       <AutocompleteField
         options={ProjectChangeRequestStatusList}

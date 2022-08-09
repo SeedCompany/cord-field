@@ -13,6 +13,7 @@ export * from './sensitivity';
 export * from './simpleSwitch';
 export * from './sleep';
 export * from './styles';
+export * from './sx';
 export * from './types';
 export * from './urls';
 export * from './use-styles.types';

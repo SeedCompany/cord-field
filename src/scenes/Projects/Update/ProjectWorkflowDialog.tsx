@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Grid, Tooltip, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   ProjectStep,
@@ -38,7 +39,7 @@ type UpdateProjectDialogProps = Except<
   project: ProjectOverviewFragment;
 };
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   overrideTitle: {
     marginTop: spacing(3),
   },
@@ -49,7 +50,7 @@ export const ProjectWorkflowDialog = ({
   ...props
 }: UpdateProjectDialogProps) => {
   const [updateProject] = useMutation(UpdateProjectDocument);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { canBypassTransitions, transitions } = project.step;
 
   return (

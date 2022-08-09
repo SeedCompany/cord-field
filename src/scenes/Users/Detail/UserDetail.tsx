@@ -1,12 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { Edit } from '@mui/icons-material';
+import { Skeleton, Tooltip, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { useInterval } from 'react-use';
+import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { RoleLabels } from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
@@ -22,7 +23,7 @@ import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.graphql';
 import { UserDocument } from './UserDetail.graphql';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
@@ -49,7 +50,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const UserDetail = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { userId = '' } = useParams();
   const { data, error } = useQuery(UserDocument, {
     variables: { userId },
@@ -92,7 +93,7 @@ export const UserDetail = () => {
               object={user}
               label="Person"
               listId="users"
-              listFilter={(args: UsersQueryVariables) =>
+              listFilter={(args: PartialDeep<UsersQueryVariables>) =>
                 args.input?.filter?.pinned ?? false
               }
             />

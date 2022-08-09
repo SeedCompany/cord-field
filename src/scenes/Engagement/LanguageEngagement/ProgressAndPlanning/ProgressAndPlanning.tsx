@@ -1,11 +1,17 @@
 import { useMutation } from '@apollo/client';
-import { makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Tooltip, Typography } from '@mui/material';
 import { pick } from 'lodash';
+import { makeStyles } from 'tss-react/mui';
 import {
   ProductMethodology as Methodology,
   ProductApproachLabels,
 } from '~/api/schema.graphql';
-import { ApproachMethodologies, displayMethodology, entries } from '~/common';
+import {
+  ApproachMethodologies,
+  displayMethodology,
+  entries,
+  StyleProps,
+} from '~/common';
 import { DefinedFileCard } from '../../../../components/DefinedFileCard';
 import { useDialog } from '../../../../components/Dialog';
 import { DialogForm } from '../../../../components/Dialog/DialogForm';
@@ -16,7 +22,7 @@ import { PeriodicReportCard } from '../../../../components/PeriodicReports';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
 import { ProgressAndPlanningFragment } from './ProgressAndPlanning.graphql';
 
-export const useStyles = makeStyles(({ spacing, typography }) => ({
+const useStyles = makeStyles()(({ spacing, typography }) => ({
   section: {
     '&:not(:last-child)': {
       marginBottom: spacing(2),
@@ -27,28 +33,27 @@ export const useStyles = makeStyles(({ spacing, typography }) => ({
   },
 }));
 
-interface Props {
+interface Props extends StyleProps {
   engagement: ProgressAndPlanningFragment;
 }
 
-export const ProgressReports = ({ engagement }: Props) => (
-  <FileActionsContextProvider>
-    <PeriodicReportCard
-      type="Progress"
-      dueCurrently={engagement.currentProgressReportDue}
-      dueNext={engagement.nextProgressReportDue}
-      disableIcon
-      hasDetailPage
-    />
-  </FileActionsContextProvider>
+export const ProgressReports = ({ engagement, ...rest }: Props) => (
+  <PeriodicReportCard
+    {...rest}
+    type="Progress"
+    dueCurrently={engagement.currentProgressReportDue}
+    dueNext={engagement.nextProgressReportDue}
+    disableIcon
+    hasDetailPage
+  />
 );
 
-export const PlanningSpreadsheet = ({ engagement }: Props) => {
+export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
   const [dialogState, setUploading, upload] =
     // Functions cannot be passed directly here so wrap in object
     useDialog<{ submit: (next: HandleUploadCompletedFunction) => void }>();
   const [updateEngagement] = useMutation(UploadPnp);
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <FileActionsContextProvider>
@@ -57,6 +62,7 @@ export const PlanningSpreadsheet = ({ engagement }: Props) => {
         placement="top"
       >
         <DefinedFileCard
+          {...rest}
           label="Planning Spreadsheet"
           uploadMutationDocument={UploadPnp}
           parentId={engagement.id}

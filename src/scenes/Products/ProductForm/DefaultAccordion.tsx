@@ -1,26 +1,27 @@
+import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
   AccordionProps,
   AccordionSummary,
-  makeStyles,
   Typography,
-} from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
-import clsx from 'clsx';
+} from '@mui/material';
 import { FormState } from 'final-form';
 import { get, startCase } from 'lodash';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { useFieldName } from '../../../components/form';
 import { ProductKey } from './ProductFormFields';
 
-export const useStyles = makeStyles(({ spacing, typography, palette }) => ({
+export const useStyles = makeStyles()(({ spacing, typography, palette }) => ({
+  // eslint-disable-next-line tss-unused-classes/unused-classes -- used in other files, refactor this
   section: {
     '&:not(:last-child)': {
       marginBottom: spacing(2),
     },
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes -- used in other files, refactor this
   label: {
     fontWeight: typography.weight.bold,
   },
@@ -62,7 +63,7 @@ export const DefaultAccordion = <K extends ProductKey>({
   children,
   AccordionProps,
 }: DefaultAccordionProps<K>) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const fullName = useFieldName(name);
   const isError = !!get(errors, fullName);
   const isTouched = !!get(touched, fullName);
@@ -91,7 +92,7 @@ export const DefaultAccordion = <K extends ProductKey>({
       <AccordionSummary
         expandIcon={<ExpandMore />}
         classes={{
-          content: clsx(
+          content: cx(
             classes.accordionSummary,
             showError ? classes.error : undefined
           ),

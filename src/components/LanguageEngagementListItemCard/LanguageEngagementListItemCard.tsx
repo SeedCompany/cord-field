@@ -3,10 +3,9 @@ import {
   CardActions,
   CardContent,
   Grid,
-  makeStyles,
   Typography,
-} from '@material-ui/core';
-import clsx from 'clsx';
+} from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { idForUrl } from '../Changeset';
@@ -16,7 +15,7 @@ import { PresetInventoryIconFilled } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     width: '100%',
   },
@@ -41,17 +40,6 @@ const useStyles = makeStyles(({ spacing }) => ({
     flexDirection: 'column',
     justifyContent: 'flex-end',
   },
-  productList: {
-    padding: 0,
-    margin: spacing(0, 0, 1),
-  },
-  centerItems: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  iconSpacing: {
-    marginRight: spacing(1),
-  },
   presetInventory: {
     verticalAlign: 'bottom',
     marginLeft: spacing(1),
@@ -75,7 +63,7 @@ export const LanguageEngagementListItemCard = (
   } = props;
 
   const numberFormatter = useNumberFormatter();
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const language = securedLanguage.value;
   const name = language?.name.value ?? language?.displayName.value;
@@ -84,7 +72,7 @@ export const LanguageEngagementListItemCard = (
   const ethnologueCode = language?.ethnologue.code.value;
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <CardActionAreaLink
         to={`/engagements/${idForUrl(props)}`}
         className={classes.card}
@@ -93,7 +81,7 @@ export const LanguageEngagementListItemCard = (
           <Grid
             container
             direction="column"
-            justify="space-between"
+            justifyContent="space-between"
             spacing={1}
             className={classes.leftContent}
           >

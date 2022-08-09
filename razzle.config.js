@@ -158,6 +158,7 @@ const modifyJestConfig = (opts) => {
   const config = opts.jestConfig;
 
   config.moduleNameMapper['~/(.+)'] = '<rootDir>/src/$1';
+  config.snapshotSerializers = ['@emotion/jest/serializer'];
 
   return config;
 };

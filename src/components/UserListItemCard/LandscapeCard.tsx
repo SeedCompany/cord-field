@@ -1,6 +1,6 @@
-import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Card, CardContent, Skeleton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { square } from '~/common';
 import { UsersQueryVariables } from '../../scenes/Users/List/users.graphql';
 import { Avatar } from '../Avatar';
@@ -8,7 +8,7 @@ import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
 import { UserListItemFragment } from './UserListItem.graphql';
 
-const useStyles = makeStyles(({ breakpoints, spacing, typography }) => ({
+const useStyles = makeStyles()(({ breakpoints, spacing, typography }) => ({
   root: {
     flex: 1,
     maxWidth: breakpoints.values.sm,
@@ -42,12 +42,12 @@ export const UserListItemCardLandscape = ({
   user,
   className,
 }: UserListItemCardLandscapeProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const org = user?.organizations.items[0];
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <CardActionAreaLink disabled={!user} to={`/users/${user?.id}`}>
         <CardContent className={classes.content}>
           <Avatar loading={!user} className={classes.avatar}>
@@ -74,7 +74,7 @@ export const UserListItemCardLandscape = ({
         object={user}
         label="Person"
         listId="users"
-        listFilter={(args: UsersQueryVariables) =>
+        listFilter={(args: PartialDeep<UsersQueryVariables>) =>
           args.input?.filter?.pinned ?? false
         }
         className={classes.pin}

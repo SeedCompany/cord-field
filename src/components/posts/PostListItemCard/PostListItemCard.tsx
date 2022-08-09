@@ -1,15 +1,14 @@
+import { MoreVert } from '@mui/icons-material';
 import {
   Avatar,
   Card,
   CardContent,
   IconButton,
-  makeStyles,
   MenuProps,
   Typography,
-} from '@material-ui/core';
-import { MoreVert } from '@material-ui/icons';
-import clsx from 'clsx';
+} from '@mui/material';
 import { useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { PostShareabilityLabels } from '~/api/schema.graphql';
 import { canEditAny, square } from '~/common';
 import { useDialog } from '../../Dialog';
@@ -20,15 +19,11 @@ import { PostableIdFragment } from '../PostableId.graphql';
 import { PostListItemCardFragment } from './PostListItemCard.graphql';
 import { PostListItemMenu } from './PostListItemMenu';
 
-const useStyles = makeStyles(({ spacing, typography }) => {
+const useStyles = makeStyles()(({ spacing, typography }) => {
   return {
     root: {
       width: '100%',
       position: 'relative',
-    },
-    card: {
-      display: 'flex',
-      alignItems: 'initial',
     },
     cardContent: {
       flex: 1,
@@ -87,7 +82,7 @@ export const PostListItemCard = ({
   includeMembership = false,
   className,
 }: PostListItemCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [editState, editPost] = useDialog();
   const [deleteState, deletePost] = useDialog();
@@ -95,7 +90,7 @@ export const PostListItemCard = ({
 
   return (
     <>
-      <Card className={clsx(classes.root, className)}>
+      <Card className={cx(classes.root, className)}>
         <CardContent className={classes.cardContent}>
           <div className={classes.leftContent}>
             <Avatar className={classes.avatar}>

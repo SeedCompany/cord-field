@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { Add, Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+import { Add, Edit } from '@mui/icons-material';
+import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { removeItemFromList } from '~/api';
 import { canEditAny, listOrPlaceholders } from '~/common';
 import { BooleanProperty } from '../../../components/BooleanProperty';
@@ -37,7 +38,7 @@ import {
 import { LanguagePostList } from './LanguagePostList';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles()(({ spacing, palette }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
@@ -71,7 +72,7 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
 }));
 
 export const LanguageDetail = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { languageId = '' } = useParams();
   const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },
@@ -142,8 +143,8 @@ export const LanguageDetail = () => {
               object={language}
               label="Language"
               listId="languages"
-              listFilter={(args: LanguagesQueryVariables) =>
-                args.input.filter?.pinned ?? false
+              listFilter={(args: PartialDeep<LanguagesQueryVariables>) =>
+                args.input?.filter?.pinned ?? false
               }
             />
           </div>

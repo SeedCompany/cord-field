@@ -1,5 +1,4 @@
-import { Typography } from '@material-ui/core';
-import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton, Typography } from '@mui/material';
 import { ProductApproachLabels } from '~/api/schema.graphql';
 import {
   ApproachMethodologies,
@@ -16,7 +15,7 @@ export const MethodologySection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { methodology } = values.product ?? {};
   return (
     <SecuredAccordion

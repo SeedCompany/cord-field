@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { ComponentType, useEffect } from 'react';
 import { displayProductTypes } from '~/common';
 import { FieldConfig } from '../../../components/form';

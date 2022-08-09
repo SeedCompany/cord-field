@@ -1,35 +1,23 @@
-import { Grid, GridProps, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { Skeleton, Typography } from '@mui/material';
 import { groupBy } from 'lodash';
-import Table from '../../../components/Table/Table';
 import { ProductTable } from './ProductTable';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
 
-interface ProductTableListProps extends GridProps {
+interface ProductTableListProps {
   products?: readonly ProgressOfProductForReportFragment[];
 }
 
-export const ProductTableList = ({
-  products,
-  ...rest
-}: ProductTableListProps) => {
+export const ProductTableList = ({ products }: ProductTableListProps) => {
   const grouped = groupBy(products, (product) => product.product.category);
 
   return (
-    <Grid item container direction="column" spacing={3} {...rest}>
-      <Grid item component={Typography} variant="h3">
+    <>
+      <Typography variant="h3">
         {products ? 'Progress for Goals' : <Skeleton width="25%" />}
-      </Grid>
+      </Typography>
       {Object.entries(grouped).map(([category, products]) => (
-        <Grid item key={category} xs>
-          <ProductTable category={category} products={products} />
-        </Grid>
+        <ProductTable key={category} category={category} products={products} />
       ))}
-      {!products && (
-        <Grid item xs>
-          <Table columns={[]} data={[]} isLoading />
-        </Grid>
-      )}
-    </Grid>
+    </>
   );
 };

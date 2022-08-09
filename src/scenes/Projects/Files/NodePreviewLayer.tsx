@@ -1,9 +1,9 @@
-import { makeStyles } from '@material-ui/core';
 import { useDragLayer } from 'react-dnd';
+import { makeStyles } from 'tss-react/mui';
 import { NodeDragPreview } from './NodeDragPreview';
 import { DndFileNode } from './util';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     position: 'fixed',
     pointerEvents: 'none',
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const NodePreviewLayer = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { item, type, isDragging, offset } = useDragLayer((monitor) => ({
     item: monitor.getItem(),
     type: monitor.getItemType(),

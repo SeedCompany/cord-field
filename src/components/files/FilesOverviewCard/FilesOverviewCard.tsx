@@ -1,4 +1,4 @@
-import { LibraryBooksOutlined } from '@material-ui/icons';
+import { LibraryBooksOutlined } from '@mui/icons-material';
 import {
   FieldOverviewCard,
   FieldOverviewCardProps,

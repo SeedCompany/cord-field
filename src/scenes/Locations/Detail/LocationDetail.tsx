@@ -1,10 +1,9 @@
 import { useQuery } from '@apollo/client';
-import { makeStyles, Typography } from '@material-ui/core';
-import { Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Edit } from '@mui/icons-material';
+import { Skeleton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 import { LocationTypeLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
@@ -19,7 +18,7 @@ import { Redacted } from '../../../components/Redacted';
 import { EditLocation } from '../Edit';
 import { LocationDocument } from './LocationDetail.graphql';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -51,7 +50,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const LocationDetail = () => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const { locationId = '' } = useParams();
 
   const [editLocationState, editLocation] = useDialog();
@@ -76,7 +75,7 @@ export const LocationDetail = () => {
           <header className={classes.header}>
             <Typography
               variant="h2"
-              className={clsx(
+              className={cx(
                 classes.name,
                 location?.name ? null : classes.nameLoading
               )}

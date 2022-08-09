@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { Grid, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Grid, Tooltip, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   EngagementStatus,
@@ -43,7 +44,7 @@ type UpdateProjectDialogProps = Except<
   engagement: Engagement;
 };
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   overrideTitle: {
     marginTop: spacing(3),
   },
@@ -63,7 +64,7 @@ export const EngagementWorkflowDialog = ({
     engagement.__typename === 'InternshipEngagement'
       ? updateInternshipEngagement
       : updateLanguageEngagement;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { canBypassTransitions, transitions } = engagement.status;
 

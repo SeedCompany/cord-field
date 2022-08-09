@@ -2,20 +2,19 @@ import { useMutation } from '@apollo/client';
 import {
   CircularProgress,
   FormControlLabel,
-  makeStyles,
+  Skeleton,
   Switch,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+} from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { makeStyles } from 'tss-react/mui';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
 } from './CeremonyCard.graphql';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -53,7 +52,7 @@ export const CeremonyPlanned = ({
   const loading = canReadCeremony == null;
   const canRead = canReadCeremony && planned?.canRead;
 
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
   const [updateCeremony, updateState] = useMutation(UpdateCeremonyDocument, {
@@ -116,10 +115,10 @@ export const CeremonyPlanned = ({
     );
   }
   return (
-    <div className={clsx(classes.root, className)}>
+    <div className={cx(classes.root, className)}>
       {loading || !canRead ? (
         <>
-          <Switch className={clsx(classes.switch, classes.switchHidden)} />
+          <Switch className={cx(classes.switch, classes.switchHidden)} />
           {title}
         </>
       ) : (
@@ -137,7 +136,7 @@ export const CeremonyPlanned = ({
               </Tooltip>
             }
             label={title}
-            className={clsx(classes.switch, flipped ? classes.flipped : null)}
+            className={cx(classes.switch, flipped ? classes.flipped : null)}
           />
           {updateState.loading ? <CircularProgress size={20} /> : null}
         </>

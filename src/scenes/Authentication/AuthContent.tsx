@@ -1,8 +1,7 @@
-import { makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -17,6 +16,6 @@ interface AuthContentProps {
 }
 
 export const AuthContent = ({ className, children }: AuthContentProps) => {
-  const classes = useStyles();
-  return <div className={clsx(classes.root, className)}>{children}</div>;
+  const { classes, cx } = useStyles();
+  return <div className={cx(classes.root, className)}>{children}</div>;
 };

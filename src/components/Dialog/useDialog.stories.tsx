@@ -8,7 +8,7 @@ import {
   ListItem,
   ListItemText,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useDialog } from './useDialog';
 
 export default {

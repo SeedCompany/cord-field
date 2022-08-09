@@ -1,4 +1,4 @@
-import { MenuList, Paper } from '@material-ui/core';
+import { MenuList, Paper } from '@mui/material';
 import { MenuItemLink as MIL } from './MenuItemLink';
 
 export default { title: 'Components/Routing' };

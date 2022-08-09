@@ -1,26 +1,17 @@
-import {
-  Divider,
-  makeStyles,
-  Menu,
-  MenuItem,
-  MenuProps,
-  Typography,
-  useTheme,
-} from '@material-ui/core';
+import { Divider, Menu, MenuItem, MenuProps, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 import { useDialog } from '../../../../components/Dialog';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';
 import { ChangePassword } from '../../../Authentication/ChangePassword';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   menu: {
     minWidth: 200,
   },
   menuHeading: {
     padding: spacing(1, 2, 2, 2),
-  },
-  uploadButtonText: {
-    marginLeft: spacing(1),
   },
 }));
 
@@ -29,7 +20,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 const skipAutoFocus: any = { disabled: true };
 
 export const ProfileMenu = (props: Partial<MenuProps>) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { spacing } = useTheme();
   const { session } = useSession();
   const [changePasswordState, changePassword] = useDialog();
@@ -41,9 +32,11 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
         id="profile-menu"
         keepMounted
         open={Boolean(props.anchorEl)}
-        getContentAnchorEl={null}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
+        transformOrigin={{
+          vertical: parseInt(spacing(-2)),
+          horizontal: 'right',
+        }}
         classes={{ paper: classes.menu }}
         {...props}
       >

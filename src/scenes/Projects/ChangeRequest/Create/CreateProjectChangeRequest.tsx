@@ -78,7 +78,7 @@ export const CreateProjectChangeRequest = ({
         variant="outlined"
         required
         multiline
-        inputProps={{ rowsMin: 2 }}
+        minRows={2}
       />
     </DialogForm>
   );

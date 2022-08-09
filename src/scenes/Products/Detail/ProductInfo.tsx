@@ -3,11 +3,11 @@ import {
   List,
   ListItem,
   ListItemText,
-  makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
 import { displayMethodologyWithLabel, mapFromList } from '~/common';
 import {
@@ -17,7 +17,7 @@ import {
 import { Link } from '../../../components/Routing';
 import { ProductDetailFragment as Product } from './ProductDetail.graphql';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   listItem: {
     margin: 0,
   },
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const ProductInfo = ({ product }: { product?: Product }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const ppm = mapFromList(
     product?.engagement.partnershipsProducingMediums.items ?? [],
     (pair) => [pair.medium, pair.partnership]

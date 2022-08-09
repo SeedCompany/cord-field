@@ -7,10 +7,10 @@ import {
   DialogTitle,
   Divider,
   List,
-  makeStyles,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+  Skeleton,
+} from '@mui/material';
 import { Fragment } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
@@ -18,7 +18,7 @@ import {
 } from '../FileVersionItem';
 import { FileVersionsDocument } from './FileActions.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   skeleton: {
     padding: spacing(1, 3),
   },
@@ -33,7 +33,7 @@ export const FileVersions = (props: FileVersionsProps) => {
   const { file, actions, ...dialogProps } = props;
   const { onClose } = dialogProps;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const id = file?.id ?? '';
   const { data, loading } = useQuery(FileVersionsDocument, {
@@ -62,7 +62,7 @@ export const FileVersions = (props: FileVersionsProps) => {
           ? [0, 1, 2].map((item) => (
               <Fragment key={item}>
                 <div className={classes.skeleton}>
-                  <Skeleton variant="rect" width={400} height={50} />
+                  <Skeleton variant="rectangular" width={400} height={50} />
                 </div>
                 {item < 2 && <Divider />}
               </Fragment>

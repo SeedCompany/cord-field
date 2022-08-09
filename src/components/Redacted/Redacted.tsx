@@ -1,6 +1,5 @@
-import { makeStyles, Tooltip, TooltipProps } from '@material-ui/core';
-import { Skeleton, SkeletonProps } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Skeleton, SkeletonProps, Tooltip, TooltipProps } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { ChildrenProp } from '~/common';
 
@@ -11,7 +10,7 @@ export interface RedactedProps {
   SkeletonProps?: SkeletonProps;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   redacted: {
     transform: 'initial',
   },
@@ -24,7 +23,7 @@ export const Redacted = ({
   SkeletonProps,
   children,
 }: RedactedProps & ChildrenProp) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
     <Tooltip title={info} {...TooltipProps}>
       <Skeleton
@@ -33,7 +32,7 @@ export const Redacted = ({
         {...SkeletonProps}
         classes={{
           ...SkeletonProps?.classes,
-          text: clsx(classes.redacted, SkeletonProps?.classes?.text),
+          text: cx(classes.redacted, SkeletonProps?.classes?.text),
         }}
       >
         {children}

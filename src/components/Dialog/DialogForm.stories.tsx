@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { sleep } from '../../util';
 import { SubmitError, TextField } from '../form';

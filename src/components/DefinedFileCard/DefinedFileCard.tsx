@@ -1,22 +1,22 @@
 import { useMutation } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
+  Add as AddIcon,
+  NotInterested as NotPermittedIcon,
+} from '@mui/icons-material';
+import {
   Avatar,
   Card,
   CardActionArea,
-  makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import {
-  Add as AddIcon,
-  NotInterested as NotPermittedIcon,
-} from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { DateTime } from 'luxon';
 import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { makeStyles } from 'tss-react/mui';
 import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
-import { SecuredProp } from '~/common';
+import { SecuredProp, StyleProps } from '~/common';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -30,7 +30,7 @@ import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
 import { DropzoneOverlay } from '../Upload';
 
-const useStyles = makeStyles(({ palette, spacing, typography }) => ({
+const useStyles = makeStyles()(({ palette, spacing, typography }) => ({
   root: {
     flex: 1,
     position: 'relative',
@@ -92,7 +92,7 @@ const useStyles = makeStyles(({ palette, spacing, typography }) => ({
   },
 }));
 
-export interface DefinedFileCardProps {
+export interface DefinedFileCardProps extends StyleProps {
   label: ReactNode;
   resourceType: string;
   securedFile: SecuredProp<FileNode>;
@@ -121,11 +121,10 @@ const FileCardMeta = ({
   resourceType,
   text,
 }: FileCardMetaProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Typography
       className={classes.fileMeta}
-      color="initial"
       variant="caption"
       component="p"
       gutterBottom
@@ -145,7 +144,7 @@ const FileCardMeta = ({
 
 export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
   function DefinedFileCard(props, ref) {
-    const classes = useStyles();
+    const { classes, cx } = useStyles();
     const {
       label,
       resourceType,
@@ -154,6 +153,8 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       parentId,
       disableIcon,
       onUpload,
+      className,
+      sx,
       ...rest
     } = props;
     const { value: file, canRead, canEdit } = securedFile;
@@ -222,7 +223,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
     const Icon = !file && canEdit ? AddIcon : NotPermittedIcon;
 
     const card = (
-      <Card {...getRootProps()} className={classes.root}>
+      <Card {...getRootProps()} className={cx(classes.root, className)} sx={sx}>
         <input {...getInputProps()} name="defined_file_version_uploader" />
         <DropzoneOverlay
           classes={{ text: classes.dropzoneText }}
@@ -259,11 +260,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                 />
               )}
               <div className={classes.info}>
-                <Typography
-                  className={classes.fileName}
-                  color="initial"
-                  variant="h4"
-                >
+                <Typography className={classes.fileName} variant="h4">
                   {label}
                 </Typography>
                 <div className={classes.fileInfo}>

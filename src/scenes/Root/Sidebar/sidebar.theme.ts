@@ -1,27 +1,67 @@
+import { alpha, createTheme as createMuiTheme } from '@mui/material/styles';
 import { createTheme } from '../../../theme';
 
-export const sidebarTheme = createTheme({
-  dark: true,
+const listItemColor = '#fff';
+
+const base = createTheme({ dark: true });
+export const sidebarTheme = createMuiTheme({
+  ...base,
   palette: {
+    ...base.palette,
     background: {
+      ...base.palette.background,
       paper: '#3c444e',
     },
   },
-  overrides: () => ({
+  components: {
+    ...base.components,
     MuiListSubheader: {
-      root: {
-        color: '#d1dadf',
+      styleOverrides: {
+        root: {
+          color: '#d1dadf',
+        },
       },
     },
-    MuiListItem: {
-      root: {
-        borderRadius: 14,
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 14,
+          // Same as default just changes the color from primary to white
+          '&.Mui-selected': {
+            backgroundColor: alpha(
+              listItemColor,
+              base.palette.action.selectedOpacity
+            ),
+            '&.Mui-focusVisible': {
+              backgroundColor: alpha(
+                listItemColor,
+                base.palette.action.selectedOpacity +
+                  base.palette.action.focusOpacity
+              ),
+            },
+            '&:hover': {
+              backgroundColor: alpha(
+                listItemColor,
+                base.palette.action.selectedOpacity +
+                  base.palette.action.hoverOpacity
+              ),
+              '@media (hover: none)': {
+                backgroundColor: alpha(
+                  listItemColor,
+                  base.palette.action.selectedOpacity
+                ),
+              },
+            },
+          },
+        },
       },
     },
     MuiMenuItem: {
-      root: {
-        borderRadius: 0,
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+        },
       },
     },
-  }),
+  },
 });

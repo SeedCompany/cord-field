@@ -1,4 +1,4 @@
-import { RadioGroup } from '@material-ui/core';
+import { RadioGroup } from '@mui/material';
 import { isString } from 'lodash';
 import { ReactNode } from 'react';
 import { Order } from '~/api/schema.graphql';

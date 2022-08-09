@@ -1,3 +1,4 @@
+import { TransitionHandlerProps } from '@mui/material/transitions';
 import { SyntheticEvent, useCallback, useMemo, useState } from 'react';
 
 export function useDialog<T = never>() {
@@ -13,13 +14,20 @@ export function useDialog<T = never>() {
     }
     setOpen(true);
   }, []) as ShowFn<T>;
+
+  const TransitionProps: TransitionHandlerProps = useMemo(
+    () => ({
+      onExited: () => setItem(undefined),
+    }),
+    [setItem]
+  );
   const state = useMemo(
     () => ({
       open: isOpen,
       onClose: () => setOpen(false),
-      onExited: () => setItem(undefined),
+      TransitionProps,
     }),
-    [isOpen]
+    [isOpen, TransitionProps]
   );
   return [state, show, item] as const;
 }

@@ -1,12 +1,6 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { ProjectStatusLabels } from '~/api/schema.graphql';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
@@ -18,7 +12,7 @@ import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
 import { ProjectListItemFragment } from './ProjectListItem.graphql';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => {
+const useStyles = makeStyles()(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;
   return {
     root: {
@@ -84,11 +78,11 @@ export const ProjectListItemCard = ({
   project,
   className,
 }: ProjectListItemCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const location = project?.primaryLocation.value?.name.value;
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <CardActionAreaLink
         disabled={!project}
         to={project ? getProjectUrl(project) : ''}
@@ -98,7 +92,7 @@ export const ProjectListItemCard = ({
           <Grid
             container
             direction="column"
-            justify="space-between"
+            justifyContent="space-between"
             spacing={1}
             className={classes.leftContent}
           >
@@ -212,8 +206,8 @@ export const ProjectListItemCard = ({
         object={project}
         label="Project"
         listId="projects"
-        listFilter={(args: ProjectListQueryVariables) =>
-          args.input.filter?.pinned ?? false
+        listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
+          args.input?.filter?.pinned ?? false
         }
         className={classes.pin}
       />

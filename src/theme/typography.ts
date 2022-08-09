@@ -1,7 +1,9 @@
+import type { Palette } from '@mui/material';
+import type { TypographyOptions } from '@mui/material/styles/createTypography';
 import { pickBy } from 'lodash';
-import { ThemeOptions } from './createTheme';
+import type { CSSProperties } from 'react';
 
-export const typography: ThemeOptions['typography'] = (palette) => {
+export const typography = (palette: Palette): TypographyOptions => {
   const weight: FontWeights = {
     light: 300, // default
     regular: 400, // default
@@ -39,21 +41,23 @@ export const typography: ThemeOptions['typography'] = (palette) => {
   };
 };
 
-const variant = (size: number, lineHeightPx: number, weight?: number) =>
+const variant = (size: number, lineHeightPx: number, weight?: FontWeight) =>
   pickBy({
     fontSize: size,
     fontWeight: weight,
     lineHeight: lineHeightPx / size,
   });
 
+type FontWeight = CSSProperties['fontWeight'];
+
 interface FontWeights {
-  light: number;
-  regular: number;
-  medium: number;
-  bold: number;
+  light: FontWeight;
+  regular: FontWeight;
+  medium: FontWeight;
+  bold: FontWeight;
 }
 
-declare module '@material-ui/core/styles/createTypography' {
+declare module '@mui/material/styles/createTypography' {
   interface FontStyle {
     weight: FontWeights;
   }

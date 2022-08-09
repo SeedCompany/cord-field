@@ -1,8 +1,7 @@
-import { makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     flex: 1,
     overflow: 'hidden',
@@ -15,8 +14,8 @@ const useStyles = makeStyles(({ spacing }) => ({
 export const ContentContainer = (
   props: { className?: string } & ChildrenProp
 ) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
-    <div className={clsx(classes.root, props.className)}>{props.children}</div>
+    <div className={cx(classes.root, props.className)}>{props.children}</div>
   );
 };

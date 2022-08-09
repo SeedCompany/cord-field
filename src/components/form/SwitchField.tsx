@@ -6,7 +6,7 @@ import {
   FormHelperText,
   Switch,
   SwitchProps,
-} from '@material-ui/core';
+} from '@mui/material';
 import { ReactNode } from 'react';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';

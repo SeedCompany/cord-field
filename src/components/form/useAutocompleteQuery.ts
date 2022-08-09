@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { AutocompleteProps } from '@material-ui/lab';
+import { AutocompleteProps } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 import { Merge } from 'type-fest';
 import { isNetworkRequestInFlight } from '../../api';

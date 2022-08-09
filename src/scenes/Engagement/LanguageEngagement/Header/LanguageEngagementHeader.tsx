@@ -1,12 +1,7 @@
-import {
-  Breadcrumbs,
-  Grid,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import { DateRange, Edit } from '@material-ui/icons';
+import { DateRange, Edit } from '@mui/icons-material';
+import { Breadcrumbs, Grid, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, Many } from '~/common';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
@@ -32,7 +27,7 @@ import {
 import { EngagementWorkflowDialog } from '../../EditEngagement/EngagementWorkflowDialog';
 import { LanguageEngagementDetailFragment } from '../LanguageEngagementDetail.graphql';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   nameRedacted: {
     width: '50%',
   },
@@ -50,7 +45,7 @@ export const LanguageEngagementHeader = ({
 }: {
   engagement: LanguageEngagementDetailFragment & EngagementToDeleteFragment;
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [editState, show, editField] =
     useDialog<Many<EditableEngagementField>>();
@@ -75,70 +70,76 @@ export const LanguageEngagementHeader = ({
           <EngagementBreadcrumb data={engagement} />
         </Breadcrumbs>
       </Grid>
-      <Grid item container spacing={3} alignItems="center">
-        <Grid item className={langName ? undefined : classes.nameRedacted}>
-          <Typography
-            variant="h2"
-            {...(language
-              ? { component: Link, to: `/languages/${language.id}` }
-              : {})}
-          >
-            {langName ?? (
-              <Redacted
-                info={`You do not have permission to view this engagement's ${
-                  language ? 'name' : 'language'
-                }`}
-                width="100%"
-              />
+      <Grid item>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item className={langName ? undefined : classes.nameRedacted}>
+            {language ? (
+              <Link variant="h2" to={`/languages/${language.id}`}>
+                {langName ?? (
+                  <Redacted
+                    info="You do not have permission to view this engagement's name"
+                    width="100%"
+                  />
+                )}
+              </Link>
+            ) : (
+              <Typography variant="h2">
+                <Redacted
+                  info="You do not have permission to view this engagement's language"
+                  width="100%"
+                />
+              </Typography>
             )}
-          </Typography>
-        </Grid>
-        {editable && (
-          <Grid item>
-            <Tooltip title="Update First Scripture and Luke Partnership">
-              <Fab
-                color="primary"
-                aria-label="Update language engagement"
-                onClick={() =>
-                  show([
-                    'firstScripture',
-                    'lukePartnership',
-                    'openToInvestorVisit',
-                  ])
-                }
-              >
-                <Edit />
-              </Fab>
-            </Tooltip>
           </Grid>
-        )}
-        <Grid item>
-          <DeleteEngagement
-            project={engagement.project}
-            engagement={engagement}
-          />
+          {editable && (
+            <Grid item>
+              <Tooltip title="Update First Scripture and Luke Partnership">
+                <Fab
+                  color="primary"
+                  aria-label="Update language engagement"
+                  onClick={() =>
+                    show([
+                      'firstScripture',
+                      'lukePartnership',
+                      'openToInvestorVisit',
+                    ])
+                  }
+                >
+                  <Edit />
+                </Fab>
+              </Tooltip>
+            </Grid>
+          )}
+          <Grid item>
+            <DeleteEngagement
+              project={engagement.project}
+              engagement={engagement}
+            />
+          </Grid>
         </Grid>
       </Grid>
-      <Grid item container spacing={3} alignItems="center">
-        <Grid item>
-          <Typography variant="h4">
-            Language Engagement
-            {engagement.project.presetInventory.value && (
-              <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
-                <PresetInventoryIconFilled
-                  color="action"
-                  className={classes.presetInventory}
-                  aria-label="preset inventory"
-                />
-              </Tooltip>
-            )}
-          </Typography>
-        </Grid>
+      <Grid item>
+        <Grid item container spacing={3} alignItems="center">
+          <Grid item>
+            <Typography variant="h4">
+              Language Engagement
+              {engagement.project.presetInventory.value && (
+                <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
+                  <PresetInventoryIconFilled
+                    color="action"
+                    className={classes.presetInventory}
+                    aria-label="preset inventory"
+                  />
+                </Tooltip>
+              )}
+            </Typography>
+          </Grid>
 
-        <Grid item>
-          <Typography variant="body2" color="textSecondary">
-            Updated <FormattedDateTime date={engagement.modifiedAt} />
-          </Typography>
+          <Grid item>
+            <Typography variant="body2" color="textSecondary">
+              Updated <FormattedDateTime date={engagement.modifiedAt} />
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
       <Grid item container spacing={1} alignItems="center">

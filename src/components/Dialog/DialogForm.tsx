@@ -7,27 +7,33 @@ import {
   DialogContent,
   DialogProps,
   DialogTitle,
-  makeStyles,
-} from '@material-ui/core';
+} from '@mui/material';
+import {
+  TransitionHandlerProps,
+  TransitionProps,
+} from '@mui/material/transitions';
 import { FormApi } from 'final-form';
-import { ReactNode } from 'react';
+import { isFunction, mergeWith } from 'lodash';
+import { ReactNode, useCallback, useMemo, useRef } from 'react';
 import {
   Form,
   FormProps,
   FormRenderProps,
   RenderableProps,
 } from 'react-final-form';
+import { makeStyles } from 'tss-react/mui';
 import { Except, Promisable } from 'type-fest';
-import { ErrorHandlers, handleFormError, inChangesetVar } from '../../api';
+import { ErrorHandlers, handleFormError, inChangesetVar } from '~/api';
+import { callAll } from '~/common';
 import { ChangesetModificationWarning } from '../Changeset/ChangesetModificationWarning';
+import { AllowFormCloseContext } from '../form/AllowClose';
 import {
   blurOnSubmit,
-  FieldGroup,
   focusFirstFieldRegistered,
   focusFirstFieldWithSubmitError,
-  SubmitButton,
-  SubmitButtonProps,
-} from '../form';
+} from '../form/decorators';
+import { FieldGroup } from '../form/FieldGroup';
+import { SubmitButton, SubmitButtonProps } from '../form/SubmitButton';
 
 export type DialogFormProps<T, R = void> = Omit<
   FormProps<T>,
@@ -85,14 +91,13 @@ export type DialogFormProps<T, R = void> = Omit<
       | 'success',
     form: FormApi<T>
   ) => void;
-  onExited?: () => void;
-  DialogProps?: Omit<DialogProps, 'open' | 'onClose' | 'onExited'>;
+  DialogProps?: Omit<DialogProps, 'open' | 'onClose'>;
   children?:
     | ReactNode
     | ((props: Except<FormRenderProps<T>, 'handleSubmit'>) => ReactNode);
-};
+} & Pick<DialogProps, 'TransitionProps'>;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   spacer: {
     flex: 1,
   },
@@ -119,17 +124,35 @@ export function DialogForm<T, R = void>({
   onSuccess,
   errorHandlers,
   onClose,
-  onExited,
   fieldsPrefix = '',
   children,
-  DialogProps = {},
+  DialogProps,
   onSubmit,
   changesetAware,
   disableChangesetWarning,
+  TransitionProps,
   ...FormProps
 }: DialogFormProps<T, R>) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const inChangeset = useReactiveVar(inChangesetVar);
+  const formRef = useRef<FormApi<T> | undefined>();
+
+  const mergedTransitionProps: TransitionProps = useMemo(() => {
+    const ourTransitionProps: TransitionHandlerProps = {
+      onExited: () => formRef.current?.reset(),
+    };
+    return mergeWith(
+      DialogProps?.TransitionProps,
+      TransitionProps,
+      ourTransitionProps,
+      (a, b) => (isFunction(a) && isFunction(b) ? callAll(a, b) : b)
+    );
+  }, [DialogProps?.TransitionProps, TransitionProps]);
+
+  const fieldsPreventingClose = useRef(new Set());
+  const allowDialogClose = useCallback((key: string, allowed: boolean) => {
+    fieldsPreventingClose.current[allowed ? 'delete' : 'add'](key);
+  }, []);
 
   return (
     <Form<T>
@@ -158,6 +181,7 @@ export function DialogForm<T, R = void>({
       }}
     >
       {({ handleSubmit, submitting, form, ...rest }) => {
+        formRef.current = form;
         const renderedForm = (
           <Dialog
             fullWidth
@@ -165,23 +189,19 @@ export function DialogForm<T, R = void>({
             {...DialogProps}
             open={open}
             onClose={(e, reason) => {
+              if (submitting || fieldsPreventingClose.current.size > 0) {
+                return;
+              }
               onClose?.(reason, form);
             }}
-            onExited={() => {
-              onExited?.();
-              form.reset();
-            }}
-            disableBackdropClick={
-              DialogProps.disableBackdropClick ?? submitting
-            }
             aria-labelledby={title ? 'dialog-form' : undefined}
-            PaperProps={{ component: 'form', ...DialogProps.PaperProps }}
+            PaperProps={{
+              ...DialogProps?.PaperProps,
+              // @ts-expect-error MUI types don't model this correctly.
+              component: 'form',
+            }}
             onSubmit={handleSubmit}
-            // This breaks MUI date picker's popup. This I believe is an acceptable
-            // compromise. Clicking off the dialog still closes it. It only affects
-            // keyboard navigation and accessibility. Maybe this can be removed
-            // with MUI v5.
-            disableEnforceFocus
+            TransitionProps={mergedTransitionProps}
           >
             {title ? <DialogTitle id="dialog-form">{title}</DialogTitle> : null}
             <DialogContent>
@@ -232,7 +252,9 @@ export function DialogForm<T, R = void>({
 
         return (
           <FieldGroup replace prefix={fieldsPrefix}>
-            {renderedForm}
+            <AllowFormCloseContext.Provider value={allowDialogClose}>
+              {renderedForm}
+            </AllowFormCloseContext.Provider>
           </FieldGroup>
         );
       }}

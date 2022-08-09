@@ -1,49 +1,39 @@
+import { Cancel } from '@mui/icons-material';
 import {
-  createStyles,
-  Divider,
   IconButton,
   DialogTitle as MuiDialogTitle,
-  Theme,
-  Typography,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core';
-import { Cancel } from '@material-ui/icons';
+  DialogTitleProps as MuiDialogTitleProps,
+} from '@mui/material';
+import { extendSx } from '../../common';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: theme.spacing(2, 2, 2, 3),
-    },
-    title: {},
-  });
-
-export interface DialogTitleProps extends WithStyles<typeof styles> {
-  id?: string;
+export interface DialogTitleProps extends MuiDialogTitleProps {
   children: React.ReactNode;
   onClose?: () => void;
 }
 
-export const DialogTitle = withStyles(styles, {
-  classNamePrefix: 'DialogTitle',
-})((props: DialogTitleProps) => {
-  const { children, classes, onClose, ...other } = props;
+export const DialogTitle = (props: DialogTitleProps) => {
+  const { children, onClose, ...other } = props;
   return (
-    <>
-      <MuiDialogTitle disableTypography className={classes.root} {...other}>
-        <Typography variant="h4" className={classes.title}>
-          {children}
-        </Typography>
-        {onClose ? (
-          <IconButton size="small" aria-label="close" onClick={onClose}>
-            <Cancel />
-          </IconButton>
-        ) : null}
-      </MuiDialogTitle>
-      <Divider />
-    </>
+    <MuiDialogTitle
+      variant="h4"
+      {...other}
+      sx={[
+        ({ palette }) => ({
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: `thin solid ${palette.divider}`,
+          pr: '16px', // match top
+        }),
+        ...extendSx(props.sx),
+      ]}
+    >
+      {children}
+      {onClose ? (
+        <IconButton size="small" aria-label="close" onClick={onClose}>
+          <Cancel />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
   );
-});
+};

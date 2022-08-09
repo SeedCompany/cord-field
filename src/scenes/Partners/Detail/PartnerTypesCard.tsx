@@ -5,10 +5,10 @@ import {
   CardActions,
   CardContent,
   Grid,
-  makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import {
   FinancialReportingTypeLabels,
   PartnerTypeLabels,
@@ -17,7 +17,7 @@ import { canEditAny, labelsFrom } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   cardContent: {
     display: 'flex',
     flex: 1,
@@ -48,7 +48,7 @@ export const PartnerTypesCard = ({
   className,
   onEdit,
 }: PartnerTypesCardProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const canEdit = canEditAny(
     partner,

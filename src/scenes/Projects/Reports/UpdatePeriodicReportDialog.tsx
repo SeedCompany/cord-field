@@ -94,7 +94,7 @@ export const UpdatePeriodicReportDialog = ({
         name="receivedDate"
         label="Received Date"
         required={!updateReceivedDateOnly}
-        openTo="date"
+        openTo="day"
       />
     </DialogForm>
   );

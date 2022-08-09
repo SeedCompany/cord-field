@@ -25,20 +25,15 @@ const restrictedImports = [
     ].join('\n'),
   },
 
-  // As noted in https://github.com/mui-org/material-ui/releases/tag/v4.5.1
-  {
-    path: '@material-ui/styles',
-    message: "Use '@material-ui/core' instead",
-  },
   // Enforce SVG Icons as recommended
   {
-    path: '@material-ui/core',
+    path: '@mui/material',
     importNames: 'Icon',
-    message: "Use specific SVG Icons from '@material-ui/icons' instead",
+    message: "Use specific SVG Icons from '@mui/icons-material' instead",
   },
   // Enforce our Link component
   {
-    path: ['@material-ui/core', 'react-router-dom'],
+    path: ['@mui/material', 'react-router-dom'],
     importNames: ['Link', 'LinkProps'],
     message:
       'Use Link in components/Routing instead which has routing integrated',
@@ -60,11 +55,210 @@ const restrictedImports = [
       importName: importName === 'default' ? localName : importName,
     }),
   },
+
+  // Our babel import transforms don't work with these exports
+  {
+    path: '@mui/material',
+    importNames: ['css', 'styled', 'keyframes', 'useTheme'],
+    replacement: { path: '@mui/material/styles' },
+    message: "Import from '@mui/material/styles' instead",
+  },
+
+  // Hide emotion as much as possible
+  {
+    pattern: '@emotion/react',
+    allowNames: ['CacheProvider', 'EmotionCache'],
+    message: "Import from '@mui/material/styles' instead",
+    replacement: { path: '@mui/material/styles' },
+  },
+  {
+    pattern: '@emotion/styled',
+    importNames: 'default',
+    message: "Import from '@mui/material/styles' instead",
+    replacement: {
+      path: '@mui/material/styles',
+      importName: 'styled',
+    },
+  },
+
+  // @mui/system is low-level, use @mui/material instead
+  // Which wraps to provide more functionality
+  {
+    path: '@mui/system/styled',
+    importNames: 'default',
+    message: "Import from '@mui/material/styles' instead",
+    replacement: {
+      path: '@mui/material/styles',
+      importName: 'styled',
+    },
+  },
+  {
+    path: '@mui/system',
+    importNames: 'Box',
+    message: "Import from '@mui/material' instead",
+    replacement: {
+      path: '@mui/material',
+    },
+  },
+  {
+    path: ['@mui/system/Box', '@mui/material/Box', '@mui/system/Box/Box'],
+    importNames: 'default',
+    message: "Import from '@mui/material' instead",
+    replacement: {
+      path: '@mui/material',
+      importName: 'Box',
+    },
+  },
+  {
+    path: '@mui/system',
+    message: `Import from '@mui/material/styles' instead.`,
+    replacement: {
+      path: '@mui/material/styles',
+    },
+  },
+
+  // So many things in lab have been moved, but they stubbed or aliased exports
+  // for a smoother transition. Ensure correct & _working_ imports are used.
+  {
+    path: '@mui/lab',
+    importNames: [
+      'Alert',
+      'AlertColor',
+      'AlertProps',
+      'AlertTitle',
+      'AlertTitleProps',
+      'Autocomplete',
+      'AutocompleteChangeDetails',
+      'AutocompleteChangeReason',
+      'AutocompleteCloseReason',
+      'AutocompleteInputChangeReason',
+      'AutocompleteOwnerState',
+      'AutocompleteProps',
+      'AutocompleteRenderGetTagProps',
+      'AutocompleteRenderGroupParams',
+      'AutocompleteRenderInputParams',
+      'AutocompleteRenderOptionState',
+      'AvatarGroup',
+      'AvatarGroupProps',
+      'Pagination',
+      'PaginationProps',
+      'PaginationRenderItemParams',
+      'PaginationItem',
+      'PaginationItemProps',
+      'PaginationItemTypeMap',
+      'Rating',
+      'RatingProps',
+      'IconContainerProps',
+      'Skeleton',
+      'SkeletonProps',
+      'SkeletonTypeMap',
+      'SpeedDial',
+      'SpeedDialProps',
+      'CloseReason',
+      'OpenReason',
+      'SpeedDialAction',
+      'SpeedDialActionProps',
+      'SpeedDialIcon',
+      'SpeedDialIconProps',
+      'ToggleButton',
+      'ToggleButtonProps',
+      'ToggleButtonTypeMap',
+      'ToggleButtonGroup',
+      'ToggleButtonGroupProps',
+    ],
+    message: 'Component was moved out of `@mui/lab` to `@mui/material`',
+    replacement: { path: '@mui/material' },
+  },
+  {
+    path: '@mui/lab',
+    importNames: [
+      'AdapterDateFns',
+      'AdapterDayjs',
+      'AdapterLuxon',
+      'AdapterMoment',
+      'CalendarPicker',
+      'CalendarPickerSkeleton',
+      'ClockPicker',
+      'DatePicker',
+      'DateTimePicker',
+      'DesktopDatePicker',
+      'DesktopDateTimePicker',
+      'DesktopTimePicker',
+      'LocalizationProvider',
+      'MobileDatePicker',
+      'MobileDateTimePicker',
+      'MobileTimePicker',
+      'MonthlyPicker',
+      'PickersDay',
+      'StaticDatePicker',
+      'StaticDateTimePicker',
+      'StaticTimePicker',
+      'TimePicker',
+      'YearPicker',
+    ],
+    message: 'Component was moved from `@mui/lab` to `@mui/x-date-pickers`',
+    replacement: {
+      path: '@mui/x-date-pickers',
+    },
+  },
+  {
+    path: '@mui/lab',
+    importNames: [
+      'DateRangePicker',
+      'DateRangePickerDay',
+      'DesktopDateRangePicker',
+      'MobileDateRangePicker',
+      'StaticDateRangePicker',
+    ],
+    message: [
+      'Component was moved from `@mui/lab` to `@mui/x-date-pickers-pro`',
+      '',
+      'More information about this migration on our blog: https://mui.com/x/react-date-pickers/migration-lab/.',
+    ].join('\n'),
+    replacement: {
+      path: '@mui/x-date-pickers-pro',
+    },
+  },
+
+  // Fake export, ensure correct & working function is used.
+  {
+    path: ['@mui/material', '@mui/material/styles'],
+    importNames: ['makeStyles', 'withStyles'],
+    replacement: { path: 'tss-react/mui' },
+  },
+  {
+    path: '@mui/material/styles/makeStyles',
+    importNames: 'default',
+    replacement: { path: 'tss-react/mui', importName: 'makeStyles' },
+  },
+
+  {
+    path: [
+      '@mui/system',
+      '@mui/material',
+      '@mui/lab',
+      '@mui/icons-material',
+      '@mui/x-date-pickers',
+      '@mui/x-date-pickers-pro',
+    ],
+    importNames: 'default',
+    kind: 'value',
+    message: 'Import specific things instead to allow tree shaking',
+  },
   {
     pattern: [
-      '@material-ui/core/*',
-      '@material-ui/icons/*',
-      '@material-ui/lab/*',
+      '@mui/material/*',
+      '!@mui/material/styles',
+      '!@mui/material/colors',
+      '!@mui/material/transitions',
+      '!@mui/material/utils',
+      '@mui/icons-material/*',
+      '@mui/lab/*',
+      '@mui/system/*',
+      '@mui/x-date-pickers/*',
+      '@mui/x-date-pickers-pro/*',
+      '!themeAugmentation',
+      '!Unstable_Grid2',
     ],
     message: `Import from library root instead. Leave code splitting to toolchain.`,
     replacement: ({ path, localName }) => ({
@@ -86,9 +280,11 @@ const restrictedImports = [
 /** @type {import('eslint').Linter.Config} */
 const config = {
   root: true,
-  plugins: ['@seedcompany'],
+  plugins: ['@seedcompany', 'tss-unused-classes'],
   extends: ['plugin:@seedcompany/react'],
   rules: {
+    'tss-unused-classes/unused-classes': 'warn',
+
     // TODO Remove and fix
     // Allow `extends any` for TSX
     // This makes the distinction that it's a generic instead of JSX

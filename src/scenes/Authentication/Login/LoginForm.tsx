@@ -1,9 +1,9 @@
-import { makeStyles, Typography } from '@material-ui/core';
-import clsx from 'clsx';
+import { Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { sample } from 'lodash';
 import { useState } from 'react';
 import { Form, FormProps } from 'react-final-form';
+import { makeStyles } from 'tss-react/mui';
 import { LoginInput } from '~/api/schema.graphql';
 import {
   blurOnSubmit,
@@ -29,7 +29,7 @@ const quotes: Quote[] = [
   },
 ];
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   header: {
     display: 'flex',
     flexDirection: 'column',
@@ -76,7 +76,7 @@ export type LoginFormProps = Pick<
 >;
 
 export const LoginForm = (props: LoginFormProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [quote] = useState(() => sample(quotes)!);
   return (
     <AuthContent>
@@ -121,9 +121,9 @@ const Footer = ({
   quote: { quote, reference },
   ...props
 }: JSX.IntrinsicElements['footer'] & { quote: Quote }) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
-    <footer {...props} className={clsx(classes.footer, props.className)}>
+    <footer {...props} className={cx(classes.footer, props.className)}>
       <Typography color="textSecondary" className={classes.verse}>
         “{quote}”
       </Typography>

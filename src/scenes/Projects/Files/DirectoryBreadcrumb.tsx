@@ -1,6 +1,6 @@
-import { fade, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { alpha as fade } from '@mui/material/styles';
 import { useDrop } from 'react-dnd';
+import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb, BreadcrumbProps } from '../../../components/Breadcrumb';
 import { DndFileNode, DropOnDirResult } from './util';
 
@@ -9,7 +9,7 @@ type DirectoryBreadcrumbProps = BreadcrumbProps & {
   name?: string;
 };
 
-const useStyles = makeStyles(({ palette, shape, spacing, transitions }) => ({
+const useStyles = makeStyles()(({ palette, shape, spacing, transitions }) => ({
   root: {
     position: 'relative',
     margin: spacing(-1, -0.5),
@@ -49,15 +49,15 @@ export const DirectoryBreadcrumb = ({
     }),
     [id, name]
   );
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
     <Breadcrumb
       {...props}
       ref={dropRef}
-      className={clsx(classes.root, props.className)}
+      className={cx(classes.root, props.className)}
     >
       <span
-        className={clsx({
+        className={cx({
           [classes.drop]: true,
           [classes.isOver]: isOver && canDrop,
           [classes.isDragging]: !!isDragging && canDrop,

@@ -1,6 +1,6 @@
 import { ErrorHandler } from '@apollo/client/link/error';
-import { IconButton } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import { Close } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import { useRef } from 'react';
 
@@ -44,7 +44,7 @@ const errorRenderer =
       enqueueSnackbar(gqlError.message, {
         variant: 'error',
         persist: true,
-        action: (key: string) => (
+        action: (key) => (
           <IconButton color="inherit" onClick={() => closeSnackbar(key)}>
             <Close />
           </IconButton>

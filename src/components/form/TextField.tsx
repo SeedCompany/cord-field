@@ -1,7 +1,7 @@
 import {
   TextField as MuiTextField,
   TextFieldProps as MuiTextFieldProps,
-} from '@material-ui/core';
+} from '@mui/material';
 import { Except } from 'type-fest';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';

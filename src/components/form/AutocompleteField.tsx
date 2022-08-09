@@ -1,11 +1,13 @@
 import {
+  Autocomplete,
+  AutocompleteProps,
   Chip,
   ChipProps,
   CircularProgress,
   TextField,
   TextFieldProps,
-} from '@material-ui/core';
-import { Autocomplete, AutocompleteProps, Value } from '@material-ui/lab';
+  AutocompleteValue as Value,
+} from '@mui/material';
 import { identity } from 'lodash';
 import { useCallback, useLayoutEffect } from 'react';
 import { Except } from 'type-fest';
@@ -23,9 +25,22 @@ export type AutocompleteFieldProps<
     'helperText' | 'label' | 'required' | 'autoFocus' | 'variant' | 'margin'
   > & {
     ChipProps?: ChipProps;
-    options: readonly T[];
     // Allowed but ignored from useAutocompleteQuery
     root?: unknown;
+
+    // Removed string from option type if freeSolo is true. This is causing problems
+    // with TS inference. https://github.com/mui/material-ui/issues/33561
+    /**
+     * Used to determine the string value for a given option.
+     * It's used to fill the input (and the list box options if `renderOption` is not provided).
+     *
+     * If used in free solo mode, it must accept both the type of the options and a string.
+     *
+     * @param {T} option
+     * @returns {string}
+     * @default (option) => option.label ?? option
+     */
+    getOptionLabel?: (option: T) => string;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, FreeSolo>,
     | 'value'
@@ -35,7 +50,7 @@ export type AutocompleteFieldProps<
     | 'renderTags'
     | 'filterSelectedOptions'
     | 'ChipProps'
-    | 'options'
+    | 'getOptionLabel'
   >;
 
 /**
@@ -66,7 +81,10 @@ export function AutocompleteField<
 
   const selectOnFocus = props.selectOnFocus ?? !props.freeSolo;
   const andSelectOnFocus = useCallback(
-    (el) => selectOnFocus && el.select(),
+    (el: HTMLDivElement) =>
+      selectOnFocus &&
+      el.tagName === 'INPUT' &&
+      (el as unknown as HTMLInputElement).select(),
     [selectOnFocus]
   );
 
@@ -152,7 +170,7 @@ export function AutocompleteField<
           margin={margin}
         />
       )}
-      getOptionSelected={
+      isOptionEqualToValue={
         compareBy ? (a, b) => compareBy(a) === compareBy(b) : undefined
       }
     />
