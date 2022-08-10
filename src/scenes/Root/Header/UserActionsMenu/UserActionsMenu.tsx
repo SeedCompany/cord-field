@@ -44,8 +44,10 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
       {...props}
     >
       <MenuItem
-        onClick={() => {
+        onClick={(event) => {
           toggleManagerOpen();
+          // @ts-expect-error yeah we are adding a reason
+          props.onClose?.(event, 'actionClicked');
         }}
       >
         <ListItemIcon className={classes.listItemIcon}>
