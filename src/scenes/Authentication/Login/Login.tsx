@@ -3,7 +3,6 @@ import { FORM_ERROR } from 'final-form';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useSearchParams } from 'react-router-dom';
-import { useMountedState } from 'react-use';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
 import { useNavigate } from '../../../components/Routing';
@@ -18,7 +17,6 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
   const [query] = useSearchParams();
   const { session, sessionLoading } = useSession();
   const [success, setSuccess] = useState(false);
-  const isMounted = useMountedState();
   const navigateOut = () => {
     const returnTo = decodeURIComponent(query.get('returnTo') ?? '/');
     navigate(returnTo, { replace: true });
@@ -41,9 +39,7 @@ export const Login = (props: Except<Props, 'onSubmit'>) => {
             return;
           }
           updateSessionCache(cache, sessionData);
-          if (isMounted()) {
-            setSuccess(true);
-          }
+          setSuccess(true);
         },
       });
       navigateOut();
