@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
-import { useUpload, useUploadManager } from '../../../../components/Upload';
+import { useUpload } from '../../../../components/Upload';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   menu: {
@@ -29,17 +29,9 @@ const useStyles = makeStyles()(({ spacing }) => ({
 export const UserActionsMenu = (props: Partial<MenuProps>) => {
   const { classes } = useStyles();
   const { spacing } = useTheme();
-  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
-  const { removeCompletedUploads } = useUpload();
+  const { isManagerOpen, toggleManagerOpen } = useUpload();
 
   const UmIcon = isManagerOpen ? HideIcon : ShowIcon;
-
-  const handleUploadManagerToggle = () => {
-    if (isManagerOpen) {
-      removeCompletedUploads();
-    }
-    setIsManagerOpen(!isManagerOpen);
-  };
 
   return (
     <Menu
@@ -51,7 +43,13 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
       classes={{ paper: classes.menu }}
       {...props}
     >
-      <MenuItem onClick={handleUploadManagerToggle}>
+      <MenuItem
+        onClick={(event) => {
+          toggleManagerOpen();
+          // @ts-expect-error yeah we are adding a reason
+          props.onClose?.(event, 'actionClicked');
+        }}
+      >
         <ListItemIcon className={classes.listItemIcon}>
           <UmIcon fontSize="small" />
         </ListItemIcon>

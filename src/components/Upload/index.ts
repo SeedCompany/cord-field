@@ -1,6 +1,4 @@
 export * from './DropzoneOverlay';
-export * from './Reducer';
+export type { UploadCallback } from './Reducer';
 export * from './UploadContext';
-export * from './UploadManagerContext';
 export * from './UploadFilesForm';
-export * from './UploadManager';
