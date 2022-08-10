@@ -23,7 +23,7 @@
   },
   "packageManager": "yarn@3.2.2",
   "dependencies": {
-    "@apollo/client": "3.5.*",
+    "@apollo/client": "3.6.*",
     "@date-io/core": "^2.13.2",
     "@date-io/luxon": "^2.13.2",
     "@emotion/cache": "^11.7.1",
