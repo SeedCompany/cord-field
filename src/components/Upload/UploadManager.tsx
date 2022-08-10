@@ -16,7 +16,6 @@ import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 import { useSession } from '../Session';
 import { DraggablePaper } from './DraggablePaper';
-import { useUploadManager } from './UploadManagerContext';
 
 const PAPER_WIDTH = 360;
 
@@ -67,7 +66,7 @@ const useStyles = makeStyles<void, 'collapsed'>()(
 interface DialogTitleProps extends ChildrenProp {
   id: string;
   isCollapsed: boolean;
-  onClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClose: () => void;
   onCollapseClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -112,25 +111,17 @@ const UploadManagerDialogTitle = (props: DialogTitleProps) => {
 };
 
 interface UploadManagerProps {
-  removeCompletedUploads: () => void;
+  open: boolean;
+  onClose: () => void;
   children?: ReactNode;
 }
 
 const UploadManagerImpl = (props: UploadManagerProps) => {
-  const { children, removeCompletedUploads } = props;
+  const { children, open, onClose } = props;
   const { session } = useSession();
-  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { classes, cx } = useStyles();
   const isMounted = useMountedState();
-
-  function handleClose(event: React.MouseEvent<HTMLButtonElement>) {
-    event.stopPropagation();
-    removeCompletedUploads();
-    if (isMounted()) {
-      setIsManagerOpen(false);
-    }
-  }
 
   function handleCollapse(event: React.MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
@@ -145,7 +136,7 @@ const UploadManagerImpl = (props: UploadManagerProps) => {
       disableEnforceFocus
       disableAutoFocus
       hideBackdrop
-      open={!!session && isManagerOpen}
+      open={!!session && open}
       PaperComponent={(props) => (
         <DraggablePaper {...props} isCollapsed={isCollapsed} />
       )}
@@ -154,7 +145,7 @@ const UploadManagerImpl = (props: UploadManagerProps) => {
       <UploadManagerDialogTitle
         id="draggable-dialog-title"
         isCollapsed={isCollapsed}
-        onClose={handleClose}
+        onClose={onClose}
         onCollapseClick={handleCollapse}
       >
         Upload Manager

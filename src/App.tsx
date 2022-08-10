@@ -6,7 +6,7 @@ import { ApolloProvider } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
-import { UploadManagerProvider, UploadProvider } from './components/Upload';
+import { UploadProvider as FileUploadProvider } from './components/Upload';
 import { SensitiveOperations } from './scenes/Authentication';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
@@ -41,8 +41,7 @@ export const appProviders = [
   <LocalizationProvider key="i10n" dateAdapter={LuxonCalenderDateUtils} />,
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,
-  <UploadManagerProvider key="upload-manager" />,
-  <UploadProvider key="upload" />,
+  <FileUploadProvider key="files" />,
 ];
 
 export const App = () => (
