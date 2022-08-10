@@ -1,7 +1,6 @@
 import { toFinite } from 'lodash';
 import { memo, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useMountedState } from 'react-use';
 import { makeStyles } from 'tss-react/mui';
 import { Merge } from 'type-fest';
 import { many } from '~/common';
@@ -225,7 +224,6 @@ const PictureImpl = ({
   const hideImg = !placeholder && lazyObserve && !inView && !isBot;
   const needsHolder = Boolean(aspectRatio || hideImg || darken);
 
-  const isMounted = useMountedState();
   // We use the DOM callbacks to determine state as this is closest to what
   // the UI shows. Calling loadImage here still requires the image to load again
   // on DOM if "Disable cache" in DevTools is used. This makes it hard to
@@ -299,9 +297,6 @@ const PictureImpl = ({
       style={!needsHolder ? { ...styles, ...styleProp } : styles}
       {...(lazyNative ? { loading: 'lazy' } : {})}
       onLoad={(e) => {
-        if (!isMounted()) {
-          return;
-        }
         setLoaded(e.currentTarget.srcset);
         if (rest.onLoad) {
           rest.onLoad(e);
@@ -309,9 +304,6 @@ const PictureImpl = ({
       }}
       onError={(e) => {
         const url = e.currentTarget.srcset;
-        if (!isMounted()) {
-          return;
-        }
         setErrored(url);
         if (rest.onError) {
           rest.onError(e);

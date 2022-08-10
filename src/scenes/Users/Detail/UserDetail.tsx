@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { Skeleton, Tooltip, Typography } from '@mui/material';
+import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { useInterval } from 'react-use';
 import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { RoleLabels } from '~/api/schema.graphql';
