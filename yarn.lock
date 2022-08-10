@@ -14,26 +14,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.5.*":
-  version: 3.5.10
-  resolution: "@apollo/client@npm:3.5.10"
+"@apollo/client@npm:3.6.*":
+  version: 3.6.9
+  resolution: "@apollo/client@npm:3.6.9"
   dependencies:
-    "@graphql-typed-document-node/core": ^3.0.0
+    "@graphql-typed-document-node/core": ^3.1.1
     "@wry/context": ^0.6.0
     "@wry/equality": ^0.5.0
     "@wry/trie": ^0.3.0
-    graphql-tag: ^2.12.3
+    graphql-tag: ^2.12.6
     hoist-non-react-statics: ^3.3.2
     optimism: ^0.16.1
     prop-types: ^15.7.2
     symbol-observable: ^4.0.0
-    ts-invariant: ^0.9.4
+    ts-invariant: ^0.10.3
     tslib: ^2.3.0
-    zen-observable-ts: ^1.2.0
+    zen-observable-ts: ^1.2.5
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     graphql-ws: ^5.5.5
-    react: ^16.8.0 || ^17.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
     subscriptions-transport-ws: ^0.9.0 || ^0.11.0
   peerDependenciesMeta:
     graphql-ws:
@@ -42,7 +42,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: 0228b9de82e1f25b4d63439944f81675579db2fc33eead06c62c603f3d48e8b6dae7d41232a754b03b3b8290b13ca8cdcea9962948cc1991ccefe4d16d942e7f
+  checksum: a3c037ef3465cb5d736d8495c9c2dcb9741e39d9c102f147b479af1923c5913f710981a311d1098b9969ebe87769b749c22274decb5977ad0619032e7ac2cf26
   languageName: node
   linkType: hard
 
@@ -2380,7 +2380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-typed-document-node/core@npm:^3.0.0, @graphql-typed-document-node/core@npm:^3.1.1":
+"@graphql-typed-document-node/core@npm:^3.1.1":
   version: 3.1.1
   resolution: "@graphql-typed-document-node/core@npm:3.1.1"
   peerDependencies:
@@ -3104,9 +3104,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pmmmwh/react-refresh-webpack-plugin@npm:^0.5.3":
-  version: 0.5.4
-  resolution: "@pmmmwh/react-refresh-webpack-plugin@npm:0.5.4"
+"@pmmmwh/react-refresh-webpack-plugin@npm:^0.5.6":
+  version: 0.5.7
+  resolution: "@pmmmwh/react-refresh-webpack-plugin@npm:0.5.7"
   dependencies:
     ansi-html-community: ^0.0.8
     common-path-prefix: ^3.0.0
@@ -3139,7 +3139,7 @@ __metadata:
       optional: true
     webpack-plugin-serve:
       optional: true
-  checksum: 66deb75fe06c0d93f9f6f87c57349013cdc82d4cc536b3aff919fd417df1c6603d14a96448d4088f1a680ec22a75f994b30c374a0042c524dfecd96a942ff674
+  checksum: 3490649181878cc8808fb91f3870ef095e5a1fb9647b3ac83740df07379c9d1cf540f24bf2b09d5f26a3a8c805b2c6b9c5be7192bdb9317d0ffffa67426e9f66
   languageName: node
   linkType: hard
 
@@ -3726,12 +3726,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:*, @types/react-dom@npm:^17.0.14":
-  version: 17.0.14
-  resolution: "@types/react-dom@npm:17.0.14"
+"@types/react-dom@npm:*, @types/react-dom@npm:^18.0.6":
+  version: 18.0.6
+  resolution: "@types/react-dom@npm:18.0.6"
   dependencies:
     "@types/react": "*"
-  checksum: b54cd0ef573236b3d87fe7493e6d1c36d8b4ca37a3b46364272a5c91ac178e3296b68ea1aeb299ce68f12ad663c5720ee890d0539b14881c6754bdcbdb0befa0
+  checksum: db571047af1a567631758700b9f7d143e566df939cfe5fbf7535347cc0c726a1cdbb5e3f8566d076e54cf708b6c1166689de194a9ba09ee35efc9e1d45911685
   languageName: node
   linkType: hard
 
@@ -3763,14 +3763,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^17.0.41":
-  version: 17.0.41
-  resolution: "@types/react@npm:17.0.41"
+"@types/react@npm:*, @types/react@npm:^18.0.15":
+  version: 18.0.17
+  resolution: "@types/react@npm:18.0.17"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 1b086ec0ea5d666f05e19e0724e41278d27a2ca29a2cd71b9d9ab3fe27dba233806eb728d744e092c9fe9637ac738d8c5a05983cde84d215342949b47ecba2ef
+  checksum: 18cae64f5bfd6bb58fbd8ee2ba52ec82de844f114254e26de7b513e4b86621f643f9b71d7066958cd571b0d78cb86cbceda449c5289f9349ca573df29ab69252
   languageName: node
   linkType: hard
 
@@ -4247,17 +4247,6 @@ __metadata:
     "@webassemblyjs/wast-parser": 1.9.0
     "@xtuc/long": 4.2.2
   checksum: 3d1e1b2e84745a963f69acd1c02425b321dd2e608e11dabc467cae0c9a808962bc769ec9afc46fbcea7188cc1e47d72370da762d258f716fb367cb1a7865c54b
-  languageName: node
-  linkType: hard
-
-"@welldone-software/why-did-you-render@npm:^6.2.3":
-  version: 6.2.3
-  resolution: "@welldone-software/why-did-you-render@npm:6.2.3"
-  dependencies:
-    lodash: ^4
-  peerDependencies:
-    react: ^16 || ^17
-  checksum: 6c012f0a67c94c19cd2e8221438d547990a26b0593b0d1e8fd57084253d7cd305f4904e5bda984fd38416390b35b95fb0c3631fa485bd41b0b317568f080376c
   languageName: node
   linkType: hard
 
@@ -6479,7 +6468,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cord-field@workspace:."
   dependencies:
-    "@apollo/client": 3.5.*
+    "@apollo/client": 3.6.*
     "@babel/core": ^7.18.6
     "@babel/plugin-proposal-numeric-separator": ^7.18.6
     "@babel/plugin-transform-runtime": ^7.18.6
@@ -6544,8 +6533,8 @@ __metadata:
     "@types/luxon": ^2.3.1
     "@types/node": ^17.0.21
     "@types/papaparse": ^5.3.2
-    "@types/react": ^17.0.41
-    "@types/react-dom": ^17.0.14
+    "@types/react": ^18.0.15
+    "@types/react-dom": ^18.0.6
     "@types/react-pdf": ^5.0.9
     "@types/response-time": ^2.3.5
     "@types/seedrandom": ^3.0.2
@@ -6557,7 +6546,6 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "*"
     "@typescript-eslint/parser": "*"
     "@typescript-eslint/types": "*"
-    "@welldone-software/why-did-you-render": ^6.2.3
     ahooks: ^3.7.0
     babel-loader: ^8.2.5
     babel-plugin-transform-imports: ^2.0.0
@@ -6605,14 +6593,14 @@ __metadata:
     query-string: ^7.1.1
     razzle: ^4.2.16
     razzle-dev-utils: ^4.2.16
-    react: ^17.0.2
+    react: ^18.2.0
     react-dnd: ^15.1.2
     react-dnd-html5-backend: ^15.1.3
-    react-dom: ^17.0.2
+    react-dom: ^18.2.0
     react-draggable: ^4.4.5
     react-dropzone: ^14.2.0
     react-error-boundary: ^3.1.4
-    react-final-form: "patch:react-final-form@npm:6.5.8#.yarn/patches/react-final-form.patch"
+    react-final-form: "patch:react-final-form@npm:6.5.9#.yarn/patches/react-final-form.patch"
     react-helmet-async: ^1.3.0
     react-intersection-observer: ^9.1.0
     react-number-format: ^4.9.3
@@ -9311,7 +9299,7 @@ final-form-calculate@1.3.2:
   languageName: node
   linkType: hard
 
-"graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.12.3":
+"graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.12.6":
   version: 2.12.6
   resolution: "graphql-tag@npm:2.12.6"
   dependencies:
@@ -11856,7 +11844,7 @@ final-form-calculate@1.3.2:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4, lodash@npm:^4.17.11, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0, lodash@npm:~4.17.0":
+"lodash@npm:^4.17.11, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.7.0, lodash@npm:~4.17.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -14758,16 +14746,15 @@ final-form-calculate@1.3.2:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^17.0.2":
-  version: 17.0.2
-  resolution: "react-dom@npm:17.0.2"
+"react-dom@npm:^18.2.0":
+  version: 18.2.0
+  resolution: "react-dom@npm:18.2.0"
   dependencies:
     loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-    scheduler: ^0.20.2
+    scheduler: ^0.23.0
   peerDependencies:
-    react: 17.0.2
-  checksum: 1c1eaa3bca7c7228d24b70932e3d7c99e70d1d04e13bb0843bbf321582bc25d7961d6b8a6978a58a598af2af496d1cedcfb1bf65f6b0960a0a8161cb8dab743c
+    react: ^18.2.0
+  checksum: 7d323310bea3a91be2965f9468d552f201b1c27891e45ddc2d6b8f717680c95a75ae0bc1e3f5cf41472446a2589a75aed4483aee8169287909fcd59ad149e8cc
   languageName: node
   linkType: hard
 
@@ -14822,27 +14809,27 @@ final-form-calculate@1.3.2:
   languageName: node
   linkType: hard
 
-"react-final-form@npm:6.5.8":
-  version: 6.5.8
-  resolution: "react-final-form@npm:6.5.8"
+"react-final-form@npm:6.5.9":
+  version: 6.5.9
+  resolution: "react-final-form@npm:6.5.9"
   dependencies:
     "@babel/runtime": ^7.15.4
   peerDependencies:
     final-form: ^4.20.4
-    react: ^16.8.0 || ^17.0.0
-  checksum: ea73cbd941e5f338429753cfde8bdfd849571d00eeea1fe90e39463c2da02d5ebe5551e8d30234800174ef96d853edd7db776a2bab17ab71ca3ecc9a24a5fc28
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 2ab79b1b0230545af1b93b324e2ce61992087beda344f762e1c1306867c177ca6258651e992515fa6681a790f94380a388c18e898ffb20468562e62c83c6b289
   languageName: node
   linkType: hard
 
-"react-final-form@patch:react-final-form@npm:6.5.8#.yarn/patches/react-final-form.patch::locator=cord-field%40workspace%3A.":
-  version: 6.5.8
-  resolution: "react-final-form@patch:react-final-form@npm%3A6.5.8#.yarn/patches/react-final-form.patch::version=6.5.8&hash=71d300&locator=cord-field%40workspace%3A."
+"react-final-form@patch:react-final-form@npm:6.5.9#.yarn/patches/react-final-form.patch::locator=cord-field%40workspace%3A.":
+  version: 6.5.9
+  resolution: "react-final-form@patch:react-final-form@npm%3A6.5.9#.yarn/patches/react-final-form.patch::version=6.5.9&hash=71d300&locator=cord-field%40workspace%3A."
   dependencies:
     "@babel/runtime": ^7.15.4
   peerDependencies:
     final-form: ^4.20.4
-    react: ^16.8.0 || ^17.0.0
-  checksum: 895a3531eab2662e4e5405ae394fdd00710255d6841ad9613a93a8be95b342cceee5618b43debb9d08213f7aac53f4cc89d4fec74579dcf1c2257f3a6069b507
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 34e945f8d65ea1571a0b9a8129ba8a0b56d7b529e7f7adb680d221aca656b6c92e9b37f2911bd516653e4187dc0055f35e751b68005110a0de5ef31683720b71
   languageName: node
   linkType: hard
 
@@ -14932,10 +14919,10 @@ final-form-calculate@1.3.2:
   languageName: node
   linkType: hard
 
-"react-refresh@npm:^0.11.0":
-  version: 0.11.0
-  resolution: "react-refresh@npm:0.11.0"
-  checksum: 112178a05b1e0ffeaf5d9fb4e56b4410a34a73adeb04dbf13abdc50d9ac9df2ada83e81485156cca0b3fa296aa3612751b3d6cd13be4464642a43679b819cbc7
+"react-refresh@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "react-refresh@npm:0.13.0"
+  checksum: 1cf2b87ed99e1d388aa3923078bc30cd3ce43ee86e8936944e961d3643c6e85da41ebed6a0996e8bdad75a0d2ce3b7e10638b45018231380d4a174f63a451f75
   languageName: node
   linkType: hard
 
@@ -14978,13 +14965,12 @@ final-form-calculate@1.3.2:
   languageName: node
   linkType: hard
 
-"react@npm:^17.0.2":
-  version: 17.0.2
-  resolution: "react@npm:17.0.2"
+"react@npm:^18.2.0":
+  version: 18.2.0
+  resolution: "react@npm:18.2.0"
   dependencies:
     loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: b254cc17ce3011788330f7bbf383ab653c6848902d7936a87b09d835d091e3f295f7e9dd1597c6daac5dc80f90e778c8230218ba8ad599f74adcc11e33b9d61b
+  checksum: 88e38092da8839b830cda6feef2e8505dec8ace60579e46aa5490fc3dc9bba0bd50336507dc166f43e3afc1c42939c09fe33b25fae889d6f402721dcd78fca1b
   languageName: node
   linkType: hard
 
@@ -15642,13 +15628,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.20.2":
-  version: 0.20.2
-  resolution: "scheduler@npm:0.20.2"
+"scheduler@npm:^0.23.0":
+  version: 0.23.0
+  resolution: "scheduler@npm:0.23.0"
   dependencies:
     loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: c4b35cf967c8f0d3e65753252d0f260271f81a81e427241295c5a7b783abf4ea9e905f22f815ab66676f5313be0a25f47be582254db8f9241b259213e999b8fc
+  checksum: d79192eeaa12abef860c195ea45d37cbf2bbf5f66e3c4dcd16f54a7da53b17788a70d109ee3d3dde1a0fd50e6a8fc171f4300356c5aee4fc0171de526bf35f8a
   languageName: node
   linkType: hard
 
@@ -17239,12 +17224,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ts-invariant@npm:^0.9.4":
-  version: 0.9.4
-  resolution: "ts-invariant@npm:0.9.4"
+"ts-invariant@npm:^0.10.3":
+  version: 0.10.3
+  resolution: "ts-invariant@npm:0.10.3"
   dependencies:
     tslib: ^2.1.0
-  checksum: c9e5726361fa266916966b2070605f8664b6dd1d8b0ef7565dbf056abb6a87be26195985ef62dd97aeb0894cf2f4ad5b7f0d89dadadc197eaa38e99222afa29c
+  checksum: bb07d56fe4aae69d8860e0301dfdee2d375281159054bc24bf1e49e513fb0835bf7f70a11351344d213a79199c5e695f37ebbf5a447188a377ce0cd81d91ddb5
   languageName: node
   linkType: hard
 
@@ -18594,12 +18579,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"zen-observable-ts@npm:^1.2.0":
-  version: 1.2.3
-  resolution: "zen-observable-ts@npm:1.2.3"
+"zen-observable-ts@npm:^1.2.5":
+  version: 1.2.5
+  resolution: "zen-observable-ts@npm:1.2.5"
   dependencies:
     zen-observable: 0.8.15
-  checksum: 0548b555c67671f1240fb416755d2c27abf095b74a9e25c1abf23b2e15de40e6b076c678a162021358fe62914864eb9f0a57cd65e203d66c4988a08b220e6172
+  checksum: 3b707b7a0239a9bc40f73ba71b27733a689a957c1f364fabb9fa9cbd7d04b7c2faf0d517bf17004e3ed3f4330ac613e84c0d32313e450ddaa046f3350af44541
   languageName: node
   linkType: hard
 
