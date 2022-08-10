@@ -7,13 +7,16 @@ export interface DraggableDialogProps
   draggableProps?: Partial<DraggableProps>;
 }
 
-export const DraggableDialog = (props: DraggableDialogProps) => {
+export const DraggableDialog = ({
+  draggableProps,
+  ...props
+}: DraggableDialogProps) => {
   const paperProps: DraggablePaperProps = {
     ...props.PaperProps,
     draggableProps: {
       bounds: 'parent',
       handle: '.MuiDialogTitle-root',
-      ...props.draggableProps,
+      ...draggableProps,
     },
   };
   return (
