@@ -41,15 +41,6 @@ if (process.env.NODE_ENV !== 'production') {
     );
     // Do hacking to show dates easier
     await import('./common/hacky-inspect-dates');
-
-    // Setup why did you render
-    const [React, whyDidYouRender] = await Promise.all([
-      import('react').then((m) => m.default),
-      import('@welldone-software/why-did-you-render').then((m) => m.default),
-    ]);
-    whyDidYouRender(React, {
-      // ...WDYR options
-    });
   };
   setup.push(devSetUp());
 }

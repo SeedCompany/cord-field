@@ -148,7 +148,6 @@
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
     "@typescript-eslint/types": "*",
-    "@welldone-software/why-did-you-render": "^6.2.3",
     "babel-loader": "^8.2.5",
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-rename-import": "^2.3.0",
