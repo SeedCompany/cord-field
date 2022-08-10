@@ -1,7 +1,8 @@
 import { RefObject, useEffect, useRef } from 'react';
-import { useScroll, useScrolling, useThrottle } from 'react-use';
+import { useScroll, useThrottle } from 'react-use';
 import { useLocationState } from '../components/Routing';
 import { useFirstMountState } from './useFirstMountState';
+import { useScrolling } from './useScrolling';
 
 /**
  * Persists scroll location in history so that that it can be restored when
