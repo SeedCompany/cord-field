@@ -14,7 +14,7 @@ import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
 import { RequestFileUploadDocument } from './Upload.graphql';
 import { UploadItems } from './UploadItems';
-import { UploadManager } from './UploadManager';
+import { UploadManagerUIShell as UploadManager } from './UploadManagerUIShell';
 import { useUploadFile } from './useUploadFile';
 
 const initialUploadContext = {
