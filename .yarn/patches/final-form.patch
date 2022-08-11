@@ -1,5 +1,5 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 617484f0aca73966fb7a57cdf039f1c77a5200a5..700051b103b5a633492838d67c0453f2a078cf44 100644
+index dc9439a408e1108e51cfbf867a83f945bbf8e484..857d3a8954d72c33ebfc659ee6734cebc350a29e 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -237,7 +237,7 @@ export interface FormApi<
