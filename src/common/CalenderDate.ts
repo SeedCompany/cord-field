@@ -39,30 +39,23 @@ Object.defineProperties(DateTime.prototype, {
  * Whether we need/want it to be type compatible with DateTime has yet to
  * be determined - currently it is.
  */
-export class CalendarDate extends DateTime {
+export class CalendarDate
+  // @ts-expect-error library doesn't explicitly support extension
+  extends DateTime
+{
   static isDate(o: any): o is CalendarDate {
     return o instanceof CalendarDate;
   }
 
   static fromDateTime(dt: DateTime): CalendarDate {
-    if (dt instanceof CalendarDate) {
-      return dt;
-    }
-    const inst = dt.startOf('day') as any;
-    return new CalendarDate({
-      ts: inst.ts,
-      zone: inst.zone,
-      c: inst.c,
-      o: inst.o,
-      loc: inst.loc,
-      invalid: inst.invalid,
-    });
+    return Object.assign(
+      new CalendarDate(),
+      dt instanceof CalendarDate ? dt : dt.startOf('day')
+    );
   }
 
-  protected constructor(args: any = {}) {
-    // @ts-expect-error DateTime constructor isn't defined, because it's private
-    // but it does require an object
-    super(args);
+  protected constructor() {
+    super({});
   }
 
   [Symbol.for('inspect')]() {
