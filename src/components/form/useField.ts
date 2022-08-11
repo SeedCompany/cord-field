@@ -97,7 +97,11 @@ export const useField = <
       ? isListEqualBy(compareBy ?? identity)
       : isEqualBy(compareBy ?? identity));
 
-  const { input, meta } = useFinalField<Value<T, Multiple>, El>(name, {
+  const { input, meta } = useFinalField<
+    Value<T, Multiple>,
+    El,
+    Value<T, Multiple>
+  >(name, {
     validate,
     multiple,
     ...restConfig,
