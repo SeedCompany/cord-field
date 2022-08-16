@@ -45,6 +45,7 @@ jobs:
           name: schema.graphql
           pr: ${{ steps.api-pr.outputs.group1 }}
           workflow_conclusion: completed # needs to be done, but not necessarily successful
+          check_artifacts: true
           path: server_build
         if: ${{ steps.api-pr.outputs.group1 != '' }}
 
