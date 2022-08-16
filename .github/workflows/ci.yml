@@ -44,6 +44,7 @@ jobs:
           workflow: ci.yml
           name: schema.graphql
           pr: ${{ steps.api-pr.outputs.group1 }}
+          workflow_conclusion: completed # needs to be done, but not necessarily successful
           path: server_build
         if: ${{ steps.api-pr.outputs.group1 != '' }}
 
