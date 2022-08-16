@@ -55,6 +55,11 @@ const restrictedImports = [
       importName: importName === 'default' ? localName : importName,
     }),
   },
+  {
+    importNames: 'default',
+    path: 'lodash',
+    message: 'Import functions directly to enable tree-shaking at build time',
+  },
 
   // Our babel import transforms don't work with these exports
   {
