@@ -1,8 +1,8 @@
-import { List, ListItem } from '@material-ui/core';
-import _, { differenceBy, identity, unionBy } from 'lodash';
-import * as React from 'react';
+import { List, ListItem } from '@mui/material';
+import { differenceBy, identity, unionBy } from 'lodash';
 import { ReactNode } from 'react';
-import { Entity, UnsecuredProp, unwrapSecured } from '../../api';
+import { Entity } from '~/api';
+import { UnsecuredProp, unwrapSecured } from '~/common';
 import { ChangesetBadge } from './ChangesetBadge';
 import {
   EntityFromChangesetDiff,
@@ -57,9 +57,11 @@ export const ChangesetPropList = <
   }
   if (!(prop in previous)) {
     console.error(
-      `${previous.__typename}.${prop} has not been requested in ChangesetDiff`
+      `${previous.__typename}.${String(
+        prop
+      )} has not been requested in ChangesetDiff`
     );
-    return <></>;
+    return;
   }
 
   const originalProp = unwrapSecured(previous[prop]) as Item;
@@ -84,7 +86,7 @@ export const ChangesetPropList = <
     <List disablePadding>
       {allItems.map((item, i) => (
         <ChangesetBadge
-          anchorHorizontal="right"
+          anchorOrigin={{ horizontal: 'right' }}
           mode={
             added.includes(item)
               ? 'added'
@@ -92,10 +94,9 @@ export const ChangesetPropList = <
               ? 'removed'
               : undefined
           }
+          key={`${item}-${i}`}
         >
-          <ListItem key={`${item}-${i}`} disableGutters>
-            {renderListItem(item)}
-          </ListItem>
+          <ListItem disableGutters>{renderListItem(item)}</ListItem>
         </ChangesetBadge>
       ))}
     </List>
