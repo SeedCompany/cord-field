@@ -40,7 +40,7 @@ const iconMap: Record<string, SvgIconComponent> = {
 };
 
 export const ProductCard = ({ product, className }: ProductCardProps) => {
-  const {classes, cx} = useStyles();
+  const { classes, cx } = useStyles();
 
   const Icon = product.category ? iconMap[product.category] : undefined;
 

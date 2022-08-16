@@ -26,7 +26,12 @@ export const DisplaySimpleProperty = ({
   const shouldRenderElement = loading || (label && value);
   if (!shouldRenderElement) return null;
   const propValue = (
-    <Typography component="span" variant="inherit" color="text.secondary" {...ValueProps}>
+    <Typography
+      component="span"
+      variant="inherit"
+      color="text.secondary"
+      {...ValueProps}
+    >
       {value}
     </Typography>
   );

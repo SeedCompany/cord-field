@@ -8,7 +8,11 @@ import {
 } from '@mui/material';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { ProductMedium, ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
+import {
+  ProductMedium,
+  ProductMediumLabels,
+  ProductStepLabels,
+} from '~/api/schema.graphql';
 import { displayMethodologyWithLabel, mapFromList } from '~/common';
 import {
   ChangesetPropertyBadge,
