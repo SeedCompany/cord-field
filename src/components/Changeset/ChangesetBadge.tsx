@@ -1,4 +1,10 @@
-import { Badge, Grid, TooltipProps, Typography } from '@mui/material';
+import {
+  Badge,
+  BadgeOrigin,
+  Grid,
+  TooltipProps,
+  Typography,
+} from '@mui/material';
 import { startCase } from 'lodash';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -61,7 +67,7 @@ interface ChangesetBadgeOwnProps {
   disableOutline?: boolean;
   moreInfo?: ReactNode;
   TooltipProps?: Omit<TooltipProps, 'title' | 'children'>;
-  anchorHorizontal?: 'right' | 'left';
+  anchorOrigin?: Partial<BadgeOrigin>;
 }
 
 export interface ChangesetBadgeProps
@@ -75,7 +81,7 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
     children,
     moreInfo,
     TooltipProps,
-    anchorHorizontal,
+    anchorOrigin,
   } = props;
   const outline = !disableOutline;
   const { classes, cx } = useStyles(props, {
@@ -89,15 +95,13 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
   return (
     <Badge
       anchorOrigin={{
-        horizontal: anchorHorizontal ?? 'left',
-        vertical: 'top',
+        horizontal: anchorOrigin?.horizontal ?? 'left',
+        vertical: anchorOrigin?.vertical ?? 'top',
       }}
       component={BadgeWithTooltip}
       tooltip={(content: ReactElement) => (
         <PaperTooltip
           placement="right"
-          // Assuming more info is given when changedå
-          interactive={mode === 'changed'}
           {...TooltipProps}
           title={
             <Grid container direction="column" alignItems="flex-start">

@@ -204,7 +204,7 @@ export const CreateProduct = () => {
 
     try {
       await Promise.all([createProduct(), updatePpm()]);
-      navigate(`/engagements/${changesetId ? mergedId : engagementId}`);
+      navigate(`/engagements/${mergedId}`);
     } catch (e) {
       return await handleFormError(e, form);
     }

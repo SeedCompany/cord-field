@@ -49,15 +49,13 @@ fragment ProductChangesetDiff on Product {
   mediums {
     value
   }
-  ...OtherProductProps
-}
-
-fragment OtherProductProps on OtherProduct {
-  title {
-    value
-  }
-  description {
-    value
+  ... on OtherProduct {
+    title {
+      value
+    }
+    description {
+      value
+    }
   }
 }
 

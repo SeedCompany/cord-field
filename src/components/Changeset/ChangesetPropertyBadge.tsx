@@ -76,7 +76,7 @@ export const ChangesetPropertyBadge = <
   return (
     <ChangesetBadge
       mode={isDiff ? 'changed' : undefined}
-      anchorHorizontal={iconHorizontalOrigin}
+      anchorOrigin={{ horizontal: iconHorizontalOrigin }}
       moreInfo={
         isDiff ? (
           renderChange ? (
