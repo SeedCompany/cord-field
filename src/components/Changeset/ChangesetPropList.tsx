@@ -61,7 +61,7 @@ export const ChangesetPropList = <
         prop
       )} has not been requested in ChangesetDiff`
     );
-    return;
+    return null;
   }
 
   const originalProp = unwrapSecured(previous[prop]) as Item;
