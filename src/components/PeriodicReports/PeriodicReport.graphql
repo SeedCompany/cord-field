@@ -16,6 +16,13 @@ fragment PeriodicReport on PeriodicReport {
       ...FileNodeInfo
     }
   }
+  otherFiles {
+    canEdit
+    canRead
+    value {
+      ...FileNodeInfo
+    }
+  }
   receivedDate {
     canRead
     canEdit

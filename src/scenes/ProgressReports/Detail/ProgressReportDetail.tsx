@@ -30,6 +30,7 @@ import { Redacted } from '../../../components/Redacted';
 import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProductTableList } from './ProductTableList';
+import { OtherFilesOverviewCard } from './ProgressOtherFilesCard';
 import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
@@ -228,6 +229,17 @@ export const ProgressReportDetail = () => {
                       progressReport={report}
                       disableIcon
                       onUpload={({ files }) => setUploading(files)}
+                    />
+                  ) : (
+                    <FieldOverviewCard />
+                  )}
+                </Grid>
+                <Grid item>
+                  {report ? (
+                    <OtherFilesOverviewCard
+                      loading={!report}
+                      total={undefined}
+                      redacted={report.otherFiles.canRead}
                     />
                   ) : (
                     <FieldOverviewCard />
