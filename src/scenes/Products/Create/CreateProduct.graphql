@@ -1,6 +1,4 @@
-mutation CreateDirectScriptureProduct(
-  $input: CreateDirectScriptureProductInput!
-) {
+mutation CreateDirectScriptureProduct($input: CreateDirectScriptureProduct!) {
   createProduct: createDirectScriptureProduct(input: $input) {
     product {
       ...CreateProductResult
@@ -9,7 +7,7 @@ mutation CreateDirectScriptureProduct(
 }
 
 mutation CreateDerivativeScriptureProduct(
-  $input: CreateDerivativeScriptureProductInput!
+  $input: CreateDerivativeScriptureProduct!
 ) {
   createProduct: createDerivativeScriptureProduct(input: $input) {
     product {
@@ -18,7 +16,7 @@ mutation CreateDerivativeScriptureProduct(
   }
 }
 
-mutation CreateOtherProduct($input: CreateOtherProductInput!) {
+mutation CreateOtherProduct($input: CreateOtherProduct!) {
   createProduct: createOtherProduct(input: $input) {
     product {
       ...CreateProductResult

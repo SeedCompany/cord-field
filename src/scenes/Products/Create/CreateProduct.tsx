@@ -127,12 +127,10 @@ export const CreateProduct = () => {
           variables: {
             input: {
               changeset: changesetId,
-              product: {
-                engagementId,
-                title: title || '',
-                description,
-                ...inputs,
-              },
+              engagementId,
+              title: title || '',
+              description,
+              ...inputs,
             },
           },
         });
@@ -142,20 +140,18 @@ export const CreateProduct = () => {
           variables: {
             input: {
               changeset: changesetId,
-              product: {
-                engagementId,
-                scriptureReferences: parsedScriptureReferences,
-                unspecifiedScripture:
-                  parsedScriptureReferences.length > 0 ||
-                  !unspecifiedScripture?.totalVerses ||
-                  !book
-                    ? null
-                    : {
-                        book,
-                        ...unspecifiedScripture,
-                      },
-                ...inputs,
-              },
+              engagementId,
+              scriptureReferences: parsedScriptureReferences,
+              unspecifiedScripture:
+                parsedScriptureReferences.length > 0 ||
+                !unspecifiedScripture?.totalVerses ||
+                !book
+                  ? null
+                  : {
+                      book,
+                      ...unspecifiedScripture,
+                    },
+              ...inputs,
             },
           },
         });
@@ -165,12 +161,10 @@ export const CreateProduct = () => {
           variables: {
             input: {
               changeset: changesetId,
-              product: {
-                engagementId,
-                ...inputs,
-                produces: produces!.id,
-                scriptureReferencesOverride: parsedScriptureReferences,
-              },
+              engagementId,
+              ...inputs,
+              produces: produces!.id,
+              scriptureReferencesOverride: parsedScriptureReferences,
             },
           },
         });
