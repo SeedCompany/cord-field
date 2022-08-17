@@ -34,8 +34,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
   },
 }));
 
-// test comment
-
 export const CreateProduct = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
