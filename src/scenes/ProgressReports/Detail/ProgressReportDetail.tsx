@@ -56,14 +56,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
   subheader: {
     margin: spacing(2, 0, 4),
   },
-  card: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardContent: {
-    flex: 1,
-  },
 }));
 
 export const ProgressReportDetail = () => {
@@ -251,16 +243,7 @@ export const ProgressReportDetail = () => {
                   <FieldOverviewCard />
                 )}
               </Grid>
-              <ProductTableList
-                products={report?.progress}
-                style={{
-                  maxWidth:
-                    windowSize.width !== Infinity
-                      ? // window - sidebar - margin
-                        windowSize.width - 248 - 8 * 2
-                      : undefined,
-                }}
-              />
+              <ProductTableList products={report?.progress} />
             </Stack>
           </>
         )}
