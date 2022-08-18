@@ -1,7 +1,8 @@
 import { useMutation } from '@apollo/client';
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import { Form } from 'react-final-form';
+import { makeStyles } from 'tss-react/mui';
 import {
   ProgressVarianceReasonGroups,
   ProgressVarianceReasonLabels,
@@ -17,7 +18,7 @@ import {
 import { UpdateProgressReportDocument as UpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
 import { ExplanationOfVarianceFormFragment as ProgressReport } from './ExplanationForm.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   saveButton: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -43,7 +44,7 @@ export const ExplanationForm = ({
   progressReport,
   setState,
 }: UpdateExplanationFormParams) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [updateProgressReport] = useMutation(UpdatePeriodicReport);
   const varianceReasons = progressReport?.varianceReasons.value;
 
@@ -139,7 +140,7 @@ export const ExplanationInfo = ({
   progressReport,
 }: UpdateExplanationFormParams) => {
   const varianceReasons = progressReport?.varianceReasons.value;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Grid direction="column">

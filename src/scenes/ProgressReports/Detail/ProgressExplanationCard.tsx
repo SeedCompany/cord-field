@@ -1,53 +1,24 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  IconButton,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import { AccessTime, Close, Edit } from '@material-ui/icons';
+import { AccessTime, Close, Edit } from '@mui/icons-material';
+import { Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
 import { some } from 'lodash';
 import { useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import {
   ExplanationForm,
   ExplanationInfo,
 } from '../ExplanationForm/ExplanationForm';
 import { ExplanationOfVarianceFormFragment } from '../ExplanationForm/ExplanationForm.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   cardHeader: {
     opacity: 0.8,
   },
   cardHeaderText: {
     marginLeft: spacing(0.5),
   },
-  varianceHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
   editButton: {
     marginLeft: spacing(82),
     marginTop: spacing(-1),
-  },
-  cardActions: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    width: '100%',
-    height: '100%',
-  },
-  explanationText: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'flextStart',
-  },
-  explanationReason: {
-    display: 'flex',
-    alignSelf: 'flex-start',
-    justifyContent: 'flex-start',
-    marginRight: spacing(3),
-    marginLeft: spacing(3),
   },
 }));
 
@@ -64,7 +35,7 @@ export const ProgressExplanationCard = ({
     setIsEdit(mode);
   }
 
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Card>
       <CardContent>
