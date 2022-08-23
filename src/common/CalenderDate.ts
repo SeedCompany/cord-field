@@ -48,14 +48,24 @@ export class CalendarDate
   }
 
   static fromDateTime(dt: DateTime): CalendarDate {
-    return Object.assign(
-      new CalendarDate(),
-      dt instanceof CalendarDate ? dt : dt.startOf('day')
-    );
+    if (dt instanceof CalendarDate) {
+      return dt;
+    }
+    const inst = dt.startOf('day') as any;
+    // props must be manually enumerated because of our hacky-inspect-dates
+    // monkey patch which makes all its props non-enumerable
+    return new CalendarDate({
+      ts: inst.ts,
+      zone: inst.zone,
+      c: inst.c,
+      o: inst.o,
+      loc: inst.loc,
+      invalid: inst.invalid,
+    });
   }
 
-  protected constructor() {
-    super({});
+  protected constructor(args: any = {}) {
+    super(args);
   }
 
   [Symbol.for('inspect')]() {
