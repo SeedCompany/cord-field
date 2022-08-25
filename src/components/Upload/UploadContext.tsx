@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import {
   createContext,
+  SyntheticEvent,
   useCallback,
   useContext,
   useEffect,
@@ -101,9 +102,9 @@ export const UploadProvider = ({ children }: ChildrenProp) => {
   }, [submittedFiles, handleFileAdded, setUploadingStatus]);
 
   const toggleManagerOpen = useCallback(
-    (open?: boolean) => {
+    (open?: boolean | SyntheticEvent) => {
       setManagerOpen((prev) => {
-        const nextOpen = open ?? !prev;
+        const nextOpen = typeof open === 'boolean' ? open : !prev;
         if (!nextOpen) {
           removeCompletedUploads();
         }
