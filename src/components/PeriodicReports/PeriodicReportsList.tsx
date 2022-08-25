@@ -64,7 +64,7 @@ export const PeriodicReportsList = ({
           <PeriodicReportsTable
             data={reports}
             onRowClick={
-              onRowClick ? (params) => onRowClick(params.row.report) : undefined
+              onRowClick ? (params) => onRowClick(params.row) : undefined
             }
           />
         </Card>
