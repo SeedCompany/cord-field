@@ -1,16 +1,10 @@
-import {
-  Card,
-  CardActions,
-  CardContent,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import clsx from 'clsx';
+import { Card, CardActions, CardContent, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
 import { FundingAccountCardFragment } from './FundingAccountCard.graphql';
 
-const useStyles = makeStyles(({ spacing }) => {
+const useStyles = makeStyles()(({ spacing }) => {
   return {
     root: {
       width: '100%',
@@ -34,10 +28,10 @@ export const FundingAccountCard = ({
   className,
   fundingAccount,
 }: FundingAccountCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <CardContent>
         <Typography variant="h4" className={classes.name}>
           {fundingAccount.name.value}

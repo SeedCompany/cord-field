@@ -1,18 +1,19 @@
 import { useLazyQuery } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
+  Autocomplete,
+  AutocompleteProps,
   Chip,
   ChipProps,
   CircularProgress,
   TextField,
   TextFieldProps,
-} from '@material-ui/core';
+  AutocompleteValue as Value,
+} from '@mui/material';
 import {
-  Autocomplete,
-  AutocompleteProps,
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
   createFilterOptions,
-  Value,
-} from '@material-ui/lab';
+} from '@mui/material/Autocomplete';
 import { camelCase, last, uniqBy, upperFirst } from 'lodash';
 import {
   ComponentType,
@@ -101,7 +102,10 @@ export function LookupField<
 
   const selectOnFocus = props.selectOnFocus ?? true;
   const andSelectOnFocus = useCallback(
-    (el) => selectOnFocus && el.select(),
+    (el: HTMLDivElement) =>
+      selectOnFocus &&
+      el.tagName === 'INPUT' &&
+      (el as unknown as HTMLInputElement).select(),
     [selectOnFocus]
   );
 
@@ -182,7 +186,7 @@ export function LookupField<
 
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
-      getOptionSelected={(a, b) => compareBy(a) === compareBy(b)}
+      isOptionEqualToValue={(a, b) => compareBy(a) === compareBy(b)}
       loadingText={<CircularProgress size={16} />}
       // Otherwise it looks like an item is selected when it's just a search value
       clearOnBlur
@@ -207,16 +211,16 @@ export function LookupField<
           />
         ))
       }
-      // @ts-expect-error our value is readonly array, MUI's is not but it could be.
       options={options}
       getOptionLabel={getOptionLabel}
       freeSolo={freeSolo}
-      renderOption={(option) => {
-        if (typeof option === 'string') {
-          return `Create "${option}"`;
-        }
-        return getOptionLabel(option);
-      }}
+      renderOption={(props, option, _ownerState) => (
+        <li {...props}>
+          {typeof option === 'string'
+            ? `Create "${option}"`
+            : getOptionLabel(option)}
+        </li>
+      )}
       filterOptions={(options, params) => {
         // Apply default filtering. Even though the API filters for us, we add
         // the currently selected options back in because they are still valid

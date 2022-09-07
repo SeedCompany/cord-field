@@ -1,9 +1,10 @@
-import { makeStyles, Tab, Tabs } from '@material-ui/core';
+import { Tab, Tabs } from '@mui/material';
 import { useEffect } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { XLSX$Utils } from 'xlsx';
 import { useFileActions } from '../FileActions';
 
-const useStyles = makeStyles(({ spacing }) => {
+const useStyles = makeStyles()(() => {
   const backgroundColor = '#e6e6e6';
   const borderColor = '#d8d8df';
   const headerBorderColor = '#d1cacb';
@@ -12,11 +13,8 @@ const useStyles = makeStyles(({ spacing }) => {
     border: `1px solid ${headerBorderColor}`,
     borderWidth: '0px 1px 1px 0px',
     textAlign: 'center',
-  };
+  } as const;
   return {
-    sheetHeader: {
-      marginBottom: spacing(2),
-    },
     container: {
       '& h2': {
         fontFamily: 'Arial',
@@ -125,7 +123,7 @@ const RenderedSheet = (props: Omit<SheetData, 'name'>) => {
 };
 
 export const SpreadsheetView = (props: SpreadSheetViewProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { data } = props;
   const { previewPage, setPreviewPage } = useFileActions();
 

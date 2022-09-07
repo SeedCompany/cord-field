@@ -1,17 +1,10 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { random } from 'lodash';
+import { makeStyles } from 'tss-react/mui';
 import { CardActionAreaLink } from '../Routing';
 import { OrganizationListItemFragment } from './OrganizationListItem.graphql';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => {
+const useStyles = makeStyles()(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;
   return {
     root: {
@@ -28,9 +21,6 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       display: 'flex',
       justifyContent: 'space-between',
     },
-    skeletonRight: {
-      marginLeft: 'auto',
-    },
   };
 });
 export interface OrganizationListItemCardProps {
@@ -45,10 +35,10 @@ export const OrganizationListItemCard = ({
   organization,
   className,
 }: OrganizationListItemCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
-    <Card className={clsx(className, classes.root)}>
+    <Card className={cx(className, classes.root)}>
       <CardActionAreaLink
         disabled={!organization}
         to={`/organizations/${organization?.id}`}

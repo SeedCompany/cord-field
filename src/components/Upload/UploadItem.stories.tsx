@@ -1,4 +1,4 @@
-import { Card } from '@material-ui/core';
+import { Card } from '@mui/material';
 import { action } from '@storybook/addon-actions';
 import { number, text } from '@storybook/addon-knobs';
 import { UploadItem as UI } from './UploadItem';

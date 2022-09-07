@@ -1,11 +1,5 @@
-import {
-  // eslint-disable-next-line @seedcompany/no-restricted-imports
-  Breakpoint,
-  // eslint-disable-next-line @seedcompany/no-restricted-imports
-  Breakpoints,
-} from '@material-ui/core/styles/createBreakpoints';
-// eslint-disable-next-line @seedcompany/no-restricted-imports
-import { CSSProperties } from '@material-ui/styles';
+import { Breakpoint, Breakpoints } from '@mui/material';
+import { CSSObject as CSSProperties } from 'tss-react';
 import { lowerCase } from './case';
 
 export const square = (size: string | number) => ({

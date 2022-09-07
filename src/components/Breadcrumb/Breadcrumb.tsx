@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { To } from 'history';
 import { isString } from 'lodash';
 import { forwardRef, ReactNode } from 'react';

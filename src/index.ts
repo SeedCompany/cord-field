@@ -1,25 +1,26 @@
 import 'source-map-support/register';
 import { createTerminus } from '@godaddy/terminus';
 import express from 'express';
-import { app } from './server/server';
+import { create } from './server/server';
 
-let currentApp = app;
+let currentApp: express.Express;
 
 if (module.hot) {
   module.hot.accept('./server/server', () => {
     console.log('🔁  HMR Reloading `./server`...');
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
-      currentApp = require('./server/server').app;
-    } catch (error) {
-      console.error(error);
-    }
+    import('./server/server')
+      .then((server) => server.create())
+      .then((app) => {
+        currentApp = app;
+      })
+      .catch((error) => console.error(error));
   });
   console.info('✅  Server-side HMR Enabled!');
 }
 
 // eslint-disable-next-line import/no-default-export
-export default Promise.resolve().then(() => {
+export default create().then((app) => {
+  currentApp = app;
   const server = express()
     .use((req, res) => currentApp(req, res))
     .listen(process.env.SERVER_PORT, () => {

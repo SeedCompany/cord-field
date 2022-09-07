@@ -1,4 +1,4 @@
-import { ChangeHistory } from '@material-ui/icons';
+import { ChangeHistory } from '@mui/icons-material';
 import { FieldOverviewCard } from '../FieldOverviewCard';
 import { useNumberFormatter } from '../Formatters';
 import { ProjectChangeRequestSummaryFragment } from './ProjectChangeRequestSummary.graphql';

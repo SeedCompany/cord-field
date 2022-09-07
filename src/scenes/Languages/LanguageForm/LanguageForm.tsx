@@ -1,6 +1,7 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import { setIn } from 'final-form';
 import { useMemo } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   CreateLanguage,
@@ -21,31 +22,31 @@ import {
   matchFieldIfSame,
   NumberField,
   SecuredField,
+  SelectField,
   SubmitError,
   TextField,
+  YearField,
 } from '../../../components/form';
-import { SelectField } from '../../../components/form/SelectField';
 import { max, minLength, required } from '../../../components/form/validators';
-import { YearField } from '../../../components/form/YearField';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.graphql';
 import { LanguageFormFragment } from './LangugeForm.graphql';
 
-export interface LanguageFormValues<T extends UpdateLanguage | CreateLanguage> {
-  language: Except<T, 'sponsorEstimatedEndDate'> & {
+type LanguageMutation = UpdateLanguage | CreateLanguage;
+
+export interface LanguageFormValues<Mutation extends LanguageMutation> {
+  language: Except<Mutation, 'sponsorEstimatedEndDate'> & {
     sponsorEstimatedEndFY?: Nullable<number>;
   };
 }
 
-export type LanguageFormProps<T> = DialogFormProps<
-  T,
-  LanguageListItemFragment
-> & {
-  /** The pre-existing language to edit */
-  language?: LanguageFormFragment;
-};
+export type LanguageFormProps<Mutation extends LanguageMutation> =
+  DialogFormProps<LanguageFormValues<Mutation>, LanguageListItemFragment> & {
+    /** The pre-existing language to edit */
+    language?: LanguageFormFragment;
+  };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   content: {
     overflow: 'hidden', // prevent scroll bars from negative margins of Grid
   },
@@ -56,11 +57,11 @@ const decorators = [
   matchFieldIfSame(`language.name`, `language.displayName`),
 ];
 
-export const LanguageForm = <T extends any>({
+export const LanguageForm = <Mutation extends LanguageMutation>({
   language,
   ...rest
-}: LanguageFormProps<T>) => {
-  const classes = useStyles();
+}: LanguageFormProps<Mutation>) => {
+  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const maxPopulation = useMemo(
     () =>
@@ -90,11 +91,7 @@ export const LanguageForm = <T extends any>({
             : next(e),
       }}
     >
-      {({
-        values,
-      }: {
-        values: Partial<LanguageFormValues<CreateLanguage | UpdateLanguage>>;
-      }) => {
+      {({ values }: { values: Partial<LanguageFormValues<Mutation>> }) => {
         return (
           <Grid container spacing={3} className={classes.content}>
             <Grid item xs={12}>
@@ -163,7 +160,7 @@ export const LanguageForm = <T extends any>({
                           placeholder="#####"
                           accept={/\d/g}
                           formatInput={(value) =>
-                            (value.match(/[\d]+/g) || []).join('').substr(0, 5)
+                            (value.match(/\d+/g) || []).join('').slice(0, 5)
                           }
                           validate={(value) =>
                             !value || value.length === 5
@@ -354,7 +351,7 @@ export const LanguageForm = <T extends any>({
                       multiline
                       placeholder="Enter Reasoning"
                       helperText="Why is this language a Least of These partnership?"
-                      inputProps={{ rowsMin: 2 }}
+                      minRows={2}
                       {...props}
                     />
                   )}
@@ -372,9 +369,9 @@ export const LanguageForm = <T extends any>({
 const SignLanguageCodeField = (props: FormattedTextFieldProps) => {
   return (
     <FormattedTextField
-      accept={/[a-zA-Z0-9]/g}
+      accept={/[a-zA-Z\d]/g}
       formatInput={(value) =>
-        (value.match(/[a-zA-Z0-9]+/g) || []).join('').substr(0, 4)
+        (value.match(/[a-zA-Z\d]+/g) || []).join('').slice(0, 4)
       }
       replace={(value) => value.toUpperCase()}
       validate={(value) =>

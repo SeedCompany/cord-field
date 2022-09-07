@@ -1,4 +1,5 @@
-import { makeStyles, Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import {
   AutocompleteField,
   AutocompleteFieldProps,
@@ -12,7 +13,7 @@ import {
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   collapsed: {
     marginLeft: spacing(1),
     marginTop: spacing(1),
@@ -20,7 +21,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const CompletionSection = ({ values, accordionState }: SectionProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (!values.product?.methodology) {
     return null;

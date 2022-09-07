@@ -55,8 +55,9 @@ export const ChangesetPropertyBadge = <
     return <>{children}</>;
   }
   if (!(prop in previous)) {
+    const propStr = String(prop);
     console.error(
-      `${previous.__typename}.${prop} has not be requested in ChangesetDiff`
+      `${previous.__typename}.${propStr} has not been requested in ChangesetDiff`
     );
     return <>{children}</>;
   }

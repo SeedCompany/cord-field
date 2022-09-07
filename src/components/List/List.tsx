@@ -1,15 +1,15 @@
-import { ButtonProps, Grid, GridProps, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { Grid, GridProps } from '@mui/material';
 import { times } from 'lodash';
 import { ReactNode, RefObject, useRef } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { Entity, isNetworkRequestInFlight, PaginatedListOutput } from '~/api';
 import { UseStyles } from '~/common';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { ChangesetBadge, useDetermineChangesetDiffItem } from '../Changeset';
-import { ProgressButton } from '../ProgressButton';
+import { ProgressButton, ProgressButtonProps } from '../ProgressButton';
 import { ListQueryResult } from './useListQuery';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles<ListProps<any>>()(({ spacing }) => ({
   root: {
     overflow: 'auto',
     marginLeft: spacing(-2),
@@ -36,7 +36,7 @@ export interface ListProps<Item extends Entity>
   SkeletonItemProps?: GridProps;
   CreateItemProps?: GridProps;
   LoadMoreItemProps?: GridProps;
-  LoadMoreButtonProps?: ButtonProps;
+  LoadMoreButtonProps?: ProgressButtonProps;
   /** Reference to the element that is actually scrolling, if it's not this list */
   scrollRef?: RefObject<HTMLElement>;
   className?: string;
@@ -62,14 +62,16 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
     scrollRef: scrollRefProp,
     className,
   } = props;
-  const classes = useStyles(props);
+  const { classes, cx } = useStyles(props, {
+    props: { classes: props.classes },
+  });
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   usePersistedScroll(scrollRefProp ?? scrollRef);
   const determineChangesetDiff = useDetermineChangesetDiffItem();
 
   return (
-    <div className={clsx(classes.root, className)} ref={scrollRef}>
+    <div className={cx(classes.root, className)} ref={scrollRef}>
       <Grid
         direction="column"
         spacing={spacing}

@@ -1,8 +1,9 @@
 import MsgReader from '@freiraum/msgreader';
-import { makeStyles, Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import parseHtml from 'html-react-parser';
 import { DateTime } from 'luxon';
 import { useCallback, useEffect, useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { mapFromList } from '~/common';
 import { FormattedDateTime } from '../../Formatters';
 import { PreviewerProps } from './FilePreview';
@@ -53,14 +54,14 @@ export const EmailPreview = (props: PreviewerProps) => {
   return previewLoading ? <PreviewLoading /> : <>{html}</>;
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     width: '100%',
   },
 }));
 
 const OutlookMessage = ({ email }: { email: Email }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.root}>

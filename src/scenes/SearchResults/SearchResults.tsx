@@ -1,8 +1,9 @@
 import { useQuery } from '@apollo/client';
-import { Card, CardContent, makeStyles, Typography } from '@material-ui/core';
+import { Card, CardContent, Typography } from '@mui/material';
 import { startCase } from 'lodash';
 import { ReactElement } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { makeStyles } from 'tss-react/mui';
 import { Error } from '../../components/Error';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';
 import { LocationCard } from '../../components/LocationCard';
@@ -16,7 +17,7 @@ import {
   SearchResultItemFragment as SearchResult,
 } from './Search.graphql';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -31,7 +32,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export const SearchResults = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [{ q: query }] = useSearch();
   const { data, error, loading } = useQuery(SearchDocument, {

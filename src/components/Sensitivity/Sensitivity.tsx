@@ -1,14 +1,14 @@
-import { Chip, colors, makeStyles, Typography } from '@material-ui/core';
-import { VerifiedUserOutlined } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { VerifiedUserOutlined } from '@mui/icons-material';
+import { Chip, Skeleton, Typography } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { meanBy } from 'lodash';
+import { makeStyles } from 'tss-react/mui';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
 
 const possible: SensitivityType[] = ['Low', 'Medium', 'High'];
 const avgLength = Math.round(meanBy(possible, (s) => s.length));
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   iconWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -41,12 +41,15 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
     height: '100%',
     width: '100%',
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   Low: {
-    backgroundColor: colors.grey[400],
+    backgroundColor: grey[400],
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   Medium: {
     backgroundColor: palette.warning.main,
   },
+  // eslint-disable-next-line tss-unused-classes/unused-classes
   High: {
     backgroundColor: palette.error.main,
   },
@@ -63,7 +66,7 @@ export const Sensitivity = ({
   loading,
   className,
 }: SensitivityProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
     <div className={className}>
@@ -73,16 +76,13 @@ export const Sensitivity = ({
       </div>
       <Chip
         classes={{ label: classes.chipLabel }}
-        className={clsx(
-          classes.chip,
-          !loading && value ? classes[value] : null
-        )}
+        className={cx(classes.chip, !loading && value ? classes[value] : null)}
         size="small"
         label={
           loading ? (
             <>
               <div className={classes.skeletonWidth} />
-              <Skeleton variant="rect" className={classes.skeleton} />
+              <Skeleton variant="rectangular" className={classes.skeleton} />
             </>
           ) : (
             value

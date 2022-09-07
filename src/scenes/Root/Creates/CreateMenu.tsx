@@ -1,5 +1,5 @@
-import { ButtonProps, Menu, MenuItem, MenuProps } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
+import { ButtonProps, Menu, MenuItem, MenuProps } from '@mui/material';
 import { startCase } from 'lodash';
 import { useContext, useState } from 'react';
 import { Power } from '~/api/schema.graphql';
@@ -49,7 +49,6 @@ export const CreateButtonMenu = (props: CreateButtonMenuProps) => {
         anchorEl={anchorEl}
         keepMounted
         onClose={closeAddMenu}
-        getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'center',

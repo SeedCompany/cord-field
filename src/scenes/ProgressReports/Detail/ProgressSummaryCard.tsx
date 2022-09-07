@@ -1,5 +1,4 @@
-import { Card, CardContent, Grid, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { ProgressSummaryFragment } from './ProgressReportDetail.graphql';
 
@@ -18,7 +17,7 @@ export const ProgressSummaryCard = ({
       alignContent="center"
       container
       spacing={3}
-      justify="space-evenly"
+      justifyContent="space-evenly"
     >
       <Value loading={loading} value={summary?.planned}>
         Planned <br />

@@ -1,46 +1,50 @@
-import { useApolloClient, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
+import { Card, Tooltip } from '@mui/material';
+import {
+  DataGrid,
+  GridCellProps,
+  GridColDef,
+  GridValueGetterParams,
+  GridValueSetterParams,
+} from '@mui/x-data-grid';
 import { sortBy, sumBy } from 'lodash';
-import { Column, Components } from 'material-table';
-import { useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { onUpdateChangeFragment, readFragment } from '~/api';
+import { IdFragment, SecuredProp } from '~/common';
 import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
 import {
-  PropertyDiff,
+  changesetGridComponents,
   useDeletedItemsOfChangeset,
-  useDetermineChangesetDiffItem,
 } from '../../../components/Changeset';
-import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
-import { ChangesetAwareTable } from '../../../components/Table';
-import type { ChangesetRowData } from '../../../components/Table/ChangesetAwareTable';
+import { useCurrencyColumn } from '../../../components/Grid/useCurrencyColumn';
 import {
   BudgetRecordFragment as BudgetRecord,
   CalculateNewTotalFragmentDoc as CalculateNewTotal,
   ProjectBudgetQuery,
-  UpdateProjectBudgetRecordDocument,
+  UpdateProjectBudgetRecordDocument as UpdateRecord,
 } from './ProjectBudget.graphql';
-
-const tableComponents: Components = {
-  // No toolbar since it's just empty space, we don't use it for anything.
-  Toolbar: () => null,
-};
-
-interface BudgetRowData extends ChangesetRowData {
-  record: BudgetRecord;
-  fundingPartner: string;
-  fiscalYear: string;
-  amount: string | null;
-}
 
 interface ProjectBudgetRecordsProps {
   budget: ProjectBudgetQuery['project']['budget'] | undefined;
   loading: boolean;
 }
 
+const getSecuredValue = ({ value }: GridValueGetterParams<SecuredProp<any>>) =>
+  value?.value;
+
+const setSecuredValue =
+  (field: string) =>
+  ({ row, value }: GridValueSetterParams) => ({
+    ...row,
+    [field]: {
+      ...row[field],
+      value,
+    },
+  });
+
 export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
   const { loading, budget } = props;
-  const formatCurrency = useCurrencyFormatter();
-  const apollo = useApolloClient();
-  const [updateBudgetRecord] = useMutation(UpdateProjectBudgetRecordDocument, {
+  const [updateBudgetRecord, { client: apollo }] = useMutation(UpdateRecord, {
     update: onUpdateChangeFragment({
       object: budget?.value ?? undefined,
       fragment: CalculateNewTotal,
@@ -50,132 +54,154 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       }),
     }),
   });
-  const determineChangesetDiff = useDetermineChangesetDiffItem();
-  const deletedRecords = useDeletedItemsOfChangeset(
-    (obj): obj is BudgetRecord => obj.__typename === 'BudgetRecord'
-  );
 
-  const records: readonly BudgetRecord[] = budget?.value?.records ?? [];
+  const deletedRecords = useDeletedItemsOfChangeset(isBudgetRecord);
+  const rows = useMemo(() => {
+    const raw: readonly BudgetRecord[] = [
+      ...(budget?.value?.records ?? []),
+      ...deletedRecords,
+    ];
+    return sortBy(raw, [
+      (record) => record.fiscalYear.value,
+      (record) => record.organization.value?.name.value ?? '',
+    ]);
+  }, [budget, deletedRecords]);
 
-  const rowData = sortBy(
-    [...records, ...deletedRecords].map<BudgetRowData>((record) => {
-      const diff = determineChangesetDiff(record);
-      return {
-        record,
-        fundingPartner: record.organization.value?.name.value ?? '',
-        fiscalYear: String(record.fiscalYear.value),
-        amount: String(record.amount.value ?? ''),
-        diffMode: diff.mode,
-        diffInfo:
-          diff.mode === 'changed' ? (
-            <PropertyDiff
-              previous={diff.previous.amount.value ?? 0}
-              current={diff.current.amount.value ?? 0}
-              labelBy={formatCurrency}
-            />
-          ) : undefined,
-      };
-    }),
-    [(record) => record.fiscalYear, (record) => record.fundingPartner]
-  );
+  const columns: Array<GridColDef<BudgetRecord>> = [
+    {
+      headerName: 'Funding Partner',
+      field: 'fundingPartner',
+      flex: 1,
+      valueGetter: ({ row }) => row.organization.value?.name.value ?? '',
+    },
+    {
+      headerName: 'Fiscal Year',
+      field: 'fiscalYear',
+      flex: 1,
+      valueGetter: getSecuredValue,
+    },
+    {
+      headerName: 'Amount',
+      field: 'amount',
+      flex: 1,
+      ...useCurrencyColumn(),
+      valueGetter: getSecuredValue,
+      valueSetter: setSecuredValue('amount'),
+      changesetAware: true,
+      editable: true,
+    },
+  ];
 
-  const blankAmount = 'click to edit';
-  const columns: Array<Column<BudgetRowData>> = useMemo(
-    () => [
-      {
-        field: 'record',
-        hidden: true,
+  const handleRowSave = async (record: BudgetRecord, prev: BudgetRecord) => {
+    // eslint-disable-next-line eqeqeq
+    if (record.amount.value == prev.amount.value) {
+      return record;
+    }
+    const newAmount = record.amount.value || null;
+
+    // If we have a changeset, fetch (from cache) the additional
+    // data required to provide an optimistic response.
+    // We need this because in our update operation we ask for the
+    // API to send back the updated diff. Because of this Apollo
+    // wants the updated diff, so we'll tell it that optimistically
+    // it is unchanged. The actual API result still overrides this
+    // when we get it.
+    const cachedChangeset = record.changeset
+      ? readFragment(apollo.cache, {
+          fragment: RecalculateChangesetDiff,
+          object: record,
+        })?.changeset
+      : null;
+
+    await updateBudgetRecord({
+      variables: {
+        input: {
+          budgetRecord: {
+            id: record.id,
+            amount: newAmount,
+          },
+          changeset: record.changeset?.id,
+        },
       },
-      {
-        field: 'fundingPartner',
-        editable: 'never',
-      },
-      {
-        field: 'fiscalYear',
-        editable: 'never',
-        defaultSort: 'asc',
-      },
-      {
-        field: 'amount',
-        type: 'currency',
-        editable: (_, rowData) => rowData.record.amount.canEdit,
-        render: (rowData) =>
-          rowData.amount
-            ? formatCurrency(Number(rowData.amount))
-            : rowData.record.amount.canEdit
-            ? blankAmount
-            : undefined,
-      },
-    ],
-    [formatCurrency]
-  );
+      optimisticResponse:
+        record.changeset && !cachedChangeset
+          ? // If we are in a changeset, but we cannot get the required
+            // data from cache, then skip the optimistic response.
+            undefined
+          : {
+              updateBudgetRecord: {
+                __typename: 'UpdateBudgetRecordOutput',
+                budgetRecord: {
+                  __typename: 'BudgetRecord',
+                  id: record.id,
+                  changeset: cachedChangeset,
+                  amount: {
+                    __typename: 'SecuredFloatNullable',
+                    value: newAmount,
+                  },
+                },
+              },
+            },
+    });
+
+    return record;
+  };
 
   return (
-    <ChangesetAwareTable
-      data={rowData}
-      columns={columns}
-      isLoading={loading}
-      components={tableComponents}
-      cellEditable={
-        budget?.canEdit
-          ? {
-              onCellEditApproved: async (newAmount, _, { record }) => {
-                if (newAmount === blankAmount || newAmount === '') return;
-
-                // If we have a changeset, fetch (from cache) the additional
-                // data required to provide an optimistic response.
-                // We need this because in our update operation we ask for the
-                // API to send back the updated diff. Because of this Apollo
-                // wants the updated diff, so we'll tell it that optimistically
-                // it is unchanged. The actual API result still overrides this
-                // when we get it.
-                const cachedChangeset = record.changeset
-                  ? readFragment(apollo.cache, {
-                      fragment: RecalculateChangesetDiff,
-                      object: record,
-                    })?.changeset
-                  : null;
-
-                await updateBudgetRecord({
-                  variables: {
-                    input: {
-                      budgetRecord: {
-                        id: record.id,
-                        amount: Number(newAmount),
-                      },
-                      changeset: budget.value?.changeset?.id,
-                    },
-                  },
-                  optimisticResponse:
-                    record.changeset && !cachedChangeset
-                      ? // If we are in a changeset, but we cannot get the required
-                        // data from cache, then skip the optimistic response.
-                        undefined
-                      : {
-                          updateBudgetRecord: {
-                            __typename: 'UpdateBudgetRecordOutput',
-                            budgetRecord: {
-                              __typename: 'BudgetRecord',
-                              id: record.id,
-                              changeset: cachedChangeset,
-                              amount: {
-                                __typename: 'SecuredFloatNullable',
-                                value: Number(newAmount),
-                              },
-                            },
-                          },
-                        },
-                });
-              },
-            }
-          : undefined
-      }
-      options={{
-        thirdSortClick: false,
-        headerStyle: {
-          background: 'unset',
-        },
-      }}
-    />
+    <Card>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        loading={loading}
+        components={{
+          Footer: () => null,
+          ...changesetGridComponents,
+          Cell: withEditTooltip(changesetGridComponents.Cell),
+        }}
+        initialState={{
+          sorting: { sortModel: [{ field: 'fiscalYear', sort: 'asc' }] },
+        }}
+        localeText={{
+          noRowsLabel:
+            'Project does not have a date range or funding partnerships',
+        }}
+        autoHeight
+        disableColumnMenu
+        isRowSelectable={() => false}
+        sx={{
+          '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
+            {
+              display: 'none',
+            },
+        }}
+        isCellEditable={(params) =>
+          Boolean(budget?.canEdit && params.row.amount.canEdit)
+        }
+        processRowUpdate={handleRowSave}
+        experimentalFeatures={{
+          newEditingApi: true,
+        }}
+      />
+    </Card>
   );
 };
+
+const withEditTooltip = (BaseCell: ComponentType<GridCellProps>) => {
+  const Cell = (props: GridCellProps) => {
+    const cell = <BaseCell {...props} />;
+    return props.isEditable && props.cellMode !== 'edit' ? (
+      <Tooltip title="Double click to edit" placement="right">
+        <div>{cell}</div>
+      </Tooltip>
+    ) : (
+      cell
+    );
+  };
+  Cell.displayName = `withEditTooltip(${
+    BaseCell.displayName ?? BaseCell.name
+  })`;
+  return Cell;
+};
+
+const isBudgetRecord = (obj: IdFragment): obj is BudgetRecord =>
+  obj.__typename === 'BudgetRecord';

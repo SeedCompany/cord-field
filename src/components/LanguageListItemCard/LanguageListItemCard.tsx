@@ -1,12 +1,6 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
@@ -16,7 +10,7 @@ import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
 import { LanguageListItemFragment } from './LanguageListItem.graphql';
 
-const useStyles = makeStyles(({ spacing }) => {
+const useStyles = makeStyles()(({ spacing }) => {
   return {
     root: {
       width: '100%',
@@ -61,12 +55,12 @@ export const LanguageListItemCard = ({
   className,
   language,
 }: LanguageListItemCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const formatNumber = useNumberFormatter();
   const population = language?.population.value;
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <CardActionAreaLink
         disabled={!language}
         to={`/languages/${language?.id}`}
@@ -137,8 +131,8 @@ export const LanguageListItemCard = ({
         object={language}
         label="Language"
         listId="languages"
-        listFilter={(args: LanguagesQueryVariables) =>
-          args.input.filter?.pinned ?? false
+        listFilter={(args: PartialDeep<LanguagesQueryVariables>) =>
+          args.input?.filter?.pinned ?? false
         }
         className={classes.pin}
       />

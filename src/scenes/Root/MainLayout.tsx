@@ -1,11 +1,11 @@
-import { makeStyles } from '@material-ui/core';
 import { Outlet } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     flex: 1,
     display: 'flex',
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 
 export const MainLayout = () => {
   useAuthRequired();
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <div className={classes.root}>
       <CreateDialogProviders>

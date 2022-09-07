@@ -1,7 +1,8 @@
-import { InputAdornment, makeStyles } from '@material-ui/core';
-import { Search } from '@material-ui/icons';
+import { Search } from '@mui/icons-material';
+import { InputAdornment } from '@mui/material';
 import { Form } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 import { TextField } from '../../../../components/form';
 import { makeQueryHandler, StringParam } from '../../../../hooks';
 
@@ -9,7 +10,7 @@ export const useSearch = makeQueryHandler({
   q: StringParam,
 });
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   root: {
     flex: 1,
     maxWidth: 500,
@@ -21,7 +22,7 @@ const useStyles = makeStyles(({ palette, spacing }) => ({
 }));
 
 export const HeaderSearch = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [{ q: search = '' }] = useSearch();
   const navigate = useNavigate();
 

@@ -1,22 +1,22 @@
+import { FolderOpen, Language, Person } from '@mui/icons-material';
 import {
   List,
   ListItemIcon,
   ListItemText,
   ListSubheader,
-  makeStyles,
   Paper,
   SvgIconProps,
-  ThemeProvider,
-} from '@material-ui/core';
-import { FolderOpen, Language, Person } from '@material-ui/icons';
+} from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import { ComponentType } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { CreateButtonMenu } from '../Creates';
 import { sidebarTheme } from './sidebar.theme';
 import { SidebarHeader } from './SidebarHeader';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     maxWidth: 248,
     overflowY: 'auto',
@@ -26,12 +26,12 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   createNewItem: {
     margin: spacing(4, 2, 1),
-    width: `calc(100% - ${spacing(2 * 2)}px)`,
+    width: `calc(100% - ${spacing(2 * 2)})`,
   },
 }));
 
 export const Sidebar = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const navList = (
     <List
@@ -48,7 +48,7 @@ export const Sidebar = () => {
 
   return (
     <ThemeProvider theme={sidebarTheme}>
-      <Paper square className={classes.root}>
+      <Paper elevation={0} square className={classes.root}>
         <SidebarHeader />
         <div className={classes.content}>
           <CreateButtonMenu fullWidth className={classes.createNewItem} />

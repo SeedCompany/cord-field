@@ -1,6 +1,7 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { Form, FormProps } from 'react-final-form';
+import { makeStyles } from 'tss-react/mui';
 import { RegisterInput } from '~/api/schema.graphql';
 import {
   blurOnSubmit,
@@ -17,7 +18,7 @@ import { CordIcon } from '../../../components/Icons';
 import { Link } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
 
-const useStyles = makeStyles(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     [breakpoints.up('md')]: {
       maxWidth: 700,
@@ -55,7 +56,7 @@ export type RegisterFormProps = Pick<
 >;
 
 export const RegisterForm = (props: RegisterFormProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <AuthContent className={classes.root}>
       <div className={classes.header}>

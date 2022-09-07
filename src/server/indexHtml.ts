@@ -1,5 +1,4 @@
 import { ChunkExtractor } from '@loadable/server';
-import ServerStyleSheets from '@material-ui/styles/ServerStyleSheets';
 import { HelmetServerState as HelmetData } from 'react-helmet-async';
 import { trailingSlash } from '~/common';
 
@@ -7,13 +6,13 @@ export const indexHtml = ({
   helmet,
   markup,
   extractor,
-  sheets,
+  emotion,
   globals,
 }: {
   helmet: HelmetData;
   markup: string;
   extractor: ChunkExtractor;
-  sheets: ServerStyleSheets;
+  emotion: string;
   globals: Record<string, any>;
 }) => `<!doctype html>
 <html ${helmet.htmlAttributes.toString()}>
@@ -25,7 +24,7 @@ export const indexHtml = ({
   ${helmet.link.toString()}
   ${extractor.getStyleTags()}
   ${helmet.style.toString()}
-  <style id="jss-ssr">${sheets.toString()}</style>
+  ${emotion}
   ${helmet.noscript.toString()}
   ${helmet.script.toString()}
 </head>

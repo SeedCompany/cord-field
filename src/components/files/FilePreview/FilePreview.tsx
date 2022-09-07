@@ -7,9 +7,9 @@ import {
   DialogProps,
   DialogTitle,
   Grid,
-  makeStyles,
-} from '@material-ui/core';
+} from '@mui/material';
 import { Suspense, useCallback, useEffect, useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { saveAs } from '../../../common/FileSaver';
 import { NonDirectoryActionItem } from '../FileActions';
 import {
@@ -33,7 +33,7 @@ const RtfPreview = loadable(() => import('./RtfPreview'));
 const WordPreview = loadable(() => import('./WordPreview'));
 const EmailPreview = loadable(() => import('./EmailPreview'));
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   dialogContent: {
     height: '100%',
   },
@@ -161,7 +161,7 @@ const previewers: PreviewerProperties = {
 };
 
 export const FilePreview = (props: FilePreviewProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);

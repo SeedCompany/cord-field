@@ -1,8 +1,7 @@
-import { makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     padding: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
@@ -16,9 +15,9 @@ export const Code = ({
   json,
   children,
 }: { json?: any; className?: string } & ChildrenProp) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
-    <pre className={clsx(classes.root, className)}>
+    <pre className={cx(classes.root, className)}>
       {json ? JSON.stringify(json, undefined, 2) : children}
     </pre>
   );

@@ -9,7 +9,7 @@ import {
   TableChart as SpreadsheetIcon,
   SvgIconComponent,
   VideoLibrary as VideoIcon,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 export interface FileType {
   mimeType: string;

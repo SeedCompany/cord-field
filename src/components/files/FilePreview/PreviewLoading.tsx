@@ -1,6 +1,7 @@
-import { CircularProgress, Grid, makeStyles } from '@material-ui/core';
+import { CircularProgress, Grid } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   container: {
     display: 'flex',
     justifyContent: 'center',
@@ -11,7 +12,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export const PreviewLoading = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Grid item>
       <div className={classes.container}>

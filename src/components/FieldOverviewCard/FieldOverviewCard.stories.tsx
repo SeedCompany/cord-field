@@ -1,5 +1,5 @@
-import { Box } from '@material-ui/core';
-import { AccountBalance } from '@material-ui/icons';
+import { Box } from '@mui/material';
+import { AccountBalance } from '@mui/icons-material';
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import { dateTime } from '../knobs.stories';

@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { Tooltip, Typography } from '@material-ui/core';
-import { DeleteOutline } from '@material-ui/icons';
+import { DeleteOutline } from '@mui/icons-material';
+import { Tooltip, Typography } from '@mui/material';
 import { removeItemFromList } from '~/api';
 import { callAll } from '~/common';
 import {

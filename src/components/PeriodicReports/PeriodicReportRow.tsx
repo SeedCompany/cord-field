@@ -1,16 +1,24 @@
-import { MTableBodyRow } from 'material-table';
+import { GridRow, GridRowProps } from '@mui/x-data-grid';
 import { PaperTooltip } from '../PaperTooltip';
-import { ReportRow } from './PeriodicReportsTable';
+import { PeriodicReportFragment } from './PeriodicReport.graphql';
 
-export const PeriodicReportRow = (props: { data: ReportRow }) => {
-  const skipped = props.data.report.skippedReason.value;
+export const PeriodicReportRow = (props: GridRowProps) => {
+  const report = props.row as PeriodicReportFragment;
+  const skipped = report.skippedReason.value;
   return (
     <PaperTooltip
       title={skipped ? <>Skipped&mdash;{skipped}</> : ''}
       placement="bottom-start"
       arrow={false}
     >
-      <MTableBodyRow {...props} />
+      <div>
+        <GridRow
+          {...props}
+          css={(theme) => ({
+            color: skipped ? theme.palette.text.disabled : undefined,
+          })}
+        />
+      </div>
     </PaperTooltip>
   );
 };

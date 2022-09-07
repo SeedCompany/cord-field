@@ -1,12 +1,11 @@
-import { makeStyles, Typography } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Skeleton, Typography } from '@mui/material';
 import { useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { CalendarDate, Nullable, SecuredProp } from '~/common';
 import { useDateFormatter } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   root: {
     padding: spacing(2),
     borderRadius: 100,
@@ -38,7 +37,7 @@ interface LargeDateProps {
 }
 
 export const LargeDate = ({ date, className }: LargeDateProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const formatDate = useDateFormatter();
   const [placeholderNow] = useState(() => CalendarDate.local());
 
@@ -46,7 +45,7 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
     <Typography
       color="primary"
       variant="h2"
-      className={clsx(
+      className={cx(
         classes.root,
         !date || !date.canRead ? null : classes.loaded,
         className
@@ -58,13 +57,13 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
         <>
           <span className={classes.hidden}>{formatDate(placeholderNow)}</span>
           {!date ? (
-            <Skeleton variant="rect" className={classes.skeleton} />
+            <Skeleton variant="rectangular" className={classes.skeleton} />
           ) : !date.canRead ? (
             <Redacted
               info="You don't have permission to view this date"
               SkeletonProps={{
-                variant: 'rect',
-                className: clsx(classes.skeleton, classes.redacted),
+                variant: 'rectangular',
+                className: cx(classes.skeleton, classes.redacted),
               }}
             />
           ) : null}

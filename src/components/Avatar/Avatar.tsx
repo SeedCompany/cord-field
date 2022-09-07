@@ -1,15 +1,15 @@
 import {
-  makeStyles,
   Avatar as MuiAvatar,
   AvatarProps as MuiAvatarProps,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+  Skeleton,
+} from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 export interface AvatarProps extends MuiAvatarProps {
   loading?: boolean;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   loading: {
     backgroundColor: 'transparent',
   },
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
 
 export const Avatar = ({ loading, ...props }: AvatarProps) => {
   const { alt, src, srcSet, sizes, children, ...rest } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <MuiAvatar
       {...(loading ? rest : props)}
@@ -31,7 +31,7 @@ export const Avatar = ({ loading, ...props }: AvatarProps) => {
       }}
     >
       {loading ? (
-        <Skeleton variant="rect" className={classes.skeleton} />
+        <Skeleton variant="rectangular" className={classes.skeleton} />
       ) : (
         children
       )}

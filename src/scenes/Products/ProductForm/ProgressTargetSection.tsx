@@ -1,4 +1,4 @@
-import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton } from '@mui/material';
 import { NumberField } from '../../../components/form';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';

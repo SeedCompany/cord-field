@@ -1,55 +1,46 @@
-import {
-  Badge,
-  Grid,
-  makeStyles,
-  TooltipProps,
-  Typography,
-} from '@material-ui/core';
-import {
-  Add as AddIcon,
-  ChangeHistory as ChangeIcon,
-  Remove as RemoveIcon,
-} from '@material-ui/icons';
-import clsx from 'clsx';
+import { Badge, Grid, TooltipProps, Typography } from '@mui/material';
 import { startCase } from 'lodash';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
-import { simpleSwitch, UseStyles } from '~/common';
+import { makeStyles } from 'tss-react/mui';
+import { mapFromList, UseStyles } from '~/common';
 import { BadgeWithTooltip } from '../BadgeWithTooltip';
 import { PaperTooltip } from '../PaperTooltip';
+import { DiffMode } from './ChangesetDiffContext';
+import { ChangesetIcon } from './ChangesetIcon';
+import { modeToPalette } from './theme';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles<
+  ChangesetBadgeOwnProps,
+  'added' | 'changed' | 'removed' | 'outline'
+>()(({ palette }, _params, classes) => ({
   root: {
     display: 'flex',
   },
   badge: {
     padding: 0,
     cursor: 'help',
-    '&$added': {
-      color: 'white',
-      background: palette.success.main,
-    },
-    '&$changed': {
-      color: palette.info.contrastText,
-      background: palette.info.main,
-    },
-    '&$removed': {
-      color: palette.error.contrastText,
-      background: palette.error.main,
-    },
+    ...mapFromList(['added', 'changed', 'removed'] as const, (mode) => {
+      const paletteKey = modeToPalette[mode];
+      const css = {
+        color: palette[paletteKey].contrastText,
+        background: palette[paletteKey].main,
+      };
+      return [`&.${classes[mode]}`, css];
+    }),
   },
   icon: {
     fontSize: 12,
   },
   children: {
-    '&$added$outline': {
-      border: `2px solid ${palette.success.main}`,
+    [`&.${classes.added}.${classes.outline}`]: {
+      border: `2px solid ${palette[modeToPalette.added].main}`,
     },
-    '&$changed$outline': {
-      border: `2px solid ${palette.info.main}`,
+    [`&.${classes.changed}.${classes.outline}`]: {
+      border: `2px solid ${palette[modeToPalette.changed].main}`,
     },
-    '&$removed': {
-      '&$outline': {
-        border: `2px solid ${palette.error.main}`,
+    [`&.${classes.removed}`]: {
+      [`&.${classes.outline}`]: {
+        border: `2px solid ${palette[modeToPalette.removed].main}`,
       },
       boxShadow: 'none',
       backgroundColor: 'inherit',
@@ -64,27 +55,28 @@ const useStyles = makeStyles(({ palette }) => ({
   outline: {},
 }));
 
-export interface ChangesetBadgeProps extends UseStyles<typeof useStyles> {
+interface ChangesetBadgeOwnProps {
   children: ReactNode;
-  mode?: 'added' | 'removed' | 'changed';
+  mode?: DiffMode;
   disableOutline?: boolean;
   moreInfo?: ReactNode;
   TooltipProps?: Omit<TooltipProps, 'title' | 'children'>;
 }
 
+export interface ChangesetBadgeProps
+  extends ChangesetBadgeOwnProps,
+    UseStyles<typeof useStyles> {}
+
 export const ChangesetBadge = (props: ChangesetBadgeProps) => {
   const { mode, disableOutline, children, moreInfo, TooltipProps } = props;
   const outline = !disableOutline;
-  const classes = useStyles(props);
+  const { classes, cx } = useStyles(props, {
+    props: { classes: props.classes },
+  });
 
   if (!mode) {
     return <>{children}</>;
   }
-  const Icon = simpleSwitch(mode, {
-    added: AddIcon,
-    changed: ChangeIcon,
-    removed: RemoveIcon,
-  })!;
 
   return (
     <Badge
@@ -93,8 +85,6 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
       tooltip={(content: ReactElement) => (
         <PaperTooltip
           placement="right"
-          // Assuming more info is given when changed
-          interactive={mode === 'changed'}
           {...TooltipProps}
           title={
             <Grid container direction="column" alignItems="flex-start">
@@ -108,10 +98,12 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
           {content}
         </PaperTooltip>
       )}
-      badgeContent={<Icon color="inherit" className={classes.icon} />}
+      badgeContent={
+        <ChangesetIcon mode={mode} color="inherit" className={classes.icon} />
+      }
       classes={{
         root: classes.root,
-        badge: clsx({
+        badge: cx({
           [classes.badge]: true,
           [classes.added]: mode === 'added',
           [classes.changed]: mode === 'changed',
@@ -123,7 +115,7 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
       {isValidElement(children)
         ? cloneElement(children, {
             ...children.props,
-            className: clsx(
+            className: cx(
               {
                 [classes.children]: true,
                 [classes.added]: mode === 'added',

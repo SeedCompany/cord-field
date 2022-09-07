@@ -1,5 +1,5 @@
-import { List, ListItemIcon, ListItemText } from '@material-ui/core';
-import { Home as HomeIcon, Launch, Lock } from '@material-ui/icons';
+import { List, ListItemIcon, ListItemText } from '@mui/material';
+import { Home as HomeIcon, Launch, Lock } from '@mui/icons-material';
 import { ListItemLink as LIL } from './ListItemLink';
 
 export default { title: 'Components/Routing' };

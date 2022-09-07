@@ -11,7 +11,7 @@ export const useLocale = (): string | undefined => {
     }
     try {
       const accept = req.acceptsLanguages()[0]?.replace(/_/g, '-');
-      new Intl.Locale(accept); // check if valid
+      accept && new Intl.Locale(accept); // check if valid
       return accept;
     } catch {
       return undefined;

@@ -1,11 +1,8 @@
+import { useScroll, useThrottle } from 'ahooks';
 import { RefObject, useEffect, useRef } from 'react';
-import {
-  useFirstMountState,
-  useScroll,
-  useScrolling,
-  useThrottle,
-} from 'react-use';
 import { useLocationState } from '../components/Routing';
+import { useFirstMountState } from './useFirstMountState';
+import { useScrolling } from './useScrolling';
 
 /**
  * Persists scroll location in history so that that it can be restored when
@@ -14,7 +11,7 @@ import { useLocationState } from '../components/Routing';
  */
 export const usePersistedScroll = (scrollRef: RefObject<HTMLElement>) => {
   const firstRender = useFirstMountState();
-  const currentPos = useThrottle(useScroll(scrollRef).y, 200);
+  const currentPos = useThrottle(useScroll(scrollRef)?.top ?? 0, { wait: 200 });
   const isScrolling = useScrolling(scrollRef);
   const [{ scroll: savedPos }, setLocationState] = useLocationState({
     scroll: 0,

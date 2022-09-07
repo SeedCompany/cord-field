@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { readFragment } from '../../../../api';
 import { IconButton } from '../../../../components/IconButton';
 import {

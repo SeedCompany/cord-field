@@ -1,14 +1,17 @@
+import { CacheProvider } from '@emotion/react';
 import { loadableReady } from '@loadable/component';
 import Cookies from 'js-cookie';
 import { Settings, Zone } from 'luxon';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { hydrate } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
+import { TssCacheProvider } from 'tss-react';
 import { basePathOfUrl } from '~/common';
 import { App } from './App';
 import { Nest } from './components/Nest';
+import { createMuiEmotionCache, createTssEmotionCache } from './theme/emotion';
 
 // Set current timezone in cookie so server can render with it.
 // This isn't great as a change to this or first load will cause the server to
@@ -38,15 +41,6 @@ if (process.env.NODE_ENV !== 'production') {
     );
     // Do hacking to show dates easier
     await import('./common/hacky-inspect-dates');
-
-    // Setup why did you render
-    const [React, whyDidYouRender] = await Promise.all([
-      import('react').then((m) => m.default),
-      import('@welldone-software/why-did-you-render').then((m) => m.default),
-    ]);
-    whyDidYouRender(React, {
-      // ...WDYR options
-    });
   };
   setup.push(devSetUp());
 }
@@ -55,7 +49,10 @@ if (isBrowser) {
   setup.push(loadableReady());
 }
 
-const root = document.getElementById('root');
+const root = document.getElementById('root')!;
+
+const emotionCacheMui = createMuiEmotionCache();
+const emotionCacheTss = createTssEmotionCache();
 
 const clientOnlyProviders = [
   <BrowserRouter
@@ -64,17 +61,14 @@ const clientOnlyProviders = [
   />,
   <HelmetProvider key="helmet" children={[]} />,
   <DndProvider key="dnd" backend={HTML5Backend} />,
+  <CacheProvider key="emotion-mui" value={emotionCacheMui} />,
+  <TssCacheProvider key="emotion-tss" value={emotionCacheTss} children={[]} />,
 ];
 
 void Promise.all(setup).then(() => {
-  hydrate(
+  createRoot(root).render(
     <Nest elements={clientOnlyProviders}>
       <App />
-    </Nest>,
-    root,
-    () => {
-      const jssStyles = document.getElementById('jss-ssr');
-      jssStyles?.parentNode?.removeChild(jssStyles);
-    }
+    </Nest>
   );
 });

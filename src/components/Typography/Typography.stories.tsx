@@ -1,4 +1,4 @@
-import { Typography as TP, TypographyVariant } from '@material-ui/core';
+import { Typography as TP, TypographyVariant } from '@mui/material';
 import { boolean, select } from '@storybook/addon-knobs';
 
 export default { title: 'Components' };

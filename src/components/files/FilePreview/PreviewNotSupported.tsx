@@ -1,9 +1,10 @@
-import { Button, makeStyles, ModalProps, Typography } from '@material-ui/core';
-import { CloudDownload } from '@material-ui/icons';
+import { CloudDownload } from '@mui/icons-material';
+import { Button, ModalProps, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { NonDirectoryActionItem } from '../FileActions';
 import { useDownloadFile } from '../hooks';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -22,7 +23,7 @@ export const PreviewNotSupported = ({
   file: NonDirectoryActionItem;
   onClose?: ModalProps['onClose'];
 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const download = useDownloadFile();
   return (
     <div className={classes.container}>

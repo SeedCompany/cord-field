@@ -4,21 +4,20 @@ import {
   CardActionArea,
   CardActions,
   Grid,
-  makeStyles,
+  Skeleton,
   Tooltip,
   TooltipProps,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+} from '@mui/material';
 import { To } from 'history';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { useDateTimeFormatter } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 
-const useStyles = makeStyles(({ spacing, palette }) => ({
+const useStyles = makeStyles()(({ spacing, palette }) => ({
   root: {
     flex: 1,
     height: '100%',
@@ -83,7 +82,7 @@ export const FieldOverviewCard = ({
   title,
   viewLabel: buttonLabel,
 }: FieldOverviewCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
   const showData = !loading && !redacted;
@@ -91,7 +90,7 @@ export const FieldOverviewCard = ({
   const Btn = data?.to ? ButtonLink : Button;
 
   const card = (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       <ActionArea
         disabled={!data || redacted}
         to={data?.to ?? ''}
@@ -100,13 +99,12 @@ export const FieldOverviewCard = ({
       >
         <HugeIcon icon={icon} loading={!data} />
         <div className={classes.rightContent}>
-          <Typography color="initial" variant="h4">
+          <Typography variant="h4">
             {loading ? <Skeleton width="80%" /> : data ? title : ''}
           </Typography>
           <Typography
-            color="initial"
             variant="h1"
-            className={clsx({
+            className={cx({
               [classes.emptyValue]: data && !data.value,
             })}
           >

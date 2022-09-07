@@ -39,7 +39,10 @@ Object.defineProperties(DateTime.prototype, {
  * Whether we need/want it to be type compatible with DateTime has yet to
  * be determined - currently it is.
  */
-export class CalendarDate extends DateTime {
+export class CalendarDate
+  // @ts-expect-error library doesn't explicitly support extension
+  extends DateTime
+{
   static isDate(o: any): o is CalendarDate {
     return o instanceof CalendarDate;
   }
@@ -49,6 +52,8 @@ export class CalendarDate extends DateTime {
       return dt;
     }
     const inst = dt.startOf('day') as any;
+    // props must be manually enumerated because of our hacky-inspect-dates
+    // monkey patch which makes all its props non-enumerable
     return new CalendarDate({
       ts: inst.ts,
       zone: inst.zone,
@@ -60,8 +65,6 @@ export class CalendarDate extends DateTime {
   }
 
   protected constructor(args: any = {}) {
-    // @ts-expect-error DateTime constructor isn't defined, because it's private
-    // but it does require an object
     super(args);
   }
 

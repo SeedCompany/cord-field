@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent } from '@material-ui/core';
+import { Button, Dialog, DialogContent } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDialog } from '../Dialog';
 import { DialogTitle } from '../Dialog/DialogTitle';
@@ -19,7 +19,7 @@ export function SortButtonDialog<T>({
 
   return (
     <>
-      <Button variant="outlined" onClick={() => open()}>
+      <Button variant="outlined" color="secondary" onClick={() => open()}>
         Sort Options
       </Button>
       <Dialog fullWidth maxWidth="xs" {...state}>

@@ -1,19 +1,13 @@
-import {
-  Card,
-  CardContent,
-  Grid,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { random } from 'lodash';
+import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
 import { PartnerListItemFragment } from './PartnerListItemCard.graphql';
 
-const useStyles = makeStyles(({ breakpoints, spacing }) => {
+const useStyles = makeStyles()(({ breakpoints, spacing }) => {
   const cardWidth = breakpoints.values.sm;
   return {
     root: {
@@ -30,9 +24,6 @@ const useStyles = makeStyles(({ breakpoints, spacing }) => {
       padding: spacing(2, 3),
       display: 'flex',
       justifyContent: 'space-between',
-    },
-    skeletonRight: {
-      marginLeft: 'auto',
     },
     pin: {
       position: 'absolute',
@@ -53,10 +44,10 @@ export const PartnerListItemCard = ({
   partner,
   className,
 }: PartnerListItemCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
-    <Card className={clsx(className, classes.root)}>
+    <Card className={cx(className, classes.root)}>
       <CardActionAreaLink
         disabled={!partner}
         to={`/partners/${partner?.id}`}
@@ -80,8 +71,8 @@ export const PartnerListItemCard = ({
         object={partner}
         label="Partner"
         listId="partners"
-        listFilter={(args: PartnersQueryVariables) =>
-          args.input.filter?.pinned ?? false
+        listFilter={(args: PartialDeep<PartnersQueryVariables>) =>
+          args.input?.filter?.pinned ?? false
         }
         className={classes.pin}
         size="small"

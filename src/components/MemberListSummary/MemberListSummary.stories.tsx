@@ -1,5 +1,5 @@
-import { Card } from '@material-ui/core';
-import { Group } from '@material-ui/icons';
+import { Card } from '@mui/material';
+import { Group } from '@mui/icons-material';
 import { number, text } from '@storybook/addon-knobs';
 import seedRandom from 'seedrandom';
 import {

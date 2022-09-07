@@ -1,17 +1,17 @@
+import { AssignmentOutlined, BarChart, ShowChart } from '@mui/icons-material';
 import {
   Button,
   Card,
   CardActions,
   Divider,
-  makeStyles,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { AssignmentOutlined, BarChart, ShowChart } from '@material-ui/icons';
+} from '@mui/material';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
-import { Many, simpleSwitch } from '~/common';
+import { Many, simpleSwitch, StyleProps } from '~/common';
 import {
   EditablePeriodicReportField,
   UpdatePeriodicReportDialog,
@@ -28,7 +28,7 @@ import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportInfo } from './ReportInfo';
 import { ReportLabel } from './ReportLabel';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     flex: 1,
     height: '100%',
@@ -63,7 +63,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-export interface PeriodicReportCardProps {
+export interface PeriodicReportCardProps extends StyleProps {
   type: ReportType;
   dueCurrently?: SecuredPeriodicReportFragment;
   dueNext?: SecuredPeriodicReportFragment;
@@ -73,7 +73,7 @@ export interface PeriodicReportCardProps {
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
   const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
   const needsUpload =
@@ -102,7 +102,12 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
 
   return (
     <>
-      <Card {...getRootProps()} tabIndex={-1} className={classes.root}>
+      <Card
+        {...getRootProps()}
+        tabIndex={-1}
+        className={cx(classes.root, props.className)}
+        sx={props.sx}
+      >
         <CardActionAreaLink to={link} className={classes.topArea}>
           {!disableIcon && (
             <HugeIcon
@@ -116,7 +121,7 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
           )}
 
           <div className={classes.rightContent}>
-            <Typography color="initial" variant="h4" paragraph>
+            <Typography variant="h4" paragraph>
               {`${type} Reports`}
             </Typography>
             <div className={classes.relevantReports}>
@@ -125,7 +130,12 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
                 report={dueCurrently}
                 className={classes.relevantReport}
               />
-              <Divider orientation="vertical" flexItem variant="middle" />
+              <Divider
+                orientation="vertical"
+                flexItem
+                variant="middle"
+                sx={{ mx: 2 }}
+              />
               <ReportInfo
                 title="Next"
                 report={dueNext}

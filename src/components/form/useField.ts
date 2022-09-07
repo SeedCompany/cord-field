@@ -1,9 +1,9 @@
 import { identity } from 'lodash';
 import { useEffect } from 'react';
 import { UseFieldConfig, useField as useFinalField } from 'react-final-form';
-import { useFirstMountState } from 'react-use';
 import { Except } from 'type-fest';
 import { callSome, Many, many, Nullable } from '~/common';
+import { useFirstMountState } from '~/hooks';
 import { useFieldName } from './FieldGroup';
 import { isEqualBy, isListEqualBy, useFocus, useIsSubmitting } from './util';
 import {
@@ -97,7 +97,13 @@ export const useField = <
       ? isListEqualBy(compareBy ?? identity)
       : isEqualBy(compareBy ?? identity));
 
-  const { input, meta } = useFinalField<Value<T, Multiple>, El>(name, {
+  const { input, meta } = useFinalField<
+    Value<T, Multiple>,
+    El,
+    Value<T, Multiple>
+  >(name, {
+    // @ts-expect-error 2nd arg was made optional for unknown reasons.
+    // Ignore this as FF always passes this value, so it's safe to use without checking for null.
     validate,
     multiple,
     ...restConfig,

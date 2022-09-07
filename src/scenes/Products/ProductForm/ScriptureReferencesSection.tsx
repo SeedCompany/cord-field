@@ -1,4 +1,4 @@
-import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton } from '@mui/material';
 import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
 import {
   entries,
@@ -31,7 +31,7 @@ export const ScriptureReferencesSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const { scriptureReferences, book, bookSelection, unspecifiedScripture } =
     values.product ?? {};
@@ -47,12 +47,12 @@ export const ScriptureReferencesSection = ({
       title="Scripture Reference"
       renderCollapsed={() => {
         if (book && bookSelection === 'full') {
-          return <ToggleButton selected children={book} />;
+          return <ToggleButton selected children={book} value="full" />;
         }
 
         if (book && unspecifiedScripture) {
           return (
-            <ToggleButton selected>
+            <ToggleButton selected value="partialUnspecified">
               {getUnspecifiedScriptureDisplay({
                 book,
                 ...unspecifiedScripture,

@@ -1,19 +1,16 @@
 import { ApolloError } from '@apollo/client';
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
-import clsx from 'clsx';
+import { Button, Grid, Typography } from '@mui/material';
 import { isPlainObject } from 'lodash';
 import { ElementType, isValidElement, ReactNode } from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { getErrorInfo } from '~/api';
 import { ButtonLink, StatusCode, useNavigate } from '../Routing';
 import { ErrorRenderers, renderError } from './error-handling';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   page: {
     overflow: 'auto',
     padding: spacing(4, 0, 0, 4),
-  },
-  header: {
-    marginBottom: spacing(4),
   },
   buttons: {
     marginTop: spacing(3),
@@ -62,7 +59,7 @@ export const Error = ({
   disableButtons,
   component: Component = 'div',
 }: ErrorProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const navigate = useNavigate();
 
   if (!(show ?? error)) {
@@ -84,7 +81,7 @@ export const Error = ({
     error && getErrorInfo(error).codes.includes('NotFound') ? 404 : 500;
 
   return (
-    <Component className={clsx(page && classes.page)}>
+    <Component className={cx(page && classes.page)}>
       {/* Default status code to be helpful for the most common ones. The
       children can still override this by rendering <StatusCode /> themselves */}
       <StatusCode code={statusCode} />

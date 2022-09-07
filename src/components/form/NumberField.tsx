@@ -1,5 +1,5 @@
-import { InputAdornment, makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
+import { InputAdornment } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { Nullable } from '~/common';
 import {
@@ -184,7 +184,7 @@ const replaceNumber =
 
 const parseNumber = (string: string) => parseValidNumber(acceptNumber(string));
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   alignRight: {
     textAlign: 'right',
   },
@@ -200,7 +200,7 @@ export const NumberField = ({
   suffix = '',
   ...props
 }: NumberFieldProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const formatting: FormattingOptions = {
     allowNegative,
     minimumFractionDigits,
@@ -240,7 +240,7 @@ export const NumberField = ({
         ...props.InputProps,
         classes: {
           ...props.InputProps?.classes,
-          input: clsx(
+          input: cx(
             alignRight && classes.alignRight,
             props.InputProps?.classes?.input
           ),

@@ -1,19 +1,19 @@
 import {
+  VisibilityOff as HideIcon,
+  Visibility as ShowIcon,
+} from '@mui/icons-material';
+import {
   ListItemIcon,
   ListItemText,
-  makeStyles,
   Menu,
   MenuItem,
   MenuProps,
-  useTheme,
-} from '@material-ui/core';
-import {
-  VisibilityOff as HideIcon,
-  Visibility as ShowIcon,
-} from '@material-ui/icons';
-import { useUpload, useUploadManager } from '../../../../components/Upload';
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
+import { useUpload } from '../../../../components/Upload';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   menu: {
     minWidth: 200,
   },
@@ -27,32 +27,29 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export const UserActionsMenu = (props: Partial<MenuProps>) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { spacing } = useTheme();
-  const { isManagerOpen, setIsManagerOpen } = useUploadManager();
-  const { removeCompletedUploads } = useUpload();
+  const { isManagerOpen, toggleManagerOpen } = useUpload();
 
   const UmIcon = isManagerOpen ? HideIcon : ShowIcon;
-
-  const handleUploadManagerToggle = () => {
-    if (isManagerOpen) {
-      removeCompletedUploads();
-    }
-    setIsManagerOpen(!isManagerOpen);
-  };
 
   return (
     <Menu
       id="profile-menu"
       keepMounted
       open={Boolean(props.anchorEl)}
-      getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
+      transformOrigin={{ vertical: parseInt(spacing(-2)), horizontal: 'right' }}
       classes={{ paper: classes.menu }}
       {...props}
     >
-      <MenuItem onClick={handleUploadManagerToggle}>
+      <MenuItem
+        onClick={(event) => {
+          toggleManagerOpen();
+          // @ts-expect-error yeah we are adding a reason
+          props.onClose?.(event, 'actionClicked');
+        }}
+      >
         <ListItemIcon className={classes.listItemIcon}>
           <UmIcon fontSize="small" />
         </ListItemIcon>

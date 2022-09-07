@@ -1,13 +1,19 @@
-import { CardContent, Grid, makeStyles, Typography } from '@material-ui/core';
-import { AvatarGroup, Skeleton } from '@material-ui/lab';
+import {
+  AvatarGroup,
+  CardContent,
+  Grid,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import { To } from 'history';
 import { compact } from 'lodash';
+import { makeStyles } from 'tss-react/mui';
 import { listOrPlaceholders } from '~/common';
 import { Avatar } from '../Avatar';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   grid: {
     marginBottom: spacing(2),
   },
@@ -20,9 +26,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
   avatarGroup: {
     marginRight: spacing(1),
-  },
-  skeletonText: {
-    marginLeft: spacing(1),
   },
   memberNames: {
     flexGrow: 1,
@@ -54,7 +57,7 @@ export const MemberListSummary = ({
   to,
   icon,
 }: MemberListSummaryProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <CardActionAreaLink to={to} disabled={!members}>

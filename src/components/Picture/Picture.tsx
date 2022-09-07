@@ -1,9 +1,7 @@
-import { makeStyles } from '@material-ui/core';
-import clsx from 'clsx';
 import { toFinite } from 'lodash';
 import { memo, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useMountedState } from 'react-use';
+import { makeStyles } from 'tss-react/mui';
 import { Merge } from 'type-fest';
 import { many } from '~/common';
 import { useIsBot } from '../../hooks';
@@ -123,7 +121,7 @@ export type PictureProps = Merge<
   SourceProps & LayoutProps & LazyProps & PlaceholderProps & EffectsProps
 >;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     borderRadius: 0,
   },
@@ -199,7 +197,7 @@ const PictureImpl = ({
   style: styleProp,
   ...rest
 }: PictureProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const sizesContext = usePictureSizes();
   const sizes = sizesProp ? many(sizesProp).join(', ') : sizesContext;
   const srcSet = formatSrcSet(source);
@@ -224,9 +222,8 @@ const PictureImpl = ({
     triggerOnce: true,
   });
   const hideImg = !placeholder && lazyObserve && !inView && !isBot;
-  const needsHolder = aspectRatio || hideImg || darken;
+  const needsHolder = Boolean(aspectRatio || hideImg || darken);
 
-  const isMounted = useMountedState();
   // We use the DOM callbacks to determine state as this is closest to what
   // the UI shows. Calling loadImage here still requires the image to load again
   // on DOM if "Disable cache" in DevTools is used. This makes it hard to
@@ -290,19 +287,16 @@ const PictureImpl = ({
       sizes={sizes}
       width={width}
       height={height}
-      className={clsx({
+      className={cx({
         [classes.img]: true,
-        [classes.aspectRatio]: aspectRatio,
+        [classes.aspectRatio]: Boolean(aspectRatio),
         [classes.coverImg]: fitCover,
         [classes.root]: !needsHolder,
-        [classNameProp ?? '']: !needsHolder && classNameProp,
+        [classNameProp ?? '']: Boolean(!needsHolder && classNameProp),
       })}
       style={!needsHolder ? { ...styles, ...styleProp } : styles}
       {...(lazyNative ? { loading: 'lazy' } : {})}
       onLoad={(e) => {
-        if (!isMounted()) {
-          return;
-        }
         setLoaded(e.currentTarget.srcset);
         if (rest.onLoad) {
           rest.onLoad(e);
@@ -310,9 +304,6 @@ const PictureImpl = ({
       }}
       onError={(e) => {
         const url = e.currentTarget.srcset;
-        if (!isMounted()) {
-          return;
-        }
         setErrored(url);
         if (rest.onError) {
           rest.onError(e);
@@ -327,11 +318,11 @@ const PictureImpl = ({
   const held = needsHolder ? (
     <div
       ref={lazyObserve && !inView ? ref : undefined}
-      className={clsx({
+      className={cx({
         [classes.holder]: true,
         [classes.coverHolder]: fitCover,
         [classes.root]: true,
-        [classNameProp ?? '']: classNameProp,
+        [classNameProp ?? '']: Boolean(classNameProp),
       })}
       style={{
         paddingBottom: aspectRatio ? `${(1 / aspectRatio) * 100}%` : undefined,
@@ -341,7 +332,7 @@ const PictureImpl = ({
       {img}
       {darken && (
         <div
-          className={clsx(classes.background, classes.darkener)}
+          className={cx(classes.background, classes.darkener)}
           style={{
             ...styles,
             opacity: darken / 100,
@@ -357,7 +348,7 @@ const PictureImpl = ({
   if (background || fitContain) {
     return (
       <div
-        className={clsx({
+        className={cx({
           [classes.background]: background,
           [classes.contain]: fitContain,
         })}

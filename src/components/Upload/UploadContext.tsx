@@ -1,28 +1,34 @@
 import { useMutation } from '@apollo/client';
 import {
   createContext,
+  SyntheticEvent,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useReducer,
+  useState,
 } from 'react';
 import { ChildrenProp } from '~/common';
+import { initialState, uploadReducer } from './Reducer';
 import * as actions from './Reducer/uploadActions';
-import { initialState } from './Reducer/uploadInitialState';
-import { uploadReducer } from './Reducer/uploadReducer';
 import * as Types from './Reducer/uploadTypings';
 import { RequestFileUploadDocument } from './Upload.graphql';
 import { UploadItems } from './UploadItems';
-import { UploadManager } from './UploadManager';
-import { useUploadManager } from './UploadManagerContext';
+import { UploadManagerUIShell as UploadManager } from './UploadManagerUIShell';
 import { useUploadFile } from './useUploadFile';
 
 const initialUploadContext = {
-  addFilesToUploadQueue: (_: Types.FileInput[]) => {
+  // eslint-disable-next-line @seedcompany/no-unused-vars
+  addFilesToUploadQueue: (files: Types.FileInput[]) => {
     return;
   },
   removeCompletedUploads: () => {
+    return;
+  },
+  isManagerOpen: false,
+  // eslint-disable-next-line @seedcompany/no-unused-vars
+  toggleManagerOpen: (toggleOrSetOpen?: boolean) => {
     return;
   },
 };
@@ -33,7 +39,7 @@ UploadContext.displayName = 'UploadContext';
 
 export const UploadProvider = ({ children }: ChildrenProp) => {
   const [state, dispatch] = useReducer(uploadReducer, initialState);
-  const { setIsManagerOpen } = useUploadManager();
+  const [isManagerOpen, setManagerOpen] = useState(false);
   const { submittedFiles } = state;
   const [requestFileUpload] = useMutation(RequestFileUploadDocument);
   const uploadFile = useUploadFile(dispatch);
@@ -44,9 +50,9 @@ export const UploadProvider = ({ children }: ChildrenProp) => {
         type: actions.FILES_SUBMITTED,
         files,
       });
-      setIsManagerOpen(true);
+      setManagerOpen(true);
     },
-    [setIsManagerOpen]
+    [setManagerOpen]
   );
 
   const setUploadingStatus = useCallback(
@@ -95,15 +101,38 @@ export const UploadProvider = ({ children }: ChildrenProp) => {
     }
   }, [submittedFiles, handleFileAdded, setUploadingStatus]);
 
+  const toggleManagerOpen = useCallback(
+    (open?: boolean | SyntheticEvent) => {
+      setManagerOpen((prev) => {
+        const nextOpen = typeof open === 'boolean' ? open : !prev;
+        if (!nextOpen) {
+          removeCompletedUploads();
+        }
+        return nextOpen;
+      });
+    },
+    [setManagerOpen, removeCompletedUploads]
+  );
+
   const context = useMemo(
-    () => ({ addFilesToUploadQueue, removeCompletedUploads }),
-    [addFilesToUploadQueue, removeCompletedUploads]
+    () => ({
+      isManagerOpen,
+      toggleManagerOpen,
+      addFilesToUploadQueue,
+      removeCompletedUploads,
+    }),
+    [
+      isManagerOpen,
+      toggleManagerOpen,
+      addFilesToUploadQueue,
+      removeCompletedUploads,
+    ]
   );
 
   return (
     <UploadContext.Provider value={context}>
       {children}
-      <UploadManager removeCompletedUploads={removeCompletedUploads}>
+      <UploadManager open={isManagerOpen} onClose={toggleManagerOpen}>
         <UploadItems state={state} removeUpload={removeUpload} />
       </UploadManager>
     </UploadContext.Provider>

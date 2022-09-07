@@ -1,4 +1,4 @@
-import { TextField, TextFieldProps } from '@material-ui/core';
+import { TextField, TextFieldProps } from '@mui/material';
 import { identity } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useRifm } from 'rifm';

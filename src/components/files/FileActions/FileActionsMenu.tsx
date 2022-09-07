@@ -1,13 +1,4 @@
 import {
-  ListItemIcon,
-  ListItemText,
-  makeStyles,
-  Menu,
-  MenuItem,
-  MenuProps,
-  useTheme,
-} from '@material-ui/core';
-import {
   Add as AddIcon,
   Delete as DeleteIcon,
   CloudDownload as DownloadIcon,
@@ -17,10 +8,19 @@ import {
   BorderColor as RenameIcon,
   SkipNextRounded as Skip,
   Event as UpdateDate,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
+import {
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  MenuProps,
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { startCase } from 'lodash';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { makeStyles } from 'tss-react/mui';
 import { IconButton, IconButtonProps } from '../../IconButton';
 import { FileAction } from './FileAction.enum';
 import {
@@ -32,14 +32,7 @@ import {
   VersionActionItem,
 } from './FileActionsContext';
 
-const useStyles = makeStyles(({ spacing }) => ({
-  listItemIcon: {
-    marginRight: spacing(2),
-    minWidth: 'unset',
-  },
-  listItemText: {
-    textTransform: 'capitalize',
-  },
+const useStyles = makeStyles()(({ spacing }) => ({
   newVersionItem: {
     display: 'flex',
     justifyContent: 'center',
@@ -48,7 +41,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     marginRight: spacing(-2),
     paddingLeft: spacing(2),
     paddingRight: spacing(2),
-    width: `calc(100% + (${spacing(2)}px * 2))`,
+    width: `calc(100% + (${spacing(2)} * 2))`,
     '&:focus': {
       outline: 'none',
     },
@@ -118,7 +111,7 @@ const isFileVersion = (
 ): props is VersionPopupProps => props.item.__typename === 'FileVersion';
 
 export const FileActionsMenu = (props: FileActionsMenuProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { spacing } = useTheme();
   const { item, actions, ...rest } = props;
 
@@ -205,18 +198,10 @@ export const FileActionsMenu = (props: FileActionsMenuProps) => {
     const Icon = actionIcons[menuItem];
     return (
       <>
-        <ListItemIcon className={classes.listItemIcon}>
+        <ListItemIcon>
           <Icon fontSize="small" />
         </ListItemIcon>
-        <ListItemText
-          className={classes.listItemText}
-          primary={
-            menuItem === FileAction.UpdateReceivedDate ||
-            menuItem === FileAction.EditSkipReason
-              ? startCase(menuItem)
-              : menuItem
-          }
-        />
+        <ListItemText primary={startCase(menuItem)} />
       </>
     );
   };
@@ -225,9 +210,8 @@ export const FileActionsMenu = (props: FileActionsMenuProps) => {
     <Menu
       id="file-actions-menu"
       open={Boolean(props.anchorEl)}
-      getContentAnchorEl={null}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: spacing(-2), horizontal: 'right' }}
+      transformOrigin={{ vertical: parseInt(spacing(-2)), horizontal: 'right' }}
       {...menuProps}
     >
       {menuActions.map((action) => {

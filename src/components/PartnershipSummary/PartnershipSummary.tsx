@@ -1,9 +1,9 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from 'tss-react/mui';
 import { PeopleJoinedIcon } from '../Icons';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
 import { PartnershipSummaryFragment } from './PartnershipSummary.graphql';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   icon: {
     fontSize: 42,
     marginTop: -8,
@@ -25,7 +25,7 @@ export const PartnershipSummary = ({
         item.partner.value?.organization.value?.avatarLetters ?? '',
     })
   );
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <MemberListSummary

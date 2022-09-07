@@ -3,11 +3,10 @@ import {
   CardActionArea,
   CardContent,
   Grid,
-  makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+} from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import {
   ApproachIcons,
   displayMethodology,
@@ -16,7 +15,7 @@ import {
 } from '~/common';
 import { MethodologiesCardFragment } from './MethodologiesCard.graphql';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   root: {
     width: '100%',
     height: '100%',
@@ -52,7 +51,7 @@ export const MethodologiesCard = ({
   onClick,
   className,
 }: MethodologiesCardProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   if (data?.canRead === false) {
     return null;
@@ -95,7 +94,7 @@ export const MethodologiesCard = ({
   );
 
   return (
-    <Card className={clsx(classes.root, className)}>
+    <Card className={cx(classes.root, className)}>
       {data?.canEdit ? (
         <CardActionArea onClick={onClick} className={classes.actionArea}>
           {content}

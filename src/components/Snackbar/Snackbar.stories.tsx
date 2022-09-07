@@ -1,5 +1,5 @@
-import { Button, IconButton } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
+import { Button, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 import { OptionsObject, useSnackbar } from 'notistack';
@@ -26,6 +26,7 @@ export const Persistent = () => {
         color="inherit"
         onClick={() => closeSnackbar(key)}
         aria-label="dismiss"
+        size="large"
       >
         <Close />
       </IconButton>

@@ -1,9 +1,10 @@
-import { makeStyles } from '@material-ui/core';
-import { Report as ErrorIcon } from '@material-ui/icons';
+import { Report as ErrorIcon } from '@mui/icons-material';
 import { SnackbarProvider as BaseSnackbarProvider } from 'notistack';
+import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 
-const useStyles = makeStyles(({ palette }) => ({
+const useStyles = makeStyles()(({ palette }) => ({
+  /* eslint-disable tss-unused-classes/unused-classes */
   variantSuccess: {
     backgroundColor: palette.success.main,
   },
@@ -16,6 +17,7 @@ const useStyles = makeStyles(({ palette }) => ({
   variantWarning: {
     backgroundColor: palette.warning.main,
   },
+  /* eslint-enable tss-unused-classes/unused-classes */
 }));
 
 const icons = {
@@ -23,7 +25,7 @@ const icons = {
 };
 
 export const SnackbarProvider = ({ children }: ChildrenProp) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <BaseSnackbarProvider
       classes={classes}

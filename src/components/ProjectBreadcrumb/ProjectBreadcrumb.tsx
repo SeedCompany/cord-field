@@ -1,6 +1,5 @@
-import { makeStyles } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
-import clsx from 'clsx';
+import { Skeleton } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Nullable } from '~/common';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { Breadcrumb, BreadcrumbProps } from '../Breadcrumb';
@@ -12,7 +11,7 @@ export interface ProjectBreadcrumbProps extends Partial<BreadcrumbProps> {
   data?: Nullable<ProjectBreadcrumbFragment>;
 }
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -26,7 +25,7 @@ export const ProjectBreadcrumb = ({
   data,
   ...rest
 }: ProjectBreadcrumbProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
     <Breadcrumb
@@ -35,7 +34,7 @@ export const ProjectBreadcrumb = ({
         underline: data?.name.canRead ? undefined : 'none',
       }}
       {...rest}
-      className={clsx(classes.root, rest.className)}
+      className={cx(classes.root, rest.className)}
     >
       {data ? (
         <>

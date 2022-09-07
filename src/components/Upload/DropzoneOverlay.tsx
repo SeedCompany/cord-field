@@ -1,12 +1,12 @@
-import { makeStyles, Typography } from '@material-ui/core';
-import clsx from 'clsx';
+import { Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
 /**
  * This component requires a parent with a `position` value,
  * since it uses `position: absolute`.
  */
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   dropContainer: {
     backgroundColor: palette.grey['600'],
     border: `4px dashed ${palette.grey['300']}`,
@@ -41,7 +41,7 @@ interface DropzoneOverlayProps {
 }
 
 export const DropzoneOverlay = (props: DropzoneOverlayProps) => {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const {
     classes: classNames,
     isDragActive,
@@ -49,14 +49,11 @@ export const DropzoneOverlay = (props: DropzoneOverlayProps) => {
   } = props;
   return !isDragActive ? null : (
     <div
-      className={clsx(
-        classes.dropContainer,
-        classNames?.root && classNames.root
-      )}
+      className={cx(classes.dropContainer, classNames?.root && classNames.root)}
     >
       <Typography
         variant="h1"
-        className={clsx(
+        className={cx(
           classes.instructions,
           classNames?.text && classNames.text
         )}

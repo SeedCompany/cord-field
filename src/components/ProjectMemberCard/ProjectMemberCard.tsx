@@ -3,17 +3,17 @@ import {
   Card,
   CardActions,
   CardContent,
-  makeStyles,
+  Skeleton,
   Typography,
-} from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { RoleLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';
 import { useDateTimeFormatter } from '../Formatters';
 import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 
-const useStyles = makeStyles(({ spacing }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   cardContent: {
     display: 'flex',
   },
@@ -46,7 +46,7 @@ export const ProjectMemberCard = ({
   onEdit,
   className,
 }: ProjectMemberCardProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
   const createdAtString = dateTimeFormatter(projectMember?.createdAt);

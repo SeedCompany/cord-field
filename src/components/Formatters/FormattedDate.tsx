@@ -1,4 +1,4 @@
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
 import { MergeExclusive } from 'type-fest';
 import { DateRange } from '~/api/schema.graphql';

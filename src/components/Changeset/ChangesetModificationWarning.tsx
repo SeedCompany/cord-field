@@ -1,5 +1,5 @@
-import { ChangeHistory as ChangeIcon } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
+import { ChangeHistory as ChangeIcon } from '@mui/icons-material';
+import { Alert } from '@mui/material';
 
 interface Props {
   variant?: 'modifying' | 'ignoring';

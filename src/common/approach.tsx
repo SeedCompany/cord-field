@@ -3,7 +3,7 @@ import {
   MenuBook,
   PlayCircleFilled,
   Translate,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import { ReactNode } from 'react';
 import { ProductApproach, ProductMethodology } from '~/api/schema.graphql';
 import { entries, mapFromList } from './array-helpers';

@@ -1,34 +1,25 @@
 import {
-  Card,
-  CardContent,
-  Grid,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
-import {
   DescriptionOutlined,
   FilterVintage,
   HelpOutlined,
   MenuBook,
   Movie,
   SvgIconComponent,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
+import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { idForUrl } from '../Changeset';
 import { HugeIcon } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.graphql';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     display: 'flex',
     flex: 1,
   },
   actionArea: {
     flex: 1,
-  },
-  content: {
-    display: 'flex',
-    alignItems: 'center',
   },
   icon: {
     fontSize: 80,
@@ -48,7 +39,7 @@ const iconMap: Record<string, SvgIconComponent> = {
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const Icon = product.category ? iconMap[product.category] : undefined;
 

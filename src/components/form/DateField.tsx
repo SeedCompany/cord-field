@@ -1,37 +1,34 @@
-import { TextField, TextFieldProps } from '@material-ui/core';
+import { TextField, TextFieldProps } from '@mui/material';
 import {
-  BaseDatePickerProps,
   DatePicker,
-  useUtils,
-} from '@material-ui/pickers';
+  DatePickerProps,
+  MuiPickersAdapterContext,
+} from '@mui/x-date-pickers';
 import {
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
   DateValidationError,
-  DateValidationProps,
-} from '@material-ui/pickers/_helpers/date-utils';
-import { MuiPickersAdapter } from '@material-ui/pickers/_shared/hooks/useUtils';
-import { ParsableDate } from '@material-ui/pickers/constants/prop-types';
-import type { SharedPickerProps } from '@material-ui/pickers/Picker/makePickerWithState';
-import type { ResponsiveWrapper } from '@material-ui/pickers/wrappers/ResponsiveWrapper';
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
+  validateDate,
+} from '@mui/x-date-pickers/internals';
+// eslint-disable-next-line @seedcompany/no-restricted-imports
+import { MuiPickersAdapterContextValue } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
 import { DateTime } from 'luxon';
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { Except } from 'type-fest';
 import { CalendarDate, Nullable } from '~/common';
+import { AllowFormCloseContext } from './AllowClose';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 import { required as requiredValidator, Validator } from './validators';
-
-type DatePickerProps = Omit<
-  BaseDatePickerProps<CalendarDate>,
-  keyof DateValidationProps<any>
-> &
-  DateValidationProps<CalendarDate> &
-  SharedPickerProps<CalendarDate, typeof ResponsiveWrapper>;
 
 export type DateFieldProps = Except<
   FieldConfig<CalendarDate | null>,
   'defaultValue' | 'initialValue' | 'validate'
 > &
-  Except<DatePickerProps, 'value' | 'onChange' | 'renderInput'> &
+  Except<
+    DatePickerProps<string | CalendarDate | null, CalendarDate>,
+    'value' | 'onChange' | 'renderInput'
+  > &
   Pick<
     TextFieldProps,
     'label' | 'disabled' | 'helperText' | 'placeholder' | 'fullWidth'
@@ -53,13 +50,13 @@ export const DateField = ({
   placeholder,
   ...props
 }: DateFieldProps) => {
-  const utils = useUtils<CalendarDate>();
+  const i10nCtx = useLocalization();
   const validator: Validator<Nullable<CalendarDate>> = (val) => {
-    const allProps = {
-      ...defaultRange,
-      ...props,
-    };
-    let error: DateError | null = validateDate(utils, val, allProps);
+    let error: DateError | null = validateDate({
+      props,
+      value: val,
+      adapter: i10nCtx,
+    });
     if (!error) {
       return undefined;
     }
@@ -74,7 +71,11 @@ export const DateField = ({
   const initialValue = useDate(initialValueProp);
   const defaultValue = useDate(defaultValueProp);
 
-  const { input, meta, ref, rest } = useField<CalendarDate, false>({
+  const { input, meta, ref, rest } = useField<
+    CalendarDate,
+    false,
+    HTMLDivElement
+  >({
     isEqual: isDateEqual,
     ...props,
     defaultValue,
@@ -84,7 +85,7 @@ export const DateField = ({
   const { value, onChange, onFocus, onBlur } = input;
   const open = useRef(false);
 
-  // Show understood date but invalid selection errors immediately
+  // Show errors for understood but invalid dates immediately
   // Leave invalid text input to be shown only after touched as usual
   const hasError =
     showError(meta) ||
@@ -95,44 +96,47 @@ export const DateField = ({
       ...defaultMessages,
       ...errorMessages,
       Required: 'Required',
-    }[meta.error as DateError] ?? meta.error;
+    }[meta.error as string] ?? meta.error;
   const helperText = getHelperText(
     {
       ...meta,
       error: humanError,
     },
-    meta.active && !open.current && !disableFormatHelperText
-      ? humanFormat
-      : helperTextProp,
+    helperTextProp,
     hasError
   );
 
+  const allowFormClose = useContext(AllowFormCloseContext);
+
   return (
-    <DatePicker<CalendarDate>
-      views={['year', 'month', 'date']}
-      openTo={value ? 'date' : 'year'}
+    <DatePicker<CalendarDate | null | undefined>
+      views={['year', 'month', 'day']}
+      openTo={value ? 'day' : 'year'}
       disabled={meta.disabled}
-      clearable={!props.required}
-      showTodayButton
-      allowSameDateSelection
+      componentsProps={{
+        actionBar: {
+          actions: (variant) => [
+            'today',
+            ...(!props.required ? (['clear'] as const) : []), // clearable
+            ...(variant === 'mobile' ? (['cancel', 'accept'] as const) : []),
+          ],
+        },
+      }}
       showDaysOutsideCurrentMonth
-      {...defaultRange}
       {...rest}
-      ref={ref as any}
-      inputFormat={inputFormat}
+      ref={ref}
       value={value}
       onOpen={() => {
         open.current = true;
+        allowFormClose(input.name, false);
         onFocus();
       }}
       onClose={() => {
         open.current = false;
+        allowFormClose(input.name, true);
         onBlur();
       }}
-      // any bc component doesn't have correct generic applied upstream
-      onChange={(d: any | DateTime | null) =>
-        onChange(d ? CalendarDate.fromDateTime(d) : d)
-      }
+      onChange={onChange}
       renderInput={(params) => (
         <TextField
           autoComplete="off"
@@ -149,7 +153,7 @@ export const DateField = ({
           }}
           inputProps={{
             ...params.inputProps,
-            placeholder,
+            placeholder: placeholder ?? params.inputProps?.placeholder,
           }}
           name={input.name}
           helperText={helperText}
@@ -179,30 +183,6 @@ const defaultMessages: Record<DateError, string> = {
   disablePast: 'Date cannot be in the past',
   shouldDisableDate: 'Date is unavailable',
 };
-
-const defaultRange = {
-  minDate: CalendarDate.fromISO('1900-01-01'),
-  maxDate: CalendarDate.fromISO('2100-01-01').minus({ day: 1 }),
-};
-
-// Derive format based on locale
-// force two digit days & months since masked input
-// doesn't like variable number of digits
-const inputFormat = CalendarDate.fromObject(
-  {
-    year: 1234,
-    month: 11,
-    day: 29,
-  },
-  {
-    zone: 'utc',
-  }
-)
-  .toLocaleString(CalendarDate.DATE_SHORT)
-  .replace('1234', 'yyyy')
-  .replace('11', 'MM')
-  .replace('29', 'dd');
-export const humanFormat = inputFormat.toLowerCase();
 
 type DateInput = string | CalendarDate | null | undefined;
 
@@ -244,45 +224,7 @@ const isDateEqual = (a: DateInput, b: DateInput) => {
   return false;
 };
 
-// Copied from un-exported @material-ui/pickers/_helpers/date-utils
-const validateDate = (
-  utils: MuiPickersAdapter<CalendarDate>,
-  value: ParsableDate<CalendarDate>,
-  {
-    minDate,
-    maxDate,
-    disableFuture,
-    shouldDisableDate,
-    disablePast,
-  }: DateValidationProps<CalendarDate>
-) => {
-  const now = utils.date();
-  const date = utils.date(value);
-
-  if (value == null || date == null || now == null) {
-    return null;
-  }
-
-  switch (true) {
-    case !utils.isValid(value):
-      return 'invalidDate';
-
-    case Boolean(shouldDisableDate?.(date)):
-      return 'shouldDisableDate';
-
-    case Boolean(disableFuture && utils.isAfterDay(date, now)):
-      return 'disableFuture';
-
-    case Boolean(disablePast && utils.isBeforeDay(date, now)):
-      return 'disablePast';
-
-    case Boolean(minDate && utils.isBeforeDay(date, minDate)):
-      return 'minDate';
-
-    case Boolean(maxDate && utils.isAfterDay(date, maxDate)):
-      return 'maxDate';
-
-    default:
-      return null;
-  }
-};
+const useLocalization = () =>
+  useContext<MuiPickersAdapterContextValue<CalendarDate>>(
+    MuiPickersAdapterContext as any
+  );

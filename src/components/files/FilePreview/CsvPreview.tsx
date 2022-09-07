@@ -14,7 +14,7 @@ export const CsvPreview = (props: PreviewerProps) => {
 
   // ignoring result.errors for now and just using result.data
   const handleReadComplete = useCallback(
-    ({ data }) => {
+    ({ data }: ParseResult<string[]>) => {
       setCsvData(data);
       setPreviewLoading(false);
     },

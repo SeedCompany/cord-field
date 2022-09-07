@@ -1,6 +1,7 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(({ breakpoints }) => ({
+const useStyles = makeStyles()(({ breakpoints }) => ({
   text: {
     maxWidth: breakpoints.values.sm,
     textAlign: 'center',
@@ -13,7 +14,7 @@ interface PreviewErrorProps {
 
 export const PreviewError = (props: PreviewErrorProps) => {
   const { errorText } = props;
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <Grid item>
       <Typography variant="h3" color="textSecondary" className={classes.text}>

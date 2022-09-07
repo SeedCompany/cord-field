@@ -1,18 +1,19 @@
 import { useQuery } from '@apollo/client';
+import { Add, Edit } from '@mui/icons-material';
 import {
   Button,
   CardActionArea,
   CardContent,
   Grid,
-  makeStyles,
+  Skeleton,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { Add, Edit } from '@material-ui/icons';
-import { Skeleton } from '@material-ui/lab';
+} from '@mui/material';
 import { Many } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
+import { PartialDeep } from 'type-fest';
 import { listOrPlaceholders, square } from '~/common';
 import { Avatar } from '../../../components/Avatar';
 import { BooleanProperty } from '../../../components/BooleanProperty';
@@ -31,7 +32,7 @@ import { PartnerDocument } from './PartnerDetail.graphql';
 import { PartnerPostList } from './PartnerPostList';
 import { PartnerTypesCard } from './PartnerTypesCard';
 
-const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -95,7 +96,7 @@ const useStyles = makeStyles(({ spacing, breakpoints, palette }) => ({
 }));
 
 export const PartnerDetail = () => {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { partnerId = '' } = useParams();
   const formatDateTime = useDateTimeFormatter();
 
@@ -146,8 +147,8 @@ export const PartnerDetail = () => {
               object={partner}
               label="Partner"
               listId="partners"
-              listFilter={(args: PartnersQueryVariables) =>
-                args.input.filter?.pinned ?? false
+              listFilter={(args: PartialDeep<PartnersQueryVariables>) =>
+                args.input?.filter?.pinned ?? false
               }
             />
           </header>
