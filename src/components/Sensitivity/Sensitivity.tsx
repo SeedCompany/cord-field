@@ -1,5 +1,5 @@
 import { VerifiedUserOutlined } from '@mui/icons-material';
-import { Chip, Skeleton, Typography } from '@mui/material';
+import { Box, Chip, Skeleton, SxProps, Theme, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { meanBy } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
@@ -59,17 +59,19 @@ export interface SensitivityProps {
   value?: SensitivityType;
   loading?: boolean;
   className?: string;
+  sx?: SxProps<Theme>;
 }
 
 export const Sensitivity = ({
   value,
   loading,
   className,
+  sx,
 }: SensitivityProps) => {
   const { classes, cx } = useStyles();
 
   return (
-    <div className={className}>
+    <Box className={className} sx={sx}>
       <div className={classes.iconWrapper}>
         <VerifiedUserOutlined className={classes.icon} />
         <Typography variant="body2">Sensitivity</Typography>
@@ -89,6 +91,6 @@ export const Sensitivity = ({
           )
         }
       />
-    </div>
+    </Box>
   );
 };
