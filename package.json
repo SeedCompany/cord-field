@@ -163,7 +163,7 @@
     "eslint-plugin-prettier": "*",
     "eslint-plugin-react": "*",
     "eslint-plugin-react-hooks": "*",
-    "eslint-plugin-tss-unused-classes": "^0.0.3",
+    "eslint-plugin-tss-unused-classes": "^0.0.4",
     "html-webpack-plugin": "^4.0.0",
     "http-proxy-middleware": "^2.0.6",
     "husky": "^4.3.8",
