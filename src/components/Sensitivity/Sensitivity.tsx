@@ -1,9 +1,10 @@
 import { VerifiedUserOutlined } from '@mui/icons-material';
-import { Box, Chip, Skeleton, SxProps, Theme, Typography } from '@mui/material';
+import { Box, Chip, Skeleton, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { meanBy } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
+import { Sx } from '~/common';
 
 const possible: SensitivityType[] = ['Low', 'Medium', 'High'];
 const avgLength = Math.round(meanBy(possible, (s) => s.length));
@@ -59,7 +60,7 @@ export interface SensitivityProps {
   value?: SensitivityType;
   loading?: boolean;
   className?: string;
-  sx?: SxProps<Theme>;
+  sx?: Sx;
 }
 
 export const Sensitivity = ({
