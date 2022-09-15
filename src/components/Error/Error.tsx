@@ -1,21 +1,10 @@
 import { ApolloError } from '@apollo/client';
-import { Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import { isPlainObject } from 'lodash';
-import { ElementType, isValidElement, ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { isValidElement, ReactNode } from 'react';
 import { getErrorInfo } from '~/api';
 import { ButtonLink, StatusCode, useNavigate } from '../Routing';
 import { ErrorRenderers, renderError } from './error-handling';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  page: {
-    overflow: 'auto',
-    padding: spacing(4, 0, 0, 4),
-  },
-  buttons: {
-    marginTop: spacing(3),
-  },
-}));
 
 export interface ErrorProps {
   /**
@@ -37,7 +26,6 @@ export interface ErrorProps {
   page?: boolean;
   /** Turn off back & home buttons */
   disableButtons?: boolean;
-  component?: ElementType;
 }
 
 /**
@@ -55,11 +43,8 @@ export const Error = ({
   error,
   children,
   show,
-  page,
   disableButtons,
-  component: Component = 'div',
 }: ErrorProps) => {
-  const { classes, cx } = useStyles();
   const navigate = useNavigate();
 
   if (!(show ?? error)) {
@@ -81,30 +66,44 @@ export const Error = ({
     error && getErrorInfo(error).codes.includes('NotFound') ? 404 : 500;
 
   return (
-    <Component className={cx(page && classes.page)}>
-      {/* Default status code to be helpful for the most common ones. The
+    <Box
+      // TODO: use page based sx props
+      sx={(theme) => ({
+        overflow: 'auto',
+        padding: theme.spacing(4, 0, 0, 4),
+      })}
+    >
+      <>
+        {/* Default status code to be helpful for the most common ones. The
       children can still override this by rendering <StatusCode /> themselves */}
-      <StatusCode code={statusCode} />
-      <Typography gutterBottom>Oops, Sorry.</Typography>
-      {rendered}
-      {!disableButtons && (
-        <Grid container spacing={3} className={classes.buttons}>
-          <Grid item>
-            <Button
-              onClick={() => navigate(-1)}
-              variant="contained"
-              color="secondary"
-            >
-              Back
-            </Button>
+        <StatusCode code={statusCode} />
+        <Typography gutterBottom>Oops, Sorry.</Typography>
+        {rendered}
+        {!disableButtons && (
+          <Grid
+            container
+            spacing={3}
+            sx={{
+              marginTop: 3,
+            }}
+          >
+            <Grid item>
+              <Button
+                onClick={() => navigate(-1)}
+                variant="contained"
+                color="secondary"
+              >
+                Back
+              </Button>
+            </Grid>
+            <Grid item>
+              <ButtonLink to="/" variant="contained" color="secondary">
+                Home
+              </ButtonLink>
+            </Grid>
           </Grid>
-          <Grid item>
-            <ButtonLink to="/" variant="contained" color="secondary">
-              Home
-            </ButtonLink>
-          </Grid>
-        </Grid>
-      )}
-    </Component>
+        )}
+      </>
+    </Box>
   );
 };
