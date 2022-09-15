@@ -5,11 +5,11 @@ import {
   Grid,
   Skeleton,
   Tab,
+  Theme,
   Typography,
 } from '@mui/material';
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { User } from '~/api/schema.graphql';
 import { simpleSwitch } from '~/common';
 import { useNumberFormatter } from '../../../components/Formatters';
@@ -23,23 +23,9 @@ import { UserSortOptions } from './UserSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  options: {
-    margin: spacing(3, 0),
-  },
-  items: {
-    maxWidth: breakpoints.values.sm,
-  },
-  tabPanel: {
-    overflowY: 'auto',
-    // allow card shadow to bleed over instead of cutting it off
-    padding: spacing(0, 0, 0, 2),
-    margin: spacing(0, 0, 0, -2),
-  },
-  total: {
-    marginTop: spacing(2),
-  },
-}));
+const itemsSx = (theme: Theme) => ({
+  maxWidth: theme.breakpoints.values.sm,
+});
 
 export const UserList = () => {
   const sort = useSort<User>();
@@ -58,7 +44,6 @@ export const UserList = () => {
     },
   });
 
-  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const scrollRef = useRef<HTMLElement>(null);
 
@@ -68,7 +53,13 @@ export const UserList = () => {
       <Typography variant="h2" paragraph>
         People
       </Typography>
-      <Grid container spacing={1} className={classes.options}>
+      <Grid
+        container
+        spacing={1}
+        sx={(theme) => ({
+          margin: theme.spacing(3, 0),
+        })}
+      >
         <Grid item>
           <SortButtonDialog {...sort}>
             <UserSortOptions />
@@ -80,18 +71,28 @@ export const UserList = () => {
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="user navigation tabs"
-          className={classes.items}
+          sx={(theme) => itemsSx(theme)}
         >
           <Tab label="Pinned" value="pinned" />
           <Tab label="All" value="all" />
         </TabList>
-        <Divider className={classes.items} />
+        <Divider sx={(theme) => itemsSx(theme)} />
         <TabPanel
           value={filters.tab}
-          className={classes.tabPanel}
           ref={scrollRef}
+          sx={(theme) => ({
+            overflowY: 'auto',
+            // allow card shadow to bleed over instead of cutting it off
+            padding: theme.spacing(0, 0, 0, 2),
+            margin: theme.spacing(0, 0, 0, -2),
+          })}
         >
-          <Typography variant="h3" className={classes.total}>
+          <Typography
+            variant="h3"
+            sx={(theme) => ({
+              marginTop: theme.spacing(2),
+            })}
+          >
             {list.data ? (
               <>{formatNumber(list.data.total)} People</>
             ) : (
@@ -100,7 +101,7 @@ export const UserList = () => {
           </Typography>
           <List
             {...list}
-            classes={{ container: classes.items }}
+            containerSx={(theme) => itemsSx(theme)}
             renderItem={(item) => <UserCard user={item} />}
             renderSkeleton={<UserCard />}
             scrollRef={scrollRef}

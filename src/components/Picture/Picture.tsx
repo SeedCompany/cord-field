@@ -1,7 +1,7 @@
+import { Box } from '@mui/material';
 import { toFinite } from 'lodash';
 import { memo, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { makeStyles } from 'tss-react/mui';
 import { Merge } from 'type-fest';
 import { many } from '~/common';
 import { useIsBot } from '../../hooks';
@@ -121,50 +121,6 @@ export type PictureProps = Merge<
   SourceProps & LayoutProps & LazyProps & PlaceholderProps & EffectsProps
 >;
 
-const useStyles = makeStyles()(() => ({
-  root: {
-    borderRadius: 0,
-  },
-  contain: {
-    margin: 'auto',
-  },
-  coverHolder: {
-    height: '100%',
-  },
-  coverImg: {
-    objectFit: 'cover',
-    width: '100%',
-    height: '100%',
-  },
-  holder: {
-    position: 'relative',
-  },
-  background: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    overflow: 'hidden',
-    pointerEvents: 'none',
-  },
-  img: {
-    maxWidth: '100%',
-    borderRadius: 'inherit',
-  },
-  aspectRatio: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-  },
-  darkener: {
-    background: 'black',
-    opacity: 0,
-  },
-}));
-
 /**
  * An Image/Picture wrapper.
  *
@@ -197,7 +153,6 @@ const PictureImpl = ({
   style: styleProp,
   ...rest
 }: PictureProps) => {
-  const { classes, cx } = useStyles();
   const sizesContext = usePictureSizes();
   const sizes = sizesProp ? many(sizesProp).join(', ') : sizesContext;
   const srcSet = formatSrcSet(source);
@@ -287,13 +242,28 @@ const PictureImpl = ({
       sizes={sizes}
       width={width}
       height={height}
-      className={cx({
-        [classes.img]: true,
-        [classes.aspectRatio]: Boolean(aspectRatio),
-        [classes.coverImg]: fitCover,
-        [classes.root]: !needsHolder,
-        [classNameProp ?? '']: Boolean(!needsHolder && classNameProp),
-      })}
+      className={!needsHolder && classNameProp ? classNameProp : ''}
+      css={[
+        !needsHolder && {
+          borderRadius: 0,
+        },
+        Boolean(aspectRatio) && {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+        },
+        fitCover && {
+          objectFit: 'cover',
+          width: '100%',
+          height: '100%',
+        },
+        {
+          maxWidth: '100%',
+          borderRadius: 'inherit',
+        },
+      ]}
       style={!needsHolder ? { ...styles, ...styleProp } : styles}
       {...(lazyNative ? { loading: 'lazy' } : {})}
       onLoad={(e) => {
@@ -316,14 +286,21 @@ const PictureImpl = ({
   );
 
   const held = needsHolder ? (
-    <div
+    <Box
+      component="div"
       ref={lazyObserve && !inView ? ref : undefined}
-      className={cx({
-        [classes.holder]: true,
-        [classes.coverHolder]: fitCover,
-        [classes.root]: true,
-        [classNameProp ?? '']: Boolean(classNameProp),
-      })}
+      className={classNameProp ? classNameProp : ''}
+      sx={[
+        {
+          borderRadius: 0,
+        },
+        {
+          position: 'relative',
+        },
+        fitCover && {
+          height: '100%',
+        },
+      ]}
       style={{
         paddingBottom: aspectRatio ? `${(1 / aspectRatio) * 100}%` : undefined,
         ...styleProp,
@@ -331,31 +308,57 @@ const PictureImpl = ({
     >
       {img}
       {darken && (
-        <div
-          className={cx(classes.background, classes.darkener)}
+        <Box
+          component="div"
           style={{
             ...styles,
             opacity: darken / 100,
           }}
+          sx={[
+            {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              overflow: 'hidden',
+              pointerEvents: 'none',
+            },
+            {
+              background: 'black',
+              opacity: 0,
+            },
+          ]}
           aria-hidden="true"
         />
       )}
-    </div>
+    </Box>
   ) : (
     img
   );
 
   if (background || fitContain) {
     return (
-      <div
-        className={cx({
-          [classes.background]: background,
-          [classes.contain]: fitContain,
-        })}
+      <Box
+        component="div"
+        sx={[
+          fitContain && {
+            margin: 'auto',
+          },
+          Boolean(background) && {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            overflow: 'hidden',
+            pointerEvents: 'none',
+          },
+        ]}
         style={fitContain ? { maxWidth: width, maxHeight: height } : undefined}
       >
         {held}
-      </div>
+      </Box>
     );
   }
 
