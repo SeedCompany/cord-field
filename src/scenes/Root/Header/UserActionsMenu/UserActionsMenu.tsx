@@ -13,16 +13,9 @@ import { useTheme } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { useUpload } from '../../../../components/Upload';
 
-const useStyles = makeStyles()(({ spacing }) => ({
+const useStyles = makeStyles()(() => ({
   menu: {
     minWidth: 200,
-  },
-  listItemIcon: {
-    marginRight: spacing(2),
-    minWidth: 'unset',
-  },
-  listItemText: {
-    textTransform: 'capitalize',
   },
 }));
 
@@ -50,12 +43,19 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
           props.onClose?.(event, 'actionClicked');
         }}
       >
-        <ListItemIcon className={classes.listItemIcon}>
+        <ListItemIcon
+          sx={{
+            marginRight: spacing(2),
+            minWidth: 'unset',
+          }}
+        >
           <UmIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText
-          className={classes.listItemText}
           primary="upload manager"
+          sx={{
+            textTransform: 'capitalize',
+          }}
         />
       </MenuItem>
     </Menu>

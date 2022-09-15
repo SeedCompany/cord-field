@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import { Grid, Tooltip, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   ProjectStep,
@@ -39,18 +38,11 @@ type UpdateProjectDialogProps = Except<
   project: ProjectOverviewFragment;
 };
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  overrideTitle: {
-    marginTop: spacing(3),
-  },
-}));
-
 export const ProjectWorkflowDialog = ({
   project,
   ...props
 }: UpdateProjectDialogProps) => {
   const [updateProject] = useMutation(UpdateProjectDocument);
-  const { classes } = useStyles();
   const { canBypassTransitions, transitions } = project.step;
 
   return (
@@ -118,7 +110,9 @@ export const ProjectWorkflowDialog = ({
             {transitions.length > 0 ? (
               <Typography
                 color="textSecondary"
-                className={classes.overrideTitle}
+                sx={{
+                  marginTop: 3,
+                }}
               >
                 Or you can bypass these transitions
               </Typography>

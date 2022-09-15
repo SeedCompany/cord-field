@@ -5,34 +5,32 @@ import {
 } from '@mui/icons-material';
 import { Card, IconButton, MenuProps, Typography } from '@mui/material';
 import { useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
 import { UserActionsMenu } from '../UserActionsMenu';
 
-const useStyles = makeStyles()(({ typography, spacing }) => ({
-  card: {
-    flexShrink: 0,
-    display: 'flex',
-    alignItems: 'center',
-    padding: spacing(1),
-  },
-  name: {
-    fontWeight: typography.weight.medium,
-    margin: spacing(0, 1, 0, 2),
-  },
-}));
-
 export const ProfileToolbar = () => {
-  const { classes } = useStyles();
   const { session } = useSession();
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
 
   return (
     <>
-      <Card className={classes.card}>
-        <Typography className={classes.name} color="primary">
+      <Card
+        sx={{
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          padding: 1,
+        }}
+      >
+        <Typography
+          color="primary"
+          sx={(theme) => ({
+            fontWeight: theme.typography.weight.medium,
+            margin: theme.spacing(0, 1, 0, 2),
+          })}
+        >
           Hi, {session?.realFirstName.value ?? 'Friend'}
         </Typography>
         <IconButton

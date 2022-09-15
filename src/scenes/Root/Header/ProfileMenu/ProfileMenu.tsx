@@ -6,12 +6,9 @@ import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';
 import { ChangePassword } from '../../../Authentication/ChangePassword';
 
-const useStyles = makeStyles()(({ spacing }) => ({
+const useStyles = makeStyles()(() => ({
   menu: {
     minWidth: 200,
-  },
-  menuHeading: {
-    padding: spacing(1, 2, 2, 2),
   },
 }));
 
@@ -42,7 +39,9 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
       >
         <Typography
           variant="h4"
-          className={classes.menuHeading}
+          sx={{
+            padding: spacing(1, 2, 2, 2),
+          }}
           {...skipAutoFocus}
         >
           Profile Info
