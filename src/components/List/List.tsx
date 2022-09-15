@@ -62,7 +62,6 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
 
   return (
     <Box
-      component="div"
       className={className}
       ref={scrollRef}
       css={(theme) => [

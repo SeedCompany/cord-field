@@ -287,7 +287,6 @@ const PictureImpl = ({
 
   const held = needsHolder ? (
     <Box
-      component="div"
       ref={lazyObserve && !inView ? ref : undefined}
       className={classNameProp ? classNameProp : ''}
       sx={[
@@ -309,7 +308,6 @@ const PictureImpl = ({
       {img}
       {darken && (
         <Box
-          component="div"
           style={{
             ...styles,
             opacity: darken / 100,
@@ -340,7 +338,6 @@ const PictureImpl = ({
   if (background || fitContain) {
     return (
       <Box
-        component="div"
         sx={[
           fitContain && {
             margin: 'auto',

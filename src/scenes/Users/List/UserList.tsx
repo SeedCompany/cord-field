@@ -23,7 +23,7 @@ import { UserSortOptions } from './UserSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;
 
-const itemsSx = (theme: Theme) => ({
+const maxWith = (theme: Theme) => ({
   maxWidth: theme.breakpoints.values.sm,
 });
 
@@ -71,12 +71,12 @@ export const UserList = () => {
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="user navigation tabs"
-          sx={(theme) => itemsSx(theme)}
+          sx={maxWith}
         >
           <Tab label="Pinned" value="pinned" />
           <Tab label="All" value="all" />
         </TabList>
-        <Divider sx={(theme) => itemsSx(theme)} />
+        <Divider sx={maxWith} />
         <TabPanel
           value={filters.tab}
           ref={scrollRef}
@@ -101,7 +101,7 @@ export const UserList = () => {
           </Typography>
           <List
             {...list}
-            containerSx={(theme) => itemsSx(theme)}
+            containerSx={maxWith}
             renderItem={(item) => <UserCard user={item} />}
             renderSkeleton={<UserCard />}
             scrollRef={scrollRef}
