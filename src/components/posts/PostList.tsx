@@ -49,9 +49,7 @@ export const PostList = ({
             post={post}
           />
         )}
-        sx={{
-          maxWidth: 600,
-        }}
+        itemMaxWidth={600}
         skeletonCount={0}
         renderSkeleton={null}
       />

@@ -99,7 +99,7 @@ export const PartnerList = () => {
           </Typography>
           <List
             {...list}
-            classes={{ container: classes.items }}
+            itemMaxWidth="sm"
             renderItem={(item) => <PartnerCard partner={item} />}
             renderSkeleton={<PartnerCard />}
             scrollRef={scrollRef}

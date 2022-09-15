@@ -41,9 +41,6 @@ const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
     padding: spacing(0, 0, 0, 2),
     margin: spacing(0, 0, 0, -2),
   },
-  items: {
-    maxWidth: 400,
-  },
   total: {
     marginTop: spacing(2),
   },
@@ -117,7 +114,7 @@ export const LanguageList = () => {
           </Typography>
           <List
             {...list}
-            classes={{ container: classes.items }}
+            itemMaxWidth={400}
             renderItem={(item) => <LanguageCard language={item} />}
             renderSkeleton={<LanguageCard />}
             scrollRef={scrollRef}

@@ -92,15 +92,6 @@ const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
       marginRight: spacing(2),
     },
   },
-  engagementList: {
-    // fix spacing above applied with > *
-    marginTop: spacing(-3),
-    // marginRight: -16,
-    // padding: 0,
-  },
-  engagementListItems: {
-    maxWidth: 492,
-  },
 }));
 
 export const ProjectOverview = () => {
@@ -571,10 +562,8 @@ export const ProjectOverview = () => {
           </Grid>
           <List
             {...engagements}
-            classes={{
-              root: classes.engagementList,
-              container: classes.engagementListItems,
-            }}
+            sx={{ mt: -3 }}
+            itemMaxWidth={492}
             spacing={3}
             // ItemProps={{ sm: 12, md: 6 }}
             renderItem={(engagement) =>

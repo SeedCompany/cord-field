@@ -101,7 +101,7 @@ export const UserList = () => {
           </Typography>
           <List
             {...list}
-            containerSx={maxWith}
+            ContainerProps={{ sx: maxWith }}
             renderItem={(item) => <UserCard user={item} />}
             renderSkeleton={<UserCard />}
             scrollRef={scrollRef}

@@ -116,7 +116,8 @@ export const ProjectList = () => {
           </Typography>
           <List
             {...list}
-            classes={{ container: classes.maxWidth }}
+            itemMaxWidth="sm"
+            ContainerProps={{ sx: { flexWrap: 'nowrap' } }}
             renderItem={(item) => <ProjectCard project={item} />}
             renderSkeleton={<ProjectCard />}
             scrollRef={scrollRef}
