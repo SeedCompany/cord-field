@@ -1,44 +1,39 @@
-import { Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { Box, Typography } from '@mui/material';
 import { CordIcon } from '../../../components/Icons';
 import { SwooshBackground } from './SwooshBackground';
 
-const useStyles = makeStyles()(({ spacing, typography }) => ({
-  root: {
-    position: 'relative',
-  },
-  floating: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: '15%',
-    padding: spacing(0, 4, 0, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-  },
-  copyright: {
-    fontWeight: typography.fontWeightLight,
-  },
-}));
-
 export const SidebarHeader = () => {
-  const { classes } = useStyles();
-
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        position: 'relative',
+      }}
+    >
       <SwooshBackground />
-      <div className={classes.floating}>
+      <Box
+        sx={(theme) => ({
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: '15%',
+          padding: theme.spacing(0, 4, 0, 4),
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-evenly',
+        })}
+      >
         <CordIcon sx={{ color: 'inherit', fontSize: 40 }} />
         <Typography
-          className={classes.copyright}
           display="block"
           variant="caption"
+          sx={(theme) => ({
+            fontWeight: theme.typography.fontWeightLight,
+          })}
         >
           © Seed Company
         </Typography>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

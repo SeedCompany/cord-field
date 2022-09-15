@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import { startCase } from 'lodash';
 import { ReactElement } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { Error } from '../../components/Error';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';
 import { LocationCard } from '../../components/LocationCard';
@@ -17,23 +16,7 @@ import {
   SearchResultItemFragment as SearchResult,
 } from './Search.graphql';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-  },
-  main: {
-    maxWidth: breakpoints.values.sm,
-    '& > *': {
-      marginBottom: spacing(2),
-    },
-  },
-}));
-
 export const SearchResults = () => {
-  const { classes } = useStyles();
-
   const [{ q: query }] = useSearch();
   const { data, error, loading } = useQuery(SearchDocument, {
     variables: {
@@ -54,9 +37,23 @@ export const SearchResults = () => {
   });
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: 4,
+      }}
+    >
       <Helmet title={`${query} - Search`} />
-      <main className={classes.main}>
+      <Box
+        component="main"
+        sx={(theme) => ({
+          maxWidth: theme.breakpoints.values.sm,
+          '& > *': {
+            marginBottom: 2,
+          },
+        })}
+      >
         {error ? (
           <Error error={error}>Error loading search results</Error>
         ) : loading ? (
@@ -80,8 +77,8 @@ export const SearchResults = () => {
         ) : (
           <Error show>No results found</Error>
         )}
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

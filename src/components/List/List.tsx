@@ -2,7 +2,7 @@ import { Box, Grid, GridProps } from '@mui/material';
 import { times } from 'lodash';
 import { ReactNode, RefObject, useRef } from 'react';
 import { Entity, isNetworkRequestInFlight, PaginatedListOutput } from '~/api';
-import { Sx } from '~/common';
+import { extendSx, Sx } from '~/common';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { ChangesetBadge, useDetermineChangesetDiffItem } from '../Changeset';
 import { ProgressButton, ProgressButtonProps } from '../ProgressButton';
@@ -64,22 +64,17 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
     <Box
       className={className}
       ref={scrollRef}
-      css={(theme) => [
-        {
+      sx={[
+        (theme) => ({
           overflow: 'auto',
           marginLeft: theme.spacing(-2),
           padding: theme.spacing(2),
-        },
+        }),
+        ...extendSx(containerSx),
+        ...extendSx(sx),
       ]}
-      sx={containerSx}
     >
-      <Grid
-        direction="column"
-        spacing={spacing}
-        {...ContainerProps}
-        container
-        sx={sx}
-      >
+      <Grid direction="column" spacing={spacing} {...ContainerProps} container>
         {!data?.items
           ? times(skeletonCount).map((index) => (
               <Grid {...ItemProps} {...SkeletonItemProps} item key={index}>

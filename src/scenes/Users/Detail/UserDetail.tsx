@@ -1,12 +1,11 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Skeleton, Tooltip, Typography } from '@mui/material';
+import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { RoleLabels } from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
@@ -23,34 +22,7 @@ import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.graphql';
 import { UserDocument } from './UserDetail.graphql';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    overflowY: 'auto',
-    padding: spacing(4),
-    '& > *:not(:last-child)': {
-      marginBottom: spacing(3),
-    },
-    maxWidth: breakpoints.values.md,
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
-    gap: spacing(1),
-  },
-  name: {
-    marginRight: spacing(2), // a little extra between text and buttons
-    lineHeight: 'inherit', // centers text with buttons better
-  },
-  partnersContainer: {
-    marginTop: spacing(1),
-  },
-  partner: {
-    marginBottom: spacing(2),
-  },
-}));
-
 export const UserDetail = () => {
-  const { classes } = useStyles();
   const { userId = '' } = useParams();
   const { data, error } = useQuery(UserDocument, {
     variables: { userId },
@@ -63,14 +35,36 @@ export const UserDetail = () => {
   const canEditAnyFields = canEditAny(user);
 
   return (
-    <main className={classes.root}>
+    <Box
+      component="main"
+      sx={(theme) => ({
+        overflowY: 'auto',
+        padding: theme.spacing(4),
+        '& > *:not(:last-child)': {
+          marginBottom: theme.spacing(3),
+        },
+        maxWidth: theme.breakpoints.values.md,
+      })}
+    >
       <Helmet title={user?.fullName ?? undefined} />
       {error ? (
         <Typography variant="h4">Error loading person</Typography>
       ) : (
         <>
-          <div className={classes.header}>
-            <Typography variant="h2" className={classes.name}>
+          <Box
+            sx={(theme) => ({
+              flex: 1,
+              display: 'flex',
+              gap: theme.spacing(1),
+            })}
+          >
+            <Typography
+              variant="h2"
+              sx={(theme) => ({
+                marginRight: theme.spacing(2), // a little extra between text and buttons
+                lineHeight: 'inherit', // centers text with buttons better
+              })}
+            >
               {!user ? (
                 <Skeleton width="20ch" />
               ) : (
@@ -97,7 +91,7 @@ export const UserDetail = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
-          </div>
+          </Box>
           <DisplayProperty
             label="Email"
             value={user?.email.value}
@@ -137,20 +131,26 @@ export const UserDetail = () => {
           {!!user?.partners.items.length && (
             <>
               <Typography variant="h3">Partners</Typography>
-              <div className={classes.partnersContainer}>
+              <Box
+                sx={(theme) => ({
+                  marginTop: theme.spacing(1),
+                })}
+              >
                 {user.partners.items.map((item) => (
                   <PartnerListItemCard
                     key={item.id}
                     partner={item}
-                    className={classes.partner}
+                    sx={(theme) => ({
+                      marginBottom: theme.spacing(2),
+                    })}
                   />
                 ))}
-              </div>
+              </Box>
             </>
           )}
         </>
       )}
-    </main>
+    </Box>
   );
 };
 

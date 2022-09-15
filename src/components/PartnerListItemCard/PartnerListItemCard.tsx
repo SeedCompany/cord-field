@@ -1,40 +1,14 @@
 import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { random } from 'lodash';
-import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
+import { extendSx, StyleProps } from '~/common';
 import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
 import { PartnerListItemFragment } from './PartnerListItemCard.graphql';
 
-const useStyles = makeStyles()(({ breakpoints, spacing }) => {
-  const cardWidth = breakpoints.values.sm;
-  return {
-    root: {
-      width: '100%',
-      maxWidth: cardWidth,
-      position: 'relative',
-    },
-    card: {
-      display: 'flex',
-      alignItems: 'initial',
-    },
-    cardContent: {
-      flex: 1,
-      padding: spacing(2, 3),
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    pin: {
-      position: 'absolute',
-      top: 5,
-      right: 5,
-    },
-  };
-});
-export interface PartnerListItemCardProps {
+export interface PartnerListItemCardProps extends StyleProps {
   partner?: PartnerListItemFragment;
-  className?: string;
 }
 
 // min/max is based on production data
@@ -43,17 +17,36 @@ const randomNameLength = () => random(3, 50);
 export const PartnerListItemCard = ({
   partner,
   className,
+  sx,
 }: PartnerListItemCardProps) => {
-  const { classes, cx } = useStyles();
-
   return (
-    <Card className={cx(className, classes.root)}>
+    <Card
+      className={className}
+      sx={[
+        {
+          width: '100%',
+          maxWidth: (theme) => theme.breakpoints.values.sm,
+          position: 'relative',
+        },
+        ...extendSx(sx),
+      ]}
+    >
       <CardActionAreaLink
         disabled={!partner}
         to={`/partners/${partner?.id}`}
-        className={classes.card}
+        sx={{
+          display: 'flex',
+          alignItems: 'initial',
+        }}
       >
-        <CardContent className={classes.cardContent}>
+        <CardContent
+          sx={(theme) => ({
+            flex: 1,
+            padding: theme.spacing(2, 3),
+            display: 'flex',
+            justifyContent: 'space-between',
+          })}
+        >
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <Typography variant="h4">
@@ -74,7 +67,11 @@ export const PartnerListItemCard = ({
         listFilter={(args: PartialDeep<PartnersQueryVariables>) =>
           args.input?.filter?.pinned ?? false
         }
-        className={classes.pin}
+        sx={{
+          position: 'absolute',
+          top: 5,
+          right: 5,
+        }}
         size="small"
       />
     </Card>
