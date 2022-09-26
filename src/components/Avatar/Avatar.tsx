@@ -3,23 +3,28 @@ import {
   AvatarProps as MuiAvatarProps,
   Skeleton,
 } from '@mui/material';
+import { extendSx } from '~/common';
 
 export interface AvatarProps extends MuiAvatarProps {
   loading?: boolean;
 }
 
 export const Avatar = ({ loading, ...props }: AvatarProps) => {
-  const { alt, src, srcSet, sizes, children, ...rest } = props;
+  const { alt, src, srcSet, sizes, children, sx, ...rest } = props;
   return (
     <MuiAvatar
       {...(loading ? rest : props)}
-      sx={
-        loading
-          ? {
-              backgroundColor: 'transparent',
-            }
-          : undefined // setting to undefined will make it fallback to the default
-      }
+      sx={[
+        {
+          backgroundColor: 'transparent',
+        },
+        !loading &&
+          ((theme) => ({
+            color: theme.palette.info.main,
+            backgroundColor: theme.palette.grey[200],
+          })),
+        ...extendSx(sx),
+      ]}
       classes={props.classes}
     >
       {loading ? (
