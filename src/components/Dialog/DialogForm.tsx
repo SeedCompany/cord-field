@@ -1,5 +1,6 @@
 import { useReactiveVar } from '@apollo/client';
 import {
+  Box,
   Button,
   ButtonProps,
   Dialog,
@@ -21,7 +22,6 @@ import {
   FormRenderProps,
   RenderableProps,
 } from 'react-final-form';
-import { makeStyles } from 'tss-react/mui';
 import { Except, Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError, inChangesetVar } from '~/api';
 import { callAll } from '~/common';
@@ -97,12 +97,6 @@ export type DialogFormProps<T, R = void> = Omit<
     | ((props: Except<FormRenderProps<T>, 'handleSubmit'>) => ReactNode);
 } & Pick<DialogProps, 'TransitionProps'>;
 
-const useStyles = makeStyles()(() => ({
-  spacer: {
-    flex: 1,
-  },
-}));
-
 const defaultDecorators = [
   focusFirstFieldRegistered,
   focusFirstFieldWithSubmitError,
@@ -133,7 +127,6 @@ export function DialogForm<T, R = void>({
   TransitionProps,
   ...FormProps
 }: DialogFormProps<T, R>) {
-  const { classes } = useStyles();
   const inChangeset = useReactiveVar(inChangesetVar);
   const formRef = useRef<FormApi<T> | undefined>();
 
@@ -220,7 +213,11 @@ export function DialogForm<T, R = void>({
               {leftAction ? (
                 <>
                   {leftAction}
-                  <div className={classes.spacer} />
+                  <Box
+                    sx={{
+                      flex: 1,
+                    }}
+                  />
                 </>
               ) : null}
               {closeLabel !== false && (
