@@ -1,27 +1,7 @@
 import { Grid, Typography } from '@mui/material';
 import { alpha as fade } from '@mui/material/styles';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { Sx } from '~/common';
-
-const useStyles = makeStyles()(({ palette, shape, spacing }) => ({
-  diff: {
-    marginTop: spacing(0.5),
-  },
-  diffItem: {
-    padding: spacing(0, 0.5),
-    borderRadius: shape.borderRadius,
-  },
-  previous: {
-    textDecoration: 'line-through',
-    color: palette.error.main,
-    background: fade(palette.error.light, 0.5),
-  },
-  current: {
-    color: palette.primary.dark,
-    background: fade(palette.primary.light, 0.5),
-  },
-}));
+import { extendSx, Sx } from '~/common';
 
 export const PropertyDiff = <T extends any>({
   previous,
@@ -36,24 +16,47 @@ export const PropertyDiff = <T extends any>({
   sx?: Sx;
   className?: string;
 }) => {
-  const { classes, cx } = useStyles();
   return (
     <Grid
       container
       direction="column"
       alignItems="flex-start"
-      className={cx(classes.diff, className)}
-      sx={sx}
+      className={className}
+      sx={[
+        (theme) => ({
+          marginTop: theme.spacing(0.5),
+        }),
+        ...extendSx(sx),
+      ]}
     >
       <Typography
-        className={cx(classes.diffItem, classes.previous)}
+        sx={[
+          (theme) => ({
+            padding: theme.spacing(0, 0.5),
+            borderRadius: theme.shape.borderRadius,
+          }),
+          (theme) => ({
+            textDecoration: 'line-through',
+            color: theme.palette.error.main,
+            background: fade(theme.palette.error.light, 0.5),
+          }),
+        ]}
         gutterBottom
         display="inline"
       >
         {labelBy ? labelBy(previous) : (previous as ReactNode)}
       </Typography>
       <Typography
-        className={cx(classes.diffItem, classes.current)}
+        sx={[
+          (theme) => ({
+            padding: theme.spacing(0, 0.5),
+            borderRadius: theme.shape.borderRadius,
+          }),
+          (theme) => ({
+            color: theme.palette.primary.dark,
+            background: fade(theme.palette.primary.light, 0.5),
+          }),
+        ]}
         display="inline"
       >
         {labelBy ? labelBy(current) : (current as ReactNode)}
