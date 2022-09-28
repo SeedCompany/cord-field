@@ -9,7 +9,6 @@ import {
   Grid,
 } from '@mui/material';
 import { Suspense, useCallback, useEffect, useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { saveAs } from '../../../common/FileSaver';
 import { NonDirectoryActionItem } from '../FileActions';
 import {
@@ -32,12 +31,6 @@ const ExcelPreview = loadable(() => import('./ExcelPreview'));
 const RtfPreview = loadable(() => import('./RtfPreview'));
 const WordPreview = loadable(() => import('./WordPreview'));
 const EmailPreview = loadable(() => import('./EmailPreview'));
-
-const useStyles = makeStyles()(() => ({
-  dialogContent: {
-    height: '100%',
-  },
-}));
 
 export interface PreviewerProps {
   file?: File;
@@ -161,7 +154,6 @@ const previewers: PreviewerProperties = {
 };
 
 export const FilePreview = (props: FilePreviewProps) => {
-  const { classes } = useStyles();
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
@@ -255,7 +247,7 @@ export const FilePreview = (props: FilePreviewProps) => {
       aria-labelledby="dialog-file-preview"
     >
       <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
-      <DialogContent className={classes.dialogContent}>
+      <DialogContent sx={{ height: '100%' }}>
         <Grid container direction="column" spacing={2} alignItems="center">
           <Grid item>
             {previewError ? (
