@@ -1,19 +1,11 @@
+import { Box } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
-
-const useStyles = makeStyles()(() => ({
-  paragraph: {
-    whiteSpace: 'pre-wrap',
-    fontFamily: "'Roboto Mono', Consolas, Menlo, Monaco, Courier, monospace",
-  },
-}));
 
 export const PlainTextPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<JSX.Element | JSX.Element[] | null>(null);
-  const { classes } = useStyles();
 
   const renderHtml = useCallback(
     async (file: File) => {
@@ -27,9 +19,17 @@ export const PlainTextPreview = (props: PreviewerProps) => {
             : '\r';
         const lines = textContent.split(newLineCharacter);
         const html = lines.map((line, index) => (
-          <p key={index} className={classes.paragraph}>
+          <Box
+            component="p"
+            key={index}
+            sx={{
+              whiteSpace: 'pre-wrap',
+              fontFamily:
+                "'Roboto Mono', Consolas, Menlo, Monaco, Courier, monospace",
+            }}
+          >
             {line}
-          </p>
+          </Box>
         ));
         setHtml(html);
         setPreviewLoading(false);
@@ -37,7 +37,7 @@ export const PlainTextPreview = (props: PreviewerProps) => {
         setPreviewError('Could not read document file');
       }
     },
-    [classes, setPreviewLoading, setPreviewError]
+    [setPreviewLoading, setPreviewError]
   );
 
   useEffect(() => {
