@@ -1,12 +1,4 @@
 import { Grid, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
-
-const useStyles = makeStyles()(({ breakpoints }) => ({
-  text: {
-    maxWidth: breakpoints.values.sm,
-    textAlign: 'center',
-  },
-}));
 
 interface PreviewErrorProps {
   errorText: string;
@@ -14,10 +6,16 @@ interface PreviewErrorProps {
 
 export const PreviewError = (props: PreviewErrorProps) => {
   const { errorText } = props;
-  const { classes } = useStyles();
   return (
     <Grid item>
-      <Typography variant="h3" color="textSecondary" className={classes.text}>
+      <Typography
+        variant="h3"
+        color="textSecondary"
+        sx={(theme) => ({
+          maxWidth: theme.breakpoints.values.sm,
+          textAlign: 'center',
+        })}
+      >
         {errorText}
       </Typography>
     </Grid>
