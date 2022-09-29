@@ -1,20 +1,7 @@
 import { CloudDownload } from '@mui/icons-material';
-import { Button, ModalProps, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { Box, Button, ModalProps, Typography } from '@mui/material';
 import { NonDirectoryActionItem } from '../FileActions';
 import { useDownloadFile } from '../hooks';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    margin: spacing(4),
-    textAlign: 'center',
-  },
-  text: {
-    lineHeight: 1.5,
-  },
-}));
 
 export const PreviewNotSupported = ({
   file,
@@ -23,11 +10,23 @@ export const PreviewNotSupported = ({
   file: NonDirectoryActionItem;
   onClose?: ModalProps['onClose'];
 }) => {
-  const { classes } = useStyles();
   const download = useDownloadFile();
   return (
-    <div className={classes.container}>
-      <Typography variant="h3" paragraph className={classes.text}>
+    <Box
+      sx={(theme) => ({
+        display: 'flex',
+        flexDirection: 'column',
+        margin: theme.spacing(4),
+        textAlign: 'center',
+      })}
+    >
+      <Typography
+        variant="h3"
+        paragraph
+        sx={{
+          lineHeight: 1.5,
+        }}
+      >
         Previewing is not supported
         <br />
         for this file type
@@ -42,6 +41,6 @@ export const PreviewNotSupported = ({
       >
         Download
       </Button>
-    </div>
+    </Box>
   );
 };
