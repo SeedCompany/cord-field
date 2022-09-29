@@ -1,5 +1,5 @@
+import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import type { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
@@ -13,14 +13,7 @@ export interface NativePreviewerProps extends PreviewerProps {
   type: NativePreviewType;
 }
 
-const useStyles = makeStyles()(() => ({
-  media: {
-    maxWidth: 800,
-  },
-}));
-
 export const NativePreview = (props: NativePreviewerProps) => {
-  const { classes } = useStyles();
   const { file, type, previewLoading, setPreviewLoading } = props;
   const [url, setUrl] = useState<string | undefined>();
   useEffect(() => {
@@ -39,21 +32,31 @@ export const NativePreview = (props: NativePreviewerProps) => {
 
   const player = (type: NativePreviewType) => {
     return type === NativePreviewType.Image ? (
-      <img src={url} className={classes.media} alt="" />
+      <Box
+        component="img"
+        src={url}
+        sx={{
+          maxWidth: 800,
+        }}
+        alt=""
+      />
     ) : type === NativePreviewType.Audio ? (
       <audio controls autoPlay src={url}>
         {unsupportedTypeMessage}
       </audio>
     ) : (
-      <video
-        className={classes.media}
+      <Box
+        component="video"
+        sx={{
+          maxWidth: 800,
+        }}
         controls
         autoPlay
         controlsList="nodownload"
       >
         <source src={url} />
         {unsupportedTypeMessage}
-      </video>
+      </Box>
     );
   };
 
