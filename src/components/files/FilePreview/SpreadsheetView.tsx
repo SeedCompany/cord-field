@@ -139,7 +139,7 @@ export const SpreadsheetView = (props: SpreadSheetViewProps) => {
 
   const activeTab = previewPage - 1;
   return data.length === 1 ? (
-    <Box sx={{ container }}>
+    <Box sx={container}>
       <RenderedSheet rows={data[0]!.rows} columns={data[0]!.columns} />
     </Box>
   ) : (
@@ -159,7 +159,7 @@ export const SpreadsheetView = (props: SpreadSheetViewProps) => {
           <Box
             key={name}
             aria-labelledby={`sheet-tab-${index}`}
-            sx={{ container }}
+            sx={container}
             hidden={activeTab !== index}
             id={`sheet-tabpanel-${index}`}
             role="tabpanel"
