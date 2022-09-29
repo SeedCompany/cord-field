@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardActionArea,
@@ -12,41 +13,9 @@ import {
 import { To } from 'history';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { useDateTimeFormatter } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-
-const useStyles = makeStyles()(({ spacing, palette }) => ({
-  root: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  topArea: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    padding: spacing(3, 4),
-  },
-  rightContent: {
-    flex: 1,
-    alignSelf: 'flex-start',
-    paddingLeft: spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-  },
-  emptyValue: {
-    color: palette.action.disabled,
-  },
-  bottomArea: {
-    paddingRight: spacing(1),
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-}));
 
 interface FieldOverviewCardData {
   value?: ReactNode;
@@ -82,31 +51,56 @@ export const FieldOverviewCard = ({
   title,
   viewLabel: buttonLabel,
 }: FieldOverviewCardProps) => {
-  const { classes, cx } = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
   const showData = !loading && !redacted;
   const ActionArea = showData && data?.to ? CardActionAreaLink : CardActionArea;
   const Btn = data?.to ? ButtonLink : Button;
+  const emptyStyle = data && !data.value;
 
   const card = (
-    <Card className={cx(classes.root, className)}>
+    <Card
+      className={className}
+      sx={{
+        flex: 1,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <ActionArea
         disabled={!data || redacted}
         to={data?.to ?? ''}
-        className={classes.topArea}
+        sx={(theme) => ({
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          padding: theme.spacing(3, 4),
+        })}
         onClick={onClick}
       >
         <HugeIcon icon={icon} loading={!data} />
-        <div className={classes.rightContent}>
+        <Box
+          sx={(theme) => ({
+            flex: 1,
+            alignSelf: 'flex-start',
+            paddingLeft: theme.spacing(4),
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-evenly',
+          })}
+        >
           <Typography variant="h4">
             {loading ? <Skeleton width="80%" /> : data ? title : ''}
           </Typography>
           <Typography
             variant="h1"
-            className={cx({
-              [classes.emptyValue]: data && !data.value,
-            })}
+            sx={[
+              !!emptyStyle &&
+                ((theme) => ({
+                  color: theme.palette.action.disabled,
+                })),
+            ]}
           >
             {loading || redacted ? (
               <Skeleton animation={loading ? 'pulse' : false} />
@@ -116,7 +110,7 @@ export const FieldOverviewCard = ({
               ''
             )}
           </Typography>
-        </div>
+        </Box>
       </ActionArea>
       {buttonLabel && (
         <CardActions>
@@ -124,7 +118,11 @@ export const FieldOverviewCard = ({
             container
             spacing={loading ? 4 : 2}
             wrap="nowrap"
-            className={classes.bottomArea}
+            sx={(theme) => ({
+              paddingRight: theme.spacing(1),
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            })}
           >
             <Grid item xs={loading}>
               <Btn
