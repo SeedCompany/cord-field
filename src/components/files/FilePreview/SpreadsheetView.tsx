@@ -1,48 +1,44 @@
-import { Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import { useEffect } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { XLSX$Utils } from 'xlsx';
 import { useFileActions } from '../FileActions';
 
-const useStyles = makeStyles()(() => {
-  const backgroundColor = '#e6e6e6';
-  const borderColor = '#d8d8df';
-  const headerBorderColor = '#d1cacb';
-  const headerStyles = {
-    backgroundColor: backgroundColor,
-    border: `1px solid ${headerBorderColor}`,
-    borderWidth: '0px 1px 1px 0px',
+const backgroundColor = '#e6e6e6';
+const borderColor = '#d8d8df';
+const headerBorderColor = '#d1cacb';
+const headerStyles = {
+  backgroundColor: backgroundColor,
+  border: `1px solid ${headerBorderColor}`,
+  borderWidth: '0px 1px 1px 0px',
+  textAlign: 'center',
+} as const;
+
+const container = {
+  '& h2': {
+    fontFamily: 'Arial',
+    fontWeight: 'normal',
     textAlign: 'center',
-  } as const;
-  return {
-    container: {
-      '& h2': {
-        fontFamily: 'Arial',
-        fontWeight: 'normal',
-        textAlign: 'center',
-      },
-      '& table': {
-        border: `1px solid ${headerBorderColor}`,
-        borderCollapse: 'collapse',
-        borderSpacing: '0px',
-        borderWidth: '1px 0px 0px 1px',
-        fontFamily: 'Arial',
-      },
-      '& th': {
-        ...headerStyles,
-      },
-      '& .table-header': {
-        ...headerStyles,
-      },
-      '& td': {
-        backgroundColor: 'white',
-        border: `1px solid ${borderColor}`,
-        borderWidth: '0px 1px 1px 0px',
-        padding: '2px 4px',
-      },
-    },
-  };
-});
+  },
+  '& table': {
+    border: `1px solid ${headerBorderColor}`,
+    borderCollapse: 'collapse',
+    borderSpacing: '0px',
+    borderWidth: '1px 0px 0px 1px',
+    fontFamily: 'Arial',
+  },
+  '& th': {
+    ...headerStyles,
+  },
+  '& .table-header': {
+    ...headerStyles,
+  },
+  '& td': {
+    backgroundColor: 'white',
+    border: `1px solid ${borderColor}`,
+    borderWidth: '0px 1px 1px 0px',
+    padding: '2px 4px',
+  },
+};
 
 /* Using typings from `xlsx` here because we want to play it
    safe when we use these typings in the `ExcelPreview` component */
@@ -123,7 +119,6 @@ const RenderedSheet = (props: Omit<SheetData, 'name'>) => {
 };
 
 export const SpreadsheetView = (props: SpreadSheetViewProps) => {
-  const { classes } = useStyles();
   const { data } = props;
   const { previewPage, setPreviewPage } = useFileActions();
 
@@ -144,9 +139,9 @@ export const SpreadsheetView = (props: SpreadSheetViewProps) => {
 
   const activeTab = previewPage - 1;
   return data.length === 1 ? (
-    <div className={classes.container}>
+    <Box sx={{ container }}>
       <RenderedSheet rows={data[0]!.rows} columns={data[0]!.columns} />
-    </div>
+    </Box>
   ) : (
     <>
       <Tabs
@@ -161,10 +156,10 @@ export const SpreadsheetView = (props: SpreadSheetViewProps) => {
       {data.map((sheet, index) => {
         const { name, rows, columns } = sheet;
         return (
-          <div
+          <Box
             key={name}
             aria-labelledby={`sheet-tab-${index}`}
-            className={classes.container}
+            sx={{ container }}
             hidden={activeTab !== index}
             id={`sheet-tabpanel-${index}`}
             role="tabpanel"
@@ -172,7 +167,7 @@ export const SpreadsheetView = (props: SpreadSheetViewProps) => {
             {activeTab === index && columns.length > 0 ? (
               <RenderedSheet rows={rows} columns={columns} />
             ) : null}
-          </div>
+          </Box>
         );
       })}
     </>
