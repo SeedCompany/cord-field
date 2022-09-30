@@ -7,7 +7,6 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatusLabels,
@@ -18,23 +17,6 @@ import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { PartnershipCardFragment } from './PartnershipCard.graphql';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    flex: 1,
-  },
-  loadingName: {
-    width: '75%',
-  },
-  primaryIcon: {
-    marginLeft: spacing(1),
-  },
-  cardActions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingRight: spacing(2),
-  },
-}));
 
 export interface PartnershipCardProps {
   partnership?: PartnershipCardFragment;
@@ -47,17 +29,26 @@ export const PartnershipCard = ({
   onEdit,
   className,
 }: PartnershipCardProps) => {
-  const { classes, cx } = useStyles();
-
   const name = partnership?.partner.value?.organization.value?.name.value;
   return (
-    <Card className={cx(classes.root, className)}>
+    <Card
+      className={className}
+      sx={{
+        flex: 1,
+      }}
+    >
       <CardContent>
         <Grid container direction="column" spacing={1}>
           <Grid item container direction="row" alignItems="flex-start">
             <Typography
               variant="h4"
-              className={name ? undefined : classes.loadingName}
+              sx={
+                name
+                  ? undefined
+                  : {
+                      width: '75%',
+                    }
+              }
             >
               {partnership ? (
                 name ?? (
@@ -71,7 +62,11 @@ export const PartnershipCard = ({
               )}
             </Typography>
             {partnership?.primary.value ? (
-              <PartnershipPrimaryIcon className={classes.primaryIcon} />
+              <PartnershipPrimaryIcon
+                sx={(theme) => ({
+                  marginLeft: theme.spacing(1),
+                })}
+              />
             ) : null}
           </Grid>
           <Grid item>
@@ -124,7 +119,13 @@ export const PartnershipCard = ({
           </Grid>
         </Grid>
       </CardContent>
-      <CardActions className={classes.cardActions}>
+      <CardActions
+        sx={(theme) => ({
+          display: 'flex',
+          justifyContent: 'space-between',
+          paddingRight: theme.spacing(2),
+        })}
+      >
         <Button color="primary" disabled={!partnership} onClick={onEdit}>
           Edit
         </Button>
