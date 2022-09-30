@@ -1,5 +1,6 @@
 import {
   AvatarGroup,
+  Box,
   CardContent,
   Grid,
   Skeleton,
@@ -7,30 +8,10 @@ import {
 } from '@mui/material';
 import { To } from 'history';
 import { compact } from 'lodash';
-import { makeStyles } from 'tss-react/mui';
 import { listOrPlaceholders } from '~/common';
 import { Avatar } from '../Avatar';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  grid: {
-    marginBottom: spacing(2),
-  },
-  seeAll: {
-    marginLeft: 'auto',
-  },
-  bottomContent: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  avatarGroup: {
-    marginRight: spacing(1),
-  },
-  memberNames: {
-    flexGrow: 1,
-  },
-}));
 
 export interface MemberSummaryItem {
   // url to picture
@@ -57,12 +38,16 @@ export const MemberListSummary = ({
   to,
   icon,
 }: MemberListSummaryProps) => {
-  const { classes } = useStyles();
-
   return (
     <CardActionAreaLink to={to} disabled={!members}>
       <CardContent>
-        <Grid container spacing={4} className={classes.grid}>
+        <Grid
+          container
+          spacing={4}
+          sx={(theme) => ({
+            marginBottom: theme.spacing(2),
+          })}
+        >
           <Grid item>
             <HugeIcon icon={icon} />
           </Grid>
@@ -72,12 +57,27 @@ export const MemberListSummary = ({
               {!members ? <Skeleton width="1ch" variant="text" /> : total}
             </Typography>
           </Grid>
-          <Grid item className={classes.seeAll}>
+          <Grid
+            item
+            sx={{
+              marginLeft: 'auto',
+            }}
+          >
             <Typography color="primary">See All</Typography>
           </Grid>
         </Grid>
-        <div className={classes.bottomContent}>
-          <AvatarGroup max={max} className={classes.avatarGroup}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <AvatarGroup
+            max={max}
+            sx={(theme) => ({
+              marginRight: theme.spacing(1),
+            })}
+          >
             {listOrPlaceholders(members, max).map((member, i) => (
               <Avatar
                 key={member?.id || i}
@@ -90,7 +90,9 @@ export const MemberListSummary = ({
             ))}
           </AvatarGroup>
           <Typography
-            className={classes.memberNames}
+            sx={{
+              flexGrow: 1,
+            }}
             color="primary"
             variant="body2"
           >
@@ -103,7 +105,7 @@ export const MemberListSummary = ({
               memberNames(members, max)
             )}
           </Typography>
-        </div>
+        </Box>
       </CardContent>
     </CardActionAreaLink>
   );
