@@ -7,6 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { ProjectStepLabels } from '~/api/schema.graphql';
 import { labelFrom, Many } from '~/common';
+import { ToggleCommentsButton } from '~/components/ToggleCommentButton/ToggleCommentButton';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
@@ -274,6 +275,7 @@ export const ProjectOverview = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
+            <ToggleCommentsButton />
           </header>
 
           <div className={classes.subheader}>

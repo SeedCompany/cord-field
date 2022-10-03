@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { useAuthRequired } from '../Authentication';
+import { CommentsBar } from './Commentsbar';
 import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
@@ -30,6 +31,7 @@ export const MainLayout = () => {
         <Header />
         <Outlet />
       </div>
+      <CommentsBar />
     </div>
   );
 };

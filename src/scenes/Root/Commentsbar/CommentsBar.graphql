@@ -1,0 +1,74 @@
+mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    comment {
+      id
+      body {
+        canEdit
+        canRead
+        value
+      }
+    }
+  }
+}
+
+query CommentThreads($resourceId: ID!) {
+  commentThreads(resource: $resourceId) {
+    total
+    items {
+      ...CommentThreadProps
+    }
+  }
+}
+
+query CommentThread($id: ID!) {
+  commentThread(id: $id) {
+    ...CommentThreadProps
+  }
+}
+
+mutation CreateOrReplyComment(
+  $commentBody: RichText!
+  $resourceId: ID!
+  $threadId: ID
+) {
+  createComment(
+    input: { body: $commentBody, resourceId: $resourceId, threadId: $threadId }
+  ) {
+    comment {
+      ...CommentProps
+    }
+  }
+}
+
+mutation DeleteComment($id: ID!) {
+  deleteComment(id: $id) {
+    success
+  }
+}
+
+fragment CommentProps on Comment {
+  id
+  body {
+    value
+  }
+  creator {
+    fullName
+    avatarLetters
+    id
+  }
+  createdAt
+  canDelete
+}
+
+fragment CommentThreadProps on CommentThread {
+  id
+  firstComment {
+    ...CommentProps
+  }
+  comments {
+    total
+    items {
+      ...CommentProps
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { Location } from 'history';
+import { Params } from 'react-router-dom';
 import { splice } from './array-helpers';
 
 export const splicePath = (
@@ -17,3 +18,7 @@ export const withoutTrailingSlash = (url: string) =>
 
 export const basePathOfUrl = (url?: string) =>
   url?.startsWith('http') ? new URL(url).pathname : url || '/';
+
+export const getResourceId = (params: Params): string => {
+  return params[Object.keys(params)[0] || 0] || '';
+};
