@@ -1,5 +1,4 @@
 import { Skeleton } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { Nullable } from '~/common';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { Breadcrumb, BreadcrumbProps } from '../Breadcrumb';
@@ -11,22 +10,10 @@ export interface ProjectBreadcrumbProps extends Partial<BreadcrumbProps> {
   data?: Nullable<ProjectBreadcrumbFragment>;
 }
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  icon: {
-    marginLeft: spacing(1),
-  },
-}));
-
 export const ProjectBreadcrumb = ({
   data,
   ...rest
 }: ProjectBreadcrumbProps) => {
-  const { classes, cx } = useStyles();
-
   return (
     <Breadcrumb
       to={data ? getProjectUrl(data) : undefined}
@@ -34,7 +21,11 @@ export const ProjectBreadcrumb = ({
         underline: data?.name.canRead ? undefined : 'none',
       }}
       {...rest}
-      className={cx(classes.root, rest.className)}
+      className={rest.className}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
     >
       {data ? (
         <>
@@ -46,7 +37,12 @@ export const ProjectBreadcrumb = ({
           ) : (
             data.name.value
           )}
-          <SensitivityIcon value={data.sensitivity} className={classes.icon} />
+          <SensitivityIcon
+            value={data.sensitivity}
+            sx={(theme) => ({
+              marginLeft: theme.spacing(1),
+            })}
+          />
         </>
       ) : (
         <Skeleton width={200} />

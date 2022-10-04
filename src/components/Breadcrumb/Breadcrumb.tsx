@@ -3,9 +3,10 @@ import { To } from 'history';
 import { isString } from 'lodash';
 import { forwardRef, ReactNode } from 'react';
 import { useMatch } from 'react-router-dom';
+import { StyleProps } from '~/common';
 import { Link, LinkProps } from '../Routing';
 
-export interface BreadcrumbProps {
+export interface BreadcrumbProps extends StyleProps {
   to?: To;
   LinkProps?: Partial<LinkProps>;
   children?: ReactNode;
@@ -16,7 +17,7 @@ export interface BreadcrumbProps {
 export const Breadcrumb = forwardRef<
   HTMLAnchorElement | HTMLElement,
   BreadcrumbProps
->(function Breadcrumb({ to, children, LinkProps, ...rest }, ref) {
+>(function Breadcrumb({ to, children, LinkProps, sx, ...rest }, ref) {
   const active =
     useMatch(to == null ? '' : isString(to) ? to : to.pathname!) ||
     // RR doesn't think current page is active. maybe a bug?
@@ -24,7 +25,7 @@ export const Breadcrumb = forwardRef<
 
   if (to == null || active) {
     return (
-      <Typography variant="h4" {...rest} ref={ref}>
+      <Typography variant="h4" {...rest} ref={ref} sx={sx}>
         {children}
       </Typography>
     );
