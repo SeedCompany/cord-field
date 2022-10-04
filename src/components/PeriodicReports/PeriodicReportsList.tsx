@@ -1,31 +1,10 @@
-import { Breadcrumbs, Card, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Card, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
 import { Breadcrumb } from '../Breadcrumb';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportsTable } from './PeriodicReportsTable';
-
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  main: {
-    padding: spacing(4),
-    maxWidth: breakpoints.values.md,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  header: {
-    margin: spacing(3, 0),
-  },
-}));
 
 export const PeriodicReportsList = ({
   type,
@@ -40,12 +19,28 @@ export const PeriodicReportsList = ({
   reports?: readonly PeriodicReportFragment[];
   onRowClick?: (report: PeriodicReportFragment) => void;
 }) => {
-  const { classes } = useStyles();
   const reportTypeName = `${type} Reports`;
 
   return (
-    <div className={classes.root}>
-      <main className={classes.main}>
+    <Box
+      sx={{
+        flex: 1,
+        overflowY: 'auto',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box
+        component="main"
+        sx={(theme) => ({
+          padding: theme.spacing(4),
+          maxWidth: theme.breakpoints.values.md,
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        })}
+      >
         <Helmet title={`${reportTypeName} - ${pageTitleSuffix}`} />
         <Breadcrumbs
           children={[
@@ -56,7 +51,12 @@ export const PeriodicReportsList = ({
           ]}
         />
 
-        <Typography variant="h2" className={classes.header}>
+        <Typography
+          variant="h2"
+          sx={(theme) => ({
+            margin: theme.spacing(3, 0),
+          })}
+        >
           {reportTypeName}
         </Typography>
 
@@ -68,7 +68,7 @@ export const PeriodicReportsList = ({
             }
           />
         </Card>
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 };
