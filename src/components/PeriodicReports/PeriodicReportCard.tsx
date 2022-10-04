@@ -1,5 +1,6 @@
 import { AssignmentOutlined, BarChart, ShowChart } from '@mui/icons-material';
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -9,9 +10,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
-import { Many, simpleSwitch, StyleProps } from '~/common';
+import { extendSx, Many, simpleSwitch, StyleProps } from '~/common';
 import {
   EditablePeriodicReportField,
   UpdatePeriodicReportDialog,
@@ -28,41 +28,10 @@ import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportInfo } from './ReportInfo';
 import { ReportLabel } from './ReportLabel';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'relative',
-    outline: 'none',
-  },
-  topArea: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    alignItems: 'flex-start',
-    padding: spacing(3, 4),
-  },
-  icon: {
-    marginRight: spacing(4),
-  },
-  rightContent: {
-    flex: 1,
-    alignSelf: 'flex-start',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-  },
-  relevantReports: {
-    display: 'flex',
-  },
-  relevantReport: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-}));
-
+const relevantReport = {
+  display: 'flex',
+  flexDirection: 'column',
+};
 export interface PeriodicReportCardProps extends StyleProps {
   type: ReportType;
   dueCurrently?: SecuredPeriodicReportFragment;
@@ -72,8 +41,7 @@ export interface PeriodicReportCardProps extends StyleProps {
 }
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
-  const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
-  const { classes, cx } = useStyles();
+  const { type, dueCurrently, dueNext, disableIcon, hasDetailPage, sx } = props;
 
   const currentFile = dueCurrently?.value?.reportFile;
   const needsUpload =
@@ -105,10 +73,29 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
       <Card
         {...getRootProps()}
         tabIndex={-1}
-        className={cx(classes.root, props.className)}
-        sx={props.sx}
+        className={props.className}
+        sx={[
+          {
+            flex: 1,
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            position: 'relative',
+            outline: 'none',
+          },
+          ...extendSx(sx),
+        ]}
       >
-        <CardActionAreaLink to={link} className={classes.topArea}>
+        <CardActionAreaLink
+          to={link}
+          sx={(theme) => ({
+            flex: 1,
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            alignItems: 'flex-start',
+            padding: theme.spacing(3, 4),
+          })}
+        >
           {!disableIcon && (
             <HugeIcon
               icon={simpleSwitch(type, {
@@ -116,19 +103,33 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
                 Financial: ShowChart,
                 Progress: BarChart,
               })}
-              className={classes.icon}
+              sx={(theme) => ({
+                marginRight: theme.spacing(4),
+              })}
             />
           )}
 
-          <div className={classes.rightContent}>
+          <Box
+            sx={{
+              flex: 1,
+              alignSelf: 'flex-start',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-evenly',
+            }}
+          >
             <Typography variant="h4" paragraph>
               {`${type} Reports`}
             </Typography>
-            <div className={classes.relevantReports}>
+            <Box
+              sx={{
+                display: 'flex',
+              }}
+            >
               <ReportInfo
                 title="Current"
                 report={dueCurrently}
-                className={classes.relevantReport}
+                sx={relevantReport}
               />
               <Divider
                 orientation="vertical"
@@ -136,13 +137,9 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
                 variant="middle"
                 sx={{ mx: 2 }}
               />
-              <ReportInfo
-                title="Next"
-                report={dueNext}
-                className={classes.relevantReport}
-              />
-            </div>
-          </div>
+              <ReportInfo title="Next" report={dueNext} sx={relevantReport} />
+            </Box>
+          </Box>
         </CardActionAreaLink>
         <CardActions>
           <ButtonLink color="primary" to={link}>

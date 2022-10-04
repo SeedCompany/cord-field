@@ -1,5 +1,6 @@
 import { SvgIconProps } from '@mui/material';
 import { cloneElement, isValidElement, ReactElement } from 'react';
+import { extendSx } from '~/common';
 import { Avatar, AvatarProps } from '../Avatar';
 
 export interface HugeIconProps extends AvatarProps {
@@ -7,7 +8,12 @@ export interface HugeIconProps extends AvatarProps {
   children?: React.ReactElement<SvgIconProps>;
 }
 
-export const HugeIcon = ({ icon: Icon, children, ...rest }: HugeIconProps) => {
+export const HugeIcon = ({
+  icon: Icon,
+  children,
+  sx,
+  ...rest
+}: HugeIconProps) => {
   const wrap = (el: ReactElement<SvgIconProps>) =>
     cloneElement(el, {
       fontSize: 'large',
@@ -24,12 +30,15 @@ export const HugeIcon = ({ icon: Icon, children, ...rest }: HugeIconProps) => {
   return (
     <Avatar
       {...rest}
-      sx={(theme) => ({
-        color: theme.palette.info.main,
-        backgroundColor: theme.palette.grey[200],
-        width: 64,
-        height: 64,
-      })}
+      sx={[
+        (theme) => ({
+          color: theme.palette.info.main,
+          backgroundColor: theme.palette.grey[200],
+          width: 64,
+          height: 64,
+        }),
+        ...extendSx(sx),
+      ]}
     >
       {renderedIcon}
     </Avatar>
