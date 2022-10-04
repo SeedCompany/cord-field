@@ -1,6 +1,7 @@
 import { MoreVert } from '@mui/icons-material';
 import {
   Avatar,
+  Box,
   Card,
   CardContent,
   IconButton,
@@ -8,7 +9,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { PostShareabilityLabels } from '~/api/schema.graphql';
 import { canEditAny, square } from '~/common';
 import { useDialog } from '../../Dialog';
@@ -18,56 +18,6 @@ import { EditPost } from '../EditPost';
 import { PostableIdFragment } from '../PostableId.graphql';
 import { PostListItemCardFragment } from './PostListItemCard.graphql';
 import { PostListItemMenu } from './PostListItemMenu';
-
-const useStyles = makeStyles()(({ spacing, typography }) => {
-  return {
-    root: {
-      width: '100%',
-      position: 'relative',
-    },
-    cardContent: {
-      flex: 1,
-      padding: spacing(2, 3),
-      display: 'flex',
-      alignItems: 'flex-start',
-    },
-    leftContent: {
-      marginRight: spacing(3),
-      marginTop: spacing(6),
-    },
-    rightContent: { flex: 1 },
-    topRightContent: {
-      display: 'flex',
-      alignItems: 'flex-start',
-    },
-    nameAndDate: {
-      height: spacing(6),
-      flex: 1,
-    },
-    typeShareabilityRow: {
-      display: 'flex',
-      alignItems: 'center',
-      marginBottom: spacing(1),
-    },
-    shareability: {
-      marginLeft: spacing(2),
-    },
-    shareabilityLabel: {
-      fontWeight: typography.fontWeightBold,
-      paddingRight: spacing(1),
-    },
-    avatar: {
-      ...square(spacing(8)),
-      fontSize: typography.h3.fontSize,
-    },
-    actionsMenu: {
-      margin: spacing(1),
-      position: 'absolute',
-      right: 0,
-      top: 0,
-    },
-  };
-});
 
 interface PostListItemCardProps {
   parent: PostableIdFragment;
@@ -82,7 +32,6 @@ export const PostListItemCard = ({
   includeMembership = false,
   className,
 }: PostListItemCardProps) => {
-  const { classes, cx } = useStyles();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [editState, editPost] = useDialog();
   const [deleteState, deletePost] = useDialog();
@@ -90,43 +39,97 @@ export const PostListItemCard = ({
 
   return (
     <>
-      <Card className={cx(classes.root, className)}>
-        <CardContent className={classes.cardContent}>
-          <div className={classes.leftContent}>
-            <Avatar className={classes.avatar}>
+      <Card
+        className={className}
+        sx={{
+          width: '100%',
+          position: 'relative',
+        }}
+      >
+        <CardContent
+          sx={(theme) => ({
+            flex: 1,
+            padding: theme.spacing(2, 3),
+            display: 'flex',
+            alignItems: 'flex-start',
+          })}
+        >
+          <Box
+            sx={(theme) => ({
+              marginRight: theme.spacing(3),
+              marginTop: theme.spacing(6),
+            })}
+          >
+            <Avatar
+              sx={(theme) => ({
+                ...square(theme.spacing(8)),
+                fontSize: theme.typography.h3.fontSize,
+              })}
+            >
               {post.creator.value?.avatarLetters}
             </Avatar>
-          </div>
-          <div className={classes.rightContent}>
-            <div className={classes.topRightContent}>
-              <div className={classes.nameAndDate}>
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+              }}
+            >
+              <Box
+                sx={(theme) => ({
+                  height: theme.spacing(6),
+                  flex: 1,
+                })}
+              >
                 <Typography variant="body2">
                   {post.creator.value?.fullName}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   <FormattedDateTime date={post.createdAt} />
                 </Typography>
-              </div>
-            </div>
-            <div className={classes.typeShareabilityRow}>
+              </Box>
+            </Box>
+            <Box
+              sx={(theme) => ({
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: theme.spacing(1),
+              })}
+            >
               <Typography variant="h4">{post.type}</Typography>
-              <div className={classes.shareability}>
+              <Box
+                sx={(theme) => ({
+                  marginLeft: theme.spacing(2),
+                })}
+              >
                 <Typography variant="body2">
-                  <span className={classes.shareabilityLabel}>
+                  <Box
+                    component="span"
+                    sx={(theme) => ({
+                      fontWeight: theme.typography.fontWeightBold,
+                      paddingRight: theme.spacing(1),
+                    })}
+                  >
                     {post.shareability.includes('External')
                       ? 'PUBLIC'
                       : 'PRIVATE'}
-                  </span>
+                  </Box>
                   {PostShareabilityLabels[post.shareability]}
                 </Typography>
-              </div>
-            </div>
+              </Box>
+            </Box>
             <Typography variant="body2">{post.body.value}</Typography>
-          </div>
+          </Box>
         </CardContent>
         {editable && (
           <IconButton
-            className={classes.actionsMenu}
+            sx={(theme) => ({
+              margin: theme.spacing(1),
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            })}
             onClick={(e) => setActionsAnchor(e.currentTarget)}
           >
             <MoreVert />
