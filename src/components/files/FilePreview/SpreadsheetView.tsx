@@ -13,7 +13,7 @@ const headerStyles = {
   textAlign: 'center',
 } as const;
 
-const container = {
+const containerStyle = {
   '& h2': {
     fontFamily: 'Arial',
     fontWeight: 'normal',
@@ -139,7 +139,7 @@ export const SpreadsheetView = (props: SpreadSheetViewProps) => {
 
   const activeTab = previewPage - 1;
   return data.length === 1 ? (
-    <Box sx={container}>
+    <Box sx={containerStyle}>
       <RenderedSheet rows={data[0]!.rows} columns={data[0]!.columns} />
     </Box>
   ) : (
@@ -159,7 +159,7 @@ export const SpreadsheetView = (props: SpreadSheetViewProps) => {
           <Box
             key={name}
             aria-labelledby={`sheet-tab-${index}`}
-            sx={container}
+            sx={containerStyle}
             hidden={activeTab !== index}
             id={`sheet-tabpanel-${index}`}
             role="tabpanel"
