@@ -1,6 +1,7 @@
 import CheckList from '@editorjs/checklist';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
+import { EditorConfig } from '@editorjs/editorjs';
 import Embed from '@editorjs/embed';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
@@ -15,7 +16,7 @@ import SimpleImage from '@editorjs/simple-image';
 import Table from '@editorjs/table';
 import Warning from '@editorjs/warning';
 
-export const EDITOR_JS_TOOLS = {
+export const EDITOR_JS_TOOLS: EditorConfig['tools'] = {
   // NOTE: Paragraph is default tool. Declare only when you want to change paragraph option.
   // paragraph: Paragraph,
   embed: Embed,
