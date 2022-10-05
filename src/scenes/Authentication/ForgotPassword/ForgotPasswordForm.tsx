@@ -1,6 +1,5 @@
 import { Typography } from '@mui/material';
 import { Form, FormProps } from 'react-final-form';
-import { makeStyles } from 'tss-react/mui';
 import {
   EmailField,
   SubmitButton,
@@ -9,32 +8,21 @@ import {
 import { Link } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  title: {
-    marginBottom: spacing(3),
-  },
-  formError: {
-    margin: spacing(2, 0),
-  },
-  submit: {
-    marginTop: spacing(1),
-  },
-  loginLink: {
-    display: 'inline-block',
-    marginTop: spacing(1),
-  },
-}));
-
 export type ForgotPasswordFormProps = Pick<
   FormProps<{ email: string }>,
   'onSubmit' | 'initialValues'
 >;
 
 export const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
-  const { classes } = useStyles();
   return (
     <AuthContent>
-      <Typography variant="h3" align="center" className={classes.title}>
+      <Typography
+        variant="h3"
+        align="center"
+        sx={(theme) => ({
+          marginBottom: theme.spacing(3),
+        })}
+      >
         Reset Your Password
       </Typography>
       <Typography align="center">
@@ -44,15 +32,29 @@ export const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
       <Form {...props}>
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <SubmitError className={classes.formError} />
+            <SubmitError
+              sx={(theme) => ({
+                margin: theme.spacing(2, 0),
+              })}
+            />
             <EmailField autoFocus autoComplete="email" />
-            <SubmitButton className={classes.submit}>
+            <SubmitButton
+              sx={(theme) => ({
+                marginTop: theme.spacing(1),
+              })}
+            >
               Reset Password
             </SubmitButton>
           </form>
         )}
       </Form>
-      <Link to="/login" className={classes.loginLink}>
+      <Link
+        to="/login"
+        sx={(theme) => ({
+          display: 'inline-block',
+          marginTop: theme.spacing(1),
+        })}
+      >
         Login
       </Link>
     </AuthContent>
