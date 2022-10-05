@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps } from 'react-router-dom';
 import { Merge } from 'type-fest';
+import { StyleProps } from '~/common';
 
 export type CardActionAreaLinkProps = InternalProps | ExternalProps;
 
@@ -12,7 +13,7 @@ interface InternalProps extends Merge<BaseProps, LinkProps> {
   external?: false;
 }
 
-interface ExternalProps extends BaseProps {
+interface ExternalProps extends BaseProps, StyleProps {
   external: true;
   to: string;
 }
@@ -20,14 +21,14 @@ interface ExternalProps extends BaseProps {
 export const CardActionAreaLink = forwardRef<
   HTMLAnchorElement,
   CardActionAreaLinkProps
->(function CardActionAreaLink({ external, to, children, ...props }, ref) {
+>(function CardActionAreaLink({ external, to, children, sx, ...props }, ref) {
   const other: any = {
     ref,
     component: external ? 'a' : Link,
     ...(external ? { href: to } : { to }),
   };
   return (
-    <CardActionArea {...props} {...other}>
+    <CardActionArea {...props} {...other} sx={sx}>
       {children}
     </CardActionArea>
   );
