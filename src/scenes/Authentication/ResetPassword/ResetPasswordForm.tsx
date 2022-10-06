@@ -1,7 +1,6 @@
 import { Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { Form, FormProps } from 'react-final-form';
-import { makeStyles } from 'tss-react/mui';
 import {
   blurOnSubmit,
   focusFirstFieldWithSubmitError,
@@ -11,22 +10,6 @@ import {
 } from '../../../components/form';
 import { Link } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  title: {
-    marginBottom: spacing(3),
-  },
-  formError: {
-    margin: spacing(2, 0),
-  },
-  submit: {
-    marginTop: spacing(1),
-  },
-  loginLink: {
-    display: 'inline-block',
-    marginTop: spacing(1),
-  },
-}));
 
 interface Fields {
   password: string;
@@ -39,11 +22,15 @@ export type ResetPasswordFormProps = Pick<
 >;
 
 export const ResetPasswordForm = (props: ResetPasswordFormProps) => {
-  const { classes } = useStyles();
-
   return (
     <AuthContent>
-      <Typography variant="h3" align="center" className={classes.title}>
+      <Typography
+        variant="h3"
+        align="center"
+        sx={(theme) => ({
+          marginBottom: theme.spacing(3),
+        })}
+      >
         Password Reset
       </Typography>
       <Typography align="center">Choose a password for you account.</Typography>
@@ -55,7 +42,11 @@ export const ResetPasswordForm = (props: ResetPasswordFormProps) => {
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <SubmitError className={classes.formError} />
+            <SubmitError
+              sx={(theme) => ({
+                margin: theme.spacing(2, 0),
+              })}
+            />
             <PasswordField
               label="New Password"
               placeholder="Create New Password"
@@ -68,13 +59,23 @@ export const ResetPasswordForm = (props: ResetPasswordFormProps) => {
               placeholder="Re-Enter New Password"
               autoComplete="new-password"
             />
-            <SubmitButton className={classes.submit}>
+            <SubmitButton
+              sx={(theme) => ({
+                marginTop: theme.spacing(1),
+              })}
+            >
               Save Password
             </SubmitButton>
           </form>
         )}
       </Form>
-      <Link to="/login" className={classes.loginLink}>
+      <Link
+        to="/login"
+        sx={(theme) => ({
+          display: 'inline-block',
+          marginTop: theme.spacing(1),
+        })}
+      >
         Login
       </Link>
     </AuthContent>
