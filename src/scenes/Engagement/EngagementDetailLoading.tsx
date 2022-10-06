@@ -1,6 +1,5 @@
 import { Edit } from '@mui/icons-material';
-import { Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { Box, Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
 import { Breadcrumb } from '../../components/Breadcrumb';
 import { DataButton } from '../../components/DataButton';
 import { Fab } from '../../components/Fab';
@@ -8,28 +7,23 @@ import { FieldOverviewCard } from '../../components/FieldOverviewCard';
 import { ProjectBreadcrumb } from '../../components/ProjectBreadcrumb';
 import { CeremonyCard } from './CeremonyCard';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-  },
-  main: {
-    maxWidth: breakpoints.values.md,
-  },
-}));
-
 export const EngagementDetailLoading = () => {
-  const { classes } = useStyles();
-
   return (
-    <div className={classes.root}>
+    <Box
+      sx={(theme) => ({
+        flex: 1,
+        overflowY: 'auto',
+        padding: theme.spacing(4),
+      })}
+    >
       <Grid
         component="main"
         container
         direction="column"
         spacing={3}
-        className={classes.main}
+        sx={(theme) => ({
+          maxWidth: theme.breakpoints.values.md,
+        })}
       >
         <Grid item>
           <Breadcrumbs>
@@ -86,6 +80,6 @@ export const EngagementDetailLoading = () => {
           </Grid>
         </Grid>
       </Grid>
-    </div>
+    </Box>
   );
 };
