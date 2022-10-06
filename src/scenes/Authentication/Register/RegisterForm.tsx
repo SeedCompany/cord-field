@@ -1,7 +1,6 @@
-import { Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { Form, FormProps } from 'react-final-form';
-import { makeStyles } from 'tss-react/mui';
 import { RegisterInput } from '~/api/schema.graphql';
 import {
   blurOnSubmit,
@@ -18,34 +17,6 @@ import { CordIcon } from '../../../components/Icons';
 import { Link } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    [breakpoints.up('md')]: {
-      maxWidth: 700,
-    },
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  icon: {
-    fontSize: 64,
-    margin: 'auto',
-    marginBottom: spacing(4),
-  },
-  formError: {
-    margin: spacing(2, 0),
-  },
-  submit: {
-    marginTop: spacing(1),
-  },
-  loginLink: {
-    display: 'inline-block',
-    marginTop: spacing(1),
-  },
-}));
-
 export interface RegisterFields extends RegisterInput {
   confirmPassword: string;
 }
@@ -56,18 +27,35 @@ export type RegisterFormProps = Pick<
 >;
 
 export const RegisterForm = (props: RegisterFormProps) => {
-  const { classes } = useStyles();
   return (
-    <AuthContent className={classes.root}>
-      <div className={classes.header}>
-        <CordIcon className={classes.icon} />
+    <AuthContent
+      sx={(theme) => ({
+        [theme.breakpoints.up('md')]: {
+          maxWidth: 700,
+        },
+      })}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <CordIcon
+          sx={(theme) => ({
+            fontSize: 64,
+            margin: 'auto',
+            marginBottom: theme.spacing(4),
+          })}
+        />
         <Typography variant="h4" gutterBottom={true}>
           CORD FIELD
         </Typography>
         <Typography color="textSecondary">
           Accelerating Bible Translation
         </Typography>
-      </div>
+      </Box>
       <Form
         {...props}
         validate={passwordMatching}
@@ -76,7 +64,11 @@ export const RegisterForm = (props: RegisterFormProps) => {
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <SubmitError className={classes.formError} />
+            <SubmitError
+              sx={(theme) => ({
+                margin: theme.spacing(2, 0),
+              })}
+            />
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <TextField
@@ -138,11 +130,23 @@ export const RegisterForm = (props: RegisterFormProps) => {
                 />
               </Grid>
             </Grid>
-            <SubmitButton className={classes.submit}>Sign Up</SubmitButton>
+            <SubmitButton
+              sx={(theme) => ({
+                marginTop: theme.spacing(1),
+              })}
+            >
+              Sign Up
+            </SubmitButton>
           </form>
         )}
       </Form>
-      <Link to="/login" className={classes.loginLink}>
+      <Link
+        to="/login"
+        sx={(theme) => ({
+          display: 'inline-block',
+          marginTop: theme.spacing(1),
+        })}
+      >
         Already have an account? Login
       </Link>
     </AuthContent>
