@@ -1,25 +1,25 @@
 import { Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { ButtonLink } from '../../../components/Routing';
 import { AuthContent } from '../AuthContent';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  title: {
-    marginBottom: spacing(3),
-  },
-  body: {
-    marginBottom: spacing(5),
-  },
-}));
-
 export const ResetPasswordSuccess = () => {
-  const { classes } = useStyles();
   return (
     <AuthContent>
-      <Typography variant="h3" align="center" className={classes.title}>
+      <Typography
+        variant="h3"
+        align="center"
+        sx={(theme) => ({
+          marginBottom: theme.spacing(3),
+        })}
+      >
         Your Password Has Been Reset
       </Typography>
-      <Typography align="center" className={classes.body}>
+      <Typography
+        align="center"
+        sx={(theme) => ({
+          marginBottom: theme.spacing(5),
+        })}
+      >
         Your password has been saved. Use the link below to log in with your new
         password.
       </Typography>
