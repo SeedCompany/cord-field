@@ -1,10 +1,10 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { sample } from 'lodash';
 import { useState } from 'react';
 import { Form, FormProps } from 'react-final-form';
-import { makeStyles } from 'tss-react/mui';
 import { LoginInput } from '~/api/schema.graphql';
+import { extendSx, StyleProps } from '~/common';
 import {
   blurOnSubmit,
   EmailField,
@@ -29,68 +29,46 @@ const quotes: Quote[] = [
   },
 ];
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  header: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  icon: {
-    fontSize: 64,
-    margin: 'auto',
-    marginBottom: spacing(4),
-  },
-  formError: {
-    margin: spacing(2, 0),
-  },
-  submit: {
-    marginTop: spacing(1),
-  },
-  otherLinks: {
-    marginTop: spacing(1),
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  footer: {
-    maxWidth: 500,
-    marginTop: spacing(5),
-    textAlign: 'center',
-  },
-  footerSpacer: {
-    visibility: 'hidden',
-    '@media (max-height: 700px)': {
-      display: 'none',
-    },
-  },
-  verse: {
-    fontStyle: 'italic',
-  },
-  reference: {
-    marginTop: spacing(1),
-  },
-}));
-
 export type LoginFormProps = Pick<
   FormProps<LoginInput>,
   'onSubmit' | 'initialValues'
 >;
 
 export const LoginForm = (props: LoginFormProps) => {
-  const { classes } = useStyles();
   const [quote] = useState(() => sample(quotes)!);
   return (
     <AuthContent>
-      <Footer quote={quote} className={classes.footerSpacer} />
+      <Footer
+        quote={quote}
+        sx={{
+          visibility: 'hidden',
+          '@media (max-height: 700px)': {
+            display: 'none',
+          },
+        }}
+      />
       <div>
-        <div className={classes.header}>
-          <CordIcon className={classes.icon} />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <CordIcon
+            sx={(theme) => ({
+              fontSize: 64,
+              margin: 'auto',
+              marginBottom: theme.spacing(4),
+            })}
+          />
           <Typography variant="h4" gutterBottom={true}>
             CORD FIELD
           </Typography>
           <Typography color="textSecondary">
             Accelerating Bible Translation
           </Typography>
-        </div>
+        </Box>
         <Form
           {...props}
           decorators={decorators}
@@ -100,17 +78,33 @@ export const LoginForm = (props: LoginFormProps) => {
             // post method to ensure credentials are not passed in url if form
             // is submitted before client-side javascript can pick the event.
             <form method="post" onSubmit={handleSubmit}>
-              <SubmitError className={classes.formError} />
+              <SubmitError
+                sx={(theme) => ({
+                  margin: theme.spacing(2, 0),
+                })}
+              />
               <EmailField autoFocus autoComplete="email" />
               <PasswordField autoComplete="current-password" />
-              <SubmitButton className={classes.submit}>Sign In</SubmitButton>
+              <SubmitButton
+                sx={(theme) => ({
+                  marginTop: theme.spacing(1),
+                })}
+              >
+                Sign In
+              </SubmitButton>
             </form>
           )}
         </Form>
-        <div className={classes.otherLinks}>
+        <Box
+          sx={(theme) => ({
+            marginTop: theme.spacing(1),
+            display: 'flex',
+            justifyContent: 'space-between',
+          })}
+        >
           <Link to="/forgot-password">Forgot Password?</Link>
           <Link to="/register">Register</Link>
-        </div>
+        </Box>
       </div>
       <Footer quote={quote} />
     </AuthContent>
@@ -118,23 +112,41 @@ export const LoginForm = (props: LoginFormProps) => {
 };
 
 const Footer = ({
+  sx,
   quote: { quote, reference },
   ...props
-}: JSX.IntrinsicElements['footer'] & { quote: Quote }) => {
-  const { classes, cx } = useStyles();
+}: JSX.IntrinsicElements['footer'] & { quote: Quote } & StyleProps) => {
   return (
-    <footer {...props} className={cx(classes.footer, props.className)}>
-      <Typography color="textSecondary" className={classes.verse}>
+    <Box
+      component="footer"
+      className={props.className}
+      sx={[
+        (theme) => ({
+          maxWidth: 500,
+          marginTop: theme.spacing(5),
+          textAlign: 'center',
+        }),
+        ...extendSx(sx),
+      ]}
+    >
+      <Typography
+        color="textSecondary"
+        sx={{
+          fontStyle: 'italic',
+        }}
+      >
         “{quote}”
       </Typography>
       <Typography
         color="textSecondary"
         variant="h4"
-        className={classes.reference}
+        sx={(theme) => ({
+          marginTop: theme.spacing(1),
+        })}
       >
         {reference}
       </Typography>
-    </footer>
+    </Box>
   );
 };
 
