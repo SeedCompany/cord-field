@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import {
+  Box,
   CircularProgress,
   FormControlLabel,
   Skeleton,
@@ -8,34 +9,10 @@ import {
   Typography,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { makeStyles } from 'tss-react/mui';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
 } from './CeremonyCard.graphql';
-
-const useStyles = makeStyles()(() => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  loadingWidth: {
-    width: '40%',
-  },
-  switch: {
-    paddingLeft: 2,
-  },
-  flipped: {
-    flexDirection: 'row-reverse',
-    marginLeft: 0,
-    paddingLeft: 0,
-  },
-  switchHidden: {
-    visibility: 'hidden',
-    width: 0,
-    padding: 0,
-  },
-}));
 
 type CeremonyCardProps = Partial<CeremonyCardFragment> & {
   className?: string;
@@ -51,8 +28,6 @@ export const CeremonyPlanned = ({
   const { type, planned } = ceremony || {};
   const loading = canReadCeremony == null;
   const canRead = canReadCeremony && planned?.canRead;
-
-  const { classes, cx } = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
   const [updateCeremony, updateState] = useMutation(UpdateCeremonyDocument, {
@@ -98,7 +73,13 @@ export const CeremonyPlanned = ({
   let title = (
     <Typography
       variant="h4"
-      className={loading ? classes.loadingWidth : undefined}
+      sx={
+        loading
+          ? {
+              width: '40%',
+            }
+          : undefined
+      }
     >
       {loading ? <Skeleton width="100%" /> : type}
     </Typography>
@@ -115,10 +96,27 @@ export const CeremonyPlanned = ({
     );
   }
   return (
-    <div className={cx(classes.root, className)}>
+    <Box
+      className={className}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
       {loading || !canRead ? (
         <>
-          <Switch className={cx(classes.switch, classes.switchHidden)} />
+          <Switch
+            sx={[
+              {
+                paddingLeft: 2,
+              },
+              {
+                visibility: 'hidden',
+                width: 0,
+                padding: 0,
+              },
+            ]}
+          />
           {title}
         </>
       ) : (
@@ -136,11 +134,22 @@ export const CeremonyPlanned = ({
               </Tooltip>
             }
             label={title}
-            className={cx(classes.switch, flipped ? classes.flipped : null)}
+            sx={[
+              {
+                paddingLeft: 2,
+              },
+              flipped
+                ? {
+                    flexDirection: 'row-reverse',
+                    marginLeft: 0,
+                    paddingLeft: 0,
+                  }
+                : null,
+            ]}
           />
           {updateState.loading ? <CircularProgress size={20} /> : null}
         </>
       )}
-    </div>
+    </Box>
   );
 };
