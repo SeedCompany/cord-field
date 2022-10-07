@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { PartialDeep } from 'type-fest';
 import { ProjectStatusLabels } from '~/api/schema.graphql';
+import { extendSx, StyleProps } from '~/common';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -22,7 +23,7 @@ const skeletonRight = {
   marginLeft: 'auto',
 };
 
-export interface ProjectListItemCardProps {
+export interface ProjectListItemCardProps extends StyleProps {
   project?: ProjectListItemFragment;
   className?: string;
 }
@@ -30,17 +31,21 @@ export interface ProjectListItemCardProps {
 export const ProjectListItemCard = ({
   project,
   className,
+  sx,
 }: ProjectListItemCardProps) => {
   const location = project?.primaryLocation.value?.name.value;
 
   return (
     <Card
       className={className}
-      sx={(theme) => ({
-        width: '100%',
-        maxWidth: theme.breakpoints.values.sm,
-        position: 'relative',
-      })}
+      sx={[
+        (theme) => ({
+          width: '100%',
+          maxWidth: theme.breakpoints.values.sm,
+          position: 'relative',
+        }),
+        ...extendSx(sx),
+      ]}
     >
       <CardActionAreaLink
         disabled={!project}

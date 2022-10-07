@@ -6,14 +6,14 @@ import {
   Typography,
 } from '@mui/material';
 import { LocationTypeLabels } from '~/api/schema.graphql';
-import { labelFrom } from '~/common';
+import { extendSx, labelFrom, StyleProps } from '~/common';
 import { FormattedDateTime } from '../Formatters';
 import { ProgressButton } from '../ProgressButton';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LocationCardFragment } from './LocationCard.graphql';
 
-export interface LocationCardProps {
+export interface LocationCardProps extends StyleProps {
   className?: string;
   loading?: boolean;
   location?: LocationCardFragment;
@@ -27,15 +27,19 @@ export const LocationCard = ({
   loading,
   onRemove,
   removing,
+  sx,
 }: LocationCardProps) => {
   const { id, name, locationType, createdAt } = location ?? {};
   return (
     <Card
       className={className}
-      sx={{
-        width: '100%',
-        maxWidth: 400,
-      }}
+      sx={[
+        {
+          width: '100%',
+          maxWidth: 400,
+        },
+        ...extendSx(sx),
+      ]}
     >
       <CardActionAreaLink to={`/locations/${id}`}>
         <CardContent>
