@@ -1,7 +1,6 @@
 import { DateRange } from '@mui/icons-material';
-import { Breadcrumbs, Grid, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Grid, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import {
   EngagementStatusLabels,
   InternshipPositionLabels,
@@ -35,26 +34,11 @@ import { EngagementQuery } from '../Engagement.graphql';
 import { UploadInternshipEngagementGrowthPlanDocument } from '../Files';
 import { MentorCard } from './MentorCard';
 
-const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-  },
-  main: {
-    maxWidth: breakpoints.values.md,
-  },
-  nameRedacted: {
-    width: '50%',
-  },
-  infoColor: {
-    color: palette.info.main,
-  },
-}));
+const nameRedacted = {
+  width: '50%',
+};
 
 export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
-  const { classes } = useStyles();
-
   const [editState, show, editField] =
     useDialog<Many<EditableEngagementField>>();
   const [workflowState, openWorkflow, workflowEngagement] =
@@ -74,13 +58,21 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
           engagement.project.name.value ?? 'a project'
         }`}
       />
-      <div className={classes.root}>
+      <Box
+        sx={(theme) => ({
+          flex: 1,
+          overflowY: 'auto',
+          padding: theme.spacing(4),
+        })}
+      >
         <Grid
           component="main"
           container
           direction="column"
           spacing={3}
-          className={classes.main}
+          sx={(theme) => ({
+            maxWidth: theme.breakpoints.values.md,
+          })}
         >
           <Grid item>
             <Breadcrumbs>
@@ -92,10 +84,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
             <Grid container spacing={3} direction="column">
               <Grid item>
                 <Grid container spacing={3} alignItems="center">
-                  <Grid
-                    item
-                    className={name ? undefined : classes.nameRedacted}
-                  >
+                  <Grid item sx={name ? undefined : nameRedacted}>
                     {intern ? (
                       <Link variant="h2" to={`/users/${intern.id}`}>
                         {name ?? (
@@ -146,7 +135,13 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                 </Grid>
                 <Grid item>
                   <DataButton
-                    startIcon={<DateRange className={classes.infoColor} />}
+                    startIcon={
+                      <DateRange
+                        sx={(theme) => ({
+                          color: theme.palette.info.main,
+                        })}
+                      />
+                    }
                     secured={engagement.dateRange}
                     redacted="You do not have permission to view start/end dates"
                     children={FormattedDateRange.orNull}
@@ -246,7 +241,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
             </Grid>
           </Grid>
         </Grid>
-      </div>
+      </Box>
       <EditEngagementDialog
         {...editState}
         engagement={engagement}
