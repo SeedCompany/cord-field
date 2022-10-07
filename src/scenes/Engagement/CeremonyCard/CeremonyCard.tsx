@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -10,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useMemo } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { UpdateCeremonyInput } from '~/api/schema.graphql';
 import { canEditAny } from '~/common';
 import { useDialog } from '../../../components/Dialog';
@@ -25,30 +25,9 @@ import {
 import { CeremonyPlanned } from './CeremonyPlanned';
 import { LargeDate } from './LargeDate';
 
-const useStyles = makeStyles()(({ spacing, typography }) => ({
-  root: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  header: {
-    marginBottom: spacing(1),
-  },
-  card: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardContent: {
-    flex: 1,
-  },
-  halfWidth: {
-    width: '40%',
-  },
-  estimatedDate: {
-    fontWeight: typography.weight.light,
-  },
-}));
+const halfWidth = {
+  width: '40%',
+};
 
 type CeremonyCardProps = Partial<CeremonyCardFragment>;
 
@@ -58,8 +37,6 @@ export const CeremonyCard = ({
 }: CeremonyCardProps) => {
   const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
-
-  const { classes, cx } = useStyles();
   const formatDate = useDateFormatter();
   const [updateCeremony] = useMutation(UpdateCeremonyDocument);
   const [dialogState, openDialog] = useDialog();
@@ -91,14 +68,31 @@ export const CeremonyCard = ({
     [actualDate?.value, estimatedDate?.value, id]
   );
 
+  const loadingOrCanRead =
+    loading || !canRead || !ceremony?.estimatedDate.canRead;
+
   return (
-    <div className={classes.root}>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <CeremonyPlanned
         canRead={canRead}
         value={ceremony}
-        className={classes.header}
+        sx={(theme) => ({
+          marginBottom: theme.spacing(1),
+        })}
       />
-      <Card className={classes.card}>
+      <Card
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <Grid
           component={CardContent}
           container
@@ -106,12 +100,14 @@ export const CeremonyCard = ({
           alignItems="center"
           justifyContent="space-evenly"
           spacing={2}
-          className={classes.cardContent}
+          sx={{
+            flex: 1,
+          }}
         >
           <Grid item container direction="column" alignItems="center">
             <Typography
               variant="body2"
-              className={loading ? classes.halfWidth : undefined}
+              sx={loading ? halfWidth : undefined}
               gutterBottom
             >
               {!loading ? `Actual Date` : <Skeleton width="100%" />}
@@ -121,19 +117,19 @@ export const CeremonyCard = ({
           <Grid item container direction="column" alignItems="center">
             <Typography
               variant="body2"
-              className={loading ? classes.halfWidth : undefined}
+              sx={loading ? halfWidth : undefined}
               gutterBottom
             >
               {!loading ? 'Estimated Date' : <Skeleton width="100%" />}
             </Typography>
             <Typography
               variant="body2"
-              className={cx(
-                classes.estimatedDate,
-                loading || !canRead || !ceremony?.estimatedDate.canRead
-                  ? classes.halfWidth
-                  : undefined
-              )}
+              sx={[
+                (theme) => ({
+                  fontWeight: theme.typography.weight.light,
+                }),
+                loadingOrCanRead && halfWidth,
+              ]}
             >
               {!loading ? (
                 canRead && ceremony?.estimatedDate.canRead ? (
@@ -185,6 +181,6 @@ export const CeremonyCard = ({
           <DateField name="actualDate" label="Actual Date" />
         </FieldGroup>
       </DialogForm>
-    </div>
+    </Box>
   );
 };

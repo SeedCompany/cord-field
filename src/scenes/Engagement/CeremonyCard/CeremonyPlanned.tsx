@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { extendSx, StyleProps } from '~/common';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
@@ -24,7 +25,8 @@ export const CeremonyPlanned = ({
   value: ceremony,
   className,
   flipped,
-}: CeremonyCardProps) => {
+  sx,
+}: CeremonyCardProps & StyleProps) => {
   const { type, planned } = ceremony || {};
   const loading = canReadCeremony == null;
   const canRead = canReadCeremony && planned?.canRead;
@@ -98,10 +100,13 @@ export const CeremonyPlanned = ({
   return (
     <Box
       className={className}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-      }}
+      sx={[
+        {
+          display: 'flex',
+          alignItems: 'center',
+        },
+        ...extendSx(sx),
+      ]}
     >
       {loading || !canRead ? (
         <>
