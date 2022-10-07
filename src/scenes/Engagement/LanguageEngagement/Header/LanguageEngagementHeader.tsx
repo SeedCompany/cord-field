@@ -1,7 +1,6 @@
 import { DateRange, Edit } from '@mui/icons-material';
 import { Breadcrumbs, Grid, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, Many } from '~/common';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
@@ -27,26 +26,15 @@ import {
 import { EngagementWorkflowDialog } from '../../EditEngagement/EngagementWorkflowDialog';
 import { LanguageEngagementDetailFragment } from '../LanguageEngagementDetail.graphql';
 
-const useStyles = makeStyles()(({ palette, spacing }) => ({
-  nameRedacted: {
-    width: '50%',
-  },
-  infoColor: {
-    color: palette.info.main,
-  },
-  presetInventory: {
-    verticalAlign: 'bottom',
-    marginLeft: spacing(1),
-  },
-}));
+const nameRedacted = {
+  width: '50%',
+};
 
 export const LanguageEngagementHeader = ({
   engagement,
 }: {
   engagement: LanguageEngagementDetailFragment & EngagementToDeleteFragment;
 }) => {
-  const { classes } = useStyles();
-
   const [editState, show, editField] =
     useDialog<Many<EditableEngagementField>>();
   const [workflowState, openWorkflow, workflowEngagement] =
@@ -72,7 +60,7 @@ export const LanguageEngagementHeader = ({
       </Grid>
       <Grid item>
         <Grid container spacing={3} alignItems="center">
-          <Grid item className={langName ? undefined : classes.nameRedacted}>
+          <Grid item sx={langName ? undefined : nameRedacted}>
             {language ? (
               <Link variant="h2" to={`/languages/${language.id}`}>
                 {langName ?? (
@@ -127,7 +115,10 @@ export const LanguageEngagementHeader = ({
                 <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
                   <PresetInventoryIconFilled
                     color="action"
-                    className={classes.presetInventory}
+                    sx={(theme) => ({
+                      verticalAlign: 'bottom',
+                      marginLeft: theme.spacing(1),
+                    })}
                     aria-label="preset inventory"
                   />
                 </Tooltip>
@@ -153,7 +144,13 @@ export const LanguageEngagementHeader = ({
         </Grid>
         <Grid item>
           <DataButton
-            startIcon={<DateRange className={classes.infoColor} />}
+            startIcon={
+              <DateRange
+                sx={(theme) => ({
+                  color: theme.palette.info.main,
+                })}
+              />
+            }
             secured={engagement.dateRange}
             redacted="You do not have permission to view start/end dates"
             children={FormattedDateRange.orNull}

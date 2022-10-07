@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import { Grid, Tooltip, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   EngagementStatus,
@@ -44,12 +43,6 @@ type UpdateProjectDialogProps = Except<
   engagement: Engagement;
 };
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  overrideTitle: {
-    marginTop: spacing(3),
-  },
-}));
-
 export const EngagementWorkflowDialog = ({
   engagement,
   ...props
@@ -64,7 +57,6 @@ export const EngagementWorkflowDialog = ({
     engagement.__typename === 'InternshipEngagement'
       ? updateInternshipEngagement
       : updateLanguageEngagement;
-  const { classes } = useStyles();
 
   const { canBypassTransitions, transitions } = engagement.status;
 
@@ -131,7 +123,9 @@ export const EngagementWorkflowDialog = ({
             {transitions.length > 0 ? (
               <Typography
                 color="textSecondary"
-                className={classes.overrideTitle}
+                sx={(theme) => ({
+                  marginTop: theme.spacing(3),
+                })}
               >
                 Or you can bypass these transitions
               </Typography>
