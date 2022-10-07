@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { Tooltip, Typography } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import { pick } from 'lodash';
-import { makeStyles } from 'tss-react/mui';
 import {
   ProductMethodology as Methodology,
   ProductApproachLabels,
@@ -21,17 +20,6 @@ import { EnumField, EnumOption } from '../../../../components/form';
 import { PeriodicReportCard } from '../../../../components/PeriodicReports';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
 import { ProgressAndPlanningFragment } from './ProgressAndPlanning.graphql';
-
-const useStyles = makeStyles()(({ spacing, typography }) => ({
-  section: {
-    '&:not(:last-child)': {
-      marginBottom: spacing(2),
-    },
-  },
-  label: {
-    fontWeight: typography.weight.bold,
-  },
-}));
 
 interface Props extends StyleProps {
   engagement: ProgressAndPlanningFragment;
@@ -53,7 +41,6 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
     // Functions cannot be passed directly here so wrap in object
     useDialog<{ submit: (next: HandleUploadCompletedFunction) => void }>();
   const [updateEngagement] = useMutation(UploadPnp);
-  const { classes } = useStyles();
 
   return (
     <FileActionsContextProvider>
@@ -95,9 +82,15 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
             know which methodology the new goals should have.
           </Typography>
           <EnumField name="methodology" layout="column" helperText={false}>
-            <div className={classes.section}>
+            <Box
+              sx={(theme) => ({
+                '&:not(:last-child)': {
+                  marginBottom: theme.spacing(2),
+                },
+              })}
+            >
               <EnumOption default label="Skip extracting goals" />
-            </div>
+            </Box>
             {entries({
               ...pick(
                 ApproachMethodologies,
@@ -107,8 +100,19 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
               ),
               Visual: ['SignLanguage'] as const,
             }).map(([approach, methodologies]) => (
-              <div key={approach} className={classes.section}>
-                <Typography className={classes.label}>
+              <Box
+                key={approach}
+                sx={(theme) => ({
+                  '&:not(:last-child)': {
+                    marginBottom: theme.spacing(2),
+                  },
+                })}
+              >
+                <Typography
+                  sx={(theme) => ({
+                    fontWeight: theme.typography.weight.bold,
+                  })}
+                >
                   {ProductApproachLabels[approach]}
                 </Typography>
                 {methodologies.map((option: Methodology) => (
@@ -118,7 +122,7 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
                     value={option}
                   />
                 ))}
-              </div>
+              </Box>
             ))}
           </EnumField>
         </DialogForm>
