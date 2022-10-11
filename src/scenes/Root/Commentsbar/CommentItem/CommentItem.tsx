@@ -1,33 +1,67 @@
+import { useMutation } from '@apollo/client';
 import { MoreVert } from '@mui/icons-material';
 import { Box, IconButton, MenuProps, Paper, Typography } from '@mui/material';
 import Blocks from 'editorjs-blocks-react-renderer';
 import { useState } from 'react';
+import { removeItemFromList } from '~/api';
+import { useDateTimeFormatter } from '~/components/Formatters';
 import { CommentItemMenu } from '../CommentItemMenu';
-import { CommentReply } from '../CommentReply/CommentReply';
-import { CommentPropsFragment } from '../CommentsBar.graphql';
+import {
+  CommentPropsFragment,
+  CommentThreadPropsFragment,
+  DeleteCommentDocument,
+} from '../CommentsBar.graphql';
 
 export interface CommentProps {
   comment: CommentPropsFragment;
-  hasChildren?: boolean;
+  repliesCount?: number;
   isChild?: boolean;
   resourceId: string;
-  threadId?: string;
-  handleCreateComment?: (comment: CommentPropsFragment) => Promise<void> | void;
+  isExpanded?: boolean;
+  parent: CommentThreadPropsFragment;
+  handleDeleteComment?: (comment: CommentPropsFragment) => Promise<void> | void;
+  handleEditComment?: (comment: CommentPropsFragment) => Promise<void> | void;
+  handleExpand?: (threadId: string | null) => void;
 }
 
 export const CommentItem = ({
   comment,
-  hasChildren,
+  repliesCount = 0,
   isChild,
-  resourceId,
-  threadId,
-  handleCreateComment,
+  handleDeleteComment,
+  isExpanded,
+  handleExpand,
+  parent,
 }: CommentProps) => {
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
+  const [deleteCommentMutation] = useMutation(DeleteCommentDocument, {});
+
+  const deleteComment = async (commentId: string) => {
+    const { data } = await deleteCommentMutation({
+      variables: {
+        id: commentId,
+      },
+      update: removeItemFromList({
+        listId: [parent, 'comments'],
+        item: comment,
+      }),
+    });
+
+    if (data?.deleteComment) {
+      setActionsAnchor(null);
+      void handleDeleteComment?.(comment);
+    }
+  };
+
+  console.log('trying to render comment', comment);
+
+  const dateTimeFormatter = useDateTimeFormatter();
+
+  const createdAtString = dateTimeFormatter(comment.createdAt);
 
   return (
     <Paper
-      elevation={hasChildren ? 4 : isChild ? 1 : 3}
+      elevation={repliesCount ? 4 : isChild ? 1 : 3}
       sx={[
         { padding: 2, width: '100%', position: 'relative' },
         { zIndex: 11 },
@@ -48,9 +82,11 @@ export const CommentItem = ({
         <Typography
           variant="body2"
           color={(theme) => theme.palette.grey[500]}
-          sx={{ ml: 1 }}
+          sx={{
+            ml: 1,
+          }}
         >
-          {comment.createdAt.toRelative()}
+          {createdAtString}
         </Typography>
       </Box>
       <Box
@@ -68,21 +104,39 @@ export const CommentItem = ({
         }}
       >
         {comment.body.value && <Blocks data={comment.body.value} />}
-      </Box>
 
-      {!isChild && (
-        <CommentReply
-          resourceId={resourceId}
-          threadId={threadId}
-          commentId={comment.id}
-          handleCreateComment={handleCreateComment}
-        />
-      )}
+        {repliesCount > 0 && (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            component="span"
+            sx={{
+              '&:hover': {
+                cursor: 'pointer',
+                textDecoration: 'underline',
+              },
+            }}
+            onClick={() => {
+              const newValue = (!isExpanded ? parent.id : null) || null;
+
+              handleExpand?.(newValue);
+            }}
+          >
+            {isExpanded ? 'Hide' : 'View'} Replies ({repliesCount})
+          </Typography>
+        )}
+      </Box>
       <CommentItemMenu
         commentId={comment.id}
         anchorEl={actionsAnchor}
         onClose={() => setActionsAnchor(null)}
         open={Boolean(actionsAnchor)}
+        onDelete={() => {
+          void deleteComment(comment.id);
+        }}
+        onEdit={() => {
+          setActionsAnchor(null);
+        }}
       />
 
       <IconButton

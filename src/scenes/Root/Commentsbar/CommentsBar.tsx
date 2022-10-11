@@ -1,63 +1,45 @@
-import { useQuery } from '@apollo/client';
-import { Drawer, List, ListSubheader } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { getResourceId } from '~/common';
+import { Drawer } from '@mui/material';
+import { useLocalStorageState } from 'ahooks';
 import { BooleanParam, makeQueryHandler } from '../../../hooks';
-import {
-  CommentThreadPropsFragment,
-  CommentThreadsDocument,
-} from './CommentsBar.graphql';
-import { CommentThread } from './CommentThread';
+import { CommentsThreadList } from './CommentsThreadList';
 
-export const CommentsBar = () => {
+interface CommentsBarProps {
+  resourceId: string;
+}
+
+export const CommentsBar = ({ resourceId }: CommentsBarProps) => {
   const useShowComments = makeQueryHandler({
     comments: BooleanParam(),
   });
-  const [isShowing] = useShowComments();
+  const [isShowing, _setShowing] = useShowComments();
+
+  const [_commentsLocalStorageState] = useLocalStorageState<boolean>(
+    'show-comments',
+    {
+      defaultValue: false,
+    }
+  );
 
   const minWidth = 300;
   const width = 300;
 
-  const resourceId = getResourceId(useParams());
-
-  const { data } = useQuery(CommentThreadsDocument, {
-    variables: {
-      resourceId,
-      input: {
-        order: 'ASC',
-      },
-    },
-  });
-  const navList = (
-    <List
-      component="nav"
-      aria-label="sidebar"
-      subheader={<ListSubheader component="div">COMMENTS</ListSubheader>}
-    >
-      {data?.commentThreads.items.map((thread: CommentThreadPropsFragment) => (
-        <CommentThread
-          thread={thread}
-          key={thread.id}
-          resourceId={resourceId}
-        />
-      ))}
-    </List>
-  );
-
   return (
     <Drawer
       variant="persistent"
-      open={isShowing.comments}
+      // open={!!resourceId && isShowing.comments}
+      open={!!resourceId && true}
       anchor="right"
       sx={[
         !isShowing.comments && {
           display: 'none',
         },
         {
-          minWidth,
-          width,
           overflowY: 'auto',
           display: 'flex',
+        },
+        isShowing.comments && {
+          width,
+          flexShrink: 0,
         },
       ]}
       PaperProps={{
@@ -68,7 +50,7 @@ export const CommentsBar = () => {
         },
       }}
     >
-      {navList}
+      <CommentsThreadList resourceId={resourceId} />
     </Drawer>
   );
 };

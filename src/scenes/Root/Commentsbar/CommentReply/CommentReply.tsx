@@ -1,18 +1,24 @@
 import { useMutation } from '@apollo/client';
+import loadable from '@loadable/component';
 import { Box, Button, TextField } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
 import { useRef, useState } from 'react';
-import { EditorJsWrapper } from '~/components/EditorJsWrapper/EditorJsWrapper';
+import { StyleProps } from '~/common';
 import {
   CommentPropsFragment,
   CreateOrReplyCommentDocument,
 } from '../CommentsBar.graphql';
 
-export interface CommentReplyProps {
+const EditorJsWrapper = loadable(() => import('~/components/EditorJsWrapper'), {
+  resolveComponent: (m) => m.EditorJsWrapper,
+});
+
+export interface CommentReplyProps extends StyleProps {
   threadId?: string;
   resourceId: string;
-  commentId: string;
+  commentId?: string;
   handleCreateComment?: (comment: CommentPropsFragment) => Promise<void> | void;
+  placeholder?: string;
 }
 
 export const CommentReply = ({
@@ -20,6 +26,8 @@ export const CommentReply = ({
   resourceId,
   commentId,
   handleCreateComment,
+  placeholder = 'Write a reply...',
+  sx,
 }: CommentReplyProps) => {
   const [createComment] = useMutation(CreateOrReplyCommentDocument);
   const [isReplying, setIsReplying] = useState(false);
@@ -69,7 +77,7 @@ export const CommentReply = ({
   };
 
   return (
-    <div>
+    <Box sx={sx}>
       {isReplying ? (
         <>
           <Box
@@ -106,7 +114,7 @@ export const CommentReply = ({
             <EditorJsWrapper
               holder={`reply-to-${commentId}`}
               onInitialize={handleInitialize}
-              placeholder="Write a reply..."
+              placeholder={placeholder}
               autofocus
             />
           </Box>
@@ -121,12 +129,12 @@ export const CommentReply = ({
         <TextField
           onClick={handleReply}
           disabled={isSubmitting}
-          placeholder="Write a reply..."
+          placeholder={placeholder}
           variant="outlined"
           size="small"
           sx={{ width: '100%', padding: 0 }}
         />
       )}
-    </div>
+    </Box>
   );
 };

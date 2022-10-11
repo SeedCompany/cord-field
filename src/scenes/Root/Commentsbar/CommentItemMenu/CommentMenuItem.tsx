@@ -11,6 +11,8 @@ import {
 interface CommentItemMenuProps extends Partial<MenuProps> {
   threadId?: string;
   commentId: string;
+  onDelete: () => void;
+  onEdit: () => void;
 }
 
 export const CommentItemMenu = ({
@@ -18,6 +20,8 @@ export const CommentItemMenu = ({
   threadId,
   anchorEl,
   open,
+  onDelete,
+  onEdit,
   ...rest
 }: CommentItemMenuProps) => {
   const listItemSx = (theme: Theme) => ({
@@ -41,7 +45,7 @@ export const CommentItemMenu = ({
         </ListItemIcon>
         <ListItemText primary="Edit" />
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={onDelete}>
         <ListItemIcon sx={listItemSx}>
           <DeleteIcon fontSize="small" />
         </ListItemIcon>

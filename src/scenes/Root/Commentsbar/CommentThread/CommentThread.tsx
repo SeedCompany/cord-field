@@ -1,9 +1,8 @@
-import { useQuery } from '@apollo/client';
+// import { useQuery } from '@apollo/client';
+import { useState } from 'react';
 import { CommentItem } from '../CommentItem';
-import {
-  CommentThreadDocument,
-  CommentThreadPropsFragment,
-} from '../CommentsBar.graphql';
+import { CommentThreadPropsFragment } from '../CommentsBar.graphql';
+import { CommentThreadAccordion } from './CommentThreadAccordion';
 
 interface CommentThreadProps {
   thread: CommentThreadPropsFragment;
@@ -11,47 +10,53 @@ interface CommentThreadProps {
 }
 
 export const CommentThread = ({ thread, resourceId }: CommentThreadProps) => {
-  const getCommentThread = useQuery(CommentThreadDocument, {
-    variables: {
-      id: thread.id,
-    },
-  });
+  const totalComments = thread.comments.total;
 
-  const handleCreateComment = async () => {
-    await getCommentThread.refetch();
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const handleCommentsChanges = async () => {
+    // await getCommentThread.refetch();
   };
 
-  if (thread.comments.total > 1) {
+  if (totalComments > 1) {
     return (
-      <>
+      <CommentThreadAccordion
+        handleCommentsChanges={handleCommentsChanges}
+        thread={thread}
+        resourceId={resourceId}
+        handleExtend={setExpanded}
+        forceExpanded={expanded === thread.id}
+      >
         <CommentItem
           comment={thread.firstComment}
-          threadId={thread.id}
-          hasChildren
+          parent={thread}
+          repliesCount={totalComments - 1}
           resourceId={resourceId}
-          handleCreateComment={handleCreateComment}
+          handleDeleteComment={handleCommentsChanges}
+          handleEditComment={handleCommentsChanges}
+          isExpanded={expanded === thread.id}
+          handleExpand={setExpanded}
         />
-        {thread.comments.items.map(
-          (comment) =>
-            comment.id !== thread.firstComment.id && (
-              <CommentItem
-                comment={comment}
-                isChild
-                key={comment.id}
-                threadId={thread.id}
-                resourceId={resourceId}
-              />
-            )
-        )}
-      </>
+      </CommentThreadAccordion>
     );
   }
   return (
-    <CommentItem
-      comment={thread.firstComment}
-      threadId={thread.id}
+    <CommentThreadAccordion
+      handleCommentsChanges={handleCommentsChanges}
+      thread={thread}
       resourceId={resourceId}
-      handleCreateComment={handleCreateComment}
-    />
+      handleExtend={setExpanded}
+      forceExpanded={totalComments === 1 || expanded === thread.id}
+    >
+      <CommentItem
+        comment={thread.firstComment}
+        parent={thread}
+        resourceId={resourceId}
+        handleDeleteComment={handleCommentsChanges}
+        handleEditComment={handleCommentsChanges}
+        isExpanded={totalComments === 1 || expanded === thread.id}
+        handleExpand={setExpanded}
+      />
+    </CommentThreadAccordion>
   );
 };

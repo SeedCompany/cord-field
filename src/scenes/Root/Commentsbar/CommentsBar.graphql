@@ -11,9 +11,10 @@ mutation CreateComment($input: CreateCommentInput!) {
   }
 }
 
-query CommentThreads($resourceId: ID!) {
-  commentThreads(resource: $resourceId) {
+query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
+  commentThreads(resource: $resourceId, input: $input) {
     total
+    hasMore
     items {
       ...CommentThreadProps
     }
@@ -71,4 +72,12 @@ fragment CommentThreadProps on CommentThread {
       ...CommentProps
     }
   }
+}
+
+fragment CommentId on Comment {
+  ...Id
+}
+
+fragment CommentThreadId on CommentThread {
+  ...Id
 }

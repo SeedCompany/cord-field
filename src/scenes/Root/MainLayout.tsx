@@ -1,5 +1,6 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { getResourceId } from '~/common';
 import { useAuthRequired } from '../Authentication';
 import { CommentsBar } from './Commentsbar';
 import { CreateDialogProviders } from './Creates';
@@ -22,6 +23,7 @@ const useStyles = makeStyles()(() => ({
 export const MainLayout = () => {
   useAuthRequired();
   const { classes } = useStyles();
+  const resourceId = getResourceId(useParams());
   return (
     <div className={classes.root}>
       <CreateDialogProviders>
@@ -31,7 +33,7 @@ export const MainLayout = () => {
         <Header />
         <Outlet />
       </div>
-      <CommentsBar />
+      <CommentsBar resourceId={resourceId} />
     </div>
   );
 };
