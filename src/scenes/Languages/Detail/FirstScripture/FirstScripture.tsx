@@ -3,51 +3,42 @@ import {
   IndeterminateCheckBox,
   NotInterested,
 } from '@mui/icons-material';
-import { Skeleton, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { Box, Skeleton, Typography } from '@mui/material';
+import { Theme } from '@mui/material/styles';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { FirstScriptureFragment } from './FirstScripture.graphql';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  icon: {
-    marginRight: spacing(1),
-  },
-  text: {
-    display: 'flex',
-  },
-}));
+const root = {
+  display: 'flex',
+  alignItems: 'center',
+};
+
+const iconStyle = (theme: Theme) => {
+  return {
+    marginRight: theme.spacing(1),
+  };
+};
 
 export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
-  const { classes } = useStyles();
-
   if (!data) {
     return (
-      <div className={classes.root}>
-        <Skeleton
-          variant="circular"
-          width={24}
-          height={24}
-          className={classes.icon}
-        />
+      <Box sx={root}>
+        <Skeleton variant="circular" width={24} height={24} sx={iconStyle} />
         <Skeleton width={300} />
-      </div>
+      </Box>
     );
   }
 
   if (!data.firstScripture.canRead) {
     return (
-      <div className={classes.root}>
-        <IndeterminateCheckBox className={classes.icon} />
+      <Box sx={root}>
+        <IndeterminateCheckBox sx={iconStyle} />
         <Redacted
           info="You cannot view whether this language has first Scripture"
           width={300}
         />
-      </div>
+      </Box>
     );
   }
 
@@ -55,21 +46,21 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
 
   if (!scripture?.hasFirst) {
     return (
-      <div className={classes.root}>
-        <NotInterested className={classes.icon} />
+      <Box sx={root}>
+        <NotInterested sx={iconStyle} />
         <Typography>No Scripture yet</Typography>
-      </div>
+      </Box>
     );
   }
 
   if (scripture.__typename === 'ExternalFirstScripture') {
     return (
-      <div className={classes.root}>
-        <Check color="primary" className={classes.icon} />
+      <Box sx={root}>
+        <Check color="primary" sx={iconStyle} />
         <Typography>
           First Scripture was completed outside of Seed Company
         </Typography>
-      </div>
+      </Box>
     );
   }
 
@@ -79,9 +70,13 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
 
   const project = scripture.engagement.project;
   return (
-    <div className={classes.root}>
-      <Check color="primary" className={classes.icon} />
-      <Typography className={classes.text}>
+    <Box sx={root}>
+      <Check color="primary" sx={iconStyle} />
+      <Typography
+        sx={{
+          display: 'flex',
+        }}
+      >
         First Scripture:&nbsp;&nbsp;
         <Link
           to={`/engagements/${scripture.engagement.id}`}
@@ -94,6 +89,6 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
           )}
         </Link>
       </Typography>
-    </div>
+    </Box>
   );
 };
