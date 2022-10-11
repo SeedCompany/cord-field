@@ -36,6 +36,9 @@ export const CommentItem = ({
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [deleteCommentMutation] = useMutation(DeleteCommentDocument, {});
 
+  const dateTimeFormatter = useDateTimeFormatter();
+  const createdAtString = dateTimeFormatter(comment.createdAt);
+
   const deleteComment = async (commentId: string) => {
     const { data } = await deleteCommentMutation({
       variables: {
@@ -52,12 +55,6 @@ export const CommentItem = ({
       void handleDeleteComment?.(comment);
     }
   };
-
-  console.log('trying to render comment', comment);
-
-  const dateTimeFormatter = useDateTimeFormatter();
-
-  const createdAtString = dateTimeFormatter(comment.createdAt);
 
   return (
     <Paper

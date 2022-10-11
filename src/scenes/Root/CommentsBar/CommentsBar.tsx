@@ -1,6 +1,5 @@
 import { Drawer } from '@mui/material';
-import { useLocalStorageState } from 'ahooks';
-import { BooleanParam, makeQueryHandler } from '../../../hooks';
+import { useCookieState } from 'ahooks';
 import { CommentsThreadList } from './CommentsThreadList';
 
 interface CommentsBarProps {
@@ -8,36 +7,28 @@ interface CommentsBarProps {
 }
 
 export const CommentsBar = ({ resourceId }: CommentsBarProps) => {
-  const useShowComments = makeQueryHandler({
-    comments: BooleanParam(),
+  const [isShowingCookie] = useCookieState('showComments', {
+    defaultValue: 'false',
   });
-  const [isShowing, _setShowing] = useShowComments();
-
-  const [_commentsLocalStorageState] = useLocalStorageState<boolean>(
-    'show-comments',
-    {
-      defaultValue: false,
-    }
-  );
 
   const minWidth = 300;
   const width = 300;
+  const open = !!resourceId && Boolean(isShowingCookie);
 
   return (
     <Drawer
       variant="persistent"
-      // open={!!resourceId && isShowing.comments}
-      open={!!resourceId && true}
+      open={open}
       anchor="right"
       sx={[
-        !isShowing.comments && {
+        !open && {
           display: 'none',
         },
         {
           overflowY: 'auto',
           display: 'flex',
         },
-        isShowing.comments && {
+        open && {
           width,
           flexShrink: 0,
         },

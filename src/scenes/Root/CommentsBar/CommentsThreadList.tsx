@@ -12,7 +12,6 @@ interface CommentThreadListProps {
 }
 
 export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
-  console.log('resourceId', resourceId);
   const commentThreads = useListQuery(CommentThreadsListDocument, {
     listAt: (data) => data.commentThreads,
     variables: {

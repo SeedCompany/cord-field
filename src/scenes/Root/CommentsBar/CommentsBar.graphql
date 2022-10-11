@@ -1,16 +1,3 @@
-mutation CreateComment($input: CreateCommentInput!) {
-  createComment(input: $input) {
-    comment {
-      id
-      body {
-        canEdit
-        canRead
-        value
-      }
-    }
-  }
-}
-
 query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
   commentThreads(resource: $resourceId, input: $input) {
     total
@@ -72,12 +59,4 @@ fragment CommentThreadProps on CommentThread {
       ...CommentProps
     }
   }
-}
-
-fragment CommentId on Comment {
-  ...Id
-}
-
-fragment CommentThreadId on CommentThread {
-  ...Id
 }
