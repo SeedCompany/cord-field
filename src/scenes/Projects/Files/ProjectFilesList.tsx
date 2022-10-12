@@ -17,7 +17,6 @@ import {
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import {
@@ -48,30 +47,7 @@ import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
 import { FileOrDirectory, isDirectory } from './util';
 
-const useStyles = makeStyles()(({ palette, spacing, breakpoints }) => ({
-  dropzone: {
-    overflowY: 'auto',
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-  },
-  tableWrapper: {
-    margin: spacing(4, 4, 4, 0),
-    maxWidth: breakpoints.values.md,
-  },
-  fileName: {
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  fileIcon: {
-    color: palette.action.active,
-    marginRight: spacing(0.5),
-  },
-}));
-
 const ProjectFilesListWrapped = () => {
-  const { classes } = useStyles();
   const navigate = useNavigate();
   const { projectUrl } = useProjectId();
   const formatDate = useDateTimeFormatter();
@@ -138,10 +114,22 @@ const ProjectFilesListWrapped = () => {
       renderCell: ({ row, value }) => {
         const Icon = fileIcon(isDirectory(row) ? 'directory' : row.mimeType);
         return (
-          <span className={classes.fileName}>
-            <Icon className={classes.fileIcon} />
+          <Box
+            component="span"
+            sx={{
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Icon
+              sx={(theme) => ({
+                color: theme.palette.action.active,
+                marginRight: theme.spacing(0.5),
+              })}
+            />
             {parseFileNameAndExtension(value).displayName}
-          </span>
+          </Box>
         );
       },
     },
@@ -214,7 +202,15 @@ const ProjectFilesListWrapped = () => {
       You do not have permission to see files for this project
     </Typography>
   ) : (
-    <div className={classes.dropzone} {...getRootProps()}>
+    <Box
+      sx={{
+        overflowY: 'auto',
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+      }}
+      {...getRootProps()}
+    >
       <Helmet
         title={`${isNotRootDirectory ? data?.directory.name : 'Files'} - ${
           project ? project.name.value ?? 'A Project' : '...'
@@ -267,7 +263,13 @@ const ProjectFilesListWrapped = () => {
                 </Breadcrumbs>
               </Box>
             )}
-            <section className={classes.tableWrapper}>
+            <Box
+              component="section"
+              sx={(theme) => ({
+                margin: theme.spacing(4, 4, 4, 0),
+                maxWidth: theme.breakpoints.values.md,
+              })}
+            >
               <Card>
                 <DataGrid
                   loading={loading}
@@ -305,12 +307,12 @@ const ProjectFilesListWrapped = () => {
                 />
               </Card>
               <NodePreviewLayer />
-            </section>
+            </Box>
           </>
         )}
         <CreateProjectDirectory {...createDirectoryState} />
       </ContentContainer>
-    </div>
+    </Box>
   );
 };
 
