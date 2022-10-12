@@ -26,7 +26,7 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: parseInt(spacing(-2)), horizontal: 'right' }}
       sx={{
-        '&.MuiMenu-paper': {
+        '& .MuiMenu-paper': {
           minWidth: 200,
         },
       }}
