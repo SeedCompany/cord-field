@@ -10,7 +10,6 @@ import {
 import { omit, pickBy } from 'lodash';
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { Project } from '~/api/schema.graphql';
 import { simpleSwitch } from '~/common';
 import { FilterButtonDialog } from '../../../components/Filter';
@@ -27,25 +26,6 @@ import { ProjectListDocument } from './projects.graphql';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;
-
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  options: {
-    margin: spacing(3, 0),
-  },
-  maxWidth: {
-    maxWidth: breakpoints.values.sm,
-    flexWrap: 'nowrap',
-  },
-  tabPanel: {
-    overflowY: 'auto',
-    // allow card shadow to bleed over instead of cutting it off
-    padding: spacing(0, 0, 0, 2),
-    margin: spacing(0, 0, 0, -2),
-  },
-  total: {
-    marginTop: spacing(2),
-  },
-}));
 
 export const ProjectList = () => {
   const sort = useSort<Project>();
@@ -66,7 +46,6 @@ export const ProjectList = () => {
     },
   });
 
-  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const scrollRef = useRef<HTMLElement>(null);
 
@@ -76,7 +55,13 @@ export const ProjectList = () => {
       <Typography variant="h2" paragraph>
         Projects
       </Typography>
-      <Grid container spacing={1} className={classes.options}>
+      <Grid
+        container
+        spacing={1}
+        sx={(theme) => ({
+          margin: theme.spacing(3, 0),
+        })}
+      >
         <Grid item>
           <SortButtonDialog {...sort}>
             <ProjectSortOptions />
@@ -95,19 +80,37 @@ export const ProjectList = () => {
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="project navigation tabs"
-          className={classes.maxWidth}
+          sx={(theme) => ({
+            maxWidth: theme.breakpoints.values.sm,
+            flexWrap: 'nowrap',
+          })}
         >
           <Tab label="Pinned" value="pinned" />
           <Tab label="Mine" value="mine" />
           <Tab label="All" value="all" />
         </TabList>
-        <Divider className={classes.maxWidth} />
+        <Divider
+          sx={(theme) => ({
+            maxWidth: theme.breakpoints.values.sm,
+            flexWrap: 'nowrap',
+          })}
+        />
         <TabPanel
           value={filters.tab}
-          className={classes.tabPanel}
+          sx={(theme) => ({
+            overflowY: 'auto',
+            // allow card shadow to bleed over instead of cutting it off
+            padding: theme.spacing(0, 0, 0, 2),
+            margin: theme.spacing(0, 0, 0, -2),
+          })}
           ref={scrollRef}
         >
-          <Typography variant="h3" className={classes.total}>
+          <Typography
+            variant="h3"
+            sx={(theme) => ({
+              marginTop: theme.spacing(2),
+            })}
+          >
             {list.data ? (
               `${formatNumber(list.data.total)} Projects`
             ) : (
