@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { Add, DateRange, Edit, Publish } from '@mui/icons-material';
-import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { ProjectStepLabels } from '~/api/schema.graphql';
 import { labelFrom, Many } from '~/common';
@@ -55,47 +54,7 @@ type EngagementListItem =
   | LanguageEngagementListItemFragment
   | InternshipEngagementListItemFragment;
 
-const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-  },
-  main: {
-    maxWidth: breakpoints.values.md,
-    '& > *:not(:last-child)': {
-      marginBottom: spacing(3),
-    },
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
-    gap: spacing(1),
-  },
-  headerLoading: {
-    alignItems: 'center',
-  },
-  name: {
-    marginRight: spacing(2), // a little extra between text and buttons
-    lineHeight: 'inherit', // centers text with buttons better
-  },
-  nameLoading: {
-    width: '30%',
-  },
-  infoColor: {
-    color: palette.info.main,
-  },
-  subheader: {
-    display: 'flex',
-    alignItems: 'center',
-    '& > *': {
-      marginRight: spacing(2),
-    },
-  },
-}));
-
 export const ProjectOverview = () => {
-  const { classes, cx } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const beta = useBetaFeatures();
   const formatNumber = useNumberFormatter();
@@ -205,7 +164,14 @@ export const ProjectOverview = () => {
     : CreateInternshipEngagement;
 
   return (
-    <main className={classes.root}>
+    <Box
+      component="main"
+      sx={(theme) => ({
+        flex: 1,
+        overflowY: 'auto',
+        padding: theme.spacing(4),
+      })}
+    >
       <Helmet title={projectOverviewData?.project.name.value ?? undefined} />
       <Error error={error}>
         {{
@@ -214,19 +180,42 @@ export const ProjectOverview = () => {
         }}
       </Error>
       {!error && (
-        <div className={classes.main}>
-          <header
-            className={cx(
-              classes.header,
-              projectOverviewData ? null : classes.headerLoading
-            )}
+        <Box
+          sx={(theme) => ({
+            maxWidth: theme.breakpoints.values.md,
+            '& > *:not(:last-child)': {
+              marginBottom: theme.spacing(3),
+            },
+          })}
+        >
+          <Box
+            component="header"
+            sx={[
+              (theme) => ({
+                flex: 1,
+                display: 'flex',
+                gap: theme.spacing(1),
+              }),
+              projectOverviewData
+                ? null
+                : {
+                    alignItems: 'center',
+                  },
+            ]}
           >
             <Typography
               variant="h2"
-              className={cx(
-                classes.name,
-                projectName ? null : classes.nameLoading
-              )}
+              sx={[
+                (theme) => ({
+                  marginRight: theme.spacing(2), // a little extra between text and buttons
+                  lineHeight: 'inherit', // centers text with buttons better
+                }),
+                projectName
+                  ? null
+                  : {
+                      width: '30%',
+                    },
+              ]}
             >
               {!projectName ? (
                 <Skeleton width="100%" />
@@ -265,9 +254,17 @@ export const ProjectOverview = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
-          </header>
+          </Box>
 
-          <div className={classes.subheader}>
+          <Box
+            sx={(theme) => ({
+              display: 'flex',
+              alignItems: 'center',
+              '& > *': {
+                marginRight: theme.spacing(2),
+              },
+            })}
+          >
             <Typography variant="h4">
               {projectOverviewData ? (
                 'Project Overview'
@@ -283,7 +280,7 @@ export const ProjectOverview = () => {
                 />
               </Typography>
             )}
-          </div>
+          </Box>
 
           <Grid container spacing={2}>
             <DisplaySimpleProperty
@@ -385,7 +382,13 @@ export const ProjectOverview = () => {
               >
                 <DataButton
                   loading={!projectOverviewData}
-                  startIcon={<DateRange className={classes.infoColor} />}
+                  startIcon={
+                    <DateRange
+                      sx={(theme) => ({
+                        color: theme.palette.info.main,
+                      })}
+                    />
+                  }
                   secured={projectOverviewData?.project.mouRange}
                   redacted="You do not have permission to view start/end dates"
                   children={FormattedDateRange.orNull}
@@ -402,7 +405,13 @@ export const ProjectOverview = () => {
                 <Grid item>
                   <DataButton
                     loading={!projectOverviewData}
-                    startIcon={<DateRange className={classes.infoColor} />}
+                    startIcon={
+                      <DateRange
+                        sx={(theme) => ({
+                          color: theme.palette.info.main,
+                        })}
+                      />
+                    }
                     secured={projectOverviewData.project.estimatedSubmission}
                     redacted="You do not have permission to view estimated submission date"
                     children={(date) => <FormattedDate date={date} />}
@@ -579,7 +588,7 @@ export const ProjectOverview = () => {
           {!!projectOverviewData?.project && (
             <ProjectPostList project={projectOverviewData.project} />
           )}
-        </div>
+        </Box>
       )}
       {workflowProject && (
         <ProjectWorkflowDialog {...workflowState} project={workflowProject} />
@@ -597,6 +606,6 @@ export const ProjectOverview = () => {
           {...createEngagementState}
         />
       )}
-    </main>
+    </Box>
   );
 };
