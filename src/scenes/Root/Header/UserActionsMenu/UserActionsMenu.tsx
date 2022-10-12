@@ -10,17 +10,9 @@ import {
   MenuProps,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useUpload } from '../../../../components/Upload';
 
-const useStyles = makeStyles()(() => ({
-  menu: {
-    minWidth: 200,
-  },
-}));
-
 export const UserActionsMenu = (props: Partial<MenuProps>) => {
-  const { classes } = useStyles();
   const { spacing } = useTheme();
   const { isManagerOpen, toggleManagerOpen } = useUpload();
 
@@ -33,7 +25,11 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
       open={Boolean(props.anchorEl)}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: parseInt(spacing(-2)), horizontal: 'right' }}
-      classes={{ paper: classes.menu }}
+      sx={{
+        '&.MuiMenu-paper': {
+          minWidth: 200,
+        },
+      }}
       {...props}
     >
       <MenuItem
