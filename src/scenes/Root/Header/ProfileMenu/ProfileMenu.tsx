@@ -1,23 +1,15 @@
 import { Divider, Menu, MenuItem, MenuProps, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useDialog } from '../../../../components/Dialog';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';
 import { ChangePassword } from '../../../Authentication/ChangePassword';
-
-const useStyles = makeStyles()(() => ({
-  menu: {
-    minWidth: 200,
-  },
-}));
 
 // Menu looks for disabled prop to skip over when choosing
 // which item to auto focus first.
 const skipAutoFocus: any = { disabled: true };
 
 export const ProfileMenu = (props: Partial<MenuProps>) => {
-  const { classes } = useStyles();
   const { spacing } = useTheme();
   const { session } = useSession();
   const [changePasswordState, changePassword] = useDialog();
@@ -34,7 +26,11 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
           vertical: parseInt(spacing(-2)),
           horizontal: 'right',
         }}
-        classes={{ paper: classes.menu }}
+        sx={{
+          '& .MuiMenu-paper': {
+            minWidth: 200,
+          },
+        }}
         {...props}
       >
         <Typography
