@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Edit, SkipNextRounded as SkipIcon } from '@mui/icons-material';
 import {
+  Box,
   Breadcrumbs,
   Card,
   CardContent,
@@ -11,7 +12,6 @@ import {
   Typography,
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { useBetaFeatures } from '~/components/Session';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import {
@@ -37,31 +37,7 @@ import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
 import { ProgressReportDrawer } from './ProgressReportDrawer';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  main: {
-    flex: 1,
-    padding: spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  header: {
-    marginTop: spacing(3),
-    marginBottom: spacing(2),
-  },
-  subheader: {
-    margin: spacing(2, 0, 4),
-  },
-}));
-
 export const ProgressReportDetail = () => {
-  const { classes } = useStyles();
   const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
 
   const beta = useBetaFeatures();
@@ -95,8 +71,24 @@ export const ProgressReportDetail = () => {
   const engagement = report?.parent;
 
   return (
-    <div className={classes.root}>
-      <main className={classes.main}>
+    <Box
+      sx={{
+        flex: 1,
+        overflowY: 'auto',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box
+        component="main"
+        sx={(theme) => ({
+          flex: 1,
+          padding: theme.spacing(4),
+          display: 'flex',
+          flexDirection: 'column',
+        })}
+      >
         <Helmet title="Progress Report" />
         <Breadcrumbs
           children={[
@@ -126,7 +118,10 @@ export const ProgressReportDetail = () => {
           container
           spacing={3}
           alignItems="center"
-          className={classes.header}
+          sx={(theme) => ({
+            marginTop: theme.spacing(3),
+            marginBottom: theme.spacing(2),
+          })}
         >
           <Grid item component={Typography} variant="h2">
             {data ? (
@@ -205,7 +200,9 @@ export const ProgressReportDetail = () => {
             <Typography
               variant="body2"
               color="textSecondary"
-              className={classes.subheader}
+              sx={(theme) => ({
+                margin: theme.spacing(2, 0, 4),
+              })}
             >
               {!report ? (
                 <Skeleton width="20ch" />
@@ -248,8 +245,9 @@ export const ProgressReportDetail = () => {
             </Stack>
           </>
         )}
-      </main>
-      {newProgressReportBeta && <ProgressReportDrawer report={report} />}
-    </div>
+
+        {newProgressReportBeta && <ProgressReportDrawer report={report} />}
+      </Box>
+    </Box>
   );
 };
