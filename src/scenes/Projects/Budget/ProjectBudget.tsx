@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
-import { Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { Error } from '../../../components/Error';
@@ -16,28 +15,7 @@ import {
 } from './ProjectBudget.graphql';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
-const useStyles = makeStyles()(({ breakpoints, spacing }) => ({
-  root: {
-    overflowY: 'auto',
-  },
-  header: {
-    margin: spacing(3, 4, 3, 0),
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    maxWidth: breakpoints.values.md,
-  },
-  totalLoading: {
-    width: '10%',
-  },
-  tableWrapper: {
-    maxWidth: breakpoints.values.md,
-    margin: spacing(0, 4, 4, 0),
-  },
-}));
-
 export const ProjectBudget = () => {
-  const { classes } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const formatCurrency = useCurrencyFormatter();
 
@@ -50,7 +28,11 @@ export const ProjectBudget = () => {
   const template = budget?.value?.universalTemplateFile;
 
   return (
-    <Content className={classes.root}>
+    <Content
+      sx={{
+        overflowY: 'auto',
+      }}
+    >
       <Helmet title={`Budget - ${data?.project.name.value ?? 'A Project'}`} />
       {error ? (
         <Error error={error}>
@@ -69,11 +51,25 @@ export const ProjectBudget = () => {
             <ProjectBreadcrumb data={data?.project} />
             <Breadcrumb to=".">Field Budget</Breadcrumb>
           </Breadcrumbs>
-          <header className={classes.header}>
+          <Box
+            sx={(theme) => ({
+              margin: theme.spacing(3, 4, 3, 0),
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+              maxWidth: theme.breakpoints.values.md,
+            })}
+          >
             <Typography variant="h2">Budget</Typography>
             <Typography
               variant="h3"
-              className={loading ? classes.totalLoading : undefined}
+              sx={
+                loading
+                  ? {
+                      width: '10%',
+                    }
+                  : undefined
+              }
             >
               {!loading && budget?.value?.total != null ? (
                 `Total: ${formatCurrency(budget.value.total)}`
@@ -81,8 +77,13 @@ export const ProjectBudget = () => {
                 <Skeleton width="100%" />
               )}
             </Typography>
-          </header>
-          <div className={classes.tableWrapper}>
+          </Box>
+          <Box
+            sx={(theme) => ({
+              maxWidth: theme.breakpoints.values.md,
+              margin: theme.spacing(0, 4, 4, 0),
+            })}
+          >
             <Grid container direction="column" spacing={3}>
               <Grid item>
                 <ProjectBudgetRecords loading={loading} budget={budget} />
@@ -103,7 +104,7 @@ export const ProjectBudget = () => {
                 </FileActionsContextProvider>
               )}
             </Grid>
-          </div>
+          </Box>
         </>
       )}
     </Content>
