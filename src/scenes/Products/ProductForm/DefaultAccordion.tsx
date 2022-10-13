@@ -4,41 +4,26 @@ import {
   AccordionDetails,
   AccordionProps,
   AccordionSummary,
+  Box,
+  Theme,
   Typography,
 } from '@mui/material';
 import { FormState } from 'final-form';
 import { get, startCase } from 'lodash';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { useFieldName } from '../../../components/form';
 import { ProductKey } from './ProductFormFields';
 
-export const useStyles = makeStyles()(({ spacing, typography, palette }) => ({
-  // eslint-disable-next-line tss-unused-classes/unused-classes -- used in other files, refactor this
-  section: {
-    '&:not(:last-child)': {
-      marginBottom: spacing(2),
-    },
+export const sectionStyle = (theme: Theme) => ({
+  '&:not(:last-child)': {
+    marginBottom: theme.spacing(2),
   },
-  // eslint-disable-next-line tss-unused-classes/unused-classes -- used in other files, refactor this
-  label: {
-    fontWeight: typography.weight.bold,
-  },
-  toggleButtonContainer: {
-    margin: spacing(0, -1),
-  },
-  accordionSummary: {
-    flexDirection: 'column',
-  },
-  accordionSection: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  error: {
-    color: palette.error.main,
-  },
-}));
+});
+
+const errorStyle = (theme: Theme) => ({
+  color: theme.palette.error.main,
+});
 
 export type DefaultAccordionProps<K extends ProductKey> = {
   name: K;
@@ -63,7 +48,6 @@ export const DefaultAccordion = <K extends ProductKey>({
   children,
   AccordionProps,
 }: DefaultAccordionProps<K>) => {
-  const { classes, cx } = useStyles();
   const fullName = useFieldName(name);
   const isError = !!get(errors, fullName);
   const isTouched = !!get(touched, fullName);
@@ -91,12 +75,12 @@ export const DefaultAccordion = <K extends ProductKey>({
     >
       <AccordionSummary
         expandIcon={<ExpandMore />}
-        classes={{
-          content: cx(
-            classes.accordionSummary,
-            showError ? classes.error : undefined
-          ),
-        }}
+        sx={[
+          {
+            '& 	.MuiAccordionSummary-content': { flexDirection: 'column' },
+          },
+          showError && errorStyle,
+        ]}
       >
         {typeof title === 'function' ? (
           title(isOpen)
@@ -106,11 +90,20 @@ export const DefaultAccordion = <K extends ProductKey>({
             {title ?? startCase(name)}
           </Typography>
         )}
-        <div className={classes.toggleButtonContainer}>
+        <Box
+          sx={(theme) => ({
+            margin: theme.spacing(0, -1),
+          })}
+        >
           {isOpen ? null : renderCollapsed()}
-        </div>
+        </Box>
       </AccordionSummary>
-      <AccordionDetails className={classes.accordionSection}>
+      <AccordionDetails
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         {children}
       </AccordionDetails>
     </Accordion>

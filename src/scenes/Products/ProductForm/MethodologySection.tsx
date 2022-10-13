@@ -1,4 +1,4 @@
-import { ToggleButton, Typography } from '@mui/material';
+import { Box, ToggleButton, Typography } from '@mui/material';
 import { ProductApproachLabels } from '~/api/schema.graphql';
 import {
   ApproachMethodologies,
@@ -7,7 +7,7 @@ import {
   entries,
 } from '~/common';
 import { EnumField, EnumOption } from '../../../components/form';
-import { useStyles } from './DefaultAccordion';
+import { sectionStyle } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
@@ -15,7 +15,6 @@ export const MethodologySection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const { classes } = useStyles();
   const { methodology } = values.product ?? {};
   return (
     <SecuredAccordion
@@ -32,8 +31,12 @@ export const MethodologySection = ({
       {(props) => (
         <EnumField layout="column" {...props}>
           {entries(ApproachMethodologies).map(([approach, methodologies]) => (
-            <div key={approach} className={classes.section}>
-              <Typography className={classes.label}>
+            <Box key={approach} sx={sectionStyle}>
+              <Typography
+                sx={(theme) => ({
+                  fontWeight: theme.typography.weight.bold,
+                })}
+              >
                 {ProductApproachLabels[approach]}
               </Typography>
               {methodologies.map((option) => (
@@ -43,7 +46,7 @@ export const MethodologySection = ({
                   value={option}
                 />
               ))}
-            </div>
+            </Box>
           ))}
         </EnumField>
       )}
