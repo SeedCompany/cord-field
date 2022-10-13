@@ -21,10 +21,6 @@ export const sectionStyle = (theme: Theme) => ({
   },
 });
 
-const errorStyle = (theme: Theme) => ({
-  color: theme.palette.error.main,
-});
-
 export type DefaultAccordionProps<K extends ProductKey> = {
   name: K;
   openedSection: ProductKey | undefined;
@@ -79,7 +75,10 @@ export const DefaultAccordion = <K extends ProductKey>({
           {
             '& 	.MuiAccordionSummary-content': { flexDirection: 'column' },
           },
-          showError && errorStyle,
+          showError &&
+            ((theme) => ({
+              color: theme.palette.error.main,
+            })),
         ]}
       >
         {typeof title === 'function' ? (
