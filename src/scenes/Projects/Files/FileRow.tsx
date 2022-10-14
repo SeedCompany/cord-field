@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client';
+import { Box } from '@mui/material';
 import { useForkRef } from '@mui/material/utils';
 import { GridRow, GridRowProps } from '@mui/x-data-grid';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { makeStyles } from 'tss-react/mui';
 import { addItemToList, removeItemFromList } from '~/api';
 import { callAll } from '~/common';
 import { MoveFileNodeDocument } from './MoveNode.graphql';
@@ -17,33 +17,7 @@ import {
   isDirectory,
 } from './util';
 
-const useStyles = makeStyles<void, 'isOver'>()(
-  ({ palette, transitions }, _props, classes) => ({
-    root: {
-      '& > *': {
-        transition: transitions.create('all'),
-      },
-    },
-    isDragging: {
-      background: palette.background.default,
-      '& > *': {
-        opacity: 0,
-      },
-    },
-    isOver: {},
-    acceptsDrop: {
-      [`&.${classes.isOver}`]: {
-        background: palette.info.light,
-      },
-    },
-    rejectsDrop: {
-      opacity: 0.2,
-      [`&.${classes.isOver}`]: {
-        background: palette.error.light,
-      },
-    },
-  })
-);
+const isOverClass = 'is-hovering-over';
 
 export const FileRow = ({
   parent,
@@ -112,24 +86,41 @@ export const FileRow = ({
   }, [preview]);
 
   const ref = useForkRef(dropRef, dragRef);
-  const { classes, cx } = useStyles();
 
   return (
     <div ref={ref as any}>
-      <GridRow
+      <Box
+        className={isOver && !isDragging ? isOverClass : ''}
+        component={GridRow}
         {...props}
-        className={cx({
-          [classes.root]: true,
-          [classes.isDragging]: isDragging,
-          [classes.acceptsDrop]: Boolean(
-            draggingItem && !isDragging && canDrop
-          ),
-          [classes.rejectsDrop]: Boolean(
-            draggingItem && !isDragging && !canDrop
-          ),
-          [classes.isOver]: isOver && !isDragging,
-        })}
-      />
+        sx={[
+          (theme) => ({
+            '& > *': {
+              transition: theme.transitions.create('all'),
+            },
+          }),
+          isDragging &&
+            ((theme) => ({
+              background: theme.palette.background.default,
+              '& > *': {
+                opacity: 0,
+              },
+            })),
+          Boolean(draggingItem && !isDragging && canDrop) &&
+            ((theme) => ({
+              [`&.${isOverClass}`]: {
+                background: theme.palette.info.light,
+              },
+            })),
+          Boolean(draggingItem && !isDragging && !canDrop) &&
+            ((theme) => ({
+              opacity: 0.2,
+              [`&.${isOverClass}`]: {
+                background: theme.palette.error.light,
+              },
+            })),
+        ]}
+      ></Box>
     </div>
   );
 };
