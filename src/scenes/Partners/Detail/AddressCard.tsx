@@ -7,33 +7,22 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
-import { canEditAny } from '~/common';
+import { canEditAny, StyleProps } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  cardContent: {
-    display: 'flex',
-    flex: 1,
-    alignSelf: 'flex-start',
-    // Allow point events so tooltips can be viewed, but don't seem clickable
-    '&.Mui-disabled': {
-      pointerEvents: 'auto',
-      '& .MuiCardActionArea-focusHighlight': {
-        opacity: 0,
-      },
+const cardContent = {
+  display: 'flex',
+  flex: 1,
+  alignSelf: 'flex-start',
+  // Allow point events so tooltips can be viewed, but don't seem clickable
+  '&.Mui-disabled': {
+    pointerEvents: 'auto',
+    '& .MuiCardActionArea-focusHighlight': {
+      opacity: 0,
     },
   },
-  address: {
-    width: '100%',
-  },
-  cardActions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingRight: spacing(2),
-  },
-}));
+};
 
 interface AddressCardProps {
   partner?: PartnerDetailsFragment;
@@ -45,24 +34,21 @@ export const AddressCard = ({
   partner,
   className,
   onEdit,
-}: AddressCardProps) => {
-  const { classes } = useStyles();
-
+  sx,
+}: AddressCardProps & StyleProps) => {
   // TODO: Implement full address saving and parsing (st, city, state, etc)
 
   const canEdit = canEditAny(partner, false, 'address');
 
   return (
-    <Card className={className}>
-      <CardActionArea
-        onClick={onEdit}
-        className={classes.cardContent}
-        disabled={!canEdit}
-      >
-        <CardContent className={classes.cardContent}>
+    <Card className={className} sx={sx}>
+      <CardActionArea onClick={onEdit} sx={cardContent} disabled={!canEdit}>
+        <CardContent sx={cardContent}>
           <Typography
             variant="h4"
-            className={classes.address}
+            sx={{
+              width: '100%',
+            }}
             color={!partner?.address.value ? 'textSecondary' : undefined}
           >
             {!partner ? (
@@ -81,7 +67,13 @@ export const AddressCard = ({
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions className={classes.cardActions}>
+      <CardActions
+        sx={(theme) => ({
+          display: 'flex',
+          justifyContent: 'space-between',
+          paddingRight: theme.spacing(2),
+        })}
+      >
         <Button color="primary" disabled={!canEdit} onClick={onEdit}>
           Edit
         </Button>
