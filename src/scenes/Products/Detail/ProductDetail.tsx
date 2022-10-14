@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Grid, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { Box, Grid, Typography } from '@mui/material';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,
@@ -14,26 +13,7 @@ import { ProductDetailHeader } from './ProductDetailHeader';
 import { ProductInfo } from './ProductInfo';
 import { StepsList } from './Progress';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  main: {
-    flex: 1,
-    maxWidth: breakpoints.values.md,
-  },
-  details: {
-    flex: 1,
-  },
-}));
-
 export const ProductDetail = () => {
-  const { classes } = useStyles();
-
   const { id, changesetId } = useChangesetAwareIdFromUrl('productId');
   const { data, error } = useQuery(ProductDetailDocument, {
     variables: {
@@ -53,16 +33,34 @@ export const ProductDetail = () => {
   }
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={(theme) => ({
+        flex: 1,
+        overflowY: 'auto',
+        padding: theme.spacing(4),
+        display: 'flex',
+        flexDirection: 'column',
+      })}
+    >
       <Grid
         component="main"
         container
         direction="column"
         spacing={3}
-        className={classes.main}
+        sx={(theme) => ({
+          flex: 1,
+          maxWidth: theme.breakpoints.values.md,
+        })}
       >
         <ProductDetailHeader product={product} />
-        <Grid item container spacing={5} className={classes.details}>
+        <Grid
+          item
+          container
+          spacing={5}
+          sx={{
+            flex: 1,
+          }}
+        >
           <Grid item md={4} container alignContent="flex-start" spacing={3}>
             <ProductInfo product={product} />
           </Grid>
@@ -88,6 +86,6 @@ export const ProductDetail = () => {
           )}
         </Grid>
       </Grid>
-    </div>
+    </Box>
   );
 };
