@@ -5,16 +5,9 @@ import {
   LinearProgress,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { ProductStepLabels, ProgressMeasurement } from '~/api/schema.graphql';
 import { StepProgressFragment } from './ProductProgress.graphql';
 import { ProgressIcon } from './ProgressIcon';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  infoArea: {
-    padding: spacing(1),
-  },
-}));
 
 export const StepProgress = ({
   measurement,
@@ -27,7 +20,6 @@ export const StepProgress = ({
   progress: StepProgressFragment;
   onClick?: () => void;
 }) => {
-  const { classes } = useStyles();
   const progressValue = completed.value || 0;
   return (
     <Grid container wrap="nowrap" alignItems="center" spacing={2}>
@@ -44,7 +36,9 @@ export const StepProgress = ({
               alignItems="center"
               justifyContent="space-between"
               spacing={1}
-              className={classes.infoArea}
+              sx={(theme) => ({
+                padding: theme.spacing(1),
+              })}
             >
               <Grid item component={Typography} variant="h4">
                 {ProductStepLabels[step]}
