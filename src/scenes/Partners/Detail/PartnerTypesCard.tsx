@@ -12,7 +12,7 @@ import {
   FinancialReportingTypeLabels,
   PartnerTypeLabels,
 } from '~/api/schema.graphql';
-import { canEditAny, labelsFrom } from '~/common';
+import { canEditAny, labelsFrom, StyleProps } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
@@ -39,7 +39,8 @@ export const PartnerTypesCard = ({
   partner,
   className,
   onEdit,
-}: PartnerTypesCardProps) => {
+  sx,
+}: PartnerTypesCardProps & StyleProps) => {
   const canEdit = canEditAny(
     partner,
     false,
@@ -48,7 +49,7 @@ export const PartnerTypesCard = ({
   );
 
   return (
-    <Card className={className}>
+    <Card className={className} sx={sx}>
       <CardActionArea onClick={onEdit} disabled={!canEdit} sx={cardContentSx}>
         <CardContent sx={cardContentSx}>
           <Grid container direction="column" spacing={1}>
