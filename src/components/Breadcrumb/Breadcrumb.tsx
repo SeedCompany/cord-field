@@ -32,7 +32,14 @@ export const Breadcrumb = forwardRef<
   } else {
     return (
       // @ts-expect-error idk man, yeah it's compatible
-      <Link variant="h4" to={to} {...LinkProps} {...rest} ref={ref as any}>
+      <Link
+        variant="h4"
+        to={to}
+        {...LinkProps}
+        {...rest}
+        ref={ref as any}
+        sx={sx}
+      >
         {children}
       </Link>
     );
