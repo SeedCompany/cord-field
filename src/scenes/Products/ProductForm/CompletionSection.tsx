@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import {
   AutocompleteField,
   AutocompleteFieldProps,
@@ -13,16 +12,7 @@ import {
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  collapsed: {
-    marginLeft: spacing(1),
-    marginTop: spacing(1),
-  },
-}));
-
 export const CompletionSection = ({ values, accordionState }: SectionProps) => {
-  const { classes } = useStyles();
-
   if (!values.product?.methodology) {
     return null;
   }
@@ -33,7 +23,12 @@ export const CompletionSection = ({ values, accordionState }: SectionProps) => {
       name="describeCompletion"
       title="Completion Description"
       renderCollapsed={() => (
-        <Typography className={classes.collapsed}>
+        <Typography
+          sx={(theme) => ({
+            marginLeft: theme.spacing(1),
+            marginTop: theme.spacing(1),
+          })}
+        >
           {values.product?.describeCompletion}
         </Typography>
       )}
