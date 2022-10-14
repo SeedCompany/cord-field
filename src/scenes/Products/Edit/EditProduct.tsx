@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import {
   callAll,
   entries,
@@ -35,18 +34,7 @@ import {
   updateProgressSteps,
 } from './updateProgressSteps';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    overflowY: 'auto',
-    padding: spacing(4),
-    '& > *': {
-      marginBottom: spacing(2),
-    },
-  },
-}));
-
 export const EditProduct = () => {
-  const { classes } = useStyles();
   const navigate = useNavigate();
 
   const { id, changesetId } = useChangesetAwareIdFromUrl('productId');
@@ -291,7 +279,16 @@ export const EditProduct = () => {
   }
 
   return (
-    <main className={classes.root}>
+    <Box
+      component="main"
+      sx={(theme) => ({
+        overflowY: 'auto',
+        padding: theme.spacing(4),
+        '& > *': {
+          marginBottom: theme.spacing(2),
+        },
+      })}
+    >
       {/* TODO label goal */}
       <Helmet title="Edit Goal" />
       <Breadcrumbs>
@@ -317,6 +314,6 @@ export const EditProduct = () => {
           initialValues={initialValues}
         />
       )}
-    </main>
+    </Box>
   );
 };
