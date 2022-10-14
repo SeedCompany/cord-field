@@ -13,7 +13,7 @@ interface CommentThreadListProps {
 
 export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
   const commentThreads = useListQuery(CommentThreadsListDocument, {
-    listAt: (data) => data.commentThreads,
+    listAt: (data) => data.commentThreads.parent.commentThreads,
     variables: {
       resourceId,
     },

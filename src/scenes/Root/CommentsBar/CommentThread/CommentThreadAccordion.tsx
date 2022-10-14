@@ -8,7 +8,6 @@ interface CommentThreadProps {
   thread: CommentThreadPropsFragment;
   resourceId: string;
   children?: React.ReactNode | React.ReactNode[];
-  handleCommentsChanges?: () => Promise<void> | void;
   handleExtend?: (expanded: string | null) => void;
   forceExpanded?: boolean;
 }
@@ -17,7 +16,6 @@ export const CommentThreadAccordion = ({
   thread,
   resourceId,
   children,
-  handleCommentsChanges,
   handleExtend: handleExpand,
   forceExpanded = false,
 }: CommentThreadProps) => {
@@ -56,7 +54,6 @@ export const CommentThreadAccordion = ({
           resourceId={resourceId}
           threadId={thread.id}
           commentId={thread.firstComment.id}
-          handleCreateComment={handleCommentsChanges}
           sx={(theme) => ({
             padding: theme.spacing(1, 2),
             mt: 1,

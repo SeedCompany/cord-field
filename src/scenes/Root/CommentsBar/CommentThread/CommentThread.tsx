@@ -14,14 +14,9 @@ export const CommentThread = ({ thread, resourceId }: CommentThreadProps) => {
 
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  const handleCommentsChanges = async () => {
-    // await getCommentThread.refetch();
-  };
-
   if (totalComments > 1) {
     return (
       <CommentThreadAccordion
-        handleCommentsChanges={handleCommentsChanges}
         thread={thread}
         resourceId={resourceId}
         handleExtend={setExpanded}
@@ -32,8 +27,6 @@ export const CommentThread = ({ thread, resourceId }: CommentThreadProps) => {
           parent={thread}
           repliesCount={totalComments - 1}
           resourceId={resourceId}
-          handleDeleteComment={handleCommentsChanges}
-          handleEditComment={handleCommentsChanges}
           isExpanded={expanded === thread.id}
           handleExpand={setExpanded}
         />
@@ -42,7 +35,6 @@ export const CommentThread = ({ thread, resourceId }: CommentThreadProps) => {
   }
   return (
     <CommentThreadAccordion
-      handleCommentsChanges={handleCommentsChanges}
       thread={thread}
       resourceId={resourceId}
       handleExtend={setExpanded}
@@ -52,8 +44,6 @@ export const CommentThread = ({ thread, resourceId }: CommentThreadProps) => {
         comment={thread.firstComment}
         parent={thread}
         resourceId={resourceId}
-        handleDeleteComment={handleCommentsChanges}
-        handleEditComment={handleCommentsChanges}
         isExpanded={totalComments === 1 || expanded === thread.id}
         handleExpand={setExpanded}
       />

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { removeItemFromList } from '~/api';
 import { useDateTimeFormatter } from '~/components/Formatters';
 import { CommentItemMenu } from '../CommentItemMenu';
+import { CommentReply } from '../CommentReply';
 import {
   CommentPropsFragment,
   CommentThreadPropsFragment,
@@ -32,12 +33,15 @@ export const CommentItem = ({
   isExpanded,
   handleExpand,
   parent,
+  resourceId,
 }: CommentProps) => {
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
+  const [isEditing, setIsEditing] = useState(false);
+
   const [deleteCommentMutation] = useMutation(DeleteCommentDocument, {});
 
   const dateTimeFormatter = useDateTimeFormatter();
-  const createdAtString = dateTimeFormatter(comment.createdAt);
+  const formattedDateString = dateTimeFormatter(comment.modifiedAt);
 
   const deleteComment = async (commentId: string) => {
     const { data } = await deleteCommentMutation({
@@ -55,6 +59,8 @@ export const CommentItem = ({
       void handleDeleteComment?.(comment);
     }
   };
+
+  console.log(comment.modifiedAt, comment.createdAt);
 
   return (
     <Paper
@@ -83,7 +89,7 @@ export const CommentItem = ({
             ml: 1,
           }}
         >
-          {createdAtString}
+          {formattedDateString}
         </Typography>
       </Box>
       <Box
@@ -101,6 +107,16 @@ export const CommentItem = ({
         }}
       >
         {comment.body.value && <Blocks data={comment.body.value} />}
+
+        {!!isEditing && (
+          <CommentReply
+            blocks={comment.body.value}
+            commentId={comment.id}
+            resourceId={resourceId}
+            handleClose={() => setIsEditing(false)}
+            isEditing
+          />
+        )}
 
         {repliesCount > 0 && (
           <Typography
@@ -132,6 +148,7 @@ export const CommentItem = ({
           void deleteComment(comment.id);
         }}
         onEdit={() => {
+          setIsEditing(true);
           setActionsAnchor(null);
         }}
       />

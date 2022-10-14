@@ -1,9 +1,14 @@
 query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
-  commentThreads(resource: $resourceId, input: $input) {
-    total
-    hasMore
-    items {
-      ...CommentThreadProps
+  commentThreads(resource: $resourceId) {
+    parent {
+      id
+      commentThreads(input: $input) {
+        total
+        hasMore
+        items {
+          ...CommentThreadProps
+        }
+      }
     }
   }
 }
@@ -22,6 +27,23 @@ mutation CreateOrReplyComment(
   createComment(
     input: { body: $commentBody, resourceId: $resourceId, threadId: $threadId }
   ) {
+    commentThread {
+      parent {
+        id
+        __typename
+        commentThreads {
+          hasMore
+          items {
+            ...CommentThreadProps
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateComment($commentBody: RichText!, $commentId: ID!) {
+  updateComment(input: { body: $commentBody, id: $commentId }) {
     comment {
       ...CommentProps
     }
@@ -30,7 +52,7 @@ mutation CreateOrReplyComment(
 
 mutation DeleteComment($id: ID!) {
   deleteComment(id: $id) {
-    success
+    __typename
   }
 }
 
@@ -45,7 +67,9 @@ fragment CommentProps on Comment {
     id
   }
   createdAt
+  modifiedAt
   canDelete
+  __typename
 }
 
 fragment CommentThreadProps on CommentThread {

@@ -39,7 +39,7 @@ export const CommentItemMenu = ({
       anchorEl={anchorEl}
       {...rest}
     >
-      <MenuItem>
+      <MenuItem onClick={onEdit}>
         <ListItemIcon sx={listItemSx}>
           <EditIcon fontSize="small" />
         </ListItemIcon>

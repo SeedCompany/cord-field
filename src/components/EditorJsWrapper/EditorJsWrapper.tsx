@@ -8,6 +8,7 @@ export interface EditorJsWrapperProps extends EditorConfig {
   holder?: string;
   placeholder?: string;
   autofocus?: boolean;
+  blocks?: JSON;
 }
 
 export const EditorJsWrapper = ({
@@ -22,6 +23,7 @@ export const EditorJsWrapper = ({
       onInitialize={onInitialize}
       holder={holder}
       tools={EDITOR_JS_TOOLS}
+      data={rest.blocks}
       {...rest}
     />
   );
