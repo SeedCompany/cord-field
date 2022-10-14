@@ -1,6 +1,6 @@
+import { Box } from '@mui/material';
 import { alpha as fade } from '@mui/material/styles';
 import { useDrop } from 'react-dnd';
-import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb, BreadcrumbProps } from '../../../components/Breadcrumb';
 import { DndFileNode, DropOnDirResult } from './util';
 
@@ -8,29 +8,6 @@ type DirectoryBreadcrumbProps = BreadcrumbProps & {
   id?: string;
   name?: string;
 };
-
-const useStyles = makeStyles()(({ palette, shape, spacing, transitions }) => ({
-  root: {
-    position: 'relative',
-    margin: spacing(-1, -0.5),
-    padding: spacing(1),
-  },
-  drop: {
-    position: 'absolute',
-    inset: 0,
-    zIndex: -1,
-    borderRadius: shape.borderRadius,
-    transition: transitions.create('all'),
-    border: `2px dashed transparent`,
-  },
-  isDragging: {
-    borderColor: palette.divider,
-  },
-  isOver: {
-    background: fade(palette.info.light, 0.7),
-  },
-}));
-
 export const DirectoryBreadcrumb = ({
   id,
   name,
@@ -49,19 +26,40 @@ export const DirectoryBreadcrumb = ({
     }),
     [id, name]
   );
-  const { classes, cx } = useStyles();
   return (
     <Breadcrumb
       {...props}
       ref={dropRef}
-      className={cx(classes.root, props.className)}
+      className={props.className}
+      sx={(theme) => ({
+        position: 'relative',
+        margin: theme.spacing(-1, -0.5),
+        padding: theme.spacing(1),
+      })}
     >
-      <span
-        className={cx({
-          [classes.drop]: true,
-          [classes.isOver]: isOver && canDrop,
-          [classes.isDragging]: !!isDragging && canDrop,
-        })}
+      <Box
+        component="span"
+        sx={[
+          (theme) => {
+            console.log('borderRadius', theme.shape.borderRadius);
+            return {
+              position: 'absolute',
+              inset: 0,
+              zIndex: -1,
+              borderRadius: `${theme.shape.borderRadius}px`,
+              transition: theme.transitions.create('all'),
+              border: `2px dashed transparent`,
+            };
+          },
+          Boolean(isOver && canDrop) &&
+            ((theme) => ({
+              background: fade(theme.palette.info.light, 0.7),
+            })),
+          Boolean(isDragging && canDrop) &&
+            ((theme) => ({
+              borderColor: theme.palette.divider,
+            })),
+        ]}
       />
       {props.children || name}
     </Breadcrumb>
