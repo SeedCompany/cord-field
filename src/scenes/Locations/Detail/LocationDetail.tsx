@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Skeleton, Typography } from '@mui/material';
+import { Box, Skeleton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { LocationTypeLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
@@ -18,39 +17,7 @@ import { Redacted } from '../../../components/Redacted';
 import { EditLocation } from '../Edit';
 import { LocationDocument } from './LocationDetail.graphql';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-  },
-  main: {
-    maxWidth: breakpoints.values.md,
-    '& > *': {
-      marginBottom: spacing(3),
-    },
-  },
-  name: {
-    marginRight: spacing(4),
-  },
-  nameLoading: {
-    width: '40%',
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
-  },
-  subheader: {
-    display: 'flex',
-    alignItems: 'baseline',
-    '& > *': {
-      marginRight: spacing(2),
-    },
-  },
-}));
-
 export const LocationDetail = () => {
-  const { classes, cx } = useStyles();
   const { locationId = '' } = useParams();
 
   const [editLocationState, editLocation] = useDialog();
@@ -62,7 +29,14 @@ export const LocationDetail = () => {
   const fundingAccount = location?.fundingAccount.value;
 
   return (
-    <main className={classes.root}>
+    <Box
+      component="main"
+      sx={(theme) => ({
+        flex: 1,
+        overflowY: 'auto',
+        padding: theme.spacing(4),
+      })}
+    >
       <Helmet title={location?.name.value || undefined} />
       <Error error={error}>
         {{
@@ -71,14 +45,32 @@ export const LocationDetail = () => {
         }}
       </Error>
       {!error && (
-        <div className={classes.main}>
-          <header className={classes.header}>
+        <Box
+          sx={(theme) => ({
+            maxWidth: theme.breakpoints.values.md,
+            '& > *': {
+              marginBottom: theme.spacing(3),
+            },
+          })}
+        >
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+            }}
+          >
             <Typography
               variant="h2"
-              className={cx(
-                classes.name,
-                location?.name ? null : classes.nameLoading
-              )}
+              sx={[
+                (theme) => ({
+                  marginRight: theme.spacing(4),
+                }),
+                location?.name
+                  ? null
+                  : {
+                      width: '40%',
+                    },
+              ]}
             >
               {!location ? (
                 <Skeleton width="100%" />
@@ -101,8 +93,16 @@ export const LocationDetail = () => {
                 <Edit />
               </Fab>
             )}
-          </header>
-          <div className={classes.subheader}>
+          </Box>
+          <Box
+            sx={(theme) => ({
+              display: 'flex',
+              alignItems: 'baseline',
+              '& > *': {
+                marginRight: theme.spacing(2),
+              },
+            })}
+          >
             <Typography variant="h4">
               {location ? 'Location' : <Skeleton width={200} />}
             </Typography>
@@ -111,7 +111,7 @@ export const LocationDetail = () => {
                 Created <FormattedDateTime date={location.createdAt} />
               </Typography>
             )}
-          </div>
+          </Box>
           <DisplayProperty
             label="Type"
             value={labelFrom(LocationTypeLabels)(location?.type.value)}
@@ -131,10 +131,10 @@ export const LocationDetail = () => {
             }`}
             loading={!location}
           />
-        </div>
+        </Box>
       )}
       <EditLocation location={location} {...editLocationState} />
-    </main>
+    </Box>
   );
 };
 
