@@ -12,8 +12,8 @@ const commentText = 'This is a comment';
 const comment: CommentPropsFragment = {
   __typename: 'Comment',
   id: '1',
-  createdAt: DateTime.fromISO('2021-01-01T00:00:00.000Z'),
-  modifiedAt: DateTime.fromISO('2021-01-01T00:00:00.000Z'),
+  createdAt: DateTime.fromISO('2021-01-01T10:00:00.000Z'),
+  modifiedAt: DateTime.fromISO('2021-01-01T10:00:00.000Z'),
   canDelete: true,
   creator: {
     id: '1',
