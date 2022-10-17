@@ -48,7 +48,6 @@ export const CommentsBarProvider = ({ children }: ChildrenProp) => {
   const [expandedThreads, setExpandedThreads] = useState<string[]>([]);
 
   const toggleThreadComments = useCallback((threadId: string) => {
-    console.log('toggleThreadComments', threadId);
     setExpandedThreads((prev) =>
       prev.includes(threadId)
         ? prev.filter((id) => id !== threadId)

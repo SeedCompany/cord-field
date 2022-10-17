@@ -12,8 +12,6 @@ export const CommentsBar = ({ resourceId }: CommentsBarProps) => {
   const minWidth = 300;
   const width = 300;
 
-  console.log('isCommentsBarOpen', isCommentsBarOpen);
-
   return (
     <Drawer
       variant="persistent"
