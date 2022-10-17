@@ -1,10 +1,13 @@
+import { Close } from '@mui/icons-material';
 import { Box, List, ListSubheader, Typography } from '@mui/material';
+import { IconButton } from '~/components/IconButton';
 import { useListQuery } from '~/components/List';
 import { CommentReply } from './CommentReply';
 import {
   CommentThreadPropsFragment,
   CommentThreadsListDocument,
 } from './CommentsBar.graphql';
+import { useCommentsContext } from './CommentsBarContext';
 import { CommentThread } from './CommentThread';
 
 interface CommentThreadListProps {
@@ -12,6 +15,7 @@ interface CommentThreadListProps {
 }
 
 export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
+  const { toggleCommentsBar } = useCommentsContext();
   const commentThreads = useListQuery(CommentThreadsListDocument, {
     listAt: (data) => data.commentThreads.parent.commentThreads,
     variables: {
@@ -23,7 +27,31 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
     <List
       component="nav"
       aria-label="sidebar"
-      subheader={<ListSubheader component="div">COMMENTS</ListSubheader>}
+      subheader={
+        <ListSubheader
+          component="div"
+          sx={{
+            pl: 0,
+          }}
+        >
+          <IconButton
+            onClick={() => toggleCommentsBar(false)}
+            sx={{
+              mr: 'auto',
+              pl: 2,
+              pr: 1,
+              pb: 0,
+              pt: 0,
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+          >
+            <Close />
+          </IconButton>
+          COMMENTS
+        </ListSubheader>
+      }
     >
       <Box sx={{ padding: [4, 2] }}>
         <Typography variant="h6">Create a comment</Typography>

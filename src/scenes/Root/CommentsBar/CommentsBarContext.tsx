@@ -9,7 +9,7 @@ import {
 import { ChildrenProp } from '~/common';
 
 interface InitialCommentsBarContextInterface {
-  toggleCommentsBar: () => void;
+  toggleCommentsBar: (state?: boolean) => void;
   toggleThreadComments: (threadId: string) => void;
   expandedThreads: string[];
   isCommentsBarOpen: boolean;
@@ -21,7 +21,8 @@ const initialCommentsBarContext: InitialCommentsBarContextInterface = {
     return;
   },
 
-  toggleCommentsBar: () => {
+  // eslint-disable-next-line @seedcompany/no-unused-vars
+  toggleCommentsBar: (state?: boolean) => {
     return;
   },
 
@@ -55,10 +56,20 @@ export const CommentsBarProvider = ({ children }: ChildrenProp) => {
     );
   }, []);
 
-  const toggleCommentsBar = useCallback(() => {
-    setCommentsBarOpen((prev) => !prev);
-    setCookieCommentsBarOpen((prev) => (prev === 'true' ? 'false' : 'true'));
-  }, [setCommentsBarOpen, setCookieCommentsBarOpen]);
+  const toggleCommentsBar = useCallback(
+    (state?: boolean) => {
+      if (state === undefined) {
+        setCommentsBarOpen((prev) => !prev);
+        setCookieCommentsBarOpen((prev) =>
+          prev === 'true' ? 'false' : 'true'
+        );
+      } else {
+        setCommentsBarOpen(state);
+        setCookieCommentsBarOpen(state ? 'true' : 'false');
+      }
+    },
+    [setCommentsBarOpen, setCookieCommentsBarOpen]
+  );
 
   const context = useMemo(
     () => ({

@@ -9,13 +9,12 @@ interface CommentsBarProps {
 export const CommentsBar = ({ resourceId }: CommentsBarProps) => {
   const { isCommentsBarOpen } = useCommentsContext();
 
-  const minWidth = 300;
-  const width = 300;
+  const minWidth = 350;
 
   return (
     <Drawer
       variant="persistent"
-      open={isCommentsBarOpen}
+      open={isCommentsBarOpen && !!resourceId}
       anchor="right"
       sx={[
         !isCommentsBarOpen && {
@@ -26,14 +25,14 @@ export const CommentsBar = ({ resourceId }: CommentsBarProps) => {
           display: 'flex',
         },
         isCommentsBarOpen && {
-          width,
+          width: minWidth,
           flexShrink: 0,
         },
       ]}
       PaperProps={{
         elevation: 3,
         sx: {
-          width,
+          width: minWidth,
           minWidth,
         },
       }}

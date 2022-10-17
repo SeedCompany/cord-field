@@ -13,7 +13,7 @@ export const ToggleCommentsButton = ({
 
   return (
     <IconButton
-      onClick={toggleCommentsBar}
+      onClick={() => toggleCommentsBar()}
       {...rest}
       disabled={rest.disabled}
       loading={rest.loading}
