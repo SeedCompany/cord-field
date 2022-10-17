@@ -104,7 +104,11 @@ export const CommentItem = ({
           },
         }}
       >
-        {comment.body.value && <Blocks data={comment.body.value} />}
+        {comment.body.value && (
+          <div data-testid="comment-body">
+            <Blocks data={comment.body.value} />
+          </div>
+        )}
 
         {!!isEditing && (
           <CommentReply
