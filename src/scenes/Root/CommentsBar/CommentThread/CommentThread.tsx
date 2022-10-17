@@ -1,7 +1,9 @@
 // import { useQuery } from '@apollo/client';
-import { useState } from 'react';
+
+import { useEffect } from 'react';
 import { CommentItem } from '../CommentItem';
 import { CommentThreadPropsFragment } from '../CommentsBar.graphql';
+import { useCommentsContext } from '../CommentsBarContext';
 import { CommentThreadAccordion } from './CommentThreadAccordion';
 
 interface CommentThreadProps {
@@ -10,42 +12,36 @@ interface CommentThreadProps {
 }
 
 export const CommentThread = ({ thread, resourceId }: CommentThreadProps) => {
+  const { expandedThreads, toggleThreadComments } = useCommentsContext();
   const totalComments = thread.comments.total;
+  const expanded = expandedThreads.includes(thread.id);
 
-  const [expanded, setExpanded] = useState<string | null>(null);
+  useEffect(() => {
+    if (thread.comments.total === 1 && !expanded) {
+      toggleThreadComments(thread.id);
+    }
+  }, [thread, toggleThreadComments, expanded]);
 
   if (totalComments > 1) {
     return (
-      <CommentThreadAccordion
-        thread={thread}
-        resourceId={resourceId}
-        handleExtend={setExpanded}
-        forceExpanded={expanded === thread.id}
-      >
+      <CommentThreadAccordion thread={thread} resourceId={resourceId}>
         <CommentItem
           comment={thread.firstComment}
           parent={thread}
           repliesCount={totalComments - 1}
           resourceId={resourceId}
-          isExpanded={expanded === thread.id}
-          handleExpand={setExpanded}
+          isExpanded={expanded}
         />
       </CommentThreadAccordion>
     );
   }
   return (
-    <CommentThreadAccordion
-      thread={thread}
-      resourceId={resourceId}
-      handleExtend={setExpanded}
-      forceExpanded={totalComments === 1 || expanded === thread.id}
-    >
+    <CommentThreadAccordion thread={thread} resourceId={resourceId}>
       <CommentItem
         comment={thread.firstComment}
         parent={thread}
         resourceId={resourceId}
-        isExpanded={totalComments === 1 || expanded === thread.id}
-        handleExpand={setExpanded}
+        isExpanded={expanded}
       />
     </CommentThreadAccordion>
   );

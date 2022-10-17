@@ -9,6 +9,7 @@ import { SnackbarProvider } from './components/Snackbar';
 import { UploadProvider as FileUploadProvider } from './components/Upload';
 import { SensitiveOperations } from './scenes/Authentication';
 import { Root } from './scenes/Root';
+import { CommentsBarProvider } from './scenes/Root/CommentsBar/CommentsBarContext';
 import { createTheme } from './theme';
 
 const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
@@ -42,6 +43,7 @@ export const appProviders = [
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,
   <FileUploadProvider key="files" />,
+  <CommentsBarProvider key="comments" />,
 ];
 
 export const App = () => (

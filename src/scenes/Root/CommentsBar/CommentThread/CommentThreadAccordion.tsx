@@ -1,37 +1,26 @@
 import { Accordion, AccordionDetails } from '@mui/material';
-import { useState } from 'react';
 import { CommentItem } from '../CommentItem';
 import { CommentReply } from '../CommentReply';
 import { CommentThreadPropsFragment } from '../CommentsBar.graphql';
+import { useCommentsContext } from '../CommentsBarContext';
 
 interface CommentThreadProps {
   thread: CommentThreadPropsFragment;
   resourceId: string;
   children?: React.ReactNode | React.ReactNode[];
-  handleExtend?: (expanded: string | null) => void;
-  forceExpanded?: boolean;
 }
 
 export const CommentThreadAccordion = ({
   thread,
   resourceId,
   children,
-  handleExtend: handleExpand,
-  forceExpanded = false,
 }: CommentThreadProps) => {
-  const [expanded, setExpanded] = useState<string | null>(null);
-
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-      const newValue = newExpanded ? panel : null;
-      setExpanded(newValue);
-      handleExpand?.(newValue);
-    };
+  const { expandedThreads, toggleThreadComments } = useCommentsContext();
 
   return (
     <Accordion
-      expanded={forceExpanded || expanded === thread.id}
-      onChange={handleChange(thread.id)}
+      expanded={expandedThreads.includes(thread.id)}
+      onChange={() => toggleThreadComments(thread.id)}
       square
       sx={{
         '&.Mui-expanded': {

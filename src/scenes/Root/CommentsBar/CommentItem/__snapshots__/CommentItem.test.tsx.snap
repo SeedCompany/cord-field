@@ -66,6 +66,11 @@ Object {
   padding: 0;
 }
 
+.emotion-4>* {
+  padding: 0;
+  margin: 0;
+}
+
 .emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -455,19 +460,15 @@ Object {
           <p
             class="MuiTypography-root MuiTypography-body2 emotion-3"
           >
-            12/31/2020, 7:00 PM
+            1/1/2021, 5:00 AM
           </p>
         </div>
         <div
           class="MuiBox-root emotion-4"
         >
-          <div
-            data-testid="comment-body"
-          >
-            <p>
-              This is a comment
-            </p>
-          </div>
+          <p>
+            This is a comment
+          </p>
         </div>
         <button
           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-5"
@@ -654,6 +655,11 @@ Object {
   padding: 0;
 }
 
+.emotion-4>* {
+  padding: 0;
+  margin: 0;
+}
+
 .emotion-5 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -780,19 +786,15 @@ Object {
         <p
           class="MuiTypography-root MuiTypography-body2 emotion-3"
         >
-          12/31/2020, 7:00 PM
+          1/1/2021, 5:00 AM
         </p>
       </div>
       <div
         class="MuiBox-root emotion-4"
       >
-        <div
-          data-testid="comment-body"
-        >
-          <p>
-            This is a comment
-          </p>
-        </div>
+        <p>
+          This is a comment
+        </p>
       </div>
       <button
         class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium emotion-5"

@@ -12,6 +12,7 @@ import {
   CommentThreadPropsFragment,
   DeleteCommentDocument,
 } from '../CommentsBar.graphql';
+import { useCommentsContext } from '../CommentsBarContext';
 
 export interface CommentProps {
   comment: CommentPropsFragment;
@@ -22,7 +23,6 @@ export interface CommentProps {
   parent: CommentThreadPropsFragment;
   handleDeleteComment?: (comment: CommentPropsFragment) => Promise<void> | void;
   handleEditComment?: (comment: CommentPropsFragment) => Promise<void> | void;
-  handleExpand?: (threadId: string | null) => void;
 }
 
 export const CommentItem = ({
@@ -31,10 +31,10 @@ export const CommentItem = ({
   isChild,
   handleDeleteComment,
   isExpanded,
-  handleExpand,
   parent,
   resourceId,
 }: CommentProps) => {
+  const { toggleThreadComments } = useCommentsContext();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -102,12 +102,14 @@ export const CommentItem = ({
             backgroundColor: 'rgba(245,235,111,0.5)',
             padding: '0',
           },
+          '& > *': {
+            padding: '0',
+            margin: '0',
+          },
         }}
       >
-        {comment.body.value && (
-          <div data-testid="comment-body">
-            <Blocks data={comment.body.value} />
-          </div>
+        {!isEditing && comment.body.value && (
+          <Blocks data={comment.body.value} />
         )}
 
         {!!isEditing && (
@@ -132,9 +134,7 @@ export const CommentItem = ({
               },
             }}
             onClick={() => {
-              const newValue = (!isExpanded ? parent.id : null) || null;
-
-              handleExpand?.(newValue);
+              toggleThreadComments(parent.id);
             }}
           >
             {isExpanded ? 'Hide' : 'View'} Replies ({repliesCount})

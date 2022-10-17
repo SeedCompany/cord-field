@@ -1,5 +1,5 @@
 import { Drawer } from '@mui/material';
-import { useCookieState } from 'ahooks';
+import { useCommentsContext } from './CommentsBarContext';
 import { CommentsThreadList } from './CommentsThreadList';
 
 interface CommentsBarProps {
@@ -7,28 +7,27 @@ interface CommentsBarProps {
 }
 
 export const CommentsBar = ({ resourceId }: CommentsBarProps) => {
-  const [isShowingCookie] = useCookieState('showComments', {
-    defaultValue: 'false',
-  });
+  const { isCommentsBarOpen } = useCommentsContext();
 
   const minWidth = 300;
   const width = 300;
-  const open = !!resourceId && Boolean(isShowingCookie);
+
+  console.log('isCommentsBarOpen', isCommentsBarOpen);
 
   return (
     <Drawer
       variant="persistent"
-      open={open}
+      open={isCommentsBarOpen}
       anchor="right"
       sx={[
-        !open && {
+        !isCommentsBarOpen && {
           display: 'none',
         },
         {
           overflowY: 'auto',
           display: 'flex',
         },
-        open && {
+        isCommentsBarOpen && {
           width,
           flexShrink: 0,
         },
