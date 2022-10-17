@@ -8,9 +8,17 @@ fragment ProgressAndPlanning on LanguageEngagement {
     }
   }
   currentProgressReportDue {
-    ...SecuredPeriodicReport
+    canRead
+    canEdit
+    value {
+      ...PeriodicReport
+    }
   }
   nextProgressReportDue {
-    ...SecuredPeriodicReport
+    canRead
+    canEdit
+    value {
+      ...PeriodicReport
+    }
   }
 }
