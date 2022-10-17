@@ -60,8 +60,6 @@ export const CommentItem = ({
     }
   };
 
-  console.log(comment.modifiedAt, comment.createdAt);
-
   return (
     <Paper
       elevation={repliesCount ? 4 : isChild ? 1 : 3}
@@ -139,35 +137,39 @@ export const CommentItem = ({
           </Typography>
         )}
       </Box>
-      <CommentItemMenu
-        commentId={comment.id}
-        anchorEl={actionsAnchor}
-        onClose={() => setActionsAnchor(null)}
-        open={Boolean(actionsAnchor)}
-        onDelete={() => {
-          void deleteComment(comment.id);
-        }}
-        onEdit={() => {
-          setIsEditing(true);
-          setActionsAnchor(null);
-        }}
-      />
-
-      <IconButton
-        onClick={(e) => setActionsAnchor(e.currentTarget)}
-        sx={(theme) => ({
-          margin: theme.spacing(1),
-          position: 'absolute',
-          right: 0,
-          top: 0,
-        })}
-      >
-        <MoreVert
-          sx={{
-            fontSize: '1.25rem',
-          }}
-        />
-      </IconButton>
+      {comment.canDelete && (
+        <>
+          <CommentItemMenu
+            commentId={comment.id}
+            anchorEl={actionsAnchor}
+            onClose={() => setActionsAnchor(null)}
+            open={Boolean(actionsAnchor)}
+            onDelete={() => {
+              void deleteComment(comment.id);
+            }}
+            onEdit={() => {
+              setIsEditing(true);
+              setActionsAnchor(null);
+            }}
+          />
+          <IconButton
+            onClick={(e) => setActionsAnchor(e.currentTarget)}
+            sx={(theme) => ({
+              margin: theme.spacing(1),
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            })}
+            data-testid="comment-menu-button"
+          >
+            <MoreVert
+              sx={{
+                fontSize: '1.25rem',
+              }}
+            />
+          </IconButton>
+        </>
+      )}
     </Paper>
   );
 };
