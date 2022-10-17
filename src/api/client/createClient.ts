@@ -6,6 +6,7 @@ import { createCache } from './createCache';
 import { delayLink } from './links/delay.link';
 import { ErrorCache, ErrorCacheLink } from './links/errorCache.link';
 import { createHttpLink } from './links/http.link';
+import { createPersistedQueryLink } from './links/persisted-queries.link';
 import { SessionLink } from './links/session.link';
 import { createSsrLink, SsrLinkProps } from './links/ssr.link';
 
@@ -34,6 +35,7 @@ export const createClient = ({
       ),
       ssr ? createSsrLink(ssr) : sessionLink,
       new RetryLink(),
+      createPersistedQueryLink(),
       createHttpLink(),
     ]),
   });
