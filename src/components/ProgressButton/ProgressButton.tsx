@@ -1,31 +1,16 @@
 import {
+  Box,
   Button,
   ButtonProps,
   CircularProgress,
   CircularProgressProps,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles()({
-  // This is to center spinner within button, while maintaining consistent button width.
-  // If we were to replace the button text, the button size could change which we want to
-  // avoid because the buttons shifting around is jarring for the user. Esp since the
-  // spinner is only shown for a short time.
-  progressWrapper: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  hidden: {
-    visibility: 'hidden',
-  },
-});
+// This is to center spinner within button, while maintaining consistent button width.
+// If we were to replace the button text, the button size could change which we want to
+// avoid because the buttons shifting around is jarring for the user. Esp since the
+// spinner is only shown for a short time.
 
 export interface ProgressButtonProps extends ButtonProps {
   /** Show progress? */
@@ -44,22 +29,43 @@ export const ProgressButton = ({
   children,
   ...rest
 }: ProgressButtonProps) => {
-  const { classes } = useStyles();
   const theme = useTheme();
   const size = theme.components?.MuiButton?.defaultProps?.size ?? rest.size;
 
   const inner = (
     <>
       {progress ? (
-        <div className={classes.progressWrapper}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <CircularProgress
             size={size === 'large' ? 26 : size === 'small' ? 16 : 20}
             color={!rest.disabled ? 'inherit' : 'primary'}
             {...progressProps}
           />
-        </div>
+        </Box>
       ) : null}
-      <span className={progress ? classes.hidden : undefined}>{children}</span>
+      <Box
+        component="span"
+        sx={
+          progress
+            ? {
+                visibility: 'hidden',
+              }
+            : undefined
+        }
+      >
+        {children}
+      </Box>
     </>
   );
 
