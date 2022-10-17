@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@mui/material';
 import { setIn } from 'final-form';
 import { useMemo } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   CreateLanguage,
@@ -46,12 +45,6 @@ export type LanguageFormProps<Mutation extends LanguageMutation> =
     language?: LanguageFormFragment;
   };
 
-const useStyles = makeStyles()(() => ({
-  content: {
-    overflow: 'hidden', // prevent scroll bars from negative margins of Grid
-  },
-}));
-
 const decorators = [
   ...DialogForm.defaultDecorators,
   matchFieldIfSame(`language.name`, `language.displayName`),
@@ -61,7 +54,6 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
   language,
   ...rest
 }: LanguageFormProps<Mutation>) => {
-  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const maxPopulation = useMemo(
     () =>
@@ -93,7 +85,13 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
     >
       {({ values }: { values: Partial<LanguageFormValues<Mutation>> }) => {
         return (
-          <Grid container spacing={3} className={classes.content}>
+          <Grid
+            container
+            spacing={3}
+            sx={{
+              overflow: 'hidden', // prevent scroll bars from negative margins of Grid
+            }}
+          >
             <Grid item xs={12}>
               <SubmitError align="left" />
             </Grid>
