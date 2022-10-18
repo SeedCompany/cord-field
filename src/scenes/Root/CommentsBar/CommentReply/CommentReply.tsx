@@ -146,6 +146,12 @@ export const CommentReply = ({
               placeholder={placeholder}
               autofocus
               blocks={isEditing ? blocks : undefined}
+              customTools={{
+                paragraph: true,
+                header: true,
+                list: true,
+                quote: true,
+              }}
             />
           </Box>
           <Button onClick={handleCancel} disabled={isSubmitting}>

@@ -1,7 +1,7 @@
 import CheckList from '@editorjs/checklist';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
-import { EditorConfig } from '@editorjs/editorjs';
+import { EditorConfig, ToolConstructable } from '@editorjs/editorjs';
 import Embed from '@editorjs/embed';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
@@ -34,4 +34,35 @@ export const EDITOR_JS_TOOLS: EditorConfig['tools'] = {
   delimiter: Delimiter,
   inlineCode: InlineCode,
   simpleImage: SimpleImage,
+};
+
+export type CustomToolsInput = {
+  [key in
+    | 'paragraph'
+    | 'embed'
+    | 'table'
+    | 'list'
+    | 'warning'
+    | 'code'
+    | 'linkTool'
+    | 'image'
+    | 'raw'
+    | 'header'
+    | 'quote'
+    | 'marker'
+    | 'checklist'
+    | 'delimiter'
+    | 'inlineCode'
+    | 'simpleImage']?: boolean;
+};
+
+export const customTools = (toolsNames: CustomToolsInput) => {
+  const customTools: EditorConfig['tools'] = {};
+  Object.keys(toolsNames).forEach((toolName) => {
+    const keyName = toolName as keyof CustomToolsInput;
+    if (toolsNames[keyName] && EDITOR_JS_TOOLS[keyName]) {
+      customTools[keyName] = EDITOR_JS_TOOLS[toolName] as ToolConstructable;
+    }
+  });
+  return customTools;
 };
