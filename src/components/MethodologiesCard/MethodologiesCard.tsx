@@ -42,6 +42,7 @@ export const MethodologiesCard = ({
         {methodology && (
           <Grid
             item
+            container
             wrap="nowrap"
             sx={(theme) => ({
               display: 'flex',
