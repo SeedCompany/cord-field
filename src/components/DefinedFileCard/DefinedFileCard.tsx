@@ -15,7 +15,6 @@ import {
 import { DateTime } from 'luxon';
 import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { makeStyles } from 'tss-react/mui';
 import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
 import { extendSx, SecuredProp, StyleProps } from '~/common';
 import {
@@ -30,12 +29,6 @@ import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
 import { DropzoneOverlay } from '../Upload';
-
-const useStyles = makeStyles()(({ typography }) => ({
-  dropzoneText: {
-    fontSize: typography.h2.fontSize,
-  },
-}));
 
 export interface DefinedFileCardProps extends StyleProps {
   label: ReactNode;
@@ -90,7 +83,6 @@ const FileCardMeta = ({
 
 export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
   function DefinedFileCard(props, ref) {
-    const { classes } = useStyles();
     const {
       label,
       resourceType,
@@ -182,9 +174,13 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       >
         <input {...getInputProps()} name="defined_file_version_uploader" />
         <DropzoneOverlay
-          classes={{ text: classes.dropzoneText }}
           isDragActive={isDragActive}
           message={!file ? `Add ${label} file` : 'Drop new version to upload'}
+          TypographyProps={{
+            sx: (theme) => ({
+              fontSize: theme.typography.h2.fontSize,
+            }),
+          }}
         />
         <CardActionArea
           {...rest}
