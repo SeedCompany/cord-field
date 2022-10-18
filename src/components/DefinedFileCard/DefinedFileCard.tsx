@@ -6,6 +6,7 @@ import {
 } from '@mui/icons-material';
 import {
   Avatar,
+  Box,
   Card,
   CardActionArea,
   Skeleton,
@@ -16,7 +17,7 @@ import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
-import { SecuredProp, StyleProps } from '~/common';
+import { extendSx, SecuredProp, StyleProps } from '~/common';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -30,65 +31,9 @@ import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
 import { DropzoneOverlay } from '../Upload';
 
-const useStyles = makeStyles()(({ palette, spacing, typography }) => ({
-  root: {
-    flex: 1,
-    position: 'relative',
-  },
-  addActionArea: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    padding: spacing(3, 4),
-  },
-  editActionArea: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    padding: spacing(3, 4),
-    position: 'relative',
-  },
-  avatar: {
-    width: 58,
-    height: 58,
-  },
+const useStyles = makeStyles()(({ typography }) => ({
   dropzoneText: {
     fontSize: typography.h2.fontSize,
-  },
-  addIcon: {
-    color: 'white',
-  },
-  icon: {
-    marginRight: spacing(4),
-  },
-  info: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  fileInfo: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  fileName: {
-    marginBottom: spacing(1),
-    marginRight: spacing(2), // so it doesn't collide with abs pos context menu
-  },
-  fileMeta: {
-    color: palette.text.secondary,
-  },
-  actionsMenu: {
-    margin: spacing(1),
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  text: {
-    marginTop: spacing(1),
-    textTransform: 'none',
   },
 }));
 
@@ -121,10 +66,11 @@ const FileCardMeta = ({
   resourceType,
   text,
 }: FileCardMetaProps) => {
-  const { classes } = useStyles();
   return (
     <Typography
-      className={classes.fileMeta}
+      sx={(theme) => ({
+        color: theme.palette.text.secondary,
+      })}
       variant="caption"
       component="p"
       gutterBottom
@@ -144,7 +90,7 @@ const FileCardMeta = ({
 
 export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
   function DefinedFileCard(props, ref) {
-    const { classes, cx } = useStyles();
+    const { classes } = useStyles();
     const {
       label,
       resourceType,
@@ -223,7 +169,17 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
     const Icon = !file && canEdit ? AddIcon : NotPermittedIcon;
 
     const card = (
-      <Card {...getRootProps()} className={cx(classes.root, className)} sx={sx}>
+      <Card
+        {...getRootProps()}
+        className={className}
+        sx={[
+          {
+            flex: 1,
+            position: 'relative',
+          },
+          ...extendSx(sx),
+        ]}
+      >
         <input {...getInputProps()} name="defined_file_version_uploader" />
         <DropzoneOverlay
           classes={{ text: classes.dropzoneText }}
@@ -233,19 +189,49 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
         <CardActionArea
           {...rest}
           ref={ref}
-          className={!file ? classes.addActionArea : classes.editActionArea}
+          sx={
+            !file
+              ? (theme) => ({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                  padding: theme.spacing(3, 4),
+                })
+              : (theme) => ({
+                  flex: 1,
+                  height: '100%',
+                  display: 'flex',
+                  padding: theme.spacing(3, 4),
+                  position: 'relative',
+                })
+          }
           disabled={isCardDisabled}
           onClick={() => file && openFilePreview(file)}
         >
           {!file ? (
             <>
-              <Avatar classes={{ root: classes.avatar }}>
-                <Icon className={classes.addIcon} fontSize="large" />
+              <Avatar
+                sx={{
+                  '&.MuiAvatar-root': {
+                    width: 58,
+                    height: 58,
+                  },
+                }}
+              >
+                <Icon
+                  sx={{
+                    color: 'white',
+                  }}
+                  fontSize="large"
+                />
               </Avatar>
               <Typography
                 variant="button"
                 align="center"
-                className={classes.text}
+                sx={(theme) => ({
+                  marginTop: theme.spacing(1),
+                  textTransform: 'none',
+                })}
               >
                 {canEdit ? `Add ${label}` : `No ${label} uploaded`}
               </Typography>
@@ -256,14 +242,36 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                 <HugeIcon
                   icon={ReportIcon}
                   loading={!file}
-                  className={classes.icon}
+                  sx={(theme) => ({
+                    marginRight: theme.spacing(4),
+                  })}
                 />
               )}
-              <div className={classes.info}>
-                <Typography className={classes.fileName} variant="h4">
+              <Box
+                sx={{
+                  flex: 1,
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <Typography
+                  sx={(theme) => ({
+                    marginBottom: theme.spacing(1),
+                    marginRight: theme.spacing(2), // so it doesn't collide with abs pos context menu
+                  })}
+                  variant="h4"
+                >
                   {label}
                 </Typography>
-                <div className={classes.fileInfo}>
+                <Box
+                  sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}
+                >
                   <FileCardMeta
                     canRead={canRead}
                     loading={!file}
@@ -281,19 +289,26 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                       </>
                     }
                   />
-                </div>
-              </div>
+                </Box>
+              </Box>
             </>
           )}
         </CardActionArea>
         {file && canRead && (
-          <div className={classes.actionsMenu}>
+          <Box
+            sx={(theme) => ({
+              margin: theme.spacing(1),
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            })}
+          >
             <ActionsMenu
               actions={permittedFileActions}
               item={file}
               onVersionUpload={onVersionUpload}
             />
-          </div>
+          </Box>
         )}
       </Card>
     );
