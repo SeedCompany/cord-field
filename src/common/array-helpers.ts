@@ -90,3 +90,13 @@ export const splice = <T>(
  */
 export const notNullish = <T>(item: T | null | undefined): item is T =>
   item != null;
+
+/**
+ * Helper for array to get the first value
+ * @param obj - The object to get the first value from
+ * @returns The first value or undefined if the object is empty
+ * @example
+ * const first = firstValue({ a: 1, b: 2 }) // 1
+ */
+export const firstValue = <K extends string, V>(obj: Record<K, V>) =>
+  obj[keys(obj)[0]!];

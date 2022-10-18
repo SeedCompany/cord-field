@@ -5,7 +5,6 @@ import {
   Menu,
   MenuItem,
   MenuProps,
-  Theme,
 } from '@mui/material';
 
 interface CommentItemMenuProps extends Partial<MenuProps> {
@@ -24,10 +23,10 @@ export const CommentItemMenu = ({
   onEdit,
   ...rest
 }: CommentItemMenuProps) => {
-  const listItemSx = (theme: Theme) => ({
-    marginRight: theme.spacing(2),
+  const listItemSx = {
+    marginRight: 2,
     minWidth: 'unset',
-  });
+  };
 
   return (
     <Menu

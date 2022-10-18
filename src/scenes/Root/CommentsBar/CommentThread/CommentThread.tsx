@@ -1,5 +1,3 @@
-// import { useQuery } from '@apollo/client';
-
 import { useEffect } from 'react';
 import { CommentItem } from '../CommentItem';
 import { useCommentsContext } from '../CommentsBarContext';

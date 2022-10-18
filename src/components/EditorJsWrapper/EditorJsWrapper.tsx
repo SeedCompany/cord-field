@@ -1,11 +1,7 @@
 import { EditorConfig } from '@editorjs/editorjs';
 import { EditorCore } from '@react-editor-js/core';
 import { createReactEditorJS } from 'react-editor-js';
-import {
-  customTools,
-  CustomToolsInput,
-  EDITOR_JS_TOOLS,
-} from './editorJsTools';
+import { customTools, EDITOR_JS_TOOLS, ToolKey } from './editorJsTools';
 
 export interface EditorJsWrapperProps extends EditorConfig {
   onInitialize?: (instance: EditorCore) => void;
@@ -13,7 +9,7 @@ export interface EditorJsWrapperProps extends EditorConfig {
   placeholder?: string;
   autofocus?: boolean;
   blocks?: JSON;
-  customTools?: CustomToolsInput;
+  customTools?: ToolKey[];
 }
 
 export const EditorJsWrapper = ({

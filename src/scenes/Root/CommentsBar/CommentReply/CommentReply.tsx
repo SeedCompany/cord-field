@@ -4,10 +4,7 @@ import { Box, Button, TextField } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
 import { useRef, useState } from 'react';
 import { StyleProps } from '~/common';
-import {
-  CreateOrReplyCommentDocument,
-  UpdateCommentDocument,
-} from './CommentReply.graphql';
+import { CreateOrReplyCommentDocument } from './CommentReply.graphql';
 
 const EditorJsWrapper = loadable(() => import('~/components/EditorJsWrapper'), {
   resolveComponent: (m) => m.EditorJsWrapper,
@@ -18,9 +15,6 @@ export interface CommentReplyProps extends StyleProps {
   resourceId: string;
   commentId?: string;
   placeholder?: string;
-  blocks?: JSON;
-  isEditing?: boolean;
-  handleClose?: () => void;
 }
 
 export const CommentReply = ({
@@ -29,12 +23,8 @@ export const CommentReply = ({
   commentId = '',
   placeholder = 'Write a reply...',
   sx,
-  isEditing = false,
-  handleClose,
-  blocks,
 }: CommentReplyProps) => {
   const [createComment] = useMutation(CreateOrReplyCommentDocument);
-  const [updateComment] = useMutation(UpdateCommentDocument);
   const [isReplying, setIsReplying] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,19 +39,11 @@ export const CommentReply = ({
   };
 
   const handleCancel = () => {
-    if (isEditing) {
-      handleClose?.();
-    } else {
-      setIsReplying(false);
-    }
+    setIsReplying(false);
   };
 
   const handleSubmit = () => {
-    if (isEditing) {
-      void handleUpdateComment();
-    } else {
-      void handleSave();
-    }
+    void handleSave();
   };
 
   const handleSave = async () => {
@@ -85,29 +67,9 @@ export const CommentReply = ({
     }
   };
 
-  const handleUpdateComment = async () => {
-    const commentBody = await editor.current?.save();
-
-    if (commentBody && !(commentBody.blocks.length > 0)) {
-      return;
-    }
-
-    setIsSubmitting(true);
-    const { data } = await updateComment({
-      variables: {
-        commentId,
-        commentBody,
-      },
-    });
-    if (data?.updateComment) {
-      setIsSubmitting(false);
-      handleClose?.();
-    }
-  };
-
   return (
     <Box sx={sx}>
-      {isReplying || isEditing ? (
+      {isReplying ? (
         <>
           <Box
             sx={(theme) => ({
@@ -145,13 +107,7 @@ export const CommentReply = ({
               onInitialize={handleInitialize}
               placeholder={placeholder}
               autofocus
-              blocks={isEditing ? blocks : undefined}
-              customTools={{
-                paragraph: true,
-                header: true,
-                list: true,
-                quote: true,
-              }}
+              customTools={['Paragraph', 'List']}
             />
           </Box>
           <Button onClick={handleCancel} disabled={isSubmitting}>

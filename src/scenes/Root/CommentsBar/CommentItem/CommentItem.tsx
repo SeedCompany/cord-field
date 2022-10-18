@@ -1,17 +1,17 @@
 import { useMutation } from '@apollo/client';
 import { MoreVert } from '@mui/icons-material';
 import { Box, IconButton, MenuProps, Paper, Typography } from '@mui/material';
-import Blocks from 'editorjs-blocks-react-renderer';
+import EditorJsRenderer from 'editorjs-blocks-react-renderer';
 import { useState } from 'react';
 import { removeItemFromList } from '~/api';
 import { useDateTimeFormatter } from '~/components/Formatters';
 import { CommentItemMenu } from '../CommentItemMenu';
-import { CommentReply } from '../CommentReply';
 import { useCommentsContext } from '../CommentsBarContext';
 import {
   CommentPropsFragment,
   CommentThreadPropsFragment,
 } from '../CommentsThreadList.graphql';
+import { EditComment } from '../EditComment';
 import { DeleteCommentDocument } from './CommentItem.graphql';
 
 export interface CommentProps {
@@ -21,18 +21,15 @@ export interface CommentProps {
   resourceId: string;
   isExpanded?: boolean;
   parent: CommentThreadPropsFragment;
-  handleDeleteComment?: (comment: CommentPropsFragment) => Promise<void> | void;
-  handleEditComment?: (comment: CommentPropsFragment) => Promise<void> | void;
+  onEditComment?: (comment: CommentPropsFragment) => void;
 }
 
 export const CommentItem = ({
   comment,
   repliesCount = 0,
   isChild,
-  handleDeleteComment,
   isExpanded,
   parent,
-  resourceId,
 }: CommentProps) => {
   const { toggleThreadComments } = useCommentsContext();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
@@ -44,7 +41,7 @@ export const CommentItem = ({
   const formattedDateString = dateTimeFormatter(comment.modifiedAt);
 
   const deleteComment = async (commentId: string) => {
-    const { data } = await deleteCommentMutation({
+    await deleteCommentMutation({
       variables: {
         id: commentId,
       },
@@ -53,11 +50,6 @@ export const CommentItem = ({
         item: comment,
       }),
     });
-
-    if (data?.deleteComment) {
-      setActionsAnchor(null);
-      void handleDeleteComment?.(comment);
-    }
   };
 
   return (
@@ -109,16 +101,14 @@ export const CommentItem = ({
         }}
       >
         {!isEditing && comment.body.value && (
-          <Blocks data={comment.body.value} />
+          <EditorJsRenderer data={comment.body.value} />
         )}
 
         {!!isEditing && (
-          <CommentReply
-            blocks={comment.body.value}
+          <EditComment
             commentId={comment.id}
-            resourceId={resourceId}
-            handleClose={() => setIsEditing(false)}
-            isEditing
+            onClose={() => setIsEditing(false)}
+            blocks={comment.body.value}
           />
         )}
 
@@ -158,12 +148,12 @@ export const CommentItem = ({
           />
           <IconButton
             onClick={(e) => setActionsAnchor(e.currentTarget)}
-            sx={(theme) => ({
-              margin: theme.spacing(1),
+            sx={{
+              margin: 1,
               position: 'absolute',
               right: 0,
               top: 0,
-            })}
+            }}
             data-testid="comment-menu-button"
           >
             <MoreVert
