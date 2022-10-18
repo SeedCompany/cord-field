@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import { CommentItem } from '../CommentItem';
-import { CommentThreadPropsFragment } from '../CommentsBar.graphql';
 import { useCommentsContext } from '../CommentsBarContext';
+import { CommentThreadPropsFragment } from '../CommentsThreadList.graphql';
 import { CommentThreadAccordion } from './CommentThreadAccordion';
 
 interface CommentThreadProps {

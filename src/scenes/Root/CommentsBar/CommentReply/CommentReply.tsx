@@ -7,7 +7,7 @@ import { StyleProps } from '~/common';
 import {
   CreateOrReplyCommentDocument,
   UpdateCommentDocument,
-} from '../CommentsBar.graphql';
+} from './CommentReply.graphql';
 
 const EditorJsWrapper = loadable(() => import('~/components/EditorJsWrapper'), {
   resolveComponent: (m) => m.EditorJsWrapper,

@@ -19,43 +19,6 @@ query CommentThread($id: ID!) {
   }
 }
 
-mutation CreateOrReplyComment(
-  $commentBody: RichText!
-  $resourceId: ID!
-  $threadId: ID
-) {
-  createComment(
-    input: { body: $commentBody, resourceId: $resourceId, threadId: $threadId }
-  ) {
-    commentThread {
-      parent {
-        id
-        __typename
-        commentThreads {
-          hasMore
-          items {
-            ...CommentThreadProps
-          }
-        }
-      }
-    }
-  }
-}
-
-mutation UpdateComment($commentBody: RichText!, $commentId: ID!) {
-  updateComment(input: { body: $commentBody, id: $commentId }) {
-    comment {
-      ...CommentProps
-    }
-  }
-}
-
-mutation DeleteComment($id: ID!) {
-  deleteComment(id: $id) {
-    __typename
-  }
-}
-
 fragment CommentProps on Comment {
   id
   body {

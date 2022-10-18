@@ -7,12 +7,12 @@ import { removeItemFromList } from '~/api';
 import { useDateTimeFormatter } from '~/components/Formatters';
 import { CommentItemMenu } from '../CommentItemMenu';
 import { CommentReply } from '../CommentReply';
+import { useCommentsContext } from '../CommentsBarContext';
 import {
   CommentPropsFragment,
   CommentThreadPropsFragment,
-  DeleteCommentDocument,
-} from '../CommentsBar.graphql';
-import { useCommentsContext } from '../CommentsBarContext';
+} from '../CommentsThreadList.graphql';
+import { DeleteCommentDocument } from './CommentItem.graphql';
 
 export interface CommentProps {
   comment: CommentPropsFragment;

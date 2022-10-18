@@ -9,7 +9,6 @@ import InlineCode from '@editorjs/inline-code';
 import LinkTool from '@editorjs/link';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
-// import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Raw from '@editorjs/raw';
 import SimpleImage from '@editorjs/simple-image';
@@ -17,8 +16,7 @@ import Table from '@editorjs/table';
 import Warning from '@editorjs/warning';
 
 export const EDITOR_JS_TOOLS: EditorConfig['tools'] = {
-  // NOTE: Paragraph is default tool. Declare only when you want to change paragraph option.
-  // paragraph: Paragraph,
+  // NOTE: Paragraph is default tool. No need to declare it, unless you want to change paragraph option.
   embed: Embed,
   table: Table,
   list: List,

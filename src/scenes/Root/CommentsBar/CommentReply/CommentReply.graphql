@@ -1,0 +1,30 @@
+mutation CreateOrReplyComment(
+  $commentBody: RichText!
+  $resourceId: ID!
+  $threadId: ID
+) {
+  createComment(
+    input: { body: $commentBody, resourceId: $resourceId, threadId: $threadId }
+  ) {
+    commentThread {
+      parent {
+        id
+        __typename
+        commentThreads {
+          hasMore
+          items {
+            ...CommentThreadProps
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateComment($commentBody: RichText!, $commentId: ID!) {
+  updateComment(input: { body: $commentBody, id: $commentId }) {
+    comment {
+      ...CommentProps
+    }
+  }
+}

@@ -3,11 +3,11 @@ import { Box, List, ListSubheader, Typography } from '@mui/material';
 import { IconButton } from '~/components/IconButton';
 import { useListQuery } from '~/components/List';
 import { CommentReply } from './CommentReply';
+import { useCommentsContext } from './CommentsBarContext';
 import {
   CommentThreadPropsFragment,
   CommentThreadsListDocument,
-} from './CommentsBar.graphql';
-import { useCommentsContext } from './CommentsBarContext';
+} from './CommentsThreadList.graphql';
 import { CommentThread } from './CommentThread';
 
 interface CommentThreadListProps {
@@ -54,7 +54,7 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
       }
     >
       <Box sx={{ padding: [4, 2] }}>
-        <Typography variant="h6">Create a comment</Typography>
+        <Typography variant="h6">Write a comment</Typography>
         <CommentReply resourceId={resourceId} />
       </Box>
 

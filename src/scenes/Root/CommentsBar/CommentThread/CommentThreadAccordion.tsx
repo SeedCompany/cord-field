@@ -1,8 +1,8 @@
 import { Accordion, AccordionDetails } from '@mui/material';
 import { CommentItem } from '../CommentItem';
 import { CommentReply } from '../CommentReply';
-import { CommentThreadPropsFragment } from '../CommentsBar.graphql';
 import { useCommentsContext } from '../CommentsBarContext';
+import { CommentThreadPropsFragment } from '../CommentsThreadList.graphql';
 
 interface CommentThreadProps {
   thread: CommentThreadPropsFragment;
