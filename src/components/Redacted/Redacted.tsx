@@ -1,7 +1,6 @@
 import { Skeleton, SkeletonProps, Tooltip, TooltipProps } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
-import { ChildrenProp } from '~/common';
+import { ChildrenProp, extendSx } from '~/common';
 
 export interface RedactedProps {
   info: TooltipProps['title'];
@@ -10,12 +9,6 @@ export interface RedactedProps {
   SkeletonProps?: SkeletonProps;
 }
 
-const useStyles = makeStyles()(() => ({
-  redacted: {
-    transform: 'initial',
-  },
-}));
-
 export const Redacted = ({
   info,
   width,
@@ -23,7 +16,6 @@ export const Redacted = ({
   SkeletonProps,
   children,
 }: RedactedProps & ChildrenProp) => {
-  const { classes, cx } = useStyles();
   return (
     <Tooltip title={info} {...TooltipProps}>
       <Skeleton
@@ -32,8 +24,14 @@ export const Redacted = ({
         {...SkeletonProps}
         classes={{
           ...SkeletonProps?.classes,
-          text: cx(classes.redacted, SkeletonProps?.classes?.text),
+          text: SkeletonProps?.classes?.text,
         }}
+        sx={[
+          {
+            transform: 'initial',
+          },
+          ...extendSx(SkeletonProps?.sx),
+        ]}
       >
         {children}
       </Skeleton>

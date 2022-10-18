@@ -41,7 +41,7 @@ export const DataButton = <T extends any>({
   return loading ? (
     <Skeleton
       sx={{
-        '& .MuiSkeleton-fitContent': {
+        '&.MuiSkeleton-fitContent': {
           maxWidth: 'initial',
         },
       }}
@@ -52,7 +52,7 @@ export const DataButton = <T extends any>({
     <Redacted
       SkeletonProps={{
         sx: {
-          '& .MuiSkeleton-fitContent': {
+          '&.MuiSkeleton-fitContent': {
             maxWidth: 'initial',
           },
         },
