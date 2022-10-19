@@ -65,7 +65,6 @@ export const Sensitivity = ({
           },
           Boolean(!loading) && value ? sensitivityStyles[value] : {},
         ]}
-        // className={cx( : null)}
         size="small"
         label={
           loading ? (

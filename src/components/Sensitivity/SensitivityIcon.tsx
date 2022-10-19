@@ -1,23 +1,18 @@
 import { VerifiedUser } from '@mui/icons-material';
-import { SvgIconProps, Tooltip } from '@mui/material';
-import { grey } from '@mui/material/colors';
-import { makeStyles } from 'tss-react/mui';
+import { SvgIconProps, Theme, Tooltip } from '@mui/material';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
 
-const useStyles = makeStyles()(({ palette }) => ({
-  // eslint-disable-next-line tss-unused-classes/unused-classes
-  Low: {
-    color: grey[400],
-  },
-  // eslint-disable-next-line tss-unused-classes/unused-classes
-  Medium: {
-    color: palette.warning.main,
-  },
-  // eslint-disable-next-line tss-unused-classes/unused-classes
-  High: {
-    color: palette.error.main,
-  },
-}));
+const sensitivityStyles = {
+  Low: (theme: Theme) => ({
+    color: theme.palette.grey[400],
+  }),
+  Medium: (theme: Theme) => ({
+    color: theme.palette.warning.main,
+  }),
+  High: (theme: Theme) => ({
+    color: theme.palette.error.main,
+  }),
+};
 
 export interface SensitivityIconProps extends SvgIconProps {
   value?: SensitivityType;
@@ -32,12 +27,11 @@ export const SensitivityIcon = ({
   disableTooltip,
   ...rest
 }: SensitivityIconProps) => {
-  const { classes, cx } = useStyles();
-
   return (
     <Tooltip title={!loading && !disableTooltip ? `${value} Sensitivity` : ''}>
       <VerifiedUser
-        className={cx(!loading && value ? classes[value] : null, className)}
+        className={className}
+        sx={[!loading && value ? sensitivityStyles[value] : {}]}
         {...rest}
       />
     </Tooltip>
