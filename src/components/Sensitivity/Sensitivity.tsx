@@ -1,60 +1,23 @@
 import { VerifiedUserOutlined } from '@mui/icons-material';
-import { Box, Chip, Skeleton, Typography } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import { Box, Chip, Skeleton, Theme, Typography } from '@mui/material';
 import { meanBy } from 'lodash';
-import { makeStyles } from 'tss-react/mui';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
 import { Sx } from '~/common';
 
 const possible: SensitivityType[] = ['Low', 'Medium', 'High'];
 const avgLength = Math.round(meanBy(possible, (s) => s.length));
 
-const useStyles = makeStyles()(({ palette, spacing }) => ({
-  iconWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: spacing(),
-  },
-  icon: {
-    fontSize: 16,
-    color: palette.text.secondary,
-    marginRight: 2,
-  },
-  chip: {
-    borderRadius: 4,
-    color: 'white',
-    backgroundColor: 'transparent',
-    position: 'relative',
-  },
-  chipLabel: {
-    borderRadius: 'inherit', // so it passes down to skeleton
-  },
-  skeletonWidth: {
-    width: `${avgLength}ch`,
-  },
-  skeleton: {
-    borderRadius: 'inherit',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '100%',
-    width: '100%',
-  },
-  // eslint-disable-next-line tss-unused-classes/unused-classes
-  Low: {
-    backgroundColor: grey[400],
-  },
-  // eslint-disable-next-line tss-unused-classes/unused-classes
-  Medium: {
-    backgroundColor: palette.warning.main,
-  },
-  // eslint-disable-next-line tss-unused-classes/unused-classes
-  High: {
-    backgroundColor: palette.error.main,
-  },
-}));
+const sensitivityStyles = {
+  Low: (theme: Theme) => ({
+    backgroundColor: theme.palette.grey[400],
+  }),
+  Medium: (theme: Theme) => ({
+    backgroundColor: theme.palette.warning.main,
+  }),
+  High: (theme: Theme) => ({
+    backgroundColor: theme.palette.error.main,
+  }),
+};
 
 export interface SensitivityProps {
   value?: SensitivityType;
@@ -69,23 +32,62 @@ export const Sensitivity = ({
   className,
   sx,
 }: SensitivityProps) => {
-  const { classes, cx } = useStyles();
-
   return (
     <Box className={className} sx={sx}>
-      <div className={classes.iconWrapper}>
-        <VerifiedUserOutlined className={classes.icon} />
+      <Box
+        sx={(theme) => ({
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: theme.spacing(),
+        })}
+      >
+        <VerifiedUserOutlined
+          sx={(theme) => ({
+            fontSize: 16,
+            color: theme.palette.text.secondary,
+            marginRight: 2,
+          })}
+        />
         <Typography variant="body2">Sensitivity</Typography>
-      </div>
+      </Box>
       <Chip
-        classes={{ label: classes.chipLabel }}
-        className={cx(classes.chip, !loading && value ? classes[value] : null)}
+        sx={[
+          {
+            '& > .MuiChip-label': {
+              borderRadius: 'inherit', // so it passes down to skeleton
+            },
+          },
+          {
+            borderRadius: '4px',
+            color: 'white',
+            backgroundColor: 'transparent',
+            position: 'relative',
+          },
+          Boolean(!loading) && value ? sensitivityStyles[value] : {},
+        ]}
+        // className={cx( : null)}
         size="small"
         label={
           loading ? (
             <>
-              <div className={classes.skeletonWidth} />
-              <Skeleton variant="rectangular" className={classes.skeleton} />
+              <Box
+                sx={{
+                  width: `${avgLength}ch`,
+                }}
+              />
+              <Skeleton
+                variant="rectangular"
+                sx={{
+                  borderRadius: 'inherit',
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: '100%',
+                  width: '100%',
+                }}
+              />
             </>
           ) : (
             value
