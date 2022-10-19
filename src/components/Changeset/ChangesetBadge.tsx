@@ -80,6 +80,9 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
           '&.MuiBadge-root': {
             display: 'flex',
           },
+          '& .MuiPaper-root': {
+            width: 1,
+          },
         },
         generatedModeStyles,
       ]}
