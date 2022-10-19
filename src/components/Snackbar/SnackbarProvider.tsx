@@ -13,7 +13,6 @@ export const SnackbarProvider = ({ children }: ChildrenProp) => {
       component={BaseSnackbarProvider}
       children={children}
       iconVariant={icons}
-      maxSnack={10}
       sx={(theme) => ({
         '&.SnackbarItem-variantInfo': {
           backgroundColor: theme.palette.info.main,
