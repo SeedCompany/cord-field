@@ -1,59 +1,19 @@
-import { Badge, Grid, TooltipProps, Typography } from '@mui/material';
+import { Badge, Grid, Theme, TooltipProps, Typography } from '@mui/material';
 import { startCase } from 'lodash';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { mapFromList, UseStyles } from '~/common';
+import { mapFromList, StyleProps } from '~/common';
 import { BadgeWithTooltip } from '../BadgeWithTooltip';
 import { PaperTooltip } from '../PaperTooltip';
 import { DiffMode } from './ChangesetDiffContext';
 import { ChangesetIcon } from './ChangesetIcon';
 import { modeToPalette } from './theme';
 
-const useStyles = makeStyles<
-  ChangesetBadgeOwnProps,
-  'added' | 'changed' | 'removed' | 'outline'
->()(({ palette }, _params, classes) => ({
-  root: {
-    display: 'flex',
-  },
-  badge: {
-    padding: 0,
-    cursor: 'help',
-    ...mapFromList(['added', 'changed', 'removed'] as const, (mode) => {
-      const paletteKey = modeToPalette[mode];
-      const css = {
-        color: palette[paletteKey].contrastText,
-        background: palette[paletteKey].main,
-      };
-      return [`&.${classes[mode]}`, css];
-    }),
-  },
-  icon: {
-    fontSize: 12,
-  },
-  children: {
-    [`&.${classes.added}.${classes.outline}`]: {
-      border: `2px solid ${palette[modeToPalette.added].main}`,
-    },
-    [`&.${classes.changed}.${classes.outline}`]: {
-      border: `2px solid ${palette[modeToPalette.changed].main}`,
-    },
-    [`&.${classes.removed}`]: {
-      [`&.${classes.outline}`]: {
-        border: `2px solid ${palette[modeToPalette.removed].main}`,
-      },
-      boxShadow: 'none',
-      backgroundColor: 'inherit',
-      '& > *': {
-        filter: 'grayscale(1)',
-      },
-    },
-  },
-  added: {},
-  changed: {},
-  removed: {},
-  outline: {},
-}));
+const classes = {
+  added: 'changeset-badge-added',
+  changed: 'changeset-badge-changed',
+  removed: 'changeset-badge-removed',
+  outline: 'changeset-badge-outline',
+};
 
 interface ChangesetBadgeOwnProps {
   children: ReactNode;
@@ -63,16 +23,26 @@ interface ChangesetBadgeOwnProps {
   TooltipProps?: Omit<TooltipProps, 'title' | 'children'>;
 }
 
+const generatedModeStyles = (theme: Theme) => ({
+  ...mapFromList(['added', 'changed', 'removed'] as const, (mode) => {
+    const paletteKey = modeToPalette[mode];
+    const css = {
+      color: theme.palette[paletteKey].contrastText,
+      background: theme.palette[paletteKey].main,
+      padding: 0,
+      cursor: 'help',
+    };
+    return [`& .${classes[mode]} ~ .MuiBadge-badge`, css];
+  }),
+});
+
 export interface ChangesetBadgeProps
   extends ChangesetBadgeOwnProps,
-    UseStyles<typeof useStyles> {}
+    StyleProps {}
 
 export const ChangesetBadge = (props: ChangesetBadgeProps) => {
   const { mode, disableOutline, children, moreInfo, TooltipProps } = props;
   const outline = !disableOutline;
-  const { classes, cx } = useStyles(props, {
-    props: { classes: props.classes },
-  });
 
   if (!mode) {
     return <>{children}</>;
@@ -98,33 +68,58 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
           {content}
         </PaperTooltip>
       )}
-      badgeContent={
-        <ChangesetIcon mode={mode} color="inherit" className={classes.icon} />
-      }
+      badgeContent={<ChangesetIcon mode={mode} sx={{ fontSize: 12 }} />}
       classes={{
-        root: classes.root,
-        badge: cx({
-          [classes.badge]: true,
-          [classes.added]: mode === 'added',
-          [classes.changed]: mode === 'changed',
-          [classes.removed]: mode === 'removed',
-          [classes.outline]: outline,
-        }),
+        [classes.added]: mode === 'added',
+        [classes.changed]: mode === 'changed',
+        [classes.removed]: mode === 'removed',
+        [classes.outline]: outline,
       }}
+      sx={[
+        {
+          '&.MuiBadge-root': {
+            display: 'flex',
+          },
+        },
+        generatedModeStyles,
+      ]}
     >
       {isValidElement(children)
         ? cloneElement(children, {
             ...children.props,
-            className: cx(
-              {
-                [classes.children]: true,
-                [classes.added]: mode === 'added',
-                [classes.changed]: mode === 'changed',
-                [classes.removed]: mode === 'removed',
-                [classes.outline]: outline,
-              },
-              children.props?.className
-            ),
+            className:
+              `${children.props?.className ? children.props?.className : ''} ` +
+              `${mode === 'added' ? classes.added : ''} ` +
+              `${mode === 'changed' ? classes.changed : ''} ` +
+              `${mode === 'removed' ? classes.removed : ''} ` +
+              `${outline ? classes.outline : ''}`,
+
+            sx: [
+              (theme: Theme) => ({
+                [`&.${classes.added}.${classes.outline}`]: {
+                  border: `2px solid ${
+                    theme.palette[modeToPalette.added].main
+                  }`,
+                },
+                [`&.${classes.changed}.${classes.outline}`]: {
+                  border: `2px solid ${
+                    theme.palette[modeToPalette.changed].main
+                  }`,
+                },
+                [`&.${classes.removed}`]: {
+                  [`&.${classes.outline}`]: {
+                    border: `2px solid ${
+                      theme.palette[modeToPalette.removed].main
+                    }`,
+                  },
+                  boxShadow: 'none',
+                  backgroundColor: 'inherit',
+                  '& > *': {
+                    filter: 'grayscale(1)',
+                  },
+                },
+              }),
+            ],
           })
         : children}
     </Badge>

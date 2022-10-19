@@ -7,6 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { PartialDeep } from 'type-fest';
+import { extendSx, StyleProps } from '~/common';
 import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
@@ -16,7 +17,7 @@ import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
 import { LanguageListItemFragment } from './LanguageListItem.graphql';
 
-export interface LanguageListItemCardProps {
+export interface LanguageListItemCardProps extends StyleProps {
   className?: string;
   language?: LanguageListItemFragment;
 }
@@ -24,6 +25,7 @@ export interface LanguageListItemCardProps {
 export const LanguageListItemCard = ({
   className,
   language,
+  sx,
 }: LanguageListItemCardProps) => {
   const formatNumber = useNumberFormatter();
   const population = language?.population.value;
@@ -31,11 +33,14 @@ export const LanguageListItemCard = ({
   return (
     <Card
       className={className}
-      sx={{
-        width: '100%',
-        maxWidth: 400,
-        position: 'relative',
-      }}
+      sx={[
+        {
+          width: '100%',
+          maxWidth: 400,
+          position: 'relative',
+        },
+        ...extendSx(sx),
+      ]}
     >
       <CardActionAreaLink
         disabled={!language}

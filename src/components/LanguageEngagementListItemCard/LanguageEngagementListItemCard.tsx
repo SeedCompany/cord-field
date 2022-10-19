@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
-import { labelFrom } from '~/common';
+import { extendSx, labelFrom, StyleProps } from '~/common';
 import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
@@ -16,9 +16,10 @@ import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.graphql';
 
 export type LanguageEngagementListItemCardProps =
-  LanguageEngagementListItemFragment & {
-    className?: string;
-  };
+  LanguageEngagementListItemFragment &
+    StyleProps & {
+      className?: string;
+    };
 
 export const LanguageEngagementListItemCard = (
   props: LanguageEngagementListItemCardProps
@@ -29,6 +30,7 @@ export const LanguageEngagementListItemCard = (
     className,
     status,
     products,
+    sx,
   } = props;
 
   const numberFormatter = useNumberFormatter();
@@ -41,9 +43,12 @@ export const LanguageEngagementListItemCard = (
   return (
     <Card
       className={className}
-      sx={{
-        width: '100%',
-      }}
+      sx={[
+        {
+          width: '100%',
+        },
+        ...extendSx(sx),
+      ]}
     >
       <CardActionAreaLink
         to={`/engagements/${idForUrl(props)}`}
