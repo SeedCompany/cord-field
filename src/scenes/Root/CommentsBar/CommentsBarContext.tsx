@@ -10,7 +10,7 @@ import { ChildrenProp } from '~/common';
 
 interface InitialCommentsBarContextInterface {
   toggleCommentsBar: (state?: boolean) => void;
-  toggleThreadComments: (threadId: string) => void;
+  toggleThreadComments: (threadId: string, state?: boolean) => void;
   expandedThreads: string[];
   isCommentsBarOpen: boolean;
 }
@@ -48,13 +48,22 @@ export const CommentsBarProvider = ({ children }: ChildrenProp) => {
 
   const [expandedThreads, setExpandedThreads] = useState<string[]>([]);
 
-  const toggleThreadComments = useCallback((threadId: string) => {
-    setExpandedThreads((prev) =>
-      prev.includes(threadId)
-        ? prev.filter((id) => id !== threadId)
-        : [...prev, threadId]
-    );
-  }, []);
+  const toggleThreadComments = useCallback(
+    (threadId: string, state?: boolean) => {
+      if (state === undefined) {
+        setExpandedThreads((prev) =>
+          prev.includes(threadId)
+            ? prev.filter((id) => id !== threadId)
+            : [...prev, threadId]
+        );
+      } else {
+        setExpandedThreads((prev) =>
+          state ? [...prev, threadId] : prev.filter((id) => id !== threadId)
+        );
+      }
+    },
+    []
+  );
 
   const toggleCommentsBar = useCallback(
     (state?: boolean) => {

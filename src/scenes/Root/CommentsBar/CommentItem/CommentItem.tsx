@@ -1,11 +1,19 @@
 import { useMutation } from '@apollo/client';
-import { MoreVert } from '@mui/icons-material';
-import { Box, IconButton, MenuProps, Paper, Typography } from '@mui/material';
+import { MoreVert, Reply } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  IconButton,
+  MenuProps,
+  Paper,
+  Typography,
+} from '@mui/material';
 import EditorJsRenderer from 'editorjs-blocks-react-renderer';
 import { useState } from 'react';
 import { removeItemFromList } from '~/api';
 import { useDateTimeFormatter } from '~/components/Formatters';
 import { CommentItemMenu } from '../CommentItemMenu';
+import { CommentReply } from '../CommentReply';
 import { useCommentsContext } from '../CommentsBarContext';
 import {
   CommentPropsFragment,
@@ -30,10 +38,12 @@ export const CommentItem = ({
   isChild,
   isExpanded,
   parent,
+  resourceId,
 }: CommentProps) => {
   const { toggleThreadComments } = useCommentsContext();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [isEditing, setIsEditing] = useState(false);
+  const [isReplying, setIsReplying] = useState(false);
 
   const [deleteCommentMutation] = useMutation(DeleteCommentDocument, {});
 
@@ -111,6 +121,33 @@ export const CommentItem = ({
             blocks={comment.body.value}
           />
         )}
+
+        <Box>
+          {!isEditing && !isReplying && !isChild && (
+            <Button onClick={() => setIsReplying(true)}>
+              <Reply
+                sx={{
+                  fontSize: '1.25rem',
+                  mr: 0.75,
+                }}
+              />
+              Reply
+            </Button>
+          )}
+
+          {isReplying && (
+            <CommentReply
+              resourceId={resourceId}
+              threadId={parent.id}
+              commentId={comment.id}
+              sx={(theme) => ({
+                padding: theme.spacing(1, 2),
+                mt: 1,
+              })}
+              onClose={() => setIsReplying(false)}
+            />
+          )}
+        </Box>
 
         {repliesCount > 0 && (
           <Typography

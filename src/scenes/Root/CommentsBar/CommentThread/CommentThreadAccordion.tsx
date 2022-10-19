@@ -1,6 +1,5 @@
 import { Accordion, AccordionDetails } from '@mui/material';
 import { CommentItem } from '../CommentItem';
-import { CommentReply } from '../CommentReply';
 import { useCommentsContext } from '../CommentsBarContext';
 import { CommentThreadPropsFragment } from '../CommentsThreadList.graphql';
 
@@ -37,15 +36,6 @@ export const CommentThreadAccordion = ({
           margin: 0,
         }}
       >
-        <CommentReply
-          resourceId={resourceId}
-          threadId={thread.id}
-          commentId={thread.firstComment.id}
-          sx={(theme) => ({
-            padding: theme.spacing(1, 2),
-            mt: 1,
-          })}
-        />
         {thread.comments.items.map(
           (comment) =>
             comment.id !== thread.firstComment.id && (

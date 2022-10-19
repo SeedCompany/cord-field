@@ -12,13 +12,7 @@ export const ToggleCommentsButton = ({
   const Icon = isCommentsBarOpen ? CommentBank : CommentBankOutlined;
 
   return (
-    <IconButton
-      onClick={() => toggleCommentsBar()}
-      {...rest}
-      disabled={rest.disabled}
-      loading={rest.loading}
-      {...rest}
-    >
+    <IconButton onClick={() => toggleCommentsBar()} {...rest}>
       <Icon />
     </IconButton>
   );

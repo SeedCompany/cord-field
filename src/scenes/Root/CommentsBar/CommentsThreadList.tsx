@@ -2,7 +2,7 @@ import { Close } from '@mui/icons-material';
 import { Box, List, ListSubheader, Typography } from '@mui/material';
 import { IconButton } from '~/components/IconButton';
 import { useListQuery } from '~/components/List';
-import { CommentReply } from './CommentReply';
+import { CommentReply as CreateNewThread } from './CommentReply';
 import { useCommentsContext } from './CommentsBarContext';
 import {
   CommentThreadPropsFragment,
@@ -49,13 +49,12 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
           >
             <Close />
           </IconButton>
-          COMMENTS
         </ListSubheader>
       }
     >
-      <Box sx={{ padding: [4, 2] }}>
+      <Box sx={{ padding: 2, pt: 0 }}>
         <Typography variant="h6">Write a comment</Typography>
-        <CommentReply resourceId={resourceId} />
+        <CreateNewThread resourceId={resourceId} />
       </Box>
 
       {commentThreads.data?.items.map((thread: CommentThreadPropsFragment) => (

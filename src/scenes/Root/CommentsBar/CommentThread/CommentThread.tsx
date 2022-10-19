@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { CommentItem } from '../CommentItem';
 import { useCommentsContext } from '../CommentsBarContext';
 import { CommentThreadPropsFragment } from '../CommentsThreadList.graphql';
@@ -10,15 +9,9 @@ interface CommentThreadProps {
 }
 
 export const CommentThread = ({ thread, resourceId }: CommentThreadProps) => {
-  const { expandedThreads, toggleThreadComments } = useCommentsContext();
+  const { expandedThreads } = useCommentsContext();
   const totalComments = thread.comments.total;
   const expanded = expandedThreads.includes(thread.id);
-
-  useEffect(() => {
-    if (thread.comments.total === 1 && !expanded) {
-      toggleThreadComments(thread.id);
-    }
-  }, [thread, toggleThreadComments, expanded]);
 
   if (totalComments > 1) {
     return (

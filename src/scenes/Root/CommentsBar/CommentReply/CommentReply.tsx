@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import loadable from '@loadable/component';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
 import { useRef, useState } from 'react';
 import { StyleProps } from '~/common';
@@ -15,6 +15,7 @@ export interface CommentReplyProps extends StyleProps {
   resourceId: string;
   commentId?: string;
   placeholder?: string;
+  onClose?: () => void;
 }
 
 export const CommentReply = ({
@@ -22,24 +23,16 @@ export const CommentReply = ({
   resourceId,
   commentId = '',
   placeholder = 'Write a reply...',
+  onClose,
   sx,
 }: CommentReplyProps) => {
   const [createComment] = useMutation(CreateOrReplyCommentDocument);
-  const [isReplying, setIsReplying] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const editor = useRef<EditorCore>();
 
   const handleInitialize = (instance: EditorCore) => {
     editor.current = instance;
-  };
-
-  const handleReply = () => {
-    setIsReplying(true);
-  };
-
-  const handleCancel = () => {
-    setIsReplying(false);
   };
 
   const handleSubmit = () => {
@@ -63,70 +56,60 @@ export const CommentReply = ({
 
     if (data?.createComment) {
       setIsSubmitting(false);
-      setIsReplying(false);
+      onClose?.();
+      void editor.current?.clear();
     }
   };
 
   return (
     <Box sx={sx}>
-      {isReplying ? (
-        <>
-          <Box
-            sx={(theme) => ({
-              border: `thin solid ${theme.palette.divider}`,
-              borderRadius: `${theme.shape.borderRadius}px`,
-              height: 200,
-              overflow: 'auto',
-              padding: 1,
+      <Box
+        sx={(theme) => ({
+          border: `thin solid ${theme.palette.divider}`,
+          borderRadius: `${theme.shape.borderRadius}px`,
+          height: 200,
+          overflow: 'auto',
+          padding: 1,
 
-              '& .codex-editor': {
-                padding: 1,
-              },
-              '& .codex-editor__redactor': {
-                paddingBottom: '0 !important',
-              },
-              '& .ce-settings': {
-                left: '-68px',
-              },
+          '& .codex-editor': {
+            padding: 1,
+          },
+          '& .codex-editor__redactor': {
+            paddingBottom: '0 !important',
+          },
+          '& .ce-settings': {
+            left: '-68px',
+          },
 
-              '& .cdx-block': {
-                padding: '0',
-              },
-              '& .ce-popover--opened': {
-                maxHeight: '140px',
-              },
+          '& .cdx-block': {
+            padding: '0',
+          },
+          '& .ce-popover--opened': {
+            maxHeight: '140px',
+          },
 
-              // block styling
-              '& .ce-paragraph': {
-                fontSize: '0.875rem',
-              },
-            })}
-          >
-            <EditorJsWrapper
-              holder={`reply-to-${commentId}`}
-              onInitialize={handleInitialize}
-              placeholder={placeholder}
-              autofocus
-              customTools={['Paragraph', 'List']}
-            />
-          </Box>
-          <Button onClick={handleCancel} disabled={isSubmitting}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting}>
-            Submit
-          </Button>
-        </>
-      ) : (
-        <TextField
-          onClick={handleReply}
-          disabled={isSubmitting}
+          // block styling
+          '& .ce-paragraph': {
+            fontSize: '0.875rem',
+          },
+        })}
+      >
+        <EditorJsWrapper
+          holder={`reply-to-${commentId}`}
+          onInitialize={handleInitialize}
           placeholder={placeholder}
-          variant="outlined"
-          size="small"
-          sx={{ width: '100%', padding: 0 }}
+          autofocus
+          customTools={['Paragraph', 'List']}
         />
+      </Box>
+      {onClose && (
+        <Button onClick={onClose} disabled={isSubmitting}>
+          Cancel
+        </Button>
       )}
+      <Button onClick={handleSubmit} disabled={isSubmitting}>
+        Submit
+      </Button>
     </Box>
   );
 };
