@@ -13,8 +13,9 @@ export const useSession = () => {
   });
   const session = data?.session.user;
   const powers = data?.session.powers;
+  const betaFeatures = data?.session.betaFeatures;
 
-  return { session, sessionLoading, powers };
+  return { session, sessionLoading, powers, betaFeatures };
 };
 
 export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
@@ -42,7 +43,9 @@ export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
 };
 
 export const useBetaFeatures = () =>
-  useSession().powers?.includes('BetaFeatures');
+  Object.entries(useSession().betaFeatures || {}).flatMap(([key, value]) =>
+    value ? key : []
+  );
 
 export const useIdentifyInLogRocket = () => {
   const { session: user } = useSession();

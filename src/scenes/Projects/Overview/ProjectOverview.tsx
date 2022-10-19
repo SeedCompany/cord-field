@@ -107,6 +107,7 @@ export const ProjectOverview = () => {
   const { classes, cx } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const beta = useBetaFeatures();
+  console.log(beta);
   const formatNumber = useNumberFormatter();
 
   const [editState, editField, fieldsBeingEdited] =
@@ -519,7 +520,7 @@ export const ProjectOverview = () => {
             />
           </CardGroup>
 
-          {beta && (
+          {beta.includes('projectChangeRequests') && (
             <Grid container spacing={3}>
               <Grid item sm={12} md={6}>
                 <ProjectChangeRequestSummary
