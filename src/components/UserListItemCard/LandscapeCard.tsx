@@ -1,31 +1,36 @@
 import { Box, Card, CardContent, Skeleton, Typography } from '@mui/material';
 import { PartialDeep } from 'type-fest';
-import { square } from '~/common';
+import { extendSx, square, StyleProps, Sx } from '~/common';
 import { UsersQueryVariables } from '../../scenes/Users/List/users.graphql';
 import { Avatar } from '../Avatar';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
 import { UserListItemFragment } from './UserListItem.graphql';
 
-interface UserListItemCardLandscapeProps {
+interface UserListItemCardLandscapeProps extends StyleProps {
   className?: string;
   user?: UserListItemFragment;
+  sx?: Sx;
 }
 
 export const UserListItemCardLandscape = ({
   user,
   className,
+  sx,
 }: UserListItemCardLandscapeProps) => {
   const org = user?.organizations.items[0];
 
   return (
     <Card
       className={className}
-      sx={(theme) => ({
-        flex: 1,
-        maxWidth: theme.breakpoints.values.sm,
-        position: 'relative',
-      })}
+      sx={[
+        (theme) => ({
+          flex: 1,
+          maxWidth: theme.breakpoints.values.sm,
+          position: 'relative',
+        }),
+        ...extendSx(sx),
+      ]}
     >
       <CardActionAreaLink disabled={!user} to={`/users/${user?.id}`}>
         <CardContent
