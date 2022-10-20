@@ -1,7 +1,7 @@
-query ChangesetDiff($changeset: ID!) {
+query ChangesetDiff($changeset: ID!, $resource: ID) {
   changeset(id: $changeset) {
     id
-    difference {
+    difference(resource: $resource) {
       ...ChangesetDiff
       removed {
         ...LanguageEngagementListItem

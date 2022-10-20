@@ -2,7 +2,7 @@ import { ApolloCache, useQuery } from '@apollo/client';
 import { pickBy } from 'lodash';
 import LogRocket from 'logrocket';
 import { useEffect } from 'react';
-import { SessionOutput } from '~/api/schema.graphql';
+import { BetaFeatures, SessionOutput } from '~/api/schema.graphql';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
 import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
 import { LoggedInUserFragment, SessionDocument } from './session.graphql';
@@ -42,9 +42,11 @@ export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
   }
 };
 
-export const useBetaFeatures = () =>
-  Object.entries(useSession().betaFeatures || {}).flatMap(([key, value]) =>
-    value ? key : []
+export const useBetaFeatures = (): ReadonlySet<keyof BetaFeatures> =>
+  new Set(
+    Object.entries(useSession().betaFeatures || {}).flatMap(([key, value]) =>
+      value ? (key as keyof BetaFeatures) : []
+    )
   );
 
 export const useIdentifyInLogRocket = () => {
