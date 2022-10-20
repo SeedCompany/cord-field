@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { PostShareabilityLabels } from '~/api/schema.graphql';
-import { canEditAny, square } from '~/common';
+import { canEditAny, extendSx, square, StyleProps } from '~/common';
 import { useDialog } from '../../Dialog';
 import { FormattedDateTime } from '../../Formatters';
 import { DeletePost } from '../DeletePost';
@@ -19,7 +19,7 @@ import { PostableIdFragment } from '../PostableId.graphql';
 import { PostListItemCardFragment } from './PostListItemCard.graphql';
 import { PostListItemMenu } from './PostListItemMenu';
 
-interface PostListItemCardProps {
+interface PostListItemCardProps extends StyleProps {
   parent: PostableIdFragment;
   post: PostListItemCardFragment;
   includeMembership: boolean;
@@ -31,6 +31,7 @@ export const PostListItemCard = ({
   post,
   includeMembership = false,
   className,
+  sx,
 }: PostListItemCardProps) => {
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [editState, editPost] = useDialog();
@@ -41,10 +42,13 @@ export const PostListItemCard = ({
     <>
       <Card
         className={className}
-        sx={{
-          width: '100%',
-          position: 'relative',
-        }}
+        sx={[
+          {
+            width: '100%',
+            position: 'relative',
+          },
+          ...extendSx(sx),
+        ]}
       >
         <CardContent
           sx={(theme) => ({
