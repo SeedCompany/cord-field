@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { MoreVert, Reply } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, MoreVert, Reply } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -49,6 +49,7 @@ export const CommentItem = ({
 
   const dateTimeFormatter = useDateTimeFormatter();
   const formattedDateString = dateTimeFormatter(comment.modifiedAt);
+  const hasChildren = repliesCount > 0;
 
   const deleteComment = async (commentId: string) => {
     await deleteCommentMutation({
@@ -64,11 +65,17 @@ export const CommentItem = ({
 
   return (
     <Paper
-      elevation={repliesCount ? 4 : isChild ? 1 : 3}
+      elevation={hasChildren ? 4 : isChild ? 0 : 4}
       sx={[
         { padding: 2, width: '100%', position: 'relative' },
         { zIndex: 11 },
-        !!isChild && { pl: 6, zIndex: 10 },
+        Boolean(isChild) &&
+          ((theme) => ({
+            pl: 4,
+            zIndex: 10,
+            borderBottom: `1px solid ${theme.palette.divider}`,
+          })),
+        hasChildren && { pb: 1 },
       ]}
       square
     >
@@ -122,7 +129,71 @@ export const CommentItem = ({
           />
         )}
 
-        <Box>
+        <Box
+          sx={[
+            {
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+            isReplying && { flexDirection: 'column', alignItems: 'flex-start' },
+          ]}
+        >
+          {isReplying && (
+            <CommentReply
+              resourceId={resourceId}
+              threadId={parent.id}
+              commentId={comment.id}
+              sx={(theme) => ({
+                padding: theme.spacing(1, 2),
+                mt: 1,
+                width: 1,
+              })}
+              onClose={() => setIsReplying(false)}
+            />
+          )}
+
+          {hasChildren && (
+            <Box
+              sx={{
+                '&:hover': {
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                },
+                alignContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+              }}
+              onClick={() => {
+                toggleThreadComments(parent.id);
+              }}
+            >
+              {isExpanded ? (
+                <>
+                  <ExpandLess sx={{ fontSize: '1.75rem' }} />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    component="span"
+                  >
+                    Hide {repliesCount} replies
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <ExpandMore sx={{ fontSize: '1.75rem' }} />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    component="span"
+                  >
+                    Show {repliesCount} replies
+                  </Typography>
+                </>
+              )}
+            </Box>
+          )}
+
           {!isEditing && !isReplying && !isChild && (
             <Button onClick={() => setIsReplying(true)}>
               <Reply
@@ -134,39 +205,7 @@ export const CommentItem = ({
               Reply
             </Button>
           )}
-
-          {isReplying && (
-            <CommentReply
-              resourceId={resourceId}
-              threadId={parent.id}
-              commentId={comment.id}
-              sx={(theme) => ({
-                padding: theme.spacing(1, 2),
-                mt: 1,
-              })}
-              onClose={() => setIsReplying(false)}
-            />
-          )}
         </Box>
-
-        {repliesCount > 0 && (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            component="span"
-            sx={{
-              '&:hover': {
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              },
-            }}
-            onClick={() => {
-              toggleThreadComments(parent.id);
-            }}
-          >
-            {isExpanded ? 'Hide' : 'View'} Replies ({repliesCount})
-          </Typography>
-        )}
       </Box>
       {comment.canDelete && (
         <>

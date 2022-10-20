@@ -4,6 +4,7 @@ import { Box, Button } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
 import { useRef, useState } from 'react';
 import { StyleProps } from '~/common';
+import { useCommentsContext } from '../CommentsBarContext';
 import { CreateOrReplyCommentDocument } from './CommentReply.graphql';
 
 const EditorJsWrapper = loadable(() => import('~/components/EditorJsWrapper'), {
@@ -23,10 +24,12 @@ export const CommentReply = ({
   threadId,
   resourceId,
   commentId = '',
-  placeholder = 'Write a reply...',
+  placeholder = 'Write a comment...',
   onClose,
   sx,
 }: CommentReplyProps) => {
+  const { toggleThreadComments } = useCommentsContext();
+
   const [createComment] = useMutation(CreateOrReplyCommentDocument);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -59,6 +62,7 @@ export const CommentReply = ({
       setIsSubmitting(false);
       onClose?.();
       void editor.current?.clear();
+      toggleThreadComments(threadId ?? '', true);
     }
   };
 
