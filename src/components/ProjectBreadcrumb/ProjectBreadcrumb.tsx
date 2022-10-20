@@ -37,12 +37,7 @@ export const ProjectBreadcrumb = ({
           ) : (
             data.name.value
           )}
-          <SensitivityIcon
-            value={data.sensitivity}
-            sx={(theme) => ({
-              marginLeft: theme.spacing(1),
-            })}
-          />
+          <SensitivityIcon value={data.sensitivity} sx={{ marginLeft: 1 }} />
         </>
       ) : (
         <Skeleton width={200} />

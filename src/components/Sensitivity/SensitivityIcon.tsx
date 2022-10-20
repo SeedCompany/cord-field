@@ -1,6 +1,7 @@
 import { VerifiedUser } from '@mui/icons-material';
 import { SvgIconProps, Theme, Tooltip } from '@mui/material';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
+import { extendSx } from '~/common';
 
 const sensitivityStyles = {
   Low: (theme: Theme) => ({
@@ -25,13 +26,17 @@ export const SensitivityIcon = ({
   loading,
   className,
   disableTooltip,
+  sx,
   ...rest
 }: SensitivityIconProps) => {
   return (
     <Tooltip title={!loading && !disableTooltip ? `${value} Sensitivity` : ''}>
       <VerifiedUser
         className={className}
-        sx={[!loading && value ? sensitivityStyles[value] : {}]}
+        sx={[
+          ...extendSx(sx),
+          !loading && value ? sensitivityStyles[value] : {},
+        ]}
         {...rest}
       />
     </Tooltip>
