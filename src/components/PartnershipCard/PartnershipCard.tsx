@@ -11,14 +11,14 @@ import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatusLabels,
 } from '~/api/schema.graphql';
-import { labelFrom } from '~/common';
+import { extendSx, labelFrom, StyleProps } from '~/common';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { PartnershipCardFragment } from './PartnershipCard.graphql';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
-export interface PartnershipCardProps {
+export interface PartnershipCardProps extends StyleProps {
   partnership?: PartnershipCardFragment;
   onEdit?: () => void;
   className?: string;
@@ -28,14 +28,18 @@ export const PartnershipCard = ({
   partnership,
   onEdit,
   className,
+  sx,
 }: PartnershipCardProps) => {
   const name = partnership?.partner.value?.organization.value?.name.value;
   return (
     <Card
       className={className}
-      sx={{
-        flex: 1,
-      }}
+      sx={[
+        {
+          flex: 1,
+        },
+        ...extendSx(sx),
+      ]}
     >
       <CardContent>
         <Grid container direction="column" spacing={1}>
