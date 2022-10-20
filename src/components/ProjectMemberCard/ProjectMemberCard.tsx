@@ -8,12 +8,12 @@ import {
   Typography,
 } from '@mui/material';
 import { RoleLabels } from '~/api/schema.graphql';
-import { labelsFrom } from '~/common';
+import { labelsFrom, StyleProps } from '~/common';
 import { Avatar } from '../Avatar';
 import { useDateTimeFormatter } from '../Formatters';
 import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 
-export interface ProjectMemberCardProps {
+export interface ProjectMemberCardProps extends StyleProps {
   projectMember?: ProjectMemberCardFragment;
   // TODO this should use primary organization on User when api is finished
   primaryOrganizationName?: string;
@@ -26,13 +26,14 @@ export const ProjectMemberCard = ({
   primaryOrganizationName,
   onEdit,
   className,
+  sx,
 }: ProjectMemberCardProps) => {
   const dateTimeFormatter = useDateTimeFormatter();
 
   const createdAtString = dateTimeFormatter(projectMember?.createdAt);
 
   return (
-    <Card className={className}>
+    <Card className={className} sx={sx}>
       <CardContent
         sx={{
           display: 'flex',
