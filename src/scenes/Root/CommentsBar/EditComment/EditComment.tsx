@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { UpdateCommentDocument } from './EditComment.graphql';
 
 const EditorJsWrapper = loadable(() => import('~/components/EditorJsWrapper'), {
+  ssr: false,
   resolveComponent: (m) => m.EditorJsWrapper,
 });
 
