@@ -88,43 +88,47 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
       ]}
     >
       {isValidElement(children)
-        ? cloneElement(children, {
-            ...children.props,
-            className:
-              `${children.props?.className ? children.props?.className : ''} ` +
-              `${mode === 'added' ? classes.added : ''} ` +
-              `${mode === 'changed' ? classes.changed : ''} ` +
-              `${mode === 'removed' ? classes.removed : ''} ` +
-              `${outline ? classes.outline : ''}`,
-
-            sx: [
-              (theme: Theme) => ({
-                [`&.${classes.added}.${classes.outline}`]: {
-                  border: `2px solid ${
-                    theme.palette[modeToPalette.added].main
-                  }`,
-                },
-                [`&.${classes.changed}.${classes.outline}`]: {
-                  border: `2px solid ${
-                    theme.palette[modeToPalette.changed].main
-                  }`,
-                },
-                [`&.${classes.removed}`]: {
-                  [`&.${classes.outline}`]: {
-                    border: `2px solid ${
-                      theme.palette[modeToPalette.removed].main
-                    }`,
-                  },
-                  boxShadow: 'none',
-                  backgroundColor: 'inherit',
-                  '& > *': {
-                    filter: 'grayscale(1)',
-                  },
-                },
-              }),
-            ],
-          })
+        ? customeCloneElement(children, mode, outline)
         : children}
     </Badge>
   );
+};
+
+const customeCloneElement = (
+  children: ReactElement,
+  mode: string,
+  outline: boolean
+) => {
+  const cloned = cloneElement(children, {
+    ...children.props,
+    className:
+      `${children.props?.className ? children.props?.className : ''} ` +
+      `${mode === 'added' ? classes.added : ''} ` +
+      `${mode === 'changed' ? classes.changed : ''} ` +
+      `${mode === 'removed' ? classes.removed : ''} ` +
+      `${outline ? classes.outline : ''}`,
+
+    sx: [
+      (theme: Theme) => ({
+        [`&.${classes.added}.${classes.outline}`]: {
+          border: `2px solid ${theme.palette[modeToPalette.added].main}`,
+        },
+        [`&.${classes.changed}.${classes.outline}`]: {
+          border: `2px solid ${theme.palette[modeToPalette.changed].main}`,
+        },
+        [`&.${classes.removed}`]: {
+          [`&.${classes.outline}`]: {
+            border: `2px solid ${theme.palette[modeToPalette.removed].main}`,
+          },
+          boxShadow: 'none',
+          backgroundColor: 'inherit',
+          '& > *': {
+            filter: 'grayscale(1)',
+          },
+        },
+      }),
+    ],
+  });
+
+  return cloned;
 };
