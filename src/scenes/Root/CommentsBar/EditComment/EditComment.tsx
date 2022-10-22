@@ -3,6 +3,7 @@ import loadable from '@loadable/component';
 import { Box, Button } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
 import { useRef, useState } from 'react';
+import { EditorJsTheme } from '~/components/EditorJsWrapper/EditorJsTheme';
 import { UpdateCommentDocument } from './EditComment.graphql';
 
 const EditorJsWrapper = loadable(() => import('~/components/EditorJsWrapper'), {
@@ -60,42 +61,12 @@ export const EditComment = ({
 
   return (
     <Box>
-      <Box
-        sx={(theme) => ({
-          border: `thin solid ${theme.palette.divider}`,
-          borderRadius: `${theme.shape.borderRadius}px`,
-          height: 200,
-          overflow: 'auto',
-          padding: 1,
-
-          '& .codex-editor': {
-            padding: 1,
-          },
-          '& .codex-editor__redactor': {
-            paddingBottom: '0 !important',
-          },
-          '& .ce-settings': {
-            left: '-68px',
-          },
-
-          '& .cdx-block': {
-            padding: '0',
-          },
-          '& .ce-popover--opened': {
-            maxHeight: '140px',
-          },
-
-          // block styling
-          '& .ce-paragraph': {
-            fontSize: '0.875rem',
-          },
-        })}
-      >
+      <Box sx={EditorJsTheme}>
         <EditorJsWrapper
           holder={`reply-to-${commentId}`}
           onInitialize={handleInitialize}
           autofocus
-          customTools={['Paragraph', 'List', 'Quote']}
+          customTools={['paragraph', 'list', 'quote']}
           blocks={blocks}
         />
       </Box>

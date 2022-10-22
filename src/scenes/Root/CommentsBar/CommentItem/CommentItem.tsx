@@ -24,7 +24,6 @@ import { DeleteCommentDocument } from './CommentItem.graphql';
 
 export interface CommentProps {
   comment: CommentPropsFragment;
-  repliesCount?: number;
   isChild?: boolean;
   resourceId: string;
   isExpanded?: boolean;
@@ -34,7 +33,6 @@ export interface CommentProps {
 
 export const CommentItem = ({
   comment,
-  repliesCount = 0,
   isChild,
   isExpanded,
   parent,
@@ -49,6 +47,7 @@ export const CommentItem = ({
 
   const dateTimeFormatter = useDateTimeFormatter();
   const formattedDateString = dateTimeFormatter(comment.modifiedAt);
+  const repliesCount = parent.comments.total - 1;
   const hasChildren = repliesCount > 0;
 
   const deleteComment = async (commentId: string) => {
@@ -65,7 +64,7 @@ export const CommentItem = ({
 
   return (
     <Paper
-      elevation={hasChildren ? 4 : isChild ? 0 : 4}
+      elevation={!isChild && hasChildren ? 4 : isChild ? 0 : 4}
       sx={[
         { padding: 2, width: '100%', position: 'relative' },
         { zIndex: 11 },
@@ -137,6 +136,7 @@ export const CommentItem = ({
               justifyContent: 'space-between',
             },
             isReplying && { flexDirection: 'column', alignItems: 'flex-start' },
+            !repliesCount && { justifyContent: 'flex-end' },
           ]}
         >
           {isReplying && (
@@ -153,7 +153,7 @@ export const CommentItem = ({
             />
           )}
 
-          {hasChildren && (
+          {!isChild && hasChildren && (
             <Box
               sx={{
                 '&:hover': {

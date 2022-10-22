@@ -16,23 +16,24 @@ import Table from '@editorjs/table';
 import Warning from '@editorjs/warning';
 import { pick } from 'lodash';
 
+// NOTE: The keys need to be camelCase as that's what EditorJS expects on the render side.
 export const EDITOR_JS_TOOLS: EditorConfig['tools'] = {
   // NOTE: Paragraph is default tool. No need to declare it, unless you want to change paragraph option.
-  Embed,
-  Table,
-  List,
-  Warning,
-  Code,
-  LinkTool,
-  Image,
-  Raw,
-  Header,
-  Quote,
-  Marker,
-  CheckList,
-  Delimiter,
-  InlineCode,
-  SimpleImage,
+  embed: Embed,
+  table: Table,
+  list: List,
+  warning: Warning,
+  code: Code,
+  linkTool: LinkTool,
+  image: Image,
+  raw: Raw,
+  header: Header,
+  quote: Quote,
+  marker: Marker,
+  checkList: CheckList,
+  delimiter: Delimiter,
+  inlineCode: InlineCode,
+  simpleImage: SimpleImage,
 };
 
 export type ToolKey = keyof typeof EDITOR_JS_TOOLS;

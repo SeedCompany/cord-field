@@ -4,6 +4,7 @@ import { Box, Button } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
 import { useRef, useState } from 'react';
 import { StyleProps } from '~/common';
+import { EditorJsTheme } from '~/components/EditorJsWrapper/EditorJsTheme';
 import { useCommentsContext } from '../CommentsBarContext';
 import { CreateOrReplyCommentDocument } from './CommentReply.graphql';
 
@@ -68,43 +69,13 @@ export const CommentReply = ({
 
   return (
     <Box sx={sx}>
-      <Box
-        sx={(theme) => ({
-          border: `thin solid ${theme.palette.divider}`,
-          borderRadius: `${theme.shape.borderRadius}px`,
-          height: 200,
-          overflow: 'auto',
-          padding: 1,
-
-          '& .codex-editor': {
-            padding: 1,
-          },
-          '& .codex-editor__redactor': {
-            paddingBottom: '0 !important',
-          },
-          '& .ce-settings': {
-            left: '-68px',
-          },
-
-          '& .cdx-block': {
-            padding: '0',
-          },
-          '& .ce-popover--opened': {
-            maxHeight: '140px',
-          },
-
-          // block styling
-          '& .ce-paragraph': {
-            fontSize: '0.875rem',
-          },
-        })}
-      >
+      <Box sx={EditorJsTheme}>
         <EditorJsWrapper
           holder={`reply-to-${commentId}`}
           onInitialize={handleInitialize}
           placeholder={placeholder}
           autofocus
-          customTools={['Paragraph', 'List']}
+          customTools={['paragraph', 'list', 'quote', 'marker']}
         />
       </Box>
       {onClose && (

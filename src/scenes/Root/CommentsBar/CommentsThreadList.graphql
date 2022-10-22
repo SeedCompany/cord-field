@@ -13,12 +13,6 @@ query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
   }
 }
 
-query CommentThread($id: ID!) {
-  commentThread(id: $id) {
-    ...CommentThreadProps
-  }
-}
-
 fragment CommentProps on Comment {
   id
   body {

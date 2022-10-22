@@ -19,7 +19,6 @@ export const CommentThread = ({ thread, resourceId }: CommentThreadProps) => {
         <CommentItem
           comment={thread.firstComment}
           parent={thread}
-          repliesCount={totalComments - 1}
           resourceId={resourceId}
           isExpanded={expanded}
         />

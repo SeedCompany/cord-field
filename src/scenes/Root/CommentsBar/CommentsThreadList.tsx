@@ -64,6 +64,23 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
           resourceId={resourceId}
         />
       ))}
+      {commentThreads.data?.hasMore && (
+        <Box
+          sx={{
+            padding: 1,
+            textAlign: 'center',
+            '&:hover': {
+              backgroundColor: 'transparent',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+            },
+          }}
+        >
+          <Typography onClick={() => commentThreads.loadMore()} variant="body2">
+            Load More
+          </Typography>
+        </Box>
+      )}
     </List>
   );
 };
