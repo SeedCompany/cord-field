@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { ChildrenProp } from '~/common';
@@ -8,17 +7,26 @@ import {
   UpdateProjectChangeRequestFormParams,
 } from '../../scenes/Projects/ChangeRequest/Update';
 import { useDialog } from '../Dialog';
+import { ProjectChangeRequestListItemFragment as ProjectChangeRequest } from '../ProjectChangeRequestListItem';
 import { ChangesetBanner } from './ChangesetBanner';
-import { ChangesetDiffDocument } from './ChangesetDiff.graphql';
 import { ChangesetDiffProvider } from './ChangesetDiffContext';
+import { ChangedUnderProjectFragment as ChangedUnderProject } from './ProjectChangesetDiff.graphql';
 import { useChangesetAwareIdFromUrl } from './useChangesetAwareIdFromUrl';
 
+type ChangesetContextProps = {
+  changesetDiff?: ChangedUnderProject | null;
+  changeset?: ProjectChangeRequest | null;
+  project: {
+    __typename?: 'TranslationProject' | 'InternshipProject';
+    id: string;
+  };
+} & ChildrenProp;
 /**
  * Fetches and holds the changeset diff from the changeset ID referenced in the url.
  * It displays the changeset banner before its children.
  * This has to be used in a spot where an ID with changeset is already in context.
  */
-export const ChangesetContext = ({ children }: ChildrenProp) => {
+export const ChangesetContext = (props: ChangesetContextProps) => {
   const params = useParams();
   // First route param key with a ~ in its value
   const key = useMemo(
@@ -26,12 +34,6 @@ export const ChangesetContext = ({ children }: ChildrenProp) => {
     [params]
   );
   const { changesetId, closeChangeset } = useChangesetAwareIdFromUrl(key ?? '');
-  const { data } = useQuery(ChangesetDiffDocument, {
-    variables: {
-      changeset: changesetId ?? '',
-    },
-    skip: !changesetId,
-  });
 
   useEffect(() => {
     inChangesetVar(!!changesetId);
@@ -43,17 +45,19 @@ export const ChangesetContext = ({ children }: ChildrenProp) => {
   const [updateDialogState, openUpdateDialog, requestBeingUpdated] =
     useDialog<UpdateProjectChangeRequestFormParams>();
 
-  const handleEdit = data?.changeset
+  const projectChangeRequest = props.changeset;
+
+  const handleEdit = projectChangeRequest
     ? () => {
         openUpdateDialog({
-          project: data.changeset.project,
-          changeRequest: data.changeset,
+          project: props.project,
+          changeRequest: projectChangeRequest,
         });
       }
     : undefined;
 
   return (
-    <ChangesetDiffProvider value={data?.changeset.difference}>
+    <ChangesetDiffProvider value={props.changesetDiff}>
       <ChangesetBanner
         changesetId={changesetId}
         onEdit={handleEdit}
@@ -65,7 +69,7 @@ export const ChangesetContext = ({ children }: ChildrenProp) => {
           {...requestBeingUpdated}
         />
       )}
-      {children}
+      {props.children}
     </ChangesetDiffProvider>
   );
 };

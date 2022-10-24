@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom';
-import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { ProgressReportDetail as ProgressReport } from './Detail';
 
@@ -11,9 +10,10 @@ export const ProgressReports = () => (
 );
 
 const Detail = () => (
-  <ChangesetContext>
-    <Routes>
-      <Route path="*" element={<ProgressReport />} />
-    </Routes>
-  </ChangesetContext>
+  // <ChangesetContext>
+  <Routes>
+    <Route path="" element={<ProgressReport />} />
+    {NotFoundRoute}
+  </Routes>
+  // </ChangesetContext>
 );

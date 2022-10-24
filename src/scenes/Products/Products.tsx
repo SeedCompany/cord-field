@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom';
-import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { ProductDetail } from './Detail';
 import { EditProduct } from './Edit';
@@ -12,11 +11,11 @@ export const Products = () => (
 );
 
 const Detail = () => (
-  <ChangesetContext>
-    <Routes>
-      <Route path="" element={<ProductDetail />} />
-      <Route path="edit" element={<EditProduct />} />
-      {NotFoundRoute}
-    </Routes>
-  </ChangesetContext>
+  // <ChangesetContext>
+  <Routes>
+    <Route path="" element={<ProductDetail />} />
+    <Route path="edit" element={<EditProduct />} />
+    {NotFoundRoute}
+  </Routes>
+  // </ChangesetContext>
 );
