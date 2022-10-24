@@ -69,13 +69,13 @@ export const Error = ({
 
   return (
     <Box
-      // TODO: use page based sx props
+      component={Component}
       sx={(theme) => ({
         overflow: 'auto',
         padding: theme.spacing(4, 0, 0, 4),
       })}
     >
-      <Component>
+      <>
         {/* Default status code to be helpful for the most common ones. The
       children can still override this by rendering <StatusCode /> themselves */}
         <StatusCode code={statusCode} />
@@ -105,7 +105,7 @@ export const Error = ({
             </Grid>
           </Grid>
         )}
-      </Component>
+      </>
     </Box>
   );
 };
