@@ -1,0 +1,7 @@
+mutation UpdateComment($commentBody: RichText!, $commentId: ID!) {
+  updateComment(input: { body: $commentBody, id: $commentId }) {
+    comment {
+      ...CommentProps
+    }
+  }
+}

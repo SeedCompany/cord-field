@@ -1,0 +1,43 @@
+query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
+  commentThreads(resource: $resourceId) {
+    parent {
+      id
+      commentThreads(input: $input) {
+        total
+        hasMore
+        items {
+          ...CommentThreadProps
+        }
+      }
+    }
+  }
+}
+
+fragment CommentProps on Comment {
+  id
+  body {
+    value
+  }
+  creator {
+    fullName
+    avatarLetters
+    id
+  }
+  createdAt
+  modifiedAt
+  canDelete
+  __typename
+}
+
+fragment CommentThreadProps on CommentThread {
+  id
+  firstComment {
+    ...CommentProps
+  }
+  comments {
+    total
+    items {
+      ...CommentProps
+    }
+  }
+}

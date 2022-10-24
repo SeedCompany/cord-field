@@ -6,6 +6,7 @@ import {
 import {
   isObject,
   last,
+  omit,
   orderBy,
   sortedIndexBy,
   sortedLastIndexBy,
@@ -56,11 +57,13 @@ export const pageLimitPagination = <
   keyArgs: (args: InputArg<PaginatedListInput> | null) => {
     // This function is called a lot and most of the time there are no args.
     // Optimization for this case.
-    if (!args || !args.input) {
+    if (!args || Object.keys(args).length === 0) {
       return false;
     }
-    const { count, page, ...rest } = args.input;
-    return objectToKeyArgs({ input: rest });
+
+    const input = omit(args.input, ['count', 'page']);
+
+    return objectToKeyArgs({ ...args, input });
   },
   merge(existing, incoming, options: FieldFunctionOptions<PaginatedListArgs>) {
     if (!incoming) {
@@ -207,7 +210,7 @@ const objectToKeyArgs = (obj: Record<string, any>): KeySpecifier => {
   const keys = objectToKeyArgsRecurse(cleanEmptyObjects(obj));
   // @ts-expect-error false is fine as a key specifier but Apollo types
   // incorrectly say that it's not ok when using a function.
-  return keys.length > 1 ? keys : false;
+  return keys.length > 0 ? keys : false;
 };
 const objectToKeyArgsRecurse = (obj: Record<string, any>): KeySpecifier =>
   Object.entries(obj).reduce(
