@@ -1,6 +1,8 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
+import { useState } from 'react';
 import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
+import { InstructionsDialog } from './InstructionsDialog';
 import { ProgressReportStepper } from './ProgressReportStepper';
 
 export const ProgressReportSidebar = ({
@@ -10,6 +12,8 @@ export const ProgressReportSidebar = ({
   report?: ProgressReportFragment;
   step: number;
 }) => {
+  const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
+
   if (!report) {
     return null;
   }
@@ -27,7 +31,12 @@ export const ProgressReportSidebar = ({
       <Typography
         sx={{
           marginBottom: 1,
+          '&:hover': {
+            cursor: 'pointer',
+            textDecoration: 'underline',
+          },
         }}
+        onClick={() => setIsInstructionsOpen(!isInstructionsOpen)}
       >
         Instructions{' '}
         <InfoOutlined
@@ -69,6 +78,10 @@ export const ProgressReportSidebar = ({
       </Typography>
 
       <ProgressReportStepper step={step} />
+      <InstructionsDialog
+        open={isInstructionsOpen}
+        onClose={() => setIsInstructionsOpen(false)}
+      />
     </Box>
   );
 };
