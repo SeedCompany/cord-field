@@ -10,7 +10,7 @@ export const useChangesetAwareIdFromUrl = (paramName: string) => {
   let { [paramName]: objAndChangesetId = '' } = useParams();
   // eslint-disable-next-line prefer-const -- false positive
   let [id = '', changesetId = null] = objAndChangesetId.split('~');
-  if (!useBetaFeatures()) {
+  if (!useBetaFeatures().has('projectChangeRequests')) {
     objAndChangesetId = id;
     changesetId = null;
   }

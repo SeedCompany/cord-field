@@ -519,7 +519,7 @@ export const ProjectOverview = () => {
             />
           </CardGroup>
 
-          {beta && (
+          {beta.has('projectChangeRequests') && (
             <Grid container spacing={3}>
               <Grid item sm={12} md={6}>
                 <ProjectChangeRequestSummary
