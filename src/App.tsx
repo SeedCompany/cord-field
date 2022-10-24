@@ -8,6 +8,7 @@ import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
 import { UploadProvider as FileUploadProvider } from './components/Upload';
 import { SensitiveOperations } from './scenes/Authentication';
+import { ProgressReportContextProvider } from './scenes/ProgressReports/ProgressReportContext';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
 
@@ -42,6 +43,7 @@ export const appProviders = [
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,
   <FileUploadProvider key="files" />,
+  <ProgressReportContextProvider key="progress-report" />,
 ];
 
 export const App = () => (

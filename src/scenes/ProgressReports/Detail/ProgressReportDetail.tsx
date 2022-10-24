@@ -29,9 +29,10 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
+import { NewProgressReportCard } from './NewProgressReportCard';
 import { ProductTableList } from './ProductTableList';
-import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
+import { ProgressReportDrawer } from './ProgressReportDrawer';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 
 const useStyles = makeStyles()(({ spacing }) => ({
@@ -224,10 +225,9 @@ export const ProgressReportDetail = () => {
                 </Grid>
                 <Grid item xs={12} md={5} container>
                   {report ? (
-                    <ProgressReportCard
+                    <NewProgressReportCard
                       progressReport={report}
-                      disableIcon
-                      onUpload={({ files }) => setUploading(files)}
+                      label="Progress Report"
                     />
                   ) : (
                     <FieldOverviewCard />
@@ -239,6 +239,7 @@ export const ProgressReportDetail = () => {
           </>
         )}
       </main>
+      <ProgressReportDrawer />
     </div>
   );
 };
