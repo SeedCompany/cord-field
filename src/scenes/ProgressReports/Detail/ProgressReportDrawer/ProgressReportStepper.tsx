@@ -126,7 +126,7 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
         <Typography sx={typographySx}>Final Details</Typography>
         <Stepper activeStep={step - 3} orientation="vertical" sx={stepperSx}>
           <Step onClick={() => setProgressReportStep(3)}>
-            <StepButton icon={' '}>Comments</StepButton>
+            <StepButton icon={' '}>Additional Notes</StepButton>
           </Step>
         </Stepper>
       </Box>
