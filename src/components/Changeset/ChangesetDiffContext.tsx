@@ -52,6 +52,8 @@ export const ChangesetDiffProvider = (
 ) => {
   const apollo = useApolloClient();
   const diff = defaultProcessedDiff;
+  console.log('value:');
+  console.log(props.value);
   const diff2 = useMemo(() => {
     const toCacheId = (obj: any) => {
       const id = apollo.cache.identify(obj);
@@ -67,6 +69,7 @@ export const ChangesetDiffProvider = (
     };
   }, [apollo, props.value]);
 
+  console.log('diff');
   console.log(diff2);
 
   const determineChangesetDiffItem = useCallback(
