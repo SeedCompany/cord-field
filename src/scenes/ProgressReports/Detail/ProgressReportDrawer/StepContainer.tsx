@@ -3,6 +3,7 @@ import { Box, Theme, Typography } from '@mui/material';
 import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { Step0, Step1, Step2, Step3 } from '../TemporarySteps';
+import { colorPalette } from './colorPalette';
 
 const typographyLinkSx = (theme: Theme) => ({
   color: theme.palette.grey[800],
@@ -52,8 +53,8 @@ const StepContainerHeader = () => {
         justifyContent: 'space-between',
         backgroundColor: 'background.paper',
         padding: 2,
-        borderTop: '1px solid #D1DADF',
-        borderBottom: '1px solid #D1DADF',
+        borderTop: `1px solid ${colorPalette.header.border}`,
+        borderBottom: `1px solid ${colorPalette.header.border}`,
       }}
     >
       <Typography

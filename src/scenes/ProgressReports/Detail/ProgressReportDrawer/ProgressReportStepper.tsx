@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { PeopleJoinedIcon } from '~/components/Icons';
 import { useProgressReportContext } from '../../ProgressReportContext';
+import { colorPalette } from './colorPalette';
 
 interface ProgressReportStepperProps {
   step: number;
@@ -78,12 +79,12 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#E0F7FA',
+          backgroundColor: colorPalette.stepperCard.headerBackground.partner,
         }}
       >
         <PeopleJoinedIcon
           sx={{
-            backgroundColor: '#B2EBF2',
+            backgroundColor: colorPalette.stepperCard.iconBackground.partner,
             marginRight: 1,
             padding: 1,
             height: 48,
