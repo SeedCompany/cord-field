@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
+import { useBetaFeatures } from '~/components/Session';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import {
   idForUrl,
@@ -31,6 +32,7 @@ import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicRep
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { NewProgressReportCard } from './NewProgressReportCard';
 import { ProductTableList } from './ProductTableList';
+import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
 import { ProgressReportDrawer } from './ProgressReportDrawer';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
@@ -61,6 +63,9 @@ const useStyles = makeStyles()(({ spacing }) => ({
 export const ProgressReportDetail = () => {
   const { classes } = useStyles();
   const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
+
+  const beta = useBetaFeatures();
+  const newProgressReportBeta = beta.has('projectChangeRequests');
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
@@ -225,10 +230,15 @@ export const ProgressReportDetail = () => {
                 </Grid>
                 <Grid item xs={12} md={5} container>
                   {report ? (
-                    <NewProgressReportCard
-                      progressReport={report}
-                      label="Progress Report"
-                    />
+                    newProgressReportBeta ? (
+                      <NewProgressReportCard label="Progress Report" />
+                    ) : (
+                      <ProgressReportCard
+                        progressReport={report}
+                        disableIcon
+                        onUpload={({ files }) => setUploading(files)}
+                      />
+                    )
                   ) : (
                     <FieldOverviewCard />
                   )}
