@@ -1,7 +1,6 @@
 query ProjectChangesetDiffs($id: ID!, $changeset: ID) {
   project(id: $id, changeset: $changeset) {
-    __typename
-    id
+    ...Id
     changesetDiff {
       ...ChangedUnderProject
     }
@@ -30,6 +29,7 @@ fragment ChangedUnderProject on ChangesetDiff {
 
 fragment ProjectDiffItem on Resource {
   ... on Project {
+    ...Id
     name {
       value
     }
@@ -43,5 +43,15 @@ fragment ProjectDiffItem on Resource {
       value
     }
     projectStatus: status
+  }
+  ... on LanguageEngagement {
+    ...Id
+  }
+
+  ... on BudgetRecord {
+    ...Id
+    amount {
+      value
+    }
   }
 }
