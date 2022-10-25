@@ -65,7 +65,7 @@ export const ProgressReportDetail = () => {
   const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
 
   const beta = useBetaFeatures();
-  const newProgressReportBeta = beta.has('projectChangeRequests');
+  const newProgressReportBeta = beta.has('newProgressReports');
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
