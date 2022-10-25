@@ -64,14 +64,7 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
     <Box
       className={className}
       ref={scrollRef}
-      sx={[
-        (theme) => ({
-          overflow: 'auto',
-          marginLeft: theme.spacing(-2),
-          padding: theme.spacing(2),
-        }),
-        ...extendSx(sx),
-      ]}
+      sx={[{ overflow: 'auto', ml: -2, p: 2 }, ...extendSx(sx)]}
     >
       <Grid
         direction="column"
