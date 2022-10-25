@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { ChildrenProp } from '~/common';
 import { inChangesetVar } from '../../api';
+import { ChangesetDiffFragment as Diff } from '../../common/fragments';
 import {
   UpdateProjectChangeRequest,
   UpdateProjectChangeRequestFormParams,
@@ -10,11 +11,10 @@ import { useDialog } from '../Dialog';
 import { ProjectChangeRequestListItemFragment as ProjectChangeRequest } from '../ProjectChangeRequestListItem';
 import { ChangesetBanner } from './ChangesetBanner';
 import { ChangesetDiffProvider } from './ChangesetDiffContext';
-import { ChangedUnderProjectFragment as ChangedUnderProject } from './ProjectChangesetDiff.graphql';
 import { useChangesetAwareIdFromUrl } from './useChangesetAwareIdFromUrl';
 
 type ChangesetContextProps = {
-  changesetDiff?: ChangedUnderProject | null;
+  changesetDiff?: Diff | null;
   changeset?: ProjectChangeRequest | null;
   project: {
     __typename?: 'TranslationProject' | 'InternshipProject';
