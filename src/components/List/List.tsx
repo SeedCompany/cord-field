@@ -53,7 +53,6 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
     scrollRef: scrollRefProp,
     itemMaxWidth,
     className,
-    sx,
   } = props;
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -65,12 +64,12 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
       className={className}
       ref={scrollRef}
       sx={[
-        (theme) => ({
+        {
           overflow: 'auto',
-          marginLeft: theme.spacing(-2),
-          padding: theme.spacing(2),
-        }),
-        ...extendSx(sx),
+          ml: -2,
+          p: 2,
+        },
+        ...extendSx(ContainerProps?.sx),
       ]}
     >
       <Grid
