@@ -3,6 +3,11 @@ import { alpha as fade } from '@mui/material/styles';
 import { ReactNode } from 'react';
 import { extendSx, Sx } from '~/common';
 
+const diffItem: Sx = {
+  px: 0.5,
+  borderRadius: 1,
+};
+
 export const PropertyDiff = <T extends any>({
   previous,
   current,
@@ -23,23 +28,20 @@ export const PropertyDiff = <T extends any>({
       alignItems="flex-start"
       className={className}
       sx={[
-        (theme) => ({
-          marginTop: theme.spacing(0.5),
-        }),
+        {
+          marginTop: 0.5,
+        },
         ...extendSx(sx),
       ]}
     >
       <Typography
         sx={[
-          (theme) => ({
-            padding: theme.spacing(0, 0.5),
-            borderRadius: theme.shape.borderRadius,
-          }),
-          (theme) => ({
+          diffItem,
+          {
             textDecoration: 'line-through',
-            color: theme.palette.error.main,
-            background: fade(theme.palette.error.light, 0.5),
-          }),
+            color: 'error.main',
+            background: fade('error.light', 0.5),
+          },
         ]}
         gutterBottom
         display="inline"
@@ -48,14 +50,11 @@ export const PropertyDiff = <T extends any>({
       </Typography>
       <Typography
         sx={[
-          (theme) => ({
-            padding: theme.spacing(0, 0.5),
-            borderRadius: theme.shape.borderRadius,
-          }),
-          (theme) => ({
-            color: theme.palette.primary.dark,
-            background: fade(theme.palette.primary.light, 0.5),
-          }),
+          diffItem,
+          {
+            color: 'primary.dark',
+            background: fade('primary.light', 0.5),
+          },
         ]}
         display="inline"
       >
