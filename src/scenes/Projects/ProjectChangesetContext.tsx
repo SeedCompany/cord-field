@@ -14,7 +14,7 @@ import { useProjectId } from './useProjectId';
 export const ProjectChangesetContext = ({ children }: ChildrenProp) => {
   const { projectId, changesetId } = useProjectId();
 
-  const { data, loading } = useQuery(ProjectChangesetDiffsDocument, {
+  const { data } = useQuery(ProjectChangesetDiffsDocument, {
     variables: {
       id: projectId,
       changeset: changesetId ?? '',
