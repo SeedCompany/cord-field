@@ -4,9 +4,10 @@ import {
   Edit as EditIcon,
 } from '@mui/icons-material';
 import { Alert, AlertTitle, Tooltip } from '@mui/material';
+import { extendSx, StyleProps } from '~/common';
 import { IconButton } from '../IconButton';
 
-interface Props {
+interface Props extends StyleProps {
   changesetId: string | null;
   onEdit?: () => void;
   onClose?: () => void;
@@ -20,10 +21,7 @@ export const ChangesetBanner = (props: Props) => {
     <Alert
       severity="info"
       icon={<ChangeIcon fontSize="inherit" />}
-      sx={(theme) => ({
-        maxWidth: theme.breakpoints.values.md,
-        margin: theme.spacing(0, 2),
-      })}
+      sx={[{ maxWidth: 'md', mx: 2 }, ...extendSx(props.sx)]}
       action={
         <>
           {props.onEdit && (
