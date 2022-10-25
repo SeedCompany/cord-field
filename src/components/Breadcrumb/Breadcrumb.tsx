@@ -17,7 +17,7 @@ export interface BreadcrumbProps extends StyleProps {
 export const Breadcrumb = forwardRef<
   HTMLAnchorElement | HTMLElement,
   BreadcrumbProps
->(function Breadcrumb({ to, children, LinkProps, sx, ...rest }, ref) {
+>(function Breadcrumb({ to, children, LinkProps, ...rest }, ref) {
   const active =
     useMatch(to == null ? '' : isString(to) ? to : to.pathname!) ||
     // RR doesn't think current page is active. maybe a bug?
@@ -25,21 +25,14 @@ export const Breadcrumb = forwardRef<
 
   if (to == null || active) {
     return (
-      <Typography variant="h4" {...rest} ref={ref} sx={sx}>
+      <Typography variant="h4" {...rest} ref={ref}>
         {children}
       </Typography>
     );
   } else {
     return (
       // @ts-expect-error idk man, yeah it's compatible
-      <Link
-        variant="h4"
-        to={to}
-        {...LinkProps}
-        {...rest}
-        ref={ref as any}
-        sx={sx}
-      >
+      <Link variant="h4" to={to} {...LinkProps} {...rest} ref={ref as any}>
         {children}
       </Link>
     );
