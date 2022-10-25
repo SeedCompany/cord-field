@@ -61,9 +61,9 @@ const FileCardMeta = ({
 }: FileCardMetaProps) => {
   return (
     <Typography
-      sx={(theme) => ({
-        color: theme.palette.text.secondary,
-      })}
+      sx={{
+        color: 'text.secondary',
+      }}
       variant="caption"
       component="p"
       gutterBottom
@@ -92,7 +92,6 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       disableIcon,
       onUpload,
       className,
-      sx,
       ...rest
     } = props;
     const { value: file, canRead, canEdit } = securedFile;
@@ -169,7 +168,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
             flex: 1,
             position: 'relative',
           },
-          ...extendSx(sx),
+          ...extendSx(rest.sx),
         ]}
       >
         <input {...getInputProps()} name="defined_file_version_uploader" />
@@ -177,9 +176,9 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
           isDragActive={isDragActive}
           message={!file ? `Add ${label} file` : 'Drop new version to upload'}
           TypographyProps={{
-            sx: (theme) => ({
-              fontSize: theme.typography.h2.fontSize,
-            }),
+            sx: {
+              fontSize: 'h2.fontSize',
+            },
           }}
         />
         <CardActionArea
@@ -187,19 +186,21 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
           ref={ref}
           sx={
             !file
-              ? (theme) => ({
+              ? {
                   display: 'flex',
                   flexDirection: 'column',
                   height: '100%',
-                  padding: theme.spacing(3, 4),
-                })
-              : (theme) => ({
+                  py: 3,
+                  px: 4,
+                }
+              : {
                   flex: 1,
                   height: '100%',
                   display: 'flex',
-                  padding: theme.spacing(3, 4),
+                  py: 3,
+                  px: 4,
                   position: 'relative',
-                })
+                }
           }
           disabled={isCardDisabled}
           onClick={() => file && openFilePreview(file)}
@@ -224,10 +225,10 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
               <Typography
                 variant="button"
                 align="center"
-                sx={(theme) => ({
-                  marginTop: theme.spacing(1),
+                sx={{
+                  mt: 1,
                   textTransform: 'none',
-                })}
+                }}
               >
                 {canEdit ? `Add ${label}` : `No ${label} uploaded`}
               </Typography>
@@ -235,13 +236,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
           ) : (
             <>
               {!disableIcon && (
-                <HugeIcon
-                  icon={ReportIcon}
-                  loading={!file}
-                  sx={(theme) => ({
-                    marginRight: theme.spacing(4),
-                  })}
-                />
+                <HugeIcon icon={ReportIcon} loading={!file} sx={{ mr: 4 }} />
               )}
               <Box
                 sx={{
@@ -252,10 +247,10 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                 }}
               >
                 <Typography
-                  sx={(theme) => ({
-                    marginBottom: theme.spacing(1),
-                    marginRight: theme.spacing(2), // so it doesn't collide with abs pos context menu
-                  })}
+                  sx={{
+                    mb: 1,
+                    mr: 2, // so it doesn't collide with abs pos context menu
+                  }}
                   variant="h4"
                 >
                   {label}
@@ -292,12 +287,12 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
         </CardActionArea>
         {file && canRead && (
           <Box
-            sx={(theme) => ({
-              margin: theme.spacing(1),
+            sx={{
+              m: 1,
               position: 'absolute',
               right: 0,
               top: 0,
-            })}
+            }}
           >
             <ActionsMenu
               actions={permittedFileActions}
