@@ -18,11 +18,10 @@ export const Avatar = ({ loading, ...props }: AvatarProps) => {
         {
           backgroundColor: 'transparent',
         },
-        !loading &&
-          ((theme) => ({
-            color: theme.palette.info.main,
-            backgroundColor: theme.palette.grey[200],
-          })),
+        !loading && {
+          color: 'info.main',
+          bgcolor: 'grey.200',
+        },
         ...extendSx(sx),
       ]}
       classes={props.classes}
