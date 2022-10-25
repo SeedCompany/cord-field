@@ -45,6 +45,7 @@ export const Error = ({
   children,
   show,
   disableButtons,
+  page,
   component: Component = 'div',
 }: ErrorProps) => {
   const navigate = useNavigate();
@@ -70,10 +71,7 @@ export const Error = ({
   return (
     <Box
       component={Component}
-      sx={(theme) => ({
-        overflow: 'auto',
-        padding: theme.spacing(4, 0, 0, 4),
-      })}
+      sx={[!!page && { overflow: 'auto', pt: 4, pl: 4 }]}
     >
       <>
         {/* Default status code to be helpful for the most common ones. The
