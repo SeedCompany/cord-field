@@ -1,7 +1,7 @@
 import { Chip, ChipProps, Skeleton } from '@mui/material';
 import { ReactElement } from 'react';
 import { Except, SetRequired } from 'type-fest';
-import { SecuredProp } from '~/common';
+import { extendSx, SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
 
 export interface BooleanPropertyProps extends SetRequired<ChipProps, 'label'> {
@@ -19,12 +19,15 @@ export const BooleanProperty = ({
   const chip = (
     <Chip
       {...rest}
-      sx={(theme) => ({
-        background: theme.palette.info.main,
-        color: theme.palette.info.contrastText,
-        borderRadius: theme.shape.borderRadius,
-        height: 26,
-      })}
+      sx={[
+        {
+          background: 'info.main',
+          color: 'info.contrastText',
+          borderRadius: 1,
+          height: 26,
+        },
+        ...extendSx(rest.sx),
+      ]}
     />
   );
 
