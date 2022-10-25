@@ -1,5 +1,6 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Box, Theme, Typography } from '@mui/material';
+import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { Step0, Step1, Step2, Step3 } from '../TemporarySteps';
 
@@ -14,7 +15,8 @@ const typographyLinkSx = (theme: Theme) => ({
 });
 
 export const StepContainer = () => {
-  const { progressReportStep } = useProgressReportContext();
+  const { step } = useProgressReportContext();
+
   return (
     <Box
       sx={{
@@ -25,10 +27,10 @@ export const StepContainer = () => {
     >
       <StepContainerHeader />
       <Box sx={{ flex: 1, padding: 2, pt: 4 }}>
-        {progressReportStep === 0 && <Step0 />}
-        {progressReportStep === 1 && <Step1 />}
-        {progressReportStep === 2 && <Step2 />}
-        {progressReportStep === 3 && <Step3 />}
+        {step === 0 && <Step0 />}
+        {step === 1 && <Step1 />}
+        {step === 2 && <Step2 />}
+        {step === 3 && <Step3 />}
       </Box>
     </Box>
   );
@@ -38,9 +40,9 @@ const StepContainerHeader = () => {
   const {
     nextProgressReportStep,
     previousProgressReportStep,
-    toggleProgressReportDrawer,
     setCurrentProgressReport,
   } = useProgressReportContext();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -59,7 +61,7 @@ const StepContainerHeader = () => {
         sx={typographyLinkSx}
         onClick={() => {
           setCurrentProgressReport(null);
-          toggleProgressReportDrawer(false);
+          navigate('');
         }}
       >
         <ArrowBack

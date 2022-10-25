@@ -6,6 +6,12 @@ import {
   useState,
 } from 'react';
 import { ChildrenProp } from '~/common';
+import {
+  BooleanParam,
+  makeQueryHandler,
+  NumberParam,
+  withDefault,
+} from '~/hooks';
 import { ProgressReportFragment } from './Detail/ProgressReportDetail.graphql';
 
 interface InitialProgressReportContextInterface {
@@ -14,9 +20,14 @@ interface InitialProgressReportContextInterface {
   nextProgressReportStep: () => void;
   previousProgressReportStep: () => void;
   setCurrentProgressReport: (report: ProgressReportFragment | null) => void;
-  progressReportStep: number;
-  progressReportDrawer: boolean;
+  step: number;
+  drawerOpen: boolean;
   currentReport: ProgressReportFragment | null;
+}
+
+interface QueryParamsInterface {
+  edit: boolean;
+  step: number;
 }
 
 const initialProgressReportContext: InitialProgressReportContextInterface = {
@@ -42,8 +53,8 @@ const initialProgressReportContext: InitialProgressReportContextInterface = {
     return;
   },
 
-  progressReportStep: 0,
-  progressReportDrawer: false,
+  step: 0,
+  drawerOpen: false,
   currentReport: null,
 };
 
@@ -53,32 +64,62 @@ const ProgressReportContext =
   );
 
 export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
-  const [progressReportDrawer, setProgressReportDrawer] = useState(false);
-  const [progressReportStep, setProgressReportStep] = useState(0);
-  const [currentReport, setCurrentReport] =
-    useState<ProgressReportFragment | null>(null);
+  const useSearchParams = makeQueryHandler({
+    edit: withDefault(BooleanParam(), false),
+    step: withDefault(NumberParam, 0),
+  });
+  const [{ edit, step }, setParams] = useSearchParams() as [
+    QueryParamsInterface,
+    (data: any) => void
+  ];
+
+  const [currentReport, setReport] = useState<ProgressReportFragment | null>(
+    null
+  );
+
+  const setStep = useCallback(
+    (step: number) => {
+      setParams({ step, edit });
+    },
+    [edit, setParams]
+  );
+
+  const setCurrentReport = useCallback(
+    (report: ProgressReportFragment | null) => {
+      setReport(report);
+      setStep(initialProgressReportContext.step);
+    },
+    [setReport, setStep]
+  );
+
+  const setEdit = useCallback(
+    (edit: boolean) => {
+      setParams({ edit, step });
+    },
+    [setParams, step]
+  );
 
   const toggleProgressReportDrawer = useCallback(
     (state?: boolean) => {
-      setProgressReportDrawer(state ?? !progressReportDrawer);
+      setEdit(state ?? !edit);
     },
-    [progressReportDrawer]
+    [edit, setEdit]
   );
 
   const nextProgressReportStep = useCallback(() => {
-    setProgressReportStep((prev) => prev + 1);
-  }, []);
+    setStep(step + 1);
+  }, [setStep, step]);
 
   const previousProgressReportStep = useCallback(() => {
-    setProgressReportStep((prev) => (prev - 1 < 0 ? 0 : prev - 1));
-  }, []);
+    setStep(step - 1 < 0 ? 0 : step - 1);
+  }, [setStep, step]);
 
   const value = useMemo(
     () => ({
       toggleProgressReportDrawer,
-      setProgressReportStep,
-      progressReportStep,
-      progressReportDrawer,
+      setProgressReportStep: setStep,
+      step,
+      drawerOpen: edit,
       nextProgressReportStep,
       previousProgressReportStep,
       currentReport,
@@ -86,9 +127,9 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
     }),
     [
       toggleProgressReportDrawer,
-      setProgressReportStep,
-      progressReportStep,
-      progressReportDrawer,
+      setStep,
+      step,
+      edit,
       nextProgressReportStep,
       previousProgressReportStep,
       currentReport,

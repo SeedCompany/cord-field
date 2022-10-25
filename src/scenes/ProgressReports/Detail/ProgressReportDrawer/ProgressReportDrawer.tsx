@@ -1,21 +1,29 @@
 import { Box, Drawer } from '@mui/material';
+import { useEffect } from 'react';
 import { useProgressReportContext } from '../../ProgressReportContext';
+import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
 import { StepContainer } from './StepContainer';
 
-export const ProgressReportDrawer = () => {
-  const { progressReportStep, progressReportDrawer, currentReport } =
+interface ProgressReportDrawerProps {
+  report: ProgressReportFragment | null;
+}
+
+export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
+  const { step, drawerOpen, setCurrentProgressReport, currentReport } =
     useProgressReportContext();
 
-  if (!currentReport) {
-    return null;
-  }
+  useEffect(() => {
+    if (report?.id !== currentReport?.id) {
+      setCurrentProgressReport(report);
+    }
+  }, [currentReport?.id, report, setCurrentProgressReport]);
 
   return (
     <Drawer
       anchor="right"
-      open={progressReportDrawer}
+      open={drawerOpen}
       sx={{
         '& .MuiDrawer-paper': {
           width: 'calc(100% - 200px)',
@@ -40,7 +48,7 @@ export const ProgressReportDrawer = () => {
               justifyContent: 'space-between',
             }}
           >
-            <ProgressReportDrawerHeader report={currentReport} />
+            <ProgressReportDrawerHeader report={report} />
           </Box>
           <Box
             sx={{
@@ -53,10 +61,7 @@ export const ProgressReportDrawer = () => {
             <StepContainer />
           </Box>
         </Box>
-        <ProgressReportSidebar
-          report={currentReport}
-          step={progressReportStep}
-        />
+        <ProgressReportSidebar report={report} step={step} />
       </Box>
     </Drawer>
   );

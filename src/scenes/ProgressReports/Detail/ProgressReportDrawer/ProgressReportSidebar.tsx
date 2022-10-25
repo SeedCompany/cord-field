@@ -9,7 +9,7 @@ export const ProgressReportSidebar = ({
   report,
   step,
 }: {
-  report?: ProgressReportFragment;
+  report?: ProgressReportFragment | null;
   step: number;
 }) => {
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);

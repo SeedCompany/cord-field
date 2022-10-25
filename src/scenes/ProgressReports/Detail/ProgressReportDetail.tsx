@@ -249,7 +249,7 @@ export const ProgressReportDetail = () => {
           </>
         )}
       </main>
-      <ProgressReportDrawer />
+      <ProgressReportDrawer report={report} />
     </div>
   );
 };

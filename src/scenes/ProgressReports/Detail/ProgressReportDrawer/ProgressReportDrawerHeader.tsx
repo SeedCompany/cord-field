@@ -5,7 +5,7 @@ import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
 export const ProgressReportDrawerHeader = ({
   report,
 }: {
-  report?: ProgressReportFragment;
+  report?: ProgressReportFragment | null;
 }) => {
   if (!report) {
     return null;

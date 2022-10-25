@@ -1,16 +1,13 @@
 import { Add as AddIcon } from '@mui/icons-material';
 import { Avatar, Card, CardActionArea, Typography } from '@mui/material';
-import { useProgressReportContext } from '../ProgressReportContext';
-import { ProgressReportFragment } from './ProgressReportDetail.graphql';
+import { useNavigate } from '~/components/Routing';
 
 interface Props {
-  progressReport: ProgressReportFragment;
   label: string;
 }
 
-export const NewProgressReportCard = ({ progressReport, label }: Props) => {
-  const { toggleProgressReportDrawer, setCurrentProgressReport } =
-    useProgressReportContext();
+export const NewProgressReportCard = ({ label }: Props) => {
+  const navigate = useNavigate();
 
   return (
     <Card
@@ -27,8 +24,7 @@ export const NewProgressReportCard = ({ progressReport, label }: Props) => {
           padding: theme.spacing(3, 4),
         })}
         onClick={() => {
-          setCurrentProgressReport(progressReport);
-          toggleProgressReportDrawer(true);
+          navigate('?edit=1');
         }}
       >
         <>
