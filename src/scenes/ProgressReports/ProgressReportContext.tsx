@@ -9,16 +9,7 @@ import { ChildrenProp } from '~/common';
 import { makeQueryHandler, NumberParam, withDefault } from '~/hooks';
 import { ProgressReportFragment } from './Detail/ProgressReportDetail.graphql';
 
-interface InitialProgressReportContextInterface {
-  setProgressReportStep: (step: number) => void;
-  nextProgressReportStep: () => void;
-  previousProgressReportStep: () => void;
-  setCurrentProgressReport: (report: ProgressReportFragment | null) => void;
-  step: number;
-  currentReport: ProgressReportFragment | null;
-}
-
-const initialProgressReportContext: InitialProgressReportContextInterface = {
+const initialProgressReportContext = {
   // eslint-disable-next-line @seedcompany/no-unused-vars
   setProgressReportStep: (step: number) => {
     return;
@@ -38,13 +29,12 @@ const initialProgressReportContext: InitialProgressReportContextInterface = {
   },
 
   step: 0,
-  currentReport: null,
+  currentReport: null as ProgressReportFragment | null,
 };
 
-const ProgressReportContext =
-  createContext<InitialProgressReportContextInterface>(
-    initialProgressReportContext
-  );
+const ProgressReportContext = createContext<
+  typeof initialProgressReportContext
+>(initialProgressReportContext);
 
 const useStepState = makeQueryHandler({
   step: withDefault(NumberParam, 0),
