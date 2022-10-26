@@ -14,6 +14,11 @@ import { Except } from 'type-fest';
 import { fileIcon } from '../files/fileTypes';
 import { FieldConfig, useField } from './useField';
 
+const dropzoneHoverStyle = {
+  backgroundColor: 'grey.200',
+  borderColor: 'primary.main',
+};
+
 export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> & {
   label?: string;
   multiple?: boolean;
@@ -61,52 +66,31 @@ export function DropzoneField({
   });
 
   return (
-    <Box
-      className={className}
-      sx={(theme) => ({
-        marginBottom: theme.spacing(2),
-      })}
-    >
+    <Box className={className} sx={{ mb: 2 }}>
       <Box
         sx={[
-          (theme) => ({
-            backgroundColor: theme.palette.grey[300],
-            border: `2px dashed ${theme.palette.divider}`,
+          {
+            backgroundColor: 'grey.300',
+            border: `2px dashed`,
+            borderColor: 'divider',
             cursor: 'pointer',
-            padding: theme.spacing(3),
-            '&:hover': {
-              backgroundColor: theme.palette.grey[200],
-              borderColor: theme.palette.primary.main,
-            },
-          }),
-          isDragActive &&
-            ((theme) => ({
-              active: {
-                backgroundColor: theme.palette.grey[200],
-                borderColor: theme.palette.primary.main,
-              },
-            })),
+            p: 3,
+            '&:hover': dropzoneHoverStyle,
+          },
+          isDragActive && dropzoneHoverStyle,
         ]}
         {...getRootProps()}
       >
         <input {...getInputProps()} name={name} />
         <Typography
           variant="h4"
-          sx={(theme) => ({
-            color: theme.palette.text.secondary,
-            textAlign: 'center',
-          })}
+          sx={{ color: 'text.secondary', textAlign: 'center' }}
         >
           {label}
         </Typography>
       </Box>
       {currentFiles.length > 0 && (
-        <List
-          dense
-          sx={{
-            paddingBottom: 0,
-          }}
-        >
+        <List dense sx={{ pb: 0 }}>
           {currentFiles.map((file, index) => {
             const { name, type } = file;
             const Icon = fileIcon(type);
