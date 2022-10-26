@@ -11,10 +11,10 @@ export const PreviewError = (props: PreviewErrorProps) => {
       <Typography
         variant="h3"
         color="textSecondary"
-        sx={(theme) => ({
-          maxWidth: theme.breakpoints.values.sm,
+        sx={{
+          maxWidth: 'values.sm',
           textAlign: 'center',
-        })}
+        }}
       >
         {errorText}
       </Typography>
