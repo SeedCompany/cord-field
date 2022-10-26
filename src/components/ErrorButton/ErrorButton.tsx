@@ -8,14 +8,12 @@ export const ErrorButton = ({ ...rest }: ErrorButtonProps) => {
   return (
     <Button
       {...rest}
-      sx={(theme) => ({
+      sx={{
         '&.MuiButton-text': {
           color: 'error.main',
           '&:hover': {
-            bgcolor: fade(
-              theme.palette.error.main,
-              theme.palette.action.hoverOpacity
-            ),
+            bgcolor: (theme) =>
+              fade(theme.palette.error.main, theme.palette.action.hoverOpacity),
           },
         },
         '&.MuiButton-contained': {
@@ -29,7 +27,7 @@ export const ErrorButton = ({ ...rest }: ErrorButtonProps) => {
             },
           },
         },
-      })}
+      }}
     />
   );
 };
