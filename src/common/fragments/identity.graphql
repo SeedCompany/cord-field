@@ -7,7 +7,14 @@ fragment Id on Resource {
 fragment ChangesetId on ChangesetAware {
   __typename
   id
+  ...ParentId
   changeset {
+    id
+  }
+}
+
+fragment ParentId on ChangesetAware {
+  parent {
     id
   }
 }
