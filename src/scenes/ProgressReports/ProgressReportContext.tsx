@@ -18,10 +18,6 @@ interface InitialProgressReportContextInterface {
   currentReport: ProgressReportFragment | null;
 }
 
-interface QueryParamsInterface {
-  step: number;
-}
-
 const initialProgressReportContext: InitialProgressReportContextInterface = {
   // eslint-disable-next-line @seedcompany/no-unused-vars
   setProgressReportStep: (step: number) => {
@@ -50,14 +46,12 @@ const ProgressReportContext =
     initialProgressReportContext
   );
 
+const useStepState = makeQueryHandler({
+  step: withDefault(NumberParam, 0),
+});
+
 export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
-  const useSearchParams = makeQueryHandler({
-    step: withDefault(NumberParam, 0),
-  });
-  const [{ step }, setParams] = useSearchParams() as [
-    QueryParamsInterface,
-    (data: any) => void
-  ];
+  const [{ step }, setStepState] = useStepState();
 
   const [currentReport, setReport] = useState<ProgressReportFragment | null>(
     null
@@ -65,9 +59,9 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
 
   const setStep = useCallback(
     (step: number) => {
-      setParams({ step });
+      setStepState({ step });
     },
-    [setParams]
+    [setStepState]
   );
 
   const setCurrentReport = useCallback(
@@ -79,11 +73,12 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   );
 
   const nextProgressReportStep = useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- linter is confused
     setStep(step + 1);
   }, [setStep, step]);
 
   const previousProgressReportStep = useCallback(() => {
-    setStep(step - 1 < 0 ? 0 : step - 1);
+    setStep(Math.max(step - 1, 0));
   }, [setStep, step]);
 
   const value = useMemo(
