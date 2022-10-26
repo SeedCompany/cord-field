@@ -5,9 +5,9 @@ import {
   StepButton,
   StepConnector,
   Stepper,
-  Theme,
   Typography,
 } from '@mui/material';
+import { Sx } from '~/common';
 import { PeopleJoinedIcon } from '~/components/Icons';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { colorPalette } from './colorPalette';
@@ -16,41 +16,45 @@ interface ProgressReportStepperProps {
   step: number;
 }
 
-const stepperSx = (theme: Theme) => ({
-  '& .MuiStep-root .MuiStepLabel-label': {
-    fontSize: '0.75rem',
-  },
-  '& .MuiStep-root': {
-    cursor: 'pointer',
-  },
-  '& .MuiStep-root .MuiStepIcon-root ': {
-    color: theme.palette.grey[500],
-  },
-  '& .MuiStep-root .MuiStepIcon-root.Mui-active': {
-    color: theme.palette.info.light,
-  },
-  '& .MuiStep-root .MuiStepIcon-root.Mui-completed': {
-    color: theme.palette.grey[500],
-    backgroundColor: theme.palette.grey[500],
-    borderRadius: '50%',
-  },
-  '& .MuiStepConnector-lineVertical': {
-    minHeight: 16,
-  },
-  '& .MuiStepLabel-root': {
-    paddingTop: 0.5,
-    paddingBottom: 0.5,
+const stepperSx: Sx = (theme) => ({
+  '&': {
+    '.MuiStep-root': {
+      cursor: 'pointer',
+
+      '.MuiStepLabel-label': {
+        fontSize: '0.75rem',
+      },
+
+      '.MuiStepIcon-root': {
+        color: theme.palette.grey[500],
+        '&.Mui-active': {
+          color: theme.palette.info.light,
+        },
+        '&.Mui-completed': {
+          color: theme.palette.grey[500],
+          backgroundColor: theme.palette.grey[500],
+          borderRadius: '50%',
+        },
+      },
+    },
+    '.MuiStepConnector-lineVertical': {
+      minHeight: 16,
+    },
+    '.MuiStepLabel-root': {
+      paddingTop: 0.5,
+      paddingBottom: 0.5,
+    },
   },
 });
 
-const typographySx = {
+const typographySx: Sx = {
   fontSize: '0.65rem',
   textTransform: 'uppercase',
   marginTop: 1,
   marginBottom: 1,
 };
 
-const singleConnectorSx = {
+const singleConnectorSx: Sx = {
   '&.MuiStepConnector-root': {
     flex: '1 1 auto',
     marginLeft: '12px',
@@ -75,8 +79,8 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
         overflow: 'hidden',
       }}
     >
-      <Box
-        sx={{
+      <div
+        css={{
           display: 'flex',
           alignItems: 'center',
           backgroundColor: colorPalette.stepperCard.headerBackground.partner,
@@ -99,7 +103,7 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
         >
           Partner Steps
         </Typography>
-      </Box>
+      </div>
       <Box
         sx={{
           padding: 2,

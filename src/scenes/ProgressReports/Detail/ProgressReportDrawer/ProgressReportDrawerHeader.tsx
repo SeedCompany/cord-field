@@ -52,7 +52,7 @@ export const ProgressReportDrawerHeader = () => {
           },
         }}
       >
-        <Card elevation={0} variant="outlined" sx={{ p: 2, pt: 1, pb: 1 }}>
+        <Card elevation={0} variant="outlined" sx={{ px: 2, py: 1 }}>
           <Typography variant="subtitle2" color="text.gray">
             Location
           </Typography>
@@ -60,7 +60,7 @@ export const ProgressReportDrawerHeader = () => {
             Ethiopia | Africa - Anglophone West
           </Typography>
         </Card>
-        <Card elevation={0} variant="outlined" sx={{ p: 2, pt: 1, pb: 1 }}>
+        <Card elevation={0} variant="outlined" sx={{ px: 2, py: 1 }}>
           <Typography variant="subtitle2" color="text.gray">
             Sensitivity
           </Typography>

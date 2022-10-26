@@ -1,10 +1,11 @@
 import { ArrowForward } from '@mui/icons-material';
-import { Box, Theme, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { Sx } from '~/common';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { Step0, Step1, Step2, Step3 } from '../TemporarySteps';
 import { colorPalette } from './colorPalette';
 
-const typographyLinkSx = (theme: Theme) => ({
+const typographyLinkSx: Sx = (theme) => ({
   color: theme.palette.grey[800],
   fontSize: 14,
   cursor: 'pointer',
@@ -18,8 +19,8 @@ export const StepContainer = () => {
   const { step } = useProgressReportContext();
 
   return (
-    <Box
-      sx={{
+    <div
+      css={{
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
@@ -32,7 +33,7 @@ export const StepContainer = () => {
         {step === 2 && <Step2 />}
         {step === 3 && <Step3 />}
       </Box>
-    </Box>
+    </div>
   );
 };
 

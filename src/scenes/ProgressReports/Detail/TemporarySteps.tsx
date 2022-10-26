@@ -1,8 +1,9 @@
 import { ArrowForward } from '@mui/icons-material';
-import { Box, Theme, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import { Sx } from '~/common';
 import { useProgressReportContext } from '../ProgressReportContext';
 
-const typographyLinkSx = (theme: Theme) => ({
+const typographyLinkSx: Sx = (theme) => ({
   color: theme.palette.grey[800],
   fontSize: 14,
   cursor: 'pointer',
@@ -16,8 +17,8 @@ export const NextButton = () => {
   const { nextProgressReportStep } = useProgressReportContext();
 
   return (
-    <Box
-      sx={{
+    <div
+      css={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'end',
@@ -37,7 +38,7 @@ export const NextButton = () => {
           }}
         />
       </Typography>
-    </Box>
+    </div>
   );
 };
 
