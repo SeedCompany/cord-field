@@ -37,4 +37,5 @@ fragment LoggedInUser on User {
 
 fragment features on BetaFeatures {
   projectChangeRequests
+  newProgressReports
 }
