@@ -13,12 +13,12 @@ export const PreviewNotSupported = ({
   const download = useDownloadFile();
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         display: 'flex',
         flexDirection: 'column',
-        margin: theme.spacing(4),
+        m: 4,
         textAlign: 'center',
-      })}
+      }}
     >
       <Typography
         variant="h3"
