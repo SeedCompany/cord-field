@@ -211,19 +211,19 @@ export const FileActionsMenu = (props: FileActionsMenuProps) => {
               <Box
                 component="span"
                 {...getRootProps()}
-                sx={(theme) => ({
+                sx={{
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginLeft: theme.spacing(-2),
-                  marginRight: theme.spacing(-2),
-                  paddingLeft: theme.spacing(2),
-                  paddingRight: theme.spacing(2),
-                  width: `calc(100% + (${theme.spacing(2)} * 2))`,
+                  ml: -2,
+                  mr: -2,
+                  pl: 2,
+                  pr: 2,
+                  width: `calc(100% + (2 * 2))`,
                   '&:focus': {
                     outline: 'none',
                   },
-                })}
+                }}
               >
                 <input {...getInputProps()} name="file-version-uploader" />
                 {menuItemContents(action)}
