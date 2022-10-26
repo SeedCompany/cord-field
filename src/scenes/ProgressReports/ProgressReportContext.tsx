@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 import { ChildrenProp } from '~/common';
-import { makeQueryHandler, NumberParam, withDefault } from '~/hooks';
+import { makeQueryHandler, StringParam } from '~/hooks';
 import { ProgressReportFragment } from './Detail/ProgressReportDetail.graphql';
 
 const initialProgressReportContext = {
@@ -37,11 +37,20 @@ const ProgressReportContext = createContext<
 >(initialProgressReportContext);
 
 const useStepState = makeQueryHandler({
-  step: withDefault(NumberParam, 0),
+  step: StringParam,
 });
 
+export const stepNames = [
+  'team-highlight',
+  'community-story',
+  'progress',
+  'additional-notes',
+];
+
 export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
-  const [{ step }, setStepState] = useStepState();
+  const [{ step: urlStep }, setStepState] = useStepState();
+
+  const [step, setIndexStep] = useState(stepNames.indexOf(urlStep));
 
   const [currentReport, setReport] = useState<ProgressReportFragment | null>(
     null
@@ -49,22 +58,32 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
 
   const setStep = useCallback(
     (step: number) => {
-      setStepState({ step });
+      setIndexStep(step);
+      setStepState({ step: stepNames[step] });
     },
     [setStepState]
   );
 
   const setCurrentReport = useCallback(
     (report: ProgressReportFragment | null) => {
+      if (!report) {
+        setStep(initialProgressReportContext.step);
+        return;
+      } else if (urlStep) {
+        if (stepNames.includes(urlStep)) {
+          setStep(stepNames.indexOf(urlStep));
+        } else {
+          setStep(initialProgressReportContext.step);
+        }
+      }
       setReport(report);
-      setStep(initialProgressReportContext.step);
     },
-    [setReport, setStep]
+    [setStep, urlStep]
   );
 
   const nextProgressReportStep = useCallback(() => {
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- linter is confused
-    setStep(step + 1);
+    setStep(Math.min(step + 1, stepNames.length - 1));
   }, [setStep, step]);
 
   const previousProgressReportStep = useCallback(() => {
