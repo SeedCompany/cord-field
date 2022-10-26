@@ -3,13 +3,8 @@ import { Box, Card, Theme, Typography } from '@mui/material';
 import { Link } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
 
-interface Props {
-  report?: ProgressReportFragment | null;
-}
-
-export const ProgressReportDrawerHeader = ({ report: _report }: Props) => {
+export const ProgressReportDrawerHeader = () => {
   const { setCurrentProgressReport } = useProgressReportContext();
 
   return (

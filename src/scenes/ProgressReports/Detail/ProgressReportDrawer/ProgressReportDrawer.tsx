@@ -54,7 +54,7 @@ export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
               justifyContent: 'space-between',
             }}
           >
-            <ProgressReportDrawerHeader report={report} />
+            <ProgressReportDrawerHeader />
           </Box>
           <Box
             sx={{
@@ -67,7 +67,7 @@ export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
             <StepContainer />
           </Box>
         </Box>
-        <ProgressReportSidebar report={report} step={step} />
+        <ProgressReportSidebar step={step} />
       </Box>
     </Drawer>
   );

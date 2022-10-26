@@ -1,22 +1,11 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import { useState } from 'react';
-import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
 import { InstructionsDialog } from './InstructionsDialog';
 import { ProgressReportStepper } from './ProgressReportStepper';
 
-export const ProgressReportSidebar = ({
-  report,
-  step,
-}: {
-  report?: ProgressReportFragment | null;
-  step: number;
-}) => {
+export const ProgressReportSidebar = ({ step }: { step: number }) => {
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
-
-  if (!report) {
-    return null;
-  }
 
   return (
     <Box
