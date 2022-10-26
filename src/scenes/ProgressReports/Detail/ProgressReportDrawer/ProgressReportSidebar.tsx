@@ -67,16 +67,6 @@ export const ProgressReportSidebar = ({
       >
         Submit Report
       </Button>
-      <Typography
-        sx={{
-          marginBottom: 2,
-          fontSize: '0.75rem',
-          color: 'text.gray',
-        }}
-      >
-        Button enabled once all the fields are filled out
-      </Typography>
-
       <ProgressReportStepper step={step} />
       <InstructionsDialog
         open={isInstructionsOpen}
