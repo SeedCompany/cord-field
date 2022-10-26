@@ -1,11 +1,11 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useDialog } from '~/components/Dialog';
 import { InstructionsDialog } from './InstructionsDialog';
 import { ProgressReportStepper } from './ProgressReportStepper';
 
 export const ProgressReportSidebar = ({ step }: { step: number }) => {
-  const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
+  const [instructionsState, showInstructions] = useDialog();
 
   return (
     <Box
@@ -25,7 +25,7 @@ export const ProgressReportSidebar = ({ step }: { step: number }) => {
             textDecoration: 'underline',
           },
         }}
-        onClick={() => setIsInstructionsOpen(!isInstructionsOpen)}
+        onClick={showInstructions}
       >
         Instructions{' '}
         <InfoOutlined
@@ -57,10 +57,7 @@ export const ProgressReportSidebar = ({ step }: { step: number }) => {
         Submit Report
       </Button>
       <ProgressReportStepper step={step} />
-      <InstructionsDialog
-        open={isInstructionsOpen}
-        onClose={() => setIsInstructionsOpen(false)}
-      />
+      <InstructionsDialog {...instructionsState} />
     </Box>
   );
 };
