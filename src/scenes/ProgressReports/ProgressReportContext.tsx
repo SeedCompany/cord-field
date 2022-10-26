@@ -24,7 +24,7 @@ const initialProgressReportContext = {
   },
 
   // eslint-disable-next-line @seedcompany/no-unused-vars
-  setCurrentProgressReport(report: ProgressReportFragment | null) {
+  setCurrentProgressReport: (report: ProgressReportFragment | null) => {
     return;
   },
 
@@ -50,7 +50,8 @@ export const stepNames = [
 export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
-  const [step, setIndexStep] = useState(stepNames.indexOf(urlStep));
+  const stepIndex = stepNames.indexOf(urlStep);
+  const [step, setIndexStep] = useState(stepIndex > -1 ? stepIndex : 0);
 
   const [currentReport, setReport] = useState<ProgressReportFragment | null>(
     null
