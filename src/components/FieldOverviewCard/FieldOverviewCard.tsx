@@ -71,24 +71,25 @@ export const FieldOverviewCard = ({
       <ActionArea
         disabled={!data || redacted}
         to={data?.to ?? ''}
-        sx={(theme) => ({
+        sx={{
           flex: 1,
           display: 'flex',
           justifyContent: 'space-evenly',
-          padding: theme.spacing(3, 4),
-        })}
+          py: 3,
+          px: 4,
+        }}
         onClick={onClick}
       >
         <HugeIcon icon={icon} loading={!data} />
         <Box
-          sx={(theme) => ({
+          sx={{
             flex: 1,
             alignSelf: 'flex-start',
-            paddingLeft: theme.spacing(4),
+            pl: 4,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-evenly',
-          })}
+          }}
         >
           <Typography variant="h4">
             {loading ? <Skeleton width="80%" /> : data ? title : ''}
@@ -96,10 +97,9 @@ export const FieldOverviewCard = ({
           <Typography
             variant="h1"
             sx={[
-              !!emptyStyle &&
-                ((theme) => ({
-                  color: theme.palette.action.disabled,
-                })),
+              !!emptyStyle && {
+                color: 'action.disabled',
+              },
             ]}
           >
             {loading || redacted ? (
@@ -118,11 +118,11 @@ export const FieldOverviewCard = ({
             container
             spacing={loading ? 4 : 2}
             wrap="nowrap"
-            sx={(theme) => ({
-              paddingRight: theme.spacing(1),
+            sx={{
+              pr: 1,
               alignItems: 'center',
               justifyContent: 'space-between',
-            })}
+            }}
           >
             <Grid item xs={loading}>
               <Btn
