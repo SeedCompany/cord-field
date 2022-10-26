@@ -2,10 +2,54 @@ query ProjectChangesetDiffs($id: ID!, $changeset: ID) {
   project(id: $id, changeset: $changeset) {
     ...Id
     changesetDiff {
-      ...ChangesetDiff
+      ...ProjectChangesetDiff
     }
-    changeset {
-      ...ProjectChangeRequestListItem
+  }
+}
+
+fragment ProjectChangesetDiff on ChangesetDiff {
+  added {
+    ...ProjectProps
+    ...BudgetRecordProps
+    ...Id
+  }
+  removed {
+    ...ProjectProps
+    ...BudgetRecordProps
+    ...Id
+  }
+  changed {
+    previous {
+      ...ProjectProps
+      ...BudgetRecordProps
+      ...Id
     }
+    updated {
+      ...ProjectProps
+      ...BudgetRecordProps
+      ...Id
+    }
+  }
+}
+
+fragment ProjectProps on Project {
+  name {
+    value
+  }
+  mouRange {
+    value {
+      start
+      end
+    }
+  }
+  step {
+    value
+  }
+  projectStatus: status
+}
+
+fragment BudgetRecordProps on BudgetRecord {
+  amount {
+    value
   }
 }
