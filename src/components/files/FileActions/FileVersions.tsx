@@ -53,11 +53,7 @@ export const FileVersions = (props: FileVersionsProps) => {
         {loading
           ? [0, 1, 2].map((item) => (
               <Fragment key={item}>
-                <Box
-                  sx={(theme) => ({
-                    padding: theme.spacing(1, 3),
-                  })}
-                >
+                <Box sx={{ py: 1, px: 3 }}>
                   <Skeleton variant="rectangular" width={400} height={50} />
                 </Box>
                 {item < 2 && <Divider />}
