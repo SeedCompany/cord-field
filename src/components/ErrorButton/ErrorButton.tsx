@@ -10,22 +10,22 @@ export const ErrorButton = ({ ...rest }: ErrorButtonProps) => {
       {...rest}
       sx={(theme) => ({
         '&.MuiButton-text': {
-          color: theme.palette.error.main,
+          color: 'error.main',
           '&:hover': {
-            backgroundColor: fade(
+            bgcolor: fade(
               theme.palette.error.main,
               theme.palette.action.hoverOpacity
             ),
           },
         },
         '&.MuiButton-contained': {
-          color: theme.palette.error.contrastText,
-          backgroundColor: theme.palette.error.main,
+          color: 'error.contrastText',
+          bgcolor: 'error.main',
           '&:hover': {
-            backgroundColor: theme.palette.error.dark,
+            bgcolor: 'error.dark',
             // Reset on touch devices, it doesn't add specificity
             '@media (hover: none)': {
-              backgroundColor: theme.palette.error.main,
+              bgcolor: 'error.main',
             },
           },
         },
