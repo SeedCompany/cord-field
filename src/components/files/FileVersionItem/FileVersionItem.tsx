@@ -50,23 +50,23 @@ export const FileVersionItem = (props: FileVersionItemProps) => {
   return (
     <ListItem>
       <ListItemIcon
-        sx={(theme) => ({
-          marginRight: theme.spacing(2),
-          minWidth: theme.spacing(4),
-        })}
+        sx={{
+          mr: 2,
+          minWidth: 4,
+        }}
       >
         <Icon
-          sx={(theme) => ({
-            fontSize: theme.typography.h2.fontSize,
-          })}
+          sx={{
+            fontSize: 'h2.fontSize',
+          }}
         />
       </ListItemIcon>
       <ListItemText
         onClick={() => openFilePreview(version)}
-        sx={(theme) => ({
+        sx={{
           cursor: 'pointer',
-          marginRight: theme.spacing(3),
-        })}
+          mr: 3,
+        }}
         primary={name}
         secondary={`Created on ${formatDate(createdAt)}${
           createdByUser ? ` by ${createdByUser}` : ''
