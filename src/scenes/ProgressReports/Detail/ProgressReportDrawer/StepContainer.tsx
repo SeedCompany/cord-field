@@ -1,6 +1,5 @@
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import { ArrowForward } from '@mui/icons-material';
 import { Box, Theme, Typography } from '@mui/material';
-import { Link } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { Step0, Step1, Step2, Step3 } from '../TemporarySteps';
 import { colorPalette } from './colorPalette';
@@ -38,60 +37,26 @@ export const StepContainer = () => {
 };
 
 const StepContainerHeader = () => {
-  const {
-    nextProgressReportStep,
-    previousProgressReportStep,
-    setCurrentProgressReport,
-  } = useProgressReportContext();
+  const { nextProgressReportStep } = useProgressReportContext();
 
   return (
     <Box
       sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'end',
         backgroundColor: 'background.paper',
         padding: 2,
         borderTop: `1px solid ${colorPalette.header.border}`,
         borderBottom: `1px solid ${colorPalette.header.border}`,
       }}
     >
-      <Link
-        to=".."
-        sx={typographyLinkSx}
-        onClick={() => {
-          setCurrentProgressReport(null);
-        }}
-      >
-        <ArrowBack
-          sx={{
-            marginRight: 1,
-            fontSize: '1rem',
-            marginBottom: '-3px',
-          }}
-        />
-        All Reports
-      </Link>
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
         }}
       >
-        <Typography
-          component="span"
-          onClick={previousProgressReportStep}
-          sx={typographyLinkSx}
-        >
-          <ArrowBack
-            sx={{
-              marginRight: 1,
-              fontSize: '1rem',
-              marginBottom: '-3px',
-            }}
-          />
-          Previous
-        </Typography>
         <Typography
           component="span"
           onClick={nextProgressReportStep}
