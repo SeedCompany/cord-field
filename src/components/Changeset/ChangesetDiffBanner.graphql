@@ -1,0 +1,11 @@
+query ChangesetDiffBanner($changeset: ID!) {
+  changeset(id: $changeset) {
+    id
+    ...ProjectChangeRequestListItem
+    ... on ProjectChangeRequest {
+      project {
+        ...Id
+      }
+    }
+  }
+}
