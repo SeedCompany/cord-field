@@ -1,15 +1,16 @@
-import { Box, Card, Typography } from '@mui/material';
+import { ArrowBack } from '@mui/icons-material';
+import { Box, Card, Theme, Typography } from '@mui/material';
+import { Link } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
+import { useProgressReportContext } from '../../ProgressReportContext';
 import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
 
-export const ProgressReportDrawerHeader = ({
-  report,
-}: {
+interface Props {
   report?: ProgressReportFragment | null;
-}) => {
-  if (!report) {
-    return null;
-  }
+}
+
+export const ProgressReportDrawerHeader = ({ report: _report }: Props) => {
+  const { setCurrentProgressReport } = useProgressReportContext();
 
   return (
     <Box
@@ -18,8 +19,33 @@ export const ProgressReportDrawerHeader = ({
         width: 1,
         flexDirection: 'column',
         padding: 2,
+        pt: 0,
       }}
     >
+      <Link
+        to=".."
+        sx={(theme: Theme) => ({
+          color: theme.palette.grey[800],
+          cursor: 'pointer',
+          marginTop: -2,
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+          marginBottom: 2,
+        })}
+        onClick={() => {
+          setCurrentProgressReport(null);
+        }}
+      >
+        <ArrowBack
+          sx={{
+            marginRight: 1,
+            fontSize: '1.25rem',
+            marginBottom: '-4px',
+          }}
+        />
+        All Reports
+      </Link>
       <Typography variant="h2">Project Name | Engagement Name</Typography>
       <Box
         sx={{
