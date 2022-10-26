@@ -1,14 +1,12 @@
 import { Add as AddIcon } from '@mui/icons-material';
-import { Avatar, Card, CardActionArea, Typography } from '@mui/material';
-import { useNavigate } from '~/components/Routing';
+import { Avatar, Card, Typography } from '@mui/material';
+import { CardActionAreaLink } from '~/components/Routing';
 
 interface Props {
   label: string;
 }
 
 export const NewProgressReportCard = ({ label }: Props) => {
-  const navigate = useNavigate();
-
   return (
     <Card
       sx={{
@@ -16,16 +14,14 @@ export const NewProgressReportCard = ({ label }: Props) => {
         position: 'relative',
       }}
     >
-      <CardActionArea
+      <CardActionAreaLink
+        to="edit"
         sx={(theme) => ({
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
           padding: theme.spacing(3, 4),
         })}
-        onClick={() => {
-          navigate('?edit=1');
-        }}
       >
         <>
           <Avatar
@@ -45,7 +41,7 @@ export const NewProgressReportCard = ({ label }: Props) => {
             Add {label}
           </Typography>
         </>
-      </CardActionArea>
+      </CardActionAreaLink>
     </Card>
   );
 };

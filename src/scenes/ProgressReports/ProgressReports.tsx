@@ -13,8 +13,7 @@ export const ProgressReports = () => (
 const Detail = () => (
   <ChangesetContext>
     <Routes>
-      <Route path="" element={<ProgressReport />} />
-      {NotFoundRoute}
+      <Route path="*" element={<ProgressReport />} />
     </Routes>
   </ChangesetContext>
 );

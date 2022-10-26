@@ -1,6 +1,6 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Box, Theme, Typography } from '@mui/material';
-import { useNavigate } from '~/components/Routing';
+import { Link } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { Step0, Step1, Step2, Step3 } from '../TemporarySteps';
 import { colorPalette } from './colorPalette';
@@ -43,7 +43,6 @@ const StepContainerHeader = () => {
     previousProgressReportStep,
     setCurrentProgressReport,
   } = useProgressReportContext();
-  const navigate = useNavigate();
 
   return (
     <Box
@@ -57,12 +56,11 @@ const StepContainerHeader = () => {
         borderBottom: `1px solid ${colorPalette.header.border}`,
       }}
     >
-      <Typography
-        component="span"
+      <Link
+        to=".."
         sx={typographyLinkSx}
         onClick={() => {
           setCurrentProgressReport(null);
-          navigate('');
         }}
       >
         <ArrowBack
@@ -73,7 +71,7 @@ const StepContainerHeader = () => {
           }}
         />
         All Reports
-      </Typography>
+      </Link>
       <Box
         sx={{
           display: 'flex',

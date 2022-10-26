@@ -1,5 +1,7 @@
 import { Box, Drawer } from '@mui/material';
 import { useEffect } from 'react';
+import { useMatch } from 'react-router-dom';
+import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
@@ -11,7 +13,10 @@ interface ProgressReportDrawerProps {
 }
 
 export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
-  const { step, drawerOpen, setCurrentProgressReport, currentReport } =
+  const open = !!useMatch('progress-reports/:id/edit');
+
+  const navigate = useNavigate();
+  const { step, setCurrentProgressReport, currentReport } =
     useProgressReportContext();
 
   useEffect(() => {
@@ -23,7 +28,8 @@ export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
   return (
     <Drawer
       anchor="right"
-      open={drawerOpen}
+      open={open}
+      onClose={() => navigate('..')}
       sx={{
         '& .MuiDrawer-paper': {
           width: 'calc(100% - 200px)',
