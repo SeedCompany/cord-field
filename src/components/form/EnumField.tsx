@@ -234,13 +234,9 @@ export const EnumField = <
     variant === 'checkbox' || variant === 'toggle-split' ? (
       <FormGroup
         sx={[
-          variant === 'toggle-split' &&
-            ((theme) => ({
-              '&.MuiFormGroup-root': {
-                margin: theme.spacing(-1),
-                padding: theme.spacing(1, 0),
-              },
-            })),
+          variant === 'toggle-split' && {
+            '&.MuiFormGroup-root': { m: -1, py: 1 },
+          },
         ]}
         row={layout === 'row'}
       >
@@ -250,9 +246,7 @@ export const EnumField = <
       <ToggleButtonGroup
         exclusive={!multiple}
         orientation={layout === 'row' ? 'horizontal' : 'vertical'}
-        sx={(theme) => ({
-          margin: theme.spacing(1, 0),
-        })}
+        sx={{ my: 1 }}
       >
         {children}
       </ToggleButtonGroup>
@@ -285,12 +279,7 @@ export const EnumField = <
       }}
     >
       {label && (
-        <FormLabel
-          component="legend"
-          sx={(theme) => ({
-            fontWeight: theme.typography.weight.bold,
-          })}
-        >
+        <FormLabel component="legend" sx={{ fontWeight: 'bold' }}>
           {label}
         </FormLabel>
       )}
