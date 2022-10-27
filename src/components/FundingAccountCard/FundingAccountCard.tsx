@@ -13,20 +13,9 @@ export const FundingAccountCard = ({
   fundingAccount,
 }: FundingAccountCardProps) => {
   return (
-    <Card
-      className={className}
-      sx={{
-        width: '100%',
-        maxWidth: 400,
-      }}
-    >
+    <Card className={className} sx={{ width: '100%', maxWidth: 400 }}>
       <CardContent>
-        <Typography
-          variant="h4"
-          sx={(theme) => ({
-            marginBottom: theme.spacing(2),
-          })}
-        >
+        <Typography variant="h4" sx={{ mb: 2 }}>
           {fundingAccount.name.value}
         </Typography>
         <DisplaySimpleProperty
