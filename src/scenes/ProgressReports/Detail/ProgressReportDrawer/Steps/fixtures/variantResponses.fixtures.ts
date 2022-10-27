@@ -6,7 +6,7 @@ const partnerResponse = {
   response: {
     canRead: true,
     canEdit: true,
-    value: "This is the Partner's answer" as string | null, // or rich text json
+    value: null as string | null, // or rich text json
   },
 };
 
@@ -16,7 +16,7 @@ const translationResponse = {
   response: {
     canRead: true,
     canEdit: true,
-    value: "Translation's answer..." as string | null, // or rich text json
+    value: null as string | null, // or rich text json
   },
 };
 

@@ -3,7 +3,9 @@ import { PromptVariant } from '../../../../ProgressReportContext';
 import { VariantPromptResponse } from './progressReport.fixture';
 
 export interface ProgressReport {
-  highlights: SecuredVariantPromptResponseList;
+  highlights: {
+    available: SecuredVariantPromptResponseList;
+  };
 }
 
 export interface SecuredVariantPromptResponseList {
