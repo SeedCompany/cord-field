@@ -91,9 +91,9 @@ export const LocationCard = ({
           <Typography
             variant="caption"
             color="textSecondary"
-            sx={(theme) => ({
-              paddingRight: theme.spacing(1), // make symmetrical with button padding
-            })}
+            sx={{
+              mr: 1, // make symmetrical with button padding
+            }}
           >
             {loading ? (
               <Skeleton width="25%" />
