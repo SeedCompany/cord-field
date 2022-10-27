@@ -30,18 +30,10 @@ export const InternshipEngagementListItemCard = (
   const country = props.countryOfOrigin.value?.name.value;
 
   return (
-    <Card
-      className={props.className}
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Card className={props.className} sx={{ width: '100%' }}>
       <CardActionAreaLink
         to={`/engagements/${idForUrl(props)}`}
-        sx={{
-          display: 'flex',
-          alignItems: 'initial',
-        }}
+        sx={{ display: 'flex', alignItems: 'initial' }}
       >
         <Grid
           component={CardContent}
@@ -49,12 +41,13 @@ export const InternshipEngagementListItemCard = (
           direction="column"
           justifyContent="space-between"
           spacing={1}
-          sx={(theme) => ({
+          sx={{
             flex: 1,
-            padding: theme.spacing(2, 3),
+            py: 2,
+            px: 3,
             display: 'flex',
             justifyContent: 'space-between',
-          })}
+          }}
         >
           <Grid item>
             <Typography variant="h4">{fullName}</Typography>
