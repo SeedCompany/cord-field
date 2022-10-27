@@ -8,13 +8,14 @@ export const ContentContainer = (
     <Box
       className={props.className}
       sx={[
-        (theme) => ({
+        {
           flex: 1,
           overflow: 'hidden',
-          padding: theme.spacing(4, 0, 0, 4),
+          pt: 4,
+          pl: 4,
           display: 'flex',
           flexDirection: 'column',
-        }),
+        },
         ...extendSx(props.sx),
       ]}
     >
