@@ -8,12 +8,12 @@ import {
   Typography,
 } from '@mui/material';
 import { Sx } from '~/common';
-import { PeopleJoinedIcon } from '~/components/Icons';
 import {
   PromptVariant,
   useProgressReportContext,
 } from '../../ProgressReportContext';
 import { colorPalette } from './colorPalette';
+import { PromptVariantIcon } from './StepIcon';
 
 interface ProgressReportStepperProps {
   step: number;
@@ -101,16 +101,7 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
             colorPalette.stepperCard.headerBackground[promptVariant],
         }}
       >
-        <PeopleJoinedIcon
-          sx={{
-            backgroundColor:
-              colorPalette.stepperCard.iconBackground[promptVariant],
-            marginRight: 1,
-            padding: 1,
-            height: 48,
-            width: 48,
-          }}
-        />
+        <PromptVariantIcon promptVariant={promptVariant} />
         <Typography
           sx={{
             padding: 1,
