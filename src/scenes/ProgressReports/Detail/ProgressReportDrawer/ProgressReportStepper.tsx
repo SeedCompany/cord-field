@@ -9,7 +9,10 @@ import {
 } from '@mui/material';
 import { Sx } from '~/common';
 import { PeopleJoinedIcon } from '~/components/Icons';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import {
+  PromptVariant,
+  useProgressReportContext,
+} from '../../ProgressReportContext';
 import { colorPalette } from './colorPalette';
 
 interface ProgressReportStepperProps {
@@ -68,8 +71,19 @@ const singleConnectorSx: Sx = {
   },
 };
 
+const mapVariantToHeader = (variant: PromptVariant) => {
+  switch (variant) {
+    case 'Communications Edit':
+      return 'Communications';
+    case 'FPM Notes':
+      return 'Field Project Manager';
+    default:
+      return variant;
+  }
+};
+
 export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
-  const { setProgressReportStep } = useProgressReportContext();
+  const { setProgressReportStep, promptVariant } = useProgressReportContext();
 
   return (
     <Paper
@@ -83,12 +97,14 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
         css={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: colorPalette.stepperCard.headerBackground.partner,
+          backgroundColor:
+            colorPalette.stepperCard.headerBackground[promptVariant],
         }}
       >
         <PeopleJoinedIcon
           sx={{
-            backgroundColor: colorPalette.stepperCard.iconBackground.partner,
+            backgroundColor:
+              colorPalette.stepperCard.iconBackground[promptVariant],
             marginRight: 1,
             padding: 1,
             height: 48,
@@ -101,7 +117,7 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
             flexGrow: 2,
           }}
         >
-          Partner Steps
+          {mapVariantToHeader(promptVariant)} Steps
         </Typography>
       </div>
       <Box
