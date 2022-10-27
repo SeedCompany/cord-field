@@ -25,7 +25,7 @@ export const PartnerListItemCard = ({
       sx={[
         {
           width: '100%',
-          maxWidth: (theme) => theme.breakpoints.values.sm,
+          maxWidth: 'sm',
           position: 'relative',
         },
         ...extendSx(sx),
@@ -40,12 +40,13 @@ export const PartnerListItemCard = ({
         }}
       >
         <CardContent
-          sx={(theme) => ({
+          sx={{
             flex: 1,
-            padding: theme.spacing(2, 3),
+            py: 2,
+            px: 3,
             display: 'flex',
             justifyContent: 'space-between',
-          })}
+          }}
         >
           <Grid container direction="column" spacing={1}>
             <Grid item>
