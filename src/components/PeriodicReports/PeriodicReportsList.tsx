@@ -33,13 +33,13 @@ export const PeriodicReportsList = ({
     >
       <Box
         component="main"
-        sx={(theme) => ({
-          padding: theme.spacing(4),
-          maxWidth: theme.breakpoints.values.md,
+        sx={{
+          p: 4,
+          maxWidth: 'md',
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-        })}
+        }}
       >
         <Helmet title={`${reportTypeName} - ${pageTitleSuffix}`} />
         <Breadcrumbs
@@ -51,12 +51,7 @@ export const PeriodicReportsList = ({
           ]}
         />
 
-        <Typography
-          variant="h2"
-          sx={(theme) => ({
-            margin: theme.spacing(3, 0),
-          })}
-        >
+        <Typography variant="h2" sx={{ my: 3 }}>
           {reportTypeName}
         </Typography>
 
