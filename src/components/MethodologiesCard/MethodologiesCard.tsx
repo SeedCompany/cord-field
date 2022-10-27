@@ -44,11 +44,11 @@ export const MethodologiesCard = ({
             item
             container
             wrap="nowrap"
-            sx={(theme) => ({
+            sx={{
               display: 'flex',
-              color: theme.palette.text.secondary,
-              marginRight: theme.spacing(0.5),
-            })}
+              color: 'text.secondary',
+              mr: 0.5,
+            }}
           >
             {ApproachIcons[MethodologyToApproach[methodology]]}
           </Grid>
@@ -66,12 +66,13 @@ export const MethodologiesCard = ({
 
   const content = (
     <CardContent
-      sx={(theme) => ({
+      sx={{
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        padding: theme.spacing(3, 4),
-      })}
+        py: 3,
+        px: 4,
+      }}
     >
       <Typography variant="h4" paragraph>
         Methodologies
