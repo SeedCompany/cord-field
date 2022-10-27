@@ -14,9 +14,9 @@ export const PeriodicReportRow = (props: GridRowProps) => {
       <div>
         <GridRow
           {...props}
-          css={(theme) => ({
-            color: skipped ? theme.palette.text.disabled : undefined,
-          })}
+          css={{
+            color: skipped ? 'text.disabled' : undefined,
+          }}
         />
       </div>
     </PaperTooltip>
