@@ -2,8 +2,9 @@ import { ArrowForward } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { Sx } from '~/common';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { Step0, Step1, Step2, Step3 } from '../TemporarySteps';
+import { Step1, Step2, Step3 } from '../TemporarySteps';
 import { colorPalette } from './colorPalette';
+import { TeamHighlightStep } from './Steps/TeamHighlight';
 
 const typographyLinkSx: Sx = (theme) => ({
   color: theme.palette.grey[800],
@@ -27,8 +28,8 @@ export const StepContainer = () => {
       }}
     >
       <StepContainerHeader />
-      <Box sx={{ flex: 1, padding: 2, pt: 4 }}>
-        {step === 0 && <Step0 />}
+      <Box sx={{ flex: 1, padding: 2, pt: 1 }}>
+        {step === 0 && <TeamHighlightStep />}
         {step === 1 && <Step1 />}
         {step === 2 && <Step2 />}
         {step === 3 && <Step3 />}
