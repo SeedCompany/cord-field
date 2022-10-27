@@ -41,13 +41,7 @@ export const MemberListSummary = ({
   return (
     <CardActionAreaLink to={to} disabled={!members}>
       <CardContent>
-        <Grid
-          container
-          spacing={4}
-          sx={(theme) => ({
-            marginBottom: theme.spacing(2),
-          })}
-        >
+        <Grid container spacing={4} sx={{ mb: 2 }}>
           <Grid item>
             <HugeIcon icon={icon} />
           </Grid>
@@ -72,12 +66,7 @@ export const MemberListSummary = ({
             alignItems: 'center',
           }}
         >
-          <AvatarGroup
-            max={max}
-            sx={(theme) => ({
-              marginRight: theme.spacing(1),
-            })}
-          >
+          <AvatarGroup max={max} sx={{ mr: 1 }}>
             {listOrPlaceholders(members, max).map((member, i) => (
               <Avatar
                 key={member?.id || i}
