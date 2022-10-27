@@ -25,21 +25,23 @@ import { VariantResponse } from '../fixtures/variantResponses.fixtures';
 export const TeamHighlightStep = () => {
   const { promptVariant } = useProgressReportContext();
   const [data, setData] = useState<SecuredVariantPromptResponseList>(
-    progressReport.highlights
+    progressReport.highlights.available
   );
-  const [stepData, setStepData] = useState<VariantResponse | null>(
+  const [responseData, setResponseData] = useState<VariantResponse | null>(
     data.items[0]?.responses.find((r) => r.variant === promptVariant) ?? null
   );
   const [savedAt, setSavedAt] = useState<DateTime | null>(null);
 
   useEffect(() => {
-    setStepData(
+    setResponseData(
       data.items[0]?.responses.find((r) => r.variant === promptVariant) ?? null
     );
   }, [promptVariant, data]);
 
   const onSubmit = (values: any) => {
     setSavedAt(DateTime.local());
+    // replace newline \n or \r with <br />
+    const htmlResponse = values.response.replace(/\r?\n|\r/gm, '<br />');
 
     setData(() => {
       const newData = {
@@ -52,17 +54,31 @@ export const TeamHighlightStep = () => {
                 (r) => r.variant !== promptVariant
               ),
               {
-                ...stepData!,
+                ...responseData!,
                 variant: promptVariant,
                 response: {
-                  ...stepData!.response,
-                  value: values.response,
+                  ...responseData!.response,
+                  value: htmlResponse,
                 },
               },
             ],
           },
         ],
       };
+
+      if (values.prompt.id) {
+        newData.items[0]!.prompt = {
+          ...data.items[0]!.prompt,
+          id: values.prompt.id,
+          prompt: {
+            ...data.items[0]!.prompt?.prompt,
+            canEdit: false,
+            canRead: true,
+            value: data.options.prompts.find((p) => p.id === values.prompt.id)!
+              .prompt.value.value,
+          },
+        };
+      }
 
       return newData;
     });
@@ -72,8 +88,8 @@ export const TeamHighlightStep = () => {
     <Form
       onSubmit={onSubmit}
       initialValues={{
-        prompt: data.items[0]?.prompt.prompt.value,
-        response: stepData?.response.value,
+        prompt: { id: data.items[0]?.prompt?.id },
+        response: responseData?.response.value?.replace(/<br \/>/gm, '\n'),
       }}
     >
       {({ handleSubmit }) => (
@@ -94,20 +110,21 @@ export const TeamHighlightStep = () => {
               answer.
             </Typography>
 
-            {data.items[0]?.prompt.prompt.canEdit ? (
+            {data.items[0]?.prompt.prompt?.canEdit ?? true ? (
               <EnumField
-                name="prompt"
+                name="prompt.id"
                 label="Select a question"
                 options={data.options.prompts.map((p) => p.id)}
                 getLabel={(id) =>
                   data.options.prompts.find((p) => p.id === id)!.prompt.value
+                    .value
                 }
                 validate={[required]}
               />
             ) : (
               data.items[0]?.prompt.prompt.canRead && (
                 <Typography variant="body2" sx={{ mb: 2 }}>
-                  {data.items[0]?.prompt.prompt.value}
+                  {data.items[0]?.prompt.prompt?.value}
                 </Typography>
               )
             )}
@@ -124,24 +141,24 @@ export const TeamHighlightStep = () => {
                 validate={[required]}
               />
               {savedAt && (
-                <Typography variant="caption" sx={{ mt: 1 }}>
+                <Typography variant="caption" sx={{ my: 1 }}>
                   Saved at {savedAt.toISO()}
                 </Typography>
               )}
+              <SubmitButton variant="outlined" color="secondary" sx={{}}>
+                Save Progress
+              </SubmitButton>
 
               <Divider sx={{ my: 2 }} />
               {data.items[0]?.responses.sort(customSort).map((response) => (
                 <AccordionComponent
                   response={response}
                   key={response.variant}
-                  promptVariant={stepData?.variant}
+                  promptVariant={responseData?.variant}
                   expanded
                 />
               ))}
             </Box>
-            <SubmitButton variant="outlined" color="secondary" sx={{}}>
-              Save Progress
-            </SubmitButton>
           </Box>
         </form>
       )}
@@ -200,7 +217,11 @@ const AccordionComponent = ({
             px: 4,
           }}
         >
-          <Typography>{response.response.value}</Typography>
+          <Typography
+            dangerouslySetInnerHTML={{
+              __html: response.response.value,
+            }}
+          />
         </AccordionDetails>
       </Accordion>
     );
