@@ -30,7 +30,6 @@ export const LanguageEngagementListItemCard = (
     className,
     status,
     products,
-    sx,
   } = props;
 
   const numberFormatter = useNumberFormatter();
@@ -41,37 +40,25 @@ export const LanguageEngagementListItemCard = (
   const ethnologueCode = language?.ethnologue.code.value;
 
   return (
-    <Card
-      className={className}
-      sx={[
-        {
-          width: '100%',
-        },
-        ...extendSx(sx),
-      ]}
-    >
+    <Card className={className} sx={[{ width: '100%' }, ...extendSx(props.sx)]}>
       <CardActionAreaLink
         to={`/engagements/${idForUrl(props)}`}
-        sx={{
-          display: 'flex',
-          alignItems: 'initial',
-        }}
+        sx={{ display: 'flex', alignItems: 'initial' }}
       >
         <CardContent
-          sx={(theme) => ({
+          sx={{
             flex: 1,
-            padding: theme.spacing(2, 3),
+            py: 2,
+            px: 3,
             display: 'flex',
-          })}
+          }}
         >
           <Grid
             container
             direction="column"
             justifyContent="space-between"
             spacing={1}
-            sx={{
-              flex: 1,
-            }}
+            sx={{ flex: 1 }}
           >
             <Grid item>
               <Typography variant="h4">
@@ -80,10 +67,7 @@ export const LanguageEngagementListItemCard = (
                   <PresetInventoryIconFilled
                     color="action"
                     aria-label="preset inventory"
-                    sx={(theme) => ({
-                      verticalAlign: 'bottom',
-                      marginLeft: theme.spacing(1),
-                    })}
+                    sx={{ verticalAlign: 'bottom', ml: 1 }}
                   />
                 )}
               </Typography>
@@ -110,14 +94,14 @@ export const LanguageEngagementListItemCard = (
             />
           </Grid>
           <Box
-            sx={(theme) => ({
+            sx={{
               flex: 0,
               textAlign: 'right',
-              marginLeft: theme.spacing(2),
+              ml: 2,
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-end',
-            })}
+            }}
           >
             <DisplaySimpleProperty aria-hidden="true" />
             <div>
