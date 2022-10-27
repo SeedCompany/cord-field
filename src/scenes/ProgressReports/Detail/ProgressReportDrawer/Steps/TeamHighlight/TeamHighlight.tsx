@@ -2,6 +2,8 @@ import { Box, Typography } from '@mui/material';
 import { Form } from 'react-final-form';
 import { EnumField, TextField } from '~/components/form';
 import { required } from '~/components/form/validators';
+import { useProgressReportContext } from '../../../../ProgressReportContext';
+import { teamHighlight as prompt } from '../fixtures/teamHighlight.fixture';
 
 const promptMapper: { [key: string]: string } = {
   obstacle:
@@ -15,15 +17,15 @@ const promptMapper: { [key: string]: string } = {
 };
 
 export const TeamHighlightStep = () => {
-  const data = {
-    teamHighlight: {
-      id: '1',
-      createdAt: '2021-01-01T00:00:00.000Z',
-      updatedAt: '2021-01-01T00:00:00.000Z',
-      prompt: 'obstacle',
-      response: 'I did a thing',
-    },
-  };
+  const { promptVariant } = useProgressReportContext();
+
+  const data = prompt;
+
+  const stepData = data.prompt.variants.find(
+    (prompt) => prompt.variant === promptVariant
+  );
+
+  console.log('stepData', stepData);
 
   const onSubmit = (values: any) => {
     console.log(values);
@@ -49,14 +51,22 @@ export const TeamHighlightStep = () => {
               answer.
             </Typography>
 
-            <EnumField
-              name="prompt"
-              label="Select a question"
-              options={Object.keys(promptMapper)}
-              getLabel={(key) => promptMapper[key] ?? ''}
-              validate={[required]}
-              defaultValue={data.teamHighlight.prompt}
-            />
+            {prompt.prompt.prompt.canEdit ? (
+              <EnumField
+                name="prompt"
+                label="Select a question"
+                options={Object.keys(promptMapper)}
+                getLabel={(key) => promptMapper[key] ?? ''}
+                validate={[required]}
+                defaultValue={prompt.prompt.prompt.value}
+              />
+            ) : (
+              prompt.prompt.prompt.canRead && (
+                <Typography variant="body2" sx={{ mb: 2 }}>
+                  {prompt.prompt.prompt.value}
+                </Typography>
+              )
+            )}
 
             <Box
               sx={{ display: 'flex', flexDirection: 'column', marginBottom: 2 }}
@@ -68,7 +78,7 @@ export const TeamHighlightStep = () => {
                 rows={6}
                 variant="outlined"
                 validate={[required]}
-                defaultValue={data.teamHighlight.response}
+                defaultValue={stepData?.response.value}
               />
             </Box>
           </Box>
