@@ -41,7 +41,7 @@ export interface PeriodicReportCardProps extends StyleProps {
 }
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
-  const { type, dueCurrently, dueNext, disableIcon, hasDetailPage, sx } = props;
+  const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
 
   const currentFile = dueCurrently?.value?.reportFile;
   const needsUpload =
@@ -83,18 +83,19 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
             position: 'relative',
             outline: 'none',
           },
-          ...extendSx(sx),
+          ...extendSx(props.sx),
         ]}
       >
         <CardActionAreaLink
           to={link}
-          sx={(theme) => ({
+          sx={{
             flex: 1,
             display: 'flex',
             justifyContent: 'space-evenly',
             alignItems: 'flex-start',
-            padding: theme.spacing(3, 4),
-          })}
+            py: 3,
+            px: 4,
+          }}
         >
           {!disableIcon && (
             <HugeIcon
@@ -103,9 +104,7 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
                 Financial: ShowChart,
                 Progress: BarChart,
               })}
-              sx={(theme) => ({
-                marginRight: theme.spacing(4),
-              })}
+              sx={{ mr: 4 }}
             />
           )}
 
