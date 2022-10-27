@@ -32,28 +32,11 @@ export const PartnershipCard = ({
 }: PartnershipCardProps) => {
   const name = partnership?.partner.value?.organization.value?.name.value;
   return (
-    <Card
-      className={className}
-      sx={[
-        {
-          flex: 1,
-        },
-        ...extendSx(sx),
-      ]}
-    >
+    <Card className={className} sx={[{ flex: 1 }, ...extendSx(sx)]}>
       <CardContent>
         <Grid container direction="column" spacing={1}>
           <Grid item container direction="row" alignItems="flex-start">
-            <Typography
-              variant="h4"
-              sx={
-                name
-                  ? undefined
-                  : {
-                      width: '75%',
-                    }
-              }
-            >
+            <Typography variant="h4" sx={name ? undefined : { width: '75%' }}>
               {partnership ? (
                 name ?? (
                   <Redacted
@@ -66,11 +49,7 @@ export const PartnershipCard = ({
               )}
             </Typography>
             {partnership?.primary.value ? (
-              <PartnershipPrimaryIcon
-                sx={(theme) => ({
-                  marginLeft: theme.spacing(1),
-                })}
-              />
+              <PartnershipPrimaryIcon sx={{ ml: 1 }} />
             ) : null}
           </Grid>
           <Grid item>
@@ -124,11 +103,7 @@ export const PartnershipCard = ({
         </Grid>
       </CardContent>
       <CardActions
-        sx={(theme) => ({
-          display: 'flex',
-          justifyContent: 'space-between',
-          paddingRight: theme.spacing(2),
-        })}
+        sx={{ display: 'flex', justifyContent: 'space-between', pr: 2 }}
       >
         <Button color="primary" disabled={!partnership} onClick={onEdit}>
           Edit
