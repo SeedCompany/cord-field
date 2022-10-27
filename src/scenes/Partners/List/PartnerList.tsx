@@ -46,13 +46,7 @@ export const PartnerList = () => {
       <Typography variant="h2" paragraph>
         Partners
       </Typography>
-      <Grid
-        container
-        spacing={1}
-        sx={(theme) => ({
-          margin: theme.spacing(3, 0),
-        })}
-      >
+      <Grid container spacing={1} sx={{ my: 3, mx: 0 }}>
         <Grid item>
           <SortButtonDialog {...sort}>
             <PartnerSortOptions />
@@ -64,34 +58,24 @@ export const PartnerList = () => {
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="partner navigation tabs"
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.sm,
-          })}
+          sx={{ maxWidth: 'sm' }}
         >
           <Tab label="Pinned" value="pinned" />
           <Tab label="All" value="all" />
         </TabList>
-        <Divider
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.sm,
-          })}
-        />
+        <Divider sx={{ maxWidth: 'sm' }} />
         <TabPanel
           value={filters.tab}
-          sx={(theme) => ({
+          sx={{
             overflowY: 'auto',
             // allow card shadow to bleed over instead of cutting it off
-            padding: theme.spacing(0, 0, 0, 2),
-            margin: theme.spacing(0, 0, 0, -2),
-          })}
+            py: 0,
+            pl: 2,
+            ml: -2,
+          }}
           ref={scrollRef}
         >
-          <Typography
-            variant="h3"
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-          >
+          <Typography variant="h3" sx={{ mt: 2 }}>
             {list.data ? (
               `${formatNumber(list.data.total)} Partners`
             ) : (
