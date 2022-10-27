@@ -39,11 +39,11 @@ export const ProjectListItemCard = ({
     <Card
       className={className}
       sx={[
-        (theme) => ({
+        {
           width: '100%',
-          maxWidth: theme.breakpoints.values.sm,
+          maxWidth: 'sm',
           position: 'relative',
-        }),
+        },
         ...extendSx(sx),
       ]}
     >
@@ -56,13 +56,14 @@ export const ProjectListItemCard = ({
         }}
       >
         <CardContent
-          sx={(theme) => ({
+          sx={{
             flex: 1,
-            padding: theme.spacing(2, 3),
+            py: 2,
+            px: 3,
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-          })}
+          }}
         >
           <Grid
             container
@@ -82,10 +83,7 @@ export const ProjectListItemCard = ({
                 {project?.presetInventory.value && (
                   <PresetInventoryIconFilled
                     color="action"
-                    sx={(theme) => ({
-                      verticalAlign: 'bottom',
-                      marginLeft: theme.spacing(1),
-                    })}
+                    sx={{ verticalAlign: 'bottom', ml: 1 }}
                     aria-label="preset inventory"
                   />
                 )}
@@ -118,9 +116,7 @@ export const ProjectListItemCard = ({
               <Sensitivity
                 value={project?.sensitivity}
                 loading={!project}
-                sx={(theme) => ({
-                  marginBottom: theme.spacing(1),
-                })}
+                sx={{ mb: 1 }}
               />
             </Grid>
             <Grid item>
@@ -135,14 +131,14 @@ export const ProjectListItemCard = ({
             </Grid>
           </Grid>
           <Box
-            sx={(theme) => ({
+            sx={{
               flex: 1,
               textAlign: 'right',
-              marginLeft: theme.spacing(2),
+              ml: 2,
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
-            })}
+            }}
           >
             <DisplaySimpleProperty aria-hidden="true" />
             <Box
