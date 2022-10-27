@@ -7,6 +7,8 @@ import {
   MenuProps,
 } from '@mui/material';
 
+const listItemIconStyle = { mr: 2, minWidth: 'unset' };
+
 interface PostListItemMenuProps extends Partial<MenuProps> {
   onEdit: () => void;
   onDelete: () => void;
@@ -25,23 +27,13 @@ export const PostListItemMenu = (props: PostListItemMenuProps) => {
       {...rest}
     >
       <MenuItem onClick={onEdit}>
-        <ListItemIcon
-          sx={(theme) => ({
-            marginRight: theme.spacing(2),
-            minWidth: 'unset',
-          })}
-        >
+        <ListItemIcon sx={listItemIconStyle}>
           <EditIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText primary="Edit Post" />
       </MenuItem>
       <MenuItem onClick={onDelete}>
-        <ListItemIcon
-          sx={(theme) => ({
-            marginRight: theme.spacing(2),
-            minWidth: 'unset',
-          })}
-        >
+        <ListItemIcon sx={listItemIconStyle}>
           <DeleteIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText primary="Delete Post" />
