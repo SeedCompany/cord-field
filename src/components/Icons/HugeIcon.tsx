@@ -8,12 +8,7 @@ export interface HugeIconProps extends AvatarProps {
   children?: React.ReactElement<SvgIconProps>;
 }
 
-export const HugeIcon = ({
-  icon: Icon,
-  children,
-  sx,
-  ...rest
-}: HugeIconProps) => {
+export const HugeIcon = ({ icon: Icon, children, ...rest }: HugeIconProps) => {
   const wrap = (el: ReactElement<SvgIconProps>) =>
     cloneElement(el, {
       fontSize: 'large',
@@ -31,13 +26,13 @@ export const HugeIcon = ({
     <Avatar
       {...rest}
       sx={[
-        (theme) => ({
-          color: theme.palette.info.main,
-          backgroundColor: theme.palette.grey[200],
+        {
+          color: 'info.main',
+          bgcolor: 'grey.200',
           width: 64,
           height: 64,
-        }),
-        ...extendSx(sx),
+        },
+        ...extendSx(rest.sx),
       ]}
     >
       {renderedIcon}
