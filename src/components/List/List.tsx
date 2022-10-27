@@ -53,7 +53,6 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
     scrollRef: scrollRefProp,
     itemMaxWidth,
     className,
-    sx,
   } = props;
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -64,7 +63,7 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
     <Box
       className={className}
       ref={scrollRef}
-      sx={[{ overflow: 'auto', ml: -2, p: 2 }, ...extendSx(sx)]}
+      sx={[{ overflow: 'auto', ml: -2, p: 2 }, ...extendSx(props.sx)]}
     >
       <Grid
         direction="column"
