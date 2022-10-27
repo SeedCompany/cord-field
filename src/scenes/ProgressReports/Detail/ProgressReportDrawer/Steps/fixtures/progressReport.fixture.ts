@@ -5,7 +5,7 @@ import { responses } from './variantResponses.fixtures';
 
 const TeamHighLightVariant = {
   __typename: 'VariantPromptResponse',
-  id: '',
+  id: 'abcdefg',
   prompt: {
     __typename: 'Prompt',
     id: 'obstacle',

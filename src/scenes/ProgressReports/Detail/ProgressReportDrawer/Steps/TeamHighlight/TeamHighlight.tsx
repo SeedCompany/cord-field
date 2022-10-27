@@ -1,38 +1,81 @@
-import { Box, Typography } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Divider,
+  Typography,
+} from '@mui/material';
+import { DateTime } from 'luxon';
+import { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
-import { EnumField, TextField } from '~/components/form';
+import { EnumField, SubmitButton, TextField } from '~/components/form';
 import { required } from '~/components/form/validators';
-import { useProgressReportContext } from '../../../../ProgressReportContext';
-import { teamHighlight as prompt } from '../fixtures/teamHighlight.fixture';
-
-const promptMapper: { [key: string]: string } = {
-  obstacle:
-    'What are the biggest obstacles team members are facing in reaching their goals? How are they dealing with those obstacles? (Ex: translation difficulties, political unrest, suppression of faith)',
-  terms:
-    'What terms or concepts were difficult to find the right word for in the local language? Please explain how you found a solution.',
-  affected:
-    'How has working on the translation affected team members or their families? Please give a specific example.',
-  others:
-    'What have others done to help the team? How did this impact the team’s work? (Ex: People in the community cooking meals for the team, local governments offering the use of a community center, churches hosting literacy classes/checking sessions)',
-};
+import {
+  PromptVariant,
+  promptVariants,
+  useProgressReportContext,
+} from '../../../../ProgressReportContext';
+import { PromptVariantIcon } from '../../StepIcon';
+import { progressReport } from '../fixtures/progressReport.fixture';
+import { SecuredVariantPromptResponseList } from '../fixtures/types.fixture';
+import { VariantResponse } from '../fixtures/variantResponses.fixtures';
 
 export const TeamHighlightStep = () => {
   const { promptVariant } = useProgressReportContext();
-
-  const data = prompt;
-
-  const stepData = data.prompt.variants.find(
-    (prompt) => prompt.variant === promptVariant
+  const [data, setData] = useState<SecuredVariantPromptResponseList>(
+    progressReport.highlights
   );
+  const [stepData, setStepData] = useState<VariantResponse | null>(
+    data.items[0]?.responses.find((r) => r.variant === promptVariant) ?? null
+  );
+  const [savedAt, setSavedAt] = useState<DateTime | null>(null);
 
-  console.log('stepData', stepData);
+  useEffect(() => {
+    setStepData(
+      data.items[0]?.responses.find((r) => r.variant === promptVariant) ?? null
+    );
+  }, [promptVariant, data]);
 
   const onSubmit = (values: any) => {
-    console.log(values);
+    setSavedAt(DateTime.local());
+
+    setData(() => {
+      const newData = {
+        ...data,
+        items: [
+          {
+            ...data.items[0]!,
+            responses: [
+              ...data.items[0]!.responses.filter(
+                (r) => r.variant !== promptVariant
+              ),
+              {
+                ...stepData!,
+                variant: promptVariant,
+                response: {
+                  ...stepData!.response,
+                  value: values.response,
+                },
+              },
+            ],
+          },
+        ],
+      };
+
+      return newData;
+    });
   };
 
   return (
-    <Form onSubmit={onSubmit}>
+    <Form
+      onSubmit={onSubmit}
+      initialValues={{
+        prompt: data.items[0]?.prompt.prompt.value,
+        response: stepData?.response.value,
+      }}
+    >
       {({ handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <Box
@@ -51,19 +94,20 @@ export const TeamHighlightStep = () => {
               answer.
             </Typography>
 
-            {prompt.prompt.prompt.canEdit ? (
+            {data.items[0]?.prompt.prompt.canEdit ? (
               <EnumField
                 name="prompt"
                 label="Select a question"
-                options={Object.keys(promptMapper)}
-                getLabel={(key) => promptMapper[key] ?? ''}
+                options={data.options.prompts.map((p) => p.id)}
+                getLabel={(id) =>
+                  data.options.prompts.find((p) => p.id === id)!.prompt.value
+                }
                 validate={[required]}
-                defaultValue={prompt.prompt.prompt.value}
               />
             ) : (
-              prompt.prompt.prompt.canRead && (
+              data.items[0]?.prompt.prompt.canRead && (
                 <Typography variant="body2" sx={{ mb: 2 }}>
-                  {prompt.prompt.prompt.value}
+                  {data.items[0]?.prompt.prompt.value}
                 </Typography>
               )
             )}
@@ -78,12 +122,88 @@ export const TeamHighlightStep = () => {
                 rows={6}
                 variant="outlined"
                 validate={[required]}
-                defaultValue={stepData?.response.value}
               />
+              {savedAt && (
+                <Typography variant="caption" sx={{ mt: 1 }}>
+                  Saved at {savedAt.toISO()}
+                </Typography>
+              )}
+
+              <Divider sx={{ my: 2 }} />
+              {data.items[0]?.responses.sort(customSort).map((response) => (
+                <AccordionComponent
+                  response={response}
+                  key={response.variant}
+                  promptVariant={stepData?.variant}
+                  expanded
+                />
+              ))}
             </Box>
+            <SubmitButton variant="outlined" color="secondary" sx={{}}>
+              Save Progress
+            </SubmitButton>
           </Box>
         </form>
       )}
     </Form>
   );
+};
+
+const customSort = (a: VariantResponse, b: VariantResponse) => {
+  return promptVariants.indexOf(b.variant) - promptVariants.indexOf(a.variant);
+};
+
+const AccordionComponent = ({
+  response,
+  promptVariant,
+  expanded: _expanded,
+}: {
+  response: VariantResponse;
+  promptVariant?: PromptVariant;
+  expanded?: boolean;
+}) => {
+  const [expanded, setExpanded] = useState(_expanded ?? false);
+
+  if (
+    response.response.canRead &&
+    response.response.value &&
+    response.variant !== promptVariant
+  ) {
+    return (
+      <Accordion
+        key={response.variant}
+        expanded={expanded}
+        elevation={2}
+        square
+        sx={{
+          mt: 2,
+          '&.Mui-expanded': {
+            mb: 0,
+          },
+        }}
+      >
+        <AccordionSummary
+          aria-controls={`${response.variant}-content`}
+          expandIcon={<ExpandMore />}
+          sx={{
+            '& .MuiAccordionSummary-content': {
+              alignItems: 'center',
+            },
+          }}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <PromptVariantIcon promptVariant={response.variant} />
+          <span>{response.variant}</span>
+        </AccordionSummary>
+        <AccordionDetails
+          sx={{
+            px: 4,
+          }}
+        >
+          <Typography>{response.response.value}</Typography>
+        </AccordionDetails>
+      </Accordion>
+    );
+  }
+  return null;
 };
