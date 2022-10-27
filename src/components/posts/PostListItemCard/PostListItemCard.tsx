@@ -51,23 +51,19 @@ export const PostListItemCard = ({
         ]}
       >
         <CardContent
-          sx={(theme) => ({
+          sx={{
             flex: 1,
-            padding: theme.spacing(2, 3),
+            py: 2,
+            px: 3,
             display: 'flex',
             alignItems: 'flex-start',
-          })}
+          }}
         >
-          <Box
-            sx={(theme) => ({
-              marginRight: theme.spacing(3),
-              marginTop: theme.spacing(6),
-            })}
-          >
+          <Box sx={{ mr: 3, mt: 6 }}>
             <Avatar
               sx={(theme) => ({
                 ...square(theme.spacing(8)),
-                fontSize: theme.typography.h3.fontSize,
+                fontSize: 'h3.fontSize',
               })}
             >
               {post.creator.value?.avatarLetters}
@@ -95,25 +91,18 @@ export const PostListItemCard = ({
               </Box>
             </Box>
             <Box
-              sx={(theme) => ({
+              sx={{
                 display: 'flex',
                 alignItems: 'center',
-                marginBottom: theme.spacing(1),
-              })}
+                mb: 1,
+              }}
             >
               <Typography variant="h4">{post.type}</Typography>
-              <Box
-                sx={(theme) => ({
-                  marginLeft: theme.spacing(2),
-                })}
-              >
+              <Box sx={{ ml: 2 }}>
                 <Typography variant="body2">
                   <Box
                     component="span"
-                    sx={(theme) => ({
-                      fontWeight: theme.typography.fontWeightBold,
-                      paddingRight: theme.spacing(1),
-                    })}
+                    sx={{ fontWeight: 'fontWeightBold', pr: 1 }}
                   >
                     {post.shareability.includes('External')
                       ? 'PUBLIC'
@@ -128,12 +117,7 @@ export const PostListItemCard = ({
         </CardContent>
         {editable && (
           <IconButton
-            sx={(theme) => ({
-              margin: theme.spacing(1),
-              position: 'absolute',
-              right: 0,
-              top: 0,
-            })}
+            sx={{ m: 1, position: 'absolute', right: 0, top: 0 }}
             onClick={(e) => setActionsAnchor(e.currentTarget)}
           >
             <MoreVert />
