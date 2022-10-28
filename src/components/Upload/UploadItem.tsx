@@ -24,24 +24,25 @@ export const UploadItem = (props: UploadItemProps) => {
 
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: theme.spacing(1),
+        p: 1,
         '&:not(:last-of-type)': {
-          borderBottom: `1px solid ${theme.palette.divider}`,
+          borderBottom: `1px solid`,
+          borderColor: 'divider',
         },
         width: '100%',
-      })}
+      }}
     >
       <Box
-        sx={(theme) => ({
-          marginRight: theme.spacing(2),
+        sx={{
+          marginRight: 2,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
-        })}
+        }}
       >
         <Typography
           variant="body2"
@@ -79,9 +80,7 @@ export const UploadItem = (props: UploadItemProps) => {
         <IconButton
           aria-label="clear"
           onClick={onClear}
-          sx={(theme) => ({
-            color: theme.palette.error.main,
-          })}
+          sx={{ color: 'error.main' }}
         >
           <CancelIcon />
         </IconButton>
@@ -89,22 +88,12 @@ export const UploadItem = (props: UploadItemProps) => {
         <IconButton
           aria-label="completed"
           onClick={() => console.log('TODO: Add onCompleted click handler')}
-          sx={(theme) => ({
-            color: theme.palette.error.main,
-          })}
+          sx={{ color: 'error.main' }}
         >
-          <CheckIcon
-            sx={(theme) => ({
-              color: theme.palette.primary.main,
-            })}
-          />
+          <CheckIcon sx={{ color: 'primary.main' }} />
         </IconButton>
       ) : (
-        <Box
-          sx={{
-            padding: '12px',
-          }}
-        >
+        <Box sx={{ padding: '12px' }}>
           <CircularProgress
             variant="determinate"
             size="1.5em"
