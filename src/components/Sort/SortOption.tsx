@@ -41,14 +41,7 @@ export function SortOption<T>({
   ) : null;
   return (
     <>
-      <FormLabel
-        sx={(theme) => ({
-          fontWeight: theme.typography.weight.bold,
-          margin: theme.spacing(2, 0, 1),
-        })}
-      >
-        {label}
-      </FormLabel>
+      <FormLabel sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>{label}</FormLabel>
       {defaultOrder === 'ASC' ? (
         <>
           {ascNode}
