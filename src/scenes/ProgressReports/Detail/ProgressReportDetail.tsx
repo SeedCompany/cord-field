@@ -245,9 +245,8 @@ export const ProgressReportDetail = () => {
             </Stack>
           </>
         )}
-
-        {newProgressReportBeta && <ProgressReportDrawer report={report} />}
       </Box>
+      {newProgressReportBeta && <ProgressReportDrawer report={report} />}
     </Box>
   );
 };
