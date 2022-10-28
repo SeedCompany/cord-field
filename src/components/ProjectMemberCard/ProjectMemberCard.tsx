@@ -34,16 +34,13 @@ export const ProjectMemberCard = ({
 
   return (
     <Card className={className} sx={sx}>
-      <CardContent
-        sx={{
-          display: 'flex',
-        }}
-      >
+      <CardContent sx={{ display: 'flex' }}>
         <Avatar
           sx={(theme) => ({
+            // theme.spacing(7) is 56px. if using 7 the css property is 7px
             width: theme.spacing(7),
             height: theme.spacing(7),
-            marginRight: theme.spacing(2),
+            mr: 2,
           })}
           variant="circular"
           alt={projectMember?.user.value?.fullName ?? ''}
@@ -51,11 +48,7 @@ export const ProjectMemberCard = ({
         >
           {projectMember?.user.value?.avatarLetters}
         </Avatar>
-        <Box
-          sx={{
-            flexGrow: 1,
-          }}
-        >
+        <Box sx={{ flexGrow: 1 }}>
           <Typography>
             {!projectMember ? (
               <Skeleton variant="text" width="40%" />
@@ -80,11 +73,13 @@ export const ProjectMemberCard = ({
         </Box>
       </CardContent>
       <CardActions
-        sx={(theme) => ({
+        sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          padding: theme.spacing(1, 2, 1, 1),
-        })}
+          py: 1,
+          pr: 2,
+          pl: 1,
+        }}
       >
         <Button disabled={!projectMember} color="primary" onClick={onEdit}>
           Edit

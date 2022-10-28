@@ -2,7 +2,7 @@ import { VerifiedUserOutlined } from '@mui/icons-material';
 import { Box, Chip, Skeleton, Theme, Typography } from '@mui/material';
 import { meanBy } from 'lodash';
 import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
-import { Sx } from '~/common';
+import { StyleProps } from '~/common';
 
 const possible: SensitivityType[] = ['Low', 'Medium', 'High'];
 const avgLength = Math.round(meanBy(possible, (s) => s.length));
@@ -19,11 +19,10 @@ const sensitivityStyles = {
   }),
 };
 
-export interface SensitivityProps {
+export interface SensitivityProps extends StyleProps {
   value?: SensitivityType;
   loading?: boolean;
   className?: string;
-  sx?: Sx;
 }
 
 export const Sensitivity = ({
@@ -35,18 +34,18 @@ export const Sensitivity = ({
   return (
     <Box className={className} sx={sx}>
       <Box
-        sx={(theme) => ({
+        sx={{
           display: 'flex',
           alignItems: 'center',
-          marginBottom: theme.spacing(),
-        })}
+          marginBottom: (theme) => theme.spacing(),
+        }}
       >
         <VerifiedUserOutlined
-          sx={(theme) => ({
+          sx={{
             fontSize: 16,
-            color: theme.palette.text.secondary,
-            marginRight: 2,
-          })}
+            color: 'text.secondary',
+            mr: '2px',
+          }}
         />
         <Typography variant="body2">Sensitivity</Typography>
       </Box>
