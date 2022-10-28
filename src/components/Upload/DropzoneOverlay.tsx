@@ -22,22 +22,23 @@ export const DropzoneOverlay = (props: DropzoneOverlayProps) => {
   return !isDragActive ? null : (
     <Box
       sx={[
-        (theme) => ({
-          backgroundColor: theme.palette.grey['600'],
-          border: `4px dashed ${theme.palette.grey['300']}`,
+        {
+          bgcolor: 'grey.600',
+          border: `4px dashed`,
+          borderColor: 'grey.300',
           cursor: 'pointer',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           opacity: 0.8,
-          padding: 3,
+          p: 3,
           position: 'absolute',
           top: 0,
           left: 0,
           bottom: 0,
           right: 0,
           zIndex: 100,
-        }),
+        },
         ...extendSx(sx),
       ]}
     >
@@ -45,10 +46,7 @@ export const DropzoneOverlay = (props: DropzoneOverlayProps) => {
         variant="h1"
         {...TypographyProps}
         sx={[
-          (theme) => ({
-            color: theme.palette.grey['300'],
-            textAlign: 'center',
-          }),
+          { color: 'grey.300', textAlign: 'center' },
           ...extendSx(TypographyProps?.sx),
         ]}
       >
