@@ -13,20 +13,20 @@ export const SnackbarProvider = ({ children }: ChildrenProp) => {
       component={BaseSnackbarProvider}
       children={children}
       iconVariant={icons}
-      sx={(theme) => ({
+      sx={{
         '&.SnackbarItem-variantInfo': {
-          backgroundColor: theme.palette.info.main,
+          backgroundColor: 'info.main',
         },
         '&.SnackbarItem-variantSuccess': {
-          backgroundColor: theme.palette.success.main,
+          backgroundColor: 'success.main',
         },
         '&.SnackbarItem-variantWarning': {
-          backgroundColor: theme.palette.warning.main,
+          backgroundColor: 'warning.main',
         },
         '&.SnackbarItem-variantError': {
-          backgroundColor: theme.palette.error.main,
+          backgroundColor: 'error.main',
         },
-      })}
+      }}
     />
   );
 };
