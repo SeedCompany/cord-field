@@ -52,10 +52,11 @@ export const ProjectChangeRequestListItem = ({
           </Typography>
           <Box
             component="span"
-            sx={(theme) => ({
-              color: theme.palette.text.secondary,
-              margin: theme.spacing(0, 1),
-            })}
+            sx={{
+              color: 'text.secondary',
+              my: 0,
+              mx: 1,
+            }}
           >
             —
           </Box>
@@ -83,12 +84,7 @@ export const ProjectChangeRequestListItem = ({
           {!data ? <Skeleton width="40%" /> : data.summary.value}
         </Typography>
       </CardContent>
-      <CardActions
-        sx={(theme) => ({
-          display: 'flex',
-          padding: theme.spacing(1, 2, 1, 1),
-        })}
-      >
+      <CardActions sx={{ display: 'flex', py: 1, pr: 2, pl: 1 }}>
         {!data || data.canEdit ? (
           <Button
             disabled={!data || currentlyViewing === data.id}
