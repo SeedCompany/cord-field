@@ -23,14 +23,14 @@ const detailsSytle = (theme: Theme) => {
   };
 };
 
-const detailsCardStyle = (theme: Theme) => {
-  return {
-    flex: 1,
-    padding: theme.spacing(3, 2, 1),
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignContent: 'flex-end',
-  };
+const detailsCardStyle = {
+  flex: 1,
+  pt: 3,
+  px: 2,
+  pb: 1,
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignContent: 'flex-end',
 };
 
 export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
@@ -39,21 +39,13 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
   }
 
   return (
-    <Box
-      sx={(theme) => ({
-        flex: 1,
-        overflowY: 'auto',
-        padding: theme.spacing(4),
-      })}
-    >
+    <Box sx={{ flex: 1, overflowY: 'auto', p: 4 }}>
       <Grid
         component="main"
         container
         direction="column"
         spacing={3}
-        sx={(theme) => ({
-          maxWidth: theme.breakpoints.values.lg,
-        })}
+        sx={{ maxWidth: 'lg' }}
       >
         <LanguageEngagementHeader engagement={engagement} />
         <Grid item container spacing={5}>
