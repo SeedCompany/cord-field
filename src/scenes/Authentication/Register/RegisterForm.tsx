@@ -43,11 +43,11 @@ export const RegisterForm = (props: RegisterFormProps) => {
         }}
       >
         <CordIcon
-          sx={(theme) => ({
+          sx={{
             fontSize: 64,
-            margin: 'auto',
-            marginBottom: theme.spacing(4),
-          })}
+            m: 'auto',
+            mb: 4,
+          }}
         />
         <Typography variant="h4" gutterBottom={true}>
           CORD FIELD
@@ -64,11 +64,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <SubmitError
-              sx={(theme) => ({
-                margin: theme.spacing(2, 0),
-              })}
-            />
+            <SubmitError sx={{ my: 2 }} />
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <TextField
@@ -130,23 +126,11 @@ export const RegisterForm = (props: RegisterFormProps) => {
                 />
               </Grid>
             </Grid>
-            <SubmitButton
-              sx={(theme) => ({
-                marginTop: theme.spacing(1),
-              })}
-            >
-              Sign Up
-            </SubmitButton>
+            <SubmitButton sx={{ mt: 1 }}>Sign Up</SubmitButton>
           </form>
         )}
       </Form>
-      <Link
-        to="/login"
-        sx={(theme) => ({
-          display: 'inline-block',
-          marginTop: theme.spacing(1),
-        })}
-      >
+      <Link to="/login" sx={{ display: 'inline-block', mt: 1 }}>
         Already have an account? Login
       </Link>
     </AuthContent>
