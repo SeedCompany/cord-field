@@ -12,12 +12,13 @@ export const AuthContent = ({ className, children, sx }: AuthContentProps) => {
     <Box
       className={className}
       sx={[
-        (theme) => ({
+        {
           display: 'flex',
           flexDirection: 'column',
           maxWidth: 400,
-          margin: theme.spacing(4, 1),
-        }),
+          my: 4,
+          mx: 1,
+        },
         ...extendSx(sx),
       ]}
     >
