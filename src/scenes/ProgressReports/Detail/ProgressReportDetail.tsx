@@ -82,12 +82,7 @@ export const ProgressReportDetail = () => {
     >
       <Box
         component="main"
-        sx={(theme) => ({
-          flex: 1,
-          padding: theme.spacing(4),
-          display: 'flex',
-          flexDirection: 'column',
-        })}
+        sx={{ flex: 1, p: 4, display: 'flex', flexDirection: 'column' }}
       >
         <Helmet title="Progress Report" />
         <Breadcrumbs
@@ -114,15 +109,7 @@ export const ProgressReportDetail = () => {
           ]}
         />
 
-        <Grid
-          container
-          spacing={3}
-          alignItems="center"
-          sx={(theme) => ({
-            marginTop: theme.spacing(3),
-            marginBottom: theme.spacing(2),
-          })}
-        >
+        <Grid container spacing={3} alignItems="center" sx={{ mt: 3, mb: 2 }}>
           <Grid item component={Typography} variant="h2">
             {data ? (
               <>
@@ -200,9 +187,7 @@ export const ProgressReportDetail = () => {
             <Typography
               variant="body2"
               color="textSecondary"
-              sx={(theme) => ({
-                margin: theme.spacing(2, 0, 4),
-              })}
+              sx={{ mt: 2, mb: 4, mx: 0 }}
             >
               {!report ? (
                 <Skeleton width="20ch" />
