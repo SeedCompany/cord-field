@@ -121,12 +121,7 @@ export const EngagementWorkflowDialog = ({
         {canBypassTransitions ? (
           <>
             {transitions.length > 0 ? (
-              <Typography
-                color="textSecondary"
-                sx={(theme) => ({
-                  marginTop: theme.spacing(3),
-                })}
-              >
+              <Typography color="textSecondary" sx={{ mt: 3 }}>
                 Or you can bypass these transitions
               </Typography>
             ) : (
