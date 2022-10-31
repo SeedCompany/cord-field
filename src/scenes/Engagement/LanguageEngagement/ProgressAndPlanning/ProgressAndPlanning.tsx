@@ -83,11 +83,11 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
           </Typography>
           <EnumField name="methodology" layout="column" helperText={false}>
             <Box
-              sx={(theme) => ({
+              sx={{
                 '&:not(:last-child)': {
-                  marginBottom: theme.spacing(2),
+                  mb: 2,
                 },
-              })}
+              }}
             >
               <EnumOption default label="Skip extracting goals" />
             </Box>
@@ -102,17 +102,13 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
             }).map(([approach, methodologies]) => (
               <Box
                 key={approach}
-                sx={(theme) => ({
+                sx={{
                   '&:not(:last-child)': {
-                    marginBottom: theme.spacing(2),
+                    mb: 2,
                   },
-                })}
+                }}
               >
-                <Typography
-                  sx={(theme) => ({
-                    fontWeight: theme.typography.weight.bold,
-                  })}
-                >
+                <Typography sx={{ fontWeight: 'bold' }}>
                   {ProductApproachLabels[approach]}
                 </Typography>
                 {methodologies.map((option: Methodology) => (
