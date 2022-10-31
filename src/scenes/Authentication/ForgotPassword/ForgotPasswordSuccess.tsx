@@ -5,21 +5,10 @@ import { AuthContent } from '../AuthContent';
 export const ForgotPasswordSuccess = ({ email }: { email: string }) => {
   return (
     <AuthContent>
-      <Typography
-        variant="h3"
-        align="center"
-        sx={(theme) => ({
-          marginBottom: theme.spacing(3),
-        })}
-      >
+      <Typography variant="h3" align="center" sx={{ mb: 3 }}>
         Check Your Email
       </Typography>
-      <Typography
-        align="center"
-        sx={(theme) => ({
-          marginBottom: theme.spacing(5),
-        })}
-      >
+      <Typography align="center" sx={{ mb: 5 }}>
         Please check the email address {email} for instructions to reset your
         password.
       </Typography>
