@@ -55,13 +55,7 @@ export const LoginForm = (props: LoginFormProps) => {
             alignItems: 'center',
           }}
         >
-          <CordIcon
-            sx={(theme) => ({
-              fontSize: 64,
-              margin: 'auto',
-              marginBottom: theme.spacing(4),
-            })}
-          />
+          <CordIcon sx={{ fontSize: 64, margin: 'auto', mb: 4 }} />
           <Typography variant="h4" gutterBottom={true}>
             CORD FIELD
           </Typography>
@@ -78,29 +72,19 @@ export const LoginForm = (props: LoginFormProps) => {
             // post method to ensure credentials are not passed in url if form
             // is submitted before client-side javascript can pick the event.
             <form method="post" onSubmit={handleSubmit}>
-              <SubmitError
-                sx={(theme) => ({
-                  margin: theme.spacing(2, 0),
-                })}
-              />
+              <SubmitError sx={{ my: 2 }} />
               <EmailField autoFocus autoComplete="email" />
               <PasswordField autoComplete="current-password" />
-              <SubmitButton
-                sx={(theme) => ({
-                  marginTop: theme.spacing(1),
-                })}
-              >
-                Sign In
-              </SubmitButton>
+              <SubmitButton sx={{ mt: 1 }}>Sign In</SubmitButton>
             </form>
           )}
         </Form>
         <Box
-          sx={(theme) => ({
-            marginTop: theme.spacing(1),
+          sx={{
+            mt: 1,
             display: 'flex',
             justifyContent: 'space-between',
-          })}
+          }}
         >
           <Link to="/forgot-password">Forgot Password?</Link>
           <Link to="/register">Register</Link>
@@ -112,7 +96,6 @@ export const LoginForm = (props: LoginFormProps) => {
 };
 
 const Footer = ({
-  sx,
   quote: { quote, reference },
   ...props
 }: JSX.IntrinsicElements['footer'] & { quote: Quote } & StyleProps) => {
@@ -121,12 +104,12 @@ const Footer = ({
       component="footer"
       className={props.className}
       sx={[
-        (theme) => ({
+        {
           maxWidth: 500,
-          marginTop: theme.spacing(5),
+          mt: 5,
           textAlign: 'center',
-        }),
-        ...extendSx(sx),
+        },
+        ...extendSx(props.sx),
       ]}
     >
       <Typography
@@ -137,13 +120,7 @@ const Footer = ({
       >
         “{quote}”
       </Typography>
-      <Typography
-        color="textSecondary"
-        variant="h4"
-        sx={(theme) => ({
-          marginTop: theme.spacing(1),
-        })}
-      >
+      <Typography color="textSecondary" variant="h4" sx={{ mt: 1 }}>
         {reference}
       </Typography>
     </Box>
