@@ -99,13 +99,12 @@ export const FileRow = ({
               transition: theme.transitions.create('all'),
             },
           }),
-          isDragging &&
-            ((theme) => ({
-              background: theme.palette.background.default,
-              '& > *': {
-                opacity: 0,
-              },
-            })),
+          isDragging && {
+            background: 'background.default',
+            '& > *': {
+              opacity: 0,
+            },
+          },
           Boolean(draggingItem && !isDragging && canDrop) &&
             ((theme) => ({
               [`&.${isOverClass}`]: {
