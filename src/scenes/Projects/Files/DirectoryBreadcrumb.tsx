@@ -31,17 +31,17 @@ export const DirectoryBreadcrumb = ({
       {...props}
       ref={dropRef}
       className={props.className}
-      sx={(theme) => ({
+      sx={{
         position: 'relative',
-        margin: theme.spacing(-1, -0.5),
-        padding: theme.spacing(1),
-      })}
+        my: -1,
+        mx: -0.5,
+        p: 1,
+      }}
     >
       <Box
         component="span"
         sx={[
           (theme) => {
-            console.log('borderRadius', theme.shape.borderRadius);
             return {
               position: 'absolute',
               inset: 0,
@@ -55,10 +55,9 @@ export const DirectoryBreadcrumb = ({
             ((theme) => ({
               background: fade(theme.palette.info.light, 0.7),
             })),
-          Boolean(isDragging && canDrop) &&
-            ((theme) => ({
-              borderColor: theme.palette.divider,
-            })),
+          Boolean(isDragging && canDrop) && {
+            borderColor: 'divider',
+          },
         ]}
       />
       {props.children || name}
