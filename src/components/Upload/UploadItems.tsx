@@ -43,9 +43,7 @@ export const UploadItems = (props: UploadItemsProps) => {
           <Typography
             variant="h5"
             component="span"
-            sx={(theme) => ({
-              color: theme.palette.action.disabled,
-            })}
+            sx={{ color: 'action.disabled' }}
           >
             No uploads
           </Typography>
