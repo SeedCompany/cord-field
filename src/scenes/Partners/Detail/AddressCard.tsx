@@ -68,11 +68,11 @@ export const AddressCard = ({
         </CardContent>
       </CardActionArea>
       <CardActions
-        sx={(theme) => ({
+        sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          paddingRight: theme.spacing(2),
-        })}
+          pr: 2,
+        }}
       >
         <Button color="primary" disabled={!canEdit} onClick={onEdit}>
           Edit
