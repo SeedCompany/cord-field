@@ -1,8 +1,8 @@
-import { PromptVariant } from '../../../../ProgressReportContext';
+import { Role } from '~/api/schema.graphql';
 
 const partnerResponse = {
   __typename: 'VariantResponse',
-  variant: 'Partner' as PromptVariant,
+  variant: 'Partner' as Role,
   response: {
     canRead: true,
     canEdit: true,
@@ -12,7 +12,7 @@ const partnerResponse = {
 
 const translationResponse = {
   __typename: 'VariantResponse',
-  variant: 'Translation' as PromptVariant,
+  variant: 'Translation' as Role,
   response: {
     canRead: true,
     canEdit: true,
@@ -22,7 +22,7 @@ const translationResponse = {
 
 const projectManagerResponse = {
   __typename: 'VariantResponse',
-  variant: 'FPM Notes' as PromptVariant,
+  variant: 'FPM Notes' as Role,
   response: {
     canRead: true,
     canEdit: true,
@@ -32,7 +32,7 @@ const projectManagerResponse = {
 
 const communicationResponse = {
   __typename: 'VariantResponse',
-  variant: 'Communications Edit' as PromptVariant,
+  variant: 'Communications Edit' as Role,
   response: {
     canRead: true,
     canEdit: true,

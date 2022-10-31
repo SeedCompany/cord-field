@@ -16,15 +16,6 @@ export const stepNames = [
   'additional-notes',
 ];
 
-export const promptVariants = [
-  'Partner',
-  'Translation',
-  'FPM Notes',
-  'Communications Edit',
-] as const;
-
-export type PromptVariant = typeof promptVariants[number];
-
 const initialProgressReportContext = {
   // eslint-disable-next-line @seedcompany/no-unused-vars
   setProgressReportStep: (step: number) => {
@@ -44,14 +35,8 @@ const initialProgressReportContext = {
     return;
   },
 
-  // eslint-disable-next-line @seedcompany/no-unused-vars
-  setPromptVariant: (role: PromptVariant) => {
-    return;
-  },
-
   step: 0,
   currentReport: null as ProgressReportFragment | null,
-  promptVariant: 'Partner' as PromptVariant,
 };
 
 const ProgressReportContext = createContext<
@@ -71,8 +56,6 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   const [currentReport, setReport] = useState<ProgressReportFragment | null>(
     null
   );
-
-  const [promptVariant, setPromptVariant] = useState<PromptVariant>('Partner');
 
   const setStep = useCallback(
     (step: number) => {
@@ -116,8 +99,6 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
       previousProgressReportStep,
       currentReport,
       setCurrentProgressReport: setCurrentReport,
-      promptVariant,
-      setPromptVariant,
     }),
     [
       step,
@@ -126,8 +107,6 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
       previousProgressReportStep,
       currentReport,
       setCurrentReport,
-      promptVariant,
-      setPromptVariant,
     ]
   );
 

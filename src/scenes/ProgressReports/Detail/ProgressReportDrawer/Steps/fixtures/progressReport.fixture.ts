@@ -1,4 +1,4 @@
-import { PromptVariant } from '../../../../ProgressReportContext';
+import { Role } from '~/api/schema.graphql';
 import { prompts } from './prompts.fixtures';
 import { ProgressReport } from './types.fixture';
 import { responses } from './variantResponses.fixtures';
@@ -29,11 +29,11 @@ export const progressReport: ProgressReport = {
           ...prompts,
         ],
         variants: [
-          'Partner',
-          'Translation',
-          'FPM Notes',
-          'Communications Edit',
-        ] as PromptVariant[],
+          'FieldPartner',
+          'Translator',
+          'ProjectManager',
+          'Marketing',
+        ] as Role[],
       },
     },
   },

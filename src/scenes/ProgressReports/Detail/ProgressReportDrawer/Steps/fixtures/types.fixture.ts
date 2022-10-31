@@ -1,5 +1,4 @@
-import { Resource, SecuredRichText } from '~/api/schema.graphql';
-import { PromptVariant } from '../../../../ProgressReportContext';
+import { Resource, Role, SecuredRichText } from '~/api/schema.graphql';
 import { VariantPromptResponse } from './progressReport.fixture';
 
 export interface ProgressReport {
@@ -18,7 +17,7 @@ export interface SecuredVariantPromptResponseList {
 
 export interface VariantPromptList {
   prompts: Prompt[];
-  variants: PromptVariant[];
+  variants: Role[];
 }
 export interface Prompt extends Resource {
   prompt: SecuredRichText;

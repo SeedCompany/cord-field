@@ -8,12 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Sx } from '~/common';
-import {
-  PromptVariant,
-  useProgressReportContext,
-} from '../../ProgressReportContext';
-import { colorPalette } from './colorPalette';
-import { PromptVariantIcon } from './StepIcon';
+import { useProgressReportContext } from '../../ProgressReportContext';
 
 interface ProgressReportStepperProps {
   step: number;
@@ -71,52 +66,15 @@ const singleConnectorSx: Sx = {
   },
 };
 
-const mapVariantToHeader = (variant: PromptVariant) => {
-  switch (variant) {
-    case 'Communications Edit':
-      return 'Communications';
-    case 'FPM Notes':
-      return 'Field Project Manager';
-    default:
-      return variant;
-  }
-};
-
 export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
-  const { setProgressReportStep, promptVariant } = useProgressReportContext();
+  const { setProgressReportStep } = useProgressReportContext();
 
   return (
-    <Paper
-      elevation={4}
-      sx={{
-        marginRight: 2,
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-          backgroundColor:
-            colorPalette.stepperCard.headerBackground[promptVariant],
-        }}
-      >
-        <PromptVariantIcon promptVariant={promptVariant} />
-        <Typography
-          sx={{
-            padding: 1,
-            flexGrow: 2,
-          }}
-        >
-          {mapVariantToHeader(promptVariant)} Steps
-        </Typography>
+    <Paper elevation={4} sx={{ mr: 2, overflow: 'hidden' }}>
+      <div>
+        <Typography sx={{ px: 2, pt: 2 }}>Steps:</Typography>
       </div>
-      <Box
-        sx={{
-          padding: 2,
-          paddingTop: 1,
-        }}
-      >
+      <Box sx={{ p: 2, pt: 0 }}>
         <Typography sx={typographySx}>Narrative Report</Typography>
         <Stepper activeStep={step} orientation="vertical" sx={stepperSx}>
           <Step onClick={() => setProgressReportStep(0)}>
