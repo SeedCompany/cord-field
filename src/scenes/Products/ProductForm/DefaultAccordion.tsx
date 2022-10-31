@@ -5,7 +5,6 @@ import {
   AccordionProps,
   AccordionSummary,
   Box,
-  Theme,
   Typography,
 } from '@mui/material';
 import { FormState } from 'final-form';
@@ -15,11 +14,11 @@ import { Except } from 'type-fest';
 import { useFieldName } from '../../../components/form';
 import { ProductKey } from './ProductFormFields';
 
-export const sectionStyle = (theme: Theme) => ({
+export const sectionStyle = {
   '&:not(:last-child)': {
-    marginBottom: theme.spacing(2),
+    mb: 2,
   },
-});
+};
 
 export type DefaultAccordionProps<K extends ProductKey> = {
   name: K;
@@ -75,10 +74,9 @@ export const DefaultAccordion = <K extends ProductKey>({
           {
             '& 	.MuiAccordionSummary-content': { flexDirection: 'column' },
           },
-          showError &&
-            ((theme) => ({
-              color: theme.palette.error.main,
-            })),
+          showError && {
+            color: 'error.main',
+          },
         ]}
       >
         {typeof title === 'function' ? (
@@ -89,13 +87,7 @@ export const DefaultAccordion = <K extends ProductKey>({
             {title ?? startCase(name)}
           </Typography>
         )}
-        <Box
-          sx={(theme) => ({
-            margin: theme.spacing(0, -1),
-          })}
-        >
-          {isOpen ? null : renderCollapsed()}
-        </Box>
+        <Box sx={{ my: 0, mx: -1 }}>{isOpen ? null : renderCollapsed()}</Box>
       </AccordionSummary>
       <AccordionDetails
         sx={{
