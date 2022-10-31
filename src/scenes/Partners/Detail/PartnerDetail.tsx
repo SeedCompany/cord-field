@@ -7,7 +7,6 @@ import {
   CardContent,
   Grid,
   Skeleton,
-  Theme,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -33,13 +32,13 @@ import { PartnerDocument } from './PartnerDetail.graphql';
 import { PartnerPostList } from './PartnerPostList';
 import { PartnerTypesCard } from './PartnerTypesCard';
 
-const cardSection = (theme: Theme) => ({
+const cardSection = {
   '& > h3': {
-    marginBottom: theme.spacing(1),
+    mb: 1,
   },
   display: 'flex',
   flexDirection: 'column',
-});
+};
 
 const card = {
   flexGrow: 1,
@@ -64,14 +63,7 @@ export const PartnerDetail = () => {
     useDialog<Many<EditablePartnerField>>();
 
   return (
-    <Box
-      component="main"
-      sx={(theme) => ({
-        flex: 1,
-        overflowY: 'auto',
-        padding: theme.spacing(4),
-      })}
-    >
+    <Box component="main" sx={{ flex: 1, overflowY: 'auto', p: 4 }}>
       <Helmet title={name ?? undefined} />
       <Error error={error}>
         {{
@@ -81,27 +73,20 @@ export const PartnerDetail = () => {
       </Error>
       {!error && (
         <Box
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.md,
+          sx={{
+            maxWidth: 'md',
             '& > *': {
-              marginBottom: theme.spacing(3),
+              mb: 3,
             },
-          })}
+          }}
         >
-          <Box
-            component="header"
-            sx={(theme) => ({
-              flex: 1,
-              display: 'flex',
-              gap: theme.spacing(1),
-            })}
-          >
+          <Box component="header" sx={{ flex: 1, display: 'flex', gap: 1 }}>
             <Typography
               variant="h2"
-              sx={(theme) => ({
-                marginRight: theme.spacing(2), // a little extra between text and buttons
+              sx={{
+                mr: 2, // a little extra between text and buttons
                 lineHeight: 'inherit', // centers text with buttons better
-              })}
+              }}
             >
               {partner ? (
                 partner.organization.value?.name.value
@@ -136,7 +121,7 @@ export const PartnerDetail = () => {
               alignItems: 'center',
             }}
           >
-            <Typography variant="h4" sx={{ marginRight: 2 }}>
+            <Typography variant="h4" sx={{ mr: 2 }}>
               {partner ? 'Partner Information' : <Skeleton width={200} />}
             </Typography>
             {partner && (
@@ -199,14 +184,14 @@ export const PartnerDetail = () => {
             </Grid>
           </Grid>
           <Box
-            sx={(theme) => ({
+            sx={{
               display: 'flex',
               alignItems: 'center',
-              marginBottom: theme.spacing(1),
+              mb: 1,
               '& > *': {
-                marginRight: theme.spacing(2),
+                mr: 2,
               },
-            })}
+            }}
           >
             <Typography variant="h3">
               {partner ? 'Point of Contact' : <Skeleton width="120px" />}
@@ -227,11 +212,11 @@ export const PartnerDetail = () => {
                 >
                   <CardContent>
                     <Avatar
-                      sx={(theme) => ({
+                      sx={{
                         ...square(86),
                         fontSize: 70,
-                        color: theme.palette.background.paper,
-                      })}
+                        color: 'background.paper',
+                      }}
                     >
                       <Add fontSize="inherit" />
                     </Avatar>
@@ -270,9 +255,7 @@ export const PartnerDetail = () => {
                 <ProjectListItemCard
                   key={project?.id ?? index}
                   project={project}
-                  sx={(theme) => ({
-                    marginBottom: theme.spacing(2),
-                  })}
+                  sx={{ mb: 2 }}
                 />
               ))
             )}
