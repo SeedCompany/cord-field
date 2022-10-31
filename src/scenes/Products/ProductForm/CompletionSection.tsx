@@ -23,12 +23,7 @@ export const CompletionSection = ({ values, accordionState }: SectionProps) => {
       name="describeCompletion"
       title="Completion Description"
       renderCollapsed={() => (
-        <Typography
-          sx={(theme) => ({
-            marginLeft: theme.spacing(1),
-            marginTop: theme.spacing(1),
-          })}
-        >
+        <Typography sx={{ ml: 1, mt: 1 }}>
           {values.product?.describeCompletion}
         </Typography>
       )}
