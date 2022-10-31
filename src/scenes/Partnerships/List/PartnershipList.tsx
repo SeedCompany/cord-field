@@ -29,14 +29,7 @@ export const PartnershipList = () => {
     useDialog<PartnershipFormFragment>();
 
   return (
-    <Box
-      sx={(theme) => ({
-        flex: 1,
-        overflowY: 'auto',
-        padding: theme.spacing(4),
-        maxWidth: theme.breakpoints.values.sm,
-      })}
-    >
+    <Box sx={{ flex: 1, overflowY: 'auto', p: 4, maxWidth: 'sm' }}>
       <Helmet
         title={`Partnerships - ${data?.project.name.value ?? 'A Project'}`}
       />
@@ -44,18 +37,8 @@ export const PartnershipList = () => {
         <ProjectBreadcrumb data={project} />
         <Breadcrumb to={`${projectUrl}/partnerships`}>Partnerships</Breadcrumb>
       </Breadcrumbs>
-      <Box
-        sx={(theme) => ({
-          margin: theme.spacing(3, 0),
-          display: 'flex',
-        })}
-      >
-        <Typography
-          variant="h2"
-          sx={(theme) => ({
-            marginRight: theme.spacing(3),
-          })}
-        >
+      <Box sx={{ my: 3, mx: 0, display: 'flex' }}>
+        <Typography variant="h2" sx={{ mr: 3 }}>
           Partnerships
         </Typography>
         {partnerships?.canCreate && (
