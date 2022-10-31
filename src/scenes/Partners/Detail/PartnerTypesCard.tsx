@@ -29,7 +29,7 @@ const cardContentSx = {
   },
 };
 
-interface PartnerTypesCardProps {
+interface PartnerTypesCardProps extends StyleProps {
   partner?: PartnerDetailsFragment;
   onEdit: () => void;
   className?: string;
@@ -40,7 +40,7 @@ export const PartnerTypesCard = ({
   className,
   onEdit,
   sx,
-}: PartnerTypesCardProps & StyleProps) => {
+}: PartnerTypesCardProps) => {
   const canEdit = canEditAny(
     partner,
     false,
@@ -100,11 +100,7 @@ export const PartnerTypesCard = ({
         </CardContent>
       </CardActionArea>
       <CardActions
-        sx={(theme) => ({
-          display: 'flex',
-          justifyContent: 'space-between',
-          paddingRight: theme.spacing(2),
-        })}
+        sx={{ display: 'flex', justifyContent: 'space-between', pr: 2 }}
       >
         <Button color="primary" disabled={!canEdit} onClick={onEdit}>
           Edit
