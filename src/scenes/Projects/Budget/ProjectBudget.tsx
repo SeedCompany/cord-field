@@ -52,13 +52,15 @@ export const ProjectBudget = () => {
             <Breadcrumb to=".">Field Budget</Breadcrumb>
           </Breadcrumbs>
           <Box
-            sx={(theme) => ({
-              margin: theme.spacing(3, 4, 3, 0),
+            sx={{
+              my: 3,
+              mr: 4,
+              ml: 0,
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'flex-end',
-              maxWidth: theme.breakpoints.values.md,
-            })}
+              maxWidth: 'md',
+            }}
           >
             <Typography variant="h2">Budget</Typography>
             <Typography
@@ -78,12 +80,7 @@ export const ProjectBudget = () => {
               )}
             </Typography>
           </Box>
-          <Box
-            sx={(theme) => ({
-              maxWidth: theme.breakpoints.values.md,
-              margin: theme.spacing(0, 4, 4, 0),
-            })}
-          >
+          <Box sx={{ maxWidth: 'md', mt: 0, mr: 4, mb: 4, ml: 0 }}>
             <Grid container direction="column" spacing={3}>
               <Grid item>
                 <ProjectBudgetRecords loading={loading} budget={budget} />
