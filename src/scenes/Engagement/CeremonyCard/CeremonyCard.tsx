@@ -79,13 +79,7 @@ export const CeremonyCard = ({
         flexDirection: 'column',
       }}
     >
-      <CeremonyPlanned
-        canRead={canRead}
-        value={ceremony}
-        sx={(theme) => ({
-          marginBottom: theme.spacing(1),
-        })}
-      />
+      <CeremonyPlanned canRead={canRead} value={ceremony} sx={{ mb: 1 }} />
       <Card
         sx={{
           flex: 1,
@@ -100,9 +94,7 @@ export const CeremonyCard = ({
           alignItems="center"
           justifyContent="space-evenly"
           spacing={2}
-          sx={{
-            flex: 1,
-          }}
+          sx={{ flex: 1 }}
         >
           <Grid item container direction="column" alignItems="center">
             <Typography
@@ -125,9 +117,9 @@ export const CeremonyCard = ({
             <Typography
               variant="body2"
               sx={[
-                (theme) => ({
-                  fontWeight: theme.typography.weight.light,
-                }),
+                {
+                  fontWeight: 'light',
+                },
                 loadingOrCanRead && halfWidth,
               ]}
             >
