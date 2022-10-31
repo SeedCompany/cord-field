@@ -24,13 +24,7 @@ export type ResetPasswordFormProps = Pick<
 export const ResetPasswordForm = (props: ResetPasswordFormProps) => {
   return (
     <AuthContent>
-      <Typography
-        variant="h3"
-        align="center"
-        sx={(theme) => ({
-          marginBottom: theme.spacing(3),
-        })}
-      >
+      <Typography variant="h3" align="center" sx={{ mb: 3 }}>
         Password Reset
       </Typography>
       <Typography align="center">Choose a password for you account.</Typography>
@@ -42,11 +36,7 @@ export const ResetPasswordForm = (props: ResetPasswordFormProps) => {
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <SubmitError
-              sx={(theme) => ({
-                margin: theme.spacing(2, 0),
-              })}
-            />
+            <SubmitError sx={{ my: 2 }} />
             <PasswordField
               label="New Password"
               placeholder="Create New Password"
@@ -59,23 +49,11 @@ export const ResetPasswordForm = (props: ResetPasswordFormProps) => {
               placeholder="Re-Enter New Password"
               autoComplete="new-password"
             />
-            <SubmitButton
-              sx={(theme) => ({
-                marginTop: theme.spacing(1),
-              })}
-            >
-              Save Password
-            </SubmitButton>
+            <SubmitButton sx={{ mt: 1 }}>Save Password</SubmitButton>
           </form>
         )}
       </Form>
-      <Link
-        to="/login"
-        sx={(theme) => ({
-          display: 'inline-block',
-          marginTop: theme.spacing(1),
-        })}
-      >
+      <Link to="/login" sx={{ display: 'inline-block', mt: 1 }}>
         Login
       </Link>
     </AuthContent>
