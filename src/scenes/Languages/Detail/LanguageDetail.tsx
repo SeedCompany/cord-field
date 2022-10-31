@@ -76,13 +76,13 @@ export const LanguageDetail = () => {
   return (
     <Box
       component="main"
-      sx={(theme) => ({
+      sx={{
         overflowY: 'auto',
-        padding: theme.spacing(4),
+        p: 4,
         '& > *:not(:last-child)': {
-          marginBottom: theme.spacing(3),
+          mb: 3,
         },
-      })}
+      }}
     >
       <Helmet title={displayName?.value || name?.value || undefined} />
       <Error error={error}>
@@ -94,18 +94,18 @@ export const LanguageDetail = () => {
       {!error && (
         <>
           <Box
-            sx={(theme) => ({
+            sx={{
               flex: 1,
               display: 'flex',
-              gap: theme.spacing(1),
-            })}
+              gap: 1,
+            }}
           >
             <Typography
               variant="h2"
-              sx={(theme) => ({
-                marginRight: theme.spacing(2), // a little extra between text and buttons
+              sx={{
+                mr: 2, // a little extra between text and buttons
                 lineHeight: 'inherit', // centers text with buttons better
-              })}
+              }}
             >
               {!language ? (
                 <Skeleton width="16ch" />
@@ -156,11 +156,11 @@ export const LanguageDetail = () => {
                 <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
                   <PresetInventoryIconFilled
                     fontSize="large"
-                    sx={(theme) => ({
+                    sx={{
                       display: 'flex',
                       alignItems: 'center',
-                      color: theme.palette.info.main,
-                    })}
+                      color: 'info.main',
+                    }}
                   />
                 </Tooltip>
               </Grid>
@@ -225,9 +225,9 @@ export const LanguageDetail = () => {
                 container
                 spacing={2}
                 alignItems="center"
-                sx={(theme) => ({
-                  marginBottom: theme.spacing(1),
-                })}
+                sx={{
+                  mb: 1,
+                }}
               >
                 <Grid item>
                   <Typography variant="h3">Locations</Typography>
@@ -256,9 +256,7 @@ export const LanguageDetail = () => {
                   <LocationCard
                     key={location?.id ?? index}
                     location={location}
-                    sx={(theme) => ({
-                      marginBottom: theme.spacing(2),
-                    })}
+                    sx={{ mb: 2 }}
                     loading={!location}
                     removing={removing}
                     onRemove={() =>
@@ -299,9 +297,7 @@ export const LanguageDetail = () => {
                 <ProjectListItemCard
                   key={project?.id ?? index}
                   project={project}
-                  sx={(theme) => ({
-                    marginBottom: theme.spacing(2),
-                  })}
+                  sx={{ mb: 2 }}
                 />
               ))}
               {projects?.items.length === 0 ? (
