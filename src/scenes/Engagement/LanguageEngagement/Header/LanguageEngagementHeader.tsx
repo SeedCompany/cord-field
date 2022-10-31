@@ -115,10 +115,7 @@ export const LanguageEngagementHeader = ({
                 <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
                   <PresetInventoryIconFilled
                     color="action"
-                    sx={(theme) => ({
-                      verticalAlign: 'bottom',
-                      marginLeft: theme.spacing(1),
-                    })}
+                    sx={{ verticalAlign: 'bottom', ml: 1 }}
                     aria-label="preset inventory"
                   />
                 </Tooltip>
@@ -144,13 +141,7 @@ export const LanguageEngagementHeader = ({
         </Grid>
         <Grid item>
           <DataButton
-            startIcon={
-              <DateRange
-                sx={(theme) => ({
-                  color: theme.palette.info.main,
-                })}
-              />
-            }
+            startIcon={<DateRange sx={{ color: 'info.main' }} />}
             secured={engagement.dateRange}
             redacted="You do not have permission to view start/end dates"
             children={FormattedDateRange.orNull}
