@@ -58,21 +58,13 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
           engagement.project.name.value ?? 'a project'
         }`}
       />
-      <Box
-        sx={(theme) => ({
-          flex: 1,
-          overflowY: 'auto',
-          padding: theme.spacing(4),
-        })}
-      >
+      <Box sx={{ flex: 1, overflowY: 'auto', p: 4 }}>
         <Grid
           component="main"
           container
           direction="column"
           spacing={3}
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.md,
-          })}
+          sx={{ maxWidth: 'md' }}
         >
           <Grid item>
             <Breadcrumbs>
@@ -135,13 +127,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                 </Grid>
                 <Grid item>
                   <DataButton
-                    startIcon={
-                      <DateRange
-                        sx={(theme) => ({
-                          color: theme.palette.info.main,
-                        })}
-                      />
-                    }
+                    startIcon={<DateRange sx={{ color: 'info.main' }} />}
                     secured={engagement.dateRange}
                     redacted="You do not have permission to view start/end dates"
                     children={FormattedDateRange.orNull}
