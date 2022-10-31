@@ -29,28 +29,19 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
       variant="h2"
       className={className}
       sx={[
-        (theme) => ({
-          padding: theme.spacing(2),
+        {
+          p: 2,
           borderRadius: 100,
           position: 'relative',
-        }),
-        !date || !date.canRead
-          ? null
-          : (theme) => ({
-              backgroundColor: theme.palette.grey[300],
-            }),
+        },
+        !date || !date.canRead ? null : { bgcolor: 'grey.300' },
       ]}
     >
       {date?.value ? (
         formatDate(date.value)
       ) : (
         <>
-          <Box
-            component="span"
-            sx={{
-              visibility: 'hidden',
-            }}
-          >
+          <Box component="span" sx={{ visibility: 'hidden' }}>
             {formatDate(placeholderNow)}
           </Box>
           {!date ? (
@@ -60,12 +51,7 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
               info="You don't have permission to view this date"
               SkeletonProps={{
                 variant: 'rectangular',
-                sx: [
-                  skeleton,
-                  (theme) => ({
-                    backgroundColor: theme.palette.grey[700],
-                  }),
-                ],
+                sx: [skeleton, { bgcolor: 'grey.700' }],
               }}
             />
           ) : null}
