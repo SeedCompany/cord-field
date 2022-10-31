@@ -36,9 +36,7 @@ export const StepProgress = ({
               alignItems="center"
               justifyContent="space-between"
               spacing={1}
-              sx={(theme) => ({
-                padding: theme.spacing(1),
-              })}
+              sx={{ p: 1 }}
             >
               <Grid item component={Typography} variant="h4">
                 {ProductStepLabels[step]}
