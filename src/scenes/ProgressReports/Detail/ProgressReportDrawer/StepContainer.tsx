@@ -5,15 +5,15 @@ import { useProgressReportContext } from '../../ProgressReportContext';
 import { Step0, Step1, Step2, Step3 } from '../TemporarySteps';
 import { colorPalette } from './colorPalette';
 
-const typographyLinkSx: Sx = (theme) => ({
-  color: theme.palette.grey[800],
+const typographyLinkSx: Sx = {
+  color: 'grey.800',
   fontSize: 14,
   cursor: 'pointer',
-  marginLeft: 2,
+  ml: 2,
   '&:hover': {
     textDecoration: 'underline',
   },
-});
+};
 
 export const StepContainer = () => {
   const { step } = useProgressReportContext();
@@ -27,7 +27,7 @@ export const StepContainer = () => {
       }}
     >
       <StepContainerHeader />
-      <Box sx={{ flex: 1, padding: 2, pt: 4 }}>
+      <Box sx={{ flex: 1, p: 2, pt: 4 }}>
         {step === 0 && <Step0 />}
         {step === 1 && <Step1 />}
         {step === 2 && <Step2 />}
@@ -46,8 +46,8 @@ const StepContainerHeader = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'end',
-        backgroundColor: 'background.paper',
-        padding: 2,
+        bgcolor: 'background.paper',
+        p: 2,
         borderTop: `1px solid ${colorPalette.header.border}`,
         borderBottom: `1px solid ${colorPalette.header.border}`,
       }}
@@ -66,9 +66,9 @@ const StepContainerHeader = () => {
           Next
           <ArrowForward
             sx={{
-              marginLeft: 1,
+              ml: 1,
               fontSize: '1rem',
-              marginBottom: '-3px',
+              mb: '-3px',
             }}
           />
         </Typography>
