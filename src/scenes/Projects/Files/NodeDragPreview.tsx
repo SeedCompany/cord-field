@@ -9,16 +9,16 @@ export const NodeDragPreview = ({ node }: { node: FileNodeInfoFragment }) => {
   return (
     <Paper
       elevation={12}
-      sx={(theme) => ({
+      sx={{
         display: 'flex',
         alignItems: 'center',
-        padding: theme.spacing(1),
-      })}
+        p: 1,
+      }}
     >
       <Icon
         sx={(theme) => ({
           color: theme.palette.action.active,
-          marginRight: theme.spacing(0.5),
+          mr: 0.5,
         })}
       />
       {parseFileNameAndExtension(node.name).displayName}
