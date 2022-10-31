@@ -16,13 +16,7 @@ export type ForgotPasswordFormProps = Pick<
 export const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
   return (
     <AuthContent>
-      <Typography
-        variant="h3"
-        align="center"
-        sx={(theme) => ({
-          marginBottom: theme.spacing(3),
-        })}
-      >
+      <Typography variant="h3" align="center" sx={{ mb: 3 }}>
         Reset Your Password
       </Typography>
       <Typography align="center">
@@ -32,29 +26,13 @@ export const ForgotPasswordForm = (props: ForgotPasswordFormProps) => {
       <Form {...props}>
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <SubmitError
-              sx={(theme) => ({
-                margin: theme.spacing(2, 0),
-              })}
-            />
+            <SubmitError sx={{ my: 2 }} />
             <EmailField autoFocus autoComplete="email" />
-            <SubmitButton
-              sx={(theme) => ({
-                marginTop: theme.spacing(1),
-              })}
-            >
-              Reset Password
-            </SubmitButton>
+            <SubmitButton sx={{ mt: 1 }}>Reset Password</SubmitButton>
           </form>
         )}
       </Form>
-      <Link
-        to="/login"
-        sx={(theme) => ({
-          display: 'inline-block',
-          marginTop: theme.spacing(1),
-        })}
-      >
+      <Link to="/login" sx={{ display: 'inline-block', mt: 1 }}>
         Login
       </Link>
     </AuthContent>
