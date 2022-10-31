@@ -24,11 +24,11 @@ export const UserListItemCardLandscape = ({
     <Card
       className={className}
       sx={[
-        (theme) => ({
+        {
           flex: 1,
-          maxWidth: theme.breakpoints.values.sm,
+          maxWidth: 'sm',
           position: 'relative',
-        }),
+        },
         ...extendSx(sx),
       ]}
     >
@@ -42,9 +42,10 @@ export const UserListItemCardLandscape = ({
           <Avatar
             loading={!user}
             sx={(theme) => ({
+              // requires theme callback to keep avatar square sizing consistent
               ...square(theme.spacing(8)),
-              fontSize: theme.typography.h3.fontSize,
-              marginRight: theme.spacing(3),
+              fontSize: 'h3.fontSize',
+              mr: 3,
             })}
           >
             {user?.avatarLetters}
