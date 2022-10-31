@@ -48,32 +48,27 @@ export const UserListItemCardPortrait = ({
           }}
         >
           <CardContent
-            sx={(theme) => ({
+            sx={{
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'stretch',
               textAlign: 'center',
-              padding: theme.spacing(3),
-            })}
+              p: 3,
+            }}
           >
             <Avatar
               loading={!user}
-              sx={(theme) => ({
+              sx={{
                 alignSelf: 'center',
                 ...square(86),
-                fontSize: theme.typography.h2.fontSize,
-                marginBottom: theme.spacing(2),
-              })}
+                fontSize: 'h2.fontSize',
+                mb: 2,
+              }}
             >
               {user?.avatarLetters}
             </Avatar>
-            <Typography
-              variant="h4"
-              sx={(theme) => ({
-                marginBottom: theme.spacing(3),
-              })}
-            >
+            <Typography variant="h4" sx={{ mb: 3 }}>
               {!user ? (
                 <Skeleton width="100%" />
               ) : (
