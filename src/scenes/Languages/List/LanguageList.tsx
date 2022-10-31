@@ -5,7 +5,6 @@ import {
   Grid,
   Skeleton,
   Tab,
-  Theme,
   Typography,
 } from '@mui/material';
 import { omit, pickBy } from 'lodash';
@@ -28,9 +27,9 @@ import { LanguageSortOptions } from './LanguageSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;
 
-const maxWidth = (theme: Theme) => ({
-  maxWidth: theme.breakpoints.values.sm,
-});
+const maxWidth = {
+  maxWidth: 'sm',
+};
 
 export const LanguageList = () => {
   const sort = useSort<Language>();
@@ -59,13 +58,7 @@ export const LanguageList = () => {
       <Typography variant="h2" paragraph>
         Languages
       </Typography>
-      <Grid
-        container
-        spacing={1}
-        sx={(theme) => ({
-          margin: theme.spacing(3, 0),
-        })}
-      >
+      <Grid container spacing={1} sx={{ my: 3, mx: 0 }}>
         <Grid item>
           <SortButtonDialog {...sort}>
             <LanguageSortOptions />
@@ -93,21 +86,19 @@ export const LanguageList = () => {
         <Divider sx={maxWidth} />
         <TabPanel
           value={filters.tab}
-          sx={(theme) => ({
+          sx={{
             overflowY: 'auto',
             // allow card shadow to bleed over instead of cutting it off
-            padding: theme.spacing(0, 0, 0, 2),
-            margin: theme.spacing(0, 0, 0, -2),
-          })}
+            py: 0,
+            pr: 0,
+            pl: 2,
+            my: 0,
+            mr: 0,
+            ml: -2,
+          }}
           ref={scrollRef}
         >
-          <Typography
-            variant="h3"
-            paragraph
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-          >
+          <Typography variant="h3" paragraph sx={{ mt: 2 }}>
             {list.data ? (
               `${formatNumber(list.data.total)} Languages`
             ) : (
