@@ -34,33 +34,23 @@ export const ProductDetail = () => {
 
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         flex: 1,
         overflowY: 'auto',
-        padding: theme.spacing(4),
+        p: 4,
         display: 'flex',
         flexDirection: 'column',
-      })}
+      }}
     >
       <Grid
         component="main"
         container
         direction="column"
         spacing={3}
-        sx={(theme) => ({
-          flex: 1,
-          maxWidth: theme.breakpoints.values.md,
-        })}
+        sx={{ flex: 1, maxWidth: 'md' }}
       >
         <ProductDetailHeader product={product} />
-        <Grid
-          item
-          container
-          spacing={5}
-          sx={{
-            flex: 1,
-          }}
-        >
+        <Grid item container spacing={5} sx={{ flex: 1 }}>
           <Grid item md={4} container alignContent="flex-start" spacing={3}>
             <ProductInfo product={product} />
           </Grid>
