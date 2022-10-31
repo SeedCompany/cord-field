@@ -281,13 +281,13 @@ export const EditProduct = () => {
   return (
     <Box
       component="main"
-      sx={(theme) => ({
+      sx={{
         overflowY: 'auto',
-        padding: theme.spacing(4),
+        p: 4,
         '& > *': {
-          marginBottom: theme.spacing(2),
+          mb: 2,
         },
-      })}
+      }}
     >
       {/* TODO label goal */}
       <Helmet title="Edit Goal" />
