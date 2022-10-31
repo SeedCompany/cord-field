@@ -10,20 +10,18 @@ import { CeremonyCard } from './CeremonyCard';
 export const EngagementDetailLoading = () => {
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         flex: 1,
         overflowY: 'auto',
-        padding: theme.spacing(4),
-      })}
+        p: 4,
+      }}
     >
       <Grid
         component="main"
         container
         direction="column"
         spacing={3}
-        sx={(theme) => ({
-          maxWidth: theme.breakpoints.values.md,
-        })}
+        sx={{ maxWidth: 'md' }}
       >
         <Grid item>
           <Breadcrumbs>
