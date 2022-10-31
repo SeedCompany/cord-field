@@ -34,11 +34,11 @@ export const Sensitivity = ({
   return (
     <Box className={className} sx={sx}>
       <Box
-        sx={{
+        sx={(theme) => ({
           display: 'flex',
           alignItems: 'center',
-          marginBottom: (theme) => theme.spacing(),
-        }}
+          marginBottom: theme.spacing(),
+        })}
       >
         <VerifiedUserOutlined
           sx={{
