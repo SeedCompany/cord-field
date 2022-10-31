@@ -41,8 +41,8 @@ const stepperSx: Sx = {
       minHeight: 16,
     },
     '.MuiStepLabel-root': {
-      paddingTop: 0.5,
-      paddingBottom: 0.5,
+      pt: 0.5,
+      pb: 0.5,
     },
   },
 };
@@ -75,7 +75,7 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
     <Paper
       elevation={4}
       sx={{
-        marginRight: 2,
+        mr: 2,
         overflow: 'hidden',
       }}
     >
@@ -88,16 +88,16 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
       >
         <PeopleJoinedIcon
           sx={{
-            backgroundColor: colorPalette.stepperCard.iconBackground.partner,
-            marginRight: 1,
-            padding: 1,
+            bgcolor: colorPalette.stepperCard.iconBackground.partner,
+            mr: 1,
+            p: 1,
             height: 48,
             width: 48,
           }}
         />
         <Typography
           sx={{
-            padding: 1,
+            p: 1,
             flexGrow: 2,
           }}
         >
@@ -106,8 +106,8 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
       </div>
       <Box
         sx={{
-          padding: 2,
-          paddingTop: 1,
+          p: 2,
+          pt: 1,
         }}
       >
         <Typography sx={typographySx}>Narrative Report</Typography>
