@@ -38,8 +38,8 @@ export const MentorCard = ({ data, onEdit, wrap }: MentorCardProps) => {
           // To match certification title.
           // This is hacky, we should try to find a way to do this without pixel
           // coupling.
-          marginTop: 1,
-          marginBottom: 2,
+          mt: 1,
+          mb: 2,
         }}
       >
         Mentor
@@ -59,11 +59,11 @@ export const MentorCard = ({ data, onEdit, wrap }: MentorCardProps) => {
             >
               <CardContent>
                 <Avatar
-                  sx={(theme) => ({
+                  sx={{
                     ...square(86),
                     fontSize: 70,
-                    color: theme.palette.background.paper,
-                  })}
+                    color: 'background.paper',
+                  }}
                 >
                   <Add fontSize="inherit" />
                 </Avatar>
