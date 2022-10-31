@@ -31,11 +31,11 @@ export const LocationDetail = () => {
   return (
     <Box
       component="main"
-      sx={(theme) => ({
+      sx={{
         flex: 1,
         overflowY: 'auto',
-        padding: theme.spacing(4),
-      })}
+        p: 4,
+      }}
     >
       <Helmet title={location?.name.value || undefined} />
       <Error error={error}>
@@ -46,12 +46,12 @@ export const LocationDetail = () => {
       </Error>
       {!error && (
         <Box
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.md,
+          sx={{
+            maxWidth: 'md',
             '& > *': {
-              marginBottom: theme.spacing(3),
+              mb: 3,
             },
-          })}
+          }}
         >
           <Box
             sx={{
@@ -62,9 +62,9 @@ export const LocationDetail = () => {
             <Typography
               variant="h2"
               sx={[
-                (theme) => ({
-                  marginRight: theme.spacing(4),
-                }),
+                {
+                  mr: 4,
+                },
                 location?.name
                   ? null
                   : {
@@ -95,13 +95,13 @@ export const LocationDetail = () => {
             )}
           </Box>
           <Box
-            sx={(theme) => ({
+            sx={{
               display: 'flex',
               alignItems: 'baseline',
               '& > *': {
-                marginRight: theme.spacing(2),
+                mr: 2,
               },
-            })}
+            }}
           >
             <Typography variant="h4">
               {location ? 'Location' : <Skeleton width={200} />}
