@@ -24,19 +24,8 @@ export const ProjectChangeRequestList = () => {
   const [createState, openCreateDialog] = useDialog();
 
   return (
-    <Box
-      sx={{
-        flex: 1,
-        overflowY: 'auto',
-      }}
-    >
-      <Box
-        component="main"
-        sx={(theme) => ({
-          padding: theme.spacing(4),
-          maxWidth: theme.breakpoints.values.sm,
-        })}
-      >
+    <Box sx={{ overflowY: 'auto' }}>
+      <Box component="main" sx={{ p: 4, maxWidth: 'sm' }}>
         <Helmet
           title={`Change Requests - ${data?.project.name.value ?? 'A Project'}`}
         />
@@ -44,18 +33,8 @@ export const ProjectChangeRequestList = () => {
           <ProjectBreadcrumb data={data?.project} />
           <Breadcrumb to=".">Change Requests</Breadcrumb>
         </Breadcrumbs>
-        <Box
-          sx={(theme) => ({
-            margin: theme.spacing(3, 0),
-            display: 'flex',
-          })}
-        >
-          <Typography
-            variant="h2"
-            sx={(theme) => ({
-              marginRight: theme.spacing(3),
-            })}
-          >
+        <Box sx={{ my: 3, mx: 0, display: 'flex' }}>
+          <Typography variant="h2" sx={{ mr: 3 }}>
             Change Requests
           </Typography>
           {(!list.data || list.data.canCreate) && (
