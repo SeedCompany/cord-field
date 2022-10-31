@@ -32,11 +32,7 @@ export const MethodologySection = ({
         <EnumField layout="column" {...props}>
           {entries(ApproachMethodologies).map(([approach, methodologies]) => (
             <Box key={approach} sx={sectionStyle}>
-              <Typography
-                sx={(theme) => ({
-                  fontWeight: theme.typography.weight.bold,
-                })}
-              >
+              <Typography sx={{ fontWeight: 'bold' }}>
                 {ProductApproachLabels[approach]}
               </Typography>
               {methodologies.map((option) => (
