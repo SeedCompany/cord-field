@@ -16,7 +16,7 @@ interface ProgressReportStepperProps {
   step: number;
 }
 
-const stepperSx: Sx = (theme) => ({
+const stepperSx: Sx = {
   '&': {
     '.MuiStep-root': {
       cursor: 'pointer',
@@ -26,13 +26,13 @@ const stepperSx: Sx = (theme) => ({
       },
 
       '.MuiStepIcon-root': {
-        color: theme.palette.grey[500],
+        color: 'grey.500',
         '&.Mui-active': {
-          color: theme.palette.info.light,
+          color: 'info.light',
         },
         '&.Mui-completed': {
-          color: theme.palette.grey[500],
-          backgroundColor: theme.palette.grey[500],
+          color: 'grey.500',
+          bgcolor: 'grey.500',
           borderRadius: '50%',
         },
       },
@@ -45,19 +45,19 @@ const stepperSx: Sx = (theme) => ({
       paddingBottom: 0.5,
     },
   },
-});
+};
 
 const typographySx: Sx = {
   fontSize: '0.65rem',
   textTransform: 'uppercase',
-  marginTop: 1,
-  marginBottom: 1,
+  mt: 1,
+  mb: 1,
 };
 
 const singleConnectorSx: Sx = {
   '&.MuiStepConnector-root': {
     flex: '1 1 auto',
-    marginLeft: '12px',
+    ml: '12px',
   },
   '& .MuiStepConnector-lineHorizontal': {
     display: 'block',
