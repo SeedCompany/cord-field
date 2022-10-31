@@ -96,13 +96,7 @@ export const ProductForm = ({
   return (
     <Form<ProductFormValues> decorators={decorators} {...props}>
       {({ handleSubmit, ...rest }) => (
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.md,
-          })}
-        >
+        <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 'md' }}>
           <SubmitError />
           {/* Need to give accordions their own container for styling */}
           <div>
@@ -113,11 +107,7 @@ export const ProductForm = ({
             />
           </div>
 
-          <Box
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-          >
+          <Box sx={{ mt: 2 }}>
             <SubmitButton fullWidth={false} color="primary" size="medium">
               Save Goal
             </SubmitButton>
@@ -126,9 +116,7 @@ export const ProductForm = ({
                 action="delete"
                 fullWidth={false}
                 size="medium"
-                sx={(theme) => ({
-                  marginLeft: theme.spacing(1),
-                })}
+                sx={{ ml: 1 }}
               >
                 Delete Goal
               </SubmitButton>
