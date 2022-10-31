@@ -5,21 +5,10 @@ import { AuthContent } from '../AuthContent';
 export const ResetPasswordSuccess = () => {
   return (
     <AuthContent>
-      <Typography
-        variant="h3"
-        align="center"
-        sx={(theme) => ({
-          marginBottom: theme.spacing(3),
-        })}
-      >
+      <Typography variant="h3" align="center" sx={{ mb: 3 }}>
         Your Password Has Been Reset
       </Typography>
-      <Typography
-        align="center"
-        sx={(theme) => ({
-          marginBottom: theme.spacing(5),
-        })}
-      >
+      <Typography align="center" sx={{ mb: 5 }}>
         Your password has been saved. Use the link below to log in with your new
         password.
       </Typography>
