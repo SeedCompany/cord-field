@@ -1,29 +1,42 @@
+import { useQuery } from '@apollo/client';
 import { Box, Drawer } from '@mui/material';
 import { useEffect } from 'react';
 import { useMatch } from 'react-router-dom';
 import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
+import {
+  DrawerPeriodicReportDocument,
+  DrawerPeriodicReportFragment,
+} from './ProgressReportDrawer.graphql';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
 import { StepContainer } from './StepContainer';
 
 interface ProgressReportDrawerProps {
-  report: ProgressReportFragment | null;
+  reportId?: string;
 }
 
-export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
+export const ProgressReportDrawer = ({
+  reportId = '',
+}: ProgressReportDrawerProps) => {
   const open = !!useMatch('progress-reports/:id/edit');
 
   const navigate = useNavigate();
-  const { step, setCurrentProgressReport, currentReport } =
-    useProgressReportContext();
+  const { step, setCurrentProgressReport } = useProgressReportContext();
+
+  const fullProgressReport = useQuery(DrawerPeriodicReportDocument, {
+    variables: {
+      progressReportId: reportId,
+    },
+  });
+  const { loading, data } = fullProgressReport;
+  const periodicReport = data?.periodicReport as DrawerPeriodicReportFragment;
 
   useEffect(() => {
-    if (report?.id !== currentReport?.id) {
-      setCurrentProgressReport(report);
+    if (!loading && periodicReport && periodicReport.id === reportId) {
+      setCurrentProgressReport(periodicReport);
     }
-  }, [currentReport?.id, report, setCurrentProgressReport]);
+  }, [loading, setCurrentProgressReport, reportId, periodicReport]);
 
   return (
     <Drawer
