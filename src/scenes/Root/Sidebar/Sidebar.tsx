@@ -41,15 +41,11 @@ export const Sidebar = () => {
         }}
       >
         <SidebarHeader />
-        <Box
-          sx={(theme) => ({
-            padding: theme.spacing(0, 2),
-          })}
-        >
+        <Box sx={{ py: 0, px: 2 }}>
           <CreateButtonMenu
             fullWidth
             sx={(theme) => ({
-              margin: theme.spacing(4, 2, 1),
+              m: theme.spacing(4, 2, 1),
               width: `calc(100% - ${theme.spacing(2 * 2)})`,
             })}
           />
