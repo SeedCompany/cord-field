@@ -1,1 +1,1 @@
-export * from './TeamHighlight';
+export * from './TeamHighlightStep';

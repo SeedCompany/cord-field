@@ -1,42 +1,27 @@
-import { useMutation } from '@apollo/client';
 import { Box, Typography } from '@mui/material';
 import RichText from 'editorjs-blocks-react-renderer';
+import { SubmissionErrors } from 'final-form';
 import { Form } from 'react-final-form';
 import { EnumField, EnumOption, SubmitButton } from '~/components/form';
 import { required } from '~/components/form/validators';
 import { DrawerAvailableDataFragment } from '../../ProgressReportDrawer.graphql';
-import { CreateProgressReportHighlightDocument } from './PromptsForm.graphql';
+
+interface PromptsFormProps {
+  availableData: DrawerAvailableDataFragment | null;
+  reportId: string;
+  createItemMutation: (
+    input: any
+  ) => void | SubmissionErrors | Promise<SubmissionErrors>;
+}
 
 export const PromptsForm = ({
-  stepData,
+  availableData: stepData,
   reportId,
-  onSuccess,
-}: {
-  stepData?: DrawerAvailableDataFragment;
-  reportId?: string;
-  onSuccess?: (item: any) => void;
-}) => {
-  const [createProgressReportHighlight] = useMutation(
-    CreateProgressReportHighlightDocument
-  );
-
-  const onSubmit = async (values: { prompt: string; reportId: string }) => {
-    console.log(values);
-
-    const { data } = await createProgressReportHighlight({
-      variables: {
-        input: {
-          prompt: values.prompt,
-          resource: values.reportId,
-        },
-      },
-    });
-    onSuccess?.(data?.createProgressReportHighlight);
-  };
-
+  createItemMutation,
+}: PromptsFormProps) => {
   return (
     <Form
-      onSubmit={onSubmit}
+      onSubmit={createItemMutation}
       initialValues={{
         reportId,
       }}

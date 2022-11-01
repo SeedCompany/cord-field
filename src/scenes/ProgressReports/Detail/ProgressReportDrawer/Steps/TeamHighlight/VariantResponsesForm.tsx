@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
@@ -8,6 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import RichTextRenderer from 'editorjs-blocks-react-renderer';
+import { SubmissionErrors } from 'final-form';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Form } from 'react-final-form';
@@ -17,45 +17,18 @@ import {
   DrawerPeriodicReportItemResponseFragment,
 } from '../../ProgressReportDrawer.graphql';
 import { RoleIcon } from '../../RoleIcon';
-import { UpdateProgressReportHighlightResponseDocument } from './PromptsForm.graphql';
+
+interface VariantResponsesFormProps {
+  currentItem: DrawerPeriodicReportItemFragment;
+  changeResponseMutation: (
+    input: any
+  ) => void | SubmissionErrors | Promise<SubmissionErrors>;
+}
 
 export const VariantResponsesForm = ({
   currentItem,
-}: {
-  currentItem: DrawerPeriodicReportItemFragment;
-}) => {
-  const [submitResponse] = useMutation(
-    UpdateProgressReportHighlightResponseDocument
-  );
-
-  const onSubmit = async (values: any) => {
-    console.log(values);
-
-    const data = await submitResponse({
-      variables: {
-        input: {
-          id: currentItem.id,
-          response: {
-            version: '2.24.3',
-            time: 1667231018164,
-            blocks: [
-              {
-                id: 'YeoJuo6IPP',
-                type: 'paragraph',
-                data: {
-                  text: values.response,
-                },
-              },
-            ],
-          },
-          variant: values.variant,
-        },
-      },
-    });
-
-    console.log(data);
-  };
-
+  changeResponseMutation,
+}: VariantResponsesFormProps) => {
   return (
     <>
       <Typography variant="h3">Share a team highlight story.</Typography>
@@ -65,7 +38,7 @@ export const VariantResponsesForm = ({
       {currentItem.responses.map(
         (response: DrawerPeriodicReportItemResponseFragment) => (
           <Form
-            onSubmit={onSubmit}
+            onSubmit={changeResponseMutation}
             key={response.variant.responsibleRole}
             initialValues={{
               variant: response.variant.key,
