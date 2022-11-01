@@ -5,7 +5,6 @@ import {
   Grid,
   Skeleton,
   Tab,
-  Theme,
   Typography,
 } from '@mui/material';
 import { useRef } from 'react';
@@ -23,9 +22,9 @@ import { UserSortOptions } from './UserSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;
 
-const maxWith = (theme: Theme) => ({
-  maxWidth: theme.breakpoints.values.sm,
-});
+const maxWith = {
+  maxWidth: 'sm',
+};
 
 export const UserList = () => {
   const sort = useSort<User>();
@@ -53,13 +52,7 @@ export const UserList = () => {
       <Typography variant="h2" paragraph>
         People
       </Typography>
-      <Grid
-        container
-        spacing={1}
-        sx={(theme) => ({
-          margin: theme.spacing(3, 0),
-        })}
-      >
+      <Grid container spacing={1} sx={{ my: 3, mx: 0 }}>
         <Grid item>
           <SortButtonDialog {...sort}>
             <UserSortOptions />
@@ -80,18 +73,22 @@ export const UserList = () => {
         <TabPanel
           value={filters.tab}
           ref={scrollRef}
-          sx={(theme) => ({
+          sx={{
             overflowY: 'auto',
             // allow card shadow to bleed over instead of cutting it off
-            padding: theme.spacing(0, 0, 0, 2),
-            margin: theme.spacing(0, 0, 0, -2),
-          })}
+            py: 0,
+            pr: 0,
+            pl: 2,
+            my: 0,
+            mr: 0,
+            ml: -2,
+          }}
         >
           <Typography
             variant="h3"
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
+            sx={{
+              mt: 2,
+            }}
           >
             {list.data ? (
               <>{formatNumber(list.data.total)} People</>
