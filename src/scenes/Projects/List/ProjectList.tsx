@@ -55,13 +55,7 @@ export const ProjectList = () => {
       <Typography variant="h2" paragraph>
         Projects
       </Typography>
-      <Grid
-        container
-        spacing={1}
-        sx={(theme) => ({
-          margin: theme.spacing(3, 0),
-        })}
-      >
+      <Grid container spacing={1} sx={{ my: 3, mx: 0 }}>
         <Grid item>
           <SortButtonDialog {...sort}>
             <ProjectSortOptions />
@@ -80,37 +74,36 @@ export const ProjectList = () => {
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="project navigation tabs"
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.sm,
+          sx={{
+            maxWidth: 'sm',
             flexWrap: 'nowrap',
-          })}
+          }}
         >
           <Tab label="Pinned" value="pinned" />
           <Tab label="Mine" value="mine" />
           <Tab label="All" value="all" />
         </TabList>
         <Divider
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.sm,
+          sx={{
+            maxWidth: 'sm',
             flexWrap: 'nowrap',
-          })}
+          }}
         />
         <TabPanel
           value={filters.tab}
-          sx={(theme) => ({
+          sx={{
             overflowY: 'auto',
             // allow card shadow to bleed over instead of cutting it off
-            padding: theme.spacing(0, 0, 0, 2),
-            margin: theme.spacing(0, 0, 0, -2),
-          })}
+            py: 0,
+            pr: 0,
+            pl: 2,
+            my: 0,
+            mr: 0,
+            ml: -2,
+          }}
           ref={scrollRef}
         >
-          <Typography
-            variant="h3"
-            sx={(theme) => ({
-              marginTop: theme.spacing(2),
-            })}
-          >
+          <Typography variant="h3" sx={{ mt: 2 }}>
             {list.data ? (
               `${formatNumber(list.data.total)} Projects`
             ) : (
