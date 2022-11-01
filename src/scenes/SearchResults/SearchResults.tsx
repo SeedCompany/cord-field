@@ -41,18 +41,18 @@ export const SearchResults = () => {
       sx={{
         flex: 1,
         overflowY: 'auto',
-        padding: 4,
+        p: 4,
       }}
     >
       <Helmet title={`${query} - Search`} />
       <Box
         component="main"
-        sx={(theme) => ({
-          maxWidth: theme.breakpoints.values.sm,
+        sx={{
+          maxWidth: 'sm',
           '& > *': {
-            marginBottom: 2,
+            mb: 2,
           },
-        })}
+        }}
       >
         {error ? (
           <Error error={error}>Error loading search results</Error>
