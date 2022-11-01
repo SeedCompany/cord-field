@@ -137,7 +137,21 @@ export const useField = <
   const [focusInDoc, ref] = useFocus<El>(andDoOnFocus);
   const focusInFF = input.onFocus;
   useEffect(() => {
-    const activeInDoc = ref.current && ref.current === document.activeElement;
+    const activeInDoc = (() => {
+      if (!ref.current || !document.activeElement) {
+        return false;
+      }
+      if (ref.current === document.activeElement) {
+        return true;
+      }
+      // Assume active if the actual doesn't have a name (not input-like),
+      // and our given field ref contains the actual active element.
+      // Useful for complex fields, like RichText.
+      return (
+        !document.activeElement.getAttribute('name') &&
+        ref.current.contains(document.activeElement)
+      );
+    })();
 
     // Refocus field if it has become re-enabled and is active
     if (!disabled && meta.active && !activeInDoc) {

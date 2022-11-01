@@ -3,6 +3,11 @@ import { Theme } from '@mui/material';
 export const EditorJsTheme = (theme: Theme) => ({
   zIndex: 2, // keep toolbars above other fields' input labels.
 
+  // Fix editor showing toolbar when not focused
+  '.MuiInputBase-root:not(.Mui-focused) .ce-toolbar--opened': {
+    display: 'none',
+  },
+
   '.MuiInputBase-input': {
     height: 'initial', // Full width, we'll set the size in wrapper
     display: 'flex',

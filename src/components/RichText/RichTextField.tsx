@@ -1,6 +1,7 @@
 import type { EditorConfig } from '@editorjs/editorjs';
 import loadable from '@loadable/component';
 import {
+  ClickAwayListener,
   FormControl,
   FormHelperText,
   InputLabel,
@@ -10,7 +11,15 @@ import {
 } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
 import { pick } from 'lodash';
-import { ReactNode, useId, useRef, useState } from 'react';
+import {
+  MouseEvent,
+  ReactNode,
+  RefObject,
+  useCallback,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 import { extendSx, StyleProps } from '../../common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
@@ -36,7 +45,17 @@ export function RichTextField({
   const instanceRef = useRef<EditorCore>();
   const [isReady, setReady] = useState(false);
 
-  const { input, meta, ref, rest } = useField(props);
+  const onFocus = useCallback(() => {
+    instanceRef.current?.dangerouslyLowLevelInstance?.focus();
+  }, [instanceRef]);
+  const handleFocusFromClick = (e: MouseEvent) =>
+    // Focus the editor or keep the editor focused
+    meta.active ? e.preventDefault() : onFocus();
+
+  const { input, meta, ref } = useField({
+    ...props,
+    onFocus,
+  });
 
   const id = useId();
 
@@ -80,40 +99,67 @@ export function RichTextField({
                   }}
                   readOnly={meta.disabled}
                 >
-                  <FormControl
-                    sx={[
-                      EditorJsTheme,
-                      ...extendSx(sx),
-                      !isReady && { display: 'none' },
-                    ]}
-                    className={className}
-                    variant="outlined"
-                    disabled={meta.disabled}
-                    error={showError(meta)}
-                  >
-                    <InputLabel
-                      // TODO may do nothing as "div" is not _labelable_.
-                      // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label#attr-for
-                      htmlFor={id}
+                  <ClickAwayListener onClickAway={() => input.onBlur()}>
+                    <FormControl
+                      sx={[
+                        EditorJsTheme,
+                        ...extendSx(sx),
+                        !isReady && { display: 'none' },
+                      ]}
+                      className={className}
+                      variant="outlined"
+                      disabled={meta.disabled}
+                      error={showError(meta)}
+                      // If FF thinks it is active, show it as such
+                      focused={meta.active}
                     >
-                      {label}
-                    </InputLabel>
-                    <OutlinedInput
-                      id={id}
-                      inputComponent={'div' as any}
-                      inputProps={{
-                        // prevent OutlineInput from adding type="text" to the div
-                        type: undefined,
-                      }}
-                      inputRef={ref}
-                      role="textbox"
-                      aria-multiline
-                      label={label}
-                    />
-                    <FormHelperText id={`${id}-helper-text`}>
-                      {getHelperText(meta, helperText)}
-                    </FormHelperText>
-                  </FormControl>
+                      <InputLabel
+                        // TODO may do nothing as "div" is not _labelable_.
+                        // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label#attr-for
+                        htmlFor={id}
+                        onMouseDown={handleFocusFromClick}
+                      >
+                        {label}
+                      </InputLabel>
+                      <OutlinedInput
+                        id={id}
+                        inputComponent={'div' as any}
+                        inputProps={{
+                          // prevent OutlineInput from adding type="text" to the div
+                          type: undefined,
+                        }}
+                        inputRef={ref}
+                        role="textbox"
+                        aria-multiline
+                        label={label}
+                        onFocus={input.onFocus}
+                        onMouseDownCapture={(e) => {
+                          // Certain places around the editor visually look to be
+                          // a part of the field (OutlinedInput) but don't count as
+                          // a focusable target.
+                          // In these cases, we want to apply focus, or if already
+                          // focused, maintained that focus.
+                          if (
+                            e.target === ref.current ||
+                            (e.target instanceof HTMLDivElement &&
+                              e.target.className.includes('codex-editor'))
+                          ) {
+                            handleFocusFromClick(e);
+                          }
+                        }}
+                        onKeyDownCapture={(e) => {
+                          // Prevent blur flash when backspace on empty
+                          if (e.key === 'Backspace' && isEmpty(ref)) {
+                            e.stopPropagation();
+                          }
+                        }}
+                      />
+
+                      <FormHelperText id={`${id}-helper-text`}>
+                        {getHelperText(meta, helperText)}
+                      </FormHelperText>
+                    </FormControl>
+                  </ClickAwayListener>
                 </EditorJS>
               );
             }}
@@ -136,6 +182,14 @@ const Loading = (
     minRows={2}
   />
 );
+
+// There's no API to determine if currently empty.
+// And the empty placeholder is rendered as a block.
+// So this css class seems like the safest way to determine empty.
+const isEmpty = (ref: RefObject<HTMLElement>) =>
+  ref.current
+    ?.querySelector('.codex-editor')
+    ?.classList.contains('codex-editor--empty');
 
 const Lib = loadable.lib(() => import('react-editor-js'), {
   ssr: false,
