@@ -122,12 +122,7 @@ const ProjectFilesListWrapped = () => {
               alignItems: 'center',
             }}
           >
-            <Icon
-              sx={(theme) => ({
-                color: theme.palette.action.active,
-                marginRight: theme.spacing(0.5),
-              })}
-            />
+            <Icon sx={{ color: 'action.active', mr: 0.5 }} />
             {parseFileNameAndExtension(value).displayName}
           </Box>
         );
@@ -265,10 +260,7 @@ const ProjectFilesListWrapped = () => {
             )}
             <Box
               component="section"
-              sx={(theme) => ({
-                margin: theme.spacing(4, 4, 4, 0),
-                maxWidth: theme.breakpoints.values.md,
-              })}
+              sx={{ my: 4, mr: 4, ml: 0, maxWidth: 'md' }}
             >
               <Card>
                 <DataGrid

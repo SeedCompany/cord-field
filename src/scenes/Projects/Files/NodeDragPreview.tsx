@@ -16,10 +16,10 @@ export const NodeDragPreview = ({ node }: { node: FileNodeInfoFragment }) => {
       }}
     >
       <Icon
-        sx={(theme) => ({
-          color: theme.palette.action.active,
+        sx={{
+          color: 'action.active',
           mr: 0.5,
-        })}
+        }}
       />
       {parseFileNameAndExtension(node.name).displayName}
     </Paper>
