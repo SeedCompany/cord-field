@@ -37,14 +37,14 @@ export const UserDetail = () => {
   return (
     <Box
       component="main"
-      sx={(theme) => ({
+      sx={{
         overflowY: 'auto',
-        padding: theme.spacing(4),
+        p: 4,
         '& > *:not(:last-child)': {
-          marginBottom: theme.spacing(3),
+          mb: 3,
         },
-        maxWidth: theme.breakpoints.values.md,
-      })}
+        maxWidth: 'md',
+      }}
     >
       <Helmet title={user?.fullName ?? undefined} />
       {error ? (
@@ -52,18 +52,18 @@ export const UserDetail = () => {
       ) : (
         <>
           <Box
-            sx={(theme) => ({
+            sx={{
               flex: 1,
               display: 'flex',
-              gap: theme.spacing(1),
-            })}
+              gap: 1,
+            }}
           >
             <Typography
               variant="h2"
-              sx={(theme) => ({
-                marginRight: theme.spacing(2), // a little extra between text and buttons
+              sx={{
+                mr: 2, // a little extra between text and buttons
                 lineHeight: 'inherit', // centers text with buttons better
-              })}
+              }}
             >
               {!user ? (
                 <Skeleton width="20ch" />
@@ -132,17 +132,17 @@ export const UserDetail = () => {
             <>
               <Typography variant="h3">Partners</Typography>
               <Box
-                sx={(theme) => ({
-                  marginTop: theme.spacing(1),
-                })}
+                sx={{
+                  mt: 1,
+                }}
               >
                 {user.partners.items.map((item) => (
                   <PartnerListItemCard
                     key={item.id}
                     partner={item}
-                    sx={(theme) => ({
-                      marginBottom: theme.spacing(2),
-                    })}
+                    sx={{
+                      mb: 2,
+                    }}
                   />
                 ))}
               </Box>
