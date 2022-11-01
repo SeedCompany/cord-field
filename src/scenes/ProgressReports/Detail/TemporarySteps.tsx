@@ -1,46 +1,5 @@
-import { ArrowForward } from '@mui/icons-material';
 import { Typography } from '@mui/material';
-import { Sx } from '~/common';
-import { useProgressReportContext } from '../ProgressReportContext';
-
-const typographyLinkSx: Sx = (theme) => ({
-  color: theme.palette.grey[800],
-  fontSize: 14,
-  cursor: 'pointer',
-  marginLeft: 2,
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-});
-
-export const NextButton = () => {
-  const { nextProgressReportStep } = useProgressReportContext();
-
-  return (
-    <div
-      css={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'end',
-      }}
-    >
-      <Typography
-        component="span"
-        onClick={nextProgressReportStep}
-        sx={typographyLinkSx}
-      >
-        Next
-        <ArrowForward
-          sx={{
-            marginLeft: 1,
-            fontSize: '1rem',
-            marginBottom: '-3px',
-          }}
-        />
-      </Typography>
-    </div>
-  );
-};
+import { NextStepButton } from './ProgressReportDrawer/Steps/NextStepButton';
 
 export const Step0 = () => {
   return (
@@ -49,7 +8,7 @@ export const Step0 = () => {
         Team Highlight
       </Typography>
 
-      <NextButton />
+      <NextStepButton />
     </>
   );
 };
@@ -60,7 +19,7 @@ export const Step1 = () => (
       Community Story
     </Typography>
 
-    <NextButton />
+    <NextStepButton />
   </>
 );
 
@@ -70,7 +29,7 @@ export const Step2 = () => (
       Progress
     </Typography>
 
-    <NextButton />
+    <NextStepButton />
   </>
 );
 
@@ -80,6 +39,6 @@ export const Step3 = () => (
       Additional Notes
     </Typography>
 
-    <NextButton />
+    <NextStepButton />
   </>
 );
