@@ -6,12 +6,14 @@ export const Header = () => {
   return (
     <Box
       component="header"
-      sx={(theme) => ({
-        padding: theme.spacing(4, 4, 1, 4),
+      sx={{
+        mt: 4,
+        mx: 4,
+        mb: 1,
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'space-between',
-      })}
+      }}
     >
       <HeaderSearch />
       <ProfileToolbar />
