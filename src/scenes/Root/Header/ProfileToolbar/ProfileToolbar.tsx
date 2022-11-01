@@ -21,15 +21,17 @@ export const ProfileToolbar = () => {
           flexShrink: 0,
           display: 'flex',
           alignItems: 'center',
-          padding: 1,
+          p: 1,
         }}
       >
         <Typography
           color="primary"
-          sx={(theme) => ({
-            fontWeight: theme.typography.weight.medium,
-            margin: theme.spacing(0, 1, 0, 2),
-          })}
+          sx={{
+            fontWeight: 'medium',
+            my: 0,
+            mr: 1,
+            ml: 2,
+          }}
         >
           Hi, {session?.realFirstName.value ?? 'Friend'}
         </Typography>
