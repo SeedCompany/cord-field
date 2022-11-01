@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { useProgressReportContext } from '../../../../ProgressReportContext';
+import { NextStepButton } from '../NextStepButton';
 import { PromptVariantStep } from '../PromptVariantStep';
 import {
   CreateProgressReportHighlightDocument,
@@ -59,12 +60,19 @@ export const TeamHighlightStep = () => {
   }
 
   return (
-    <PromptVariantStep
-      currentItem={currentItem}
-      reportId={currentReport.id ?? ''}
-      availableData={stepData}
-      updateResponseMutation={changeResponse}
-      createItemMutation={createHighlight}
-    />
+    <div
+      css={(theme) => ({
+        marginBottom: theme.spacing(4),
+      })}
+    >
+      <PromptVariantStep
+        currentItem={currentItem}
+        reportId={currentReport.id ?? ''}
+        availableData={stepData}
+        updateResponseMutation={changeResponse}
+        createItemMutation={createHighlight}
+      />
+      <NextStepButton />
+    </div>
   );
 };

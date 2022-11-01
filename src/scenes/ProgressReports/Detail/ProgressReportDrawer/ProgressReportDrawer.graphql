@@ -19,6 +19,36 @@ fragment DrawerPeriodicReport on ProgressReport {
       ...DrawerPeriodicReportItem
     }
   }
+
+  parent {
+    id
+    canDelete
+    language {
+      value {
+        displayName {
+          canRead
+          value
+        }
+        sensitivity
+        locations {
+          items {
+            id
+            name {
+              canRead
+              value
+            }
+          }
+        }
+      }
+    }
+    project {
+      id
+      name {
+        canRead
+        value
+      }
+    }
+  }
 }
 
 fragment DrawerPeriodicReportItem on PromptVariantResponse {
