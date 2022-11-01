@@ -33,12 +33,12 @@ export const ProjectMembersList = () => {
 
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         flex: 1,
         overflowY: 'auto',
-        padding: 4,
-        maxWidth: theme.breakpoints.values.sm,
-      })}
+        p: 4,
+        maxWidth: 'sm',
+      }}
     >
       <Helmet
         title={`Team Members - ${data?.project.name.value ?? 'A Project'}`}
@@ -47,18 +47,8 @@ export const ProjectMembersList = () => {
         <ProjectBreadcrumb data={data?.project} />
         <Breadcrumb to=".">Team Members</Breadcrumb>
       </Breadcrumbs>
-      <Box
-        sx={(theme) => ({
-          margin: theme.spacing(3, 0),
-          display: 'flex',
-        })}
-      >
-        <Typography
-          variant="h2"
-          sx={{
-            marginRight: 3,
-          }}
-        >
+      <Box sx={{ my: 3, mx: 0, display: 'flex' }}>
+        <Typography variant="h2" sx={{ mr: 3 }}>
           Team Members
         </Typography>
         {(!list.data || list.data.canCreate) && (
