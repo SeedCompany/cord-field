@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client';
 import { useProgressReportContext } from '../../../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
-import { PromptVariantStep } from '../PromptVariantStep';
+import { PromptVariantStep } from '../PromptVariant';
 import {
   CreateProgressReportHighlightDocument,
   UpdateProgressReportHighlightResponseDocument,
-} from './PromptsForm.graphql';
+} from './TeamHighlightStep.graphql';
 
 export const TeamHighlightStep = () => {
   const { currentReport } = useProgressReportContext();

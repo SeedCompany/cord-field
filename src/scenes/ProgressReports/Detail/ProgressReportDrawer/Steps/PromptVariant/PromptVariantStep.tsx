@@ -3,8 +3,8 @@ import {
   DrawerAvailableDataFragment,
   DrawerPeriodicReportItemFragment,
 } from '../ProgressReportDrawer.graphql';
-import { PromptsForm } from './TeamHighlight/PromptsForm';
-import { VariantResponsesForm } from './TeamHighlight/VariantResponsesForm';
+import { PromptsForm } from './PromptsForm';
+import { VariantResponsesForm } from './VariantResponsesForm';
 
 interface PromptVariantStepProps {
   currentItem: DrawerPeriodicReportItemFragment | null;
