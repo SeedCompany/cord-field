@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
-import { ProgressReportFragment } from './Detail/ProgressReportDetail.graphql';
+import { DrawerPeriodicReportFragment } from './Detail/ProgressReportDrawer/ProgressReportDrawer.graphql';
 
 export const stepNames = [
   'team-highlight',
@@ -31,12 +31,12 @@ const initialProgressReportContext = {
   },
 
   // eslint-disable-next-line @seedcompany/no-unused-vars
-  setCurrentProgressReport: (report: ProgressReportFragment | null) => {
+  setCurrentProgressReport: (report: DrawerPeriodicReportFragment | null) => {
     return;
   },
 
   step: 0,
-  currentReport: null as ProgressReportFragment | null,
+  currentReport: null as DrawerPeriodicReportFragment | null,
 };
 
 const ProgressReportContext = createContext<
@@ -53,9 +53,8 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   const stepIndex = stepNames.indexOf(urlStep);
   const [step, setIndexStep] = useState(stepIndex > -1 ? stepIndex : 0);
 
-  const [currentReport, setReport] = useState<ProgressReportFragment | null>(
-    null
-  );
+  const [currentReport, setReport] =
+    useState<DrawerPeriodicReportFragment | null>(null);
 
   const setStep = useCallback(
     (step: number) => {
@@ -66,7 +65,7 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   );
 
   const setCurrentReport = useCallback(
-    (report: ProgressReportFragment | null) => {
+    (report: DrawerPeriodicReportFragment | null) => {
       if (!report) {
         setStep(initialProgressReportContext.step);
         return;

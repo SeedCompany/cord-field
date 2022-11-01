@@ -1,0 +1,65 @@
+query DrawerPeriodicReport($progressReportId: ID!) {
+  periodicReport(id: $progressReportId) {
+    ...DrawerPeriodicReport
+  }
+}
+
+fragment DrawerPeriodicReport on ProgressReport {
+  id
+  highlights {
+    canCreate
+    canRead
+    total
+    hasMore
+
+    available {
+      ...DrawerAvailableData
+    }
+    items {
+      ...DrawerPeriodicReportItem
+    }
+  }
+}
+
+fragment DrawerPeriodicReportItem on PromptVariantResponse {
+  id
+  prompt {
+    id
+    canDelete
+    createdAt
+    text {
+      value
+    }
+  }
+  canDelete
+  responses {
+    ...DrawerPeriodicReportItemResponse
+  }
+}
+
+fragment DrawerPeriodicReportItemResponse on VariantResponse {
+  response {
+    value
+    canEdit
+    canRead
+  }
+  variant {
+    key
+    label
+    responsibleRole
+  }
+}
+
+fragment DrawerAvailableData on VariantPromptList {
+  prompts {
+    id
+    text {
+      value
+    }
+  }
+  variants {
+    label
+    responsibleRole
+    key
+  }
+}

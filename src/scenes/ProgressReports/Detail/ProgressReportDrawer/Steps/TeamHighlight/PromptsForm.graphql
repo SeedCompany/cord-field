@@ -1,0 +1,35 @@
+mutation CreateProgressReportHighlight($input: ChoosePrompt!) {
+  createProgressReportHighlight(input: $input) {
+    ...DrawerPeriodicReportItem
+    parent {
+      ... on ProgressReport {
+        id
+        highlights {
+          ...Pagination
+          items {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateProgressReportHighlightResponse(
+  $input: UpdatePromptVariantResponse!
+) {
+  updateProgressReportHighlightResponse(input: $input) {
+    ...DrawerPeriodicReportItem
+    parent {
+      ... on ProgressReport {
+        id
+        highlights {
+          ...Pagination
+          items {
+            id
+          }
+        }
+      }
+    }
+  }
+}
