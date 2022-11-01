@@ -1,3 +1,4 @@
+/* eslint-disable @seedcompany/no-unused-vars */
 import CheckList from '@editorjs/checklist';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
@@ -9,6 +10,7 @@ import InlineCode from '@editorjs/inline-code';
 import LinkTool from '@editorjs/link';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
+import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Raw from '@editorjs/raw';
 import SimpleImage from '@editorjs/simple-image';
@@ -20,23 +22,25 @@ const defineTools = <T extends EditorConfig['tools']>(tools: T) => tools;
 
 export const EDITOR_JS_TOOLS = defineTools({
   // NOTE: EditorJS expects keys to be camelCase.
-  // NOTE: Paragraph is a default tool.
-  // There's no need to declare it, unless we need to change the options.
-  embed: Embed,
-  table: Table,
+  paragraph: {
+    class: Paragraph,
+    inlineToolbar: ['bold', 'italic', 'marker'],
+  },
+  // embed: Embed,
+  // table: Table,
   list: List,
-  warning: Warning,
-  code: Code,
-  linkTool: LinkTool,
-  image: Image,
-  raw: Raw,
+  // warning: Warning,
+  // code: Code,
+  // linkTool: LinkTool,
+  // image: Image, // deprecated stretchBlock usage
+  // raw: Raw,
   header: Header,
   quote: Quote,
   marker: Marker,
-  checkList: CheckList,
+  // checkList: CheckList,
   delimiter: Delimiter,
-  inlineCode: InlineCode,
-  simpleImage: SimpleImage,
+  // inlineCode: InlineCode,
+  // simpleImage: SimpleImage,
 });
 
 export type ToolKey = keyof typeof EDITOR_JS_TOOLS;
