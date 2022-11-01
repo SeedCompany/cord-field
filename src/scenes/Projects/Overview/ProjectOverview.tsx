@@ -166,11 +166,11 @@ export const ProjectOverview = () => {
   return (
     <Box
       component="main"
-      sx={(theme) => ({
+      sx={{
         flex: 1,
         overflowY: 'auto',
-        padding: theme.spacing(4),
-      })}
+        p: 4,
+      }}
     >
       <Helmet title={projectOverviewData?.project.name.value ?? undefined} />
       <Error error={error}>
@@ -181,21 +181,21 @@ export const ProjectOverview = () => {
       </Error>
       {!error && (
         <Box
-          sx={(theme) => ({
-            maxWidth: theme.breakpoints.values.md,
+          sx={{
+            maxWidth: 'md',
             '& > *:not(:last-child)': {
-              marginBottom: theme.spacing(3),
+              mb: 3,
             },
-          })}
+          }}
         >
           <Box
             component="header"
             sx={[
-              (theme) => ({
+              {
                 flex: 1,
                 display: 'flex',
-                gap: theme.spacing(1),
-              }),
+                gap: 1,
+              },
               projectOverviewData
                 ? null
                 : {
@@ -206,10 +206,10 @@ export const ProjectOverview = () => {
             <Typography
               variant="h2"
               sx={[
-                (theme) => ({
-                  marginRight: theme.spacing(2), // a little extra between text and buttons
+                {
+                  mr: 2, // a little extra between text and buttons
                   lineHeight: 'inherit', // centers text with buttons better
-                }),
+                },
                 projectName
                   ? null
                   : {
@@ -257,13 +257,13 @@ export const ProjectOverview = () => {
           </Box>
 
           <Box
-            sx={(theme) => ({
+            sx={{
               display: 'flex',
               alignItems: 'center',
               '& > *': {
-                marginRight: theme.spacing(2),
+                mr: 2,
               },
-            })}
+            }}
           >
             <Typography variant="h4">
               {projectOverviewData ? (
@@ -382,13 +382,7 @@ export const ProjectOverview = () => {
               >
                 <DataButton
                   loading={!projectOverviewData}
-                  startIcon={
-                    <DateRange
-                      sx={(theme) => ({
-                        color: theme.palette.info.main,
-                      })}
-                    />
-                  }
+                  startIcon={<DateRange sx={{ color: 'info.main' }} />}
                   secured={projectOverviewData?.project.mouRange}
                   redacted="You do not have permission to view start/end dates"
                   children={FormattedDateRange.orNull}
@@ -405,13 +399,7 @@ export const ProjectOverview = () => {
                 <Grid item>
                   <DataButton
                     loading={!projectOverviewData}
-                    startIcon={
-                      <DateRange
-                        sx={(theme) => ({
-                          color: theme.palette.info.main,
-                        })}
-                      />
-                    }
+                    startIcon={<DateRange sx={{ color: 'info.main' }} />}
                     secured={projectOverviewData.project.estimatedSubmission}
                     redacted="You do not have permission to view estimated submission date"
                     children={(date) => <FormattedDate date={date} />}
