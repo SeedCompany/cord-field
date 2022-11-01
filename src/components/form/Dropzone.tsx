@@ -1,5 +1,6 @@
 import { Clear as ClearIcon } from '@mui/icons-material';
 import {
+  Box,
   IconButton,
   List,
   ListItem,
@@ -9,37 +10,14 @@ import {
   Typography,
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { fileIcon } from '../files/fileTypes';
 import { FieldConfig, useField } from './useField';
 
-const useStyles = makeStyles()(({ palette, spacing }) => {
-  const dropzoneHoverStyle = {
-    backgroundColor: palette.grey[200],
-    borderColor: palette.primary.main,
-  };
-  return {
-    root: {
-      marginBottom: spacing(2),
-    },
-    dropzone: {
-      backgroundColor: palette.grey[300],
-      border: `2px dashed ${palette.divider}`,
-      cursor: 'pointer',
-      padding: spacing(3),
-      '&:hover': dropzoneHoverStyle,
-    },
-    active: dropzoneHoverStyle,
-    instructions: {
-      color: palette.text.secondary,
-      textAlign: 'center',
-    },
-    files: {
-      paddingBottom: 0,
-    },
-  };
-});
+const dropzoneHoverStyle = {
+  backgroundColor: 'grey.200',
+  borderColor: 'primary.main',
+};
 
 export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> & {
   label?: string;
@@ -53,8 +31,6 @@ export function DropzoneField({
   name: nameProp,
   className,
 }: DropzoneFieldProps) {
-  const { classes, cx } = useStyles();
-
   const {
     input: { name, onChange, value: currentFiles },
   } = useField<File, true, HTMLInputElement>({
@@ -90,20 +66,31 @@ export function DropzoneField({
   });
 
   return (
-    <div className={cx(classes.root, className)}>
-      <div
-        className={cx(classes.dropzone, {
-          [classes.active]: isDragActive,
-        })}
+    <Box className={className} sx={{ mb: 2 }}>
+      <Box
+        sx={[
+          {
+            backgroundColor: 'grey.300',
+            border: `2px dashed`,
+            borderColor: 'divider',
+            cursor: 'pointer',
+            p: 3,
+            '&:hover': dropzoneHoverStyle,
+          },
+          isDragActive && dropzoneHoverStyle,
+        ]}
         {...getRootProps()}
       >
         <input {...getInputProps()} name={name} />
-        <Typography variant="h4" className={classes.instructions}>
+        <Typography
+          variant="h4"
+          sx={{ color: 'text.secondary', textAlign: 'center' }}
+        >
           {label}
         </Typography>
-      </div>
+      </Box>
       {currentFiles.length > 0 && (
-        <List dense className={classes.files}>
+        <List dense sx={{ pb: 0 }}>
           {currentFiles.map((file, index) => {
             const { name, type } = file;
             const Icon = fileIcon(type);
@@ -128,6 +115,6 @@ export function DropzoneField({
           })}
         </List>
       )}
-    </div>
+    </Box>
   );
 }

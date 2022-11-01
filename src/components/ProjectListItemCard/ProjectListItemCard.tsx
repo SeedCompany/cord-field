@@ -1,7 +1,14 @@
-import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import { PartialDeep } from 'type-fest';
 import { ProjectStatusLabels } from '~/api/schema.graphql';
+import { extendSx, StyleProps } from '~/common';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -12,64 +19,11 @@ import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
 import { ProjectListItemFragment } from './ProjectListItem.graphql';
 
-const useStyles = makeStyles()(({ breakpoints, spacing }) => {
-  const cardWidth = breakpoints.values.sm;
-  return {
-    root: {
-      width: '100%',
-      maxWidth: cardWidth,
-      position: 'relative',
-    },
-    card: {
-      display: 'flex',
-      alignItems: 'initial',
-    },
-    cardContent: {
-      flex: 1,
-      padding: spacing(2, 3),
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    leftContent: {
-      flex: 2,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-    },
-    rightContent: {
-      flex: 1,
-      textAlign: 'right',
-      marginLeft: spacing(2),
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-    },
-    pin: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-    },
-    presetInventory: {
-      verticalAlign: 'bottom',
-      marginLeft: spacing(1),
-    },
-    engagementCount: {
-      flex: 2,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-    },
-    sensitivity: {
-      marginBottom: spacing(1),
-    },
-    skeletonRight: {
-      marginLeft: 'auto',
-    },
-  };
-});
+const skeletonRight = {
+  marginLeft: 'auto',
+};
 
-export interface ProjectListItemCardProps {
+export interface ProjectListItemCardProps extends StyleProps {
   project?: ProjectListItemFragment;
   className?: string;
 }
@@ -77,24 +31,51 @@ export interface ProjectListItemCardProps {
 export const ProjectListItemCard = ({
   project,
   className,
+  sx,
 }: ProjectListItemCardProps) => {
-  const { classes, cx } = useStyles();
   const location = project?.primaryLocation.value?.name.value;
 
   return (
-    <Card className={cx(classes.root, className)}>
+    <Card
+      className={className}
+      sx={[
+        {
+          width: '100%',
+          maxWidth: 'sm',
+          position: 'relative',
+        },
+        ...extendSx(sx),
+      ]}
+    >
       <CardActionAreaLink
         disabled={!project}
         to={project ? getProjectUrl(project) : ''}
-        className={classes.card}
+        sx={{
+          display: 'flex',
+          alignItems: 'initial',
+        }}
       >
-        <CardContent className={classes.cardContent}>
+        <CardContent
+          sx={{
+            flex: 1,
+            py: 2,
+            px: 3,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Grid
             container
             direction="column"
             justifyContent="space-between"
             spacing={1}
-            className={classes.leftContent}
+            sx={{
+              flex: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
           >
             <Grid item>
               <Typography variant="h4">
@@ -102,7 +83,7 @@ export const ProjectListItemCard = ({
                 {project?.presetInventory.value && (
                   <PresetInventoryIconFilled
                     color="action"
-                    className={classes.presetInventory}
+                    sx={{ verticalAlign: 'bottom', ml: 1 }}
                     aria-label="preset inventory"
                   />
                 )}
@@ -135,7 +116,7 @@ export const ProjectListItemCard = ({
               <Sensitivity
                 value={project?.sensitivity}
                 loading={!project}
-                className={classes.sensitivity}
+                sx={{ mb: 1 }}
               />
             </Grid>
             <Grid item>
@@ -149,16 +130,28 @@ export const ProjectListItemCard = ({
               )}
             </Grid>
           </Grid>
-          <div className={classes.rightContent}>
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: 'right',
+              ml: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+            }}
+          >
             <DisplaySimpleProperty aria-hidden="true" />
-            <div className={classes.engagementCount}>
+            <Box
+              sx={{
+                flex: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
               <Typography variant="h1">
                 {!project ? (
-                  <Skeleton
-                    variant="text"
-                    width="1ch"
-                    className={classes.skeletonRight}
-                  />
+                  <Skeleton variant="text" width="1ch" sx={skeletonRight} />
                 ) : (
                   project.engagements.total
                 )}
@@ -166,16 +159,8 @@ export const ProjectListItemCard = ({
               <Typography variant="body2" color="primary">
                 {!project ? (
                   <>
-                    <Skeleton
-                      variant="text"
-                      width="9ch"
-                      className={classes.skeletonRight}
-                    />
-                    <Skeleton
-                      variant="text"
-                      width="11ch"
-                      className={classes.skeletonRight}
-                    />
+                    <Skeleton variant="text" width="9ch" sx={skeletonRight} />
+                    <Skeleton variant="text" width="11ch" sx={skeletonRight} />
                   </>
                 ) : (
                   <>
@@ -185,7 +170,7 @@ export const ProjectListItemCard = ({
                   </>
                 )}
               </Typography>
-            </div>
+            </Box>
             {!project ? (
               <Skeleton variant="text" />
             ) : (
@@ -199,7 +184,7 @@ export const ProjectListItemCard = ({
                 ValueProps={{ color: 'primary' }}
               />
             )}
-          </div>
+          </Box>
         </CardContent>
       </CardActionAreaLink>
       <TogglePinButton
@@ -209,7 +194,11 @@ export const ProjectListItemCard = ({
         listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
           args.input?.filter?.pinned ?? false
         }
-        className={classes.pin}
+        sx={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+        }}
       />
     </Card>
   );

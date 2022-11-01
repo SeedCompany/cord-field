@@ -3,9 +3,10 @@ import { To } from 'history';
 import { isString } from 'lodash';
 import { forwardRef, ReactNode } from 'react';
 import { useMatch } from 'react-router-dom';
+import { StyleProps } from '~/common';
 import { Link, LinkProps } from '../Routing';
 
-export interface BreadcrumbProps {
+export interface BreadcrumbProps extends StyleProps {
   to?: To;
   LinkProps?: Partial<LinkProps>;
   children?: ReactNode;

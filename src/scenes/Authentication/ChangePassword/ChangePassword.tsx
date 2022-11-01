@@ -2,7 +2,6 @@ import { useMutation } from '@apollo/client';
 import { Grid } from '@mui/material';
 import { Mutator } from 'final-form';
 import { useSnackbar } from 'notistack';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { MutationChangePasswordArgs } from '~/api/schema.graphql';
 import {
@@ -21,16 +20,9 @@ interface ChangePasswordFields extends MutationChangePasswordArgs {
   confirmPassword: string;
 }
 
-const useStyles = makeStyles()(() => ({
-  content: {
-    overflow: 'hidden', // prevent scroll bars from negative margins of Grid
-  },
-}));
-
 export const ChangePassword = (props: ChangePasswordProps) => {
   const [changePassword] = useMutation(ChangePasswordDocument);
   const { enqueueSnackbar } = useSnackbar();
-  const { classes } = useStyles();
 
   return (
     <DialogForm<ChangePasswordFields>
@@ -51,7 +43,13 @@ export const ChangePassword = (props: ChangePasswordProps) => {
         });
       }}
     >
-      <Grid container spacing={3} className={classes.content}>
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          overflow: 'hidden', // prevent scroll bars from negative margins of Grid
+        }}
+      >
         <SubmitError align="left" />
         <PasswordField
           name="oldPassword"

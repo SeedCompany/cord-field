@@ -8,36 +8,28 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import {
   FinancialReportingTypeLabels,
   PartnerTypeLabels,
 } from '~/api/schema.graphql';
-import { canEditAny, labelsFrom } from '~/common';
+import { canEditAny, labelsFrom, StyleProps } from '~/common';
 import { Redacted } from '../../../components/Redacted';
 import { PartnerDetailsFragment } from './PartnerDetail.graphql';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  cardContent: {
-    display: 'flex',
-    flex: 1,
-    alignSelf: 'flex-start',
-    // Allow point events so tooltips can be viewed, but don't seem clickable
-    '&.Mui-disabled': {
-      pointerEvents: 'auto',
-      '& .MuiCardActionArea-focusHighlight': {
-        opacity: 0,
-      },
+const cardContentSx = {
+  display: 'flex',
+  flex: 1,
+  alignSelf: 'flex-start',
+  // Allow point events so tooltips can be viewed, but don't seem clickable
+  '&.Mui-disabled': {
+    pointerEvents: 'auto',
+    '& .MuiCardActionArea-focusHighlight': {
+      opacity: 0,
     },
   },
-  cardActions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingRight: spacing(2),
-  },
-}));
+};
 
-interface PartnerTypesCardProps {
+interface PartnerTypesCardProps extends StyleProps {
   partner?: PartnerDetailsFragment;
   onEdit: () => void;
   className?: string;
@@ -47,9 +39,8 @@ export const PartnerTypesCard = ({
   partner,
   className,
   onEdit,
+  sx,
 }: PartnerTypesCardProps) => {
-  const { classes } = useStyles();
-
   const canEdit = canEditAny(
     partner,
     false,
@@ -58,13 +49,9 @@ export const PartnerTypesCard = ({
   );
 
   return (
-    <Card className={className}>
-      <CardActionArea
-        onClick={onEdit}
-        className={classes.cardContent}
-        disabled={!canEdit}
-      >
-        <CardContent className={classes.cardContent}>
+    <Card className={className} sx={sx}>
+      <CardActionArea onClick={onEdit} disabled={!canEdit} sx={cardContentSx}>
+        <CardContent sx={cardContentSx}>
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <Typography
@@ -112,7 +99,9 @@ export const PartnerTypesCard = ({
           </Grid>
         </CardContent>
       </CardActionArea>
-      <CardActions className={classes.cardActions}>
+      <CardActions
+        sx={{ display: 'flex', justifyContent: 'space-between', pr: 2 }}
+      >
         <Button color="primary" disabled={!canEdit} onClick={onEdit}>
           Edit
         </Button>

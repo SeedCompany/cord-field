@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -6,33 +7,13 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { RoleLabels } from '~/api/schema.graphql';
-import { labelsFrom } from '~/common';
+import { labelsFrom, StyleProps } from '~/common';
 import { Avatar } from '../Avatar';
 import { useDateTimeFormatter } from '../Formatters';
 import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  cardContent: {
-    display: 'flex',
-  },
-  cardActions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: spacing(1, 2, 1, 1),
-  },
-  avatar: {
-    width: spacing(7),
-    height: spacing(7),
-    marginRight: spacing(2),
-  },
-  memberInfo: {
-    flexGrow: 1,
-  },
-}));
-
-export interface ProjectMemberCardProps {
+export interface ProjectMemberCardProps extends StyleProps {
   projectMember?: ProjectMemberCardFragment;
   // TODO this should use primary organization on User when api is finished
   primaryOrganizationName?: string;
@@ -45,24 +26,29 @@ export const ProjectMemberCard = ({
   primaryOrganizationName,
   onEdit,
   className,
+  sx,
 }: ProjectMemberCardProps) => {
-  const { classes } = useStyles();
   const dateTimeFormatter = useDateTimeFormatter();
 
   const createdAtString = dateTimeFormatter(projectMember?.createdAt);
 
   return (
-    <Card className={className}>
-      <CardContent className={classes.cardContent}>
+    <Card className={className} sx={sx}>
+      <CardContent sx={{ display: 'flex' }}>
         <Avatar
-          className={classes.avatar}
+          sx={(theme) => ({
+            // theme.spacing(7) is 56px. if using 7 the css property is 7px
+            width: theme.spacing(7),
+            height: theme.spacing(7),
+            mr: 2,
+          })}
           variant="circular"
           alt={projectMember?.user.value?.fullName ?? ''}
           loading={!projectMember}
         >
           {projectMember?.user.value?.avatarLetters}
         </Avatar>
-        <div className={classes.memberInfo}>
+        <Box sx={{ flexGrow: 1 }}>
           <Typography>
             {!projectMember ? (
               <Skeleton variant="text" width="40%" />
@@ -84,9 +70,17 @@ export const ProjectMemberCard = ({
               labelsFrom(RoleLabels)(projectMember.roles.value)
             )}
           </Typography>
-        </div>
+        </Box>
       </CardContent>
-      <CardActions className={classes.cardActions}>
+      <CardActions
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          py: 1,
+          pr: 2,
+          pl: 1,
+        }}
+      >
         <Button disabled={!projectMember} color="primary" onClick={onEdit}>
           Edit
         </Button>

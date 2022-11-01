@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { simpleSwitch } from '~/common';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
@@ -21,24 +20,6 @@ import { PartnersDocument } from './PartnerList.graphql';
 import { PartnerSort, PartnerSortOptions } from './PartnerSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;
-
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  options: {
-    margin: spacing(3, 0),
-  },
-  items: {
-    maxWidth: breakpoints.values.sm,
-  },
-  tabPanel: {
-    overflowY: 'auto',
-    // allow card shadow to bleed over instead of cutting it off
-    padding: spacing(0, 0, 0, 2),
-    margin: spacing(0, 0, 0, -2),
-  },
-  total: {
-    marginTop: spacing(2),
-  },
-}));
 
 export const PartnerList = () => {
   const sort = useSort<PartnerSort>('name');
@@ -56,8 +37,6 @@ export const PartnerList = () => {
       },
     },
   });
-
-  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const scrollRef = useRef<HTMLElement>(null);
 
@@ -67,7 +46,7 @@ export const PartnerList = () => {
       <Typography variant="h2" paragraph>
         Partners
       </Typography>
-      <Grid container spacing={1} className={classes.options}>
+      <Grid container spacing={1} sx={{ my: 3, mx: 0 }}>
         <Grid item>
           <SortButtonDialog {...sort}>
             <PartnerSortOptions />
@@ -79,18 +58,24 @@ export const PartnerList = () => {
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="partner navigation tabs"
-          className={classes.items}
+          sx={{ maxWidth: 'sm' }}
         >
           <Tab label="Pinned" value="pinned" />
           <Tab label="All" value="all" />
         </TabList>
-        <Divider className={classes.items} />
+        <Divider sx={{ maxWidth: 'sm' }} />
         <TabPanel
           value={filters.tab}
-          className={classes.tabPanel}
+          sx={{
+            overflowY: 'auto',
+            // allow card shadow to bleed over instead of cutting it off
+            py: 0,
+            pl: 2,
+            ml: -2,
+          }}
           ref={scrollRef}
         >
-          <Typography variant="h3" className={classes.total}>
+          <Typography variant="h3" sx={{ mt: 2 }}>
             {list.data ? (
               `${formatNumber(list.data.total)} Partners`
             ) : (
@@ -99,7 +84,7 @@ export const PartnerList = () => {
           </Typography>
           <List
             {...list}
-            classes={{ container: classes.items }}
+            itemMaxWidth="sm"
             renderItem={(item) => <PartnerCard partner={item} />}
             renderSkeleton={<PartnerCard />}
             scrollRef={scrollRef}

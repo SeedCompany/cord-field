@@ -1,20 +1,11 @@
 import { SvgIcon, SvgIconProps } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { useUserAgent } from '../../../hooks';
-
-const useStyles = makeStyles()(() => ({
-  root: {
-    width: '100%',
-    height: 'initial',
-  },
-}));
 
 export const SwooshBackground = ({
   classes: classesProp,
   ...rest
 }: SvgIconProps) => {
-  const { classes, cx } = useStyles();
   const ua = useUserAgent();
   const isSafari = ua.includes('Safari') && !ua.includes('Chrome');
   // Fix fill url() in Safari by always using the current path.
@@ -26,8 +17,12 @@ export const SwooshBackground = ({
   return (
     <SvgIcon
       classes={{
-        root: cx(classes.root, classesProp?.root),
+        root: classesProp?.root,
         ...classesProp,
+      }}
+      sx={{
+        width: '100%',
+        height: 'initial',
       }}
       viewBox="0 0 248 136"
       {...rest}

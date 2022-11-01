@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -7,7 +8,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { ProjectChangeRequestTypeLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { useProjectId } from '../../scenes/Projects/useProjectId';
@@ -15,23 +15,6 @@ import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
 import { useNavigate } from '../Routing';
 import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.graphql';
-
-const useStyles = makeStyles()(({ palette, spacing }) => ({
-  titleLoading: {
-    display: 'flex',
-  },
-  dash: {
-    color: palette.text.secondary,
-    margin: spacing(0, 1),
-  },
-  cardActions: {
-    display: 'flex',
-    padding: spacing(1, 2, 1, 1),
-  },
-  spacer: {
-    flex: 1,
-  },
-}));
 
 export interface ProjectChangeRequestListItemProps {
   data?: ChangeRequest;
@@ -42,7 +25,6 @@ export const ProjectChangeRequestListItem = ({
   data,
   className,
 }: ProjectChangeRequestListItemProps) => {
-  const { classes } = useStyles();
   const { projectId, changesetId: currentlyViewing } = useProjectId();
   const navigate = useNavigate();
 
@@ -51,7 +33,13 @@ export const ProjectChangeRequestListItem = ({
       <CardContent>
         <Typography
           variant="body1"
-          className={data ? undefined : classes.titleLoading}
+          sx={
+            data
+              ? undefined
+              : {
+                  display: 'flex',
+                }
+          }
         >
           <Typography
             component="span"
@@ -62,7 +50,16 @@ export const ProjectChangeRequestListItem = ({
           >
             {!data ? <Skeleton width="100%" /> : data.status.value}
           </Typography>
-          <span className={classes.dash}>—</span>
+          <Box
+            component="span"
+            sx={{
+              color: 'text.secondary',
+              my: 0,
+              mx: 1,
+            }}
+          >
+            —
+          </Box>
           <Typography
             component="span"
             variant="inherit"
@@ -87,7 +84,7 @@ export const ProjectChangeRequestListItem = ({
           {!data ? <Skeleton width="40%" /> : data.summary.value}
         </Typography>
       </CardContent>
-      <CardActions className={classes.cardActions}>
+      <CardActions sx={{ display: 'flex', py: 1, pr: 2, pl: 1 }}>
         {!data || data.canEdit ? (
           <Button
             disabled={!data || currentlyViewing === data.id}
@@ -104,7 +101,11 @@ export const ProjectChangeRequestListItem = ({
             Review
           </Button>
         </Tooltip>
-        <div className={classes.spacer} />
+        <Box
+          sx={{
+            flex: 1,
+          }}
+        />
         <Typography variant="subtitle2" color="textSecondary">
           {!data ? (
             <Skeleton width="23ch" />

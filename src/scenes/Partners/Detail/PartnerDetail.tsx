@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Add, Edit } from '@mui/icons-material';
 import {
+  Box,
   Button,
   CardActionArea,
   CardContent,
@@ -12,7 +13,6 @@ import {
 import { Many } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { listOrPlaceholders, square } from '~/common';
 import { Avatar } from '../../../components/Avatar';
@@ -32,71 +32,21 @@ import { PartnerDocument } from './PartnerDetail.graphql';
 import { PartnerPostList } from './PartnerPostList';
 import { PartnerTypesCard } from './PartnerTypesCard';
 
-const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
+const cardSection = {
+  '& > h3': {
+    mb: 1,
   },
-  main: {
-    maxWidth: breakpoints.values.md,
-    '& > *': {
-      marginBottom: spacing(3),
-    },
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
-    gap: spacing(1),
-  },
-  name: {
-    marginRight: spacing(2), // a little extra between text and buttons
-    lineHeight: 'inherit', // centers text with buttons better
-  },
-  subheader: {
-    display: 'flex',
-    alignItems: 'center',
-    '& > *': {
-      marginRight: spacing(2),
-    },
-  },
-  cardSection: {
-    '& > h3': {
-      marginBottom: spacing(1),
-    },
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  card: {
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  sectionTitle: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: spacing(1),
-    '& > *': {
-      marginRight: spacing(2),
-    },
-  },
-  pocCardActionArea: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  pocCardAvatar: {
-    ...square(86),
-    fontSize: 70,
-    color: palette.background.paper,
-  },
-  listItem: {
-    marginBottom: spacing(2),
-  },
-}));
+  display: 'flex',
+  flexDirection: 'column',
+};
+
+const card = {
+  flexGrow: 1,
+  display: 'flex',
+  flexDirection: 'column',
+};
 
 export const PartnerDetail = () => {
-  const { classes } = useStyles();
   const { partnerId = '' } = useParams();
   const formatDateTime = useDateTimeFormatter();
 
@@ -113,7 +63,7 @@ export const PartnerDetail = () => {
     useDialog<Many<EditablePartnerField>>();
 
   return (
-    <main className={classes.root}>
+    <Box component="main" sx={{ flex: 1, overflowY: 'auto', p: 4 }}>
       <Helmet title={name ?? undefined} />
       <Error error={error}>
         {{
@@ -122,9 +72,22 @@ export const PartnerDetail = () => {
         }}
       </Error>
       {!error && (
-        <div className={classes.main}>
-          <header className={classes.header}>
-            <Typography variant="h2" className={classes.name}>
+        <Box
+          sx={{
+            maxWidth: 'md',
+            '& > *': {
+              mb: 3,
+            },
+          }}
+        >
+          <Box component="header" sx={{ flex: 1, display: 'flex', gap: 1 }}>
+            <Typography
+              variant="h2"
+              sx={{
+                mr: 2, // a little extra between text and buttons
+                lineHeight: 'inherit', // centers text with buttons better
+              }}
+            >
               {partner ? (
                 partner.organization.value?.name.value
               ) : (
@@ -151,9 +114,14 @@ export const PartnerDetail = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
-          </header>
-          <div className={classes.subheader}>
-            <Typography variant="h4">
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Typography variant="h4" sx={{ mr: 2 }}>
               {partner ? 'Partner Information' : <Skeleton width={200} />}
             </Typography>
             {partner && (
@@ -161,7 +129,7 @@ export const PartnerDetail = () => {
                 Created {formatDateTime(partner.createdAt)}
               </Typography>
             )}
-          </div>
+          </Box>
           <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
@@ -194,43 +162,62 @@ export const PartnerDetail = () => {
             />
           </Grid>
           <Grid container spacing={3}>
-            <Grid item xs={6} className={classes.cardSection}>
+            <Grid item xs={6} sx={cardSection}>
               <Typography variant="h3">
                 {partner ? 'Partner Types' : <Skeleton width="120px" />}
               </Typography>
               <PartnerTypesCard
                 partner={partner}
                 onEdit={() => editPartner(['types', 'financialReportingTypes'])}
-                className={classes.card}
+                sx={card}
               />
             </Grid>
-            <Grid item xs={6} className={classes.cardSection}>
+            <Grid item xs={6} sx={cardSection}>
               <Typography variant="h3">
                 {partner ? 'Address' : <Skeleton width="120px" />}
               </Typography>
               <AddressCard
                 partner={partner}
                 onEdit={() => editPartner('address')}
-                className={classes.card}
+                sx={card}
               />
             </Grid>
           </Grid>
-          <div className={classes.sectionTitle}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              mb: 1,
+              '& > *': {
+                mr: 2,
+              },
+            }}
+          >
             <Typography variant="h3">
               {partner ? 'Point of Contact' : <Skeleton width="120px" />}
             </Typography>
-          </div>
+          </Box>
           <UserListItemCardPortrait
             user={partner?.pointOfContact.value || undefined}
             content={
               !partner?.pointOfContact.value ? (
                 <CardActionArea
                   onClick={() => editPartner('pointOfContactId')}
-                  className={classes.pocCardActionArea}
+                  sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
                   aria-label="add mentor"
                 >
                   <CardContent>
-                    <Avatar className={classes.pocCardAvatar}>
+                    <Avatar
+                      sx={{
+                        ...square(86),
+                        fontSize: 70,
+                        color: 'background.paper',
+                      }}
+                    >
                       <Add fontSize="inherit" />
                     </Avatar>
                   </CardContent>
@@ -268,13 +255,13 @@ export const PartnerDetail = () => {
                 <ProjectListItemCard
                   key={project?.id ?? index}
                   project={project}
-                  className={classes.listItem}
+                  sx={{ mb: 2 }}
                 />
               ))
             )}
           </Grid>
           <Grid>{!!partner && <PartnerPostList partner={partner} />}</Grid>
-        </div>
+        </Box>
       )}
       {partner ? (
         <EditPartner
@@ -283,6 +270,6 @@ export const PartnerDetail = () => {
           editFields={editField}
         />
       ) : null}
-    </main>
+    </Box>
   );
 };

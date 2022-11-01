@@ -1,7 +1,7 @@
+import { Box } from '@mui/material';
 import parse from 'html-react-parser';
 import mammoth, { MammothOptions } from 'mammoth';
 import { useCallback, useEffect, useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
 
@@ -9,18 +9,9 @@ const mammothOptions: MammothOptions = {
   styleMap: ['u => em'],
 };
 
-const useStyles = makeStyles()(() => ({
-  root: {
-    '& img': {
-      maxWidth: '100%',
-    },
-  },
-}));
-
 export const WordPreview = (props: PreviewerProps) => {
   const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
   const [html, setHtml] = useState<ReturnType<typeof parse> | null>(null);
-  const { classes } = useStyles();
 
   const extractHtmlFromDocument = useCallback(
     async (file: File) => {
@@ -48,7 +39,15 @@ export const WordPreview = (props: PreviewerProps) => {
   return previewLoading ? (
     <PreviewLoading />
   ) : (
-    <div className={classes.root}>{html}</div>
+    <Box
+      sx={{
+        '& img': {
+          maxWidth: '100%',
+        },
+      }}
+    >
+      {html}
+    </Box>
   );
 };
 

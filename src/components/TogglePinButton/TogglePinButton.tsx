@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client';
 import { Tooltip, TooltipProps } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { addItemToList, ListIdentifier, removeItemFromList } from '~/api';
+import { extendSx, StyleProps } from '~/common';
 import { IconButton, IconButtonProps } from '../IconButton';
 import { PushPinIconFilled, PushPinIconOutlined } from '../Icons';
 import {
@@ -10,27 +10,17 @@ import {
   TogglePinnedDocument,
 } from './TogglePinButton.graphql';
 
-const useStyles = makeStyles<{ pinned: boolean }>()(
-  ({ transitions }, { pinned }) => ({
-    root: {
-      transition: transitions.create('transform', {
-        duration: transitions.duration.short,
-      }),
-      transform: pinned ? 'none' : 'rotate(45deg)',
-    },
-  })
-);
-
-export type TogglePinButtonProps = Except<IconButtonProps, 'children'> & {
-  object?: TogglePinFragment;
-  // A list to add/remove the object from this list when pin status changes
-  listId?: ListIdentifier<any>;
-  // Given this list identified by these input args,
-  // should it be modified when this object's pin status changes
-  listFilter?: (args: any) => boolean;
-  label?: string;
-  TooltipProps?: TooltipProps;
-};
+export type TogglePinButtonProps = Except<IconButtonProps, 'children'> &
+  StyleProps & {
+    object?: TogglePinFragment;
+    // A list to add/remove the object from this list when pin status changes
+    listId?: ListIdentifier<any>;
+    // Given this list identified by these input args,
+    // should it be modified when this object's pin status changes
+    listFilter?: (args: any) => boolean;
+    label?: string;
+    TooltipProps?: TooltipProps;
+  };
 
 export const TogglePinButton = ({
   object,
@@ -38,9 +28,10 @@ export const TogglePinButton = ({
   listId,
   listFilter,
   TooltipProps,
+  sx,
   ...rest
 }: TogglePinButtonProps) => {
-  const { classes, cx } = useStyles({ pinned: object?.pinned ?? false });
+  const pinned = object?.pinned ?? false;
 
   const [togglePinned] = useMutation(TogglePinnedDocument, {
     update: (cache, result, options) => {
@@ -98,8 +89,17 @@ export const TogglePinButton = ({
       loading={rest.loading || !object}
       classes={{
         ...rest.classes,
-        root: cx(classes.root, rest.classes?.root),
+        root: rest.classes?.root,
       }}
+      sx={[
+        (theme) => ({
+          transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.short,
+          }),
+          transform: pinned ? 'none' : 'rotate(45deg)',
+        }),
+        ...extendSx(sx),
+      ]}
     >
       <Icon fontSize={rest.size ? 'inherit' : undefined} />
     </IconButton>

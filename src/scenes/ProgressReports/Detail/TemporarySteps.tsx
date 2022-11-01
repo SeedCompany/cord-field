@@ -3,15 +3,15 @@ import { Typography } from '@mui/material';
 import { Sx } from '~/common';
 import { useProgressReportContext } from '../ProgressReportContext';
 
-const typographyLinkSx: Sx = (theme) => ({
-  color: theme.palette.grey[800],
+const typographyLinkSx: Sx = {
+  color: 'grey.800',
   fontSize: 14,
   cursor: 'pointer',
-  marginLeft: 2,
+  ml: 2,
   '&:hover': {
     textDecoration: 'underline',
   },
-});
+};
 
 export const NextButton = () => {
   const { nextProgressReportStep } = useProgressReportContext();
@@ -32,9 +32,9 @@ export const NextButton = () => {
         Next
         <ArrowForward
           sx={{
-            marginLeft: 1,
+            ml: 1,
             fontSize: '1rem',
-            marginBottom: '-3px',
+            mb: '-3px',
           }}
         />
       </Typography>

@@ -1,59 +1,60 @@
-import { Card, CardContent, Skeleton, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { Box, Card, CardContent, Skeleton, Typography } from '@mui/material';
 import { PartialDeep } from 'type-fest';
-import { square } from '~/common';
+import { extendSx, square, StyleProps, Sx } from '~/common';
 import { UsersQueryVariables } from '../../scenes/Users/List/users.graphql';
 import { Avatar } from '../Avatar';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
 import { UserListItemFragment } from './UserListItem.graphql';
 
-const useStyles = makeStyles()(({ breakpoints, spacing, typography }) => ({
-  root: {
-    flex: 1,
-    maxWidth: breakpoints.values.sm,
-    position: 'relative',
-  },
-  content: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  avatar: {
-    ...square(spacing(8)),
-    fontSize: typography.h3.fontSize,
-    marginRight: spacing(3),
-  },
-  userInfo: {
-    flex: 1,
-  },
-  pin: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-  },
-}));
-
-interface UserListItemCardLandscapeProps {
+interface UserListItemCardLandscapeProps extends StyleProps {
   className?: string;
   user?: UserListItemFragment;
+  sx?: Sx;
 }
 
 export const UserListItemCardLandscape = ({
   user,
   className,
+  sx,
 }: UserListItemCardLandscapeProps) => {
-  const { classes, cx } = useStyles();
-
   const org = user?.organizations.items[0];
 
   return (
-    <Card className={cx(classes.root, className)}>
+    <Card
+      className={className}
+      sx={[
+        {
+          flex: 1,
+          maxWidth: 'sm',
+          position: 'relative',
+        },
+        ...extendSx(sx),
+      ]}
+    >
       <CardActionAreaLink disabled={!user} to={`/users/${user?.id}`}>
-        <CardContent className={classes.content}>
-          <Avatar loading={!user} className={classes.avatar}>
+        <CardContent
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar
+            loading={!user}
+            sx={(theme) => ({
+              // requires theme callback to keep avatar square sizing consistent
+              ...square(theme.spacing(8)),
+              fontSize: 'h3.fontSize',
+              mr: 3,
+            })}
+          >
             {user?.avatarLetters}
           </Avatar>
-          <div className={classes.userInfo}>
+          <Box
+            sx={{
+              flex: 1,
+            }}
+          >
             <Typography variant="h4" paragraph>
               {!user ? (
                 <Skeleton width="75%" />
@@ -67,7 +68,7 @@ export const UserListItemCardLandscape = ({
             <Typography variant="body2" color="textSecondary">
               {!user ? <Skeleton width="50%" /> : user.title.value}
             </Typography>
-          </div>
+          </Box>
         </CardContent>
       </CardActionAreaLink>
       <TogglePinButton
@@ -77,7 +78,11 @@ export const UserListItemCardLandscape = ({
         listFilter={(args: PartialDeep<UsersQueryVariables>) =>
           args.input?.filter?.pinned ?? false
         }
-        className={classes.pin}
+        sx={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+        }}
       />
     </Card>
   );

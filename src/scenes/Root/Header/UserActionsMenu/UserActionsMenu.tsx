@@ -10,24 +10,9 @@ import {
   MenuProps,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { useUpload } from '../../../../components/Upload';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  menu: {
-    minWidth: 200,
-  },
-  listItemIcon: {
-    marginRight: spacing(2),
-    minWidth: 'unset',
-  },
-  listItemText: {
-    textTransform: 'capitalize',
-  },
-}));
-
 export const UserActionsMenu = (props: Partial<MenuProps>) => {
-  const { classes } = useStyles();
   const { spacing } = useTheme();
   const { isManagerOpen, toggleManagerOpen } = useUpload();
 
@@ -40,7 +25,11 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
       open={Boolean(props.anchorEl)}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: parseInt(spacing(-2)), horizontal: 'right' }}
-      classes={{ paper: classes.menu }}
+      sx={{
+        '& .MuiMenu-paper': {
+          minWidth: 200,
+        },
+      }}
       {...props}
     >
       <MenuItem
@@ -50,12 +39,19 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
           props.onClose?.(event, 'actionClicked');
         }}
       >
-        <ListItemIcon className={classes.listItemIcon}>
+        <ListItemIcon
+          sx={{
+            marginRight: spacing(2),
+            minWidth: 'unset',
+          }}
+        >
           <UmIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText
-          className={classes.listItemText}
           primary="upload manager"
+          sx={{
+            textTransform: 'capitalize',
+          }}
         />
       </MenuItem>
     </Menu>

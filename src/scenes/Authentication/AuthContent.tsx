@@ -1,21 +1,28 @@
+import { Box } from '@mui/material';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { extendSx, StyleProps } from '~/common';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    maxWidth: 400,
-    margin: spacing(4, 1),
-  },
-}));
-
-interface AuthContentProps {
+interface AuthContentProps extends StyleProps {
   className?: string;
   children?: ReactNode;
 }
 
-export const AuthContent = ({ className, children }: AuthContentProps) => {
-  const { classes, cx } = useStyles();
-  return <div className={cx(classes.root, className)}>{children}</div>;
+export const AuthContent = ({ className, children, sx }: AuthContentProps) => {
+  return (
+    <Box
+      className={className}
+      sx={[
+        {
+          display: 'flex',
+          flexDirection: 'column',
+          maxWidth: 400,
+          my: 4,
+          mx: 1,
+        },
+        ...extendSx(sx),
+      ]}
+    >
+      {children}
+    </Box>
+  );
 };

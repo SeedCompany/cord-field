@@ -23,7 +23,6 @@ import {
   useContext,
   useMemo,
 } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Except, MergeExclusive } from 'type-fest';
 import { Many, many } from '~/common';
 import { FieldConfig, useField, Value } from './useField';
@@ -53,19 +52,6 @@ export type EnumFieldProps<
       defaultOption?: string | ReactNode;
     }
   >;
-
-const useStyles = makeStyles()(({ typography, spacing }) => ({
-  fieldLabel: {
-    fontWeight: typography.weight.bold,
-  },
-  toggleSplitContainer: {
-    margin: spacing(-1),
-    padding: spacing(1, 0),
-  },
-  toggleGroupedContainer: {
-    margin: spacing(1, 0),
-  },
-}));
 
 const defaultDefaultValue = [] as const;
 
@@ -143,8 +129,6 @@ export const EnumField = <
     allowNull: !multiple,
     disabled: props.disabled,
   });
-
-  const { classes, cx } = useStyles();
 
   const { name, onChange, onBlur, onFocus } = input;
 
@@ -249,11 +233,11 @@ export const EnumField = <
   const renderedOptions =
     variant === 'checkbox' || variant === 'toggle-split' ? (
       <FormGroup
-        classes={{
-          root: cx({
-            [classes.toggleSplitContainer]: variant === 'toggle-split',
-          }),
-        }}
+        sx={[
+          variant === 'toggle-split' && {
+            '&.MuiFormGroup-root': { m: -1, py: 1 },
+          },
+        ]}
         row={layout === 'row'}
       >
         {children}
@@ -262,7 +246,7 @@ export const EnumField = <
       <ToggleButtonGroup
         exclusive={!multiple}
         orientation={layout === 'row' ? 'horizontal' : 'vertical'}
-        className={classes.toggleGroupedContainer}
+        sx={{ my: 1 }}
       >
         {children}
       </ToggleButtonGroup>
@@ -295,7 +279,7 @@ export const EnumField = <
       }}
     >
       {label && (
-        <FormLabel component="legend" className={classes.fieldLabel}>
+        <FormLabel component="legend" sx={{ fontWeight: 'bold' }}>
           {label}
         </FormLabel>
       )}

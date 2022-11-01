@@ -7,7 +7,6 @@ import {
   Typography,
 } from '@mui/material';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
 import { displayMethodologyWithLabel, mapFromList } from '~/common';
 import {
@@ -17,17 +16,7 @@ import {
 import { Link } from '../../../components/Routing';
 import { ProductDetailFragment as Product } from './ProductDetail.graphql';
 
-const useStyles = makeStyles()(() => ({
-  listItem: {
-    margin: 0,
-  },
-  completionDescription: {
-    overflowWrap: 'break-word',
-  },
-}));
-
 export const ProductInfo = ({ product }: { product?: Product }) => {
-  const { classes } = useStyles();
   const ppm = mapFromList(
     product?.engagement.partnershipsProducingMediums.items ?? [],
     (pair) => [pair.medium, pair.partnership]
@@ -70,7 +59,9 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
                         </>
                       ) : undefined
                     }
-                    className={classes.listItem}
+                    sx={{
+                      margin: 0,
+                    }}
                   />
                 </ListItem>
               ))}
@@ -97,7 +88,9 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         value={product?.describeCompletion.value}
         loading={!product}
         wrap={infoWrapper}
-        className={classes.completionDescription}
+        sx={{
+          overflowWrap: 'break-word',
+        }}
       />
 
       <DisplayProperty
@@ -127,7 +120,9 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
                   <ListItem key={step} disableGutters>
                     <ListItemText
                       primary={ProductStepLabels[step]}
-                      className={classes.listItem}
+                      sx={{
+                        margin: 0,
+                      }}
                     />
                   </ListItem>
                 ))}

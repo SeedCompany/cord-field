@@ -7,26 +7,13 @@ import {
   SvgIconComponent,
 } from '@mui/icons-material';
 import { Card, CardContent, Grid, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { extendSx, StyleProps } from '~/common';
 import { idForUrl } from '../Changeset';
 import { HugeIcon } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 import { ProductCardFragment } from './ProductCard.graphql';
 
-const useStyles = makeStyles()(() => ({
-  root: {
-    display: 'flex',
-    flex: 1,
-  },
-  actionArea: {
-    flex: 1,
-  },
-  icon: {
-    fontSize: 80,
-  },
-}));
-
-interface ProductCardProps {
+interface ProductCardProps extends StyleProps {
   product: ProductCardFragment;
 }
 
@@ -38,21 +25,35 @@ const iconMap: Record<string, SvgIconComponent> = {
   Other: HelpOutlined,
 };
 
-export const ProductCard = ({ product }: ProductCardProps) => {
-  const { classes } = useStyles();
-
+export const ProductCard = ({ product, sx, className }: ProductCardProps) => {
   const Icon = product.category ? iconMap[product.category] : undefined;
 
   return (
-    <Card className={classes.root}>
+    <Card
+      className={className}
+      sx={[
+        {
+          display: 'flex',
+          flex: 1,
+        },
+        ...extendSx(sx),
+      ]}
+    >
       <CardActionAreaLink
         to={`/products/${idForUrl(product)}`}
-        className={classes.actionArea}
+        sx={{
+          flex: 1,
+        }}
       >
         <Grid component={CardContent} container spacing={2} alignItems="center">
           {Icon && (
             <Grid item>
-              <HugeIcon className={classes.icon} icon={Icon} />
+              <HugeIcon
+                sx={{
+                  fontSize: 80,
+                }}
+                icon={Icon}
+              />
             </Grid>
           )}
           <Grid item>

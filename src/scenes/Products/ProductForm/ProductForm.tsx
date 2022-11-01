@@ -1,7 +1,7 @@
+import { Box } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { Form, FormProps } from 'react-final-form';
-import { makeStyles } from 'tss-react/mui';
 import { Except, Merge } from 'type-fest';
 import {
   CreateDerivativeScriptureProduct,
@@ -21,18 +21,6 @@ import { ProductTypes } from './constants';
 import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.graphql';
 import { ProductFormFragment } from './ProductForm.graphql';
 import { ProductFormFields } from './ProductFormFields';
-
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  form: {
-    maxWidth: breakpoints.values.md,
-  },
-  buttons: {
-    marginTop: spacing(2),
-  },
-  deleteButton: {
-    marginLeft: spacing(1),
-  },
-}));
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface -- Declaration merging is used to define fields in each section
 export interface ProductFormCustomValues {}
@@ -105,12 +93,10 @@ export const ProductForm = ({
   engagement,
   ...props
 }: ProductFormProps) => {
-  const { classes } = useStyles();
-
   return (
     <Form<ProductFormValues> decorators={decorators} {...props}>
       {({ handleSubmit, ...rest }) => (
-        <form onSubmit={handleSubmit} className={classes.form}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ maxWidth: 'md' }}>
           <SubmitError />
           {/* Need to give accordions their own container for styling */}
           <div>
@@ -121,7 +107,7 @@ export const ProductForm = ({
             />
           </div>
 
-          <div className={classes.buttons}>
+          <Box sx={{ mt: 2 }}>
             <SubmitButton fullWidth={false} color="primary" size="medium">
               Save Goal
             </SubmitButton>
@@ -130,13 +116,13 @@ export const ProductForm = ({
                 action="delete"
                 fullWidth={false}
                 size="medium"
-                className={classes.deleteButton}
+                sx={{ ml: 1 }}
               >
                 Delete Goal
               </SubmitButton>
             )}
-          </div>
-        </form>
+          </Box>
+        </Box>
       )}
     </Form>
   );

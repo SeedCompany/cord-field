@@ -1,4 +1,4 @@
-import { ToggleButton } from '@mui/material';
+import { Box, ToggleButton } from '@mui/material';
 import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
 import {
   entries,
@@ -14,7 +14,7 @@ import {
   VersesField,
 } from '../../../components/form';
 import { newTestament, oldTestament } from './constants';
-import { DefaultAccordion, useStyles } from './DefaultAccordion';
+import { DefaultAccordion, sectionStyle } from './DefaultAccordion';
 import { SectionProps } from './ProductFormFields';
 import { VersesCountField } from './VersesCountField';
 
@@ -31,8 +31,6 @@ export const ScriptureReferencesSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const { classes } = useStyles();
-
   const { scriptureReferences, book, bookSelection, unspecifiedScripture } =
     values.product ?? {};
 
@@ -70,7 +68,7 @@ export const ScriptureReferencesSection = ({
         );
       }}
     >
-      <div className={classes.section}>
+      <Box sx={sectionStyle}>
         <AutocompleteField
           label="Book"
           name="book"
@@ -85,7 +83,7 @@ export const ScriptureReferencesSection = ({
         />
 
         {book && (
-          <div className={classes.section}>
+          <Box sx={sectionStyle}>
             <EnumField
               name="bookSelection"
               required
@@ -125,9 +123,9 @@ export const ScriptureReferencesSection = ({
                 required
               />
             ) : null}
-          </div>
+          </Box>
         )}
-      </div>
+      </Box>
     </DefaultAccordion>
   );
 };

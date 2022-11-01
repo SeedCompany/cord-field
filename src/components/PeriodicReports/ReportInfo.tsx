@@ -1,35 +1,29 @@
 import { SkipNextRounded } from '@mui/icons-material';
-import { Grid, Skeleton, Typography } from '@mui/material';
+import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
+import { StyleProps } from '~/common';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { PaperTooltip } from '../PaperTooltip';
 import { Redacted } from '../Redacted';
 import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportLabel } from './ReportLabel';
 
-const useStyles = makeStyles()(() => ({
-  label: {
-    whiteSpace: 'nowrap',
-  },
-}));
+interface ReportInfoProps extends StyleProps {
+  title: ReactNode;
+  report?: SecuredPeriodicReportFragment;
+}
 
 export const ReportInfo = ({
   title,
   report,
   className,
-}: {
-  title: ReactNode;
-  report?: SecuredPeriodicReportFragment;
-  className?: string;
-}) => {
-  const { classes } = useStyles();
-
+  sx,
+}: ReportInfoProps) => {
   const file = report?.value?.reportFile;
   const section = (
-    <div className={className}>
+    <Box className={className} sx={sx}>
       <Typography
         variant="body2"
         display="inline"
@@ -42,7 +36,9 @@ export const ReportInfo = ({
         variant="h4"
         display="inline"
         gutterBottom
-        className={classes.label}
+        sx={{
+          whiteSpace: 'nowrap',
+        }}
       >
         {!report ? (
           <Skeleton />
@@ -89,7 +85,7 @@ export const ReportInfo = ({
           )
         ) : null}
       </Typography>
-    </div>
+    </Box>
   );
 
   return (
