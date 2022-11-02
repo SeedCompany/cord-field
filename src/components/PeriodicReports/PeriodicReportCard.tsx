@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
-import { Many, simpleSwitch, StyleProps } from '~/common';
+import { Many, SecuredProp, simpleSwitch, StyleProps } from '~/common';
 import {
   EditablePeriodicReportField,
   UpdatePeriodicReportDialog,
@@ -24,7 +24,7 @@ import {
 import { HugeIcon } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { DropOverlay } from './DropOverlay';
-import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
+import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportInfo } from './ReportInfo';
 import { ReportLabel } from './ReportLabel';
 
@@ -65,8 +65,8 @@ const useStyles = makeStyles()(({ spacing }) => ({
 
 export interface PeriodicReportCardProps extends StyleProps {
   type: ReportType;
-  dueCurrently?: SecuredPeriodicReportFragment;
-  dueNext?: SecuredPeriodicReportFragment;
+  dueCurrently?: SecuredProp<PeriodicReportFragment>;
+  dueNext?: SecuredProp<PeriodicReportFragment>;
   disableIcon?: boolean;
   hasDetailPage?: boolean;
 }
