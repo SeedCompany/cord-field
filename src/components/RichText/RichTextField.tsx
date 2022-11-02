@@ -1,4 +1,8 @@
-import type { EditorConfig } from '@editorjs/editorjs';
+import type {
+  EditorConfig,
+  LogLevels,
+  OutputData as RichTextData,
+} from '@editorjs/editorjs';
 import loadable from '@loadable/component';
 import {
   ClickAwayListener,
@@ -10,12 +14,13 @@ import {
   TextFieldProps,
 } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
-import { pick } from 'lodash';
+import { identity, isEqual, pick } from 'lodash';
 import {
   MouseEvent,
   ReactNode,
   RefObject,
   useCallback,
+  useEffect,
   useId,
   useRef,
   useState,
@@ -26,7 +31,10 @@ import { getHelperText, showError } from '../form/util';
 import { EditorJsTheme } from './EditorJsTheme';
 import type { ToolKey } from './editorJsTools';
 
-export type RichTextFieldProps = FieldConfig<unknown> & {
+export type RichTextFieldProps = Pick<
+  FieldConfig<RichTextData>,
+  'name' | 'disabled' | 'required' | 'autoFocus'
+> & {
   tools?: ToolKey[];
   label?: ReactNode;
   helperText?: ReactNode;
@@ -52,12 +60,66 @@ export function RichTextField({
     // Focus the editor or keep the editor focused
     meta.active ? e.preventDefault() : onFocus();
 
+  // Keep a cache of values produced by this editor instance, so we can know
+  // whether new values from final form are actually new or just from our own round trip.
+  const [internallyProduced] = useState(() => new WeakSet<RichTextData>());
+  // Keep the timestamp of the latest change event, so we can confirm after
+  // the async save finishes that only the latest change is used.
+  // This is probably excessive; I'm just trying to prevent race conditions.
+  const latestChangeTimestamp = useRef(0);
+
   const { input, meta, ref } = useField({
     ...props,
     onFocus,
+    allowNull: true,
+    format: identity, // prevents empty strings in place of null
+    validate: (value) => {
+      if (value === savingSigil) {
+        // Prevent submitting if saving is in progress
+        return 'Waiting for editor';
+      }
+      if (
+        props.required &&
+        (!value || (value as RichTextData).blocks.length === 0)
+      ) {
+        return 'Required';
+      }
+      return undefined;
+    },
+    isEqual: isRichTextEqual,
   });
 
   const id = useId();
+
+  const val = input.value as RichTextData | undefined;
+  useEffect(() => {
+    if (!instanceRef.current || !isReady) {
+      return;
+    }
+    if (val && (val === savingSigil || internallyProduced.has(val))) {
+      return;
+    }
+
+    // Ensure in-progress saving is ignored, as we are resetting state.
+    latestChangeTimestamp.current = performance.now();
+
+    if ((val?.blocks.length ?? 0) > 0) {
+      void instanceRef.current.render(val!);
+    } else {
+      if (isEmpty(ref)) {
+        // Optimization to prevent changes when empty -> empty.
+        return;
+      }
+      void instanceRef.current.clear();
+    }
+  }, [
+    val,
+    isReady,
+    instanceRef,
+    latestChangeTimestamp,
+    internallyProduced,
+    ref,
+  ]);
 
   const loading = (
     <Loading label={label} placeholder={placeholder} helperText={helperText} />
@@ -88,6 +150,7 @@ export function RichTextField({
                   tools={tools}
                   autofocus={props.autoFocus}
                   holder={id}
+                  logLevel={'WARN' as LogLevels}
                   minHeight={14} // matches minRows=2
                   placeholder={placeholder}
                   onInitialize={(instance) => {
@@ -98,6 +161,21 @@ export function RichTextField({
                     setReady(true);
                   }}
                   readOnly={meta.disabled}
+                  onChange={(api, event) => {
+                    latestChangeTimestamp.current = event.timeStamp;
+                    input.onChange(savingSigil); // Prevent submitting while saving
+                    void api.saver.save().then((data) => {
+                      if (latestChangeTimestamp.current > event.timeStamp) {
+                        // A newer change is already in progress
+                        return;
+                      }
+                      if (process.env.NODE_ENV !== 'production') {
+                        data = Object.freeze(data);
+                      }
+                      internallyProduced.add(data);
+                      input.onChange(data);
+                    });
+                  }}
                 >
                   <ClickAwayListener onClickAway={() => input.onBlur()}>
                     <FormControl
@@ -190,6 +268,14 @@ const isEmpty = (ref: RefObject<HTMLElement>) =>
   ref.current
     ?.querySelector('.codex-editor')
     ?.classList.contains('codex-editor--empty');
+
+const isRichTextEqual = (a: any, b: any) => {
+  const aBlocks = a?.blocks ?? [];
+  const bBlocks = b?.blocks ?? [];
+  return isEqual(aBlocks, bBlocks);
+};
+
+const savingSigil: RichTextData = { time: 0, blocks: [] };
 
 const Lib = loadable.lib(() => import('react-editor-js'), {
   ssr: false,
