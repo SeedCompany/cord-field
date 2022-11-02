@@ -24,6 +24,18 @@ const ParagraphBlock: RenderFn<{ text: string }> = ({ data }) => {
   return <Typography paragraph>{text && HTMLReactParser(text)}</Typography>;
 };
 
+const HeaderBlock: RenderFn<{ text: string; level: 1 | 2 | 3 | 4 | 5 | 6 }> = ({
+  data,
+}) => {
+  const { text, level = 1 } = data ?? {};
+  return (
+    <Typography variant={`h${level}`} gutterBottom>
+      {text && HTMLReactParser(text)}
+    </Typography>
+  );
+};
+
 const renderers: { [K in ToolKey]?: RenderFn<any> } = {
   paragraph: ParagraphBlock,
+  header: HeaderBlock,
 };

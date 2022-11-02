@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material';
+import { mapFromList } from '../../common';
 
 export const EditorJsTheme = (theme: Theme) => ({
   zIndex: 2, // keep toolbars above other fields' input labels.
@@ -64,4 +65,15 @@ export const EditorJsTheme = (theme: Theme) => ({
     // Matches TextField better
     paddingTop: 0,
   },
+
+  // Sync Header block to theme
+  ...mapFromList([1, 2, 3, 4, 5, 6] as const, (level) => {
+    const v = `h${level}` as const;
+    const styles = {
+      ...theme.typography[v],
+      p: 0, // reset editor style
+      mb: '0.35em', // matches MUI Typography gutterBottom
+    };
+    return [v, styles];
+  }),
 });
