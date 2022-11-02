@@ -19,6 +19,7 @@ fragment DrawerPeriodicReport on ProgressReport {
       ...DrawerPeriodicReportItem
     }
   }
+  due
 
   parent {
     id

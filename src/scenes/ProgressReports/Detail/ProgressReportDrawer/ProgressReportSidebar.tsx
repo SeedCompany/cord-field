@@ -1,11 +1,15 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import { useDialog } from '~/components/Dialog';
+import { useProgressReportContext } from '../../ProgressReportContext';
 import { InstructionsDialog } from './InstructionsDialog';
 import { ProgressReportStepper } from './ProgressReportStepper';
 
-export const ProgressReportSidebar = ({ step }: { step: number }) => {
+export const ProgressReportSidebar = () => {
+  const { step, currentReport } = useProgressReportContext();
   const [instructionsState, showInstructions] = useDialog();
+
+  const daysLeft = Math.floor(currentReport?.due.diffNow('days').days ?? 0);
 
   return (
     <Box
@@ -35,8 +39,14 @@ export const ProgressReportSidebar = ({ step }: { step: number }) => {
           }}
         />
       </Typography>
-      <Typography variant="body2" color="info.light" sx={{ marginBottom: 2 }}>
-        36 DAYS before due
+      <Typography
+        variant="body2"
+        color={daysLeft > 0 ? 'info.light' : 'error.dark'}
+        sx={{ marginBottom: 2 }}
+      >
+        <>
+          {Math.abs(daysLeft)} {daysLeft > 0 ? 'DAYS before' : 'DAYS over'} due
+        </>
       </Typography>
 
       <Button

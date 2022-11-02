@@ -22,7 +22,7 @@ export const ProgressReportDrawer = ({
   const open = !!useMatch('progress-reports/:id/edit');
 
   const navigate = useNavigate();
-  const { step, setCurrentProgressReport } = useProgressReportContext();
+  const { setCurrentProgressReport } = useProgressReportContext();
 
   const fullProgressReport = useQuery(DrawerPeriodicReportDocument, {
     variables: {
@@ -80,7 +80,7 @@ export const ProgressReportDrawer = ({
             <StepContainer />
           </Box>
         </Box>
-        <ProgressReportSidebar step={step} />
+        <ProgressReportSidebar />
       </Box>
     </Drawer>
   );
