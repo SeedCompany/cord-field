@@ -1,5 +1,5 @@
 import type { OutputData as RichTextData } from '@editorjs/editorjs';
-import { Typography } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 import Blocks from 'editorjs-blocks-react-renderer';
 import HTMLReactParser from 'html-react-parser';
 import { memo } from 'react';
@@ -35,7 +35,10 @@ const HeaderBlock: RenderFn<{ text: string; level: 1 | 2 | 3 | 4 | 5 | 6 }> = ({
   );
 };
 
+const DelimiterBlock: RenderFn = () => <Divider sx={{ my: 2 }} />;
+
 const renderers: { [K in ToolKey]?: RenderFn<any> } = {
   paragraph: ParagraphBlock,
   header: HeaderBlock,
+  delimiter: DelimiterBlock,
 };

@@ -76,4 +76,20 @@ export const EditorJsTheme = (theme: Theme) => ({
     };
     return [v, styles];
   }),
+
+  // Sync Delimiter block to theme
+  '.ce-delimiter': {
+    lineHeight: '1px',
+    textAlign: 'initial',
+    '&:before': {
+      content: '" "',
+      borderBottom: `thin solid ${theme.palette.divider}`,
+      width: 1,
+      lineHeight: 'initial',
+      height: 'initial',
+      // Padding tweaked here (and below) to be visually centered (including toolbar)
+      pt: `calc(${theme.spacing(2)} - 3px)`,
+    },
+    pb: `calc(${theme.spacing(2)} + 1px)`,
+  },
 });
