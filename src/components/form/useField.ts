@@ -29,7 +29,14 @@ export type FieldConfig<
   multiple?: Multiple;
   disabled?: boolean;
   required?: boolean;
-  validate?: Many<Validator<Value<T, Multiple>> | null>;
+  /**
+   * One or more sync validators.
+   * An async validator can also be given here.
+   * Use {@link import('~/common').callSomeAsync callSomeAsync} to combine multiple.
+   */
+  validate?:
+    | Many<Validator<Value<T, Multiple>> | null>
+    | Validator<Value<T, Multiple>, true>;
   /**
    * An alternative to using isEqual which is given two items and makes you compare them.
    * This function is given one item and the value returned is used for comparison.
@@ -64,7 +71,9 @@ export const useField = <
   // If validate is given and an array compose it to a single function
   // Else default to the required validator if required is true.
   const validate = validateProp
-    ? callSome(...many(validateProp))
+    ? Array.isArray(validateProp)
+      ? callSome(...many(validateProp))
+      : validateProp
     : required
     ? ((multiple ? requiredArrayValidator : requiredValidator) as Validator<
         Value<T, Multiple>
@@ -128,7 +137,21 @@ export const useField = <
   const [focusInDoc, ref] = useFocus<El>(andDoOnFocus);
   const focusInFF = input.onFocus;
   useEffect(() => {
-    const activeInDoc = ref.current && ref.current === document.activeElement;
+    const activeInDoc = (() => {
+      if (!ref.current || !document.activeElement) {
+        return false;
+      }
+      if (ref.current === document.activeElement) {
+        return true;
+      }
+      // Assume active if the actual doesn't have a name (not input-like),
+      // and our given field ref contains the actual active element.
+      // Useful for complex fields, like RichText.
+      return (
+        !document.activeElement.getAttribute('name') &&
+        ref.current.contains(document.activeElement)
+      );
+    })();
 
     // Refocus field if it has become re-enabled and is active
     if (!disabled && meta.active && !activeInDoc) {

@@ -44,11 +44,13 @@ generates:
           content: |
             import { DateTime } from 'luxon';
             import { CalendarDate } from '~/common';
+            import type { OutputData as RichTextData } from '@editorjs/editorjs';
     config:
       scalars:
         Date: CalendarDate
         DateTime: DateTime
         JSONObject: Record<string, any>
         URL: string
+        RichText: RichTextData
       skipTypename: false
       enumsAsTypes: true
