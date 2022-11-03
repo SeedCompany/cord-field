@@ -25,19 +25,7 @@ export const TeamHighlightStep = () => {
       variables: {
         input: {
           id: currentItem?.id ?? '',
-          response: {
-            version: '2.24.3',
-            time: 1667231018164,
-            blocks: [
-              {
-                id: 'YeoJuo6IPP',
-                type: 'paragraph',
-                data: {
-                  text: values.response,
-                },
-              },
-            ],
-          },
+          response: values.response,
           variant: values.variant,
         },
       },
@@ -67,12 +55,12 @@ export const TeamHighlightStep = () => {
     >
       <PromptVariantStep
         currentItem={currentItem}
-        reportId={currentReport.id ?? ''}
+        reportId={currentReport.id}
         availableData={stepData}
         updateResponseMutation={changeResponse}
         createItemMutation={createHighlight}
       />
-      <NextStepButton />
+      <NextStepButton sx={{ mt: 2 }} />
     </div>
   );
 };
