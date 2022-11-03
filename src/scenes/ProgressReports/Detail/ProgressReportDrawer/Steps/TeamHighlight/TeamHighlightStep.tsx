@@ -11,7 +11,7 @@ export const TeamHighlightStep = () => {
   const { currentReport } = useProgressReportContext();
   const currentItem = currentReport?.highlights.items[0] ?? null;
 
-  const stepData = currentReport?.highlights.available ?? null;
+  const availableData = currentReport?.highlights.available ?? null;
 
   const [submitResponse] = useMutation(
     UpdateProgressReportHighlightResponseDocument
@@ -56,7 +56,7 @@ export const TeamHighlightStep = () => {
       <PromptVariantStep
         currentItem={currentItem}
         reportId={currentReport.id}
-        availableData={stepData}
+        availableData={availableData}
         updateResponseMutation={changeResponse}
         createItemMutation={createHighlight}
       />

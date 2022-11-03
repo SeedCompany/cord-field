@@ -17,7 +17,7 @@ fragment ProgressReportEdit on ProgressReport {
       ...ProgressReportAvailableData
     }
     items {
-      ...HighlightItemEdit
+      ...ProgressReportItemEdit
     }
   }
   due
@@ -60,7 +60,7 @@ fragment ProgressReportEdit on ProgressReport {
   }
 }
 
-fragment HighlightItemEdit on PromptVariantResponse {
+fragment ProgressReportItemEdit on PromptVariantResponse {
   id
   prompt {
     id
@@ -72,11 +72,11 @@ fragment HighlightItemEdit on PromptVariantResponse {
   }
   canDelete
   responses {
-    ...HighlightItemResponseEdit
+    ...ProgressReportItemResponseEdit
   }
 }
 
-fragment HighlightItemResponseEdit on VariantResponse {
+fragment ProgressReportItemResponseEdit on VariantResponse {
   response {
     value
     canEdit

@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { Form } from 'react-final-form';
 import { SubmitButton } from '~/components/form';
 import { RichTextField, RichTextView } from '~/components/RichText';
-import { HighlightItemResponseEditFragment } from '../../ProgressReportDrawer.graphql';
+import { ProgressReportItemResponseEditFragment } from '../../ProgressReportDrawer.graphql';
 import { RoleIcon } from '../../RoleIcon';
 
 export const VariantResponsesAccordion = ({
@@ -19,7 +19,7 @@ export const VariantResponsesAccordion = ({
   expanded: _expanded,
   onSubmit,
 }: {
-  response: HighlightItemResponseEditFragment;
+  response: ProgressReportItemResponseEditFragment;
   expanded?: boolean;
   onSubmit: (input: any) => void | SubmissionErrors | Promise<SubmissionErrors>;
 }) => {

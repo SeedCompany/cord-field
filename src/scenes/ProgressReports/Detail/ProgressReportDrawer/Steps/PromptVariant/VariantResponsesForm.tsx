@@ -2,13 +2,13 @@ import { Box, Typography } from '@mui/material';
 import { SubmissionErrors } from 'final-form';
 import { RichTextView } from '~/components/RichText';
 import {
-  HighlightItemEditFragment,
-  HighlightItemResponseEditFragment,
+  ProgressReportItemEditFragment,
+  ProgressReportItemResponseEditFragment,
 } from '../../ProgressReportDrawer.graphql';
 import { VariantResponsesAccordion } from './VariantResponsesAccordion';
 
 interface VariantResponsesFormProps {
-  currentItem: HighlightItemEditFragment;
+  currentItem: ProgressReportItemEditFragment;
   changeResponseMutation: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
@@ -27,7 +27,7 @@ export const VariantResponsesForm = ({
         </Box>
       )}
       {currentItem.responses.map(
-        (response: HighlightItemResponseEditFragment) => (
+        (response: ProgressReportItemResponseEditFragment) => (
           <VariantResponsesAccordion
             response={response}
             expanded

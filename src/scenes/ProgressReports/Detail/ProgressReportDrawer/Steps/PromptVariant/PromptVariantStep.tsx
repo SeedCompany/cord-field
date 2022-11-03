@@ -1,13 +1,13 @@
 import { SubmissionErrors } from 'final-form';
 import {
-  HighlightItemEditFragment,
   ProgressReportAvailableDataFragment,
+  ProgressReportItemEditFragment,
 } from '../../ProgressReportDrawer.graphql';
 import { PromptsForm } from './PromptsForm';
 import { VariantResponsesForm } from './VariantResponsesForm';
 
 interface PromptVariantStepProps {
-  currentItem: HighlightItemEditFragment | null;
+  currentItem: ProgressReportItemEditFragment | null;
   reportId: string;
   availableData: ProgressReportAvailableDataFragment | null;
 
