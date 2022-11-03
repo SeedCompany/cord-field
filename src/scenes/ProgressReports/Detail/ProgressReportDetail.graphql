@@ -1,13 +1,13 @@
 query ProgressReportDetail($id: ID!, $changesetId: ID) {
   periodicReport(id: $id, changeset: $changesetId) {
-    ...ProgressReport
+    ...ProgressReportDetail
     parent {
       ...EngagementBreadcrumb
     }
   }
 }
 
-fragment ProgressReport on ProgressReport {
+fragment ProgressReportDetail on ProgressReport {
   ...PeriodicReport
   cumulativeSummary {
     ...ProgressSummary
