@@ -1,5 +1,6 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { SubmissionErrors } from 'final-form';
+import { RichTextView } from '~/components/RichText';
 import {
   HighlightItemEditFragment,
   HighlightItemResponseEditFragment,
@@ -20,6 +21,11 @@ export const VariantResponsesForm = ({
   return (
     <>
       <Typography variant="h3">Share a team highlight story.</Typography>
+      {currentItem.prompt.text.value && (
+        <Box sx={{ mt: 2, mb: 4 }}>
+          <RichTextView data={currentItem.prompt.text.value} />
+        </Box>
+      )}
       {currentItem.responses.map(
         (response: HighlightItemResponseEditFragment) => (
           <VariantResponsesAccordion
