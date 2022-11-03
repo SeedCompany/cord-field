@@ -2,7 +2,7 @@ import { SubmissionErrors } from 'final-form';
 import {
   DrawerAvailableDataFragment,
   DrawerPeriodicReportItemFragment,
-} from '../ProgressReportDrawer.graphql';
+} from '../../ProgressReportDrawer.graphql';
 import { PromptsForm } from './PromptsForm';
 import { VariantResponsesForm } from './VariantResponsesForm';
 

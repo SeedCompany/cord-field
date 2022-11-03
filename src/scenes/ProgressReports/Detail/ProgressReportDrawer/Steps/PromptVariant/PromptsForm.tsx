@@ -4,7 +4,7 @@ import { SubmissionErrors } from 'final-form';
 import { Form } from 'react-final-form';
 import { EnumField, EnumOption, SubmitButton } from '~/components/form';
 import { required } from '~/components/form/validators';
-import { DrawerAvailableDataFragment } from '../ProgressReportDrawer.graphql';
+import { DrawerAvailableDataFragment } from '../../ProgressReportDrawer.graphql';
 
 interface PromptsFormProps {
   availableData: DrawerAvailableDataFragment | null;
