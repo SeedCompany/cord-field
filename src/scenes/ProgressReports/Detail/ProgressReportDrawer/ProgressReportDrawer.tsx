@@ -49,7 +49,7 @@ export const ProgressReportDrawer = ({
         },
       }}
     >
-      <Box sx={{ display: 'flex', height: 1 }}>
+      <Box sx={{ display: 'flex', height: 1, width: 'calc(100% - 300px)' }}>
         <Box
           sx={{
             width: 1,

@@ -16,9 +16,12 @@ export const ProgressReportSidebar = () => {
       sx={{
         display: 'initial',
         flexDirection: 'column',
-        minWidth: 350,
+        width: 300,
         padding: 2,
         pt: 4,
+        right: 0,
+        top: 0,
+        position: 'fixed',
       }}
     >
       <Typography
@@ -46,6 +49,14 @@ export const ProgressReportSidebar = () => {
       >
         <>
           {Math.abs(daysLeft)} {daysLeft > 0 ? 'DAYS before' : 'DAYS over'} due
+          <span
+            css={(theme) => ({
+              marginLeft: theme.spacing(1),
+              color: 'black',
+            })}
+          >
+            {currentReport?.due.toFormat('MMM. dd, yyyy')}
+          </span>
         </>
       </Typography>
 
