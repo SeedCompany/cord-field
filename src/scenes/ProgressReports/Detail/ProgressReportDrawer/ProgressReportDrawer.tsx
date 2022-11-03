@@ -33,7 +33,7 @@ export const ProgressReportDrawer = ({
   const periodicReport = data?.periodicReport as ProgressReportEditFragment;
 
   useEffect(() => {
-    if (!loading && periodicReport && periodicReport.id === reportId) {
+    if (!loading && periodicReport.id === reportId) {
       setCurrentProgressReport(periodicReport);
     }
   }, [loading, setCurrentProgressReport, reportId, periodicReport]);
