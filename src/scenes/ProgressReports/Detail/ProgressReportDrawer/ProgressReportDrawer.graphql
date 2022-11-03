@@ -6,6 +6,7 @@ query DrawerPeriodicReport($progressReportId: ID!) {
 
 fragment DrawerPeriodicReport on ProgressReport {
   id
+  ...PeriodicReport
   highlights {
     canCreate
     canRead
@@ -20,25 +21,16 @@ fragment DrawerPeriodicReport on ProgressReport {
     }
   }
   due
-
   parent {
     id
     canDelete
+    sensitivity
     language {
       value {
+        id
         displayName {
           canRead
           value
-        }
-        sensitivity
-        locations {
-          items {
-            id
-            name {
-              canRead
-              value
-            }
-          }
         }
       }
     }
@@ -47,6 +39,22 @@ fragment DrawerPeriodicReport on ProgressReport {
       name {
         canRead
         value
+      }
+      primaryLocation {
+        value {
+          name {
+            canRead
+            value
+          }
+        }
+      }
+      fieldRegion {
+        value {
+          name {
+            value
+            canRead
+          }
+        }
       }
     }
   }

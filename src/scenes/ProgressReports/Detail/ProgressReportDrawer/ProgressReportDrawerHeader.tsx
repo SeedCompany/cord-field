@@ -1,5 +1,6 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Box, Card, Divider, Skeleton, Theme, Typography } from '@mui/material';
+import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { Link } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useProgressReportContext } from '../../ProgressReportContext';
@@ -10,6 +11,7 @@ export const ProgressReportDrawerHeader = () => {
 
   const language = currentReport?.parent.language;
   const project = currentReport?.parent.project;
+  const sensitivity = currentReport?.parent.sensitivity;
 
   return (
     <Box
@@ -78,11 +80,26 @@ export const ProgressReportDrawerHeader = () => {
           <Typography variant="subtitle2" color="text.gray">
             Location
           </Typography>
-          {language?.value?.locations.items.map((loc) => (
-            <Typography variant="body1" key={loc.id}>
-              {loc.name.value}
-            </Typography>
-          ))}
+          {project?.primaryLocation.value?.name.canRead && (
+            <div css={{ display: 'flex' }}>
+              <Typography variant="body1">
+                {project.primaryLocation.value.name.value}
+              </Typography>
+              {project.fieldRegion.value && (
+                <span
+                  css={(theme) => ({
+                    marginRight: theme.spacing(1),
+                    marginLeft: theme.spacing(1),
+                  })}
+                >
+                  |
+                </span>
+              )}
+              <Typography variant="body1">
+                {project.fieldRegion.value?.name.value}
+              </Typography>
+            </div>
+          )}
 
           {!currentReport && (
             <Skeleton variant="text" height={20} width={200} />
@@ -93,15 +110,22 @@ export const ProgressReportDrawerHeader = () => {
             Sensitivity
           </Typography>
           <Typography variant="body1" sx={{ textTransform: 'uppercase' }}>
-            {language?.value?.sensitivity}
+            {sensitivity}
             <SensitivityIcon
-              value={language?.value?.sensitivity}
+              value={sensitivity}
               sx={{
                 height: 16,
               }}
             />
           </Typography>
         </Card>
+      </Box>
+      <Box>
+        {currentReport && (
+          <Typography variant="h2" sx={{ mt: 2 }}>
+            <ReportLabel report={currentReport} /> &mdash; Field Report
+          </Typography>
+        )}
       </Box>
     </Box>
   );

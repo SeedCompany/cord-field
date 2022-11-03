@@ -1,6 +1,6 @@
 import { ArrowForward } from '@mui/icons-material';
-import { Typography } from '@mui/material';
-import { Sx } from '~/common';
+import { Box, Typography } from '@mui/material';
+import { StyleProps, Sx } from '~/common';
 import { useProgressReportContext } from '../../../ProgressReportContext';
 
 const typographyLinkSx: Sx = (theme) => ({
@@ -13,16 +13,17 @@ const typographyLinkSx: Sx = (theme) => ({
   },
 });
 
-export const NextStepButton = () => {
+export const NextStepButton = ({ sx }: StyleProps) => {
   const { nextProgressReportStep } = useProgressReportContext();
 
   return (
-    <div
+    <Box
       css={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'end',
       }}
+      sx={sx}
     >
       <Typography
         component="span"
@@ -38,6 +39,6 @@ export const NextStepButton = () => {
           }}
         />
       </Typography>
-    </div>
+    </Box>
   );
 };
