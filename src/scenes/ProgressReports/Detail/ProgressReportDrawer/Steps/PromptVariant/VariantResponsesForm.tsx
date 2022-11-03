@@ -1,5 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { SubmissionErrors } from 'final-form';
+import { ReactNode } from 'react';
 import { RichTextView } from '~/components/RichText';
 import {
   ProgressReportItemEditFragment,
@@ -12,15 +13,17 @@ interface VariantResponsesFormProps {
   onChangeResponse: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
+  title: ReactNode;
 }
 
 export const VariantResponsesForm = ({
   currentItem,
   onChangeResponse,
+  title,
 }: VariantResponsesFormProps) => {
   return (
     <>
-      <Typography variant="h3">Share a team highlight story.</Typography>
+      {title}
       {currentItem.prompt.value?.text.value && (
         <Box sx={{ mt: 2, mb: 4 }}>
           <RichTextView data={currentItem.prompt.value.text.value} />

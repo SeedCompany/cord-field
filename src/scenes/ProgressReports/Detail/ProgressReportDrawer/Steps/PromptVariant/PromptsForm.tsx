@@ -1,5 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { SubmissionErrors } from 'final-form';
+import { ReactNode } from 'react';
 import { Form } from 'react-final-form';
 import { EnumField, EnumOption, SubmitButton } from '~/components/form';
 import { RichTextView } from '~/components/RichText';
@@ -10,11 +11,15 @@ interface PromptsFormProps {
   onCreateItem: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
+  title: ReactNode;
+  promptInstructions: ReactNode;
 }
 
 export const PromptsForm = ({
   availableData: stepData,
   onCreateItem,
+  title,
+  promptInstructions,
 }: PromptsFormProps) => {
   return (
     <Form onSubmit={onCreateItem}>
@@ -29,14 +34,8 @@ export const PromptsForm = ({
           }}
           onSubmit={handleSubmit}
         >
-          <Typography gutterBottom variant="h3">
-            Share a team highlight story.
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            As you reflect on the past three months, select ONE question to
-            answer.
-          </Typography>
-
+          {title}
+          {promptInstructions}
           {stepData?.prompts.length && (
             <EnumField name="prompt" label="Select a prompt" required>
               {stepData.prompts.map((prompt) => {

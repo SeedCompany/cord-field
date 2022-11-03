@@ -1,0 +1,22 @@
+mutation CreateCommunityStory($input: ChoosePrompt!) {
+  createProgressReportHighlight(input: $input) {
+    ...ProgressReportItemEdit
+    parent {
+      ... on ProgressReport {
+        id
+        highlights {
+          ...Pagination
+          items {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateCommunityStoryResponse($input: UpdatePromptVariantResponse!) {
+  updateProgressReportHighlightResponse(input: $input) {
+    ...ProgressReportItemEdit
+  }
+}

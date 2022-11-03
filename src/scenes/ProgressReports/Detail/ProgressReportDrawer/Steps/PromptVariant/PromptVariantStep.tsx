@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import { ReactNode } from 'react';
 import {
   ChoosePrompt,
   UpdatePromptVariantResponse,
@@ -16,6 +17,9 @@ interface PromptVariantStepProps {
     { input: UpdatePromptVariantResponse }
   >;
   createItemDocument: DocumentNode<unknown, { input: ChoosePrompt }>;
+
+  title: ReactNode;
+  promptInstructions: ReactNode;
 }
 
 export const PromptVariantStep = ({
@@ -23,6 +27,8 @@ export const PromptVariantStep = ({
   reportId,
   updateResponseDocument,
   createItemDocument,
+  title,
+  promptInstructions,
 }: PromptVariantStepProps) => {
   const currentItem = stepData?.items[0] ?? null;
   const availableData = stepData?.available ?? null;
@@ -59,11 +65,14 @@ export const PromptVariantStep = ({
         <VariantResponsesForm
           currentItem={currentItem}
           onChangeResponse={handleUpdateResponse}
+          title={title}
         />
       ) : (
         <PromptsForm
           availableData={availableData}
           onCreateItem={handleCreateItem}
+          title={title}
+          promptInstructions={promptInstructions}
         />
       )}
     </>
