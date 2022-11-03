@@ -1,10 +1,10 @@
-query DrawerPeriodicReport($progressReportId: ID!) {
+query ProgressReportEdit($progressReportId: ID!) {
   periodicReport(id: $progressReportId) {
-    ...DrawerPeriodicReport
+    ...ProgressReportEdit
   }
 }
 
-fragment DrawerPeriodicReport on ProgressReport {
+fragment ProgressReportEdit on ProgressReport {
   id
   ...PeriodicReport
   highlights {
@@ -14,10 +14,10 @@ fragment DrawerPeriodicReport on ProgressReport {
     hasMore
 
     available {
-      ...DrawerAvailableData
+      ...ProgressReportAvailableData
     }
     items {
-      ...DrawerPeriodicReportItem
+      ...HighlightItemEdit
     }
   }
   due
@@ -60,7 +60,7 @@ fragment DrawerPeriodicReport on ProgressReport {
   }
 }
 
-fragment DrawerPeriodicReportItem on PromptVariantResponse {
+fragment HighlightItemEdit on PromptVariantResponse {
   id
   prompt {
     id
@@ -72,11 +72,11 @@ fragment DrawerPeriodicReportItem on PromptVariantResponse {
   }
   canDelete
   responses {
-    ...DrawerPeriodicReportItemResponse
+    ...HighlightItemResponseEdit
   }
 }
 
-fragment DrawerPeriodicReportItemResponse on VariantResponse {
+fragment HighlightItemResponseEdit on VariantResponse {
   response {
     value
     canEdit
@@ -89,7 +89,7 @@ fragment DrawerPeriodicReportItemResponse on VariantResponse {
   }
 }
 
-fragment DrawerAvailableData on VariantPromptList {
+fragment ProgressReportAvailableData on VariantPromptList {
   prompts {
     id
     text {

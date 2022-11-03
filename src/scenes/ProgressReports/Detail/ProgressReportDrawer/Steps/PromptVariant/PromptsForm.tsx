@@ -1,13 +1,13 @@
 import { Box, Typography } from '@mui/material';
-import RichText from 'editorjs-blocks-react-renderer';
 import { SubmissionErrors } from 'final-form';
 import { Form } from 'react-final-form';
 import { EnumField, EnumOption, SubmitButton } from '~/components/form';
 import { required } from '~/components/form/validators';
-import { DrawerAvailableDataFragment } from '../../ProgressReportDrawer.graphql';
+import { RichTextView } from '~/components/RichText';
+import { ProgressReportAvailableDataFragment } from '../../ProgressReportDrawer.graphql';
 
 interface PromptsFormProps {
-  availableData: DrawerAvailableDataFragment | null;
+  availableData: ProgressReportAvailableDataFragment | null;
   reportId: string;
   createItemMutation: (
     input: any
@@ -51,13 +51,18 @@ export const PromptsForm = ({
                 validate={[required]}
                 required
               >
-                {stepData.prompts.map((prompt) => (
-                  <EnumOption
-                    key={prompt.id}
-                    value={prompt.id}
-                    label={<RichText data={prompt.text.value} />}
-                  />
-                ))}
+                {stepData.prompts.map((prompt) => {
+                  if (!prompt.text.value) {
+                    return null;
+                  }
+                  return (
+                    <EnumOption
+                      key={prompt.id}
+                      value={prompt.id}
+                      label={<RichTextView data={prompt.text.value} />}
+                    />
+                  );
+                })}
               </EnumField>
             )}
 

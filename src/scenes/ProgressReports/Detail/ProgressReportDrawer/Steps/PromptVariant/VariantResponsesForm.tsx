@@ -12,13 +12,13 @@ import { Form } from 'react-final-form';
 import { SubmitButton } from '~/components/form';
 import { RichTextField, RichTextView } from '~/components/RichText';
 import {
-  DrawerPeriodicReportItemFragment,
-  DrawerPeriodicReportItemResponseFragment,
+  HighlightItemEditFragment,
+  HighlightItemResponseEditFragment,
 } from '../../ProgressReportDrawer.graphql';
 import { RoleIcon } from '../../RoleIcon';
 
 interface VariantResponsesFormProps {
-  currentItem: DrawerPeriodicReportItemFragment;
+  currentItem: HighlightItemEditFragment;
   changeResponseMutation: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
@@ -32,7 +32,7 @@ export const VariantResponsesForm = ({
     <>
       <Typography variant="h3">Share a team highlight story.</Typography>
       {currentItem.responses.map(
-        (response: DrawerPeriodicReportItemResponseFragment) => (
+        (response: HighlightItemResponseEditFragment) => (
           <AccordionComponent
             response={response}
             expanded
@@ -50,7 +50,7 @@ const AccordionComponent = ({
   expanded: _expanded,
   onSubmit,
 }: {
-  response: DrawerPeriodicReportItemResponseFragment;
+  response: HighlightItemResponseEditFragment;
   expanded?: boolean;
   onSubmit: (input: any) => void | SubmissionErrors | Promise<SubmissionErrors>;
 }) => {

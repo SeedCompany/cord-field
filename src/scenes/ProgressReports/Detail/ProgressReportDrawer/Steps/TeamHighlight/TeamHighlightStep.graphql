@@ -1,6 +1,6 @@
 mutation CreateProgressReportHighlight($input: ChoosePrompt!) {
   createProgressReportHighlight(input: $input) {
-    ...DrawerPeriodicReportItem
+    ...HighlightItemEdit
     parent {
       ... on ProgressReport {
         id
@@ -19,7 +19,7 @@ mutation UpdateProgressReportHighlightResponse(
   $input: UpdatePromptVariantResponse!
 ) {
   updateProgressReportHighlightResponse(input: $input) {
-    ...DrawerPeriodicReportItem
+    ...HighlightItemEdit
     parent {
       ... on ProgressReport {
         id

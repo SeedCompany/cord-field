@@ -5,8 +5,8 @@ import { useMatch } from 'react-router-dom';
 import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import {
-  DrawerPeriodicReportDocument,
-  DrawerPeriodicReportFragment,
+  ProgressReportEditDocument,
+  ProgressReportEditFragment,
 } from './ProgressReportDrawer.graphql';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
@@ -24,13 +24,13 @@ export const ProgressReportDrawer = ({
   const navigate = useNavigate();
   const { setCurrentProgressReport } = useProgressReportContext();
 
-  const fullProgressReport = useQuery(DrawerPeriodicReportDocument, {
+  const fullProgressReport = useQuery(ProgressReportEditDocument, {
     variables: {
       progressReportId: reportId,
     },
   });
   const { loading, data } = fullProgressReport;
-  const periodicReport = data?.periodicReport as DrawerPeriodicReportFragment;
+  const periodicReport = data?.periodicReport as ProgressReportEditFragment;
 
   useEffect(() => {
     if (!loading && periodicReport && periodicReport.id === reportId) {

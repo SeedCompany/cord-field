@@ -1,15 +1,15 @@
 import { SubmissionErrors } from 'final-form';
 import {
-  DrawerAvailableDataFragment,
-  DrawerPeriodicReportItemFragment,
+  HighlightItemEditFragment,
+  ProgressReportAvailableDataFragment,
 } from '../../ProgressReportDrawer.graphql';
 import { PromptsForm } from './PromptsForm';
 import { VariantResponsesForm } from './VariantResponsesForm';
 
 interface PromptVariantStepProps {
-  currentItem: DrawerPeriodicReportItemFragment | null;
+  currentItem: HighlightItemEditFragment | null;
   reportId: string;
-  availableData: DrawerAvailableDataFragment | null;
+  availableData: ProgressReportAvailableDataFragment | null;
 
   changePromptMutation?: (
     input: any
