@@ -20,6 +20,19 @@ fragment ProgressReportEdit on ProgressReport {
       ...ProgressReportItemEdit
     }
   }
+  communityStories: highlights {
+    canCreate
+    canRead
+    total
+    hasMore
+
+    available {
+      ...ProgressReportAvailableData
+    }
+    items {
+      ...ProgressReportItemEdit
+    }
+  }
   due
   parent {
     id
