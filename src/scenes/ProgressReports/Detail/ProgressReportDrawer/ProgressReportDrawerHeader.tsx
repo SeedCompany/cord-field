@@ -45,7 +45,7 @@ export const ProgressReportDrawerHeader = () => {
             marginBottom: '-4px',
           }}
         />
-        All Reports
+        Back
       </Link>
       <div css={{ display: 'flex' }}>
         {currentReport ? (
