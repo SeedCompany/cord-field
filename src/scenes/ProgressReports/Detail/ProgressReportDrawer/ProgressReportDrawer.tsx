@@ -40,7 +40,7 @@ export const ProgressReportDrawer = ({
       onClose={() => navigate('..')}
       sx={{
         '& .MuiDrawer-paper': {
-          width: 'calc(100% - 200px)',
+          width: '100%',
         },
       }}
     >
