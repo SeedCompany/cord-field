@@ -60,7 +60,7 @@ export const PromptVariantStep = ({
   };
 
   return (
-    <>
+    <div css={(theme) => ({ maxWidth: theme.breakpoints.values.md })}>
       {currentItem ? (
         <VariantResponsesForm
           currentItem={currentItem}
@@ -75,6 +75,6 @@ export const PromptVariantStep = ({
           promptInstructions={promptInstructions}
         />
       )}
-    </>
+    </div>
   );
 };
