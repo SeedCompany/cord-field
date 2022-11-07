@@ -13,6 +13,9 @@ fragment ProgressReportEdit on ProgressReport {
   communityStories {
     ...ProgressReportStepData
   }
+  progress {
+    ...ProgressOfProductForReport
+  }
   due
   parent {
     id
