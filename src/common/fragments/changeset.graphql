@@ -29,11 +29,28 @@ fragment ChangesetDiff on ChangesetDiff {
 
 fragment ChangesetDiffItem on Resource {
   ...Id
-  ...BudgetRecordChangesetDiff
+  ...BudgetRecordDiffProps
+  ...ProjectDiffProps
 }
 
-fragment BudgetRecordChangesetDiff on BudgetRecord {
+fragment BudgetRecordDiffProps on BudgetRecord {
   amount {
     value
   }
+}
+
+fragment ProjectDiffProps on Project {
+  name {
+    value
+  }
+  mouRange {
+    value {
+      start
+      end
+    }
+  }
+  step {
+    value
+  }
+  projectStatus: status
 }

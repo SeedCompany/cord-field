@@ -1,4 +1,4 @@
-query ChangesetDiffBanner($changeset: ID!) {
+query ChangesetBanner($changeset: ID!) {
   changeset(id: $changeset) {
     id
     ...ProjectChangeRequestListItem

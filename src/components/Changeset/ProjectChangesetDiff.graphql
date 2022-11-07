@@ -9,47 +9,17 @@ query ProjectChangesetDiffs($id: ID!, $changeset: ID) {
 
 fragment ProjectChangesetDiff on ChangesetDiff {
   added {
-    ...ProjectProps
-    ...BudgetRecordProps
-    ...Id
+    ...ChangesetDiffItem
   }
   removed {
-    ...ProjectProps
-    ...BudgetRecordProps
-    ...Id
+    ...ChangesetDiffItem
   }
   changed {
     previous {
-      ...ProjectProps
-      ...BudgetRecordProps
-      ...Id
+      ...ChangesetDiffItem
     }
     updated {
-      ...ProjectProps
-      ...BudgetRecordProps
-      ...Id
+      ...ChangesetDiffItem
     }
-  }
-}
-
-fragment ProjectProps on Project {
-  name {
-    value
-  }
-  mouRange {
-    value {
-      start
-      end
-    }
-  }
-  step {
-    value
-  }
-  projectStatus: status
-}
-
-fragment BudgetRecordProps on BudgetRecord {
-  amount {
-    value
   }
 }

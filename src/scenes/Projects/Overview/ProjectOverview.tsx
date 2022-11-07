@@ -7,6 +7,9 @@ import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { ProjectStepLabels } from '~/api/schema.graphql';
 import { labelFrom, Many } from '~/common';
+import { ChangesetChildrenBadge } from '~/components/Changeset/ChangesetChildrenBadge';
+import { ChangesetDiffProvider } from '~/components/Changeset/ChangesetDiffContext';
+import { ProjectChangesetDiffsDocument } from '~/components/Changeset/ProjectChangesetDiff.graphql';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
@@ -40,7 +43,6 @@ import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagemen
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/projects.graphql';
-import { ProjectChangesetDiff } from '../ProjectChangesetDiff';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
@@ -148,6 +150,14 @@ export const ProjectOverview = () => {
     }
   );
 
+  const { data: changesetDiffData } = useQuery(ProjectChangesetDiffsDocument, {
+    variables: {
+      id: projectId,
+      changeset: changesetId ?? '',
+    },
+    skip: !changesetId,
+  });
+
   const engagements = useListQuery(EngagementList, {
     listAt: (data) => data.project.engagements,
     changesetRemovedItems: (obj): obj is EngagementListItem =>
@@ -215,7 +225,7 @@ export const ProjectOverview = () => {
     : CreateInternshipEngagement;
 
   return (
-    <ProjectChangesetDiff>
+    <ChangesetDiffProvider value={changesetDiffData?.project.changesetDiff}>
       <main className={classes.root}>
         <Helmet title={projectOverviewData?.project.name.value ?? undefined} />
         <Error error={error}>
@@ -477,10 +487,14 @@ export const ProjectOverview = () => {
 
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
-                <BudgetOverviewCard
-                  budget={projectOverviewData?.project.budget.value}
-                  loading={!projectOverviewData}
-                />
+                <ChangesetChildrenBadge
+                  parent={projectOverviewData?.project.budget.value}
+                >
+                  <BudgetOverviewCard
+                    budget={projectOverviewData?.project.budget.value}
+                    loading={!projectOverviewData}
+                  />
+                </ChangesetChildrenBadge>
               </Grid>
               <Grid item xs={12} md={6}>
                 {/* TODO When file api is finished need to update query and pass in file information */}
@@ -612,6 +626,6 @@ export const ProjectOverview = () => {
           />
         )}
       </main>
-    </ProjectChangesetDiff>
+    </ChangesetDiffProvider>
   );
 };

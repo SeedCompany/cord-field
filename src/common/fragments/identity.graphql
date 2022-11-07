@@ -13,8 +13,16 @@ fragment ChangesetId on ChangesetAware {
   }
 }
 
+fragment ChangesetIdChild on ChangesetAware {
+  __typename
+  id
+  changeset {
+    id
+  }
+}
+
 fragment ParentId on ChangesetAware {
   parent {
-    id
+    ...ChangesetIdChild
   }
 }

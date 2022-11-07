@@ -1,4 +1,5 @@
 import { useApolloClient } from '@apollo/client';
+import { filter } from 'lodash';
 import { createContext, useCallback, useContext, useMemo } from 'react';
 import { Entity } from '~/api';
 import { ChildrenProp, IdFragment, mapFromList, Nullable } from '~/common';
@@ -25,6 +26,13 @@ type DetermineChangesetDiffItemFn = <
   | { mode: 'removed'; current: TDiffItem; previous: undefined }
   | { mode: 'changed'; current: TDiffItem; previous: TDiffItem };
 
+type DetermineChangedForIdFn = <
+  T extends Entity,
+  TDiffItem extends EntityFromChangesetDiff<T>
+>(
+  id: string
+) => { current: TDiffItem[]; previous: TDiffItem[] };
+
 interface ProcessedDiff {
   added: Record<string, DiffItem>;
   removed: Record<string, DiffItem>;
@@ -36,6 +44,12 @@ const defaultDeterminedDiffItem: ReturnType<DetermineChangesetDiffItemFn> = {
   current: undefined,
   previous: undefined,
 };
+
+const defaultDeterminedChanged: ReturnType<DetermineChangedForIdFn> = {
+  current: [],
+  previous: [],
+};
+
 const defaultProcessedDiff: ProcessedDiff = {
   added: {},
   removed: {},
@@ -45,6 +59,7 @@ export const ChangesetDiffContext = createContext({
   diff: defaultProcessedDiff,
   determineChangesetDiffItem: (() =>
     defaultDeterminedDiffItem) as DetermineChangesetDiffItemFn,
+  doSomethingCool: (() => defaultDeterminedChanged) as DetermineChangedForIdFn,
 });
 
 export const ChangesetDiffProvider = (
@@ -69,6 +84,26 @@ export const ChangesetDiffProvider = (
   }, [apollo, props.value]);
 
   console.log(diff);
+
+  const doSomethingCool = useCallback(
+    (id: string) => {
+      const childrenChanges = filter(diff.changed, (item) => {
+        if (
+          'parent' in item.previous &&
+          item.previous.parent &&
+          'id' in item.previous.parent
+        ) {
+          return item.previous.parent.id === id;
+        }
+        return false;
+      });
+      return {
+        current: childrenChanges.map((i) => i.updated),
+        previous: childrenChanges.map((i) => i.previous),
+      };
+    },
+    [diff]
+  ) as DetermineChangedForIdFn;
 
   const determineChangesetDiffItem = useCallback(
     (obj: any) => {
@@ -110,8 +145,9 @@ export const ChangesetDiffProvider = (
     () => ({
       diff,
       determineChangesetDiffItem,
+      doSomethingCool,
     }),
-    [diff, determineChangesetDiffItem]
+    [diff, determineChangesetDiffItem, doSomethingCool]
   );
 
   return (

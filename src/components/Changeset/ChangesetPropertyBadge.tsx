@@ -66,6 +66,7 @@ export const ChangesetPropertyBadge = <
   const originalProp = unwrapSecured(previous[prop]) as Item;
   const identifyBy = identifyByProp ?? identity;
   const isDiff = identifyBy(currentProp) !== identifyBy(originalProp);
+
   return (
     <ChangesetBadge
       mode={isDiff ? 'changed' : undefined}
