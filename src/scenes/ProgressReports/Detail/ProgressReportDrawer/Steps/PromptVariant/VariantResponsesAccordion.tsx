@@ -10,6 +10,7 @@ import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Form } from 'react-final-form';
 import { SubmitButton } from '~/components/form';
+import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField, RichTextView } from '~/components/RichText';
 import { ProgressReportItemResponseEditFragment } from '../../ProgressReportDrawer.graphql';
 import { RoleIcon } from '../../RoleIcon';
@@ -65,7 +66,7 @@ export const VariantResponsesAccordion = ({
                       sx={{ mb: 1 }}
                       component="div"
                     >
-                      Saved at {savedAt.toISO()}
+                      Saved at <FormattedDateTime date={savedAt} relative />
                     </Typography>
                   )}
                   <SubmitButton
