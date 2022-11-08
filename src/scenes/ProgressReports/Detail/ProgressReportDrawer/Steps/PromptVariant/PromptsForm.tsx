@@ -29,10 +29,10 @@ export const PromptsForm = ({
           }}
           onSubmit={handleSubmit}
         >
-          <Typography sx={{ mb: 2 }} variant="h3">
+          <Typography gutterBottom variant="h3">
             Share a team highlight story.
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
+          <Typography variant="body2" gutterBottom>
             As you reflect on the past three months, select ONE question to
             answer.
           </Typography>
