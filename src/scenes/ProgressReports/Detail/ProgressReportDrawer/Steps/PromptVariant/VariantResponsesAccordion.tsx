@@ -29,13 +29,13 @@ export const VariantResponsesAccordion = ({
   if (response.response.canRead) {
     return (
       <Accordion
-        key={response.variant.responsibleRole}
+        key={response.variant.key}
         expanded={expanded}
         elevation={2}
         square
       >
         <AccordionSummary
-          aria-controls={`${response.variant.responsibleRole}-content`}
+          aria-controls={`${response.variant.key}-content`}
           expandIcon={<ExpandMore />}
           sx={{
             '& .MuiAccordionSummary-content': {
