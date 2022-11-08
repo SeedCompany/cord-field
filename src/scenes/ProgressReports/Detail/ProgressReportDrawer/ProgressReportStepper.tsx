@@ -70,7 +70,7 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
   const { setProgressReportStep } = useProgressReportContext();
 
   return (
-    <Paper elevation={4} sx={{ mr: 2, overflow: 'hidden' }}>
+    <Paper elevation={4} sx={{ mr: 2 }}>
       <div>
         <Typography sx={{ px: 2, pt: 2 }}>Steps:</Typography>
       </div>
