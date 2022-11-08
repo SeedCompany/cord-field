@@ -8,30 +8,10 @@ fragment ProgressReportEdit on ProgressReport {
   id
   ...PeriodicReport
   highlights {
-    canCreate
-    canRead
-    total
-    hasMore
-
-    available {
-      ...ProgressReportAvailableData
-    }
-    items {
-      ...ProgressReportItemEdit
-    }
+    ...ProgressReportStepData
   }
   communityStories: highlights {
-    canCreate
-    canRead
-    total
-    hasMore
-
-    available {
-      ...ProgressReportAvailableData
-    }
-    items {
-      ...ProgressReportItemEdit
-    }
+    ...ProgressReportStepData
   }
   due
   parent {
@@ -70,6 +50,20 @@ fragment ProgressReportEdit on ProgressReport {
         }
       }
     }
+  }
+}
+
+fragment ProgressReportStepData on PromptVariantResponseList {
+  canCreate
+  canRead
+  total
+  hasMore
+
+  available {
+    ...ProgressReportAvailableData
+  }
+  items {
+    ...ProgressReportItemEdit
   }
 }
 

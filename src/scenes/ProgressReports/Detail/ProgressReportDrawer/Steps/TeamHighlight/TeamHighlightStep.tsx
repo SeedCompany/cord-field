@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client';
 import { useProgressReportContext } from '../../../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
 import { PromptVariantStep } from '../PromptVariant';
@@ -9,39 +8,7 @@ import {
 
 export const TeamHighlightStep = () => {
   const { currentReport } = useProgressReportContext();
-  const currentItem = currentReport?.highlights.items[0] ?? null;
-
-  const availableData = currentReport?.highlights.available ?? null;
-
-  const [submitResponse] = useMutation(
-    UpdateProgressReportHighlightResponseDocument
-  );
-  const [createProgressReportHighlight] = useMutation(
-    CreateProgressReportHighlightDocument
-  );
-
-  const changeResponse = async (values: any) => {
-    await submitResponse({
-      variables: {
-        input: {
-          id: currentItem?.id ?? '',
-          response: values.response,
-          variant: values.variant,
-        },
-      },
-    });
-  };
-
-  const createHighlight = async (values: any) => {
-    await createProgressReportHighlight({
-      variables: {
-        input: {
-          prompt: values.prompt,
-          resource: values.reportId,
-        },
-      },
-    });
-  };
+  const highlights = currentReport?.highlights;
 
   if (!currentReport) {
     return null;
@@ -54,11 +21,10 @@ export const TeamHighlightStep = () => {
       })}
     >
       <PromptVariantStep
-        currentItem={currentItem}
+        stepData={highlights}
         reportId={currentReport.id}
-        availableData={availableData}
-        updateResponseMutation={changeResponse}
-        createItemMutation={createHighlight}
+        updateResponseDocument={UpdateProgressReportHighlightResponseDocument}
+        createItemDocument={CreateProgressReportHighlightDocument}
       />
       <NextStepButton sx={{ mt: 2 }} />
     </div>

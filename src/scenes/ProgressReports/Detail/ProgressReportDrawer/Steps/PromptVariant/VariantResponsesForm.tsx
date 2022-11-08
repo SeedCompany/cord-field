@@ -9,14 +9,14 @@ import { VariantResponsesAccordion } from './VariantResponsesAccordion';
 
 interface VariantResponsesFormProps {
   currentItem: ProgressReportItemEditFragment;
-  changeResponseMutation: (
+  onChangeResponse: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
 }
 
 export const VariantResponsesForm = ({
   currentItem,
-  changeResponseMutation,
+  onChangeResponse,
 }: VariantResponsesFormProps) => {
   return (
     <>
@@ -32,7 +32,7 @@ export const VariantResponsesForm = ({
             response={response}
             expanded
             key={response.variant.key}
-            onSubmit={changeResponseMutation}
+            onSubmit={onChangeResponse}
           />
         )
       )}

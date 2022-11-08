@@ -1,46 +1,70 @@
-import { SubmissionErrors } from 'final-form';
+import { useMutation } from '@apollo/client';
+import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
-  ProgressReportAvailableDataFragment,
-  ProgressReportItemEditFragment,
-} from '../../ProgressReportDrawer.graphql';
+  ChoosePrompt,
+  UpdatePromptVariantResponse,
+} from '~/api/schema.graphql';
+import { ProgressReportStepDataFragment } from '../../ProgressReportDrawer.graphql';
 import { PromptsForm } from './PromptsForm';
 import { VariantResponsesForm } from './VariantResponsesForm';
 
 interface PromptVariantStepProps {
-  currentItem: ProgressReportItemEditFragment | null;
+  stepData?: ProgressReportStepDataFragment;
   reportId: string;
-  availableData: ProgressReportAvailableDataFragment | null;
-
-  changePromptMutation?: (
-    input: any
-  ) => void | SubmissionErrors | Promise<SubmissionErrors>;
-  createItemMutation: (
-    input: any
-  ) => void | SubmissionErrors | Promise<SubmissionErrors>;
-  updateResponseMutation: (
-    input: any
-  ) => void | SubmissionErrors | Promise<SubmissionErrors>;
+  updateResponseDocument: DocumentNode<
+    unknown,
+    { input: UpdatePromptVariantResponse }
+  >;
+  createItemDocument: DocumentNode<unknown, { input: ChoosePrompt }>;
 }
 
 export const PromptVariantStep = ({
-  currentItem,
-  availableData,
+  stepData,
   reportId,
-  updateResponseMutation,
-  createItemMutation,
+  updateResponseDocument,
+  createItemDocument,
 }: PromptVariantStepProps) => {
+  const currentItem = stepData?.items[0] ?? null;
+  const availableData = stepData?.available ?? null;
+
+  const [updateResponseMutation] = useMutation(updateResponseDocument);
+  const [createItemMutation] = useMutation(createItemDocument);
+
+  const handleUpdateResponse = async (values: any) => {
+    await updateResponseMutation({
+      variables: {
+        input: {
+          id: currentItem?.id ?? '',
+          response: values.response,
+          variant: values.variant,
+        },
+      },
+    });
+  };
+
+  const handleCreateItem = async (values: any) => {
+    await createItemMutation({
+      variables: {
+        input: {
+          prompt: values.prompt,
+          resource: values.reportId,
+        },
+      },
+    });
+  };
+
   return (
     <>
       {currentItem ? (
         <VariantResponsesForm
           currentItem={currentItem}
-          changeResponseMutation={updateResponseMutation}
+          onChangeResponse={handleUpdateResponse}
         />
       ) : (
         <PromptsForm
           availableData={availableData}
           reportId={reportId}
-          createItemMutation={createItemMutation}
+          onCreateItem={handleCreateItem}
         />
       )}
     </>
