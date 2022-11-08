@@ -27,64 +27,61 @@ export const VariantResponsesAccordion = ({
   const [expanded, setExpanded] = useState(_expanded ?? false);
   const [savedAt, setSavedAt] = useState<DateTime | null>(null);
 
-  if (response.response.canRead) {
-    return (
-      <Accordion
-        key={response.variant.key}
-        expanded={expanded}
-        elevation={2}
-        square
-      >
-        <AccordionSummary
-          aria-controls={`${response.variant.key}-content`}
-          expandIcon={<ExpandMore />}
-          sx={{
-            '& .MuiAccordionSummary-content': {
-              alignItems: 'center',
-            },
-          }}
-          onClick={() => setExpanded(!expanded)}
-        >
-          <RoleIcon role={response.variant.responsibleRole} />
-          <span>{response.variant.label}</span>
-        </AccordionSummary>
-        <AccordionDetails sx={{ px: 4 }}>
-          {response.response.canEdit ? (
-            <Form
-              onSubmit={onSubmit}
-              initialValues={{
-                variant: response.variant.key,
-                response: response.response.value,
-              }}
-            >
-              {({ handleSubmit }) => (
-                <form onSubmit={handleSubmit}>
-                  <RichTextField name="response" label="Response" />
-                  {savedAt && (
-                    <Typography
-                      variant="caption"
-                      sx={{ mb: 1 }}
-                      component="div"
-                    >
-                      Saved at <FormattedDateTime date={savedAt} relative />
-                    </Typography>
-                  )}
-                  <SubmitButton
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => setSavedAt(DateTime.now())}
-                  >
-                    Save Progress
-                  </SubmitButton>
-                </form>
-              )}
-            </Form>
-          ) : response.response.value ? (
-            <RichTextView data={response.response.value} />
-          ) : null}
-        </AccordionDetails>
-      </Accordion>
-    );
+  if (!response.response.canRead) {
+    return null;
   }
-  return null;
+
+  return (
+    <Accordion
+      key={response.variant.key}
+      expanded={expanded}
+      elevation={2}
+      square
+    >
+      <AccordionSummary
+        aria-controls={`${response.variant.key}-content`}
+        expandIcon={<ExpandMore />}
+        sx={{
+          '& .MuiAccordionSummary-content': {
+            alignItems: 'center',
+          },
+        }}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <RoleIcon role={response.variant.responsibleRole} />
+        <span>{response.variant.label}</span>
+      </AccordionSummary>
+      <AccordionDetails sx={{ px: 4 }}>
+        {response.response.canEdit ? (
+          <Form
+            onSubmit={onSubmit}
+            initialValues={{
+              variant: response.variant.key,
+              response: response.response.value,
+            }}
+          >
+            {({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <RichTextField name="response" label="Response" />
+                {savedAt && (
+                  <Typography variant="caption" sx={{ mb: 1 }} component="div">
+                    Saved at <FormattedDateTime date={savedAt} relative />
+                  </Typography>
+                )}
+                <SubmitButton
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => setSavedAt(DateTime.now())}
+                >
+                  Save Progress
+                </SubmitButton>
+              </form>
+            )}
+          </Form>
+        ) : response.response.value ? (
+          <RichTextView data={response.response.value} />
+        ) : null}
+      </AccordionDetails>
+    </Accordion>
+  );
 };
