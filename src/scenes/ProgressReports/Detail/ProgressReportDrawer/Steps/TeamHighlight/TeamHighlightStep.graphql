@@ -1,6 +1,7 @@
 mutation CreateProgressReportHighlight($input: ChoosePrompt!) {
   createProgressReportHighlight(input: $input) {
     ...ProgressReportItemEdit
+    # Fetch the list of highlights again to connect this new item to our cached list
     parent {
       ... on ProgressReport {
         id
@@ -20,16 +21,5 @@ mutation UpdateProgressReportHighlightResponse(
 ) {
   updateProgressReportHighlightResponse(input: $input) {
     ...ProgressReportItemEdit
-    parent {
-      ... on ProgressReport {
-        id
-        highlights {
-          ...Pagination
-          items {
-            id
-          }
-        }
-      }
-    }
   }
 }
