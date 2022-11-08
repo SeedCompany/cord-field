@@ -1,24 +1,12 @@
 import { Box } from '@mui/material';
-import { Sx } from '~/common';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { Step1, Step2, Step3 } from '../TemporarySteps';
 import { colorPalette } from './colorPalette';
 import { NextStepButton } from './Steps/NextStepButton';
 import { TeamHighlightStep } from './Steps/TeamHighlight';
 
-const typographyLinkSx: Sx = (theme) => ({
-  color: theme.palette.grey[800],
-  fontSize: 14,
-  cursor: 'pointer',
-  marginLeft: 2,
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-  userSelect: 'none',
-});
-
 export const StepContainer = () => {
-  const { step, nextProgressReportStep } = useProgressReportContext();
+  const { step } = useProgressReportContext();
 
   return (
     <div
