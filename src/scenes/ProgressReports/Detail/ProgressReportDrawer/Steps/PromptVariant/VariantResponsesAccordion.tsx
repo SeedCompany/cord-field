@@ -44,7 +44,7 @@ export const VariantResponsesAccordion = ({
           }}
           onClick={() => setExpanded(!expanded)}
         >
-          <RoleIcon roleStep={response.variant.responsibleRole} />
+          <RoleIcon role={response.variant.responsibleRole} />
           <span>{response.variant.label}</span>
         </AccordionSummary>
         <AccordionDetails sx={{ px: 4 }}>
