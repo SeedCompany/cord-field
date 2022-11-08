@@ -45,7 +45,7 @@ export const PromptsForm = ({
           </Typography>
 
           {stepData?.prompts.length && (
-            <EnumField name="prompt" label="Select a question" required>
+            <EnumField name="prompt" label="Select a prompt" required>
               {stepData.prompts.map((prompt) => {
                 if (!prompt.text.value) {
                   return null;
