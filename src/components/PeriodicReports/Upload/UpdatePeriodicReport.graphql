@@ -4,7 +4,7 @@ mutation UpdatePeriodicReport(
 ) {
   updatePeriodicReport(input: $input) {
     ...PeriodicReport
-    ...ProgressReport @include(if: $refreshFromPnp)
+    ...ProgressReportDetail @include(if: $refreshFromPnp)
   }
 }
 

@@ -1,0 +1,111 @@
+query ProgressReportEdit($progressReportId: ID!) {
+  periodicReport(id: $progressReportId) {
+    ...ProgressReportEdit
+  }
+}
+
+fragment ProgressReportEdit on ProgressReport {
+  id
+  ...PeriodicReport
+  highlights {
+    ...ProgressReportStepData
+  }
+  communityStories: highlights {
+    ...ProgressReportStepData
+  }
+  due
+  parent {
+    id
+    canDelete
+    sensitivity
+    language {
+      value {
+        id
+        displayName {
+          canRead
+          value
+        }
+      }
+    }
+    project {
+      id
+      name {
+        canRead
+        value
+      }
+      primaryLocation {
+        value {
+          name {
+            canRead
+            value
+          }
+        }
+      }
+      fieldRegion {
+        value {
+          name {
+            value
+            canRead
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment ProgressReportStepData on PromptVariantResponseList {
+  canCreate
+  canRead
+  total
+  hasMore
+
+  available {
+    ...ProgressReportAvailableData
+  }
+  items {
+    ...ProgressReportItemEdit
+  }
+}
+
+fragment ProgressReportItemEdit on PromptVariantResponse {
+  id
+  prompt {
+    id
+    canDelete
+    createdAt
+    text {
+      value
+    }
+  }
+  canDelete
+  responses {
+    ...ProgressReportItemResponseEdit
+  }
+}
+
+fragment ProgressReportItemResponseEdit on VariantResponse {
+  response {
+    value
+    canEdit
+    canRead
+  }
+  variant {
+    key
+    label
+    responsibleRole
+  }
+}
+
+fragment ProgressReportAvailableData on VariantPromptList {
+  prompts {
+    id
+    text {
+      value
+    }
+  }
+  variants {
+    label
+    responsibleRole
+    key
+  }
+}

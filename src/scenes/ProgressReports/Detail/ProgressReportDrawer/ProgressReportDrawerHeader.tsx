@@ -1,11 +1,17 @@
 import { ArrowBack } from '@mui/icons-material';
-import { Box, Card, Theme, Typography } from '@mui/material';
+import { Box, Card, Divider, Skeleton, Theme, Typography } from '@mui/material';
+import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { Link } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useProgressReportContext } from '../../ProgressReportContext';
 
 export const ProgressReportDrawerHeader = () => {
-  const { setCurrentProgressReport } = useProgressReportContext();
+  const { setCurrentProgressReport, currentReport } =
+    useProgressReportContext();
+
+  const language = currentReport?.parent.language;
+  const project = currentReport?.parent.project;
+  const sensitivity = currentReport?.parent.sensitivity;
 
   return (
     <Box
@@ -41,7 +47,25 @@ export const ProgressReportDrawerHeader = () => {
         />
         All Reports
       </Link>
-      <Typography variant="h2">Project Name | Engagement Name</Typography>
+      <div css={{ display: 'flex' }}>
+        {currentReport ? (
+          <Typography variant="h2">{project?.name.value}</Typography>
+        ) : (
+          <Skeleton variant="text" height={40} width={200} />
+        )}
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ mx: 2, borderRightColor: 'black', borderRightWidth: 2 }}
+        />
+        {currentReport ? (
+          <Typography variant="h2">
+            {language?.value?.displayName.value}
+          </Typography>
+        ) : (
+          <Skeleton variant="text" height={40} width={200} />
+        )}
+      </div>
       <Box
         sx={{
           marginTop: 1,
@@ -56,24 +80,52 @@ export const ProgressReportDrawerHeader = () => {
           <Typography variant="subtitle2" color="text.gray">
             Location
           </Typography>
-          <Typography variant="body1">
-            Ethiopia | Africa - Anglophone West
-          </Typography>
+          {project?.primaryLocation.value?.name.canRead && (
+            <div css={{ display: 'flex' }}>
+              <Typography variant="body1">
+                {project.primaryLocation.value.name.value}
+              </Typography>
+              {project.fieldRegion.value && (
+                <span
+                  css={(theme) => ({
+                    marginRight: theme.spacing(1),
+                    marginLeft: theme.spacing(1),
+                  })}
+                >
+                  |
+                </span>
+              )}
+              <Typography variant="body1">
+                {project.fieldRegion.value?.name.value}
+              </Typography>
+            </div>
+          )}
+
+          {!currentReport && (
+            <Skeleton variant="text" height={20} width={200} />
+          )}
         </Card>
         <Card elevation={0} variant="outlined" sx={{ px: 2, py: 1 }}>
           <Typography variant="subtitle2" color="text.gray">
             Sensitivity
           </Typography>
           <Typography variant="body1" sx={{ textTransform: 'uppercase' }}>
-            HIGH
+            {sensitivity}
             <SensitivityIcon
-              value="High"
+              value={sensitivity}
               sx={{
                 height: 16,
               }}
             />
           </Typography>
         </Card>
+      </Box>
+      <Box>
+        {currentReport && (
+          <Typography variant="h2" sx={{ mt: 2 }}>
+            <ReportLabel report={currentReport} /> &mdash; Field Report
+          </Typography>
+        )}
       </Box>
     </Box>
   );

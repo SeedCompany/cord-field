@@ -8,9 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Sx } from '~/common';
-import { PeopleJoinedIcon } from '~/components/Icons';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { colorPalette } from './colorPalette';
 
 interface ProgressReportStepperProps {
   step: number;
@@ -72,44 +70,11 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
   const { setProgressReportStep } = useProgressReportContext();
 
   return (
-    <Paper
-      elevation={4}
-      sx={{
-        marginRight: 2,
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        css={{
-          display: 'flex',
-          alignItems: 'center',
-          backgroundColor: colorPalette.stepperCard.headerBackground.partner,
-        }}
-      >
-        <PeopleJoinedIcon
-          sx={{
-            backgroundColor: colorPalette.stepperCard.iconBackground.partner,
-            marginRight: 1,
-            padding: 1,
-            height: 48,
-            width: 48,
-          }}
-        />
-        <Typography
-          sx={{
-            padding: 1,
-            flexGrow: 2,
-          }}
-        >
-          Partner Steps
-        </Typography>
+    <Paper elevation={4} sx={{ mr: 2 }}>
+      <div>
+        <Typography sx={{ px: 2, pt: 2 }}>Steps:</Typography>
       </div>
-      <Box
-        sx={{
-          padding: 2,
-          paddingTop: 1,
-        }}
-      >
+      <Box sx={{ p: 2, pt: 0 }}>
         <Typography sx={typographySx}>Narrative Report</Typography>
         <Stepper activeStep={step} orientation="vertical" sx={stepperSx}>
           <Step onClick={() => setProgressReportStep(0)}>

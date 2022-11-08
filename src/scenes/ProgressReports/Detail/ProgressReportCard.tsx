@@ -5,7 +5,7 @@ import {
 } from '../../../components/DefinedFileCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
-import { ProgressReportFragment } from './ProgressReportDetail.graphql';
+import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
 
 interface Props
   extends Omit<
@@ -16,7 +16,7 @@ interface Props
     | 'resourceType'
     | 'securedFile'
   > {
-  progressReport: ProgressReportFragment;
+  progressReport: ProgressReportDetailFragment;
 }
 
 export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {

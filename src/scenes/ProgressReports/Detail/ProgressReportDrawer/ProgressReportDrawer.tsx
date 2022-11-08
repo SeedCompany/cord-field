@@ -1,29 +1,42 @@
+import { useQuery } from '@apollo/client';
 import { Box, Drawer } from '@mui/material';
 import { useEffect } from 'react';
 import { useMatch } from 'react-router-dom';
 import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { ProgressReportFragment } from '../ProgressReportDetail.graphql';
+import {
+  ProgressReportEditDocument,
+  ProgressReportEditFragment,
+} from './ProgressReportDrawer.graphql';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
 import { StepContainer } from './StepContainer';
 
 interface ProgressReportDrawerProps {
-  report: ProgressReportFragment | null;
+  reportId?: string;
 }
 
-export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
+export const ProgressReportDrawer = ({
+  reportId = '',
+}: ProgressReportDrawerProps) => {
   const open = !!useMatch('progress-reports/:id/edit');
 
   const navigate = useNavigate();
-  const { step, setCurrentProgressReport, currentReport } =
-    useProgressReportContext();
+  const { setCurrentProgressReport } = useProgressReportContext();
+
+  const fullProgressReport = useQuery(ProgressReportEditDocument, {
+    variables: {
+      progressReportId: reportId,
+    },
+  });
+  const { loading, data } = fullProgressReport;
+  const periodicReport = data?.periodicReport as ProgressReportEditFragment;
 
   useEffect(() => {
-    if (report?.id !== currentReport?.id) {
-      setCurrentProgressReport(report);
+    if (!loading && periodicReport.id === reportId) {
+      setCurrentProgressReport(periodicReport);
     }
-  }, [currentReport?.id, report, setCurrentProgressReport]);
+  }, [loading, setCurrentProgressReport, reportId, periodicReport]);
 
   return (
     <Drawer
@@ -36,7 +49,7 @@ export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
         },
       }}
     >
-      <Box sx={{ display: 'flex', height: 1 }}>
+      <Box sx={{ display: 'flex', height: 1, width: 'calc(100% - 300px)' }}>
         <Box
           sx={{
             width: 1,
@@ -67,7 +80,7 @@ export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
             <StepContainer />
           </Box>
         </Box>
-        <ProgressReportSidebar step={step} />
+        <ProgressReportSidebar />
       </Box>
     </Drawer>
   );

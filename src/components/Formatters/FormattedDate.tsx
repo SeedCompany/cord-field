@@ -52,11 +52,20 @@ FormattedDateRange.orNull = (range: Nullable<DateRange>) =>
     <FormattedDateRange range={range} />
   );
 
-export const FormattedDateTime = ({ date }: { date: Nullable<DateTime> }) => {
+export const FormattedDateTime = ({
+  date,
+  relative,
+}: {
+  date: Nullable<DateTime>;
+  relative?: boolean;
+}) => {
   const format = useDateTimeFormatter();
+  // ToDo: when using relative, we should update using a defined interval
   return date ? (
     <Tooltip title={format(date, DateTime.DATETIME_HUGE)}>
-      <time dateTime={date.toUTC().toISO()}>{format(date)}</time>
+      <time dateTime={date.toUTC().toISO()}>
+        {relative ? date.toRelative() : format(date)}
+      </time>
     </Tooltip>
   ) : null;
 };

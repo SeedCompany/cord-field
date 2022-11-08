@@ -7,7 +7,14 @@ import {
 } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
-import { ProgressReportFragment } from './Detail/ProgressReportDetail.graphql';
+import { ProgressReportEditFragment } from './Detail/ProgressReportDrawer/ProgressReportDrawer.graphql';
+
+export const stepNames = [
+  'team-highlight',
+  'community-story',
+  'progress',
+  'additional-notes',
+];
 
 const initialProgressReportContext = {
   // eslint-disable-next-line @seedcompany/no-unused-vars
@@ -24,12 +31,12 @@ const initialProgressReportContext = {
   },
 
   // eslint-disable-next-line @seedcompany/no-unused-vars
-  setCurrentProgressReport: (report: ProgressReportFragment | null) => {
+  setCurrentProgressReport: (report: ProgressReportEditFragment | null) => {
     return;
   },
 
   step: 0,
-  currentReport: null as ProgressReportFragment | null,
+  currentReport: null as ProgressReportEditFragment | null,
 };
 
 const ProgressReportContext = createContext<
@@ -40,22 +47,14 @@ const useStepState = makeQueryHandler({
   step: StringParam,
 });
 
-export const stepNames = [
-  'team-highlight',
-  'community-story',
-  'progress',
-  'additional-notes',
-];
-
 export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
   const stepIndex = stepNames.indexOf(urlStep);
   const [step, setIndexStep] = useState(stepIndex > -1 ? stepIndex : 0);
 
-  const [currentReport, setReport] = useState<ProgressReportFragment | null>(
-    null
-  );
+  const [currentReport, setReport] =
+    useState<ProgressReportEditFragment | null>(null);
 
   const setStep = useCallback(
     (step: number) => {
@@ -66,7 +65,7 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   );
 
   const setCurrentReport = useCallback(
-    (report: ProgressReportFragment | null) => {
+    (report: ProgressReportEditFragment | null) => {
       if (!report) {
         setStep(initialProgressReportContext.step);
         return;
@@ -93,16 +92,16 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
 
   const value = useMemo(
     () => ({
-      setProgressReportStep: setStep,
       step,
+      setProgressReportStep: setStep,
       nextProgressReportStep,
       previousProgressReportStep,
       currentReport,
       setCurrentProgressReport: setCurrentReport,
     }),
     [
-      setStep,
       step,
+      setStep,
       nextProgressReportStep,
       previousProgressReportStep,
       currentReport,

@@ -1,20 +1,27 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import { useDialog } from '~/components/Dialog';
+import { useProgressReportContext } from '../../ProgressReportContext';
 import { InstructionsDialog } from './InstructionsDialog';
 import { ProgressReportStepper } from './ProgressReportStepper';
 
-export const ProgressReportSidebar = ({ step }: { step: number }) => {
+export const ProgressReportSidebar = () => {
+  const { step, currentReport } = useProgressReportContext();
   const [instructionsState, showInstructions] = useDialog();
+
+  const daysLeft = currentReport?.due.toRelative({});
 
   return (
     <Box
       sx={{
         display: 'initial',
         flexDirection: 'column',
-        minWidth: 350,
+        width: 300,
         padding: 2,
         pt: 4,
+        right: 0,
+        top: 0,
+        position: 'fixed',
       }}
     >
       <Typography
@@ -35,8 +42,22 @@ export const ProgressReportSidebar = ({ step }: { step: number }) => {
           }}
         />
       </Typography>
-      <Typography variant="body2" color="info.light" sx={{ marginBottom: 2 }}>
-        36 DAYS before due
+      <Typography
+        variant="body2"
+        color={daysLeft?.includes('ago') ? 'error.dark' : 'info.light'}
+        sx={{ marginBottom: 2 }}
+      >
+        <>
+          due {daysLeft}
+          <span
+            css={(theme) => ({
+              marginLeft: theme.spacing(1),
+              color: 'black',
+            })}
+          >
+            {currentReport?.due.toFormat('MMM. dd, yyyy')}
+          </span>
+        </>
       </Typography>
 
       <Button
