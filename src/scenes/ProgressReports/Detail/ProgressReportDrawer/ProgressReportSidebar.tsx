@@ -9,7 +9,7 @@ export const ProgressReportSidebar = () => {
   const { step, currentReport } = useProgressReportContext();
   const [instructionsState, showInstructions] = useDialog();
 
-  const daysLeft = Math.floor(currentReport?.due.diffNow('days').days ?? 0);
+  const daysLeft = currentReport?.due.toRelative({});
 
   return (
     <Box
@@ -44,11 +44,11 @@ export const ProgressReportSidebar = () => {
       </Typography>
       <Typography
         variant="body2"
-        color={daysLeft > 0 ? 'info.light' : 'error.dark'}
+        color={daysLeft?.includes('ago') ? 'error.dark' : 'info.light'}
         sx={{ marginBottom: 2 }}
       >
         <>
-          {Math.abs(daysLeft)} {daysLeft > 0 ? 'DAYS before' : 'DAYS over'} due
+          due {daysLeft}
           <span
             css={(theme) => ({
               marginLeft: theme.spacing(1),
