@@ -7,7 +7,6 @@ import { ProgressReportAvailableDataFragment } from '../../ProgressReportDrawer.
 
 interface PromptsFormProps {
   availableData: ProgressReportAvailableDataFragment | null;
-  reportId: string;
   onCreateItem: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
@@ -15,16 +14,10 @@ interface PromptsFormProps {
 
 export const PromptsForm = ({
   availableData: stepData,
-  reportId,
   onCreateItem,
 }: PromptsFormProps) => {
   return (
-    <Form
-      onSubmit={onCreateItem}
-      initialValues={{
-        reportId,
-      }}
-    >
+    <Form onSubmit={onCreateItem}>
       {({ handleSubmit }) => (
         <Box
           component="form"

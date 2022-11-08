@@ -47,7 +47,7 @@ export const PromptVariantStep = ({
       variables: {
         input: {
           prompt: values.prompt,
-          resource: values.reportId,
+          resource: reportId,
         },
       },
     });
@@ -63,7 +63,6 @@ export const PromptVariantStep = ({
       ) : (
         <PromptsForm
           availableData={availableData}
-          reportId={reportId}
           onCreateItem={handleCreateItem}
         />
       )}
