@@ -21,9 +21,9 @@ export const VariantResponsesForm = ({
   return (
     <>
       <Typography variant="h3">Share a team highlight story.</Typography>
-      {currentItem.prompt.text.value && (
+      {currentItem.prompt.value?.text.value && (
         <Box sx={{ mt: 2, mb: 4 }}>
-          <RichTextView data={currentItem.prompt.text.value} />
+          <RichTextView data={currentItem.prompt.value.text.value} />
         </Box>
       )}
       {currentItem.responses.map(
