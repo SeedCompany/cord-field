@@ -70,11 +70,13 @@ fragment ProgressReportStepData on PromptVariantResponseList {
 fragment ProgressReportItemEdit on PromptVariantResponse {
   id
   prompt {
-    id
-    canDelete
-    createdAt
-    text {
-      value
+    canRead
+    value {
+      id
+      text {
+        canRead
+        value
+      }
     }
   }
   canDelete
