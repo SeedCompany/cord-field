@@ -267,7 +267,8 @@ const Loading = (
 const isEmpty = (ref: RefObject<HTMLElement>) =>
   ref.current
     ?.querySelector('.codex-editor')
-    ?.classList.contains('codex-editor--empty');
+    ?.classList.contains('codex-editor--empty') &&
+  ref.current.querySelectorAll('.codex-editor .ce-block').length === 1;
 
 const isRichTextEqual = (a: any, b: any) => {
   const aBlocks = a?.blocks ?? [];
