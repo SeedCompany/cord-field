@@ -3,13 +3,13 @@ import { useProgressReportContext } from '../../../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
 import { PromptVariantStep } from '../PromptVariant';
 import {
-  CreateProgressReportHighlightDocument,
-  UpdateProgressReportHighlightResponseDocument,
-} from './TeamHighlightStep.graphql';
+  CreateCommunityStoryDocument,
+  UpdateCommunityStoryResponseDocument,
+} from './CommunityStoryStep.graphql';
 
-export const TeamHighlightStep = () => {
+export const CommunityStoryStep = () => {
   const { currentReport } = useProgressReportContext();
-  const highlights = currentReport?.highlights;
+  const communityStories = currentReport?.communityStories;
 
   if (!currentReport) {
     return null;
@@ -22,19 +22,20 @@ export const TeamHighlightStep = () => {
       })}
     >
       <PromptVariantStep
-        stepData={highlights}
         reportId={currentReport.id}
-        updateResponseDocument={UpdateProgressReportHighlightResponseDocument}
-        createItemDocument={CreateProgressReportHighlightDocument}
+        stepData={communityStories}
+        updateResponseDocument={UpdateCommunityStoryResponseDocument}
+        createItemDocument={CreateCommunityStoryDocument}
         title={
           <Typography variant="h3" gutterBottom>
-            Share a team highlight story.
+            Share a story from the community.
           </Typography>
         }
         promptInstructions={
           <Typography variant="body2" gutterBottom>
-            As you reflect on the past three quarters, select ONE question below
-            to answer.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elit
+            pharetra enim justo, molestie amet viverra faucibus. Egestas congue
+            felis
           </Typography>
         }
       />
