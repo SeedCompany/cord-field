@@ -1,10 +1,11 @@
 mutation CreateCommunityStory($input: ChoosePrompt!) {
-  createProgressReportHighlight(input: $input) {
+  createProgressReportCommunityStory(input: $input) {
     ...ProgressReportItemEdit
+    # Fetch the list of stories again to connect this new item to our cached list
     parent {
       ... on ProgressReport {
         id
-        highlights {
+        communityStories {
           ...Pagination
           items {
             id
@@ -16,7 +17,7 @@ mutation CreateCommunityStory($input: ChoosePrompt!) {
 }
 
 mutation UpdateCommunityStoryResponse($input: UpdatePromptVariantResponse!) {
-  updateProgressReportHighlightResponse(input: $input) {
+  updateProgressReportCommunityStoryResponse(input: $input) {
     ...ProgressReportItemEdit
   }
 }

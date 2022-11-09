@@ -10,7 +10,7 @@ fragment ProgressReportEdit on ProgressReport {
   highlights {
     ...ProgressReportStepData
   }
-  communityStories: highlights {
+  communityStories {
     ...ProgressReportStepData
   }
   due
