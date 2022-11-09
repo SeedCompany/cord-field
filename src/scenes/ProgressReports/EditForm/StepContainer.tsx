@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
-import { useProgressReportContext } from '../../ProgressReportContext';
-import { Step3 } from '../TemporarySteps';
+import { Step3 } from '../Detail/TemporarySteps';
+import { useProgressReportContext } from '../ProgressReportContext';
 import { colorPalette } from './colorPalette';
 import { CommunityStoryStep } from './Steps/CommunityStory';
 import { NextStepButton } from './Steps/NextStepButton';

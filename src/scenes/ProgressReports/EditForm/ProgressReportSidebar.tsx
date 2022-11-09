@@ -1,7 +1,7 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import { useDialog } from '~/components/Dialog';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { useProgressReportContext } from '../ProgressReportContext';
 import { InstructionsDialog } from './InstructionsDialog';
 import { ProgressReportStepper } from './ProgressReportStepper';
 

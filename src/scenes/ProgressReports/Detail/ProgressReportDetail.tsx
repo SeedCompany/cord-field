@@ -30,11 +30,11 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
+import { ProgressReportDrawer } from '../EditForm';
 import { NewProgressReportCard } from './NewProgressReportCard';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
 import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
-import { ProgressReportDrawer } from './ProgressReportDrawer';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 
 const useStyles = makeStyles()(({ spacing }) => ({

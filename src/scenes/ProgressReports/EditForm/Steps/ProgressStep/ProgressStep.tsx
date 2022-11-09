@@ -1,8 +1,8 @@
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { groupBy } from 'lodash';
 import { useState } from 'react';
-import { useProgressReportContext } from '../../../../ProgressReportContext';
-import { ProductTable } from '../../../ProductTable';
+import { ProductTable } from '../../../Detail/ProductTable';
+import { useProgressReportContext } from '../../../ProgressReportContext';
 
 export const ProgressStep = () => {
   const { currentReport } = useProgressReportContext();

@@ -3,7 +3,7 @@ import { Box, Card, Divider, Skeleton, Theme, Typography } from '@mui/material';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { Link } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { useProgressReportContext } from '../ProgressReportContext';
 
 export const ProgressReportDrawerHeader = () => {
   const { setCurrentProgressReport, currentReport } =

@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { useProgressReportContext } from '../../../../ProgressReportContext';
+import { useProgressReportContext } from '../../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
 import { PromptVariantStep } from '../PromptVariant';
 import {
