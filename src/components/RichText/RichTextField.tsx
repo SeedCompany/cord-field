@@ -16,6 +16,7 @@ import {
 import { EditorCore } from '@react-editor-js/core';
 import { identity, isEqual, pick } from 'lodash';
 import {
+  forwardRef,
   MouseEvent,
   ReactNode,
   RefObject,
@@ -30,6 +31,7 @@ import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
 import { EditorJsTheme } from './EditorJsTheme';
 import type { ToolKey } from './editorJsTools';
+import { RichTextView } from './RichTextView';
 
 export type RichTextFieldProps = Pick<
   FieldConfig<RichTextData>,
@@ -122,7 +124,7 @@ export function RichTextField({
   ]);
 
   const loading = (
-    <Loading label={label} placeholder={placeholder} helperText={helperText} />
+    <Loading value={val} {...{ label, placeholder, helperText }} />
   );
   if (typeof window === 'undefined') {
     return loading;
@@ -248,18 +250,31 @@ export function RichTextField({
   );
 }
 
-const Loading = (
-  props: Pick<TextFieldProps, 'placeholder' | 'label' | 'helperText'>
-) => (
-  <TextField
-    variant="outlined"
-    {...props}
-    helperText={props.helperText ?? ' '}
-    multiline
-    disabled
-    minRows={2}
-  />
-);
+const Loading = ({
+  value,
+  ...props
+}: Pick<TextFieldProps, 'placeholder' | 'label' | 'helperText'> & {
+  value?: RichTextData;
+}) => {
+  // eslint-disable-next-line react/display-name
+  const Input = forwardRef((_, ref) => (
+    <div ref={ref as any}>
+      <RichTextView data={value} />
+    </div>
+  ));
+  return (
+    <TextField
+      variant="outlined"
+      {...props}
+      helperText={props.helperText ?? ' '}
+      InputProps={{ inputComponent: Input as any }}
+      multiline
+      disabled
+      minRows={2}
+      sx={{ opacity: 0.5 }}
+    />
+  );
+};
 
 // There's no API to determine if currently empty.
 // And the empty placeholder is rendered as a block.
