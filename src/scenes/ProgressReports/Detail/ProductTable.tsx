@@ -1,5 +1,10 @@
 import { Box, Card } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridEditMode,
+  GridEventListener,
+} from '@mui/x-data-grid';
 import { sortBy, uniq } from 'lodash';
 import { useMemo } from 'react';
 import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
@@ -10,6 +15,9 @@ import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graph
 interface ProductTableProps {
   category: string;
   products: readonly ProgressOfProductForReportFragment[];
+  editable?: boolean;
+  editMode?: GridEditMode;
+  onRowEditStop?: GridEventListener<'rowEditStop'>;
 }
 
 type RowData = {
@@ -20,7 +28,13 @@ type RowData = {
   [K in ProductStep]?: string;
 };
 
-export const ProductTable = ({ products, category }: ProductTableProps) => {
+export const ProductTable = ({
+  products,
+  category,
+  editable,
+  editMode = 'row',
+  onRowEditStop,
+}: ProductTableProps) => {
   const steps = useMemo(() => {
     return uniq(
       sortBy(
@@ -64,6 +78,7 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
           );
         },
         field: step,
+        editable,
         width: 100,
         renderCell: ({ row }) =>
           row[step] ? (
@@ -119,6 +134,8 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
         rows={tableData}
         autoHeight
         disableColumnMenu
+        editMode={editMode}
+        onRowEditStop={onRowEditStop}
         components={{
           Footer: () => null,
         }}
