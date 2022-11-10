@@ -62,7 +62,11 @@ export const VariantResponsesAccordion = ({
           >
             {({ handleSubmit }) => (
               <form onSubmit={handleSubmit}>
-                <RichTextField name="response" label="Response" />
+                <RichTextField
+                  name="response"
+                  label="Response"
+                  tools={['paragraph', 'delimiter', 'marker']}
+                />
                 {savedAt && (
                   <Typography variant="caption" sx={{ mb: 1 }} component="div">
                     Saved at <FormattedDateTime date={savedAt} relative />
