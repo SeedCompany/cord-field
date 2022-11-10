@@ -54,6 +54,10 @@ fragment ProgressReportEdit on ProgressReport {
       }
     }
   }
+
+  cumulativeSummary {
+    ...ProgressSummary
+  }
 }
 
 fragment ProgressReportStepData on PromptVariantResponseList {
