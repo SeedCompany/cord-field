@@ -91,13 +91,14 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
             <StepButton icon={' '}>Progress</StepButton>
           </Step>
         </Stepper>
-        <StepConnector sx={singleConnectorSx} />
+        {/* ToDo: add this back once we have time to work on additional notes  */}
+        {/* <StepConnector sx={singleConnectorSx} />
         <Typography sx={typographySx}>Final Details</Typography>
         <Stepper activeStep={step - 3} orientation="vertical" sx={stepperSx}>
           <Step onClick={() => setProgressReportStep(3)}>
             <StepButton icon={' '}>Additional Notes</StepButton>
           </Step>
-        </Stepper>
+        </Stepper> */}
       </Box>
     </Paper>
   );

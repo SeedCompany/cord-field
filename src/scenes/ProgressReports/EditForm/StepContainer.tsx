@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import { Step3 } from '../Detail/TemporarySteps';
 import { useProgressReportContext } from '../ProgressReportContext';
 import { colorPalette } from './colorPalette';
 import { CommunityStoryStep } from './Steps/CommunityStory';
@@ -34,7 +33,8 @@ export const StepContainer = () => {
         {step === 0 && <TeamHighlightStep />}
         {step === 1 && <CommunityStoryStep />}
         {step === 2 && <ProgressStep />}
-        {step === 3 && <Step3 />}
+        {/* ToDo: add back once we have time to work on more steps */}
+        {/* {step === 3 && <Step3 />} */}
       </Box>
     </div>
   );

@@ -13,7 +13,8 @@ export const stepNames = [
   'team-highlight',
   'community-story',
   'progress',
-  'additional-notes',
+  // ToDo: add this back when we have time to work on additional notes
+  // 'additional-notes',
 ];
 
 const initialProgressReportContext = {
