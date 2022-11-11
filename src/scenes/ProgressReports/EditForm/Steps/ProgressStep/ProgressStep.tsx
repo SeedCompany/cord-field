@@ -35,6 +35,7 @@ const iconSx = {
 
 const ToggleButtonSx = (role: string) => ({
   p: 0.25,
+  pr: 1,
   mr: 0,
   borderRadius: 0.6,
   '&.Mui-selected': {
@@ -197,6 +198,7 @@ const VariantsToggle = ({
           role="FieldPartner"
           sx={[iconSx, tab !== 0 && transparentBgSx]}
         />
+        Field Partner
       </ToggleButton>
       <ToggleButton
         value={1}
@@ -207,6 +209,7 @@ const VariantsToggle = ({
           role="ProjectManager"
           sx={[iconSx, tab !== 1 && transparentBgSx]}
         />
+        Field Operations
       </ToggleButton>
     </ToggleButtonGroup>
   );
