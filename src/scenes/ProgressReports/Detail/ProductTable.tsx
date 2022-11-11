@@ -18,7 +18,7 @@ interface ProductTableProps {
   editable?: boolean;
   editMode?: GridEditMode;
   hidePagination?: boolean;
-  extendedHeader: ReactNode;
+  extendedHeader?: ReactNode;
   onRowEditStop?: GridEventListener<'rowEditStop'>;
 }
 
