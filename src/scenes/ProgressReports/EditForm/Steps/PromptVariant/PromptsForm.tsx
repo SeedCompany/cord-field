@@ -54,7 +54,7 @@ export const PromptsForm = ({
           )}
 
           <SubmitButton variant="outlined" color="secondary">
-            {stepData?.prompts.length ? 'Submit' : 'Loading...'}
+            {stepData?.prompts.length ? 'Save Prompt' : 'Loading...'}
           </SubmitButton>
         </Box>
       )}
