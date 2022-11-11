@@ -17,6 +17,7 @@ interface ProductTableProps {
   products: readonly ProgressOfProductForReportFragment[];
   editable?: boolean;
   editMode?: GridEditMode;
+  hidePagination?: boolean;
   onRowEditStop?: GridEventListener<'rowEditStop'>;
 }
 
@@ -33,6 +34,7 @@ export const ProductTable = ({
   category,
   editable,
   editMode = 'row',
+  hidePagination = true,
   onRowEditStop,
 }: ProductTableProps) => {
   const steps = useMemo(() => {
@@ -80,6 +82,7 @@ export const ProductTable = ({
         field: step,
         editable,
         width: 100,
+        type: 'number',
         renderCell: ({ row }) =>
           row[step] ? (
             row[step]
@@ -136,8 +139,17 @@ export const ProductTable = ({
         disableColumnMenu
         editMode={editMode}
         onRowEditStop={onRowEditStop}
+        pagination
+        pageSize={hidePagination ? tableData.length : 10}
+        onCellKeyDown={(params, event) => {
+          // disabling commit on enter because of an Mui bug. See https://github.com/mui/mui-x/issues/3729
+          if (event.key === 'Enter' || event.key === 'Escape') {
+            event.defaultMuiPrevented = true;
+            event.preventDefault();
+          }
+        }}
         components={{
-          Footer: () => null,
+          Footer: hidePagination ? () => null : undefined,
         }}
       />
     </Card>
