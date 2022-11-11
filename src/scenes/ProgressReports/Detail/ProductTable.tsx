@@ -6,7 +6,7 @@ import {
   GridEventListener,
 } from '@mui/x-data-grid';
 import { sortBy, uniq } from 'lodash';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
 import { bookIndexFromName } from '../../../common/biblejs';
 import { Link } from '../../../components/Routing';
@@ -18,6 +18,7 @@ interface ProductTableProps {
   editable?: boolean;
   editMode?: GridEditMode;
   hidePagination?: boolean;
+  extendedHeader: ReactNode;
   onRowEditStop?: GridEventListener<'rowEditStop'>;
 }
 
@@ -35,6 +36,7 @@ export const ProductTable = ({
   editable,
   editMode = 'row',
   hidePagination = true,
+  extendedHeader,
   onRowEditStop,
 }: ProductTableProps) => {
   const steps = useMemo(() => {
@@ -149,6 +151,14 @@ export const ProductTable = ({
           }
         }}
         components={{
+          Header: (props) => {
+            console.log(props.children);
+            return (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {extendedHeader}
+              </div>
+            );
+          },
           Footer: hidePagination ? () => null : undefined,
         }}
       />
