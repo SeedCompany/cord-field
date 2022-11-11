@@ -24,24 +24,14 @@ export const ProgressReportSidebar = () => {
         position: 'fixed',
       }}
     >
-      <Typography
-        sx={{
-          marginBottom: 1,
-          '&:hover': {
-            cursor: 'pointer',
-            textDecoration: 'underline',
-          },
-        }}
+      <Button
+        endIcon={<InfoOutlined />}
+        color="secondary"
         onClick={showInstructions}
+        sx={{ ml: -1 }}
       >
-        Instructions{' '}
-        <InfoOutlined
-          sx={{
-            fontSize: 16,
-            marginBottom: '-3px',
-          }}
-        />
-      </Typography>
+        Instructions
+      </Button>
       <Typography
         variant="body2"
         color={daysLeft?.includes('ago') ? 'error.dark' : 'info.light'}
