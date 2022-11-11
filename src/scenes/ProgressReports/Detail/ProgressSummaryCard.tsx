@@ -1,8 +1,9 @@
 import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { ReactNode } from 'react';
+import { StyleProps } from '~/common';
 import { ProgressSummaryFragment } from './ProgressReportDetail.graphql';
 
-interface ProgressSummaryCardProps {
+interface ProgressSummaryCardProps extends StyleProps {
   summary: ProgressSummaryFragment | null;
   loading: boolean;
 }
@@ -10,8 +11,9 @@ interface ProgressSummaryCardProps {
 export const ProgressSummaryCard = ({
   summary,
   loading,
+  sx,
 }: ProgressSummaryCardProps) => (
-  <Grid component={Card} container>
+  <Grid component={Card} container sx={sx}>
     <Grid
       component={CardContent}
       alignContent="center"
