@@ -26,7 +26,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { extendSx, StyleProps } from '../../common';
+import { extendSx, Nullable, StyleProps } from '../../common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
 import { EditorJsTheme } from './EditorJsTheme';
@@ -73,17 +73,15 @@ export function RichTextField({
   const { input, meta, ref } = useField({
     ...props,
     onFocus,
+    multiple: false, // default, but it helps types
     allowNull: true,
     format: identity, // prevents empty strings in place of null
-    validate: (value) => {
+    validate: (value: Nullable<RichTextData>) => {
       if (value === savingSigil) {
         // Prevent submitting if saving is in progress
         return 'Waiting for editor';
       }
-      if (
-        props.required &&
-        (!value || (value as RichTextData).blocks.length === 0)
-      ) {
+      if (props.required && isDataEmpty(value)) {
         return 'Required';
       }
       return undefined;
@@ -105,10 +103,10 @@ export function RichTextField({
     // Ensure in-progress saving is ignored, as we are resetting state.
     latestChangeTimestamp.current = performance.now();
 
-    if ((val?.blocks.length ?? 0) > 0) {
+    if (!isDataEmpty(val)) {
       void instanceRef.current.render(val!);
     } else {
-      if (isEmpty(ref)) {
+      if (isEditorEmpty(ref)) {
         // Optimization to prevent changes when empty -> empty.
         return;
       }
@@ -229,7 +227,7 @@ export function RichTextField({
                         }}
                         onKeyDownCapture={(e) => {
                           // Prevent blur flash when backspace on empty
-                          if (e.key === 'Backspace' && isEmpty(ref)) {
+                          if (e.key === 'Backspace' && isEditorEmpty(ref)) {
                             e.stopPropagation();
                           }
                         }}
@@ -279,13 +277,19 @@ const Loading = ({
 // There's no API to determine if currently empty.
 // And the empty placeholder is rendered as a block.
 // So this css class seems like the safest way to determine empty.
-const isEmpty = (ref: RefObject<HTMLElement>) =>
+const isEditorEmpty = (ref: RefObject<HTMLElement>) =>
   ref.current
     ?.querySelector('.codex-editor')
     ?.classList.contains('codex-editor--empty') &&
   ref.current.querySelectorAll('.codex-editor .ce-block').length === 1;
 
-const isRichTextEqual = (a: any, b: any) => {
+const isDataEmpty = (value: Nullable<RichTextData>) =>
+  !value || value.blocks.length === 0;
+
+const isRichTextEqual = (
+  a: Nullable<RichTextData>,
+  b: Nullable<RichTextData>
+) => {
   const aBlocks = a?.blocks ?? [];
   const bBlocks = b?.blocks ?? [];
   return isEqual(aBlocks, bBlocks);
