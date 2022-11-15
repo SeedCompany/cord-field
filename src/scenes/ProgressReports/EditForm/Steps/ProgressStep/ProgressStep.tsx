@@ -18,8 +18,8 @@ import { UpdatePeriodicReportDialog } from '../../../../Projects/Reports/UpdateP
 import { ProductTable } from '../../../Detail/ProductTable';
 import { ProgressReportCard } from '../../../Detail/ProgressReportCard';
 import { ProgressOfProductForReportFragment } from '../../../Detail/ProgressReportDetail.graphql';
-import { useProgressReportContext } from '../../../ProgressReportContext';
 import { colorPalette } from '../../colorPalette';
+import { useProgressReportContext } from '../../ProgressReportContext';
 import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql';
 import { RoleIcon } from '../../RoleIcon';
 
@@ -47,7 +47,7 @@ const ToggleButtonSx = (role: string) => ({
 });
 
 export const ProgressStep = () => {
-  const { currentReport } = useProgressReportContext();
+  const { report } = useProgressReportContext();
   const [tab, setTab] = useState(0);
 
   const [update] = useMutation(UpdateStepProgressDocument);
@@ -55,7 +55,7 @@ export const ProgressStep = () => {
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
 
-  if (!currentReport?.progress) {
+  if (!report?.progress) {
     return (
       <div>
         Something is wrong, we could not find the progress step in the current
@@ -64,7 +64,7 @@ export const ProgressStep = () => {
     );
   }
   const grouped = groupBy(
-    currentReport.progress,
+    report.progress,
     (product) => product.product.category
   );
 
@@ -78,14 +78,14 @@ export const ProgressStep = () => {
         {tab ? (
           <Grid item md={6}>
             <ProgressSummaryCard
-              loading={!currentReport}
-              summary={currentReport.cumulativeSummary ?? null}
+              loading={!report}
+              summary={report.cumulativeSummary ?? null}
               sx={{ height: 1 }}
             />
           </Grid>
         ) : null}
         <Grid container item md={tab ? 6 : 12} spacing={2}>
-          {!currentReport.reportFile.value && (
+          {!report.reportFile.value && (
             <Grid item md={6} sx={{ display: 'flex', alignItems: 'center' }}>
               <Typography variant="body2">
                 (TENTATIVE COPY) Please upload the PnP for this reporting
@@ -95,7 +95,7 @@ export const ProgressStep = () => {
           )}
           <Grid item md={6} justifyItems="end">
             <ProgressReportCard
-              progressReport={currentReport}
+              progressReport={report}
               disableIcon
               onUpload={({ files }) => setUploading(files)}
             />
@@ -109,7 +109,7 @@ export const ProgressStep = () => {
             products={products}
             category={category}
             update={update}
-            currentReport={currentReport}
+            report={report}
             tab={tab}
             setTab={setTab}
           />
@@ -118,7 +118,7 @@ export const ProgressStep = () => {
 
       <UpdatePeriodicReportDialog
         {...dialogState}
-        report={{ ...currentReport, reportFile: upload }}
+        report={{ ...report, reportFile: upload }}
         editFields={[
           'receivedDate',
           ...(upload && upload.length > 0 ? ['reportFile' as const] : []),
@@ -132,14 +132,14 @@ const EditableProductTable = ({
   category,
   products,
   update,
-  currentReport,
+  report,
   tab,
   setTab,
 }: {
   category: string;
   products: ProgressOfProductForReportFragment[];
   update: any;
-  currentReport: ProgressReportEditFragment;
+  report: ProgressReportEditFragment;
   tab: number;
   setTab: (tab: number) => void;
 }) => (
@@ -155,7 +155,7 @@ const EditableProductTable = ({
         variables: {
           input: {
             productId: fields.id.toString(),
-            reportId: currentReport.id,
+            reportId: report.id,
             steps: [
               ...fields.row.data.steps.map((step: StepProgressFragment) => ({
                 completed: parseFloat(fields.row[step.step]),

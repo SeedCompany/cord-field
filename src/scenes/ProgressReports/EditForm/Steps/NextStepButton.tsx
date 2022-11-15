@@ -1,7 +1,7 @@
 import { ArrowForward } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { StyleProps } from '~/common';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { useProgressReportContext } from '../ProgressReportContext';
 
 export const NextStepButton = ({ sx }: StyleProps) => {
   const { nextProgressReportStep } = useProgressReportContext();

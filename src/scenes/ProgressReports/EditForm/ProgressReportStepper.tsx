@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Sx } from '~/common';
-import { useProgressReportContext } from '../ProgressReportContext';
+import { useProgressReportContext } from './ProgressReportContext';
 
 interface ProgressReportStepperProps {
   step: number;

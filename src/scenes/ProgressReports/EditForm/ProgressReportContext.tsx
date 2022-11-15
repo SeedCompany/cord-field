@@ -2,12 +2,13 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
-import { ProgressReportEditFragment } from './EditForm/ProgressReportEdit.graphql';
+import { ProgressReportEditFragment } from './ProgressReportEdit.graphql';
 
 export const stepNames = [
   'team-highlight',
@@ -31,13 +32,8 @@ const initialProgressReportContext = {
     return;
   },
 
-  // eslint-disable-next-line @seedcompany/no-unused-vars
-  setCurrentProgressReport: (report: ProgressReportEditFragment | null) => {
-    return;
-  },
-
   step: 0,
-  currentReport: null as ProgressReportEditFragment | null,
+  report: null as ProgressReportEditFragment | null,
 };
 
 const ProgressReportContext = createContext<
@@ -48,14 +44,14 @@ const useStepState = makeQueryHandler({
   step: StringParam,
 });
 
-export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
+export const ProgressReportContextProvider = ({
+  children,
+  report,
+}: { report: ProgressReportEditFragment } & ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
   const stepIndex = stepNames.indexOf(urlStep);
   const [step, setIndexStep] = useState(stepIndex > -1 ? stepIndex : 0);
-
-  const [currentReport, setReport] =
-    useState<ProgressReportEditFragment | null>(null);
 
   const setStep = useCallback(
     (step: number) => {
@@ -63,23 +59,6 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
       setStepState({ step: stepNames[step] });
     },
     [setStepState]
-  );
-
-  const setCurrentReport = useCallback(
-    (report: ProgressReportEditFragment | null) => {
-      if (!report) {
-        setStep(initialProgressReportContext.step);
-        return;
-      } else if (urlStep) {
-        if (stepNames.includes(urlStep)) {
-          setStep(stepNames.indexOf(urlStep));
-        } else {
-          setStep(initialProgressReportContext.step);
-        }
-      }
-      setReport(report);
-    },
-    [setStep, urlStep]
   );
 
   const nextProgressReportStep = useCallback(() => {
@@ -97,18 +76,20 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
       setProgressReportStep: setStep,
       nextProgressReportStep,
       previousProgressReportStep,
-      currentReport,
-      setCurrentProgressReport: setCurrentReport,
+      report,
     }),
-    [
-      step,
-      setStep,
-      nextProgressReportStep,
-      previousProgressReportStep,
-      currentReport,
-      setCurrentReport,
-    ]
+    [step, setStep, nextProgressReportStep, previousProgressReportStep, report]
   );
+
+  useEffect(() => {
+    if (urlStep) {
+      if (stepNames.includes(urlStep)) {
+        setStep(stepNames.indexOf(urlStep));
+      } else {
+        setStep(initialProgressReportContext.step);
+      }
+    }
+  }, [setStep, urlStep]);
 
   return (
     <ProgressReportContext.Provider value={value}>

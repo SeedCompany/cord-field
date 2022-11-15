@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { useProgressReportContext } from '../../../ProgressReportContext';
+import { useProgressReportContext } from '../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
 import { PromptVariantStep } from '../PromptVariant';
 import {
@@ -8,10 +8,10 @@ import {
 } from './CommunityStoryStep.graphql';
 
 export const CommunityStoryStep = () => {
-  const { currentReport } = useProgressReportContext();
-  const communityStories = currentReport?.communityStories;
+  const { report } = useProgressReportContext();
+  const communityStories = report?.communityStories;
 
-  if (!currentReport) {
+  if (!report) {
     return null;
   }
 
@@ -22,7 +22,7 @@ export const CommunityStoryStep = () => {
       })}
     >
       <PromptVariantStep
-        reportId={currentReport.id}
+        reportId={report.id}
         stepData={communityStories}
         updateResponseDocument={UpdateCommunityStoryResponseDocument}
         createItemDocument={CreateCommunityStoryDocument}

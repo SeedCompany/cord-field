@@ -1,15 +1,15 @@
 import { InfoOutlined } from '@mui/icons-material';
 import { Box, Button, Typography } from '@mui/material';
 import { useDialog } from '~/components/Dialog';
-import { useProgressReportContext } from '../ProgressReportContext';
 import { InstructionsDialog } from './InstructionsDialog';
+import { useProgressReportContext } from './ProgressReportContext';
 import { ProgressReportStepper } from './ProgressReportStepper';
 
 export const ProgressReportSidebar = () => {
-  const { step, currentReport } = useProgressReportContext();
+  const { step, report } = useProgressReportContext();
   const [instructionsState, showInstructions] = useDialog();
 
-  const daysLeft = currentReport?.due.toRelative({});
+  const daysLeft = report?.due.toRelative({});
 
   return (
     <Box
@@ -45,7 +45,7 @@ export const ProgressReportSidebar = () => {
               color: 'black',
             })}
           >
-            {currentReport?.due.toFormat('MMM. dd, yyyy')}
+            {report?.due.toFormat('MMM. dd, yyyy')}
           </span>
         </>
       </Typography>
