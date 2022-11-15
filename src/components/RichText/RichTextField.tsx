@@ -83,7 +83,7 @@ export function RichTextField({
       }
       if (
         props.required &&
-        (!value || (value as RichTextData).blocks?.length === 0)
+        (!value || (value as RichTextData).blocks.length === 0)
       ) {
         return 'Required';
       }
@@ -106,7 +106,7 @@ export function RichTextField({
     // Ensure in-progress saving is ignored, as we are resetting state.
     latestChangeTimestamp.current = performance.now();
 
-    if ((val?.blocks?.length ?? 0) > 0) {
+    if ((val?.blocks.length ?? 0) > 0) {
       void instanceRef.current.render(val!);
     } else {
       if (isEditorEmpty(ref)) {
