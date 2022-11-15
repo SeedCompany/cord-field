@@ -2,10 +2,10 @@ import { Typography } from '@mui/material';
 import { filter } from 'lodash';
 import { ReactNode, useContext } from 'react';
 import { Entity } from '~/api';
-import { unwrapSecured } from '~/common';
+import { mapFromList, unwrapSecured } from '~/common';
 import { ParentIdFragment as ParentId } from '~/common/fragments';
 import { ChangesetBadge } from './ChangesetBadge';
-import { ChangesetDiffContext } from './ChangesetDiffContext';
+import { ChangesetDiffContext, ProcessedDiff } from './ChangesetDiffContext';
 import { PropertyDiff } from './PropertyDiff';
 
 interface Props<Obj, Id extends ParentId> {
@@ -41,85 +41,131 @@ export const ChangesetChildrenBadge = <
   props: Props<Obj, Id>
 ) => {
   const { parent, children } = props;
+  const { diff } = useContext(ChangesetDiffContext);
 
   if (!parent) {
     return <>{children}</>;
   }
 
+  const isDiff = hasChangeInTree(parent.id, diff) ? 'changed' : undefined;
   return (
     <ChangesetBadge
-      mode="changed"
-      moreInfo={<PropertyDiffTree parentId={parent.id} />}
+      mode={isDiff}
+      moreInfo={<PropertyDiffTree parentId={parent.id} diff={diff} />}
     >
       {children}
     </ChangesetBadge>
   );
 };
 
-const PropertyDiffTree = (props: { parentId: string }) => {
-  const { diff, doSomethingCool } = useContext(ChangesetDiffContext);
+const PropertyDiffTree = (props: { parentId: string; diff: ProcessedDiff }) => {
+  const diff = props.diff;
+  const propChanges = getPropChanges(props.parentId, diff);
 
-  // Get props that have changed in diff for id=parentId
-  const changesForId = filter(
-    diff.changed,
-    (val) => val.previous.id === props.parentId
-  )[0]; //only one item;
-
-  console.log(changesForId);
-
-  if (changesForId) {
-    const out: Partial<Record<string, any>> = {};
-    const propChanges = Object.entries(changesForId.previous).reduce(
-      (acc, [maybePropKey, maybePropVal]) => {
-        const prevVal = unwrapSecured(maybePropVal);
-        const updatedVal = unwrapSecured(
-          changesForId.updated[
-            maybePropKey as keyof typeof changesForId.updated
-          ]
-        );
-        if (
-          prevVal !== updatedVal &&
-          maybePropKey !== 'parent' &&
-          maybePropKey !== 'id' &&
-          maybePropKey !== '__typename' &&
-          maybePropKey !== 'changeset'
-        ) {
-          acc[maybePropKey] = {
-            previous: prevVal,
-            updated: updatedVal,
-          };
-        }
-        return acc;
-      },
-      out as Record<string, any>
-    );
+  if (propChanges) {
     return (
       <>
-        {Object.entries(propChanges).map(([propKey, propVal]) => (
-          <Typography key={propKey}>
-            {`${changesForId.previous.__typename}: ${propKey}`}
+        {Object.entries(propChanges.changesByProp).map(([propKey, propVal]) => (
+          <div key={propKey}>
+            <Typography
+              key={`${propChanges.__typename}-${propKey}`}
+            >{`${propChanges.__typename}: ${propKey}`}</Typography>
             <PropertyDiff
               key={propKey}
-              previous={propVal.previous ?? 0}
-              current={propVal.updated ?? 0}
+              previous={propVal.previous ?? <i>Empty</i>} //TODO: I SO need something better than this...
+              current={propVal.updated ?? <i>Empty</i>}
             />
-          </Typography>
+          </div>
         ))}
       </>
     );
   }
-
-  const childrenChanges = doSomethingCool(props.parentId);
-
-  if (childrenChanges.current.length > 0) {
+  const childIdsChanged = changedChildrenIds(props.parentId, diff);
+  if (childIdsChanged.length > 0) {
     return (
       <>
-        {childrenChanges.previous.map((child, i) => (
-          <PropertyDiffTree key={i} parentId={child.id} />
+        {childIdsChanged.map((id, i) => (
+          <PropertyDiffTree key={i} parentId={id} diff={diff} />
         ))}
       </>
     );
   } else {
+    // Disable lint here because we must return an empty fragment
+    // at any point in the tree of a recursive React element.
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     return <></>;
+  }
+};
+
+const hasChangeInTree = (id: string, diff: ProcessedDiff): boolean => {
+  const propChanges = getPropChanges(id, diff);
+  if (propChanges) {
+    return true;
+  } else {
+    const childIdsChanged = changedChildrenIds(id, diff);
+    if (childIdsChanged.length > 0) return true;
+  }
+  return false;
+};
+
+const changedChildrenIds = (id: string, diff: ProcessedDiff) => {
+  const childrenChanges = filter(diff.changed, (item) => {
+    if (
+      'parent' in item.previous &&
+      item.previous.parent &&
+      'id' in item.previous.parent
+    ) {
+      return item.previous.parent.id === id;
+    }
+    return false;
+  });
+  return childrenChanges.map((val) => val.previous.id);
+};
+
+const getPropChanges = (parentId: string, diff: ProcessedDiff) => {
+  const changeDiffOfId = filter(
+    diff.changed,
+    (val) => val.previous.id === parentId
+  )[0]; //there will only be one object for all props changed immediately under that object;
+  if (changeDiffOfId) {
+    type KeysOfChangesetDiff =
+      | (keyof typeof changeDiffOfId.previous &
+          keyof typeof changeDiffOfId.updated)
+      | 'changeset'
+      | 'parent';
+
+    type KeysOfOnlyChangedProps = Exclude<
+      KeysOfChangesetDiff,
+      'changeset' | 'parent'
+    >;
+
+    const isAPropKey = (
+      prop: KeysOfChangesetDiff
+    ): prop is KeysOfOnlyChangedProps => {
+      return prop !== 'changeset' && prop !== 'parent';
+    };
+
+    const propKeys: KeysOfChangesetDiff[] = Object.keys(
+      changeDiffOfId.previous
+    ) as KeysOfChangesetDiff[];
+
+    const changesByProp = mapFromList(
+      propKeys,
+      (keyName: KeysOfChangesetDiff) => {
+        if (isAPropKey(keyName)) {
+          const prevVal = unwrapSecured(changeDiffOfId.previous[keyName]);
+          const currVal = unwrapSecured(changeDiffOfId.updated[keyName]);
+          return prevVal !== currVal
+            ? [keyName, { previous: prevVal, updated: currVal }]
+            : null;
+        }
+        return null;
+      }
+    );
+
+    return {
+      __typename: changeDiffOfId.previous.__typename,
+      changesByProp,
+    };
   }
 };
