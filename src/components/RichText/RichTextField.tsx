@@ -81,10 +81,7 @@ export function RichTextField({
         // Prevent submitting if saving is in progress
         return 'Waiting for editor';
       }
-      if (
-        props.required &&
-        (!value || (value as RichTextData).blocks.length === 0)
-      ) {
+      if (props.required && isDataEmpty(value)) {
         return 'Required';
       }
       return undefined;
@@ -106,7 +103,7 @@ export function RichTextField({
     // Ensure in-progress saving is ignored, as we are resetting state.
     latestChangeTimestamp.current = performance.now();
 
-    if ((val?.blocks.length ?? 0) > 0) {
+    if (!isDataEmpty(val)) {
       void instanceRef.current.render(val!);
     } else {
       if (isEditorEmpty(ref)) {
