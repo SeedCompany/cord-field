@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { Form } from 'react-final-form';
 import { EnumField, EnumOption, SubmitButton } from '~/components/form';
 import { RichTextView } from '~/components/RichText';
-import { ProgressReportAvailableDataFragment } from '../../ProgressReportDrawer.graphql';
+import { ProgressReportAvailableDataFragment } from '../../ProgressReportEdit.graphql';
 
 interface PromptsFormProps {
   availableData: ProgressReportAvailableDataFragment | null;

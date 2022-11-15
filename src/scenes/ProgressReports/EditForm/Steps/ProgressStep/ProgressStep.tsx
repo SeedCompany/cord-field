@@ -20,7 +20,7 @@ import { ProgressReportCard } from '../../../Detail/ProgressReportCard';
 import { ProgressOfProductForReportFragment } from '../../../Detail/ProgressReportDetail.graphql';
 import { useProgressReportContext } from '../../../ProgressReportContext';
 import { colorPalette } from '../../colorPalette';
-import { ProgressReportEditFragment } from '../../ProgressReportDrawer.graphql';
+import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql';
 import { RoleIcon } from '../../RoleIcon';
 
 const transparentBgSx = {

@@ -12,7 +12,7 @@ import { Form } from 'react-final-form';
 import { SubmitButton } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField, RichTextView } from '~/components/RichText';
-import { ProgressReportItemResponseEditFragment } from '../../ProgressReportDrawer.graphql';
+import { ProgressReportItemResponseEditFragment } from '../../ProgressReportEdit.graphql';
 import { RoleIcon } from '../../RoleIcon';
 
 export const VariantResponsesAccordion = ({

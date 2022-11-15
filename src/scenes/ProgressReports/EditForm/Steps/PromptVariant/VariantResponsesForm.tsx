@@ -5,7 +5,7 @@ import { RichTextView } from '~/components/RichText';
 import {
   ProgressReportItemEditFragment,
   ProgressReportItemResponseEditFragment,
-} from '../../ProgressReportDrawer.graphql';
+} from '../../ProgressReportEdit.graphql';
 import { VariantResponsesAccordion } from './VariantResponsesAccordion';
 
 interface VariantResponsesFormProps {

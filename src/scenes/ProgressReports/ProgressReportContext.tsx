@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
-import { ProgressReportEditFragment } from './EditForm/ProgressReportDrawer.graphql';
+import { ProgressReportEditFragment } from './EditForm/ProgressReportEdit.graphql';
 
 export const stepNames = [
   'team-highlight',

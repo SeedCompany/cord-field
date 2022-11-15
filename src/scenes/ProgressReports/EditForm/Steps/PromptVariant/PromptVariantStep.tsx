@@ -5,7 +5,7 @@ import {
   ChoosePrompt,
   UpdatePromptVariantResponse,
 } from '~/api/schema.graphql';
-import { ProgressReportStepDataFragment } from '../../ProgressReportDrawer.graphql';
+import { ProgressReportStepDataFragment } from '../../ProgressReportEdit.graphql';
 import { PromptsForm } from './PromptsForm';
 import { VariantResponsesForm } from './VariantResponsesForm';
 

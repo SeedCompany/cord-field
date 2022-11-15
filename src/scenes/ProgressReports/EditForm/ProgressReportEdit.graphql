@@ -6,7 +6,12 @@ query ProgressReportEdit($progressReportId: ID!) {
 
 fragment ProgressReportEdit on ProgressReport {
   id
+  due
   ...PeriodicReport
+  cumulativeSummary {
+    ...ProgressSummary
+  }
+
   highlights {
     ...ProgressReportStepData
   }
@@ -16,7 +21,6 @@ fragment ProgressReportEdit on ProgressReport {
   progress {
     ...ProgressOfProductForReport
   }
-  due
   parent {
     id
     canDelete
@@ -54,10 +58,6 @@ fragment ProgressReportEdit on ProgressReport {
       }
     }
   }
-
-  cumulativeSummary {
-    ...ProgressSummary
-  }
 }
 
 fragment ProgressReportStepData on PromptVariantResponseList {
@@ -77,14 +77,7 @@ fragment ProgressReportStepData on PromptVariantResponseList {
 fragment ProgressReportItemEdit on PromptVariantResponse {
   id
   prompt {
-    canRead
-    value {
-      id
-      text {
-        canRead
-        value
-      }
-    }
+    ...SecuredPrompt
   }
   canDelete
   responses {
@@ -99,22 +92,36 @@ fragment ProgressReportItemResponseEdit on VariantResponse {
     canRead
   }
   variant {
-    key
-    label
-    responsibleRole
+    ...Variant
   }
 }
 
 fragment ProgressReportAvailableData on VariantPromptList {
   prompts {
-    id
-    text {
-      value
-    }
+    ...Prompt
   }
   variants {
-    label
-    responsibleRole
-    key
+    ...Variant
+  }
+}
+
+fragment Variant on Variant {
+  label
+  responsibleRole
+  key
+}
+
+fragment SecuredPrompt on SecuredPrompt {
+  canRead
+  value {
+    ...Prompt
+  }
+}
+
+fragment Prompt on Prompt {
+  id
+  text {
+    canRead
+    value
   }
 }

@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { useMatch } from 'react-router-dom';
 import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../ProgressReportContext';
-import { ProgressReportEditDocument } from './ProgressReportDrawer.graphql';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
+import { ProgressReportEditDocument } from './ProgressReportEdit.graphql';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
 import { StepContainer } from './StepContainer';
 
