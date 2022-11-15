@@ -143,6 +143,7 @@ export const ProductTable = ({
         onRowEditStop={onRowEditStop}
         pagination
         pageSize={hidePagination ? tableData.length : 10}
+        rowsPerPageOptions={[10]}
         onCellKeyDown={(params, event) => {
           // disabling commit on enter because of an Mui bug. See https://github.com/mui/mui-x/issues/3729
           if (event.key === 'Enter' || event.key === 'Escape') {
@@ -151,8 +152,7 @@ export const ProductTable = ({
           }
         }}
         components={{
-          Header: (props) => {
-            console.log(props.children);
+          Header: () => {
             return (
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 {extendedHeader}
