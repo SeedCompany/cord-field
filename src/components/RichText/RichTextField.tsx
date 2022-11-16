@@ -1,5 +1,6 @@
 import type {
   EditorConfig,
+  default as EditorJS,
   LogLevels,
   OutputData as RichTextData,
 } from '@editorjs/editorjs';
@@ -13,7 +14,6 @@ import {
   TextField,
   TextFieldProps,
 } from '@mui/material';
-import { EditorCore } from '@react-editor-js/core';
 import { identity, isEqual, pick, sumBy } from 'lodash';
 import {
   forwardRef,
@@ -62,11 +62,11 @@ export function RichTextField({
   showCharacterCount,
   ...props
 }: RichTextFieldProps) {
-  const instanceRef = useRef<EditorCore>();
+  const instanceRef = useRef<EditorJS>();
   const [isReady, setReady] = useState(false);
 
   const onFocus = useCallback(() => {
-    instanceRef.current?.dangerouslyLowLevelInstance?.focus();
+    instanceRef.current?.focus();
   }, [instanceRef]);
   const handleFocusFromClick = (e: MouseEvent) =>
     // Focus the editor or keep the editor focused
@@ -120,7 +120,7 @@ export function RichTextField({
         // Optimization to prevent changes when empty -> empty.
         return;
       }
-      void instanceRef.current.clear();
+      instanceRef.current.clear();
     }
   }, [
     val,
@@ -164,7 +164,7 @@ export function RichTextField({
                   minHeight={14} // matches minRows=2
                   placeholder={placeholder}
                   onInitialize={(instance) => {
-                    instanceRef.current = instance;
+                    instanceRef.current = instance.dangerouslyLowLevelInstance;
                     setReady(false);
                   }}
                   onReady={() => {
