@@ -12,8 +12,9 @@ export const ProgressSummaryCard = ({
   summary,
   loading,
   sx,
+  className,
 }: ProgressSummaryCardProps) => (
-  <Grid component={Card} container sx={sx}>
+  <Grid component={Card} container sx={sx} className={className}>
     <Grid
       component={CardContent}
       alignContent="center"
