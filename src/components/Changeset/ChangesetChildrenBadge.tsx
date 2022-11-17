@@ -3,12 +3,11 @@ import { filter } from 'lodash';
 import { ReactNode, useContext } from 'react';
 import { Entity } from '~/api';
 import { mapFromList, unwrapSecured } from '~/common';
-import { ParentIdFragment as ParentId } from '~/common/fragments';
 import { ChangesetBadge } from './ChangesetBadge';
 import { ChangesetDiffContext, ProcessedDiff } from './ChangesetDiffContext';
 import { PropertyDiff } from './PropertyDiff';
 
-interface Props<Obj, Id extends ParentId> {
+interface Props<Obj> {
   parent?: Obj;
   children: ReactNode;
 
@@ -34,11 +33,8 @@ interface Props<Obj, Id extends ParentId> {
   // renderChange?: (props: { previous: Item; current: Item }) => ReactNode;
 }
 
-export const ChangesetChildrenBadge = <
-  Obj extends Entity | null,
-  Id extends ParentId
->(
-  props: Props<Obj, Id>
+export const ChangesetChildrenBadge = <Obj extends Entity | null>(
+  props: Props<Obj>
 ) => {
   const { parent, children } = props;
   const { diff } = useContext(ChangesetDiffContext);
@@ -72,7 +68,7 @@ const PropertyDiffTree = (props: { parentId: string; diff: ProcessedDiff }) => {
             >{`${propChanges.__typename}: ${propKey}`}</Typography>
             <PropertyDiff
               key={propKey}
-              previous={propVal.previous ?? <i>Empty</i>} //TODO: I SO need something better than this...
+              previous={propVal.previous ?? <i>Empty</i>}
               current={propVal.updated ?? <i>Empty</i>}
             />
           </div>
