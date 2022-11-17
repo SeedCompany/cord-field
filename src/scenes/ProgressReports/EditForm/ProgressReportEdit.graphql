@@ -104,24 +104,3 @@ fragment ProgressReportAvailableData on VariantPromptList {
     ...Variant
   }
 }
-
-fragment Variant on Variant {
-  label
-  responsibleRole
-  key
-}
-
-fragment SecuredPrompt on SecuredPrompt {
-  canRead
-  value {
-    ...Prompt
-  }
-}
-
-fragment Prompt on Prompt {
-  id
-  text {
-    canRead
-    value
-  }
-}

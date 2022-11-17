@@ -30,3 +30,10 @@ fragment securedDateRange on SecuredDateRange {
     end
   }
 }
+
+fragment SecuredPrompt on SecuredPrompt {
+  canRead
+  value {
+    ...Prompt
+  }
+}

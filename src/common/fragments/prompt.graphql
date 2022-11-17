@@ -1,0 +1,7 @@
+fragment Prompt on Prompt {
+  id
+  text {
+    canRead
+    value
+  }
+}
