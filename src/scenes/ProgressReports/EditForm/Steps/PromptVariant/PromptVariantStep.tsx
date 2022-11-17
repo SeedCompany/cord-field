@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import { Box } from '@mui/material';
 import { ReactNode } from 'react';
 import {
   ChoosePrompt,
@@ -60,7 +61,7 @@ export const PromptVariantStep = ({
   };
 
   return (
-    <div css={(theme) => ({ maxWidth: theme.breakpoints.values.md })}>
+    <Box sx={{ maxWidth: 'md' }}>
       {currentItem ? (
         <VariantResponsesForm
           currentItem={currentItem}
@@ -75,6 +76,6 @@ export const PromptVariantStep = ({
           promptInstructions={promptInstructions}
         />
       )}
-    </div>
+    </Box>
   );
 };
