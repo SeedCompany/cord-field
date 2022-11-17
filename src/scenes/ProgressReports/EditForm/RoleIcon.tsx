@@ -1,8 +1,9 @@
 import { Grading, Translate } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material';
 import { ComponentType } from 'react';
+import { Except } from 'type-fest';
 import { Role } from '~/api/schema.graphql';
-import { extendSx, StyleProps } from '~/common';
+import { extendSx } from '~/common';
 import { PeopleJoinedIcon } from '~/components/Icons';
 import { ProjectManagerIcon } from '~/components/Icons/ProjectManagerIcon';
 import { colorPalette } from './colorPalette';
@@ -15,11 +16,11 @@ const variantToIconMapper: {
   ProjectManager: ProjectManagerIcon,
   Marketing: Grading,
 };
-interface StepIconProps extends StyleProps {
+interface RoleIconProps extends Except<SvgIconProps, 'role'> {
   role?: Role | null;
 }
 
-export const RoleIcon = ({ role, sx }: StepIconProps) => {
+export const RoleIcon = ({ role, sx }: RoleIconProps) => {
   if (!role) {
     return null;
   }
