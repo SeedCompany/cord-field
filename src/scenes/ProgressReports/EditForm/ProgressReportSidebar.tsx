@@ -50,24 +50,6 @@ export const ProgressReportSidebar = () => {
           </span>
         </>
       </Typography>
-
-      <Button
-        sx={{
-          backgroundColor: 'primary.main',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: 'primary.dark',
-          },
-          '&:disabled': {
-            backgroundColor: 'primary.light',
-            color: 'white',
-          },
-          marginBottom: 2,
-        }}
-        disabled
-      >
-        Submit Report
-      </Button>
       <ProgressReportStepper step={step} />
       <InstructionsDialog {...instructionsState} />
     </Box>
