@@ -10,7 +10,7 @@ export const ProgressReportSidebar = () => {
   const { step, report } = useProgressReportContext();
   const [instructionsState, showInstructions] = useDialog();
 
-  const daysLeft = report?.due.toRelative({});
+  const daysLeft = report.due.toRelative({});
 
   return (
     <Box
@@ -46,7 +46,7 @@ export const ProgressReportSidebar = () => {
               color: 'black',
             })}
           >
-            {report?.due.toLocaleString(DateTime.DATE_MED)}
+            {report.due.toLocaleString(DateTime.DATE_MED)}
           </span>
         </>
       </Typography>

@@ -9,11 +9,7 @@ import {
 
 export const CommunityStoryStep = () => {
   const { report } = useProgressReportContext();
-  const communityStories = report?.communityStories;
-
-  if (!report) {
-    return null;
-  }
+  const communityStories = report.communityStories;
 
   return (
     <div

@@ -55,14 +55,6 @@ export const ProgressStep = () => {
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
 
-  if (!report?.progress) {
-    return (
-      <div>
-        Something is wrong, we could not find the progress step in the current
-        report
-      </div>
-    );
-  }
   const grouped = groupBy(
     report.progress,
     (product) => product.product.category

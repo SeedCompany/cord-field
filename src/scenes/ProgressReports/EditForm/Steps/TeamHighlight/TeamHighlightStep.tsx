@@ -9,11 +9,7 @@ import {
 
 export const TeamHighlightStep = () => {
   const { report } = useProgressReportContext();
-  const highlights = report?.highlights;
-
-  if (!report) {
-    return null;
-  }
+  const highlights = report.highlights;
 
   return (
     <div

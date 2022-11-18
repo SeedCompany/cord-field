@@ -18,27 +18,16 @@ export const stepNames = [
   // 'additional-notes',
 ];
 
-const initialProgressReportContext = {
-  // eslint-disable-next-line @seedcompany/no-unused-vars
-  setProgressReportStep: (step: number) => {
-    return;
-  },
+interface ProgressReportContext {
+  setProgressReportStep: (step: number) => void;
+  nextStep: () => void;
+  previousStep: () => void;
 
-  nextProgressReportStep: () => {
-    return;
-  },
+  step: number;
+  report: ProgressReportEditFragment;
+}
 
-  previousProgressReportStep: () => {
-    return;
-  },
-
-  step: 0,
-  report: null as ProgressReportEditFragment | null,
-};
-
-const ProgressReportContext = createContext<
-  typeof initialProgressReportContext
->(initialProgressReportContext);
+const ProgressReportContext = createContext<ProgressReportContext | null>(null);
 
 const useStepState = makeQueryHandler({
   step: StringParam,
@@ -61,12 +50,12 @@ export const ProgressReportContextProvider = ({
     [setStepState]
   );
 
-  const nextProgressReportStep = useCallback(() => {
+  const nextStep = useCallback(() => {
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- linter is confused
     setStep(Math.min(step + 1, stepNames.length - 1));
   }, [setStep, step]);
 
-  const previousProgressReportStep = useCallback(() => {
+  const previousStep = useCallback(() => {
     setStep(Math.max(step - 1, 0));
   }, [setStep, step]);
 
@@ -74,11 +63,11 @@ export const ProgressReportContextProvider = ({
     () => ({
       step,
       setProgressReportStep: setStep,
-      nextProgressReportStep,
-      previousProgressReportStep,
+      nextStep,
+      previousStep,
       report,
     }),
-    [step, setStep, nextProgressReportStep, previousProgressReportStep, report]
+    [step, setStep, nextStep, previousStep, report]
   );
 
   useEffect(() => {
@@ -86,7 +75,7 @@ export const ProgressReportContextProvider = ({
       if (stepNames.includes(urlStep)) {
         setStep(stepNames.indexOf(urlStep));
       } else {
-        setStep(initialProgressReportContext.step);
+        setStep(0);
       }
     }
   }, [setStep, urlStep]);
@@ -98,4 +87,12 @@ export const ProgressReportContextProvider = ({
   );
 };
 
-export const useProgressReportContext = () => useContext(ProgressReportContext);
+export const useProgressReportContext = () => {
+  const context = useContext(ProgressReportContext);
+  if (!context) {
+    throw new Error(
+      'useProgressReportContext must be used within a ProgressReportContextProvider'
+    );
+  }
+  return context;
+};
