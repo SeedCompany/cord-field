@@ -20,7 +20,7 @@ interface RoleIconProps extends Except<SvgIconProps, 'role'> {
   role?: Role | null;
 }
 
-export const RoleIcon = ({ role, sx }: RoleIconProps) => {
+export const RoleIcon = ({ role, sx, ...rest }: RoleIconProps) => {
   if (!role) {
     return null;
   }
@@ -39,6 +39,7 @@ export const RoleIcon = ({ role, sx }: RoleIconProps) => {
         },
         ...extendSx(sx),
       ]}
+      {...rest}
     />
   ) : null;
 };
