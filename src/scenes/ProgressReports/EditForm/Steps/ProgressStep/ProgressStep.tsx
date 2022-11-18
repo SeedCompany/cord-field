@@ -146,10 +146,13 @@ const EditableProductTable = ({
   <ProductTable
     category={category}
     products={products}
-    editable
-    editMode="row"
     pagination
-    extendedHeader={<VariantsToggle setTab={setTab} tab={tab} />}
+    header={() => (
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <VariantsToggle setTab={setTab} tab={tab} />
+      </div>
+    )}
+    editMode="row"
     onRowEditStop={(fields) => {
       void update({
         variables: {

@@ -6,7 +6,7 @@ import {
   GridEventListener,
 } from '@mui/x-data-grid';
 import { sortBy, uniq } from 'lodash';
-import { ReactNode, useMemo } from 'react';
+import { JSXElementConstructor, useMemo } from 'react';
 import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
 import { bookIndexFromName } from '../../../common/biblejs';
 import { Link } from '../../../components/Routing';
@@ -15,11 +15,11 @@ import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graph
 interface ProductTableProps {
   category: string;
   products: readonly ProgressOfProductForReportFragment[];
-  editable?: boolean;
   editMode?: GridEditMode;
   pagination?: true;
-  extendedHeader?: ReactNode;
+  header?: JSXElementConstructor<any>;
   onRowEditStop?: GridEventListener<'rowEditStop'>;
+  onCellEditStop?: GridEventListener<'cellEditStop'>;
 }
 
 type RowData = {
@@ -33,11 +33,11 @@ type RowData = {
 export const ProductTable = ({
   products,
   category,
-  editable,
   editMode = 'row',
   pagination,
-  extendedHeader,
+  header,
   onRowEditStop,
+  onCellEditStop,
 }: ProductTableProps) => {
   const steps = useMemo(() => {
     return uniq(
@@ -82,7 +82,9 @@ export const ProductTable = ({
           );
         },
         field: step,
-        editable,
+        editable:
+          (!!onRowEditStop && editMode === 'row') ||
+          (!!onCellEditStop && editMode === 'cell'),
         width: 100,
         renderCell: ({ row }) =>
           row[step] ? (
@@ -140,6 +142,7 @@ export const ProductTable = ({
         disableColumnMenu
         editMode={editMode}
         onRowEditStop={onRowEditStop}
+        onCellEditStop={onCellEditStop}
         pagination={pagination}
         pageSize={pagination ? 10 : tableData.length}
         rowsPerPageOptions={[10]}
@@ -151,13 +154,7 @@ export const ProductTable = ({
           }
         }}
         components={{
-          Header: () => {
-            return (
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                {extendedHeader}
-              </div>
-            );
-          },
+          Header: header,
           Footer: pagination ? undefined : () => null,
         }}
       />
