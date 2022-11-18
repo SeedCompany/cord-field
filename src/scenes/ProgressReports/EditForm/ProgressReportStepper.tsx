@@ -70,9 +70,9 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
   const { setProgressReportStep } = useProgressReportContext();
 
   return (
-    <Paper elevation={4} sx={{ mr: 2 }}>
+    <Paper elevation={4} sx={{ mr: 2, borderRadius: 0.6 }}>
       <div>
-        <Typography sx={{ px: 2, pt: 2 }}>Steps:</Typography>
+        <Typography sx={{ p: 2, pt: 3 }}>Steps:</Typography>
       </div>
       <Box sx={{ p: 2, pt: 0 }}>
         <Typography sx={typographySx}>Narrative Report</Typography>
