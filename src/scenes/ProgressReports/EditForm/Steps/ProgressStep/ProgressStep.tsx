@@ -148,7 +148,7 @@ const EditableProductTable = ({
     products={products}
     editable
     editMode="row"
-    hidePagination={false}
+    pagination
     extendedHeader={<VariantsToggle setTab={setTab} tab={tab} />}
     onRowEditStop={(fields) => {
       void update({
