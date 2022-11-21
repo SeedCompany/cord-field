@@ -1,0 +1,5 @@
+fragment variant on Variant {
+  key
+  label
+  responsibleRole
+}
