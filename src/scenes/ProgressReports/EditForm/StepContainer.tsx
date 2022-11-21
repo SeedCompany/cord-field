@@ -4,6 +4,7 @@ import { useProgressReportContext } from './ProgressReportContext';
 import { CommunityStoryStep } from './Steps/CommunityStory';
 import { NextStepButton } from './Steps/NextStepButton';
 import { ProgressStep } from './Steps/ProgressStep';
+import { SubmitReportStep } from './Steps/SubmitReportStep';
 import { TeamHighlightStep } from './Steps/TeamHighlight';
 
 export const StepContainer = () => {
@@ -33,8 +34,7 @@ export const StepContainer = () => {
         {step === 0 && <TeamHighlightStep />}
         {step === 1 && <CommunityStoryStep />}
         {step === 2 && <ProgressStep />}
-        {/* ToDo: add back once we have time to work on more steps */}
-        {/* {step === 3 && <Step3 />} */}
+        {step === 3 && <SubmitReportStep />}
       </Box>
     </div>
   );

@@ -14,8 +14,7 @@ export const stepNames = [
   'team-highlight',
   'community-story',
   'progress',
-  // ToDo: add this back when we have time to work on additional notes
-  // 'additional-notes',
+  'submit-report',
 ];
 
 interface ProgressReportContext {
