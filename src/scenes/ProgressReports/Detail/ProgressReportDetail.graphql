@@ -30,6 +30,9 @@ fragment ProgressOfProductForReport on ProductProgress {
   report {
     ...Id
   }
+  variant {
+    ...variant
+  }
   steps {
     step
     completed {
