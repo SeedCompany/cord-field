@@ -14,7 +14,7 @@ import {
   TextFieldProps,
 } from '@mui/material';
 import { EditorCore } from '@react-editor-js/core';
-import { identity, isEqual, pick } from 'lodash';
+import { identity, isEqual, pick, sumBy } from 'lodash';
 import {
   forwardRef,
   MouseEvent,
@@ -26,12 +26,20 @@ import {
   useRef,
   useState,
 } from 'react';
+import filterXSS from 'xss';
 import { extendSx, Nullable, StyleProps } from '../../common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
+import { FormattedNumber } from '../Formatters';
 import { EditorJsTheme } from './EditorJsTheme';
 import type { ToolKey } from './editorJsTools';
 import { RichTextView } from './RichTextView';
+
+declare module '@editorjs/editorjs/types/data-formats/output-data' {
+  interface OutputData {
+    characterCount?: number;
+  }
+}
 
 export type RichTextFieldProps = Pick<
   FieldConfig<RichTextData>,
@@ -41,6 +49,7 @@ export type RichTextFieldProps = Pick<
   label?: ReactNode;
   helperText?: ReactNode;
   placeholder?: string;
+  showCharacterCount?: boolean;
 } & StyleProps;
 
 export function RichTextField({
@@ -50,6 +59,7 @@ export function RichTextField({
   sx,
   className,
   placeholder,
+  showCharacterCount,
   ...props
 }: RichTextFieldProps) {
   const instanceRef = useRef<EditorCore>();
@@ -169,6 +179,10 @@ export function RichTextField({
                         // A newer change is already in progress
                         return;
                       }
+                      if (showCharacterCount) {
+                        data.characterCount = countCharacters(data);
+                      }
+
                       if (process.env.NODE_ENV !== 'production') {
                         data = Object.freeze(data);
                       }
@@ -234,7 +248,16 @@ export function RichTextField({
                       />
 
                       <FormHelperText id={`${id}-helper-text`}>
-                        {getHelperText(meta, helperText)}
+                        {getHelperText(
+                          meta,
+                          helperText ??
+                            (showCharacterCount && val ? (
+                              <>
+                                <FormattedNumber value={val.characterCount} />{' '}
+                                characters
+                              </>
+                            ) : undefined)
+                        )}
                       </FormHelperText>
                     </FormControl>
                   </ClickAwayListener>
@@ -303,3 +326,22 @@ const Lib = loadable.lib(() => import('react-editor-js'), {
 const Tools = loadable.lib(() => import('./editorJsTools'), {
   ssr: false,
 });
+
+const countCharacters = (data: RichTextData) =>
+  sumBy(data.blocks, (block) => {
+    switch (block.type) {
+      case 'paragraph':
+      case 'header': {
+        const text = filterXSS(block.data.text, {
+          whiteList: {}, // filter out all tags
+          stripIgnoreTag: true, // filter out all HTML not in the `whiteList`
+          stripIgnoreTagBody: ['script'], // the script tag is a special case, we need to filter out its content
+        });
+        return text.length;
+      }
+      case 'list':
+        return sumBy(block.data.items, (item: string) => item.length);
+      default:
+        return 0;
+    }
+  });

@@ -108,7 +108,8 @@
     "ts-essentials": "^9.2.0",
     "tss-react": "^3.7.1",
     "validator": "^13.7.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
