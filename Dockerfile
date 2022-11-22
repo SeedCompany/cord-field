@@ -20,8 +20,6 @@ RUN echo RAZZLE_GIT_BRANCH=$GIT_BRANCH >> .env
 # builder =============================
 FROM node as builder
 
-RUN apk add --no-cache jq
-
 # Install dependencies (in separate docker layer from app code)
 COPY .yarn .yarn
 COPY package.json yarn.lock .yarnrc.yml ./
@@ -34,9 +32,8 @@ ARG API_BASE_URL
 ENV RAZZLE_API_BASE_URL=$API_BASE_URL
 RUN yarn gql-gen -e && yarn razzle build --noninteractive
 
-# list and remove dev dependencies
-# yarn v2 doesn't have an install only production deps command
-RUN jq -r '.devDependencies | keys | .[]' package.json | xargs yarn remove
+# Remove dev dependencies
+RUN yarn workspaces focus --all --production
 
 # run =================================
 FROM node as run
