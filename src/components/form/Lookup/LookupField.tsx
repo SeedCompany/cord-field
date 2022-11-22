@@ -245,7 +245,7 @@ export function LookupField<
         // or previously selected option, add it to the list. i.e. 'Add "X"'.
         return [
           ...filtered,
-          // @ts-expect-error We want to allow strings for new options,
+          // We want to allow strings for new options,
           // which may differ from T. We handle them in renderOption.
           params.inputValue as T,
         ];
@@ -256,7 +256,7 @@ export function LookupField<
       onBlur={field.onBlur}
       onFocus={field.onFocus}
       onKeyDown={(event) => {
-        // Prevent submitting form while searching, user is probably trying
+        // Prevent submitting the form while searching, user is probably trying
         // to execute search (which happens automatically).
         if (event.key === 'Enter' && loading) event.preventDefault();
       }}
@@ -275,7 +275,7 @@ export function LookupField<
             : {};
           createDialogItem(initialValues);
           // Don't store the new value as a string in FF.
-          // Wait till it's successfully created and returned from the API.
+          // Wait until it is successfully created and returned from the API.
           return;
         }
         field.onChange(value);

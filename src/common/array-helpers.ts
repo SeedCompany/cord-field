@@ -65,7 +65,7 @@ export function has<K extends string | number | symbol, T>(
   key: K,
   obj: T
 ): obj is T & Record<K, unknown> {
-  return key in obj;
+  return obj && key in (obj as any);
 }
 
 /**
