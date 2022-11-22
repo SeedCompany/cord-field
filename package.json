@@ -218,7 +218,8 @@
     "react-dev-utils/loader-utils": "^2.0.0",
     "react-dev-utils/recursive-readdir": "^2.2.2",
     "react-dev-utils/shell-quote": "^1.7",
-    "watchpack-chokidar2/chokidar": "^3.5.3"
+    "watchpack-chokidar2/chokidar": "^3.5.3",
+    "webpack@^4.46.0": "patch:webpack@npm:4.46.0#.yarn/patches/webpack-npm-4.46.0-a8158cfa7f.patch"
   },
   "dependenciesMeta": {
     "core-js-pure": {
