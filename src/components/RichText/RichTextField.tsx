@@ -9,6 +9,7 @@ import {
   ClickAwayListener,
   FormControl,
   FormHelperText,
+  Grid,
   InputLabel,
   OutlinedInput,
   TextField,
@@ -247,16 +248,34 @@ export function RichTextField({
                         }}
                       />
 
-                      <FormHelperText id={`${id}-helper-text`}>
+                      <FormHelperText>
                         {getHelperText(
                           meta,
-                          helperText ??
-                            (showCharacterCount && val ? (
-                              <>
+                          <Grid
+                            container
+                            spacing={1}
+                            justifyContent="space-between"
+                            component="span"
+                          >
+                            <Grid
+                              item
+                              component="span"
+                              // Maintain line height even when empty
+                              sx={{ '&:before': { content: `"\\200b"` } }}
+                            >
+                              {helperText}
+                            </Grid>
+                            {showCharacterCount && !isDataEmpty(val) && val && (
+                              <Grid
+                                item
+                                component="span"
+                                sx={{ whiteSpace: 'nowrap' }}
+                              >
                                 <FormattedNumber value={val.characterCount} />{' '}
                                 characters
-                              </>
-                            ) : undefined)
+                              </Grid>
+                            )}
+                          </Grid>
                         )}
                       </FormHelperText>
                     </FormControl>
