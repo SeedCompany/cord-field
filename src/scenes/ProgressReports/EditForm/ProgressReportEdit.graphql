@@ -92,7 +92,7 @@ fragment ProgressReportItemResponseEdit on VariantResponse {
     canRead
   }
   variant {
-    ...Variant
+    ...variant
   }
 }
 
@@ -101,6 +101,6 @@ fragment ProgressReportAvailableData on VariantPromptList {
     ...Prompt
   }
   variants {
-    ...Variant
+    ...variant
   }
 }
