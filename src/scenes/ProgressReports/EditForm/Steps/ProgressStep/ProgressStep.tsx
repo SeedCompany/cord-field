@@ -17,10 +17,12 @@ import { ProgressSummaryCard } from '../../../../ProgressReports/Detail/Progress
 import { UpdatePeriodicReportDialog } from '../../../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProductTable } from '../../../Detail/ProductTable';
 import { ProgressReportCard } from '../../../Detail/ProgressReportCard';
-import { ProgressOfProductForReportFragment } from '../../../Detail/ProgressReportDetail.graphql';
 import { colorPalette } from '../../colorPalette';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql';
+import {
+  ProgressReportEditFragment,
+  ProgressReportProgressFragment,
+} from '../../ProgressReportEdit.graphql';
 import { RoleIcon } from '../../RoleIcon';
 
 const transparentBgSx = {
@@ -46,19 +48,41 @@ const ToggleButtonSx = (role: string) => ({
   },
 });
 
+const variants = ['partner', 'official'] as const;
+
+const sortCategories = (a: string, b: string) => {
+  if (a === 'Scripture') {
+    return -1;
+  }
+  if (b === 'Scripture') {
+    return 1;
+  }
+  return a.localeCompare(b);
+};
+
 export const ProgressStep = () => {
   const { report } = useProgressReportContext();
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState<typeof variants[number]>('partner');
 
   const [update] = useMutation(UpdateStepProgressDocument);
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
 
-  const grouped = groupBy(
-    report.progress,
-    (product) => product.product.category
-  );
+  const groups: Record<
+    string,
+    Record<string, ProgressReportProgressFragment[]>
+  > = {};
+
+  report.progressForAllVariants.map((progress) => {
+    const grouped = groupBy(progress, (product) => product.product.category);
+    groups[progress[0]!.variant.key] = grouped;
+    return progress;
+  });
+
+  const categories = Object.keys(groups[tab]!).sort(sortCategories);
+  const forTable = groups[tab]!;
+  const tabIndex = variants.indexOf(tab);
 
   return (
     <div
@@ -67,7 +91,7 @@ export const ProgressStep = () => {
       })}
     >
       <Grid container spacing={2} sx={{ mb: 4 }}>
-        {tab ? (
+        {tabIndex ? (
           <Grid item md={6}>
             <ProgressSummaryCard
               loading={!report}
@@ -76,7 +100,7 @@ export const ProgressStep = () => {
             />
           </Grid>
         ) : null}
-        <Grid container item md={tab ? 6 : 12} spacing={2}>
+        <Grid container item md={tabIndex ? 6 : 12} spacing={2}>
           {!report.reportFile.value && (
             <Grid item md={6} sx={{ display: 'flex', alignItems: 'center' }}>
               <Typography variant="body2">
@@ -95,10 +119,10 @@ export const ProgressStep = () => {
         </Grid>
       </Grid>
 
-      {Object.entries(grouped).map(([category, products]) => (
-        <Box sx={{ mb: 4 }} key={category}>
+      {categories.map((category) => (
+        <Box key={category} sx={{ mb: 4 }}>
           <EditableProductTable
-            products={products}
+            products={forTable[category]}
             category={category}
             update={update}
             report={report}
@@ -122,18 +146,18 @@ export const ProgressStep = () => {
 
 const EditableProductTable = ({
   category,
-  products,
+  products = [],
   update,
   report,
   tab,
   setTab,
 }: {
   category: string;
-  products: ProgressOfProductForReportFragment[];
+  products?: ProgressReportProgressFragment[];
   update: any;
   report: ProgressReportEditFragment;
-  tab: number;
-  setTab: (tab: number) => void;
+  tab: typeof variants[number];
+  setTab: (tab: typeof variants[number]) => void;
 }) => (
   <ProductTable
     category={category}
@@ -141,7 +165,10 @@ const EditableProductTable = ({
     pagination
     header={() => (
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <VariantsToggle setTab={setTab} tab={tab} />
+        <VariantsToggle
+          setTab={(value) => setTab(variants[value] ?? variants[0])}
+          tab={variants.indexOf(tab)}
+        />
       </div>
     )}
     editMode="row"
@@ -151,6 +178,7 @@ const EditableProductTable = ({
           input: {
             productId: fields.id.toString(),
             reportId: report.id,
+            variant: tab,
             steps: [
               ...fields.row.data.steps.map((step: StepProgressFragment) => ({
                 completed: parseFloat(fields.row[step.step]),
