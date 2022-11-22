@@ -21,7 +21,7 @@
   "engines": {
     "node": ">=16"
   },
-  "packageManager": "yarn@3.2.2",
+  "packageManager": "yarn@3.3.0",
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@date-io/core": "^2.15.0",
