@@ -8,6 +8,9 @@ fragment ProductProgress on ProductProgress {
   steps {
     ...StepProgress
   }
+  variant {
+    ...variant
+  }
 }
 
 fragment StepProgress on StepProgress {
