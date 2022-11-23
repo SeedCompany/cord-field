@@ -22,7 +22,7 @@ interface ProductTableProps {
   onCellEditStop?: GridEventListener<'cellEditStop'>;
 }
 
-type RowData = {
+export type RowData = {
   id: string;
   label: string;
   data: ProgressOfProductForReportFragment;

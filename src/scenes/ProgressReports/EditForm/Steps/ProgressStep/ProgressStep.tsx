@@ -1,23 +1,21 @@
 import { useMutation } from '@apollo/client';
 import { Box, Grid, Typography } from '@mui/material';
+import { GridRowEditStopParams } from '@mui/x-data-grid';
 import { groupBy, isEmpty, sortBy } from 'lodash';
 import { useMemo, useState } from 'react';
 import { VariantFragment as Variant } from '~/common/fragments';
 import { useDialog } from '~/components/Dialog';
 import { Error } from '../../../../../components/Error';
-import {
-  StepProgressFragment,
-  UpdateStepProgressDocument,
-} from '../../../../Products/Detail/Progress/ProductProgress.graphql';
+import { UpdateStepProgressDocument } from '../../../../Products/Detail/Progress/ProductProgress.graphql';
 import { ProgressSummaryCard } from '../../../../ProgressReports/Detail/ProgressSummaryCard';
 import { UpdatePeriodicReportDialog } from '../../../../Projects/Reports/UpdatePeriodicReportDialog';
-import { ProductTable } from '../../../Detail/ProductTable';
+import {
+  ProductTable,
+  RowData as ProductTableRowData,
+} from '../../../Detail/ProductTable';
 import { ProgressReportCard } from '../../../Detail/ProgressReportCard';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import {
-  ProgressReportEditFragment,
-  ProgressReportProgressFragment,
-} from '../../ProgressReportEdit.graphql';
+import { ProgressReportProgressFragment } from '../../ProgressReportEdit.graphql';
 import { VariantSelector } from './VariantSelector';
 
 export const ProgressStep = () => {
@@ -91,7 +89,6 @@ export const ProgressStep = () => {
           <EditableProductTable
             products={progress}
             category={category}
-            report={report}
             variant={variant}
             setVariant={setVariant}
             variants={[...progressByVariant.keys()]}
@@ -115,51 +112,52 @@ const EditableProductTable = ({
   variants,
   category,
   products,
-  report,
   variant,
   setVariant,
 }: {
   variants: Variant[];
   category: string;
   products: ProgressReportProgressFragment[];
-  report: ProgressReportEditFragment;
   variant: Variant;
   setVariant: (variant: Variant) => void;
-}) => {
-  const [update] = useMutation(UpdateStepProgressDocument);
+}) => (
+  <ProductTable
+    category={category}
+    products={products}
+    pagination
+    header={() => (
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <VariantSelector
+          variants={variants}
+          value={variant}
+          onChange={setVariant}
+        />
+      </div>
+    )}
+    editMode="row"
+    onRowEditStop={useUpdateSteps()}
+  />
+);
 
-  return (
-    <ProductTable
-      category={category}
-      products={products}
-      pagination
-      header={() => (
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <VariantSelector
-            variants={variants}
-            value={variant}
-            onChange={setVariant}
-          />
-        </div>
-      )}
-      editMode="row"
-      onRowEditStop={(fields) => {
-        void update({
-          variables: {
-            input: {
-              productId: fields.id.toString(),
-              reportId: report.id,
-              variant: variant.key,
-              steps: [
-                ...fields.row.data.steps.map((step: StepProgressFragment) => ({
-                  completed: parseFloat(fields.row[step.step]),
-                  step: step.step,
-                })),
-              ],
-            },
-          },
-        });
-      }}
-    />
-  );
+const useUpdateSteps = () => {
+  const [update] = useMutation(UpdateStepProgressDocument);
+  return (params: GridRowEditStopParams<ProductTableRowData>) => {
+    const { product, report, variant, steps } = params.row.data;
+    void update({
+      variables: {
+        input: {
+          productId: product.id,
+          reportId: report.id,
+          variant: variant.key,
+          steps: steps.map(({ step }) => {
+            const raw = params.row[step];
+            return {
+              step,
+              completed: raw ? parseFloat(raw) : null,
+            };
+          }),
+        },
+      },
+    });
+  };
 };
