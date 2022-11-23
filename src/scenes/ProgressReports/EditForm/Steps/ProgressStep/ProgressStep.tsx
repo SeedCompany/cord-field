@@ -15,7 +15,6 @@ import {
 } from '../../../Detail/ProductTable';
 import { ProgressReportCard } from '../../../Detail/ProgressReportCard';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { ProgressReportProgressFragment } from '../../ProgressReportEdit.graphql';
 import { VariantSelector } from './VariantSelector';
 
 export const ProgressStep = () => {
@@ -38,6 +37,8 @@ export const ProgressStep = () => {
     [report]
   );
 
+  const handleRowEditStop = useUpdateSteps();
+
   const [variant, setVariant] = useState<Variant | undefined>(
     () => progressByVariant.keys().next().value
   );
@@ -52,6 +53,14 @@ export const ProgressStep = () => {
   if (!variant || !progressByCategory || isEmpty(progressByCategory)) {
     return <Error disableButtons>No progress available for this report.</Error>;
   }
+
+  const variantSelector = (
+    <VariantSelector
+      variants={[...progressByVariant.keys()]}
+      value={variant}
+      onChange={setVariant}
+    />
+  );
 
   return (
     <Box mb={4}>
@@ -86,12 +95,13 @@ export const ProgressStep = () => {
 
       {Object.entries(progressByCategory).map(([category, progress]) => (
         <Box key={category} sx={{ mb: 4 }}>
-          <EditableProductTable
-            products={progress}
+          <ProductTable
             category={category}
-            variant={variant}
-            setVariant={setVariant}
-            variants={[...progressByVariant.keys()]}
+            products={progress}
+            pagination
+            header={() => variantSelector}
+            editMode="row"
+            onRowEditStop={handleRowEditStop}
           />
         </Box>
       ))}
@@ -107,37 +117,6 @@ export const ProgressStep = () => {
     </Box>
   );
 };
-
-const EditableProductTable = ({
-  variants,
-  category,
-  products,
-  variant,
-  setVariant,
-}: {
-  variants: Variant[];
-  category: string;
-  products: ProgressReportProgressFragment[];
-  variant: Variant;
-  setVariant: (variant: Variant) => void;
-}) => (
-  <ProductTable
-    category={category}
-    products={products}
-    pagination
-    header={() => (
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <VariantSelector
-          variants={variants}
-          value={variant}
-          onChange={setVariant}
-        />
-      </div>
-    )}
-    editMode="row"
-    onRowEditStop={useUpdateSteps()}
-  />
-);
 
 const useUpdateSteps = () => {
   const [update] = useMutation(UpdateStepProgressDocument);
