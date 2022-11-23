@@ -63,10 +63,14 @@ export const ProgressStep = () => {
           key={category}
           category={category}
           products={progress}
-          pagination
-          header={() => variantSelector}
-          editMode="row"
-          onRowEditStop={handleRowEditStop}
+          GridProps={{
+            pagination: true,
+            components: {
+              Header: () => variantSelector,
+            },
+            editMode: 'row',
+            onRowEditStop: handleRowEditStop,
+          }}
         />
       ))}
     </Stack>

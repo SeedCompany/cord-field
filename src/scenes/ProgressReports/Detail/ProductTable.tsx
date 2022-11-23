@@ -1,12 +1,7 @@
 import { Box, Card } from '@mui/material';
-import {
-  DataGrid,
-  GridColDef,
-  GridEditMode,
-  GridEventListener,
-} from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { sortBy, uniq } from 'lodash';
-import { JSXElementConstructor, useMemo } from 'react';
+import { useMemo } from 'react';
 import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
 import { bookIndexFromName } from '../../../common/biblejs';
 import { Link } from '../../../components/Routing';
@@ -15,11 +10,7 @@ import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graph
 interface ProductTableProps {
   category: string;
   products: readonly ProgressOfProductForReportFragment[];
-  editMode?: GridEditMode;
-  pagination?: true;
-  header?: JSXElementConstructor<any>;
-  onRowEditStop?: GridEventListener<'rowEditStop'>;
-  onCellEditStop?: GridEventListener<'cellEditStop'>;
+  GridProps?: Omit<DataGridProps<RowData>, 'columns' | 'rows'>;
 }
 
 export type RowData = {
@@ -33,11 +24,7 @@ export type RowData = {
 export const ProductTable = ({
   products,
   category,
-  editMode = 'row',
-  pagination,
-  header,
-  onRowEditStop,
-  onCellEditStop,
+  GridProps = {},
 }: ProductTableProps) => {
   const steps = useMemo(() => {
     return uniq(
@@ -52,6 +39,10 @@ export const ProductTable = ({
       ).map((tuple) => tuple.step)
     );
   }, [products]);
+
+  const editingAttached =
+    (!!GridProps.onRowEditStop && GridProps.editMode === 'row') ||
+    (!!GridProps.onCellEditStop && GridProps.editMode === 'cell');
 
   const columns: Array<GridColDef<RowData>> = [
     {
@@ -82,9 +73,7 @@ export const ProductTable = ({
           );
         },
         field: step,
-        editable:
-          (!!onRowEditStop && editMode === 'row') ||
-          (!!onCellEditStop && editMode === 'cell'),
+        editable: editingAttached,
         width: 100,
         renderCell: ({ row }) =>
           row[step] ? (
@@ -136,15 +125,9 @@ export const ProductTable = ({
   return (
     <Card sx={{ maxWidth: 'lg' }}>
       <DataGrid<RowData>
-        columns={columns}
-        rows={tableData}
         autoHeight
         disableColumnMenu
-        editMode={editMode}
-        onRowEditStop={onRowEditStop}
-        onCellEditStop={onCellEditStop}
-        pagination={pagination}
-        pageSize={pagination ? 10 : tableData.length}
+        pageSize={GridProps.pagination ? 10 : tableData.length}
         rowsPerPageOptions={[10]}
         onCellKeyDown={(params, event) => {
           // disabling commit on enter because of an Mui bug. See https://github.com/mui/mui-x/issues/3729
@@ -154,9 +137,12 @@ export const ProductTable = ({
           }
         }}
         components={{
-          Header: header,
-          Footer: pagination ? undefined : () => null,
+          Footer: GridProps.pagination ? undefined : () => null,
+          ...GridProps.components,
         }}
+        {...GridProps}
+        columns={columns}
+        rows={tableData}
       />
     </Card>
   );
