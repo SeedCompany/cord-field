@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Box } from '@mui/material';
+import { Stack } from '@mui/material';
 import { GridRowEditStopParams } from '@mui/x-data-grid';
 import { groupBy, isEmpty, sortBy } from 'lodash';
 import { useMemo, useState } from 'react';
@@ -57,22 +57,21 @@ export const ProgressStep = () => {
   );
 
   return (
-    <Box mb={4}>
-      <PnpFileAndSummary report={report} sx={{ mb: 4 }} />
+    <Stack spacing={4}>
+      <PnpFileAndSummary report={report} />
 
       {Object.entries(progressByCategory).map(([category, progress]) => (
-        <Box key={category} sx={{ mb: 4 }}>
-          <ProductTable
-            category={category}
-            products={progress}
-            pagination
-            header={() => variantSelector}
-            editMode="row"
-            onRowEditStop={handleRowEditStop}
-          />
-        </Box>
+        <ProductTable
+          key={category}
+          category={category}
+          products={progress}
+          pagination
+          header={() => variantSelector}
+          editMode="row"
+          onRowEditStop={handleRowEditStop}
+        />
       ))}
-    </Box>
+    </Stack>
   );
 };
 
