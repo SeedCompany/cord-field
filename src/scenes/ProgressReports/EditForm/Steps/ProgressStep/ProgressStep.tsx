@@ -1,20 +1,17 @@
 import { useMutation } from '@apollo/client';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { GridRowEditStopParams } from '@mui/x-data-grid';
 import { groupBy, isEmpty, sortBy } from 'lodash';
 import { useMemo, useState } from 'react';
 import { VariantFragment as Variant } from '~/common/fragments';
-import { useDialog } from '~/components/Dialog';
 import { Error } from '../../../../../components/Error';
 import { UpdateStepProgressDocument } from '../../../../Products/Detail/Progress/ProductProgress.graphql';
-import { ProgressSummaryCard } from '../../../../ProgressReports/Detail/ProgressSummaryCard';
-import { UpdatePeriodicReportDialog } from '../../../../Projects/Reports/UpdatePeriodicReportDialog';
 import {
   ProductTable,
   RowData as ProductTableRowData,
 } from '../../../Detail/ProductTable';
-import { ProgressReportCard } from '../../../Detail/ProgressReportCard';
 import { useProgressReportContext } from '../../ProgressReportContext';
+import { PnpFileAndSummary } from './PnpFileAndSummary';
 import { VariantSelector } from './VariantSelector';
 
 export const ProgressStep = () => {
@@ -43,9 +40,6 @@ export const ProgressStep = () => {
     () => progressByVariant.keys().next().value
   );
 
-  // Single file for new version, empty array for received date update.
-  const [dialogState, setUploading, upload] = useDialog<File[]>();
-
   const progressByCategory = variant
     ? progressByVariant.get(variant)!
     : undefined;
@@ -64,34 +58,7 @@ export const ProgressStep = () => {
 
   return (
     <Box mb={4}>
-      <Grid container spacing={2} sx={{ mb: 4 }}>
-        {report.cumulativeSummary ? (
-          <Grid item md={6}>
-            <ProgressSummaryCard
-              loading={false}
-              summary={report.cumulativeSummary}
-              sx={{ height: 1 }}
-            />
-          </Grid>
-        ) : null}
-        <Grid container item md={report.cumulativeSummary ? 6 : 12} spacing={2}>
-          {!report.reportFile.value && (
-            <Grid item md={6} sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography variant="body2">
-                (TENTATIVE COPY) Please upload the PnP for this reporting
-                period. The progress data will populate the charts below.
-              </Typography>
-            </Grid>
-          )}
-          <Grid item md={6} justifyItems="end">
-            <ProgressReportCard
-              progressReport={report}
-              disableIcon
-              onUpload={({ files }) => setUploading(files)}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
+      <PnpFileAndSummary report={report} sx={{ mb: 4 }} />
 
       {Object.entries(progressByCategory).map(([category, progress]) => (
         <Box key={category} sx={{ mb: 4 }}>
@@ -105,15 +72,6 @@ export const ProgressStep = () => {
           />
         </Box>
       ))}
-
-      <UpdatePeriodicReportDialog
-        {...dialogState}
-        report={{ ...report, reportFile: upload }}
-        editFields={[
-          'receivedDate',
-          ...(upload && upload.length > 0 ? ['reportFile' as const] : []),
-        ]}
-      />
     </Box>
   );
 };
