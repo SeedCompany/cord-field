@@ -2,6 +2,7 @@ import { Box, Card } from '@mui/material';
 import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { sortBy, uniq } from 'lodash';
 import { useMemo } from 'react';
+import { LiteralUnion } from 'type-fest';
 import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
 import { bookIndexFromName } from '../../../common/biblejs';
 import { Link } from '../../../components/Routing';
@@ -10,13 +11,17 @@ import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graph
 interface ProductTableProps {
   category: string;
   products: readonly ProgressOfProductForReportFragment[];
-  GridProps?: Omit<DataGridProps<RowData>, 'columns' | 'rows'>;
+  GridProps?: Omit<
+    DataGridProps<RowData>,
+    'columns' | 'rows' | 'isCellEditable'
+  >;
 }
 
 export type RowData = {
   id: string;
   label: string;
   data: ProgressOfProductForReportFragment;
+  plannedSteps: ReadonlySet<LiteralUnion<ProductStep, string>>;
 } & {
   [K in ProductStep]?: string;
 };
@@ -104,6 +109,7 @@ export const ProductTable = ({
       id: product.id,
       data: progress,
       label: product.label ?? '',
+      plannedSteps: new Set(progress.steps.map((s) => s.step)),
     };
     const measurement = product.progressStepMeasurement.value;
     for (const { step, completed } of progress.steps) {
@@ -143,6 +149,7 @@ export const ProductTable = ({
         {...GridProps}
         columns={columns}
         rows={tableData}
+        isCellEditable={({ row, field }) => row.plannedSteps.has(field)}
       />
     </Card>
   );
