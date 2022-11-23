@@ -1,7 +1,6 @@
 import { Grading, Translate } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material';
 import { ComponentType } from 'react';
-import { Except } from 'type-fest';
 import { Role } from '~/api/schema.graphql';
 import { extendSx } from '~/common';
 import { PeopleJoinedIcon } from '~/components/Icons';
@@ -16,11 +15,11 @@ const variantToIconMapper: {
   ProjectManager: ProjectManagerIcon,
   Marketing: Grading,
 };
-interface RoleIconProps extends Except<SvgIconProps, 'role'> {
-  role?: Role | null;
+interface RoleIconProps extends SvgIconProps {
+  variantRole?: Role | null;
 }
 
-export const RoleIcon = ({ role, sx, ...rest }: RoleIconProps) => {
+export const RoleIcon = ({ variantRole: role, sx, ...rest }: RoleIconProps) => {
   if (!role) {
     return null;
   }
