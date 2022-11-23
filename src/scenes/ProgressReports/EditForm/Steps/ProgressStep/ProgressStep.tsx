@@ -7,7 +7,8 @@ import {
   Typography,
 } from '@mui/material';
 import { groupBy } from 'lodash';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { VariantFragment } from '~/common/fragments';
 import { useDialog } from '~/components/Dialog';
 import {
   StepProgressFragment,
@@ -48,8 +49,6 @@ const ToggleButtonSx = (role: string) => ({
   },
 });
 
-const variants = ['partner', 'official'] as const;
-
 const sortCategories = (a: string, b: string) => {
   if (a === 'Scripture') {
     return -1;
@@ -62,27 +61,52 @@ const sortCategories = (a: string, b: string) => {
 
 export const ProgressStep = () => {
   const { report } = useProgressReportContext();
-  const [tab, setTab] = useState<typeof variants[number]>('partner');
+  const [variant, setVariant] = useState<VariantFragment | null>(null);
 
   const [update] = useMutation(UpdateStepProgressDocument);
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
 
-  const groups: Record<
-    string,
-    Record<string, ProgressReportProgressFragment[]>
-  > = {};
+  const progressByVariant = Object.fromEntries(
+    report.progressForAllVariants.map((progress) => {
+      const variant = progress[0]!.variant.key;
+      const progressByCategory = groupBy(
+        progress,
+        (product) => product.product.category
+      );
+      return [variant, progressByCategory];
+    })
+  );
 
-  report.progressForAllVariants.map((progress) => {
-    const grouped = groupBy(progress, (product) => product.product.category);
-    groups[progress[0]!.variant.key] = grouped;
-    return progress;
-  });
+  const variantObjects = Object.values(
+    Object.fromEntries(
+      report.progressForAllVariants.map((progress) => {
+        const variant = progress[0]!.variant;
+        return [variant.key, variant];
+      })
+    )
+  );
 
-  const categories = Object.keys(groups[tab]!).sort(sortCategories);
-  const forTable = groups[tab]!;
-  const tabIndex = variants.indexOf(tab);
+  useEffect(() => {
+    if (variantObjects.length > 0 && !variant) {
+      setVariant(variantObjects[0]!);
+    }
+  }, [variantObjects, variant]);
+
+  const current = variant?.key ?? '';
+  const categories = Object.keys(progressByVariant[current] ?? {}).sort(
+    sortCategories
+  );
+  const forTable = progressByVariant[current]!;
+
+  if (categories.length === 0) {
+    return (
+      <Typography>
+        No categories found for this report. Please contact support
+      </Typography>
+    );
+  }
 
   return (
     <div
@@ -91,7 +115,7 @@ export const ProgressStep = () => {
       })}
     >
       <Grid container spacing={2} sx={{ mb: 4 }}>
-        {tabIndex ? (
+        {current ? (
           <Grid item md={6}>
             <ProgressSummaryCard
               loading={!report}
@@ -100,7 +124,7 @@ export const ProgressStep = () => {
             />
           </Grid>
         ) : null}
-        <Grid container item md={tabIndex ? 6 : 12} spacing={2}>
+        <Grid container item md={current ? 6 : 12} spacing={2}>
           {!report.reportFile.value && (
             <Grid item md={6} sx={{ display: 'flex', alignItems: 'center' }}>
               <Typography variant="body2">
@@ -126,8 +150,9 @@ export const ProgressStep = () => {
             category={category}
             update={update}
             report={report}
-            tab={tab}
-            setTab={setTab}
+            variant={variant}
+            setVariant={setVariant}
+            variants={variantObjects}
           />
         </Box>
       ))}
@@ -145,19 +170,21 @@ export const ProgressStep = () => {
 };
 
 const EditableProductTable = ({
+  variants,
   category,
   products = [],
   update,
   report,
-  tab,
-  setTab,
+  variant,
+  setVariant,
 }: {
+  variants: VariantFragment[];
   category: string;
   products?: ProgressReportProgressFragment[];
   update: any;
   report: ProgressReportEditFragment;
-  tab: typeof variants[number];
-  setTab: (tab: typeof variants[number]) => void;
+  variant?: VariantFragment | null;
+  setVariant: (variant: VariantFragment) => void;
 }) => (
   <ProductTable
     category={category}
@@ -166,8 +193,9 @@ const EditableProductTable = ({
     header={() => (
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <VariantsToggle
-          setTab={(value) => setTab(variants[value] ?? variants[0])}
-          tab={variants.indexOf(tab)}
+          variant={variant}
+          variants={variants}
+          setVariant={setVariant}
         />
       </div>
     )}
@@ -178,7 +206,7 @@ const EditableProductTable = ({
           input: {
             productId: fields.id.toString(),
             reportId: report.id,
-            variant: tab,
+            variant: variant,
             steps: [
               ...fields.row.data.steps.map((step: StepProgressFragment) => ({
                 completed: parseFloat(fields.row[step.step]),
@@ -194,46 +222,48 @@ const EditableProductTable = ({
 );
 
 const VariantsToggle = ({
-  tab,
-  setTab,
+  variants,
+  variant,
+  setVariant,
 }: {
-  tab: number;
-  setTab: (tab: number) => void;
+  variant?: VariantFragment | null;
+  setVariant: (variant: VariantFragment) => void;
+  variants?: VariantFragment[];
 }) => {
+  const isSelected = (v: VariantFragment) => v.key === variant?.key;
+
+  if (!variants || variants.length < 2) {
+    return null;
+  }
+
   return (
     <ToggleButtonGroup
-      value={tab}
+      value={variant?.key ?? ''}
       exclusive
       onChange={(_e, value) => {
         if (value !== null) {
-          setTab(value);
+          setVariant(variants.find((v) => v.key === value) ?? variants[0]!);
         }
       }}
       color="secondary"
       sx={{ mt: 1, ml: 1 }}
     >
-      <ToggleButton
-        value={0}
-        sx={[ToggleButtonSx('FieldPartner'), tab !== 0 && transparentBgSx]}
-      >
-        <RoleIcon
-          // eslint-disable-next-line jsx-a11y/aria-role
-          role="FieldPartner"
-          sx={[iconSx, tab !== 0 && transparentBgSx]}
-        />
-        Field Partner
-      </ToggleButton>
-      <ToggleButton
-        value={1}
-        sx={[ToggleButtonSx('ProjectManager'), tab !== 1 && transparentBgSx]}
-      >
-        <RoleIcon
-          // eslint-disable-next-line jsx-a11y/aria-role
-          role="ProjectManager"
-          sx={[iconSx, tab !== 1 && transparentBgSx]}
-        />
-        Field Operations
-      </ToggleButton>
+      {variants.map((v) => (
+        <ToggleButton
+          key={v.key}
+          value={v.key}
+          sx={[
+            ToggleButtonSx(v.responsibleRole!),
+            isSelected(v) && transparentBgSx,
+          ]}
+        >
+          <RoleIcon
+            variantRole={v.responsibleRole}
+            sx={[iconSx, !isSelected(v) && transparentBgSx]}
+          />
+          {v.label}
+        </ToggleButton>
+      ))}
     </ToggleButtonGroup>
   );
 };
