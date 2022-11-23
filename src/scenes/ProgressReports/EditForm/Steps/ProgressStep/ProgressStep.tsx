@@ -6,10 +6,11 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { groupBy } from 'lodash';
-import { useEffect, useState } from 'react';
-import { VariantFragment } from '~/common/fragments';
+import { groupBy, isEmpty, sortBy } from 'lodash';
+import { useMemo, useState } from 'react';
+import { VariantFragment as Variant } from '~/common/fragments';
 import { useDialog } from '~/components/Dialog';
+import { Error } from '../../../../../components/Error';
 import {
   StepProgressFragment,
   UpdateStepProgressDocument,
@@ -49,82 +50,54 @@ const ToggleButtonSx = (role: string) => ({
   },
 });
 
-const sortCategories = (a: string, b: string) => {
-  if (a === 'Scripture') {
-    return -1;
-  }
-  if (b === 'Scripture') {
-    return 1;
-  }
-  return a.localeCompare(b);
-};
-
 export const ProgressStep = () => {
   const { report } = useProgressReportContext();
-  const [variant, setVariant] = useState<VariantFragment | null>(null);
 
-  const [update] = useMutation(UpdateStepProgressDocument);
+  const progressByVariant = useMemo(
+    () =>
+      new Map(
+        report.progressForAllVariants.map((progress) => {
+          const { variant } = progress[0]!;
+          const progressByCategory = groupBy(
+            sortBy(progress, ({ product: { category } }) =>
+              category === 'Scripture' ? '' : category
+            ),
+            (product) => product.product.category
+          );
+          return [variant, progressByCategory];
+        })
+      ),
+    [report]
+  );
+
+  const [variant, setVariant] = useState<Variant | undefined>(
+    () => progressByVariant.keys().next().value
+  );
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
 
-  const progressByVariant = Object.fromEntries(
-    report.progressForAllVariants.map((progress) => {
-      const variant = progress[0]!.variant.key;
-      const progressByCategory = groupBy(
-        progress,
-        (product) => product.product.category
-      );
-      return [variant, progressByCategory];
-    })
-  );
+  const progressByCategory = variant
+    ? progressByVariant.get(variant)!
+    : undefined;
 
-  const variantObjects = Object.values(
-    Object.fromEntries(
-      report.progressForAllVariants.map((progress) => {
-        const variant = progress[0]!.variant;
-        return [variant.key, variant];
-      })
-    )
-  );
-
-  useEffect(() => {
-    if (variantObjects.length > 0 && !variant) {
-      setVariant(variantObjects[0]!);
-    }
-  }, [variantObjects, variant]);
-
-  const current = variant?.key ?? '';
-  const categories = Object.keys(progressByVariant[current] ?? {}).sort(
-    sortCategories
-  );
-  const forTable = progressByVariant[current]!;
-
-  if (categories.length === 0) {
-    return (
-      <Typography>
-        No categories found for this report. Please contact support
-      </Typography>
-    );
+  if (!variant || !progressByCategory || isEmpty(progressByCategory)) {
+    return <Error disableButtons>No progress available for this report.</Error>;
   }
 
   return (
-    <div
-      css={(theme) => ({
-        marginBottom: theme.spacing(4),
-      })}
-    >
+    <Box mb={4}>
       <Grid container spacing={2} sx={{ mb: 4 }}>
-        {current ? (
+        {report.cumulativeSummary ? (
           <Grid item md={6}>
             <ProgressSummaryCard
-              loading={!report}
-              summary={report.cumulativeSummary ?? null}
+              loading={false}
+              summary={report.cumulativeSummary}
               sx={{ height: 1 }}
             />
           </Grid>
         ) : null}
-        <Grid container item md={current ? 6 : 12} spacing={2}>
+        <Grid container item md={report.cumulativeSummary ? 6 : 12} spacing={2}>
           {!report.reportFile.value && (
             <Grid item md={6} sx={{ display: 'flex', alignItems: 'center' }}>
               <Typography variant="body2">
@@ -143,16 +116,15 @@ export const ProgressStep = () => {
         </Grid>
       </Grid>
 
-      {categories.map((category) => (
+      {Object.entries(progressByCategory).map(([category, progress]) => (
         <Box key={category} sx={{ mb: 4 }}>
           <EditableProductTable
-            products={forTable[category]}
+            products={progress}
             category={category}
-            update={update}
             report={report}
             variant={variant}
             setVariant={setVariant}
-            variants={variantObjects}
+            variants={[...progressByVariant.keys()]}
           />
         </Box>
       ))}
@@ -165,80 +137,81 @@ export const ProgressStep = () => {
           ...(upload && upload.length > 0 ? ['reportFile' as const] : []),
         ]}
       />
-    </div>
+    </Box>
   );
 };
 
 const EditableProductTable = ({
   variants,
   category,
-  products = [],
-  update,
+  products,
   report,
   variant,
   setVariant,
 }: {
-  variants: VariantFragment[];
+  variants: Variant[];
   category: string;
-  products?: ProgressReportProgressFragment[];
-  update: any;
+  products: ProgressReportProgressFragment[];
   report: ProgressReportEditFragment;
-  variant?: VariantFragment | null;
-  setVariant: (variant: VariantFragment) => void;
-}) => (
-  <ProductTable
-    category={category}
-    products={products}
-    pagination
-    header={() => (
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <VariantsToggle
-          variant={variant}
-          variants={variants}
-          setVariant={setVariant}
-        />
-      </div>
-    )}
-    editMode="row"
-    onRowEditStop={(fields) => {
-      void update({
-        variables: {
-          input: {
-            productId: fields.id.toString(),
-            reportId: report.id,
-            variant: variant,
-            steps: [
-              ...fields.row.data.steps.map((step: StepProgressFragment) => ({
-                completed: parseFloat(fields.row[step.step]),
-                percentDone: parseFloat(fields.row[step.step]),
-                step: step.step,
-              })),
-            ],
+  variant: Variant;
+  setVariant: (variant: Variant) => void;
+}) => {
+  const [update] = useMutation(UpdateStepProgressDocument);
+
+  return (
+    <ProductTable
+      category={category}
+      products={products}
+      pagination
+      header={() => (
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <VariantsToggle
+            variant={variant}
+            variants={variants}
+            setVariant={setVariant}
+          />
+        </div>
+      )}
+      editMode="row"
+      onRowEditStop={(fields) => {
+        void update({
+          variables: {
+            input: {
+              productId: fields.id.toString(),
+              reportId: report.id,
+              variant: variant.key,
+              steps: [
+                ...fields.row.data.steps.map((step: StepProgressFragment) => ({
+                  completed: parseFloat(fields.row[step.step]),
+                  step: step.step,
+                })),
+              ],
+            },
           },
-        },
-      });
-    }}
-  />
-);
+        });
+      }}
+    />
+  );
+};
 
 const VariantsToggle = ({
   variants,
   variant,
   setVariant,
 }: {
-  variant?: VariantFragment | null;
-  setVariant: (variant: VariantFragment) => void;
-  variants?: VariantFragment[];
+  variant: Variant;
+  setVariant: (variant: Variant) => void;
+  variants: Variant[];
 }) => {
-  const isSelected = (v: VariantFragment) => v.key === variant?.key;
+  const isSelected = (v: Variant) => v.key === variant.key;
 
-  if (!variants || variants.length < 2) {
+  if (variants.length < 2) {
     return null;
   }
 
   return (
     <ToggleButtonGroup
-      value={variant?.key ?? ''}
+      value={variant.key}
       exclusive
       onChange={(_e, value) => {
         if (value !== null) {
