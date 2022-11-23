@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import { Stack } from '@mui/material';
-import { GridRowEditStopParams } from '@mui/x-data-grid';
 import { groupBy, isEmpty, sortBy } from 'lodash';
 import { useMemo, useState } from 'react';
 import { Error } from '../../../../../components/Error';
@@ -34,7 +33,7 @@ export const ProgressStep = () => {
   );
   const variants = [...progressByVariant.keys()];
 
-  const handleRowEditStop = useUpdateSteps();
+  const processRowUpdate = useUpdateSteps();
 
   const [variant, setVariant] = useState(variants[0]);
 
@@ -68,8 +67,10 @@ export const ProgressStep = () => {
             components: {
               Header: () => variantSelector,
             },
-            editMode: 'row',
-            onRowEditStop: handleRowEditStop,
+            processRowUpdate,
+            experimentalFeatures: {
+              newEditingApi: true,
+            },
           }}
         />
       ))}
@@ -79,23 +80,33 @@ export const ProgressStep = () => {
 
 const useUpdateSteps = () => {
   const [update] = useMutation(UpdateStepProgressDocument);
-  return (params: GridRowEditStopParams<ProductTableRowData>) => {
-    const { product, report, variant, steps } = params.row.data;
+  return async (newRow: ProductTableRowData, oldRow: ProductTableRowData) => {
+    const { product, report, variant, steps } = newRow.data;
     void update({
       variables: {
         input: {
           productId: product.id,
           reportId: report.id,
           variant: variant.key,
-          steps: steps.map(({ step }) => {
-            const raw = params.row[step];
-            return {
+          steps: steps
+            .filter(({ step }) => newRow[step]?.value !== oldRow[step]?.value)
+            .map(({ step }) => ({
               step,
-              completed: raw ? parseFloat(raw) : null,
-            };
-          }),
+              completed: newRow[step]?.value,
+            })),
+        },
+      },
+      optimisticResponse: {
+        updateProductProgress: {
+          ...newRow.data,
+          steps: steps.map(({ step }) => ({
+            __typename: 'StepProgress',
+            step,
+            completed: newRow[step]!,
+          })),
         },
       },
     });
+    return newRow;
   };
 };

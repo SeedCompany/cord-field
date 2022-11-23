@@ -49,6 +49,9 @@ fragment ProductDetail on Product {
   }
   progressOfCurrentReportDue {
     ...ProductProgress
+    report {
+      ...PeriodicReport
+    }
   }
   steps {
     value

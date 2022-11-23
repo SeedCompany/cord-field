@@ -4,23 +4,27 @@ import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid';
 import { useCallback, useRef } from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 
-export const EditCurrencyCell = (
-  props: GridRenderEditCellParams<number | null | undefined>
-) => {
-  const { id, field, value, hasFocus } = props;
+type EditNumberCellProps = GridRenderEditCellParams<
+  number | null | undefined
+> & {
+  max?: number;
+};
+
+export const EditNumberCell = (props: EditNumberCellProps) => {
+  const { id, field, value, hasFocus, max } = props;
 
   const apiRef = useGridApiContext();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = useCallback(
     (values: NumberFormatValues) => {
-      void apiRef.current.setEditCellValue({
-        id,
-        field,
-        value: values.floatValue,
-      });
+      const value =
+        max && values.floatValue
+          ? Math.min(values.floatValue, max)
+          : values.floatValue ?? null;
+      void apiRef.current.setEditCellValue({ id, field, value });
     },
-    [apiRef, id, field]
+    [max, apiRef, id, field]
   );
 
   useEnhancedEffect(() => {
