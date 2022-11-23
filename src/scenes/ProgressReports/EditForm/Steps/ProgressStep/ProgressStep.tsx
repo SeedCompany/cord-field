@@ -3,7 +3,6 @@ import { Stack } from '@mui/material';
 import { GridRowEditStopParams } from '@mui/x-data-grid';
 import { groupBy, isEmpty, sortBy } from 'lodash';
 import { useMemo, useState } from 'react';
-import { VariantFragment as Variant } from '~/common/fragments';
 import { Error } from '../../../../../components/Error';
 import { UpdateStepProgressDocument } from '../../../../Products/Detail/Progress/ProductProgress.graphql';
 import {
@@ -33,12 +32,11 @@ export const ProgressStep = () => {
       ),
     [report]
   );
+  const variants = [...progressByVariant.keys()];
 
   const handleRowEditStop = useUpdateSteps();
 
-  const [variant, setVariant] = useState<Variant | undefined>(
-    () => progressByVariant.keys().next().value
-  );
+  const [variant, setVariant] = useState(variants[0]);
 
   const progressByCategory = variant
     ? progressByVariant.get(variant)!
@@ -50,7 +48,7 @@ export const ProgressStep = () => {
 
   const variantSelector = (
     <VariantSelector
-      variants={[...progressByVariant.keys()]}
+      variants={variants}
       value={variant}
       onChange={setVariant}
     />
