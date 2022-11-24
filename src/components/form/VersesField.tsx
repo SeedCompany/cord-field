@@ -163,10 +163,10 @@ export function VersesField({
   const hideVerseOrderError =
     errorCode === 'verseOrder' &&
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (!end || !end.includes(':') || !endVerse || endVerse?.length < 1);
+    (!end?.includes(':') || !endVerse || endVerse?.length < 1);
 
   const hideChapterOrderError =
-    errorCode === 'chapterOrder' && (!end || !end.includes(':'));
+    errorCode === 'chapterOrder' && !end?.includes(':');
 
   const hideVerseNumberError =
     errorCode === 'invalidVerse' &&

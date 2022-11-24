@@ -46,10 +46,7 @@ export const removeItemFromList =
     }
 
     const modifier: ListModifier = (existing, { readField }) => {
-      if (
-        !existing ||
-        !existing.items.some((ref) => readField('id', ref) === item.id)
-      ) {
+      if (!existing?.items.some((ref) => readField('id', ref) === item.id)) {
         return existing;
       }
 

@@ -56,7 +56,7 @@ export const pageLimitPagination = <
   keyArgs: (args: InputArg<PaginatedListInput> | null) => {
     // This function is called a lot and most of the time there are no args.
     // Optimization for this case.
-    if (!args || !args.input) {
+    if (!args?.input) {
       return false;
     }
     const { count, page, ...rest } = args.input;

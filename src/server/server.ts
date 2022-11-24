@@ -79,6 +79,7 @@ export const create = async () => {
     })
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   router.use(renderServerSideApp);
 
   return app;

@@ -69,11 +69,7 @@ export const MentorCard = ({ data, onEdit, wrap }: MentorCardProps) => {
           ) : undefined
         }
         action={
-          <Button
-            color="primary"
-            disabled={!data || !data.canEdit}
-            onClick={onEdit}
-          >
+          <Button color="primary" disabled={!data?.canEdit} onClick={onEdit}>
             {empty ? 'Add' : 'Edit'} Mentor
           </Button>
         }

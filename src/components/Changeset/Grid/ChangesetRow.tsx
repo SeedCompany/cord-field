@@ -1,12 +1,13 @@
 import { darken, lighten } from '@mui/material/styles';
 import { GridRow, GridRowProps } from '@mui/x-data-grid';
+import { Entity } from '~/api';
 import { useDetermineChangesetDiffItem } from '../ChangesetDiffContext';
 import { modeToPalette } from '../theme';
 
 export function ChangesetRow(props: GridRowProps) {
   const determineChangesetDiff = useDetermineChangesetDiffItem();
 
-  const diff = determineChangesetDiff(props.row);
+  const diff = determineChangesetDiff(props.row as Entity);
   if (!diff.mode) {
     return <GridRow {...props} />;
   }

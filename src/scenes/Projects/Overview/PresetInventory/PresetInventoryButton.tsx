@@ -26,7 +26,7 @@ export const PresetInventoryButton = ({
   const presetInventory = project?.presetInventory.value;
 
   const toggle = () => {
-    if (!project || !project.presetInventory.canEdit) {
+    if (!project?.presetInventory.canEdit) {
       return;
     }
 

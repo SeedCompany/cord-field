@@ -47,7 +47,7 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
       variant="h2"
       className={cx(
         classes.root,
-        !date || !date.canRead ? null : classes.loaded,
+        !date?.canRead ? null : classes.loaded,
         className
       )}
     >
