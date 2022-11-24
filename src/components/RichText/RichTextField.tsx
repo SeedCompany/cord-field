@@ -1,5 +1,6 @@
 import type {
   EditorConfig,
+  default as EditorJS,
   LogLevels,
   OutputData as RichTextData,
 } from '@editorjs/editorjs';
@@ -8,13 +9,13 @@ import {
   ClickAwayListener,
   FormControl,
   FormHelperText,
+  Grid,
   InputLabel,
   OutlinedInput,
   TextField,
   TextFieldProps,
 } from '@mui/material';
-import { EditorCore } from '@react-editor-js/core';
-import { identity, isEqual, pick } from 'lodash';
+import { identity, isEqual, pick, sumBy } from 'lodash';
 import {
   forwardRef,
   MouseEvent,
@@ -26,12 +27,20 @@ import {
   useRef,
   useState,
 } from 'react';
+import filterXSS from 'xss';
 import { extendSx, Nullable, StyleProps } from '../../common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
+import { FormattedNumber } from '../Formatters';
 import { EditorJsTheme } from './EditorJsTheme';
 import type { ToolKey } from './editorJsTools';
 import { RichTextView } from './RichTextView';
+
+declare module '@editorjs/editorjs/types/data-formats/output-data' {
+  interface OutputData {
+    characterCount?: number;
+  }
+}
 
 export type RichTextFieldProps = Pick<
   FieldConfig<RichTextData>,
@@ -41,6 +50,7 @@ export type RichTextFieldProps = Pick<
   label?: ReactNode;
   helperText?: ReactNode;
   placeholder?: string;
+  showCharacterCount?: boolean;
 } & StyleProps;
 
 export function RichTextField({
@@ -50,13 +60,14 @@ export function RichTextField({
   sx,
   className,
   placeholder,
+  showCharacterCount,
   ...props
 }: RichTextFieldProps) {
-  const instanceRef = useRef<EditorCore>();
+  const instanceRef = useRef<EditorJS>();
   const [isReady, setReady] = useState(false);
 
   const onFocus = useCallback(() => {
-    instanceRef.current?.dangerouslyLowLevelInstance?.focus();
+    instanceRef.current?.focus();
   }, [instanceRef]);
   const handleFocusFromClick = (e: MouseEvent) =>
     // Focus the editor or keep the editor focused
@@ -110,7 +121,7 @@ export function RichTextField({
         // Optimization to prevent changes when empty -> empty.
         return;
       }
-      void instanceRef.current.clear();
+      instanceRef.current.clear();
     }
   }, [
     val,
@@ -154,7 +165,7 @@ export function RichTextField({
                   minHeight={14} // matches minRows=2
                   placeholder={placeholder}
                   onInitialize={(instance) => {
-                    instanceRef.current = instance;
+                    instanceRef.current = instance.dangerouslyLowLevelInstance;
                     setReady(false);
                   }}
                   onReady={() => {
@@ -169,6 +180,10 @@ export function RichTextField({
                         // A newer change is already in progress
                         return;
                       }
+                      if (showCharacterCount) {
+                        data.characterCount = countCharacters(data);
+                      }
+
                       if (process.env.NODE_ENV !== 'production') {
                         data = Object.freeze(data);
                       }
@@ -233,8 +248,35 @@ export function RichTextField({
                         }}
                       />
 
-                      <FormHelperText id={`${id}-helper-text`}>
-                        {getHelperText(meta, helperText)}
+                      <FormHelperText>
+                        {getHelperText(
+                          meta,
+                          <Grid
+                            container
+                            spacing={1}
+                            justifyContent="space-between"
+                            component="span"
+                          >
+                            <Grid
+                              item
+                              component="span"
+                              // Maintain line height even when empty
+                              sx={{ '&:before': { content: `"\\200b"` } }}
+                            >
+                              {helperText}
+                            </Grid>
+                            {showCharacterCount && !isDataEmpty(val) && val && (
+                              <Grid
+                                item
+                                component="span"
+                                sx={{ whiteSpace: 'nowrap' }}
+                              >
+                                <FormattedNumber value={val.characterCount} />{' '}
+                                characters
+                              </Grid>
+                            )}
+                          </Grid>
+                        )}
                       </FormHelperText>
                     </FormControl>
                   </ClickAwayListener>
@@ -303,3 +345,22 @@ const Lib = loadable.lib(() => import('react-editor-js'), {
 const Tools = loadable.lib(() => import('./editorJsTools'), {
   ssr: false,
 });
+
+const countCharacters = (data: RichTextData) =>
+  sumBy(data.blocks, (block) => {
+    switch (block.type) {
+      case 'paragraph':
+      case 'header': {
+        const text = filterXSS(block.data.text, {
+          whiteList: {}, // filter out all tags
+          stripIgnoreTag: true, // filter out all HTML not in the `whiteList`
+          stripIgnoreTagBody: ['script'], // the script tag is a special case, we need to filter out its content
+        });
+        return text.length;
+      }
+      case 'list':
+        return sumBy(block.data.items, (item: string) => item.length);
+      default:
+        return 0;
+    }
+  });

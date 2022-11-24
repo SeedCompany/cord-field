@@ -66,6 +66,11 @@ export const VariantResponsesAccordion = ({
                   name="response"
                   label="Response"
                   tools={['paragraph', 'delimiter', 'marker']}
+                  // Only marketing writers should be concerned with this.
+                  // Everyone else we want as much info as possible.
+                  showCharacterCount={
+                    response.variant.responsibleRole === 'Marketing'
+                  }
                 />
                 {savedAt && (
                   <Typography variant="caption" sx={{ mb: 1 }} component="div">
