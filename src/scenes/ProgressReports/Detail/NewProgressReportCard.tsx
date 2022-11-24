@@ -38,7 +38,7 @@ export const NewProgressReportCard = ({ label }: Props) => {
               marginTop: 1,
             }}
           >
-            Add {label}
+            Edit {label}
           </Typography>
         </>
       </CardActionAreaLink>

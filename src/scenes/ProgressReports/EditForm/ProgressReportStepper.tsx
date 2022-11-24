@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Sx } from '~/common';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { useProgressReportContext } from './ProgressReportContext';
 
 interface ProgressReportStepperProps {
   step: number;
@@ -70,9 +70,9 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
   const { setProgressReportStep } = useProgressReportContext();
 
   return (
-    <Paper elevation={4} sx={{ mr: 2 }}>
+    <Paper elevation={4} sx={{ mr: 2, borderRadius: 0.6 }}>
       <div>
-        <Typography sx={{ px: 2, pt: 2 }}>Steps:</Typography>
+        <Typography sx={{ p: 2, pt: 3 }}>Steps:</Typography>
       </div>
       <Box sx={{ p: 2, pt: 0 }}>
         <Typography sx={typographySx}>Narrative Report</Typography>
@@ -91,13 +91,14 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
             <StepButton icon={' '}>Progress</StepButton>
           </Step>
         </Stepper>
-        <StepConnector sx={singleConnectorSx} />
+        {/* ToDo: add this back once we have time to work on additional notes  */}
+        {/* <StepConnector sx={singleConnectorSx} />
         <Typography sx={typographySx}>Final Details</Typography>
         <Stepper activeStep={step - 3} orientation="vertical" sx={stepperSx}>
           <Step onClick={() => setProgressReportStep(3)}>
             <StepButton icon={' '}>Additional Notes</StepButton>
           </Step>
-        </Stepper>
+        </Stepper> */}
       </Box>
     </Paper>
   );

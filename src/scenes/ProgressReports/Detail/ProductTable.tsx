@@ -1,26 +1,48 @@
 import { Box, Card } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridColDef,
+  GridRenderCellParams,
+  GridRenderEditCellParams,
+} from '@mui/x-data-grid';
 import { sortBy, uniq } from 'lodash';
 import { useMemo } from 'react';
-import { ProductStep, ProductStepLabels } from '~/api/schema.graphql';
+import { LiteralUnion } from 'type-fest';
+import {
+  ProductStep,
+  ProductStepLabels,
+  SecuredFloatNullable,
+} from '~/api/schema.graphql';
+import { isSecured, mapFromList } from '../../../common';
 import { bookIndexFromName } from '../../../common/biblejs';
+import { EditNumberCell } from '../../../components/Grid/EditNumberCell';
 import { Link } from '../../../components/Routing';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
 
 interface ProductTableProps {
   category: string;
   products: readonly ProgressOfProductForReportFragment[];
+  GridProps?: Omit<
+    DataGridProps<RowData>,
+    'columns' | 'rows' | 'isCellEditable'
+  >;
 }
 
-type RowData = {
+export type RowData = {
   id: string;
   label: string;
   data: ProgressOfProductForReportFragment;
+  plannedSteps: ReadonlySet<LiteralUnion<ProductStep, string>>;
 } & {
-  [K in ProductStep]?: string;
+  [K in ProductStep]?: SecuredFloatNullable;
 };
 
-export const ProductTable = ({ products, category }: ProductTableProps) => {
+export const ProductTable = ({
+  products,
+  category,
+  GridProps = {},
+}: ProductTableProps) => {
   const steps = useMemo(() => {
     return uniq(
       sortBy(
@@ -34,6 +56,11 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
       ).map((tuple) => tuple.step)
     );
   }, [products]);
+
+  const editingAttached =
+    GridProps.experimentalFeatures?.newEditingApi ||
+    (!!GridProps.onRowEditStop && GridProps.editMode === 'row') ||
+    (!!GridProps.onCellEditStop && GridProps.editMode === 'cell');
 
   const columns: Array<GridColDef<RowData>> = [
     {
@@ -55,7 +82,7 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
           const sep = ['&', ' '].find((sep) => label.includes(sep)) ?? '\0';
           const [one, two] = label.split(sep, 2);
           return (
-            <Box sx={{ lineHeight: 'initial' }}>
+            <Box sx={{ lineHeight: 'initial', textAlign: 'right' }}>
               <div>
                 {one} {sep}
               </div>
@@ -65,14 +92,52 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
         },
         field: step,
         width: 100,
-        renderCell: ({ row }) =>
-          row[step] ? (
-            row[step]
-          ) : row.data.steps.find((s) => s.step === step) ? (
-            ''
-          ) : (
-            <>&mdash;</>
-          ),
+        renderCell: ({
+          row,
+          field,
+          value,
+        }: GridRenderCellParams<number | null, RowData, string>) => {
+          const securedValue = (row as any)[field];
+          if (
+            !row.plannedSteps.has(step) ||
+            (isSecured(securedValue) && !securedValue.canRead)
+          ) {
+            return <>&mdash;</>;
+          }
+          if (value == null) {
+            return '';
+          }
+          const measurement = row.data.product.progressStepMeasurement.value;
+          if (measurement === 'Percent') {
+            return `${value}%`;
+          }
+          if (measurement === 'Number') {
+            return `${value}/${row.data.product.progressTarget.value ?? ''}`;
+          }
+          if (measurement === 'Boolean') {
+            return value ? 'Completed' : 'Not Done';
+          }
+          return '';
+        },
+        align: 'right',
+        editable: editingAttached,
+        valueGetter: ({ value }) => value?.value,
+        valueSetter: ({ row, value }) => ({
+          ...row,
+          [step]: {
+            ...row[step],
+            // Empty string caused by editing and committing too fast.
+            // Related to https://github.com/mui/mui-x/issues/3729 I think
+            value: value === '' ? null : value,
+          },
+        }),
+        renderEditCell: (
+          props: GridRenderEditCellParams<number | null, RowData>
+        ) => {
+          const target =
+            props.row.data.product.progressTarget.value ?? undefined;
+          return <EditNumberCell {...props} max={target} />;
+        },
       })
     ),
   ];
@@ -94,33 +159,36 @@ export const ProductTable = ({ products, category }: ProductTableProps) => {
       id: product.id,
       data: progress,
       label: product.label ?? '',
+      plannedSteps: new Set(progress.steps.map((s) => s.step)),
+      ...mapFromList(progress.steps, ({ step, completed }) => [
+        step,
+        completed,
+      ]),
     };
-    const measurement = product.progressStepMeasurement.value;
-    for (const { step, completed } of progress.steps) {
-      if (completed.value == null) {
-        continue;
-      }
-      row[step] =
-        measurement === 'Percent'
-          ? `${completed.value}%`
-          : measurement === 'Boolean'
-          ? 'Completed'
-          : measurement === 'Number'
-          ? `${completed.value}/${product.progressTarget.value ?? ''}`
-          : '';
-    }
     return row;
   });
 
   return (
     <Card sx={{ maxWidth: 'lg' }}>
       <DataGrid<RowData>
-        columns={columns}
-        rows={tableData}
         autoHeight
         disableColumnMenu
+        pageSize={GridProps.pagination ? 10 : tableData.length}
+        rowsPerPageOptions={[10]}
         components={{
-          Footer: () => null,
+          Footer: GridProps.pagination ? undefined : () => null,
+          ...GridProps.components,
+        }}
+        {...GridProps}
+        columns={columns}
+        rows={tableData}
+        isCellEditable={({ row, field }) => {
+          const securedValue = (row as any)[field];
+          return (
+            row.plannedSteps.has(field) &&
+            isSecured(securedValue) &&
+            securedValue.canEdit
+          );
         }}
       />
     </Card>

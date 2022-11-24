@@ -12,7 +12,7 @@ import { Form } from 'react-final-form';
 import { SubmitButton } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField, RichTextView } from '~/components/RichText';
-import { ProgressReportItemResponseEditFragment } from '../../ProgressReportDrawer.graphql';
+import { ProgressReportItemResponseEditFragment } from '../../ProgressReportEdit.graphql';
 import { RoleIcon } from '../../RoleIcon';
 
 export const VariantResponsesAccordion = ({
@@ -48,7 +48,7 @@ export const VariantResponsesAccordion = ({
         }}
         onClick={() => setExpanded(!expanded)}
       >
-        <RoleIcon role={response.variant.responsibleRole} />
+        <RoleIcon variantRole={response.variant.responsibleRole} />
         <span>{response.variant.label}</span>
       </AccordionSummary>
       <AccordionDetails sx={{ px: 4 }}>
@@ -62,7 +62,11 @@ export const VariantResponsesAccordion = ({
           >
             {({ handleSubmit }) => (
               <form onSubmit={handleSubmit}>
-                <RichTextField name="response" label="Response" />
+                <RichTextField
+                  name="response"
+                  label="Response"
+                  tools={['paragraph', 'delimiter', 'marker']}
+                />
                 {savedAt && (
                   <Typography variant="caption" sx={{ mb: 1 }} component="div">
                     Saved at <FormattedDateTime date={savedAt} relative />

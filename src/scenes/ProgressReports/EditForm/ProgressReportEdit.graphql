@@ -5,15 +5,23 @@ query ProgressReportEdit($progressReportId: ID!) {
 }
 
 fragment ProgressReportEdit on ProgressReport {
-  id
   ...PeriodicReport
+  cumulativeSummary {
+    ...ProgressSummary
+  }
+
   highlights {
     ...ProgressReportStepData
   }
   communityStories {
     ...ProgressReportStepData
   }
-  due
+  progress {
+    ...ProgressReportProgress
+  }
+  progressForAllVariants {
+    ...ProgressReportProgress
+  }
   parent {
     id
     canDelete
@@ -53,6 +61,13 @@ fragment ProgressReportEdit on ProgressReport {
   }
 }
 
+fragment ProgressReportProgress on ProductProgress {
+  variant {
+    ...variant
+  }
+  ...ProgressOfProductForReport
+}
+
 fragment ProgressReportStepData on PromptVariantResponseList {
   canCreate
   canRead
@@ -70,14 +85,7 @@ fragment ProgressReportStepData on PromptVariantResponseList {
 fragment ProgressReportItemEdit on PromptVariantResponse {
   id
   prompt {
-    canRead
-    value {
-      id
-      text {
-        canRead
-        value
-      }
-    }
+    ...SecuredPrompt
   }
   canDelete
   responses {
@@ -92,22 +100,15 @@ fragment ProgressReportItemResponseEdit on VariantResponse {
     canRead
   }
   variant {
-    key
-    label
-    responsibleRole
+    ...variant
   }
 }
 
 fragment ProgressReportAvailableData on VariantPromptList {
   prompts {
-    id
-    text {
-      value
-    }
+    ...Prompt
   }
   variants {
-    label
-    responsibleRole
-    key
+    ...variant
   }
 }

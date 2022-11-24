@@ -1,11 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import { Box } from '@mui/material';
 import { ReactNode } from 'react';
 import {
   ChoosePrompt,
   UpdatePromptVariantResponse,
 } from '~/api/schema.graphql';
-import { ProgressReportStepDataFragment } from '../../ProgressReportDrawer.graphql';
+import { ProgressReportStepDataFragment } from '../../ProgressReportEdit.graphql';
 import { PromptsForm } from './PromptsForm';
 import { VariantResponsesForm } from './VariantResponsesForm';
 
@@ -60,7 +61,7 @@ export const PromptVariantStep = ({
   };
 
   return (
-    <>
+    <Box sx={{ maxWidth: 'md' }}>
       {currentItem ? (
         <VariantResponsesForm
           currentItem={currentItem}
@@ -75,6 +76,6 @@ export const PromptVariantStep = ({
           promptInstructions={promptInstructions}
         />
       )}
-    </>
+    </Box>
   );
 };

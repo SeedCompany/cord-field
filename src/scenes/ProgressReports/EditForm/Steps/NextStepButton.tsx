@@ -1,10 +1,10 @@
 import { ArrowForward } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import { StyleProps } from '~/common';
-import { useProgressReportContext } from '../../../ProgressReportContext';
+import { useProgressReportContext } from '../ProgressReportContext';
 
 export const NextStepButton = ({ sx }: StyleProps) => {
-  const { nextProgressReportStep } = useProgressReportContext();
+  const { nextStep } = useProgressReportContext();
 
   return (
     <div
@@ -15,7 +15,7 @@ export const NextStepButton = ({ sx }: StyleProps) => {
     >
       <Button
         sx={sx}
-        onClick={nextProgressReportStep}
+        onClick={nextStep}
         variant="text"
         color="secondary"
         endIcon={

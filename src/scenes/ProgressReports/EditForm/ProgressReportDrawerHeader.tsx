@@ -1,17 +1,16 @@
 import { ArrowBack } from '@mui/icons-material';
-import { Box, Card, Divider, Skeleton, Theme, Typography } from '@mui/material';
+import { Box, Card, Divider, Theme, Typography } from '@mui/material';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { Link } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { useProgressReportContext } from './ProgressReportContext';
 
 export const ProgressReportDrawerHeader = () => {
-  const { setCurrentProgressReport, currentReport } =
-    useProgressReportContext();
+  const { report } = useProgressReportContext();
 
-  const language = currentReport?.parent.language;
-  const project = currentReport?.parent.project;
-  const sensitivity = currentReport?.parent.sensitivity;
+  const language = report.parent.language;
+  const project = report.parent.project;
+  const sensitivity = report.parent.sensitivity;
 
   return (
     <Box
@@ -34,9 +33,6 @@ export const ProgressReportDrawerHeader = () => {
           },
           marginBottom: 2,
         })}
-        onClick={() => {
-          setCurrentProgressReport(null);
-        }}
       >
         <ArrowBack
           sx={{
@@ -45,26 +41,18 @@ export const ProgressReportDrawerHeader = () => {
             marginBottom: '-4px',
           }}
         />
-        All Reports
+        Back
       </Link>
       <div css={{ display: 'flex' }}>
-        {currentReport ? (
-          <Typography variant="h2">{project?.name.value}</Typography>
-        ) : (
-          <Skeleton variant="text" height={40} width={200} />
-        )}
+        <Typography variant="h2">{project.name.value}</Typography>
         <Divider
           orientation="vertical"
           flexItem
           sx={{ mx: 2, borderRightColor: 'black', borderRightWidth: 2 }}
         />
-        {currentReport ? (
-          <Typography variant="h2">
-            {language?.value?.displayName.value}
-          </Typography>
-        ) : (
-          <Skeleton variant="text" height={40} width={200} />
-        )}
+        <Typography variant="h2">
+          {language.value?.displayName.value}
+        </Typography>
       </div>
       <Box
         sx={{
@@ -80,7 +68,7 @@ export const ProgressReportDrawerHeader = () => {
           <Typography variant="subtitle2" color="text.gray">
             Location
           </Typography>
-          {project?.primaryLocation.value?.name.canRead && (
+          {project.primaryLocation.value?.name.canRead && (
             <div css={{ display: 'flex' }}>
               <Typography variant="body1">
                 {project.primaryLocation.value.name.value}
@@ -100,10 +88,6 @@ export const ProgressReportDrawerHeader = () => {
               </Typography>
             </div>
           )}
-
-          {!currentReport && (
-            <Skeleton variant="text" height={20} width={200} />
-          )}
         </Card>
         <Card elevation={0} variant="outlined" sx={{ px: 2, py: 1 }}>
           <Typography variant="subtitle2" color="text.gray">
@@ -121,11 +105,9 @@ export const ProgressReportDrawerHeader = () => {
         </Card>
       </Box>
       <Box>
-        {currentReport && (
-          <Typography variant="h2" sx={{ mt: 2 }}>
-            <ReportLabel report={currentReport} /> &mdash; Field Report
-          </Typography>
-        )}
+        <Typography variant="h2" sx={{ mt: 2 }}>
+          <ReportLabel report={report} /> &mdash; Field Report
+        </Typography>
       </Box>
     </Box>
   );

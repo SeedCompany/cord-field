@@ -1,6 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid';
 import { useCurrencyFormatter } from '../Formatters/useCurrencyFormatter';
-import { EditCurrencyCell } from './EditCurrencyCell';
+import { EditNumberCell } from './EditNumberCell';
 
 export const useCurrencyColumn = () => {
   const formatCurrency = useCurrencyFormatter({
@@ -10,7 +10,7 @@ export const useCurrencyColumn = () => {
     align: 'right',
     headerAlign: 'right',
     valueFormatter: ({ value }) => formatCurrency(value ?? 0),
-    renderEditCell: (props) => <EditCurrencyCell {...props} />,
+    renderEditCell: (props) => <EditNumberCell {...props} />,
   };
   return col;
 };

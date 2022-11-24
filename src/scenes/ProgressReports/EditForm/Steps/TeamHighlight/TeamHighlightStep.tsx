@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { useProgressReportContext } from '../../../../ProgressReportContext';
+import { useProgressReportContext } from '../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
 import { PromptVariantStep } from '../PromptVariant';
 import {
@@ -8,12 +8,8 @@ import {
 } from './TeamHighlightStep.graphql';
 
 export const TeamHighlightStep = () => {
-  const { currentReport } = useProgressReportContext();
-  const highlights = currentReport?.highlights;
-
-  if (!currentReport) {
-    return null;
-  }
+  const { report } = useProgressReportContext();
+  const highlights = report.highlights;
 
   return (
     <div
@@ -23,7 +19,7 @@ export const TeamHighlightStep = () => {
     >
       <PromptVariantStep
         stepData={highlights}
-        reportId={currentReport.id}
+        reportId={report.id}
         updateResponseDocument={UpdateProgressReportHighlightResponseDocument}
         createItemDocument={CreateProgressReportHighlightDocument}
         title={
