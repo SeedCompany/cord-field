@@ -1,30 +1,34 @@
 import { useMutation } from '@apollo/client';
-import { Box, Typography } from '@mui/material';
-import { DateTime } from 'luxon';
-import { useState } from 'react';
+import { Divider, Tooltip, Typography } from '@mui/material';
+import { Fragment } from 'react';
 import { Form } from 'react-final-form';
+import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLists';
+import { Scalars } from '~/api/schema/schema.graphql';
+import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { useDialog } from '~/components/Dialog';
-import { SubmitButton } from '~/components/form';
-import { FormattedDateTime } from '~/components/Formatters';
+import { SubmitAction, SubmitButton } from '~/components/form';
 import { RichTextField } from '~/components/RichText';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { TransitionProgressReportDocument } from './SubmitReportStep.graphql';
 import { SuccessDialog } from './SuccessDialog';
+import { TransitionProgressReportDocument } from './TransitionProgressReport.graphql';
+
+interface FormValues extends SubmitAction {
+  notes: Scalars['RichText'];
+}
 
 export const SubmitReportStep = () => {
   const { report } = useProgressReportContext();
-  const [savedAt, setSavedAt] = useState<DateTime | null>(null);
-  const [submitReport] = useMutation(TransitionProgressReportDocument);
+
+  const [executeTransition] = useMutation(TransitionProgressReportDocument);
   const [successState, showSuccess] = useDialog();
 
-  const onSubmit = (values: any) => {
-    setSavedAt(DateTime.local());
-    void submitReport({
+  const onSubmit = async (values: FormValues) => {
+    await executeTransition({
       variables: {
         input: {
-          notes: values.notes,
           report: report.id,
           transition: values.submitAction,
+          notes: values.notes,
         },
       },
     });
@@ -32,48 +36,41 @@ export const SubmitReportStep = () => {
     showSuccess();
   };
 
+  const transitionDivider = (
+    <Divider variant="middle" sx={{ my: 1, color: 'text.secondary' }}>
+      or
+    </Divider>
+  );
   return (
-    <div>
-      <Typography variant="h3" gutterBottom>
-        Submit Report
-      </Typography>
-      <Typography variant="body2" gutterBottom>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elit pharetra
-        enim justo, molestie amet viverra faucibus. Egestas congue felis
-        <br />
-        You are editing a {report.status.value} report.
-      </Typography>
-      <Box sx={{ mt: 2 }}>
-        <Form onSubmit={onSubmit}>
-          {({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <RichTextField name="notes" label="Final Notes" />
-              {savedAt && (
-                <Typography variant="caption" sx={{ mb: 1 }} component="div">
-                  Saved at <FormattedDateTime date={savedAt} relative />
-                </Typography>
-              )}
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="caption" sx={{ mb: 1 }} component="div">
-                  To complete this report, please choose the next action.
-                </Typography>
-                {report.status.transitions.map((transition) => (
-                  <SubmitButton
-                    variant="outlined"
-                    color="secondary"
-                    key={transition.id}
-                    action={transition.id}
-                    onClick={() => setSavedAt(DateTime.now())}
-                  >
-                    {transition.label}
-                  </SubmitButton>
-                ))}
-              </Box>
-            </form>
-          )}
-        </Form>
-      </Box>
-      <SuccessDialog {...successState} />
-    </div>
+    <Form<FormValues> onSubmit={onSubmit}>
+      {({ handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <Typography variant="h3" paragraph>
+            Submit Report
+          </Typography>
+          <RichTextField name="notes" label="Final Notes" />
+          <Typography align="center" paragraph>
+            To complete this report, please choose the next action
+          </Typography>
+          {report.status.transitions.map(({ id, type, label, to }, index) => (
+            <Fragment key={id}>
+              {index > 0 && transitionDivider}
+              <Tooltip
+                title={`This will change the report to ${StatusLabels[to]}`}
+              >
+                <SubmitButton
+                  size="medium"
+                  {...transitionTypeStyles[type]}
+                  action={id}
+                >
+                  {label}
+                </SubmitButton>
+              </Tooltip>
+            </Fragment>
+          ))}
+          <SuccessDialog {...successState} />
+        </form>
+      )}
+    </Form>
   );
 };
