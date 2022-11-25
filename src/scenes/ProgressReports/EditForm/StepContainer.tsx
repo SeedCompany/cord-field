@@ -30,7 +30,7 @@ export const StepContainer = () => {
         <NextStepButton />
       </Box>
 
-      <Box sx={{ flex: 1, padding: 2, pt: 1 }}>
+      <Box sx={{ flex: 1, p: 2 }}>
         {step === 0 && <TeamHighlightStep />}
         {step === 1 && <CommunityStoryStep />}
         {step === 2 && <ProgressStep />}

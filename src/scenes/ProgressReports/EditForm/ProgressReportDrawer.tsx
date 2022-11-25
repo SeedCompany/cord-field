@@ -96,16 +96,14 @@ const CustomDrawer = ({
         },
       }}
     >
-      {' '}
       <Box sx={{ display: 'flex', height: 1, width: 'calc(100% - 300px)' }}>
         <Box
           sx={{
             width: 1,
-            height: '100%',
             display: 'flex',
             flexDirection: 'column',
             padding: 2,
-            pt: 4,
+            pt: 0,
           }}
         >
           {children}

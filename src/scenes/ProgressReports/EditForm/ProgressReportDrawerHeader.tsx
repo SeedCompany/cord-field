@@ -1,7 +1,7 @@
 import { ArrowBack } from '@mui/icons-material';
-import { Box, Card, Divider, Theme, Typography } from '@mui/material';
+import { Box, Card, Divider, Typography } from '@mui/material';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
-import { Link } from '~/components/Routing';
+import { ButtonLink } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useProgressReportContext } from './ProgressReportContext';
 
@@ -19,31 +19,17 @@ export const ProgressReportDrawerHeader = () => {
         width: 1,
         flexDirection: 'column',
         padding: 2,
-        pt: 0,
       }}
     >
-      <Link
+      <ButtonLink
         to=".."
-        sx={(theme: Theme) => ({
-          color: theme.palette.grey[800],
-          cursor: 'pointer',
-          marginTop: -2,
-          '&:hover': {
-            textDecoration: 'underline',
-          },
-          marginBottom: 2,
-        })}
+        color="secondary"
+        startIcon={<ArrowBack />}
+        sx={{ alignSelf: 'start' }}
       >
-        <ArrowBack
-          sx={{
-            marginRight: 1,
-            fontSize: '1.25rem',
-            marginBottom: '-4px',
-          }}
-        />
         Back
-      </Link>
-      <div css={{ display: 'flex' }}>
+      </ButtonLink>
+      <Box sx={{ display: 'flex', mt: 2 }}>
         <Typography variant="h2">{project.name.value}</Typography>
         <Divider
           orientation="vertical"
@@ -53,7 +39,7 @@ export const ProgressReportDrawerHeader = () => {
         <Typography variant="h2">
           {language.value?.displayName.value}
         </Typography>
-      </div>
+      </Box>
       <Box
         sx={{
           marginTop: 1,

@@ -19,7 +19,6 @@ export const ProgressReportSidebar = () => {
         flexDirection: 'column',
         width: 300,
         padding: 2,
-        pt: 4,
         right: 0,
         top: 0,
         position: 'fixed',
