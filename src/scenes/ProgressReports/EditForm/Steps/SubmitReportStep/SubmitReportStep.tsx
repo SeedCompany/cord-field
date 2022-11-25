@@ -1,15 +1,15 @@
 import { useMutation } from '@apollo/client';
 import { Divider, Tooltip, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { Fragment } from 'react';
 import { Form } from 'react-final-form';
 import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLists';
 import { Scalars } from '~/api/schema/schema.graphql';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
-import { useDialog } from '~/components/Dialog';
 import { SubmitAction, SubmitButton } from '~/components/form';
 import { RichTextField } from '~/components/RichText';
+import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
-import { SuccessDialog } from './SuccessDialog';
 import { TransitionProgressReportDocument } from './TransitionProgressReport.graphql';
 
 interface FormValues extends SubmitAction {
@@ -18,9 +18,10 @@ interface FormValues extends SubmitAction {
 
 export const SubmitReportStep = () => {
   const { report } = useProgressReportContext();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [executeTransition] = useMutation(TransitionProgressReportDocument);
-  const [successState, showSuccess] = useDialog();
 
   const onSubmit = async (values: FormValues) => {
     await executeTransition({
@@ -33,7 +34,10 @@ export const SubmitReportStep = () => {
       },
     });
 
-    showSuccess();
+    enqueueSnackbar('Report submitted — Thanks!', {
+      variant: 'success',
+    });
+    navigate('..');
   };
 
   const transitionDivider = (
@@ -68,7 +72,6 @@ export const SubmitReportStep = () => {
               </Tooltip>
             </Fragment>
           ))}
-          <SuccessDialog {...successState} />
         </form>
       )}
     </Form>
