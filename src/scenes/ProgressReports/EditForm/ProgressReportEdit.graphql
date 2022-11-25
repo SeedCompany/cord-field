@@ -25,9 +25,6 @@ fragment ProgressReportEdit on ProgressReport {
   status {
     ...ProgressReportStatus
   }
-  workflowEvents {
-    ...ProgressReportWorkflowEvent
-  }
   parent {
     id
     canDelete
@@ -116,33 +113,5 @@ fragment ProgressReportAvailableData on VariantPromptList {
   }
   variants {
     ...variant
-  }
-}
-
-fragment ProgressReportStatus on SecuredProgressReportStatus {
-  value
-  canBypassTransitions
-  transitions {
-    id
-    label
-    to
-    type
-  }
-}
-
-fragment ProgressReportWorkflowEvent on ProgressReportWorkflowEvent {
-  at
-  id
-  transition {
-    label
-  }
-  who {
-    value {
-      fullName
-    }
-  }
-  status
-  notes {
-    value
   }
 }
