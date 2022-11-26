@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Divider, Tooltip, Typography } from '@mui/material';
+import { Box, Divider, Tooltip, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { Fragment, useState } from 'react';
 import { Form } from 'react-final-form';
@@ -61,7 +61,11 @@ export const SubmitReportStep = () => {
   return (
     <Form<FormValues> onSubmit={onSubmit}>
       {({ handleSubmit, submitting }) => (
-        <form onSubmit={handleSubmit}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ maxWidth: 'sm', mx: 'auto' }}
+        >
           <Typography variant="h3" paragraph>
             Submit Report
           </Typography>
@@ -69,33 +73,35 @@ export const SubmitReportStep = () => {
           <Typography align="center" paragraph>
             To complete this report, please choose the next action
           </Typography>
-          {report.status.transitions.map(({ id, type, label, to }, index) => (
-            <Fragment key={id}>
-              {index > 0 && transitionDivider}
-              <Tooltip
-                title={`This will change the report to ${StatusLabels[to]}`}
-              >
-                <SubmitButton
-                  size="medium"
-                  {...transitionTypeStyles[type]}
-                  action={id}
+          <Box maxWidth={450} mx="auto">
+            {report.status.transitions.map(({ id, type, label, to }, index) => (
+              <Fragment key={id}>
+                {index > 0 && transitionDivider}
+                <Tooltip
+                  title={`This will change the report to ${StatusLabels[to]}`}
                 >
-                  {label}
-                </SubmitButton>
-              </Tooltip>
-            </Fragment>
-          ))}
-          {report.status.canBypassTransitions && (
-            <>
-              {report.status.transitions.length > 0 && transitionDivider}
-              <BypassButton
-                value={bypassStatus}
-                onChange={setBypassStatus}
-                disabled={submitting}
-              />
-            </>
-          )}
-        </form>
+                  <SubmitButton
+                    size="medium"
+                    {...transitionTypeStyles[type]}
+                    action={id}
+                  >
+                    {label}
+                  </SubmitButton>
+                </Tooltip>
+              </Fragment>
+            ))}
+            {report.status.canBypassTransitions && (
+              <>
+                {report.status.transitions.length > 0 && transitionDivider}
+                <BypassButton
+                  value={bypassStatus}
+                  onChange={setBypassStatus}
+                  disabled={submitting}
+                />
+              </>
+            )}
+          </Box>
+        </Box>
       )}
     </Form>
   );
