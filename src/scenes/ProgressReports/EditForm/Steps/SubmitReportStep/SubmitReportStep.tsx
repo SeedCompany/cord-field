@@ -1,15 +1,19 @@
 import { useMutation } from '@apollo/client';
 import { Divider, Tooltip, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Form } from 'react-final-form';
 import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLists';
-import { Scalars } from '~/api/schema/schema.graphql';
+import {
+  Scalars,
+  ProgressReportStatus as Status,
+} from '~/api/schema/schema.graphql';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { SubmitAction, SubmitButton } from '~/components/form';
 import { RichTextField } from '~/components/RichText';
 import { useNavigate } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
+import { BypassButton } from './BypassButton';
 import { TransitionProgressReportDocument } from './TransitionProgressReport.graphql';
 
 interface FormValues extends SubmitAction {
@@ -23,12 +27,21 @@ export const SubmitReportStep = () => {
 
   const [executeTransition] = useMutation(TransitionProgressReportDocument);
 
+  const [bypassStatus, setBypassStatus] = useState<Status | undefined>();
+
   const onSubmit = async (values: FormValues) => {
+    const isBypass = values.submitAction === 'bypass';
+    if (isBypass && !bypassStatus) {
+      return;
+    }
+
     await executeTransition({
       variables: {
         input: {
           report: report.id,
-          transition: values.submitAction,
+          ...(isBypass
+            ? { status: bypassStatus }
+            : { transition: values.submitAction }),
           notes: values.notes,
         },
       },
@@ -47,7 +60,7 @@ export const SubmitReportStep = () => {
   );
   return (
     <Form<FormValues> onSubmit={onSubmit}>
-      {({ handleSubmit }) => (
+      {({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit}>
           <Typography variant="h3" paragraph>
             Submit Report
@@ -72,6 +85,16 @@ export const SubmitReportStep = () => {
               </Tooltip>
             </Fragment>
           ))}
+          {report.status.canBypassTransitions && (
+            <>
+              {report.status.transitions.length > 0 && transitionDivider}
+              <BypassButton
+                value={bypassStatus}
+                onChange={setBypassStatus}
+                disabled={submitting}
+              />
+            </>
+          )}
         </form>
       )}
     </Form>
