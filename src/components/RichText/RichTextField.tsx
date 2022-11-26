@@ -6,6 +6,7 @@ import type {
 } from '@editorjs/editorjs';
 import loadable from '@loadable/component';
 import {
+  Box,
   ClickAwayListener,
   FormControl,
   FormHelperText,
@@ -298,9 +299,9 @@ const Loading = ({
 }) => {
   // eslint-disable-next-line react/display-name
   const Input = forwardRef((_, ref) => (
-    <div ref={ref as any}>
+    <Box ref={ref as any} sx={{ minHeight: 79 }}>
       <RichTextView data={value} />
-    </div>
+    </Box>
   ));
   return (
     <TextField
@@ -308,9 +309,7 @@ const Loading = ({
       {...props}
       helperText={props.helperText ?? ' '}
       InputProps={{ inputComponent: Input as any }}
-      multiline
       disabled
-      minRows={2}
       sx={{ opacity: 0.5 }}
     />
   );
