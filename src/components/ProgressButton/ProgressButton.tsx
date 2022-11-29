@@ -5,6 +5,7 @@ import {
   CircularProgressProps,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { forwardRef } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 const useStyles = makeStyles()({
@@ -38,12 +39,13 @@ export interface ProgressButtonProps extends ButtonProps {
  * This handles the styles for keeping the button a consistent size
  * while hiding the text and showing a progress spinner.
  */
-export const ProgressButton = ({
-  progress = false,
-  progressProps,
-  children,
-  ...rest
-}: ProgressButtonProps) => {
+export const ProgressButton = forwardRef<
+  HTMLButtonElement,
+  ProgressButtonProps
+>(function ProgressButton(
+  { progress = false, progressProps, children, ...rest },
+  ref
+) {
   const { classes } = useStyles();
   const theme = useTheme();
   const size = theme.components?.MuiButton?.defaultProps?.size ?? rest.size;
@@ -63,5 +65,9 @@ export const ProgressButton = ({
     </>
   );
 
-  return <Button {...rest}>{inner}</Button>;
-};
+  return (
+    <Button ref={ref} {...rest}>
+      {inner}
+    </Button>
+  );
+});

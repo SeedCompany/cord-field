@@ -1,0 +1,10 @@
+fragment ProgressReportStatus on SecuredProgressReportStatus {
+  value
+  canBypassTransitions
+  transitions {
+    id
+    label
+    to
+    type
+  }
+}

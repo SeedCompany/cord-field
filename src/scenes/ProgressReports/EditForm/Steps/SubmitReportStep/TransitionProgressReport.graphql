@@ -1,0 +1,10 @@
+mutation TransitionProgressReport(
+  $input: ExecuteProgressReportTransitionInput!
+) {
+  transitionProgressReport(input: $input) {
+    id
+    status {
+      ...ProgressReportStatus
+    }
+  }
+}

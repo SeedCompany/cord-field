@@ -22,6 +22,9 @@ fragment ProgressReportEdit on ProgressReport {
   progressForAllVariants {
     ...ProgressReportProgress
   }
+  status {
+    ...ProgressReportStatus
+  }
   parent {
     id
     canDelete
