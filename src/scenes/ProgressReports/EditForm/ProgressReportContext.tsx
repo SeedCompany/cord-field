@@ -14,6 +14,7 @@ export const stepNames = [
   'team-highlight',
   'community-story',
   'progress',
+  'explain-progress',
   'submit-report',
 ];
 

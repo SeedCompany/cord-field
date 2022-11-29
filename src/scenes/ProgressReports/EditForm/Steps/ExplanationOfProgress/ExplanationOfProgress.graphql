@@ -1,0 +1,10 @@
+mutation ExplainProgressVariance(
+  $input: ProgressReportVarianceExplanationInput!
+) {
+  explainProgressVariance(input: $input) {
+    id
+    varianceExplanation {
+      ...ProgressReportVarianceExplanation
+    }
+  }
+}

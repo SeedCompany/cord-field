@@ -37,3 +37,15 @@ fragment SecuredPrompt on SecuredPrompt {
     ...Prompt
   }
 }
+
+fragment SecuredRichTextNullable on SecuredRichTextNullable {
+  canEdit
+  canRead
+  value
+}
+
+fragment SecuredStringList on SecuredStringList {
+  canRead
+  canEdit
+  value
+}
