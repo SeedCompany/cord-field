@@ -1,5 +1,5 @@
-import { GraphQLEnumType } from 'graphql';
-import { lowerCase } from 'lodash';
+import { GraphQLEnumType, GraphQLEnumValue } from 'graphql';
+import { lowerCase, sortBy } from 'lodash';
 import { titleCase } from 'title-case';
 import {
   addExportedConst,
@@ -25,7 +25,13 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
       name: `${type.name}List`,
       type: `readonly Types.${type.name}[]`,
       initializer: writeStringArray(
-        values.filter((val) => !val.deprecationReason).map((val) => val.name)
+        sortBy(
+          values.filter((val) => !val.deprecationReason),
+          (val) => {
+            const order = descriptionTag(val, 'order');
+            return order ? Number(order) : Infinity;
+          }
+        ).map((val) => val.name)
       ),
     });
 
@@ -35,15 +41,18 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
       initializer: (writer) =>
         writer.block(() => {
           for (const val of values) {
-            const label =
-              (val.description
-                ? /^\s*@label (.+)$/m.exec(val.description)?.[1]
-                : undefined
-              )?.replace(/`/g, '\\`') ??
-              titleCase(lowerCase(val.name)).replace(/ and /g, ' & ');
+            const label = descriptionTag(val, 'label') ?? smartLabel(val.name);
             writer.writeLine(`${val.name}: \`${label}\`,`);
           }
         }),
     });
   }
 });
+
+const descriptionTag = (val: GraphQLEnumValue, tag: string) =>
+  val.description
+    ? new RegExp(`^\\s*@${tag} (.+)$`, 'm').exec(val.description)?.[1]?.trim()
+    : undefined;
+
+const smartLabel = (str: string) =>
+  titleCase(lowerCase(str)).replace(/ and /g, ' & ');
