@@ -12,6 +12,7 @@ mutation UpdateLanguageEngagement($input: UpdateLanguageEngagementInput!) {
     engagement {
       ...LanguageEngagementDetail
       ...RecalculateChangesetDiff
+      ...EngagementDescription
     }
   }
 }

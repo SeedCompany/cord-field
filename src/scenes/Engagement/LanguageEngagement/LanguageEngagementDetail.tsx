@@ -8,6 +8,7 @@ import { ProductList } from '../../Products/List/ProductList';
 import { EngagementQuery } from '../Engagement.graphql';
 import { CeremonyForm } from './Ceremony';
 import { DatesForm } from './DatesForm';
+import { LanguageEngagementDescription } from './Description';
 import { LanguageEngagementHeader } from './Header';
 import { PlanningSpreadsheet, ProgressReports } from './ProgressAndPlanning';
 
@@ -94,6 +95,18 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
             direction="column"
             spacing={2}
           >
+            {engagement.description.canRead && (
+              <>
+                <Grid item container spacing={2} alignItems="center">
+                  <Grid item component={Typography} variant="h3" paragraph>
+                    Description
+                  </Grid>
+                </Grid>
+                <Grid item container marginBottom={4}>
+                  <LanguageEngagementDescription engagement={engagement} />
+                </Grid>
+              </>
+            )}
             <Grid item container spacing={2} alignItems="center">
               <Grid item component={Typography} variant="h3" paragraph>
                 Goals
