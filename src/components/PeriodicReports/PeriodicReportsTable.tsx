@@ -49,9 +49,9 @@ export const PeriodicReportsTableInContext = ({
     {
       headerName: 'Period',
       field: 'start',
-      width: 100,
+      width: 135,
       renderCell: ({ row: report }) => (
-        <Box component="span" display="inline-flex" alignItems="center" gap="1">
+        <Box component="span" display="inline-flex" alignItems="center" gap={1}>
           <ReportLabel report={report} />
           {report.skippedReason.value && <SkipIcon fontSize="small" />}
         </Box>
