@@ -24,6 +24,13 @@ fragment ProjectOverview on Project {
       ...DisplayLocation
     }
   }
+  marketingLocation {
+    canRead
+    canEdit
+    value {
+      ...DisplayLocation
+    }
+  }
   fieldRegion {
     canRead
     canEdit

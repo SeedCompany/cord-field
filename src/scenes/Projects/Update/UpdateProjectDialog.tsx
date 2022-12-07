@@ -43,6 +43,7 @@ export type EditableProjectField = ExtractStrict<
   | 'fieldRegionId'
   | 'primaryLocationId'
   | 'sensitivity'
+  | 'marketingLocationId'
 >;
 
 interface ProjectFieldProps {
@@ -75,6 +76,9 @@ const fieldMapping: Record<
   sensitivity: ({ props }) => (
     <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
+  marketingLocationId: ({ props }) => (
+    <LocationField {...props} label="Marketing Location" />
+  ),
 };
 
 interface UpdateProjectFormValues {
@@ -83,6 +87,7 @@ interface UpdateProjectFormValues {
     {
       primaryLocationId?: DisplayLocationFragment | null;
       fieldRegionId?: DisplayFieldRegionFragment | null;
+      marketingLocationId?: DisplayLocationFragment | null;
     }
   >;
 }
@@ -120,6 +125,7 @@ export const UpdateProjectDialog = ({
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
+      marketingLocationId: project.marketingLocation.value,
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
@@ -144,6 +150,7 @@ export const UpdateProjectDialog = ({
     project.mouRange.value.end,
     project.estimatedSubmission.value,
     project.sensitivity,
+    project.marketingLocation.value,
     project.id,
     editFields,
   ]);
@@ -184,6 +191,9 @@ export const UpdateProjectDialog = ({
                   : undefined,
                 fieldRegionId: dirtyFields['project.fieldRegionId']
                   ? data.fieldRegionId?.id ?? null
+                  : undefined,
+                marketingLocationId: dirtyFields['project.marketingLocationId']
+                  ? data.marketingLocationId?.id ?? null
                   : undefined,
               },
               changeset: project.changeset?.id,
