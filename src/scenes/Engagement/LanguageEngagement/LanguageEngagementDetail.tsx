@@ -1,9 +1,16 @@
 import { Add } from '@mui/icons-material';
 import { Card, Grid, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import { Many } from '~/common';
+import { DataButton } from '~/components/DataButton';
+import { useDialog } from '~/components/Dialog';
 import { Fab } from '../../../components/Fab';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
+import {
+  EditableProjectField,
+  UpdateProjectDialog,
+} from '../../../scenes/Projects/Update';
 import { ProductList } from '../../Products/List/ProductList';
 import { EngagementQuery } from '../Engagement.graphql';
 import { CeremonyForm } from './Ceremony';
@@ -42,9 +49,48 @@ const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
 export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
   const { classes } = useStyles();
 
+  const [editState, editField, fieldsBeingEdited] =
+    useDialog<Many<EditableProjectField>>();
+
   if (engagement.__typename !== 'LanguageEngagement') {
     return null; // easiest for typescript
   }
+
+  const primaryLocation = engagement.project.primaryLocation;
+  const region = engagement.project.fieldRegion;
+  const locations = {
+    canRead: (primaryLocation.canRead || region.canRead) ?? false,
+    canEdit: (primaryLocation.canEdit || region.canEdit) ?? false,
+    value:
+      /**
+       * A lot going on here. Obviously if both values exist, we'll show
+       * them. If neither value exists, we want to pass the `DataButton`
+       * `undefined`, and then we just use the `empty` prop of the
+       * `DataButton` to display whatever message deem appropriate.
+       *
+       * But if only one value exists, we still want to display "Enter XX"
+       * in the place where the other value **would** be—BUT ONLY if the
+       * user has edit rights, otherwise they'll just be annoyed that we
+       * prompted them to "Enter XX" when really they're not allowed.
+       */
+      !primaryLocation.value && !region.value
+        ? undefined
+        : `${
+            primaryLocation.value?.name.value ??
+            (primaryLocation.canEdit ? 'Enter Location' : '')
+          }${
+            (primaryLocation.value && region.value) ||
+            (primaryLocation.canEdit && region.value) ||
+            (primaryLocation.value && region.canEdit) ||
+            (primaryLocation.canEdit && region.canEdit)
+              ? ' | '
+              : ''
+          }${
+            region.value?.name.value ?? (region.canEdit ? 'Enter Region' : '')
+          }`,
+  };
+
+  console.log(engagement);
 
   return (
     <div className={classes.root}>
@@ -94,6 +140,21 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
             direction="column"
             spacing={2}
           >
+            <Grid item>
+              <DataButton
+                loading={!engagement.project}
+                secured={locations}
+                empty="Enter Location | Field Region"
+                redacted="You do not have permission to view location"
+                children={locations.value}
+                onClick={() =>
+                  editField([
+                    'marketingLocationId',
+                    //TODO: 'marketingRegionId', // this needs the marketing region lookup but it's not in the project fragment.
+                  ])
+                }
+              />
+            </Grid>
             <Grid item container spacing={2} alignItems="center">
               <Grid item component={Typography} variant="h3" paragraph>
                 Goals
@@ -118,6 +179,12 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
           </Grid>
         </Grid>
       </Grid>
+
+      <UpdateProjectDialog
+        {...editState}
+        project={engagement.project}
+        editFields={fieldsBeingEdited}
+      />
     </div>
   );
 };

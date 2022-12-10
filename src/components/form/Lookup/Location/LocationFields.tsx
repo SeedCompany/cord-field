@@ -43,3 +43,10 @@ export const FieldZoneField = LookupField.createFor<FieldZoneLookupItem>({
   label: 'Field Zone',
   placeholder: 'Search for a field zone by name',
 });
+
+export const MarketingField = LookupField.createFor<LocationLookupItem>({
+  resource: 'Location',
+  lookupDocument: LocationLookupDocument,
+  label: 'Marketing Location',
+  placeholder: 'Search for a location by name',
+});

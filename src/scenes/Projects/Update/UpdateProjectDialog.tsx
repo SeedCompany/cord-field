@@ -26,6 +26,7 @@ import {
 import {
   FieldRegionField,
   LocationField,
+  MarketingField,
 } from '../../../components/form/Lookup';
 import {
   updateEngagementDateRanges,
@@ -77,7 +78,7 @@ const fieldMapping: Record<
     <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
   marketingLocationId: ({ props }) => (
-    <LocationField {...props} label="Marketing Location" />
+    <MarketingField {...props} label="Marketing Location" />
   ),
 };
 

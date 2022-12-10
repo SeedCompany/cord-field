@@ -377,11 +377,7 @@ export const ProjectOverview = () => {
                 redacted="You do not have permission to view location"
                 children={locations.value}
                 onClick={() =>
-                  editField([
-                    'primaryLocationId',
-                    'fieldRegionId',
-                    'marketingLocationId',
-                  ])
+                  editField(['primaryLocationId', 'fieldRegionId'])
                 }
               />
             </Grid>

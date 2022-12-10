@@ -18,6 +18,7 @@ fragment LanguageEngagementHeader on LanguageEngagement {
     presetInventory {
       value
     }
+    ...ProjectOverview
   }
   lukePartnership {
     canRead
