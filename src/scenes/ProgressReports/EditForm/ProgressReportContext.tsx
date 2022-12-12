@@ -18,6 +18,13 @@ export const stepNames = [
   'submit-report',
 ];
 
+const steps = {
+  'Narrative Report': ['Team highlight', 'Community Story'],
+  'Project Management': ['Progress', 'Explanation of Progress'],
+  'Final Details': ['Submit Report'],
+};
+const flatSteps = Object.values(steps).flat();
+
 interface ProgressReportContext {
   setProgressReportStep: (step: number) => void;
   nextStep: () => void;
@@ -25,6 +32,8 @@ interface ProgressReportContext {
 
   step: number;
   report: ProgressReportEditFragment;
+  steps: typeof steps;
+  flatSteps: typeof flatSteps;
 }
 
 const ProgressReportContext = createContext<ProgressReportContext | null>(null);
@@ -66,6 +75,8 @@ export const ProgressReportContextProvider = ({
       nextStep,
       previousStep,
       report,
+      steps,
+      flatSteps,
     }),
     [step, setStep, nextStep, previousStep, report]
   );
