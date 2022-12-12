@@ -8,6 +8,7 @@ import { ProgressReportContextProvider } from './ProgressReportContext';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
 import { ProgressReportEditDocument } from './ProgressReportEdit.graphql';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
+import { StartReportPage } from './StartReportPage';
 import { StepContainer } from './StepContainer';
 
 interface ProgressReportDrawerProps {
@@ -27,9 +28,22 @@ export const ProgressReportDrawer = ({
     },
   });
 
+  if (
+    data?.periodicReport.__typename === 'ProgressReport' &&
+    data.periodicReport.status.value === 'NotStarted'
+  ) {
+    return (
+      <ProgressReportContextProvider report={data.periodicReport}>
+        <CustomDrawer open={open} onClose={() => navigate('../')} hideStepper>
+          <StartReportPage />
+        </CustomDrawer>
+      </ProgressReportContextProvider>
+    );
+  }
+
   if (error) {
     return (
-      <CustomDrawer open={open} onClose={() => navigate('../')}>
+      <CustomDrawer open={open} onClose={() => navigate('../')} hideStepper>
         <ProgressReportDrawerHeader />
         <Error page error={error}>
           {{
@@ -79,10 +93,12 @@ export const ProgressReportDrawer = ({
 const CustomDrawer = ({
   children,
   open,
+  hideStepper,
   onClose,
 }: {
   children: ReactNode;
   open: boolean;
+  hideStepper?: boolean;
   onClose?: () => void;
 }) => {
   return (
@@ -96,7 +112,14 @@ const CustomDrawer = ({
         },
       }}
     >
-      <Box sx={{ display: 'flex', height: 1, width: 'calc(100% - 300px)' }}>
+      <Box
+        sx={[
+          { display: 'flex', height: 1, width: 'calc(100% - 300px)' },
+          !!hideStepper && {
+            width: '100%',
+          },
+        ]}
+      >
         <Box
           sx={{
             width: 1,
@@ -108,7 +131,7 @@ const CustomDrawer = ({
         >
           {children}
         </Box>
-        <ProgressReportSidebar />
+        {hideStepper ? null : <ProgressReportSidebar />}
       </Box>
     </Drawer>
   );
