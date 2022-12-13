@@ -11,6 +11,7 @@ import {
   RadioGroup,
   ToggleButton,
   ToggleButtonGroup,
+  ToggleButtonProps,
 } from '@mui/material';
 import { sortBy } from 'lodash';
 import {
@@ -25,7 +26,7 @@ import {
 } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { Except, MergeExclusive } from 'type-fest';
-import { Many, many } from '~/common';
+import { Many, many, StyleProps } from '~/common';
 import { FieldConfig, useField, Value } from './useField';
 import { getHelperText, showError } from './util';
 
@@ -52,7 +53,8 @@ export type EnumFieldProps<
       // This can be a label to show an empty option or a rendered EnumOption.
       defaultOption?: string | ReactNode;
     }
-  >;
+  > &
+  StyleProps;
 
 const useStyles = makeStyles()(({ typography, spacing }) => ({
   fieldLabel: {
@@ -87,6 +89,8 @@ export const EnumField = <
     getLabel,
     defaultOption,
     children: childrenProp,
+    className,
+    sx,
   } = props;
 
   if (multiple && variant === 'radio') {
@@ -293,6 +297,8 @@ export const EnumField = <
         }
         onBlur(e);
       }}
+      className={className}
+      sx={sx}
     >
       {label && (
         <FormLabel component="legend" className={classes.fieldLabel}>
@@ -312,6 +318,7 @@ export const EnumField = <
 export type EnumOptionsProps<T extends string> = {
   label: ReactNode;
   disabled?: boolean;
+  color?: ToggleButtonProps['color'];
 } & MergeExclusive<{ value: T }, { default: true }>;
 
 export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {

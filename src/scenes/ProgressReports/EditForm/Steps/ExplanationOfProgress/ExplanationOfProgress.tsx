@@ -8,10 +8,9 @@ import { useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { RequiredKeysOf } from 'type-fest';
 import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
-import { keys } from '~/common';
 import {
   EnumField,
-  SelectField,
+  EnumOption,
   SubmitButton,
   SubmitError,
 } from '~/components/form';
@@ -22,12 +21,7 @@ import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql
 
 type OptionGroup = RequiredKeysOf<ReasonOptions>;
 
-const groupLabelMap: Record<OptionGroup, string> = {
-  behind: 'Behind / Delayed',
-  onTime: 'On Time',
-  ahead: 'Ahead',
-};
-const groups = keys(groupLabelMap);
+const groups: OptionGroup[] = ['behind', 'onTime', 'ahead'];
 
 const decorators: Array<Decorator<any>> = [
   onFieldChange({
@@ -110,12 +104,28 @@ export const ExplanationOfProgress = () => {
               overflow: 'unset',
             }}
           >
-            <SelectField
+            <EnumField
               name="group"
-              options={groups}
-              getOptionLabel={(group) => groupLabelMap[group]}
-              variant="outlined"
-            />
+              variant="toggle-grouped"
+              helperText={false}
+              margin="none"
+            >
+              <EnumOption<OptionGroup>
+                value="behind"
+                label="Behind / Delayed"
+                color="error"
+              />
+              <EnumOption<OptionGroup>
+                value="onTime"
+                label="On Time"
+                color="info"
+              />
+              <EnumOption<OptionGroup>
+                value="ahead"
+                label="Ahead"
+                color="success"
+              />
+            </EnumField>
 
             {optionsByGroup[group].length > 0 && (
               <EnumField
