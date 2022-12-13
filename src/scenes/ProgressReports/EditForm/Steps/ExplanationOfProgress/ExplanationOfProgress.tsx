@@ -56,11 +56,24 @@ export const ExplanationOfProgress = () => {
 
   const initialValues = useMemo((): FormShape => {
     const reason = explanation.reasons.value[0];
+    let group = reason
+      ? groups.find((group) => optionsByGroup[group].includes(reason))!
+      : undefined;
+
+    if (!group) {
+      const variance = report.cumulativeSummary?.variance;
+      group = !variance
+        ? 'onTime'
+        : variance >= 0.1
+        ? 'ahead'
+        : variance >= -0.1
+        ? 'behind'
+        : 'onTime';
+    }
+
     return {
-      group: reason
-        ? groups.find((group) => optionsByGroup[group].includes(reason))!
-        : 'onTime',
-      reason: reason,
+      group,
+      reason,
       comments: explanation.comments.value ?? undefined,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
