@@ -1,75 +1,79 @@
 import { useMutation } from '@apollo/client';
-import { Box, Card, Typography } from '@mui/material';
+import type { OutputData as RichTextData } from '@editorjs/editorjs';
+import { Card, Typography } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { DateTime } from 'luxon';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
-import type * as Types from '~/api/schema.graphql';
-import { DialogForm } from '~/components/Dialog/DialogForm';
+import { RequiredKeysOf } from 'type-fest';
+import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
+import { keys } from '~/common';
 import {
   EnumField,
-  EnumOption,
   SelectField,
   SubmitButton,
+  SubmitError,
 } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField } from '~/components/RichText';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql';
 
-const keyToLabel: Record<string, string> = {
-  ahead: 'AHEAD',
-  behind: 'BEHIND/DELAYED',
-  onTime: 'ON TIME',
+type OptionGroup = RequiredKeysOf<ReasonOptions>;
+
+const groupLabelMap: Record<OptionGroup, string> = {
+  behind: 'Behind / Delayed',
+  onTime: 'On Time',
+  ahead: 'Ahead',
 };
+const groups = keys(groupLabelMap);
 
 const decorators: Array<Decorator<any>> = [
-  ...DialogForm.defaultDecorators,
   onFieldChange({
-    field: 'option',
+    field: 'group',
     updates: {
       reason: (option, values, prev) => {
-        if (option) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (!prev.group) {
+          // initializing, keep initial value
           return values.reason;
         }
-
-        return prev.reason;
+        // Clear reason that's no longer shown in UI
+        return null;
       },
     },
   }),
 ];
 
-type OptionType = keyof Omit<
-  Types.ProgressReportVarianceExplanationReasonOptions,
-  '__typename'
->;
-
-const findSelectedGroupKey = (
-  reasonOptions: Types.ProgressReportVarianceExplanationReasonOptions,
-  reason?: string
-) => {
-  if (!reason) {
-    return Object.keys(reasonOptions).filter(
-      (k) => !k.startsWith('__')
-    )[0] as OptionType;
-  }
-
-  return Object.keys(reasonOptions).find((key) =>
-    reasonOptions[key as OptionType].includes(reason)
-  ) as OptionType;
-};
+interface FormShape {
+  group: OptionGroup;
+  reason?: string;
+  comments?: RichTextData;
+}
 
 export const ExplanationOfProgress = () => {
   const { report } = useProgressReportContext();
-  const {
-    varianceExplanation: { reasons, reasonOptions, comments },
-  } = report;
-  const [savedAt, setSavedAt] = useState<DateTime | null>(null);
-  const [explainVariance] = useMutation(ExplainProgressVarianceDocument);
+  const { varianceExplanation: explanation } = report;
+  const optionsByGroup = explanation.reasonOptions;
 
-  const onSubmit = async (input: any) => {
-    void explainVariance({
+  const [explainVariance] = useMutation(ExplainProgressVarianceDocument);
+  const [savedAt, setSavedAt] = useState<DateTime | null>(null);
+
+  const initialValues = useMemo((): FormShape => {
+    const reason = explanation.reasons.value[0];
+    return {
+      group: reason
+        ? groups.find((group) => optionsByGroup[group].includes(reason))!
+        : 'onTime',
+      reason: reason,
+      comments: explanation.comments.value ?? undefined,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [explanation]);
+
+  const onSubmit = async (input: FormShape) => {
+    await explainVariance({
       variables: {
         input: {
           report: report.id,
@@ -81,83 +85,66 @@ export const ExplanationOfProgress = () => {
     setSavedAt(DateTime.local());
   };
 
-  const options = Object.keys(reasonOptions).filter((k) => !k.startsWith('__'));
-
   return (
-    <div>
-      <h2>Explanation of Progress</h2>
-      <p>
+    <>
+      <Typography variant="h3" gutterBottom>
+        Explanation of Progress
+      </Typography>
+      <Typography paragraph>
         Please provide an explanation of the state of progress for this
         reporting period.
-      </p>
+      </Typography>
 
-      <Card sx={{ p: 2 }}>
-        <Form
-          onSubmit={onSubmit}
-          decorators={decorators}
-          initialValues={{
-            option: findSelectedGroupKey(
-              report.varianceExplanation.reasonOptions,
-              reasons.value[0]
-            ),
-            reason: reasons.value[0],
-            comments: comments.value,
-          }}
-        >
-          {({ handleSubmit, values }) => {
-            let option = values.option as OptionType;
+      <Form<FormShape>
+        onSubmit={onSubmit}
+        decorators={decorators}
+        initialValues={initialValues}
+      >
+        {({ handleSubmit, values: { group } }) => (
+          <Card
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+              p: 2,
+              // Allow RichText popups to bleed over card
+              overflow: 'unset',
+            }}
+          >
+            <SelectField
+              name="group"
+              options={groups}
+              getOptionLabel={(group) => groupLabelMap[group]}
+              variant="outlined"
+            />
 
-            if (!values.option && reasons.value.length > 0) {
-              option = findSelectedGroupKey(reasonOptions, reasons.value[0]);
-            }
+            {optionsByGroup[group].length > 0 && (
+              <EnumField
+                name="reason"
+                label="Select a reason"
+                options={optionsByGroup[group]}
+                required
+                layout="column"
+              />
+            )}
 
-            const availableReasons = reasonOptions[option];
+            <RichTextField
+              name="comments"
+              label="Optional Comments"
+              tools={['paragraph', 'delimiter', 'marker']}
+            />
 
-            return (
-              <form onSubmit={handleSubmit}>
-                <SelectField
-                  name="option"
-                  options={options}
-                  getOptionLabel={(option) => keyToLabel[option] || option}
-                  variant="outlined"
-                  defaultValue={option}
-                />
-
-                {availableReasons.length > 0 && (
-                  <EnumField name="reason" label="Select a reason">
-                    <Box
-                      defaultValue={reasons.value[0]}
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                      }}
-                    >
-                      {availableReasons.map((reason: any, id: any) => (
-                        <EnumOption key={id} value={reason} label={reason} />
-                      ))}
-                    </Box>
-                  </EnumField>
-                )}
-
-                <RichTextField
-                  name="comments"
-                  label="Optional Comments"
-                  tools={['paragraph', 'delimiter', 'marker']}
-                />
-                {savedAt && (
-                  <Typography variant="caption" sx={{ mb: 1 }} component="div">
-                    Saved at <FormattedDateTime date={savedAt} relative />
-                  </Typography>
-                )}
-
-                <SubmitButton variant="outlined" color="primary">
-                  Save
-                </SubmitButton>
-              </form>
-            );
-          }}
-        </Form>
-      </Card>
-    </div>
+            <SubmitError />
+            <SubmitButton color="primary" size="medium" fullWidth={false}>
+              Save
+            </SubmitButton>
+            {savedAt && (
+              <Typography variant="caption" component="div" sx={{ mt: 1 }}>
+                Saved at <FormattedDateTime date={savedAt} relative />
+              </Typography>
+            )}
+          </Card>
+        )}
+      </Form>
+    </>
   );
 };
