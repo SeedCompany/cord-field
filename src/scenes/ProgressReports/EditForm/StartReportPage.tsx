@@ -1,30 +1,17 @@
-import { useMutation } from '@apollo/client';
 import { ArrowBack } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { Form } from 'react-final-form';
-import { SubmitButton } from '~/components/form';
 import { ButtonLink } from '~/components/Routing';
 import { useProgressReportContext } from './ProgressReportContext';
-import { TransitionProgressReportDocument } from './Steps/SubmitReportStep/TransitionProgressReport.graphql';
+import { TransitionButtons } from './Steps/SubmitReportStep/TransitionButtons';
+import { useExecuteTransition } from './Steps/SubmitReportStep/useExecuteTransition';
 
 export const StartReportPage = () => {
   const { report } = useProgressReportContext();
-  const [executeTransition] = useMutation(TransitionProgressReportDocument);
 
-  const inProgressTransition = report.status.transitions.find(
-    (t) => t.to === 'InProgress'
-  );
-
-  const onSubmit = async () => {
-    await executeTransition({
-      variables: {
-        input: {
-          report: report.id,
-          transition: inProgressTransition?.id,
-        },
-      },
-    });
-  };
+  const onSubmit = useExecuteTransition({
+    id: report.id,
+  });
 
   return (
     <Box
@@ -62,31 +49,23 @@ export const StartReportPage = () => {
           textAlign: 'center',
         }}
       >
-        {inProgressTransition ? (
-          <>
-            <Typography lineHeight="initial" paddingY={2}>
-              This report has not yet been started. Click the button if you are
-              ready to start reporting information for this quarter.
-            </Typography>
-            <Form onSubmit={onSubmit}>
-              {({ handleSubmit }) => (
-                <form onSubmit={handleSubmit}>
-                  <SubmitButton
-                    color="primary"
-                    variant="contained"
-                    size="large"
-                  >
-                    Start Report
-                  </SubmitButton>
-                </form>
-              )}
-            </Form>
-          </>
-        ) : (
-          <Typography variant="h2" paddingY={2}>
-            This report has not yet been started
+        <Typography variant="h2" paragraph>
+          This report has not yet been started
+        </Typography>
+        {(report.status.transitions.length > 0 ||
+          report.status.canBypassTransitions) && (
+          <Typography paragraph>
+            Click the button if you are ready to start reporting information for
+            this quarter.
           </Typography>
         )}
+        <Form onSubmit={onSubmit}>
+          {({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <TransitionButtons report={report} size="large" />
+            </form>
+          )}
+        </Form>
       </Box>
     </Box>
   );
