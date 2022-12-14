@@ -2,23 +2,14 @@ import { Box } from '@mui/material';
 import { colorPalette } from './colorPalette';
 import { useProgressReportContext } from './ProgressReportContext';
 import { ReportProp } from './ReportProp';
-import { CommunityStoryStep } from './Steps/CommunityStory';
-import { ExplanationOfProgress } from './Steps/ExplanationOfProgress/ExplanationOfProgress';
+import { Steps } from './Steps';
 import { NextStepButton } from './Steps/NextStepButton';
-import { ProgressStep } from './Steps/ProgressStep';
-import { SubmitReportStep } from './Steps/SubmitReportStep';
-import { TeamHighlightStep } from './Steps/TeamHighlight';
+
+const stepMap = Object.fromEntries(Object.values(Steps).flat());
 
 export const StepContainer = ({ report }: ReportProp) => {
-  const { step: stepIndex } = useProgressReportContext();
-
-  const Step = [
-    TeamHighlightStep,
-    CommunityStoryStep,
-    ProgressStep,
-    ExplanationOfProgress,
-    SubmitReportStep,
-  ][stepIndex];
+  const { stepName } = useProgressReportContext();
+  const Step = stepMap[stepName];
 
   return (
     <div

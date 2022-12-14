@@ -3,12 +3,10 @@ import { Box, Button, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useDialog } from '~/components/Dialog';
 import { InstructionsDialog } from './InstructionsDialog';
-import { useProgressReportContext } from './ProgressReportContext';
 import { ProgressReportStepper } from './ProgressReportStepper';
 import { ReportProp } from './ReportProp';
 
 export const ProgressReportSidebar = ({ report }: ReportProp) => {
-  const { step } = useProgressReportContext();
   const [instructionsState, showInstructions] = useDialog();
 
   const daysLeft = report.due.toRelative({});
@@ -50,7 +48,7 @@ export const ProgressReportSidebar = ({ report }: ReportProp) => {
           </span>
         </>
       </Typography>
-      <ProgressReportStepper step={step} />
+      <ProgressReportStepper />
       <InstructionsDialog {...instructionsState} />
     </Box>
   );
