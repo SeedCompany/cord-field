@@ -298,8 +298,8 @@ const Loading = ({
   value?: RichTextData;
 }) => {
   // eslint-disable-next-line react/display-name
-  const Input = forwardRef((_, ref) => (
-    <Box ref={ref as any} sx={{ minHeight: 79 }}>
+  const Input = forwardRef(({ className }: StyleProps, ref) => (
+    <Box ref={ref as any} className={className} sx={{ minHeight: 79 }}>
       <RichTextView data={value} />
     </Box>
   ));
