@@ -64,6 +64,7 @@ export const useIdentifyInLogRocket = () => {
       pickBy({
         name: user.fullName,
         email: user.email.value,
+        roles: user.roles.value.join(','),
         timezone: user.timezone.value?.name,
       }) as Record<string, string>
     );
