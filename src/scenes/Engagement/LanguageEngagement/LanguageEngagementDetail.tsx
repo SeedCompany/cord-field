@@ -90,8 +90,6 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
           }`,
   };
 
-  console.log(engagement);
-
   return (
     <div className={classes.root}>
       <Grid
