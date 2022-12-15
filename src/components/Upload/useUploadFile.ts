@@ -1,5 +1,4 @@
 import { Dispatch, useCallback } from 'react';
-import { getMimeType } from './getMimeType';
 import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
 
@@ -75,7 +74,7 @@ const putToS3 = async ({
   body: File;
   onProgress: (ev: ProgressEvent) => void;
 }) => {
-  const mimeType = await getMimeType(body);
+  const mimeType = await (await import('./getMimeType')).getMimeType(body);
   await new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {
