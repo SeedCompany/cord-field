@@ -29,9 +29,8 @@ export const CommunityStoryStep = () => {
         }
         promptInstructions={
           <Typography variant="body2" gutterBottom>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Elit
-            pharetra enim justo, molestie amet viverra faucibus. Egestas congue
-            felis
+            As you reflect on the past three months, select a prompt below to
+            answer.
           </Typography>
         }
       />

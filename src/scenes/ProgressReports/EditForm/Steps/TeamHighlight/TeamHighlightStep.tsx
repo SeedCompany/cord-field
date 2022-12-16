@@ -29,8 +29,8 @@ export const TeamHighlightStep = () => {
         }
         promptInstructions={
           <Typography variant="body2" gutterBottom>
-            As you reflect on the past three quarters, select ONE question below
-            to answer.
+            As you reflect on the past three months, select a prompt below to
+            answer.
           </Typography>
         }
       />

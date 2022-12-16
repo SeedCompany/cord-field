@@ -37,7 +37,7 @@ export const PromptsForm = ({
           {title}
           {promptInstructions}
           {stepData?.prompts.length && (
-            <EnumField name="prompt" label="Select a prompt" required>
+            <EnumField name="prompt" required>
               {stepData.prompts.map((prompt) => {
                 if (!prompt.text.value) {
                   return null;
@@ -54,7 +54,7 @@ export const PromptsForm = ({
           )}
 
           <SubmitButton variant="outlined" color="secondary">
-            {stepData?.prompts.length ? 'Save Prompt' : 'Loading...'}
+            {stepData?.prompts.length ? 'Select prompt' : 'Loading...'}
           </SubmitButton>
         </Box>
       )}
