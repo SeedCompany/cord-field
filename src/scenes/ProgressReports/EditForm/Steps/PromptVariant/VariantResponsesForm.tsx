@@ -10,16 +10,18 @@ import { VariantResponsesAccordion } from './VariantResponsesAccordion';
 
 interface VariantResponsesFormProps {
   currentItem: ProgressReportItemEditFragment;
-  onChangeResponse: (
+  onChangeResponse?: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
-  title: ReactNode;
+  title?: ReactNode;
+  viewOnly?: boolean;
 }
 
 export const VariantResponsesForm = ({
   currentItem,
   onChangeResponse,
   title,
+  viewOnly,
 }: VariantResponsesFormProps) => {
   return (
     <>
@@ -36,6 +38,7 @@ export const VariantResponsesForm = ({
             expanded
             key={response.variant.key}
             onSubmit={onChangeResponse}
+            viewOnly={viewOnly}
           />
         )
       )}

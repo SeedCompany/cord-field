@@ -19,10 +19,14 @@ export const VariantResponsesAccordion = ({
   response,
   expanded: _expanded,
   onSubmit,
+  viewOnly,
 }: {
   response: ProgressReportItemResponseEditFragment;
   expanded?: boolean;
-  onSubmit: (input: any) => void | SubmissionErrors | Promise<SubmissionErrors>;
+  onSubmit?: (
+    input: any
+  ) => void | SubmissionErrors | Promise<SubmissionErrors>;
+  viewOnly?: boolean;
 }) => {
   const [expanded, setExpanded] = useState(_expanded ?? false);
   const [savedAt, setSavedAt] = useState<DateTime | null>(null);
@@ -52,7 +56,7 @@ export const VariantResponsesAccordion = ({
         <span>{response.variant.label}</span>
       </AccordionSummary>
       <AccordionDetails sx={{ px: 4 }}>
-        {response.response.canEdit ? (
+        {onSubmit && response.response.canEdit && !viewOnly ? (
           <Form
             onSubmit={onSubmit}
             initialValues={{
