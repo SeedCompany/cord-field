@@ -222,16 +222,10 @@ export const ProgressReportDetail = () => {
 
             <Stack spacing={3} flex={1}>
               <Grid container spacing={3} maxWidth="md">
-                <Grid item xs={12} md={7} container>
-                  <ProgressSummaryCard
-                    loading={!report}
-                    summary={report?.cumulativeSummary ?? null}
-                  />
-                </Grid>
                 <Grid item xs={12} md={5} container>
                   {report ? (
                     newProgressReportBeta ? (
-                      <NewProgressReportCard label="Progress Report" />
+                      <NewProgressReportCard report={report} />
                     ) : (
                       <ProgressReportCard
                         progressReport={report}
@@ -243,8 +237,8 @@ export const ProgressReportDetail = () => {
                     <FieldOverviewCard />
                   )}
                 </Grid>
+                <ProductTableList report={report} />
               </Grid>
-              <ProductTableList products={report?.progress} />
             </Stack>
           </>
         )}

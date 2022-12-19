@@ -1,23 +1,37 @@
-import { Skeleton, Typography } from '@mui/material';
+import { Grid, Skeleton, Typography } from '@mui/material';
 import { groupBy } from 'lodash';
 import { ProductTable } from './ProductTable';
-import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
+import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
+import { ProgressSummaryCard } from './ProgressSummaryCard';
 
 interface ProductTableListProps {
-  products?: readonly ProgressOfProductForReportFragment[];
+  report?: ProgressReportDetailFragment | null;
 }
 
-export const ProductTableList = ({ products }: ProductTableListProps) => {
+export const ProductTableList = ({ report }: ProductTableListProps) => {
+  const products = report?.progress;
   const grouped = groupBy(products, (product) => product.product.category);
 
   return (
     <>
-      <Typography variant="h3">
-        {products ? 'Progress for Goals' : <Skeleton width="25%" />}
-      </Typography>
-      {Object.entries(grouped).map(([category, products]) => (
-        <ProductTable key={category} category={category} products={products} />
-      ))}
+      <Grid item xs={12}>
+        <Typography variant="h3">
+          {products ? 'Progress for Goals' : <Skeleton width="25%" />}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <ProgressSummaryCard
+          loading={!report}
+          summary={report?.cumulativeSummary ?? null}
+        />
+      </Grid>
+      <Grid container item xs={12}>
+        {Object.entries(grouped).map(([category, products]) => (
+          <Grid item key={category} xs={12} marginBottom={2}>
+            <ProductTable category={category} products={products} />
+          </Grid>
+        ))}
+      </Grid>
     </>
   );
 };
