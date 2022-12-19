@@ -23,11 +23,14 @@ export const ProductTableList = ({ report }: ProductTableListProps) => {
         <ProgressSummaryCard
           loading={!report}
           summary={report?.cumulativeSummary ?? null}
+          sx={{
+            maxWidth: 'md',
+          }}
         />
       </Grid>
-      <Grid container item xs={12}>
+      <Grid container item xs={12} spacing={2}>
         {Object.entries(grouped).map(([category, products]) => (
-          <Grid item key={category} xs={12} marginBottom={2}>
+          <Grid item key={category} xs={12}>
             <ProductTable category={category} products={products} />
           </Grid>
         ))}

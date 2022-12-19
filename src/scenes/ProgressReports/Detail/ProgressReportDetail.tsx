@@ -254,6 +254,8 @@ export const ProgressReportDetail = () => {
                     <FieldOverviewCard />
                   )}
                 </Grid>
+              </Grid>
+              <Grid container rowSpacing={3}>
                 <ProductTableList report={report} />
               </Grid>
             </Stack>
