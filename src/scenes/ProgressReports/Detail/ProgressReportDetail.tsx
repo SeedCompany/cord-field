@@ -35,6 +35,7 @@ import { ProgressReportEditDocument } from '../EditForm/ProgressReportEdit.graph
 import { NewProgressReportCard } from './NewProgressReportCard';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
+import { StatusStepper } from './StatusStepper';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {
@@ -93,6 +94,8 @@ export const ProgressReportDetail = () => {
       ? data.periodicReport
       : null;
   const engagement = report?.parent;
+
+  const isPublished = report?.status.value === 'Published';
 
   return (
     <div className={classes.root}>
@@ -222,10 +225,24 @@ export const ProgressReportDetail = () => {
 
             <Stack spacing={3} flex={1}>
               <Grid container spacing={3} maxWidth="md">
-                <Grid item xs={12} md={5} container>
+                <Grid item xs={12} container spacing={2}>
                   {report ? (
                     newProgressReportBeta ? (
-                      <NewProgressReportCard report={report} />
+                      <>
+                        {!isPublished ? (
+                          <Grid item xs={12} md={9}>
+                            <StatusStepper report={report} />
+                          </Grid>
+                        ) : (
+                          <Grid item xs={12} md={6}>
+                            The View Button
+                          </Grid>
+                        )}
+
+                        <Grid item xs={12} md={isPublished ? 6 : 3}>
+                          <NewProgressReportCard report={report} />
+                        </Grid>
+                      </>
                     ) : (
                       <ProgressReportCard
                         progressReport={report}
