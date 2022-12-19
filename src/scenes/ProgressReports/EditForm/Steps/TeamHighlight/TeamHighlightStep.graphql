@@ -23,3 +23,9 @@ mutation UpdateProgressReportHighlightResponse(
     ...ProgressReportItemEdit
   }
 }
+
+mutation ChangeProgressReportHighlightPrompt($input: ChangePrompt!) {
+  changeProgressReportHighlightPrompt(input: $input) {
+    ...ProgressReportItemEdit
+  }
+}
