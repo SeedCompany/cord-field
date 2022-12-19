@@ -31,11 +31,10 @@ import { Redacted } from '../../../components/Redacted';
 import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProgressReportDrawer } from '../EditForm';
+import { ProgressReportEditDocument } from '../EditForm/ProgressReportEdit.graphql';
 import { NewProgressReportCard } from './NewProgressReportCard';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
-import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
-import { ProgressSummaryCard } from './ProgressSummaryCard';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {
@@ -71,12 +70,13 @@ export const ProgressReportDetail = () => {
   const [dialogState, setUploading, upload] = useDialog<File[]>();
   const [skipState, openSkip] = useDialog();
 
-  const { data, error } = useQuery(ProgressReportDetailDocument, {
+  const { data, error } = useQuery(ProgressReportEditDocument, {
     variables: {
       id,
       changesetId,
     },
   });
+
   if (error) {
     return (
       <Error page error={error}>
@@ -250,7 +250,7 @@ export const ProgressReportDetail = () => {
         )}
       </main>
       {newProgressReportBeta && report && (
-        <ProgressReportDrawer reportId={report.id} />
+        <ProgressReportDrawer report={report} />
       )}
     </div>
   );

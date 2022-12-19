@@ -1,39 +1,25 @@
-import { useQuery } from '@apollo/client';
-import { Box, Drawer, Typography } from '@mui/material';
+import { Box, Drawer } from '@mui/material';
 import { ReactNode } from 'react';
 import { useMatch } from 'react-router-dom';
-import { Error } from '~/components/Error';
 import { useNavigate } from '~/components/Routing';
 import { ProgressReportContextProvider } from './ProgressReportContext';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
-import { ProgressReportEditDocument } from './ProgressReportEdit.graphql';
+import { ProgressReportEditFragment } from './ProgressReportEdit.graphql';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
 import { StartReportPage } from './StartReportPage';
 import { StepContainer } from './StepContainer';
 
 interface ProgressReportDrawerProps {
-  reportId?: string;
+  report: ProgressReportEditFragment;
 }
 
-export const ProgressReportDrawer = ({
-  reportId = '',
-}: ProgressReportDrawerProps) => {
+export const ProgressReportDrawer = ({ report }: ProgressReportDrawerProps) => {
   const open = !!useMatch('progress-reports/:id/edit');
 
   const navigate = useNavigate();
-
-  const { data, error } = useQuery(ProgressReportEditDocument, {
-    variables: {
-      progressReportId: reportId,
-    },
-  });
-
-  if (
-    data?.periodicReport.__typename === 'ProgressReport' &&
-    data.periodicReport.status.value === 'NotStarted'
-  ) {
+  if (report.status.value === 'NotStarted') {
     return (
-      <ProgressReportContextProvider report={data.periodicReport}>
+      <ProgressReportContextProvider report={report}>
         <CustomDrawer open={open} onClose={() => navigate('../')} hideStepper>
           <StartReportPage />
         </CustomDrawer>
@@ -41,30 +27,8 @@ export const ProgressReportDrawer = ({
     );
   }
 
-  if (error) {
-    return (
-      <CustomDrawer open={open} onClose={() => navigate('../')} hideStepper>
-        <ProgressReportDrawerHeader />
-        <Error page error={error}>
-          {{
-            NotFound: 'Could not find progress report',
-            Default: 'Error loading progress report',
-          }}
-        </Error>
-      </CustomDrawer>
-    );
-  }
-
-  if (data?.periodicReport.__typename !== 'ProgressReport') {
-    return (
-      <Typography color="error">
-        This is not the correct type of progress report
-      </Typography>
-    );
-  }
-
   return (
-    <ProgressReportContextProvider report={data.periodicReport}>
+    <ProgressReportContextProvider report={report}>
       <CustomDrawer open={open} onClose={() => navigate('..')}>
         <Box
           sx={{
