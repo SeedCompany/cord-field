@@ -8,7 +8,7 @@ import { ProgressReportAvailableDataFragment } from '../../ProgressReportEdit.gr
 
 interface PromptsFormProps {
   availableData: ProgressReportAvailableDataFragment | null;
-  onCreateItem: (
+  onFormSubmitted: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
   title: ReactNode;
@@ -17,12 +17,12 @@ interface PromptsFormProps {
 
 export const PromptsForm = ({
   availableData: stepData,
-  onCreateItem,
+  onFormSubmitted,
   title,
   promptInstructions,
 }: PromptsFormProps) => {
   return (
-    <Form onSubmit={onCreateItem}>
+    <Form onSubmit={onFormSubmitted}>
       {({ handleSubmit }) => (
         <Box
           component="form"
