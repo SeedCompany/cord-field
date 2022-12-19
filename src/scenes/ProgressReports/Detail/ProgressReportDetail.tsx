@@ -36,6 +36,8 @@ import { NewProgressReportCard } from './NewProgressReportCard';
 import { ProductTableList } from './ProductTableList';
 import { ProgressReportCard } from './ProgressReportCard';
 import { StatusStepper } from './StatusStepper';
+import { ViewProgressReportDrawer } from './ViewProgressDrawer';
+import { ViewProgressReportCard } from './ViewProgressReportCard';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {
@@ -235,7 +237,7 @@ export const ProgressReportDetail = () => {
                           </Grid>
                         ) : (
                           <Grid item xs={12} md={6}>
-                            The View Button
+                            <ViewProgressReportCard report={report} />
                           </Grid>
                         )}
 
@@ -263,7 +265,10 @@ export const ProgressReportDetail = () => {
         )}
       </main>
       {newProgressReportBeta && report && (
-        <ProgressReportDrawer report={report} />
+        <>
+          <ProgressReportDrawer report={report} />
+          <ViewProgressReportDrawer report={report} />
+        </>
       )}
     </div>
   );
