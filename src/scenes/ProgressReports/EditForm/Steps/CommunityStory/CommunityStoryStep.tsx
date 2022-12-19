@@ -3,6 +3,7 @@ import { useProgressReportContext } from '../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
 import { PromptVariantStep } from '../PromptVariant';
 import {
+  ChangeProgressReportCommunityStoryPromptDocument,
   CreateCommunityStoryDocument,
   UpdateCommunityStoryResponseDocument,
 } from './CommunityStoryStep.graphql';
@@ -22,6 +23,7 @@ export const CommunityStoryStep = () => {
         stepData={communityStories}
         updateResponseDocument={UpdateCommunityStoryResponseDocument}
         createItemDocument={CreateCommunityStoryDocument}
+        changePromptDocument={ChangeProgressReportCommunityStoryPromptDocument}
         title={
           <Typography variant="h3" gutterBottom>
             Share a story from the community.
