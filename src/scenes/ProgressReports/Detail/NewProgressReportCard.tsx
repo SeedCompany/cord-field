@@ -1,12 +1,15 @@
 import { Add as AddIcon } from '@mui/icons-material';
 import { Avatar, Card, Typography } from '@mui/material';
 import { CardActionAreaLink } from '~/components/Routing';
+import { ProgressReportEditFragment } from '../EditForm/ProgressReportEdit.graphql';
 
 interface Props {
-  label: string;
+  report: ProgressReportEditFragment;
 }
 
-export const NewProgressReportCard = ({ label }: Props) => {
+export const NewProgressReportCard = ({ report }: Props) => {
+  const preStatus = report.status.value === 'NotStarted' ? 'Start' : 'Edit';
+
   return (
     <Card
       sx={{
@@ -38,7 +41,7 @@ export const NewProgressReportCard = ({ label }: Props) => {
               marginTop: 1,
             }}
           >
-            Edit {label}
+            {preStatus} {report.type} Report
           </Typography>
         </>
       </CardActionAreaLink>
