@@ -1,4 +1,4 @@
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, Edit as EditIcon } from '@mui/icons-material';
 import { Avatar, Card, Typography } from '@mui/material';
 import { CardActionAreaLink } from '~/components/Routing';
 import { ProgressReportEditFragment } from '../EditForm/ProgressReportEdit.graphql';
@@ -8,7 +8,14 @@ interface Props {
 }
 
 export const NewProgressReportCard = ({ report }: Props) => {
-  const preStatus = report.status.value === 'NotStarted' ? 'Start' : 'Edit';
+  const isStarted = report.status.value !== 'NotStarted';
+  const preStatus = isStarted ? 'Edit' : 'Start';
+
+  const Icon = isStarted ? (
+    <EditIcon fontSize="large" />
+  ) : (
+    <AddIcon fontSize="large" />
+  );
 
   return (
     <Card
@@ -33,7 +40,7 @@ export const NewProgressReportCard = ({ report }: Props) => {
               height: 58,
             }}
           >
-            <AddIcon fontSize="large" />
+            {Icon}
           </Avatar>
           <Typography
             align="center"
