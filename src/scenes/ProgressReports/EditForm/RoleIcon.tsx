@@ -35,6 +35,7 @@ export const RoleIcon = ({ variantRole: role, sx, ...rest }: RoleIconProps) => {
           padding: 1,
           height: 48,
           width: 48,
+          borderRadius: 2,
         },
         ...extendSx(sx),
       ]}
