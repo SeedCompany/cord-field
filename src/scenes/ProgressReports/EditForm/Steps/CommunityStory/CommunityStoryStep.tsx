@@ -1,16 +1,16 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
-import { PromptVariantStep } from '../PromptVariant';
+import { Prompt, VariantResponses } from '../PromptVariant';
 import {
-  ChangeProgressReportCommunityStoryPromptDocument,
-  CreateCommunityStoryDocument,
-  UpdateCommunityStoryResponseDocument,
+  ChangeProgressReportCommunityStoryPromptDocument as ChangePrompt,
+  CreateCommunityStoryDocument as CreateStory,
+  UpdateCommunityStoryResponseDocument as UpdateResponse,
 } from './CommunityStoryStep.graphql';
 
 export const CommunityStoryStep = () => {
   const { report } = useProgressReportContext();
-  const communityStories = report.communityStories;
+  const story = report.communityStories.items[0];
 
   return (
     <div
@@ -18,24 +18,25 @@ export const CommunityStoryStep = () => {
         marginBottom: theme.spacing(4),
       })}
     >
-      <PromptVariantStep
-        reportId={report.id}
-        stepData={communityStories}
-        updateResponseDocument={UpdateCommunityStoryResponseDocument}
-        createItemDocument={CreateCommunityStoryDocument}
-        changePromptDocument={ChangeProgressReportCommunityStoryPromptDocument}
-        title={
-          <Typography variant="h3" gutterBottom>
-            Share a story from the community.
-          </Typography>
-        }
-        promptInstructions={
-          <Typography variant="body2" gutterBottom>
-            As you reflect on the past three months, select a prompt below to
-            answer.
-          </Typography>
-        }
-      />
+      <Box sx={{ maxWidth: 'md' }}>
+        <Typography variant="h3" gutterBottom>
+          Share a story from the community
+        </Typography>
+        <Prompt
+          reportId={report.id}
+          promptResponse={story}
+          available={report.communityStories.available}
+          createItemDocument={CreateStory}
+          changePromptDocument={ChangePrompt}
+          promptInstructions={
+            <Typography variant="body2" gutterBottom>
+              As you reflect on the past three months, select a prompt below to
+              answer.
+            </Typography>
+          }
+        />
+        <VariantResponses promptResponse={story} doc={UpdateResponse} />
+      </Box>
       <NextStepButton sx={{ mt: 2 }} />
     </div>
   );

@@ -1,1 +1,2 @@
-export * from './PromptVariantStep';
+export * from './Prompt';
+export * from './VariantResponses';

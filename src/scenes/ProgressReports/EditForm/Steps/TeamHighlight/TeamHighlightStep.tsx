@@ -1,16 +1,16 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
-import { PromptVariantStep } from '../PromptVariant';
+import { Prompt, VariantResponses } from '../PromptVariant';
 import {
-  ChangeProgressReportHighlightPromptDocument,
-  CreateProgressReportHighlightDocument,
-  UpdateProgressReportHighlightResponseDocument,
+  ChangeProgressReportHighlightPromptDocument as ChangePrompt,
+  CreateProgressReportHighlightDocument as CreateHighlight,
+  UpdateProgressReportHighlightResponseDocument as UpdateResponse,
 } from './TeamHighlightStep.graphql';
 
 export const TeamHighlightStep = () => {
   const { report } = useProgressReportContext();
-  const highlights = report.highlights;
+  const highlight = report.highlights.items[0];
 
   return (
     <div
@@ -18,24 +18,25 @@ export const TeamHighlightStep = () => {
         marginBottom: theme.spacing(4),
       })}
     >
-      <PromptVariantStep
-        stepData={highlights}
-        reportId={report.id}
-        updateResponseDocument={UpdateProgressReportHighlightResponseDocument}
-        createItemDocument={CreateProgressReportHighlightDocument}
-        changePromptDocument={ChangeProgressReportHighlightPromptDocument}
-        title={
-          <Typography variant="h3" gutterBottom>
-            Share a team highlight story.
-          </Typography>
-        }
-        promptInstructions={
-          <Typography variant="body2" gutterBottom>
-            As you reflect on the past three months, select a prompt below to
-            answer.
-          </Typography>
-        }
-      />
+      <Box sx={{ maxWidth: 'md' }}>
+        <Typography variant="h3" gutterBottom>
+          Share a team highlight story
+        </Typography>
+        <Prompt
+          reportId={report.id}
+          promptResponse={highlight}
+          available={report.highlights.available}
+          createItemDocument={CreateHighlight}
+          changePromptDocument={ChangePrompt}
+          promptInstructions={
+            <Typography variant="body2" gutterBottom>
+              As you reflect on the past three months, select a prompt below to
+              answer.
+            </Typography>
+          }
+        />
+        <VariantResponses promptResponse={highlight} doc={UpdateResponse} />
+      </Box>
       <NextStepButton sx={{ mt: 2 }} />
     </div>
   );

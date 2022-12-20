@@ -1,27 +1,21 @@
-import { Box, Button } from '@mui/material';
-import { SubmissionErrors } from 'final-form';
-import { ReactNode, useMemo } from 'react';
-import { RichTextView } from '~/components/RichText';
-import { ProgressReportItemEditFragment } from '../../ProgressReportEdit.graphql';
-import { VariantResponsesAccordion } from './VariantResponsesAccordion';
+import { useMemo } from 'react';
+import { PromptResponseFragment as PromptResponse } from '~/common/fragments';
+import {
+  VariantResponsesAccordion,
+  VariantResponsesAccordionProps,
+} from './VariantResponsesAccordion';
 
-interface VariantResponsesFormProps {
-  currentItem: ProgressReportItemEditFragment;
-  onChangeResponse: (
-    input: any
-  ) => void | SubmissionErrors | Promise<SubmissionErrors>;
-  onUpdatePromptClick: (value: boolean) => void;
-  title: ReactNode;
+export interface VariantResponsesFormProps
+  extends Pick<VariantResponsesAccordionProps, 'onSubmit'> {
+  promptResponse: PromptResponse;
 }
 
 export const VariantResponsesForm = ({
-  currentItem,
-  onChangeResponse,
-  onUpdatePromptClick,
-  title,
+  promptResponse,
+  ...rest
 }: VariantResponsesFormProps) => {
   const { responses, expanded } = useMemo(() => {
-    const responses = currentItem.responses;
+    const responses = promptResponse.responses;
     if (responses.length === 0) {
       return { responses: [], expanded: new Set<string>() };
     }
@@ -35,29 +29,16 @@ export const VariantResponsesForm = ({
         responses[prevFromEmpty]!.variant.key,
       ]),
     };
-  }, [currentItem.responses]);
+  }, [promptResponse.responses]);
 
   return (
     <>
-      {title}
-      {currentItem.prompt.value?.text.value && (
-        <Box sx={{ mt: 2, mb: 4 }}>
-          <RichTextView data={currentItem.prompt.value.text.value} />
-          <Button
-            variant="text"
-            size="small"
-            onClick={() => onUpdatePromptClick(true)}
-          >
-            Change prompt
-          </Button>
-        </Box>
-      )}
       {responses.map((response) => (
         <VariantResponsesAccordion
           response={response}
           expanded={expanded.has(response.variant.key)}
           key={response.variant.key}
-          onSubmit={onChangeResponse}
+          {...rest}
         />
       ))}
     </>

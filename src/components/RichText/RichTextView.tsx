@@ -8,7 +8,7 @@ import { ToolKey } from './editorJsTools';
 export const RichTextView = memo(function RichTextView({
   data,
 }: {
-  data?: RichTextData;
+  data?: RichTextData | null;
 }) {
   if (!data) {
     return null;

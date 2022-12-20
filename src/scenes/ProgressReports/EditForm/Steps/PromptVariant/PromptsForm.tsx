@@ -1,63 +1,64 @@
 import { Box } from '@mui/material';
-import { SubmissionErrors } from 'final-form';
 import { ReactNode } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormProps } from 'react-final-form';
+import { StyleProps } from '~/common';
+import { PromptFragment as Prompt } from '~/common/fragments';
 import { EnumField, EnumOption, SubmitButton } from '~/components/form';
 import { RichTextView } from '~/components/RichText';
-import { ProgressReportAvailableDataFragment } from '../../ProgressReportEdit.graphql';
 
-interface PromptsFormProps {
-  availableData: ProgressReportAvailableDataFragment | null;
-  onFormSubmitted: (
-    input: any
-  ) => void | SubmissionErrors | Promise<SubmissionErrors>;
-  title: ReactNode;
-  promptInstructions: ReactNode;
+export interface PromptSelection {
+  prompt: string;
+}
+
+export interface PromptsFormProps
+  extends FormProps<PromptSelection>,
+    StyleProps {
+  availablePrompts: readonly Prompt[];
+  preamble?: ReactNode;
 }
 
 export const PromptsForm = ({
-  availableData: stepData,
-  onFormSubmitted,
-  title,
-  promptInstructions,
-}: PromptsFormProps) => {
-  return (
-    <Form onSubmit={onFormSubmitted}>
-      {({ handleSubmit }) => (
-        <Box
-          component="form"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            padding: 2,
-            pt: 0,
-          }}
-          onSubmit={handleSubmit}
-        >
-          {title}
-          {promptInstructions}
-          {stepData?.prompts.length && (
-            <EnumField name="prompt" required>
-              {stepData.prompts.map((prompt) => {
-                if (!prompt.text.value) {
-                  return null;
-                }
-                return (
-                  <EnumOption
-                    key={prompt.id}
-                    value={prompt.id}
-                    label={<RichTextView data={prompt.text.value} />}
-                  />
-                );
-              })}
-            </EnumField>
-          )}
+  availablePrompts,
+  preamble,
+  sx,
+  className,
+  ...rest
+}: PromptsFormProps) => (
+  <Form<PromptSelection> {...rest}>
+    {({ handleSubmit }) => (
+      <Box
+        component="form"
+        sx={sx}
+        className={className}
+        onSubmit={handleSubmit}
+      >
+        {preamble}
+        {availablePrompts.length && (
+          <EnumField name="prompt" required margin="normal">
+            {availablePrompts.map((prompt) => {
+              if (!prompt.text.value) {
+                return null;
+              }
+              return (
+                <EnumOption
+                  key={prompt.id}
+                  value={prompt.id}
+                  label={<RichTextView data={prompt.text.value} />}
+                />
+              );
+            })}
+          </EnumField>
+        )}
 
-          <SubmitButton variant="outlined" color="secondary">
-            {stepData?.prompts.length ? 'Select prompt' : 'Loading...'}
-          </SubmitButton>
-        </Box>
-      )}
-    </Form>
-  );
-};
+        <SubmitButton
+          variant="outlined"
+          color="secondary"
+          size="medium"
+          fullWidth={false}
+        >
+          {availablePrompts.length ? 'Select prompt' : 'Loading...'}
+        </SubmitButton>
+      </Box>
+    )}
+  </Form>
+);

@@ -1,0 +1,40 @@
+fragment promptResponseList on PromptVariantResponseList {
+  canCreate
+  canRead
+  total
+  hasMore
+  items {
+    ...promptResponse
+  }
+
+  available {
+    prompts {
+      ...Prompt
+    }
+    variants {
+      ...variant
+    }
+  }
+}
+
+fragment promptResponse on PromptVariantResponse {
+  id
+  prompt {
+    ...SecuredPrompt
+  }
+  responses {
+    ...variantResponse
+  }
+  canDelete
+}
+
+fragment variantResponse on VariantResponse {
+  variant {
+    ...variant
+  }
+  response {
+    canRead
+    canEdit
+    value
+  }
+}
