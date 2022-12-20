@@ -44,13 +44,13 @@ export const VariantResponsesAccordion = ({
     >
       <AccordionSummary
         aria-controls={`${response.variant.key}-content`}
-        expandIcon={!viewOnly && <ExpandMore />}
+        expandIcon={<ExpandMore />}
         sx={{
           '& .MuiAccordionSummary-content': {
             alignItems: 'center',
           },
         }}
-        onClick={() => !viewOnly && setExpanded(!expanded)}
+        onClick={() => setExpanded(!expanded)}
       >
         <RoleIcon variantRole={response.variant.responsibleRole} />
         <span>{response.variant.label}</span>
