@@ -23,6 +23,8 @@ export const VariantResponsesForm = ({
   title,
   viewOnly,
 }: VariantResponsesFormProps) => {
+  const reversed = currentItem.responses.slice().reverse();
+
   return (
     <>
       {title}
@@ -31,11 +33,11 @@ export const VariantResponsesForm = ({
           <RichTextView data={currentItem.prompt.value.text.value} />
         </Box>
       )}
-      {currentItem.responses.map(
-        (response: ProgressReportItemResponseEditFragment) => (
+      {reversed.map(
+        (response: ProgressReportItemResponseEditFragment, index) => (
           <VariantResponsesAccordion
             response={response}
-            expanded
+            expanded={index === 0}
             key={response.variant.key}
             onSubmit={onChangeResponse}
             viewOnly={viewOnly}
