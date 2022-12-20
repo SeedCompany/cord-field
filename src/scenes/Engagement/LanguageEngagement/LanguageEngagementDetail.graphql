@@ -3,6 +3,7 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   ...LanguageEngagementHeader
   ...ProgressAndPlanning
   ...LanguageEngagementDatesForm
+  ...EngagementDescription
   ceremony {
     ...CeremonyCard
   }

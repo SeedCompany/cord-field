@@ -247,6 +247,7 @@ export function RichTextField({
                             e.stopPropagation();
                           }
                         }}
+                        sx={{ bgcolor: 'background.paper' }}
                       />
 
                       <FormHelperText>
@@ -299,7 +300,7 @@ const Loading = ({
 }) => {
   // eslint-disable-next-line react/display-name
   const Input = forwardRef(({ className }: StyleProps, ref) => (
-    <Box ref={ref as any} className={className} sx={{ minHeight: 79 }}>
+    <Box ref={ref as any} className={className} sx={{ minHeight: 45 }}>
       <RichTextView data={value} />
     </Box>
   ));
