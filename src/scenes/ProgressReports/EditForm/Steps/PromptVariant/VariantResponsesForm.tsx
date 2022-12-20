@@ -23,6 +23,8 @@ export const VariantResponsesForm = ({
   onUpdatePromptClick,
   title,
 }: VariantResponsesFormProps) => {
+  const reversed = currentItem.responses.slice().reverse();
+
   return (
     <>
       {title}
@@ -38,11 +40,11 @@ export const VariantResponsesForm = ({
           </Button>
         </Box>
       )}
-      {currentItem.responses.map(
-        (response: ProgressReportItemResponseEditFragment) => (
+      {reversed.map(
+        (response: ProgressReportItemResponseEditFragment, index) => (
           <VariantResponsesAccordion
             response={response}
-            expanded
+            expanded={index === 0}
             key={response.variant.key}
             onSubmit={onChangeResponse}
           />
