@@ -93,7 +93,6 @@ export const ViewProgressReportDrawer = ({
               <Grid item xs={12}>
                 <Typography variant="h2">Narrative report</Typography>
                 <Grid item xs={12}>
-                  <Typography variant="h3">Team Highlight:</Typography>
                   {report.highlights.items.map((highlight) => {
                     if (!highlight.prompt.value?.text.value) {
                       return null;
@@ -101,6 +100,7 @@ export const ViewProgressReportDrawer = ({
 
                     return (
                       <Card key={highlight.id} sx={{ p: 4, my: 2 }}>
+                        <Typography variant="h3">Team Highlight:</Typography>
                         <VariantResponsesForm
                           currentItem={highlight}
                           viewOnly
@@ -110,7 +110,6 @@ export const ViewProgressReportDrawer = ({
                   })}
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="h3">Community Story:</Typography>
                   {report.communityStories.items.map((story) => {
                     if (!story.prompt.value?.text.value) {
                       return null;
@@ -118,6 +117,7 @@ export const ViewProgressReportDrawer = ({
 
                     return (
                       <Card key={story.id} sx={{ p: 4, my: 2 }}>
+                        <Typography variant="h3">Community Story:</Typography>
                         <VariantResponsesForm currentItem={story} viewOnly />
                       </Card>
                     );
@@ -133,19 +133,31 @@ export const ViewProgressReportDrawer = ({
                     </Typography>
 
                     {report.varianceExplanation.comments.value && (
-                      <RichTextView
-                        data={report.varianceExplanation.comments.value}
-                      />
+                      <>
+                        <Typography variant="h4" gutterBottom>
+                          Comments:
+                        </Typography>
+                        <Box sx={{ ml: 4 }}>
+                          <RichTextView
+                            data={report.varianceExplanation.comments.value}
+                          />
+                        </Box>
+                      </>
                     )}
 
                     {report.varianceExplanation.reasons.value.map(
                       (reason, index) => (
-                        <Typography key={index} variant="body1">
-                          {reason}
-                        </Typography>
+                        <div key={index}>
+                          <Typography variant="h4" gutterBottom>
+                            Reason {index + 1}:
+                          </Typography>
+                          <Typography variant="body1" sx={{ ml: 4 }}>
+                            {reason}
+                          </Typography>
+                        </div>
                       )
                     )}
-                    <Divider />
+                    <Divider sx={{ my: 4 }} />
 
                     <Typography variant="h3" gutterBottom>
                       Project progress
