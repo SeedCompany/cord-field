@@ -247,6 +247,7 @@ export function RichTextField({
                             e.stopPropagation();
                           }
                         }}
+                        sx={{ bgcolor: 'background.paper' }}
                       />
 
                       <FormHelperText>
