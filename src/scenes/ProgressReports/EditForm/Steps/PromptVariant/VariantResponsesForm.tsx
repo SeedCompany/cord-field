@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { SubmissionErrors } from 'final-form';
 import { ReactNode } from 'react';
 import { RichTextView } from '~/components/RichText';
@@ -13,12 +13,14 @@ interface VariantResponsesFormProps {
   onChangeResponse: (
     input: any
   ) => void | SubmissionErrors | Promise<SubmissionErrors>;
+  onUpdatePromptClick: (value: boolean) => void;
   title: ReactNode;
 }
 
 export const VariantResponsesForm = ({
   currentItem,
   onChangeResponse,
+  onUpdatePromptClick,
   title,
 }: VariantResponsesFormProps) => {
   return (
@@ -27,6 +29,13 @@ export const VariantResponsesForm = ({
       {currentItem.prompt.value?.text.value && (
         <Box sx={{ mt: 2, mb: 4 }}>
           <RichTextView data={currentItem.prompt.value.text.value} />
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => onUpdatePromptClick(true)}
+          >
+            Change prompt
+          </Button>
         </Box>
       )}
       {currentItem.responses.map(

@@ -3,6 +3,7 @@ import { useProgressReportContext } from '../../ProgressReportContext';
 import { NextStepButton } from '../NextStepButton';
 import { PromptVariantStep } from '../PromptVariant';
 import {
+  ChangeProgressReportHighlightPromptDocument,
   CreateProgressReportHighlightDocument,
   UpdateProgressReportHighlightResponseDocument,
 } from './TeamHighlightStep.graphql';
@@ -22,6 +23,7 @@ export const TeamHighlightStep = () => {
         reportId={report.id}
         updateResponseDocument={UpdateProgressReportHighlightResponseDocument}
         createItemDocument={CreateProgressReportHighlightDocument}
+        changePromptDocument={ChangeProgressReportHighlightPromptDocument}
         title={
           <Typography variant="h3" gutterBottom>
             Share a team highlight story.

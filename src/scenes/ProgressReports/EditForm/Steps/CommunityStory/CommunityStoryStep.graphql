@@ -21,3 +21,9 @@ mutation UpdateCommunityStoryResponse($input: UpdatePromptVariantResponse!) {
     ...ProgressReportItemEdit
   }
 }
+
+mutation ChangeProgressReportCommunityStoryPrompt($input: ChangePrompt!) {
+  changeProgressReportCommunityStoryPrompt(input: $input) {
+    ...ProgressReportItemEdit
+  }
+}
