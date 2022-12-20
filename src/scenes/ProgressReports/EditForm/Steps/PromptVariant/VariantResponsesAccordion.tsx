@@ -89,7 +89,11 @@ export const VariantResponsesAccordion = ({
           </Form>
         ) : response.response.value ? (
           <RichTextView data={response.response.value} />
-        ) : null}
+        ) : (
+          <Typography color="textSecondary" paragraph>
+            No response given yet
+          </Typography>
+        )}
       </AccordionDetails>
     </Accordion>
   );
