@@ -33,6 +33,7 @@ fragment securedDateRange on SecuredDateRange {
 
 fragment SecuredPrompt on SecuredPrompt {
   canRead
+  canEdit
   value {
     ...Prompt
   }

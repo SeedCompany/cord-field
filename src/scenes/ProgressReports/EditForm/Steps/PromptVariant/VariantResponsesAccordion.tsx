@@ -5,25 +5,32 @@ import {
   AccordionSummary,
   Typography,
 } from '@mui/material';
-import { SubmissionErrors } from 'final-form';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormProps } from 'react-final-form';
+import { Scalars } from '~/api/schema/schema.graphql';
+import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
 import { SubmitButton } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField, RichTextView } from '~/components/RichText';
-import { ProgressReportItemResponseEditFragment } from '../../ProgressReportEdit.graphql';
 import { RoleIcon } from '../../RoleIcon';
+
+interface FormShape {
+  variant: string;
+  response: Scalars['RichText'] | null;
+}
+
+export interface VariantResponsesAccordionProps
+  extends Pick<FormProps<FormShape>, 'onSubmit'> {
+  response: VariantResponse;
+  expanded?: boolean;
+}
 
 export const VariantResponsesAccordion = ({
   response,
   expanded: _expanded,
   onSubmit,
-}: {
-  response: ProgressReportItemResponseEditFragment;
-  expanded?: boolean;
-  onSubmit: (input: any) => void | SubmissionErrors | Promise<SubmissionErrors>;
-}) => {
+}: VariantResponsesAccordionProps) => {
   const [expanded, setExpanded] = useState(_expanded ?? false);
   const [savedAt, setSavedAt] = useState<DateTime | null>(null);
 
@@ -53,7 +60,7 @@ export const VariantResponsesAccordion = ({
       </AccordionSummary>
       <AccordionDetails sx={{ px: 4 }}>
         {response.response.canEdit ? (
-          <Form
+          <Form<FormShape>
             onSubmit={onSubmit}
             initialValues={{
               variant: response.variant.key,

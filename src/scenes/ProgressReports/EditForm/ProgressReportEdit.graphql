@@ -11,10 +11,10 @@ fragment ProgressReportEdit on ProgressReport {
   }
 
   highlights {
-    ...ProgressReportStepData
+    ...promptResponseList
   }
   communityStories {
-    ...ProgressReportStepData
+    ...promptResponseList
   }
   progress {
     ...ProgressReportProgress
@@ -86,49 +86,4 @@ fragment ProgressReportProgress on ProductProgress {
     ...variant
   }
   ...ProgressOfProductForReport
-}
-
-fragment ProgressReportStepData on PromptVariantResponseList {
-  canCreate
-  canRead
-  total
-  hasMore
-
-  available {
-    ...ProgressReportAvailableData
-  }
-  items {
-    ...ProgressReportItemEdit
-  }
-}
-
-fragment ProgressReportItemEdit on PromptVariantResponse {
-  id
-  prompt {
-    ...SecuredPrompt
-  }
-  canDelete
-  responses {
-    ...ProgressReportItemResponseEdit
-  }
-}
-
-fragment ProgressReportItemResponseEdit on VariantResponse {
-  response {
-    value
-    canEdit
-    canRead
-  }
-  variant {
-    ...variant
-  }
-}
-
-fragment ProgressReportAvailableData on VariantPromptList {
-  prompts {
-    ...Prompt
-  }
-  variants {
-    ...variant
-  }
 }
