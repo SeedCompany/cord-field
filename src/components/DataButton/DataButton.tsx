@@ -4,7 +4,6 @@ import {
   ButtonProps,
   Skeleton,
   TooltipProps,
-  Typography,
 } from '@mui/material';
 import { isFunction } from 'lodash';
 import { cloneElement, isValidElement, ReactNode } from 'react';
@@ -75,11 +74,7 @@ export const DataButton = <T extends any>({
       {...props}
       sx={[dataButtonStyles, ...extendSx(sx)]}
     >
-      {label && (
-        <Typography component="span" sx={dataButtonLabelStyles}>
-          {label}
-        </Typography>
-      )}
+      {label && <Box sx={dataButtonLabelStyles}>{label}</Box>}
       <Box sx={{ flexDirection: 'row' }}>
         {iconWithStyles}
         {data || <>&nbsp;</>}
