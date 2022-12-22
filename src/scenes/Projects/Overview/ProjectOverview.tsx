@@ -341,7 +341,7 @@ export const ProjectOverview = () => {
               )}
             />
           </Grid>
-          <Grid container spacing={1} alignItems="center">
+          <Grid container spacing={1} alignItems="strech">
             <Tooltip
               title={
                 isTranslation
@@ -373,16 +373,24 @@ export const ProjectOverview = () => {
               <DataButton
                 loading={!projectOverviewData}
                 secured={locations}
-                empty="Enter Location | Field Region"
+                label="Location"
+                empty="None"
                 redacted="You do not have permission to view location"
                 children={locations.value}
                 onClick={() =>
-                  editField([
-                    'primaryLocationId',
-                    'fieldRegionId',
-                    'marketingLocationId',
-                  ])
+                  editField(['primaryLocationId', 'fieldRegionId'])
                 }
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                loading={!projectOverviewData}
+                secured={locations}
+                label="Marketing Location"
+                empty="None"
+                redacted="You do not have permission to view Marketing location"
+                children={locations.value}
+                onClick={() => editField(['marketingLocationId'])}
               />
             </Grid>
             <Grid item>
@@ -400,9 +408,10 @@ export const ProjectOverview = () => {
                   loading={!projectOverviewData}
                   startIcon={<DateRange className={classes.infoColor} />}
                   secured={projectOverviewData?.project.mouRange}
+                  label="Start - End"
                   redacted="You do not have permission to view start/end dates"
                   children={FormattedDateRange.orNull}
-                  empty="Start - End"
+                  empty="None"
                   onClick={() => editField('mouRange')}
                 />
               </ChangesetPropertyBadge>
@@ -417,9 +426,10 @@ export const ProjectOverview = () => {
                     loading={!projectOverviewData}
                     startIcon={<DateRange className={classes.infoColor} />}
                     secured={projectOverviewData.project.estimatedSubmission}
+                    label="Est. Submission"
                     redacted="You do not have permission to view estimated submission date"
                     children={(date) => <FormattedDate date={date} />}
-                    empty="Estimated Submission"
+                    empty="None"
                     onClick={() => editField(['estimatedSubmission'])}
                   />
                 </Grid>
@@ -434,6 +444,7 @@ export const ProjectOverview = () => {
                 <DataButton
                   loading={!projectOverviewData}
                   secured={projectOverviewData?.project.step}
+                  label="Status"
                   redacted="You do not have permission to view project step"
                   onClick={() =>
                     projectOverviewData &&
