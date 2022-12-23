@@ -209,6 +209,9 @@ export const ProjectOverview = () => {
           }`,
   };
 
+  const marketingLocation =
+    projectOverviewData?.project.marketingLocation.value?.name.value;
+
   const CreateEngagement = isTranslation
     ? CreateLanguageEngagement
     : CreateInternshipEngagement;
@@ -389,8 +392,10 @@ export const ProjectOverview = () => {
                 label="Marketing Location"
                 empty="None"
                 redacted="You do not have permission to view Marketing location"
-                children={locations.value}
-                onClick={() => editField(['marketingLocationId'])}
+                children={marketingLocation}
+                onClick={() => {
+                  editField(['marketingLocationId']);
+                }}
               />
             </Grid>
             <Grid item>
