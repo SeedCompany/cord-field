@@ -317,24 +317,20 @@ export const ProjectOverview = () => {
               </Grid>
             </Tooltip>
             <Grid item>
-              <DataButton
-                loading={!project}
-                secured={project?.primaryLocation}
-                empty="Enter Location"
-                redacted="You do not have permission to view primary location"
-                children={(location) => location.name.value}
-                onClick={() => editField('primaryLocationId')}
-              />
-            </Grid>
-            <Grid item>
-              <DataButton
-                loading={!project}
-                secured={project?.fieldRegion}
-                empty="Enter Field Region"
-                redacted="You do not have permission to view field region"
-                children={(location) => location.name.value}
-                onClick={() => editField('fieldRegionId')}
-              />
+              <ChangesetPropertyBadge
+                current={project}
+                prop="step"
+                labelBy={labelFrom(ProjectStepLabels)}
+              >
+                <DataButton
+                  loading={!project}
+                  secured={project?.step}
+                  redacted="You do not have permission to view project step"
+                  onClick={() => project && openWorkflow(project)}
+                >
+                  {labelFrom(ProjectStepLabels)(project?.step.value)}
+                </DataButton>
+              </ChangesetPropertyBadge>
             </Grid>
             <Grid item>
               <ChangesetPropertyBadge
@@ -377,20 +373,24 @@ export const ProjectOverview = () => {
               </Tooltip>
             )}
             <Grid item>
-              <ChangesetPropertyBadge
-                current={project}
-                prop="step"
-                labelBy={labelFrom(ProjectStepLabels)}
-              >
-                <DataButton
-                  loading={!project}
-                  secured={project?.step}
-                  redacted="You do not have permission to view project step"
-                  onClick={() => project && openWorkflow(project)}
-                >
-                  {labelFrom(ProjectStepLabels)(project?.step.value)}
-                </DataButton>
-              </ChangesetPropertyBadge>
+              <DataButton
+                loading={!project}
+                secured={project?.primaryLocation}
+                empty="Enter Location"
+                redacted="You do not have permission to view primary location"
+                children={(location) => location.name.value}
+                onClick={() => editField('primaryLocationId')}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                loading={!project}
+                secured={project?.fieldRegion}
+                empty="Enter Field Region"
+                redacted="You do not have permission to view field region"
+                children={(location) => location.name.value}
+                onClick={() => editField('fieldRegionId')}
+              />
             </Grid>
           </Grid>
 
