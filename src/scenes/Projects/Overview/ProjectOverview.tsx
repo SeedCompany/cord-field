@@ -384,6 +384,8 @@ export const ProjectOverview = () => {
                 </Grid>
               </Tooltip>
             )}
+          </Grid>
+          <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
                 label="Primary Location"
