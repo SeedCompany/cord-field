@@ -1,5 +1,14 @@
 import { useQuery } from '@apollo/client';
-import { Add, DateRange, Edit, Publish } from '@mui/icons-material';
+import {
+  Add,
+  DateRange as DateRangeIcon,
+  Edit,
+  Event as EventIcon,
+  Public as GlobeIcon,
+  Place as MapPinIcon,
+  Publish,
+  Timeline as TimelineIcon,
+} from '@mui/icons-material';
 import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
@@ -55,7 +64,7 @@ type EngagementListItem =
   | LanguageEngagementListItemFragment
   | InternshipEngagementListItemFragment;
 
-const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
+const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
     overflowY: 'auto',
@@ -81,9 +90,6 @@ const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
   },
   nameLoading: {
     width: '30%',
-  },
-  infoColor: {
-    color: palette.info.main,
   },
   subheader: {
     display: 'flex',
@@ -300,6 +306,7 @@ export const ProjectOverview = () => {
             >
               <Grid item>
                 <DataButton
+                  label="Sensitivity"
                   loading={!project}
                   onClick={() =>
                     isTranslation === false && editField('sensitivity')
@@ -312,7 +319,7 @@ export const ProjectOverview = () => {
                     />
                   }
                 >
-                  {project ? `${project.sensitivity} Sensitivity` : null}
+                  {project?.sensitivity}
                 </DataButton>
               </Grid>
             </Tooltip>
@@ -323,6 +330,8 @@ export const ProjectOverview = () => {
                 labelBy={labelFrom(ProjectStepLabels)}
               >
                 <DataButton
+                  label="Status"
+                  startIcon={<TimelineIcon color="info" />}
                   loading={!project}
                   secured={project?.step}
                   redacted="You do not have permission to view project step"
@@ -344,12 +353,13 @@ export const ProjectOverview = () => {
                 )}
               >
                 <DataButton
+                  label="Start - End"
+                  startIcon={<DateRangeIcon color="info" />}
+                  empty="None"
                   loading={!project}
-                  startIcon={<DateRange className={classes.infoColor} />}
                   secured={project?.mouRange}
                   redacted="You do not have permission to view start/end dates"
                   children={FormattedDateRange.orNull}
-                  empty="Start - End"
                   onClick={() => editField('mouRange')}
                 />
               </ChangesetPropertyBadge>
@@ -361,12 +371,13 @@ export const ProjectOverview = () => {
               >
                 <Grid item>
                   <DataButton
+                    label="Est. Submission"
+                    startIcon={<EventIcon color="info" />}
+                    empty="None"
                     loading={!project}
-                    startIcon={<DateRange className={classes.infoColor} />}
                     secured={project.estimatedSubmission}
                     redacted="You do not have permission to view estimated submission date"
                     children={(date) => <FormattedDate date={date} />}
-                    empty="Estimated Submission"
                     onClick={() => editField(['estimatedSubmission'])}
                   />
                 </Grid>
@@ -374,9 +385,11 @@ export const ProjectOverview = () => {
             )}
             <Grid item>
               <DataButton
+                label="Primary Location"
+                startIcon={<MapPinIcon color="info" />}
+                empty="None"
                 loading={!project}
                 secured={project?.primaryLocation}
-                empty="Enter Location"
                 redacted="You do not have permission to view primary location"
                 children={(location) => location.name.value}
                 onClick={() => editField('primaryLocationId')}
@@ -384,9 +397,11 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <DataButton
+                label="Field Region"
+                startIcon={<GlobeIcon color="info" />}
+                empty="None"
                 loading={!project}
                 secured={project?.fieldRegion}
-                empty="Enter Field Region"
                 redacted="You do not have permission to view field region"
                 children={(location) => location.name.value}
                 onClick={() => editField('fieldRegionId')}
