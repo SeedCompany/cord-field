@@ -137,7 +137,7 @@ export const ProjectOverview = () => {
 
   const [createEngagementState, createEngagement] = useDialog();
 
-  const { data: projectOverviewData, error } = useQuery(
+  const { data: { project } = { project: undefined }, error } = useQuery(
     ProjectOverviewDocument,
     {
       variables: {
@@ -158,9 +158,8 @@ export const ProjectOverview = () => {
     },
   });
 
-  const projectName = projectOverviewData?.project.name;
-  const isTranslation = projectOverviewData
-    ? projectOverviewData.project.__typename === 'TranslationProject'
+  const isTranslation = project
+    ? project.__typename === 'TranslationProject'
     : undefined;
 
   const engagementTypeLabel =
@@ -175,8 +174,8 @@ export const ProjectOverview = () => {
     0
   );
 
-  const primaryLocation = projectOverviewData?.project.primaryLocation;
-  const region = projectOverviewData?.project.fieldRegion;
+  const primaryLocation = project?.primaryLocation;
+  const region = project?.fieldRegion;
   const locations = {
     canRead: (primaryLocation?.canRead || region?.canRead) ?? false,
     canEdit: (primaryLocation?.canEdit || region?.canEdit) ?? false,
@@ -215,7 +214,7 @@ export const ProjectOverview = () => {
 
   return (
     <main className={classes.root}>
-      <Helmet title={projectOverviewData?.project.name.value ?? undefined} />
+      <Helmet title={project?.name.value ?? undefined} />
       <Error error={error}>
         {{
           NotFound: 'Could not find project',
@@ -227,24 +226,18 @@ export const ProjectOverview = () => {
           <header
             className={cx(
               classes.header,
-              projectOverviewData ? null : classes.headerLoading
+              project ? null : classes.headerLoading
             )}
           >
             <Typography
               variant="h2"
-              className={cx(
-                classes.name,
-                projectName ? null : classes.nameLoading
-              )}
+              className={cx(classes.name, project ? null : classes.nameLoading)}
             >
-              {!projectName ? (
+              {!project ? (
                 <Skeleton width="100%" />
-              ) : projectName.canRead ? (
-                <ChangesetPropertyBadge
-                  current={projectOverviewData.project}
-                  prop="name"
-                >
-                  {projectName.value}
+              ) : project.name.canRead ? (
+                <ChangesetPropertyBadge current={project} prop="name">
+                  {project.name.value}
                 </ChangesetPropertyBadge>
               ) : (
                 <Redacted
@@ -253,21 +246,20 @@ export const ProjectOverview = () => {
                 />
               )}
             </Typography>
-            <PresetInventoryButton project={projectOverviewData?.project} />
-            {(!projectOverviewData ||
-              projectOverviewData.project.name.canEdit) && (
+            <PresetInventoryButton project={project} />
+            {(!project || project.name.canEdit) && (
               <Tooltip title="Edit Project Name">
                 <IconButton
                   aria-label="edit project name"
                   onClick={() => editField(['name'])}
-                  loading={!projectOverviewData}
+                  loading={!project}
                 >
                   <Edit />
                 </IconButton>
               </Tooltip>
             )}
             <TogglePinButton
-              object={projectOverviewData?.project}
+              object={project}
               label="Project"
               listId="projects"
               listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
@@ -278,36 +270,29 @@ export const ProjectOverview = () => {
 
           <div className={classes.subheader}>
             <Typography variant="h4">
-              {projectOverviewData ? (
-                'Project Overview'
-              ) : (
-                <Skeleton width={200} />
-              )}
+              {project ? 'Project Overview' : <Skeleton width={200} />}
             </Typography>
-            {projectOverviewData && (
+            {project && (
               <Typography variant="body2" color="textSecondary">
-                Updated{' '}
-                <FormattedDateTime
-                  date={projectOverviewData.project.modifiedAt}
-                />
+                Updated <FormattedDateTime date={project.modifiedAt} />
               </Typography>
             )}
           </div>
 
           <Grid container spacing={2}>
             <DisplaySimpleProperty
-              loading={!projectOverviewData}
+              loading={!project}
               label="Project ID"
-              value={projectOverviewData?.project.id}
+              value={project?.id}
               loadingWidth={100}
               LabelProps={{ color: 'textSecondary' }}
               ValueProps={{ color: 'textPrimary' }}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
             <DisplaySimpleProperty
-              loading={!projectOverviewData}
+              loading={!project}
               label="Department ID"
-              value={projectOverviewData?.project.departmentId.value}
+              value={project?.departmentId.value}
               loadingWidth={100}
               LabelProps={{ color: 'textSecondary' }}
               ValueProps={{ color: 'textPrimary' }}
@@ -315,9 +300,7 @@ export const ProjectOverview = () => {
             />
             <DisplaySimpleProperty
               loading={
-                !engagements.data ||
-                engagements.data.hasMore ||
-                !projectOverviewData
+                !engagements.data || engagements.data.hasMore || !project
               }
               label={isTranslation ? 'Population Total' : 'Total Interns'}
               value={formatNumber(
@@ -351,27 +334,25 @@ export const ProjectOverview = () => {
             >
               <Grid item>
                 <DataButton
-                  loading={!projectOverviewData}
+                  loading={!project}
                   onClick={() =>
                     isTranslation === false && editField('sensitivity')
                   }
                   startIcon={
                     <SensitivityIcon
-                      value={projectOverviewData?.project.sensitivity}
-                      loading={!projectOverviewData}
+                      value={project?.sensitivity}
+                      loading={!project}
                       disableTooltip
                     />
                   }
                 >
-                  {projectOverviewData
-                    ? `${projectOverviewData.project.sensitivity} Sensitivity`
-                    : null}
+                  {project ? `${project.sensitivity} Sensitivity` : null}
                 </DataButton>
               </Grid>
             </Tooltip>
             <Grid item>
               <DataButton
-                loading={!projectOverviewData}
+                loading={!project}
                 secured={locations}
                 empty="Enter Location | Field Region"
                 redacted="You do not have permission to view location"
@@ -387,7 +368,7 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <ChangesetPropertyBadge
-                current={projectOverviewData?.project}
+                current={project}
                 prop="mouRange"
                 identifyBy={(range) =>
                   `${range.start?.toMillis()}/${range.end?.toMillis()}`
@@ -397,9 +378,9 @@ export const ProjectOverview = () => {
                 )}
               >
                 <DataButton
-                  loading={!projectOverviewData}
+                  loading={!project}
                   startIcon={<DateRange className={classes.infoColor} />}
-                  secured={projectOverviewData?.project.mouRange}
+                  secured={project?.mouRange}
                   redacted="You do not have permission to view start/end dates"
                   children={FormattedDateRange.orNull}
                   empty="Start - End"
@@ -407,16 +388,16 @@ export const ProjectOverview = () => {
                 />
               </ChangesetPropertyBadge>
             </Grid>
-            {projectOverviewData?.project.projectStatus === 'InDevelopment' && (
+            {project?.projectStatus === 'InDevelopment' && (
               <Tooltip
                 title="Estimated Submission to Regional Director"
                 placement="top"
               >
                 <Grid item>
                   <DataButton
-                    loading={!projectOverviewData}
+                    loading={!project}
                     startIcon={<DateRange className={classes.infoColor} />}
-                    secured={projectOverviewData.project.estimatedSubmission}
+                    secured={project.estimatedSubmission}
                     redacted="You do not have permission to view estimated submission date"
                     children={(date) => <FormattedDate date={date} />}
                     empty="Estimated Submission"
@@ -427,22 +408,17 @@ export const ProjectOverview = () => {
             )}
             <Grid item>
               <ChangesetPropertyBadge
-                current={projectOverviewData?.project}
+                current={project}
                 prop="step"
                 labelBy={labelFrom(ProjectStepLabels)}
               >
                 <DataButton
-                  loading={!projectOverviewData}
-                  secured={projectOverviewData?.project.step}
+                  loading={!project}
+                  secured={project?.step}
                   redacted="You do not have permission to view project step"
-                  onClick={() =>
-                    projectOverviewData &&
-                    openWorkflow(projectOverviewData.project)
-                  }
+                  onClick={() => project && openWorkflow(project)}
                 >
-                  {labelFrom(ProjectStepLabels)(
-                    projectOverviewData?.project.step.value
-                  )}
+                  {labelFrom(ProjectStepLabels)(project?.step.value)}
                 </DataButton>
               </ChangesetPropertyBadge>
             </Grid>
@@ -454,7 +430,7 @@ export const ProjectOverview = () => {
                 <input {...getInputProps()} />
                 <Tooltip title="Upload Files">
                   <Fab
-                    loading={!projectOverviewData || directoryIdLoading}
+                    loading={!project || directoryIdLoading}
                     disabled={canReadDirectoryId === false}
                     onClick={openFileBrowser}
                     color="primary"
@@ -467,11 +443,7 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <Typography variant="h4">
-                {projectOverviewData ? (
-                  'Upload Files'
-                ) : (
-                  <Skeleton width="12ch" />
-                )}
+                {project ? 'Upload Files' : <Skeleton width="12ch" />}
               </Typography>
             </Grid>
           </Grid>
@@ -479,14 +451,14 @@ export const ProjectOverview = () => {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <BudgetOverviewCard
-                budget={projectOverviewData?.project.budget.value}
-                loading={!projectOverviewData}
+                budget={project?.budget.value}
+                loading={!project}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               {/* TODO When file api is finished need to update query and pass in file information */}
               <FilesOverviewCard
-                loading={!projectOverviewData}
+                loading={!project}
                 total={undefined}
                 redacted={canReadDirectoryId === true}
               />
@@ -497,38 +469,28 @@ export const ProjectOverview = () => {
             <Grid item xs={12} md={6}>
               <PeriodicReportCard
                 type="Financial"
-                dueCurrently={
-                  projectOverviewData?.project.currentFinancialReportDue
-                }
-                dueNext={projectOverviewData?.project.nextFinancialReportDue}
+                dueCurrently={project?.currentFinancialReportDue}
+                dueNext={project?.nextFinancialReportDue}
               />
             </Grid>
             <Grid item xs={12} md={6}>
               <PeriodicReportCard
                 type="Narrative"
-                dueCurrently={
-                  projectOverviewData?.project.currentNarrativeReportDue
-                }
-                dueNext={projectOverviewData?.project.nextNarrativeReportDue}
+                dueCurrently={project?.currentNarrativeReportDue}
+                dueNext={project?.nextNarrativeReportDue}
               />
             </Grid>
           </Grid>
 
           <CardGroup horizontal="mdUp">
-            <ProjectMembersSummary
-              members={projectOverviewData?.project.team}
-            />
-            <PartnershipSummary
-              partnerships={projectOverviewData?.project.partnerships}
-            />
+            <ProjectMembersSummary members={project?.team} />
+            <PartnershipSummary partnerships={project?.partnerships} />
           </CardGroup>
 
           {beta.has('projectChangeRequests') && (
             <Grid container spacing={3}>
               <Grid item sm={12} md={6}>
-                <ProjectChangeRequestSummary
-                  data={projectOverviewData?.project.changeRequests}
-                />
+                <ProjectChangeRequestSummary data={project?.changeRequests} />
               </Grid>
             </Grid>
           )}
@@ -536,7 +498,7 @@ export const ProjectOverview = () => {
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Typography variant="h3">
-                {projectOverviewData && engagements.data ? (
+                {project && engagements.data ? (
                   !engagements.data.canRead ? (
                     <Redacted
                       info="You do not have permission to view engagements"
@@ -591,26 +553,21 @@ export const ProjectOverview = () => {
             skeletonCount={0}
             renderSkeleton={null}
           />
-          {!!projectOverviewData?.project && (
-            <ProjectPostList project={projectOverviewData.project} />
-          )}
+          {!!project && <ProjectPostList project={project} />}
         </div>
       )}
       {workflowProject && (
         <ProjectWorkflowDialog {...workflowState} project={workflowProject} />
       )}
-      {projectOverviewData ? (
+      {project ? (
         <UpdateProjectDialog
           {...editState}
-          project={projectOverviewData.project}
+          project={project}
           editFields={fieldsBeingEdited}
         />
       ) : null}
-      {projectOverviewData && (
-        <CreateEngagement
-          project={projectOverviewData.project}
-          {...createEngagementState}
-        />
+      {project && (
+        <CreateEngagement project={project} {...createEngagementState} />
       )}
     </main>
   );
