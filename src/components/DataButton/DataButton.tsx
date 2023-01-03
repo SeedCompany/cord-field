@@ -13,7 +13,7 @@ import { Redacted } from '../Redacted';
 export const DataButton = <T extends any>({
   loading,
   secured,
-  empty,
+  empty: emptyProp,
   redacted,
   children,
   startIcon,
@@ -29,6 +29,13 @@ export const DataButton = <T extends any>({
   label?: ReactNode;
 }) => {
   const showData = !loading && (secured ? secured.canRead : true);
+
+  const empty =
+    emptyProp && label ? (
+      <Box color="text.secondary">{emptyProp}</Box>
+    ) : (
+      emptyProp
+    );
 
   const data = isFunction(children)
     ? showData && secured?.value
