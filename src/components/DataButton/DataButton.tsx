@@ -6,32 +6,9 @@ import {
   TooltipProps,
 } from '@mui/material';
 import { isFunction } from 'lodash';
-import { cloneElement, isValidElement, ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { extendSx, SecuredProp, Sx } from '~/common';
+import { ReactNode } from 'react';
+import { extendSx, SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
-
-const useStyles = makeStyles()(() => ({
-  buttonLoading: {
-    maxWidth: 'initial',
-  },
-}));
-
-const dataButtonStyles: Sx = {
-  alignItems: 'start',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  height: 1,
-};
-
-const dataButtonLabelStyles: Sx = {
-  fontSize: '0.75rem',
-};
-
-const iconStyles: Sx = {
-  marginBottom: -0.75,
-  marginRight: 0.5,
-};
 
 export const DataButton = <T extends any>({
   loading,
@@ -51,7 +28,6 @@ export const DataButton = <T extends any>({
   empty?: ReactNode;
   label?: ReactNode;
 }) => {
-  const { classes } = useStyles();
   const showData = !loading && (secured ? secured.canRead : true);
 
   const data = isFunction(children)
@@ -60,41 +36,38 @@ export const DataButton = <T extends any>({
       : empty
     : children ?? empty;
 
-  const iconWithStyles = isValidElement(startIcon)
-    ? cloneElement(startIcon, {
-        ...startIcon.props,
-        sx: [startIcon.props.sx, ...extendSx(iconStyles)],
-      })
-    : startIcon;
-
   const btn = (
     <Button
       variant="outlined"
       color="secondary"
       {...props}
-      sx={[dataButtonStyles, ...extendSx(sx)]}
+      sx={[
+        {
+          alignItems: 'start',
+          flexDirection: 'column',
+        },
+        ...extendSx(sx),
+      ]}
     >
-      {label && <Box sx={dataButtonLabelStyles}>{label}</Box>}
-      <Box sx={{ flexDirection: 'row' }}>
-        {iconWithStyles}
+      {label && <Box sx={{ fontSize: '0.75rem' }}>{label}</Box>}
+      <Box display="flex">
+        {startIcon && (
+          <Box
+            component="span"
+            sx={{ display: 'inline-flex', ml: -0.5, mr: 1 }}
+          >
+            {startIcon}
+          </Box>
+        )}
         {data || <>&nbsp;</>}
       </Box>
     </Button>
   );
 
   return loading ? (
-    <Skeleton classes={{ fitContent: classes.buttonLoading }}>{btn}</Skeleton>
+    <Skeleton>{btn}</Skeleton>
   ) : !showData ? (
-    <Redacted
-      SkeletonProps={{
-        classes: {
-          fitContent: classes.buttonLoading,
-        },
-      }}
-      info={redacted ?? ''}
-    >
-      {btn}
-    </Redacted>
+    <Redacted info={redacted ?? ''}>{btn}</Redacted>
   ) : (
     btn
   );
