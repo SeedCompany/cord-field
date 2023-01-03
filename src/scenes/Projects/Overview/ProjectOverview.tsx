@@ -4,6 +4,7 @@ import {
   DateRange as DateRangeIcon,
   Edit,
   Event as EventIcon,
+  TravelExplore as GlobalSearchIcon,
   Public as GlobeIcon,
   Place as MapPinIcon,
   Publish,
@@ -405,6 +406,18 @@ export const ProjectOverview = () => {
                 redacted="You do not have permission to view field region"
                 children={(location) => location.name.value}
                 onClick={() => editField('fieldRegionId')}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                label="Marketing Location"
+                startIcon={<GlobalSearchIcon color="info" />}
+                empty="None"
+                loading={!project}
+                secured={project?.marketingLocation}
+                redacted="You do not have permission to view the marketing location"
+                children={(location) => location.name.value}
+                onClick={() => editField(['marketingLocationId'])}
               />
             </Grid>
           </Grid>
