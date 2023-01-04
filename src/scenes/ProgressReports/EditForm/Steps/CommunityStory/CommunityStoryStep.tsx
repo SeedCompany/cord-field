@@ -24,8 +24,8 @@ export const CommunityStoryStep = () => {
         </Typography>
         <Prompt
           reportId={report.id}
+          list={report.communityStories}
           promptResponse={story}
-          available={report.communityStories.available}
           createItemDocument={CreateStory}
           changePromptDocument={ChangePrompt}
           promptInstructions={
