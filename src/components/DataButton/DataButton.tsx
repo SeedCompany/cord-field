@@ -1,23 +1,24 @@
-import { Button, ButtonProps, Skeleton, TooltipProps } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonProps,
+  Skeleton,
+  TooltipProps,
+} from '@mui/material';
 import { isFunction } from 'lodash';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { SecuredProp } from '~/common';
+import { extendSx, SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
-
-const useStyles = makeStyles()(() => ({
-  buttonLoading: {
-    maxWidth: 'initial',
-  },
-}));
 
 export const DataButton = <T extends any>({
   loading,
   secured,
-  empty,
+  empty: emptyProp,
   redacted,
   children,
   startIcon,
+  sx,
+  label,
   ...props
 }: Omit<ButtonProps, 'children'> & {
   loading?: boolean;
@@ -25,9 +26,16 @@ export const DataButton = <T extends any>({
   redacted?: TooltipProps['title'];
   children: ((value: T) => ReactNode) | ReactNode;
   empty?: ReactNode;
+  label?: ReactNode;
 }) => {
-  const { classes } = useStyles();
   const showData = !loading && (secured ? secured.canRead : true);
+
+  const empty =
+    emptyProp && label ? (
+      <Box color="text.secondary">{emptyProp}</Box>
+    ) : (
+      emptyProp
+    );
 
   const data = isFunction(children)
     ? showData && secured?.value
@@ -40,25 +48,33 @@ export const DataButton = <T extends any>({
       variant="outlined"
       color="secondary"
       {...props}
-      startIcon={showData ? startIcon : undefined}
+      sx={[
+        {
+          alignItems: 'start',
+          flexDirection: 'column',
+        },
+        ...extendSx(sx),
+      ]}
     >
-      {data || <>&nbsp;</>}
+      {label && <Box sx={{ fontSize: '0.75rem' }}>{label}</Box>}
+      <Box display="flex">
+        {startIcon && (
+          <Box
+            component="span"
+            sx={{ display: 'inline-flex', ml: -0.5, mr: 1 }}
+          >
+            {startIcon}
+          </Box>
+        )}
+        {data || <>&nbsp;</>}
+      </Box>
     </Button>
   );
 
   return loading ? (
-    <Skeleton classes={{ fitContent: classes.buttonLoading }}>{btn}</Skeleton>
+    <Skeleton>{btn}</Skeleton>
   ) : !showData ? (
-    <Redacted
-      SkeletonProps={{
-        classes: {
-          fitContent: classes.buttonLoading,
-        },
-      }}
-      info={redacted ?? ''}
-    >
-      {btn}
-    </Redacted>
+    <Redacted info={redacted ?? ''}>{btn}</Redacted>
   ) : (
     btn
   );
