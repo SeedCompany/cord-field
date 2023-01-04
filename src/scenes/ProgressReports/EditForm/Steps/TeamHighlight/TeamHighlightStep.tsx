@@ -24,8 +24,8 @@ export const TeamHighlightStep = () => {
         </Typography>
         <Prompt
           reportId={report.id}
+          list={report.highlights}
           promptResponse={highlight}
-          available={report.highlights.available}
           createItemDocument={CreateHighlight}
           changePromptDocument={ChangePrompt}
           promptInstructions={

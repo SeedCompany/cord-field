@@ -33,22 +33,20 @@ export const PromptsForm = ({
         onSubmit={handleSubmit}
       >
         {preamble}
-        {availablePrompts.length && (
-          <EnumField name="prompt" required margin="normal">
-            {availablePrompts.map((prompt) => {
-              if (!prompt.text.value) {
-                return null;
-              }
-              return (
-                <EnumOption
-                  key={prompt.id}
-                  value={prompt.id}
-                  label={<RichTextView data={prompt.text.value} />}
-                />
-              );
-            })}
-          </EnumField>
-        )}
+        <EnumField name="prompt" required margin="normal">
+          {availablePrompts.map((prompt) => {
+            if (!prompt.text.value) {
+              return null;
+            }
+            return (
+              <EnumOption
+                key={prompt.id}
+                value={prompt.id}
+                label={<RichTextView data={prompt.text.value} />}
+              />
+            );
+          })}
+        </EnumField>
 
         <SubmitButton
           variant="outlined"
@@ -56,7 +54,7 @@ export const PromptsForm = ({
           size="medium"
           fullWidth={false}
         >
-          {availablePrompts.length ? 'Select prompt' : 'Loading...'}
+          Select prompt
         </SubmitButton>
       </Box>
     )}

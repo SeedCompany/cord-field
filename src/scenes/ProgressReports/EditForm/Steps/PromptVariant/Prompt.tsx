@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { Edit } from '@mui/icons-material';
-import { Box, Stack, Tooltip } from '@mui/material';
+import { Box, Stack, Tooltip, Typography } from '@mui/material';
 import { ReactNode, useMemo, useState } from 'react';
 import { ChangePrompt, ChoosePrompt } from '~/api/schema.graphql';
 import {
@@ -15,7 +15,7 @@ import { PromptSelection, PromptsForm, PromptsFormProps } from './PromptsForm';
 interface PromptProps {
   reportId: string;
   promptResponse?: PromptResponse;
-  available: PromptResponseList['available'];
+  list: PromptResponseList;
   createItemDocument: DocumentNode<unknown, { input: ChoosePrompt }>;
   changePromptDocument: DocumentNode<unknown, { input: ChangePrompt }>;
   promptInstructions: ReactNode;
@@ -24,15 +24,15 @@ interface PromptProps {
 export const Prompt = ({
   reportId,
   promptResponse,
-  available,
+  list,
   createItemDocument,
-  changePromptDocument: updatePromptDocument,
+  changePromptDocument,
   promptInstructions,
 }: PromptProps) => {
   const [isChangingPrompt, setIsChangingPrompt] = useState(false);
 
   const [createPromptResponse] = useMutation(createItemDocument);
-  const [updatePrompt] = useMutation(updatePromptDocument);
+  const [updatePrompt] = useMutation(changePromptDocument);
 
   const handleFirstPromptSelection = async (values: PromptSelection) => {
     await createPromptResponse({
@@ -75,15 +75,30 @@ export const Prompt = ({
     [promptResponse]
   );
 
-  if (!promptResponse || isChangingPrompt) {
+  const hasPrompts = list.available.prompts.length > 0;
+  const canSetPrompt =
+    hasPrompts &&
+    (!promptResponse ? list.canCreate : promptResponse.prompt.canEdit);
+
+  if (canSetPrompt && (!promptResponse || isChangingPrompt)) {
     return (
       <PromptsForm
-        availablePrompts={available.prompts}
+        availablePrompts={list.available.prompts}
         preamble={promptInstructions}
         onSubmit={handlePromptSelection}
         initialValues={initialValues}
         sx={{ mb: 4 }}
       />
+    );
+  }
+  if (!promptResponse) {
+    return (
+      <Typography color="text.secondary" sx={{ mt: 2 }}>
+        Nothing communicated yet
+        {!hasPrompts &&
+          list.canCreate &&
+          ' (no prompts available for selection)'}
+      </Typography>
     );
   }
   return (
@@ -96,7 +111,7 @@ export const Prompt = ({
       <Box sx={{ '& > *:last-child': { mb: 0 } }}>
         <RichTextView data={promptResponse.prompt.value?.text.value} />
       </Box>
-      {promptResponse.prompt.canEdit && (
+      {canSetPrompt && (
         <Tooltip title="Change Prompt">
           <IconButton onClick={() => setIsChangingPrompt(true)}>
             <Edit />
