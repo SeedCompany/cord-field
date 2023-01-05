@@ -1,13 +1,15 @@
 import { useMutation } from '@apollo/client';
 import type { OutputData as RichTextData } from '@editorjs/editorjs';
-import { Card, Typography } from '@mui/material';
+import { Card, CardContent, Typography } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
+import { startCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
 import { RequiredKeysOf } from 'type-fest';
 import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
+import { canEditAny } from '~/common';
 import {
   EnumField,
   EnumOption,
@@ -16,7 +18,7 @@ import {
   SubmitError,
 } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
-import { RichTextField } from '~/components/RichText';
+import { RichTextField, RichTextView } from '~/components/RichText';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql';
 
@@ -92,6 +94,32 @@ export const ExplanationOfProgress = () => {
     });
     setSavedAt(DateTime.local());
   };
+
+  if (!canEditAny(explanation)) {
+    return (
+      <>
+        <Typography variant="h3" paragraph>
+          Explanation of Progress
+        </Typography>
+        <Card>
+          <CardContent>
+            <Typography variant="h4" gutterBottom>
+              {startCase(initialValues.group)}
+            </Typography>
+            {initialValues.reason}
+            {initialValues.comments && (
+              <>
+                <Typography variant="h4" mt={2} gutterBottom>
+                  Comments
+                </Typography>
+                <RichTextView data={initialValues.comments} />
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </>
+    );
+  }
 
   return (
     <>
