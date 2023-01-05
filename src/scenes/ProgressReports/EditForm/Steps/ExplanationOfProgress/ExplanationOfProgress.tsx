@@ -11,6 +11,7 @@ import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } 
 import {
   EnumField,
   EnumOption,
+  SecuredField,
   SubmitButton,
   SubmitError,
 } from '~/components/form';
@@ -122,6 +123,7 @@ export const ExplanationOfProgress = () => {
               variant="toggle-grouped"
               helperText={false}
               margin="none"
+              disabled={!explanation.reasons.canEdit}
             >
               <EnumOption<OptionGroup>
                 value="behind"
@@ -147,14 +149,19 @@ export const ExplanationOfProgress = () => {
                 options={optionsByGroup[group]}
                 required
                 layout="column"
+                disabled={!explanation.reasons.canEdit}
               />
             )}
 
-            <RichTextField
-              name="comments"
-              label="Optional Comments"
-              tools={['paragraph', 'delimiter', 'marker']}
-            />
+            <SecuredField obj={explanation} name="comments">
+              {(props) => (
+                <RichTextField
+                  label="Optional Comments"
+                  tools={['paragraph', 'delimiter', 'marker']}
+                  {...props}
+                />
+              )}
+            </SecuredField>
 
             <SubmitError />
             <SubmitButton color="primary" size="medium" fullWidth={false}>
