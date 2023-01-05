@@ -3,11 +3,9 @@ import { Box, Card, Divider, Typography } from '@mui/material';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { ButtonLink } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
-import { useProgressReportContext } from './ProgressReportContext';
+import { ReportProp } from './ReportProp';
 
-export const ProgressReportDrawerHeader = () => {
-  const { report } = useProgressReportContext();
-
+export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
   const language = report.parent.language;
   const project = report.parent.project;
   const sensitivity = report.parent.sensitivity;

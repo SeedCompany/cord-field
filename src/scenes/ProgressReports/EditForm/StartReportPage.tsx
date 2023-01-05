@@ -2,13 +2,11 @@ import { ArrowBack } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { Form } from 'react-final-form';
 import { ButtonLink } from '~/components/Routing';
-import { useProgressReportContext } from './ProgressReportContext';
+import { ReportProp } from './ReportProp';
 import { TransitionButtons } from './Steps/SubmitReportStep/TransitionButtons';
 import { useExecuteTransition } from './Steps/SubmitReportStep/useExecuteTransition';
 
-export const StartReportPage = () => {
-  const { report } = useProgressReportContext();
-
+export const StartReportPage = ({ report }: ReportProp) => {
   const onSubmit = useExecuteTransition({
     id: report.id,
   });

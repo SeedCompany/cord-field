@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { colorPalette } from './colorPalette';
 import { useProgressReportContext } from './ProgressReportContext';
+import { ReportProp } from './ReportProp';
 import { CommunityStoryStep } from './Steps/CommunityStory';
 import { ExplanationOfProgress } from './Steps/ExplanationOfProgress/ExplanationOfProgress';
 import { NextStepButton } from './Steps/NextStepButton';
@@ -8,8 +9,16 @@ import { ProgressStep } from './Steps/ProgressStep';
 import { SubmitReportStep } from './Steps/SubmitReportStep';
 import { TeamHighlightStep } from './Steps/TeamHighlight';
 
-export const StepContainer = () => {
-  const { step } = useProgressReportContext();
+export const StepContainer = ({ report }: ReportProp) => {
+  const { step: stepIndex } = useProgressReportContext();
+
+  const Step = [
+    TeamHighlightStep,
+    CommunityStoryStep,
+    ProgressStep,
+    ExplanationOfProgress,
+    SubmitReportStep,
+  ][stepIndex];
 
   return (
     <div
@@ -31,13 +40,7 @@ export const StepContainer = () => {
         <NextStepButton />
       </Box>
 
-      <Box sx={{ flex: 1, p: 2 }}>
-        {step === 0 && <TeamHighlightStep />}
-        {step === 1 && <CommunityStoryStep />}
-        {step === 2 && <ProgressStep />}
-        {step === 3 && <ExplanationOfProgress />}
-        {step === 4 && <SubmitReportStep />}
-      </Box>
+      <Box sx={{ flex: 1, p: 2 }}>{Step && <Step report={report} />}</Box>
     </div>
   );
 };

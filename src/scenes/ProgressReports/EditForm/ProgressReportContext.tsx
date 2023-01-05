@@ -8,7 +8,6 @@ import {
 } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
-import { ProgressReportEditFragment } from './ProgressReportEdit.graphql';
 
 export const stepNames = [
   'team-highlight',
@@ -31,7 +30,6 @@ interface ProgressReportContext {
   previousStep: () => void;
 
   step: number;
-  report: ProgressReportEditFragment;
   steps: typeof steps;
   flatSteps: typeof flatSteps;
 }
@@ -42,10 +40,7 @@ const useStepState = makeQueryHandler({
   step: StringParam,
 });
 
-export const ProgressReportContextProvider = ({
-  children,
-  report,
-}: { report: ProgressReportEditFragment } & ChildrenProp) => {
+export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
   const stepIndex = stepNames.indexOf(urlStep);
@@ -74,11 +69,10 @@ export const ProgressReportContextProvider = ({
       setProgressReportStep: setStep,
       nextStep,
       previousStep,
-      report,
       steps,
       flatSteps,
     }),
-    [step, setStep, nextStep, previousStep, report]
+    [step, setStep, nextStep, previousStep]
   );
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { ReportProp } from '../../ReportProp';
 import { NextStepButton } from '../NextStepButton';
 import { Prompt, VariantResponses } from '../PromptVariant';
 import {
@@ -8,8 +8,7 @@ import {
   UpdateCommunityStoryResponseDocument as UpdateResponse,
 } from './CommunityStoryStep.graphql';
 
-export const CommunityStoryStep = () => {
-  const { report } = useProgressReportContext();
+export const CommunityStoryStep = ({ report }: ReportProp) => {
   const story = report.communityStories.items[0];
 
   return (

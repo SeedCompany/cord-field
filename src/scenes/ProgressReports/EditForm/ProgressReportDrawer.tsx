@@ -27,15 +27,16 @@ export const ProgressReportDrawer = ({
       progressReportId: reportId,
     },
   });
+  const report = data?.periodicReport;
 
   if (
-    data?.periodicReport.__typename === 'ProgressReport' &&
-    data.periodicReport.status.value === 'NotStarted'
+    report?.__typename === 'ProgressReport' &&
+    report.status.value === 'NotStarted'
   ) {
     return (
-      <ProgressReportContextProvider report={data.periodicReport}>
+      <ProgressReportContextProvider>
         <CustomDrawer open={open} onClose={() => navigate('../')}>
-          <StartReportPage />
+          <StartReportPage report={report} />
         </CustomDrawer>
       </ProgressReportContextProvider>
     );
@@ -44,7 +45,6 @@ export const ProgressReportDrawer = ({
   if (error) {
     return (
       <CustomDrawer open={open} onClose={() => navigate('../')}>
-        <ProgressReportDrawerHeader />
         <Error page error={error}>
           {{
             NotFound: 'Could not find progress report',
@@ -55,7 +55,7 @@ export const ProgressReportDrawer = ({
     );
   }
 
-  if (data?.periodicReport.__typename !== 'ProgressReport') {
+  if (report?.__typename !== 'ProgressReport') {
     return (
       <Typography color="error">
         This is not the correct type of progress report
@@ -64,11 +64,11 @@ export const ProgressReportDrawer = ({
   }
 
   return (
-    <ProgressReportContextProvider report={data.periodicReport}>
+    <ProgressReportContextProvider>
       <CustomDrawer
         open={open}
         onClose={() => navigate('..')}
-        sidebar={<ProgressReportSidebar />}
+        sidebar={<ProgressReportSidebar report={report} />}
       >
         <Box
           sx={{
@@ -77,7 +77,7 @@ export const ProgressReportDrawer = ({
             justifyContent: 'space-between',
           }}
         >
-          <ProgressReportDrawerHeader />
+          <ProgressReportDrawerHeader report={report} />
         </Box>
         <Box
           sx={{
@@ -87,7 +87,7 @@ export const ProgressReportDrawer = ({
             justifyContent: 'center',
           }}
         >
-          <StepContainer />
+          <StepContainer report={report} />
         </Box>
       </CustomDrawer>
     </ProgressReportContextProvider>

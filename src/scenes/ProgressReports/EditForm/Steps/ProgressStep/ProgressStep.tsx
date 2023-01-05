@@ -8,13 +8,11 @@ import {
   ProductTable,
   RowData as ProductTableRowData,
 } from '../../../Detail/ProductTable';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { ReportProp } from '../../ReportProp';
 import { PnpFileAndSummary } from './PnpFileAndSummary';
 import { VariantSelector } from './VariantSelector';
 
-export const ProgressStep = () => {
-  const { report } = useProgressReportContext();
-
+export const ProgressStep = ({ report }: ReportProp) => {
   const progressByVariant = useMemo(
     () =>
       new Map(

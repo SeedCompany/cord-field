@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { ReportProp } from '../../ReportProp';
 import { NextStepButton } from '../NextStepButton';
 import { Prompt, VariantResponses } from '../PromptVariant';
 import {
@@ -8,8 +8,7 @@ import {
   UpdateProgressReportHighlightResponseDocument as UpdateResponse,
 } from './TeamHighlightStep.graphql';
 
-export const TeamHighlightStep = () => {
-  const { report } = useProgressReportContext();
+export const TeamHighlightStep = ({ report }: ReportProp) => {
   const highlight = report.highlights.items[0];
 
   return (
