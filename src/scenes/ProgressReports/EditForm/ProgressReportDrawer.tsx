@@ -34,7 +34,7 @@ export const ProgressReportDrawer = ({
   ) {
     return (
       <ProgressReportContextProvider report={data.periodicReport}>
-        <CustomDrawer open={open} onClose={() => navigate('../')} hideStepper>
+        <CustomDrawer open={open} onClose={() => navigate('../')}>
           <StartReportPage />
         </CustomDrawer>
       </ProgressReportContextProvider>
@@ -43,7 +43,7 @@ export const ProgressReportDrawer = ({
 
   if (error) {
     return (
-      <CustomDrawer open={open} onClose={() => navigate('../')} hideStepper>
+      <CustomDrawer open={open} onClose={() => navigate('../')}>
         <ProgressReportDrawerHeader />
         <Error page error={error}>
           {{
@@ -65,7 +65,11 @@ export const ProgressReportDrawer = ({
 
   return (
     <ProgressReportContextProvider report={data.periodicReport}>
-      <CustomDrawer open={open} onClose={() => navigate('..')}>
+      <CustomDrawer
+        open={open}
+        onClose={() => navigate('..')}
+        sidebar={<ProgressReportSidebar />}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -91,11 +95,12 @@ export const ProgressReportDrawer = ({
 };
 
 const CustomDrawer = ({
+  sidebar,
   children,
   open,
-  hideStepper,
   onClose,
 }: {
+  sidebar?: ReactNode;
   children: ReactNode;
   open: boolean;
   hideStepper?: boolean;
@@ -112,14 +117,7 @@ const CustomDrawer = ({
         },
       }}
     >
-      <Box
-        sx={[
-          { display: 'flex', height: 1, width: 'calc(100% - 300px)' },
-          !!hideStepper && {
-            width: '100%',
-          },
-        ]}
-      >
+      <Box display="flex" height={1} width={sidebar ? 'calc(100% - 300px)' : 1}>
         <Box
           sx={{
             width: 1,
@@ -131,7 +129,7 @@ const CustomDrawer = ({
         >
           {children}
         </Box>
-        {hideStepper ? null : <ProgressReportSidebar />}
+        {sidebar}
       </Box>
     </Drawer>
   );
