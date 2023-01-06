@@ -1,6 +1,5 @@
 import { Box, Typography } from '@mui/material';
 import { ReportProp } from '../../ReportProp';
-import { NextStepButton } from '../NextStepButton';
 import { Prompt, VariantResponses } from '../PromptVariant';
 import {
   ChangeProgressReportHighlightPromptDocument as ChangePrompt,
@@ -36,7 +35,6 @@ export const TeamHighlightStep = ({ report }: ReportProp) => {
         />
         <VariantResponses promptResponse={highlight} doc={UpdateResponse} />
       </Box>
-      <NextStepButton sx={{ mt: 2 }} />
     </div>
   );
 };

@@ -8,8 +8,9 @@ import { NextStepButton } from './Steps/NextStepButton';
 const stepMap = Object.fromEntries(Object.values(Steps).flat());
 
 export const StepContainer = ({ report }: ReportProp) => {
-  const { stepName } = useProgressReportContext();
+  const { stepName, step: stepIndex } = useProgressReportContext();
   const Step = stepMap[stepName];
+  const isLastStep = stepIndex >= Object.keys(stepMap).length - 1;
 
   return (
     <div
@@ -31,7 +32,9 @@ export const StepContainer = ({ report }: ReportProp) => {
         <NextStepButton />
       </Box>
 
-      <Box sx={{ flex: 1, p: 2 }}>{Step && <Step report={report} />}</Box>
+      <Box sx={{ p: 2, mb: 2 }}>{Step && <Step report={report} />}</Box>
+
+      {!isLastStep && <NextStepButton sx={{ mr: 2, mb: 2 }} />}
     </div>
   );
 };
