@@ -122,15 +122,21 @@ export const ProductTable = ({
         align: 'right',
         editable: editingAttached,
         valueGetter: ({ value }) => value?.value,
-        valueSetter: ({ row, value }) => ({
-          ...row,
-          [step]: {
-            ...row[step],
-            // Empty string caused by editing and committing too fast.
-            // Related to https://github.com/mui/mui-x/issues/3729 I think
-            value: value === '' ? null : value,
-          },
-        }),
+        valueSetter: ({ row, value: raw }) => {
+          // Empty string caused by editing and committing too fast.
+          // Related to https://github.com/mui/mui-x/issues/3729 I think.
+          // We've seen a string here as well, I believe,
+          // so attempting to coerce to prevent API errors.
+          const value =
+            typeof raw === 'number'
+              ? raw
+              : typeof raw === 'string'
+              ? raw === '' || isNaN(Number(raw))
+                ? null
+                : Number(raw)
+              : null;
+          return { ...row, [step]: { ...row[step], value } };
+        },
         renderEditCell: (
           props: GridRenderEditCellParams<number | null, RowData>
         ) => {
