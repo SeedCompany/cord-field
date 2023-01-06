@@ -78,6 +78,8 @@ const defaultHandlers: ErrorHandlers = {
   Validation: renderValidationErrors,
   Input: (e, next, { hasField }) =>
     e.field && hasField(e.field) ? setIn({}, e.field, e.message) : next(e),
+  Duplicate: (e, next, { hasField }) =>
+    hasField(e.field) ? setIn({}, e.field, 'Already in use') : next(e),
 
   // Assume server errors are handled separately
   // Return failure but no error message
