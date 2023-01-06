@@ -87,7 +87,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
             ? setIn(
                 {},
                 e.field,
-                'Language already engaged with first Scripture'
+                'Language already has an engagement which claims first Scripture'
               )
             : defaultHandlers.Input(e, next, util),
       }}
