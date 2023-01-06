@@ -12,7 +12,9 @@ import { ComponentType } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
+import { StyledRemoteSvg } from '../../../components/StyledRemoteSvg';
 import { CreateButtonMenu } from '../Creates';
+import locationUrl from './Africa_Chad.svg';
 import { sidebarTheme } from './sidebar.theme';
 import { SidebarHeader } from './SidebarHeader';
 
@@ -43,6 +45,18 @@ export const Sidebar = () => {
       <NavItem to="/languages" label="Languages" icon={Language} />
       <NavItem to="/users" label="People" icon={Person} />
       <NavItem to="/partners" label="Partners" icon={PeopleJoinedIcon} />
+      <StyledRemoteSvg
+        url={locationUrl}
+        sx={(theme) => ({
+          '#Area': { stroke: theme.palette.text.primary, strokeWidth: 0.1 },
+          '#Selected_Location': {
+            fill: theme.palette.primary.main,
+          },
+          '#Highlight_Circle': {
+            fill: theme.palette.info.light,
+          },
+        })}
+      />
     </List>
   );
 
