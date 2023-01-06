@@ -27,15 +27,16 @@ export const ProgressReportDrawer = ({
       progressReportId: reportId,
     },
   });
+  const report = data?.periodicReport;
 
   if (
-    data?.periodicReport.__typename === 'ProgressReport' &&
-    data.periodicReport.status.value === 'NotStarted'
+    report?.__typename === 'ProgressReport' &&
+    report.status.value === 'NotStarted'
   ) {
     return (
-      <ProgressReportContextProvider report={data.periodicReport}>
-        <CustomDrawer open={open} onClose={() => navigate('../')} hideStepper>
-          <StartReportPage />
+      <ProgressReportContextProvider>
+        <CustomDrawer open={open} onClose={() => navigate('../')}>
+          <StartReportPage report={report} />
         </CustomDrawer>
       </ProgressReportContextProvider>
     );
@@ -43,8 +44,7 @@ export const ProgressReportDrawer = ({
 
   if (error) {
     return (
-      <CustomDrawer open={open} onClose={() => navigate('../')} hideStepper>
-        <ProgressReportDrawerHeader />
+      <CustomDrawer open={open} onClose={() => navigate('../')}>
         <Error page error={error}>
           {{
             NotFound: 'Could not find progress report',
@@ -55,7 +55,7 @@ export const ProgressReportDrawer = ({
     );
   }
 
-  if (data?.periodicReport.__typename !== 'ProgressReport') {
+  if (report?.__typename !== 'ProgressReport') {
     return (
       <Typography color="error">
         This is not the correct type of progress report
@@ -64,8 +64,12 @@ export const ProgressReportDrawer = ({
   }
 
   return (
-    <ProgressReportContextProvider report={data.periodicReport}>
-      <CustomDrawer open={open} onClose={() => navigate('..')}>
+    <ProgressReportContextProvider>
+      <CustomDrawer
+        open={open}
+        onClose={() => navigate('..')}
+        sidebar={<ProgressReportSidebar report={report} />}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -73,7 +77,7 @@ export const ProgressReportDrawer = ({
             justifyContent: 'space-between',
           }}
         >
-          <ProgressReportDrawerHeader />
+          <ProgressReportDrawerHeader report={report} />
         </Box>
         <Box
           sx={{
@@ -83,7 +87,7 @@ export const ProgressReportDrawer = ({
             justifyContent: 'center',
           }}
         >
-          <StepContainer />
+          <StepContainer report={report} />
         </Box>
       </CustomDrawer>
     </ProgressReportContextProvider>
@@ -91,11 +95,12 @@ export const ProgressReportDrawer = ({
 };
 
 const CustomDrawer = ({
+  sidebar,
   children,
   open,
-  hideStepper,
   onClose,
 }: {
+  sidebar?: ReactNode;
   children: ReactNode;
   open: boolean;
   hideStepper?: boolean;
@@ -112,14 +117,7 @@ const CustomDrawer = ({
         },
       }}
     >
-      <Box
-        sx={[
-          { display: 'flex', height: 1, width: 'calc(100% - 300px)' },
-          !!hideStepper && {
-            width: '100%',
-          },
-        ]}
-      >
+      <Box display="flex" height={1} width={sidebar ? 'calc(100% - 300px)' : 1}>
         <Box
           sx={{
             width: 1,
@@ -131,7 +129,7 @@ const CustomDrawer = ({
         >
           {children}
         </Box>
-        {hideStepper ? null : <ProgressReportSidebar />}
+        {sidebar}
       </Box>
     </Drawer>
   );

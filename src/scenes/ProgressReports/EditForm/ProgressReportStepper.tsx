@@ -9,10 +9,7 @@ import {
 } from '@mui/material';
 import { Sx } from '~/common';
 import { useProgressReportContext } from './ProgressReportContext';
-
-interface ProgressReportStepperProps {
-  step: number;
-}
+import { Steps } from './Steps';
 
 const stepperSx: Sx = (theme) => ({
   '&': {
@@ -66,10 +63,8 @@ const singleConnectorSx: Sx = {
   },
 };
 
-export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
-  const { setProgressReportStep, steps, flatSteps } =
-    useProgressReportContext();
-  let totalSteps = -1;
+export const ProgressReportStepper = () => {
+  const { setProgressReportStep, stepName } = useProgressReportContext();
 
   return (
     <Paper elevation={4} sx={{ mr: 2, borderRadius: 0.6 }}>
@@ -77,35 +72,23 @@ export const ProgressReportStepper = ({ step }: ProgressReportStepperProps) => {
         <Typography sx={{ p: 2, pt: 3 }}>Steps:</Typography>
       </div>
       <Box sx={{ p: 2, pt: 0 }}>
-        {Object.entries(steps).map(([title, steps]) => {
-          return (
-            <div key={title}>
-              <Typography sx={typographySx}>{title}</Typography>
-              <Stepper
-                activeStep={step - totalSteps - 1}
-                orientation="vertical"
-                sx={stepperSx}
-              >
-                {steps.map((label) => {
-                  totalSteps += 1;
-                  const stepIndex = totalSteps;
-
-                  return (
-                    <Step
-                      key={label}
-                      onClick={() => setProgressReportStep(stepIndex)}
-                    >
-                      <StepButton icon={' '}>{label}</StepButton>
-                    </Step>
-                  );
-                })}
-              </Stepper>
-              {totalSteps !== flatSteps.length - 1 && (
-                <StepConnector sx={singleConnectorSx} />
-              )}
-            </div>
-          );
-        })}
+        {Object.entries(Steps).map(([title, steps], index) => (
+          <div key={title}>
+            {index > 0 && <StepConnector sx={singleConnectorSx} />}
+            <Typography sx={typographySx}>{title}</Typography>
+            <Stepper orientation="vertical" sx={stepperSx}>
+              {steps.map(([label]) => (
+                <Step
+                  key={label}
+                  onClick={() => setProgressReportStep(label)}
+                  active={stepName === label}
+                >
+                  <StepButton icon={' '}>{label}</StepButton>
+                </Step>
+              ))}
+            </Stepper>
+          </div>
+        ))}
       </Box>
     </Paper>
   );

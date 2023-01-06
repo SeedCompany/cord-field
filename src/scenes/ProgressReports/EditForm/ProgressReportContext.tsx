@@ -1,39 +1,20 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { kebabCase } from 'lodash';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
-import { ProgressReportEditFragment } from './ProgressReportEdit.graphql';
+import { Steps } from './Steps';
 
-export const stepNames = [
-  'team-highlight',
-  'community-story',
-  'progress',
-  'explain-progress',
-  'submit-report',
-];
-
-const steps = {
-  'Narrative Report': ['Team highlight', 'Community Story'],
-  'Project Management': ['Progress', 'Explanation of Progress'],
-  'Final Details': ['Submit Report'],
-};
-const flatSteps = Object.values(steps).flat();
+const flatSteps = Object.values(Steps)
+  .flat()
+  .map((step) => step[0]);
 
 interface ProgressReportContext {
-  setProgressReportStep: (step: number) => void;
+  setProgressReportStep: (step: number | string) => void;
   nextStep: () => void;
   previousStep: () => void;
 
   step: number;
-  report: ProgressReportEditFragment;
-  steps: typeof steps;
-  flatSteps: typeof flatSteps;
+  stepName: string;
 }
 
 const ProgressReportContext = createContext<ProgressReportContext | null>(null);
@@ -42,54 +23,47 @@ const useStepState = makeQueryHandler({
   step: StringParam,
 });
 
-export const ProgressReportContextProvider = ({
-  children,
-  report,
-}: { report: ProgressReportEditFragment } & ChildrenProp) => {
+export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
-  const stepIndex = stepNames.indexOf(urlStep);
-  const [step, setIndexStep] = useState(stepIndex > -1 ? stepIndex : 0);
+  const stepName = useMemo(() => {
+    const name = urlStep
+      ? flatSteps.find((step) => kebabCase(step) === urlStep)
+      : undefined;
+    return name ?? flatSteps[0]!;
+  }, [urlStep]);
+  const stepIndex = flatSteps.indexOf(stepName);
 
   const setStep = useCallback(
-    (step: number) => {
-      setIndexStep(step);
-      setStepState({ step: stepNames[step] });
+    (nameOrIndex: number | string) => {
+      const name =
+        typeof nameOrIndex === 'number' ? flatSteps[nameOrIndex] : nameOrIndex;
+      setStepState({
+        step: kebabCase(name),
+      });
     },
     [setStepState]
   );
 
   const nextStep = useCallback(() => {
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- linter is confused
-    setStep(Math.min(step + 1, stepNames.length - 1));
-  }, [setStep, step]);
+    setStep(Math.min(stepIndex + 1, flatSteps.length - 1));
+  }, [setStep, stepIndex]);
 
   const previousStep = useCallback(() => {
-    setStep(Math.max(step - 1, 0));
-  }, [setStep, step]);
+    setStep(Math.max(stepIndex - 1, 0));
+  }, [setStep, stepIndex]);
 
   const value = useMemo(
     () => ({
-      step,
+      step: stepIndex,
+      stepName,
       setProgressReportStep: setStep,
       nextStep,
       previousStep,
-      report,
-      steps,
-      flatSteps,
     }),
-    [step, setStep, nextStep, previousStep, report]
+    [stepIndex, stepName, setStep, nextStep, previousStep]
   );
-
-  useEffect(() => {
-    if (urlStep) {
-      if (stepNames.includes(urlStep)) {
-        setStep(stepNames.indexOf(urlStep));
-      } else {
-        setStep(0);
-      }
-    }
-  }, [setStep, urlStep]);
 
   return (
     <ProgressReportContext.Provider value={value}>

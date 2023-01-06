@@ -1,6 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useProgressReportContext } from '../../ProgressReportContext';
-import { NextStepButton } from '../NextStepButton';
+import { ReportProp } from '../../ReportProp';
 import { Prompt, VariantResponses } from '../PromptVariant';
 import {
   ChangeProgressReportCommunityStoryPromptDocument as ChangePrompt,
@@ -8,8 +7,7 @@ import {
   UpdateCommunityStoryResponseDocument as UpdateResponse,
 } from './CommunityStoryStep.graphql';
 
-export const CommunityStoryStep = () => {
-  const { report } = useProgressReportContext();
+export const CommunityStoryStep = ({ report }: ReportProp) => {
   const story = report.communityStories.items[0];
 
   return (
@@ -37,7 +35,6 @@ export const CommunityStoryStep = () => {
         />
         <VariantResponses promptResponse={story} doc={UpdateResponse} />
       </Box>
-      <NextStepButton sx={{ mt: 2 }} />
     </div>
   );
 };

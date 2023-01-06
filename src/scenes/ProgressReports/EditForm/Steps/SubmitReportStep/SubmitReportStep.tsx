@@ -3,15 +3,14 @@ import { useSnackbar } from 'notistack';
 import { Form } from 'react-final-form';
 import { RichTextField } from '~/components/RichText';
 import { useNavigate } from '~/components/Routing';
-import { useProgressReportContext } from '../../ProgressReportContext';
+import { ReportProp } from '../../ReportProp';
 import { TransitionButtons } from './TransitionButtons';
 import {
   TransitionFormValues,
   useExecuteTransition,
 } from './useExecuteTransition';
 
-export const SubmitReportStep = () => {
-  const { report } = useProgressReportContext();
+export const SubmitReportStep = ({ report }: ReportProp) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
