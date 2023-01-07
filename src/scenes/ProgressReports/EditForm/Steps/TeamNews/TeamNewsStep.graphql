@@ -1,0 +1,25 @@
+mutation CreateProgressReportNews($input: ChoosePrompt!) {
+  createProgressReportTeamNews(input: $input) {
+    ...promptResponse
+    # Fetch the list of news again to connect this new item to our cached list
+    parent {
+      ... on ProgressReport {
+        id
+        teamNews {
+          ...Pagination
+          items {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateProgressReportNewsResponse(
+  $input: UpdatePromptVariantResponse!
+) {
+  updateProgressReportTeamNewsResponse(input: $input) {
+    ...promptResponse
+  }
+}

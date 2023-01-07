@@ -72,7 +72,7 @@ export const VariantResponsesAccordion = ({
                 <RichTextField
                   name="response"
                   label="Response"
-                  tools={['paragraph', 'delimiter', 'marker']}
+                  tools={['paragraph', 'delimiter', 'marker', 'list']}
                   // Only marketing writers should be concerned with this.
                   // Everyone else we want as much info as possible.
                   showCharacterCount={

@@ -323,7 +323,9 @@ const isEditorEmpty = (ref: RefObject<HTMLElement>) =>
   ref.current
     ?.querySelector('.codex-editor')
     ?.classList.contains('codex-editor--empty') &&
-  ref.current.querySelectorAll('.codex-editor .ce-block').length === 1;
+  ref.current.querySelectorAll('.codex-editor .ce-block').length === 1 &&
+  // If not the default block, then assume there are more actions the remaining block could take.
+  !!ref.current.querySelector('.codex-editor .ce-block .ce-paragraph');
 
 const isDataEmpty = (value: Nullable<RichTextData>) =>
   !value || value.blocks.length === 0;

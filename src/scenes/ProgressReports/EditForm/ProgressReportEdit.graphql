@@ -10,7 +10,7 @@ fragment ProgressReportEdit on ProgressReport {
     ...ProgressSummary
   }
 
-  highlights {
+  teamNews {
     ...promptResponseList
   }
   communityStories {
