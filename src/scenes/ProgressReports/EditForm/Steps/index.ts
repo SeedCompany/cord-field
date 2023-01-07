@@ -4,7 +4,7 @@ import { CommunityStoryStep } from './CommunityStory';
 import { ExplanationOfProgress } from './ExplanationOfProgress/ExplanationOfProgress';
 import { ProgressStep } from './ProgressStep';
 import { SubmitReportStep } from './SubmitReportStep';
-import { TeamHighlightStep } from './TeamHighlight';
+import { TeamNewsStep } from './TeamNews';
 
 export const Steps: {
   [Section in string]: ReadonlyArray<
@@ -12,7 +12,7 @@ export const Steps: {
   >;
 } = {
   'Narrative Report': [
-    ['Team highlight', TeamHighlightStep],
+    ['Team News', TeamNewsStep],
     ['Community Story', CommunityStoryStep],
   ],
   'Project Management': [
