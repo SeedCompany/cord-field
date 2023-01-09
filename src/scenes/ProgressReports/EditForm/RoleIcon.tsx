@@ -28,13 +28,17 @@ export const RoleIcon = ({ variantRole: role, sx, ...rest }: RoleIconProps) => {
   return Icon ? (
     <Icon
       sx={[
-        {
-          backgroundColor: `roles.${role}.main`,
-          marginRight: 1,
-          padding: 1,
-          height: 48,
-          width: 48,
-          borderRadius: 2,
+        (theme) => {
+          const color = theme.palette.roles[role]?.main;
+          return {
+            backgroundColor: color,
+            color: color ? theme.palette.getContrastText(color) : undefined,
+            marginRight: 1,
+            padding: 1,
+            height: 48,
+            width: 48,
+            borderRadius: 2,
+          };
         },
         ...extendSx(sx),
       ]}
