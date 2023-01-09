@@ -80,7 +80,7 @@
     "lodash": "^4.17.21",
     "logrocket": "^3.0.1",
     "logrocket-react": "^5.0.1",
-    "luxon": "^2.5.0",
+    "luxon": "^2.5.2",
     "mammoth": "^1.5.1",
     "mime-types": "^2.1.35",
     "notistack": "^2.0.8",
