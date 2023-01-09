@@ -1,8 +1,11 @@
 import { Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { CalendarDate } from '~/common';
 
 export const ReportDue = ({ date }: { date: CalendarDate }) => {
+  const theme = useTheme();
+
   const past = date <= DateTime.now();
 
   return (
@@ -10,7 +13,11 @@ export const ReportDue = ({ date }: { date: CalendarDate }) => {
       <Typography
         component="span"
         variant="body2"
-        color={past ? `error.dark` : `info.light`}
+        color={
+          past
+            ? `error.${theme.palette.mode === 'light' ? 'dark' : 'light'}`
+            : `info.${theme.palette.mode}`
+        }
       >
         due {date.toRelative()}
       </Typography>
