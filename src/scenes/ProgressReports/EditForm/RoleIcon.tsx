@@ -5,7 +5,6 @@ import { Role } from '~/api/schema.graphql';
 import { extendSx } from '~/common';
 import { PeopleJoinedIcon } from '~/components/Icons';
 import { ProjectManagerIcon } from '~/components/Icons/ProjectManagerIcon';
-import { colorPalette } from './colorPalette';
 
 const variantToIconMapper: {
   [key in Role]?: ComponentType<SvgIconProps>;
@@ -30,7 +29,7 @@ export const RoleIcon = ({ variantRole: role, sx, ...rest }: RoleIconProps) => {
     <Icon
       sx={[
         {
-          backgroundColor: colorPalette.stepperCard.iconBackground[role],
+          backgroundColor: `roles.${role}.main`,
           marginRight: 1,
           padding: 1,
           height: 48,

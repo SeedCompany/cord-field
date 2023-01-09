@@ -1,5 +1,7 @@
+import { PaletteColor, PaletteColorOptions } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { lighten, PaletteOptions } from '@mui/material/styles';
+import { Role } from '~/api/schema/schema.graphql';
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#467f3b';
@@ -32,6 +34,14 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       primary: dark ? '#f3f4f6' : '#3c444e',
       secondary: '#8f928b',
     },
+
+    // TODO theme.palette.augmentColor()
+    roles: {
+      FieldPartner: { main: '#B2EBF2' },
+      Translator: { main: '#FFE0B2' },
+      ProjectManager: { main: '#E1BEE7' },
+      Marketing: { main: '#DCEDC8' },
+    },
   };
 
   return palette;
@@ -40,8 +50,10 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
 declare module '@mui/material/styles' {
   interface Palette {
     create: Palette['primary'];
+    roles: Partial<Record<Role, Pick<PaletteColor, 'main'>>>;
   }
   interface PaletteOptions {
     create: PaletteOptions['primary'];
+    roles: Partial<Record<Role, PaletteColorOptions>>;
   }
 }
