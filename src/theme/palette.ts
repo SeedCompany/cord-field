@@ -5,6 +5,7 @@ import { Role } from '~/api/schema/schema.graphql';
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#467f3b';
+  const roleLuminance = dark ? 32 : 84;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
     background: {
@@ -37,10 +38,10 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
 
     // TODO theme.palette.augmentColor()
     roles: {
-      FieldPartner: { main: '#B2EBF2' },
-      Translator: { main: '#FFE0B2' },
-      ProjectManager: { main: '#E1BEE7' },
-      Marketing: { main: '#DCEDC8' },
+      FieldPartner: { main: `hsl(187deg, 71%, ${roleLuminance}%)` }, // #B2EBF2 / hsl(187deg, 71%, 82%)
+      Translator: { main: `hsl(36deg, 100%, ${roleLuminance}%)` }, // #FFE0B2 / hsl(36deg, 100%, 85%)
+      ProjectManager: { main: `hsl(291deg, 46%, ${roleLuminance}%)` }, // #E1BEE7 / hsl(291deg, 46%, 83%)
+      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // '#DCEDC8 / hsl(88deg, 51%, 86%)
     },
   };
 
