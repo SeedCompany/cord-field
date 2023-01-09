@@ -18,7 +18,7 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       light: lighten(mainGreen, 0.4),
     },
     secondary: {
-      main: '#3c444e',
+      main: dark ? grey[50] : '#3c444e',
     },
     error: {
       main: '#ff5a5f',
