@@ -16,7 +16,12 @@ export const useErrorRendererRef = () => {
 
 const errorRenderer =
   ({ enqueueSnackbar, closeSnackbar }: Snackbar): ErrorHandler =>
-  ({ graphQLErrors, networkError }) => {
+  ({ graphQLErrors, networkError, response, operation }) => {
+    if (process.env.NODE_ENV === 'production') {
+      // Ensure LogRocket gets some helpful info
+      console.error({ graphQLErrors, networkError, response, operation });
+    }
+
     if (networkError?.message === 'Failed to fetch') {
       enqueueSnackbar('Unable to communicate with CORD Platform', {
         variant: 'error',
