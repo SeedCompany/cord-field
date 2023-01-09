@@ -1,7 +1,7 @@
 import { Theme, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Role } from '~/api/schema/schema.graphql';
 import { VariantFragment as Variant } from '~/common/fragments';
-import { RoleIcon } from '../../RoleIcon';
+import { RoleIcon } from '~/components/RoleIcon';
 
 const transparentBgSx = {
   backgroundColor: 'transparent',

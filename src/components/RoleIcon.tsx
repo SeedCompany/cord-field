@@ -1,10 +1,10 @@
 import { Grading, Translate } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material';
 import { ComponentType } from 'react';
-import { Role } from '~/api/schema.graphql';
-import { extendSx } from '~/common';
-import { PeopleJoinedIcon } from '~/components/Icons';
-import { ProjectManagerIcon } from '~/components/Icons/ProjectManagerIcon';
+import { Role } from '../api/schema.graphql';
+import { extendSx } from '../common';
+import { PeopleJoinedIcon } from './Icons';
+import { ProjectManagerIcon } from './Icons/ProjectManagerIcon';
 
 const variantToIconMapper: {
   [key in Role]?: ComponentType<SvgIconProps>;
@@ -14,6 +14,7 @@ const variantToIconMapper: {
   ProjectManager: ProjectManagerIcon,
   Marketing: Grading,
 };
+
 interface RoleIconProps extends SvgIconProps {
   variantRole?: Role | null;
 }

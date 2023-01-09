@@ -22,20 +22,21 @@ import { useDialog } from '../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
-import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
 import { FormattedDate } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
+import { Navigate } from '../../../components/Routing';
 import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProgressReportDrawer } from '../EditForm';
-import { NewProgressReportCard } from './NewProgressReportCard';
-import { ProductTableList } from './ProductTableList';
-import { ProgressReportCard } from './ProgressReportCard';
-import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
+import {
+  ProgressReportDetailDocument,
+  ProgressReportDetailFragment,
+} from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
+import { PromptResponseCard } from './PromptResponseCard';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {
@@ -88,10 +89,14 @@ export const ProgressReportDetail = () => {
     );
   }
 
-  const report =
-    data?.periodicReport.__typename === 'ProgressReport'
-      ? data.periodicReport
-      : null;
+  const report = data?.periodicReport as
+    | ProgressReportDetailFragment
+    | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- safety check. It's possible with manual user input.
+  if (report && report.__typename !== 'ProgressReport') {
+    return <Navigate to="/" />;
+  }
+
   const engagement = report?.parent;
 
   return (
@@ -220,6 +225,19 @@ export const ProgressReportDetail = () => {
               )}
             </Typography>
 
+            <PromptResponseCard
+              title="Team News"
+              promptResponse={report?.teamNews.items[0]}
+              sx={{ maxWidth: 'sm', mb: 4 }}
+            />
+
+            <PromptResponseCard
+              title="Community Story"
+              showPrompt
+              promptResponse={report?.communityStories.items[0]}
+              sx={{ maxWidth: 'sm', mb: 4 }}
+            />
+
             <Stack spacing={3} flex={1}>
               <Grid container spacing={3} maxWidth="md">
                 <Grid item xs={12} md={7} container>
@@ -228,23 +246,7 @@ export const ProgressReportDetail = () => {
                     summary={report?.cumulativeSummary ?? null}
                   />
                 </Grid>
-                <Grid item xs={12} md={5} container>
-                  {report ? (
-                    newProgressReportBeta ? (
-                      <NewProgressReportCard label="Progress Report" />
-                    ) : (
-                      <ProgressReportCard
-                        progressReport={report}
-                        disableIcon
-                        onUpload={({ files }) => setUploading(files)}
-                      />
-                    )
-                  ) : (
-                    <FieldOverviewCard />
-                  )}
-                </Grid>
               </Grid>
-              <ProductTableList products={report?.progress} />
             </Stack>
           </>
         )}

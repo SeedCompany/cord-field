@@ -1,19 +1,25 @@
 query ProgressReportDetail($id: ID!, $changesetId: ID) {
   periodicReport(id: $id, changeset: $changesetId) {
     ...ProgressReportDetail
-    parent {
-      ...EngagementBreadcrumb
-    }
   }
 }
 
 fragment ProgressReportDetail on ProgressReport {
   ...PeriodicReport
+  parent {
+    ...EngagementBreadcrumb
+  }
   cumulativeSummary {
     ...ProgressSummary
   }
   progress {
     ...ProgressOfProductForReport
+  }
+  teamNews {
+    ...promptResponseList
+  }
+  communityStories {
+    ...promptResponseList
   }
 }
 
