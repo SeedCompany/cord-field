@@ -3,7 +3,6 @@ import type { OutputData as RichTextData } from '@editorjs/editorjs';
 import { Card, CardContent, Typography } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
-import { startCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
 import { Form, FormProps } from 'react-final-form';
@@ -19,7 +18,8 @@ import {
   SubmitError,
 } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
-import { RichTextField, RichTextView } from '~/components/RichText';
+import { RichTextField } from '~/components/RichText';
+import { VarianceExplanation } from '../../../Detail/VarianceExplanation/VarianceExplanation';
 import { ReportProp } from '../../ReportProp';
 import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql';
 
@@ -109,18 +109,7 @@ export const ExplanationOfProgress = ({ report }: ReportProp) => {
         </Typography>
         <Card>
           <CardContent>
-            <Typography variant="h4" gutterBottom>
-              {startCase(initialValues.group)}
-            </Typography>
-            {initialValues.reasons}
-            {initialValues.comments && (
-              <>
-                <Typography variant="h4" mt={2} gutterBottom>
-                  Comments
-                </Typography>
-                <RichTextView data={initialValues.comments} />
-              </>
-            )}
+            <VarianceExplanation data={explanation} />
           </CardContent>
         </Card>
       </>

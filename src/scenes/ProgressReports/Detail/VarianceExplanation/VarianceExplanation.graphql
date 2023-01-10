@@ -1,0 +1,11 @@
+fragment varianceExplanation on ProgressReportVarianceExplanation {
+  scheduleStatus
+  reasons {
+    canRead
+    value
+  }
+  comments {
+    canRead
+    value
+  }
+}

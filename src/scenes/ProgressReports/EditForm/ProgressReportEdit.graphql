@@ -25,9 +25,7 @@ fragment ProgressReportEdit on ProgressReport {
   status {
     ...ProgressReportStatus
   }
-  varianceExplanation {
-    ...ProgressReportVarianceExplanation
-  }
+  ...ExplanationOfProgressStep
   parent {
     id
     canDelete
@@ -64,20 +62,6 @@ fragment ProgressReportEdit on ProgressReport {
         }
       }
     }
-  }
-}
-
-fragment ProgressReportVarianceExplanation on ProgressReportVarianceExplanation {
-  comments {
-    ...SecuredRichTextNullable
-  }
-  reasonOptions {
-    ahead
-    behind
-    onTime
-  }
-  reasons {
-    ...SecuredStringList
   }
 }
 
