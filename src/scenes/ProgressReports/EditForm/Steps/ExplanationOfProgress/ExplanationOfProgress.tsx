@@ -46,7 +46,7 @@ const decorators: Array<Decorator<any>> = [
 
 interface FormShape {
   group: OptionGroup;
-  reason?: string;
+  reasons?: string;
   comments?: RichTextData;
 }
 
@@ -76,7 +76,7 @@ export const ExplanationOfProgress = ({ report }: ReportProp) => {
 
     return {
       group,
-      reason,
+      reasons: reason,
       comments: explanation.comments.value ?? undefined,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,7 +110,7 @@ export const ExplanationOfProgress = ({ report }: ReportProp) => {
             <Typography variant="h4" gutterBottom>
               {startCase(initialValues.group)}
             </Typography>
-            {initialValues.reason}
+            {initialValues.reasons}
             {initialValues.comments && (
               <>
                 <Typography variant="h4" mt={2} gutterBottom>
@@ -176,7 +176,7 @@ export const ExplanationOfProgress = ({ report }: ReportProp) => {
 
             {optionsByGroup[group].length > 0 && (
               <EnumField
-                name="reason"
+                name="reasons"
                 label="Select a reason"
                 options={optionsByGroup[group]}
                 required
