@@ -84,15 +84,17 @@ export const ExplanationOfProgress = ({ report }: ReportProp) => {
 
   const onSubmit: FormProps<FormShape>['onSubmit'] = async (input, form) => {
     try {
-      await explainVariance({
-        variables: {
-          input: {
-            report: report.id,
-            reasons: input.reasons ? [input.reasons] : [],
-            comments: input.comments,
+      if (form.getState().dirty) {
+        await explainVariance({
+          variables: {
+            input: {
+              report: report.id,
+              reasons: input.reasons ? [input.reasons] : [],
+              comments: input.comments,
+            },
           },
-        },
-      });
+        });
+      }
       setSavedAt(DateTime.local());
     } catch (e) {
       return await handleFormError(e, form);
