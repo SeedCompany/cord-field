@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Edit, SkipNextRounded as SkipIcon } from '@mui/icons-material';
+import { Edit } from '@mui/icons-material';
 import {
   Breadcrumbs,
   Card,
@@ -23,12 +23,11 @@ import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { FormattedDate } from '../../../components/Formatters';
-import { IconButton } from '../../../components/IconButton';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { ButtonLink, Navigate } from '../../../components/Routing';
-import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
+import { SkipReportButton } from '../../Projects/Reports/SkipReportButton';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProgressReportDrawer } from '../EditForm';
 import {
@@ -70,7 +69,6 @@ export const ProgressReportDetail = () => {
 
   // Single file for new version, empty array for received date update.
   const [dialogState, setUploading, upload] = useDialog<File[]>();
-  const [skipState, openSkip] = useDialog();
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
@@ -168,28 +166,9 @@ export const ProgressReportDetail = () => {
               )}
             </Grid>
           )}
-          {(!report || report.skippedReason.canEdit) && (
-            <Grid item>
-              <Tooltip
-                title={
-                  report?.skippedReason.value
-                    ? 'Edit Skipped Reason'
-                    : 'Skip Report'
-                }
-              >
-                <IconButton
-                  aria-label="Skip report"
-                  loading={!report}
-                  onClick={openSkip}
-                >
-                  <SkipIcon />
-                </IconButton>
-              </Tooltip>
-              {report && (
-                <SkipPeriodicReportDialog {...skipState} report={report} />
-              )}
-            </Grid>
-          )}
+          <Grid item>
+            <SkipReportButton report={report} />
+          </Grid>
         </Grid>
 
         {report?.skippedReason.value ? (
