@@ -51,7 +51,7 @@ export const InstructionsDialog = ({ open, onClose }: DialogProps) => {
         <Button
           onClick={handleCloseButtonClick}
           variant="text"
-          sx={{ color: 'gray' }}
+          color="secondary"
         >
           Close
         </Button>

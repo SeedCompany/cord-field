@@ -1,6 +1,6 @@
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Theme, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Role } from '~/api/schema/schema.graphql';
 import { VariantFragment as Variant } from '~/common/fragments';
-import { colorPalette } from '../../colorPalette';
 import { RoleIcon } from '../../RoleIcon';
 
 const transparentBgSx = {
@@ -13,16 +13,16 @@ const iconSx = {
   mr: 0,
 };
 
-const ToggleButtonSx = (role: string) => ({
+const ToggleButtonSx = (role: Role) => (theme: Theme) => ({
   p: 0.25,
   pr: 1,
   mr: 0,
   borderRadius: 0.6,
   '&.Mui-selected': {
-    backgroundColor: colorPalette.stepperCard.iconBackground[role],
+    backgroundColor: theme.palette.roles[role]?.main,
   },
   '&.Mui-selected:hover': {
-    backgroundColor: colorPalette.stepperCard.iconBackground[role],
+    backgroundColor: theme.palette.roles[role]?.main,
   },
 });
 

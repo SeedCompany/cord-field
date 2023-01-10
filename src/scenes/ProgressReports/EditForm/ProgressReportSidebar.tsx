@@ -1,15 +1,13 @@
 import { InfoOutlined } from '@mui/icons-material';
-import { Box, Button, Typography } from '@mui/material';
-import { DateTime } from 'luxon';
+import { Box, Button } from '@mui/material';
 import { useDialog } from '~/components/Dialog';
 import { InstructionsDialog } from './InstructionsDialog';
 import { ProgressReportStepper } from './ProgressReportStepper';
+import { ReportDue } from './ReportDue';
 import { ReportProp } from './ReportProp';
 
 export const ProgressReportSidebar = ({ report }: ReportProp) => {
   const [instructionsState, showInstructions] = useDialog();
-
-  const daysLeft = report.due.toRelative({});
 
   return (
     <Box
@@ -31,23 +29,9 @@ export const ProgressReportSidebar = ({ report }: ReportProp) => {
       >
         Instructions
       </Button>
-      <Typography
-        variant="body2"
-        color={daysLeft?.includes('ago') ? 'error.dark' : 'info.light'}
-        sx={{ marginBottom: 2 }}
-      >
-        <>
-          due {daysLeft}
-          <span
-            css={(theme) => ({
-              marginLeft: theme.spacing(1),
-              color: 'black',
-            })}
-          >
-            {report.due.toLocaleString(DateTime.DATE_MED)}
-          </span>
-        </>
-      </Typography>
+      <Box mb={2}>
+        <ReportDue date={report.due} />
+      </Box>
       <ProgressReportStepper />
       <InstructionsDialog {...instructionsState} />
     </Box>

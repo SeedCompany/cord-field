@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import { colorPalette } from './colorPalette';
 import { useProgressReportContext } from './ProgressReportContext';
 import { ReportProp } from './ReportProp';
 import { Steps } from './Steps';
@@ -21,13 +20,13 @@ export const StepContainer = ({ report }: ReportProp) => {
       }}
     >
       <Box
-        sx={{
+        sx={(theme) => ({
           display: 'flex',
           justifyContent: 'end',
           padding: 1,
-          borderTop: `1px solid ${colorPalette.header.border}`,
-          borderBottom: `1px solid ${colorPalette.header.border}`,
-        }}
+          border: `solid ${theme.palette.divider}`,
+          borderWidth: '1px 0',
+        })}
       >
         <NextStepButton />
       </Box>
