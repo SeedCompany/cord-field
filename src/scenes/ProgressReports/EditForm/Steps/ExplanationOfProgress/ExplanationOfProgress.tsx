@@ -6,8 +6,9 @@ import onFieldChange from 'final-form-calculate';
 import { startCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormProps } from 'react-final-form';
 import { RequiredKeysOf } from 'type-fest';
+import { handleFormError } from '~/api';
 import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
 import { canEditAny } from '~/common';
 import {
@@ -81,17 +82,21 @@ export const ExplanationOfProgress = ({ report }: ReportProp) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [explanation]);
 
-  const onSubmit = async (input: FormShape) => {
-    await explainVariance({
-      variables: {
-        input: {
-          report: report.id,
-          reasons: input.reason ? [input.reason] : [],
-          comments: input.comments,
+  const onSubmit: FormProps<FormShape>['onSubmit'] = async (input, form) => {
+    try {
+      await explainVariance({
+        variables: {
+          input: {
+            report: report.id,
+            reasons: input.reasons ? [input.reasons] : [],
+            comments: input.comments,
+          },
         },
-      },
-    });
-    setSavedAt(DateTime.local());
+      });
+      setSavedAt(DateTime.local());
+    } catch (e) {
+      return await handleFormError(e, form);
+    }
   };
 
   if (!canEditAny(explanation)) {
