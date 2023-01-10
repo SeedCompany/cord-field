@@ -1,39 +1,73 @@
-import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import { ReactNode } from 'react';
 import { StyleProps } from '~/common';
 import { ProgressSummaryFragment } from './ProgressReportDetail.graphql';
+import { VarianceExplanation } from './VarianceExplanation/VarianceExplanation';
+import { VarianceExplanationFragment } from './VarianceExplanation/VarianceExplanation.graphql';
 
 interface ProgressSummaryCardProps extends StyleProps {
   summary: ProgressSummaryFragment | null;
+  varianceExplanation?: VarianceExplanationFragment;
   loading: boolean;
+  actions?: ReactNode;
 }
 
 export const ProgressSummaryCard = ({
   summary,
+  varianceExplanation,
   loading,
-  sx,
-  className,
+  actions,
+  ...rest
 }: ProgressSummaryCardProps) => (
-  <Grid component={Card} container sx={sx} className={className}>
-    <Grid
-      component={CardContent}
-      alignContent="center"
-      container
-      spacing={3}
-      justifyContent="space-evenly"
-    >
-      <Value loading={loading} value={summary?.planned}>
-        Planned <br />
-        Progress
-      </Value>
-      <Value loading={loading} value={summary?.actual}>
-        Actual <br />
-        Progress
-      </Value>
-      <Value loading={loading} value={summary?.variance}>
-        Variance
-      </Value>
-    </Grid>
+  <Card {...rest}>
+    <CardContent>
+      <Typography variant="h3">Cumulative Progress</Typography>
+
+      <ProgressSummaryStats
+        loading={loading}
+        summary={summary}
+        sx={{ py: 2 }}
+      />
+
+      {varianceExplanation && (
+        <VarianceExplanation data={varianceExplanation} />
+      )}
+    </CardContent>
+    {actions && <CardActions children={actions} />}
+  </Card>
+);
+
+const ProgressSummaryStats = ({
+  loading,
+  summary,
+  ...rest
+}: {
+  loading: boolean;
+  summary: ProgressSummaryFragment | null;
+} & StyleProps) => (
+  <Grid
+    alignContent="center"
+    container
+    spacing={3}
+    justifyContent="space-evenly"
+    {...rest}
+  >
+    <Value loading={loading} value={summary?.planned}>
+      Planned
+    </Value>
+    <Value loading={loading} value={summary?.actual}>
+      Actual
+    </Value>
+    <Value loading={loading} value={summary?.variance}>
+      Variance
+    </Value>
   </Grid>
 );
 

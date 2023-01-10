@@ -27,7 +27,7 @@ import { IconButton } from '../../../components/IconButton';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
-import { Navigate } from '../../../components/Routing';
+import { ButtonLink, Navigate } from '../../../components/Routing';
 import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
 import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProgressReportDrawer } from '../EditForm';
@@ -244,6 +244,13 @@ export const ProgressReportDetail = () => {
                   <ProgressSummaryCard
                     loading={!report}
                     summary={report?.cumulativeSummary ?? null}
+                    varianceExplanation={report?.varianceExplanation}
+                    sx={{ width: 1 }}
+                    actions={
+                      <ButtonLink to="edit?step=progress">
+                        View Details
+                      </ButtonLink>
+                    }
                   />
                 </Grid>
               </Grid>
