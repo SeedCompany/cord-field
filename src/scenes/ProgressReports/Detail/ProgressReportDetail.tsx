@@ -18,17 +18,12 @@ import {
   idForUrl,
   useChangesetAwareIdFromUrl,
 } from '../../../components/Changeset';
-import { useDialog } from '../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
-import { Fab } from '../../../components/Fab';
-import { FormattedDate } from '../../../components/Formatters';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { Redacted } from '../../../components/Redacted';
-import { ButtonLink, Navigate } from '../../../components/Routing';
+import { ButtonLink, FabLink, Navigate } from '../../../components/Routing';
 import { SkipReportButton } from '../../Projects/Reports/SkipReportButton';
-import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProgressReportDrawer } from '../EditForm';
 import {
   ProgressReportDetailDocument,
@@ -55,9 +50,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
     marginTop: spacing(3),
     marginBottom: spacing(2),
   },
-  subheader: {
-    margin: spacing(2, 0, 4),
-  },
 }));
 
 export const ProgressReportDetail = () => {
@@ -66,9 +58,6 @@ export const ProgressReportDetail = () => {
 
   const beta = useBetaFeatures();
   const newProgressReportBeta = beta.has('newProgressReports');
-
-  // Single file for new version, empty array for received date update.
-  const [dialogState, setUploading, upload] = useDialog<File[]>();
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
@@ -142,28 +131,11 @@ export const ProgressReportDetail = () => {
           </Grid>
           {(!report || report.receivedDate.canEdit) && (
             <Grid item>
-              <Tooltip title="Update received date">
-                <Fab
-                  color="primary"
-                  aria-label="Update report"
-                  loading={!report}
-                  onClick={() => setUploading([])}
-                >
+              <Tooltip title="Edit Report">
+                <FabLink to="edit" color="primary" loading={!report}>
                   <Edit />
-                </Fab>
+                </FabLink>
               </Tooltip>
-              {report && (
-                <UpdatePeriodicReportDialog
-                  {...dialogState}
-                  report={{ ...report, reportFile: upload }}
-                  editFields={[
-                    'receivedDate',
-                    ...(upload && upload.length > 0
-                      ? ['reportFile' as const]
-                      : []),
-                  ]}
-                />
-              )}
             </Grid>
           )}
           <Grid item>
@@ -186,24 +158,6 @@ export const ProgressReportDetail = () => {
           </Grid>
         ) : (
           <>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              className={classes.subheader}
-            >
-              {!report ? (
-                <Skeleton width="20ch" />
-              ) : report.receivedDate.value ? (
-                <>
-                  Received on <FormattedDate date={report.receivedDate.value} />
-                </>
-              ) : !report.receivedDate.canRead ? (
-                <Redacted info="You don't have permission to view the received date" />
-              ) : (
-                'Not received yet'
-              )}
-            </Typography>
-
             <PromptResponseCard
               title="Team News"
               promptResponse={report?.teamNews.items[0]}
