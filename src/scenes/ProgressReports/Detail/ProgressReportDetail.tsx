@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
-import { useBetaFeatures } from '~/components/Session';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import {
   idForUrl,
@@ -55,9 +54,6 @@ const useStyles = makeStyles()(({ spacing }) => ({
 export const ProgressReportDetail = () => {
   const { classes } = useStyles();
   const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
-
-  const beta = useBetaFeatures();
-  const newProgressReportBeta = beta.has('newProgressReports');
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
@@ -191,9 +187,7 @@ export const ProgressReportDetail = () => {
           </>
         )}
       </main>
-      {newProgressReportBeta && report && (
-        <ProgressReportDrawer reportId={report.id} />
-      )}
+      {report && <ProgressReportDrawer reportId={report.id} />}
     </div>
   );
 };
