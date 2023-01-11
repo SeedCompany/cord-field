@@ -30,6 +30,7 @@ import {
 } from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 import { PromptResponseCard } from './PromptResponseCard';
+import { StatusStepper } from './StatusStepper';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {
@@ -154,6 +155,8 @@ export const ProgressReportDetail = () => {
           </Grid>
         ) : (
           <>
+            <StatusStepper current={report?.status.value} sx={{ mb: 4 }} />
+
             <PromptResponseCard
               title="Team News"
               promptResponse={report?.teamNews.items[0]}

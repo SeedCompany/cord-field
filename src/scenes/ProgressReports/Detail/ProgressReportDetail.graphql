@@ -9,6 +9,9 @@ fragment ProgressReportDetail on ProgressReport {
   parent {
     ...EngagementBreadcrumb
   }
+  status {
+    value
+  }
   cumulativeSummary {
     ...ProgressSummary
   }
