@@ -27,15 +27,15 @@ type OptionGroup = RequiredKeysOf<ReasonOptions>;
 
 const groups: OptionGroup[] = ['behind', 'onTime', 'ahead'];
 
-const decorators: Array<Decorator<any>> = [
+const decorators: Array<Decorator<FormShape>> = [
   onFieldChange({
     field: 'group',
     updates: {
-      reason: (option, values, prev) => {
+      reasons: (option, values, prev) => {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!prev.group) {
           // initializing, keep initial value
-          return values.reason;
+          return values.reasons;
         }
         // Clear reason that's no longer shown in UI
         return null;
@@ -147,6 +147,7 @@ export const ExplanationOfProgress = ({ report }: ReportProp) => {
               helperText={false}
               margin="none"
               disabled={!explanation.reasons.canEdit}
+              required
             >
               <EnumOption<OptionGroup>
                 value="behind"
