@@ -20,7 +20,7 @@ type SkipPeriodicReportFormValues = Pick<
 > &
   SubmitAction<'unskip'>;
 
-type SkipPeriodicReportDialogProps = Except<
+export type SkipPeriodicReportDialogProps = Except<
   DialogFormProps<SkipPeriodicReportFormValues>,
   'onSubmit' | 'initialValues'
 > & {

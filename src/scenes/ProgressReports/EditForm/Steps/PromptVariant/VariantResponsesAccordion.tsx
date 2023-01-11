@@ -13,7 +13,7 @@ import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
 import { SubmitButton } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField, RichTextView } from '~/components/RichText';
-import { RoleIcon } from '../../RoleIcon';
+import { RoleIcon } from '~/components/RoleIcon';
 
 interface FormShape {
   variant: string;

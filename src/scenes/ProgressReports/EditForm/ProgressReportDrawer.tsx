@@ -12,11 +12,11 @@ import { StartReportPage } from './StartReportPage';
 import { StepContainer } from './StepContainer';
 
 interface ProgressReportDrawerProps {
-  reportId?: string;
+  reportId: string;
 }
 
 export const ProgressReportDrawer = ({
-  reportId = '',
+  reportId,
 }: ProgressReportDrawerProps) => {
   const open = !!useMatch('progress-reports/:id/edit');
 

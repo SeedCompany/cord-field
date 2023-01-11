@@ -16,7 +16,7 @@ interface Props
     | 'resourceType'
     | 'securedFile'
   > {
-  progressReport: ProgressReportDetailFragment;
+  progressReport: Pick<ProgressReportDetailFragment, 'id' | 'reportFile'>;
 }
 
 export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {

@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Edit, SkipNextRounded as SkipIcon } from '@mui/icons-material';
+import { Edit } from '@mui/icons-material';
 import {
   Breadcrumbs,
   Card,
@@ -12,30 +12,25 @@ import {
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
-import { useBetaFeatures } from '~/components/Session';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,
 } from '../../../components/Changeset';
-import { useDialog } from '../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
-import { Fab } from '../../../components/Fab';
-import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
-import { FormattedDate } from '../../../components/Formatters';
-import { IconButton } from '../../../components/IconButton';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { Redacted } from '../../../components/Redacted';
-import { SkipPeriodicReportDialog } from '../../Projects/Reports/SkipPeriodicReportDialog';
-import { UpdatePeriodicReportDialog } from '../../Projects/Reports/UpdatePeriodicReportDialog';
+import { ButtonLink, FabLink, Navigate } from '../../../components/Routing';
+import { SkipReportButton } from '../../Projects/Reports/SkipReportButton';
 import { ProgressReportDrawer } from '../EditForm';
-import { NewProgressReportCard } from './NewProgressReportCard';
-import { ProductTableList } from './ProductTableList';
-import { ProgressReportCard } from './ProgressReportCard';
-import { ProgressReportDetailDocument } from './ProgressReportDetail.graphql';
+import {
+  ProgressReportDetailDocument,
+  ProgressReportDetailFragment,
+} from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
+import { PromptResponseCard } from './PromptResponseCard';
+import { StatusStepper } from './StatusStepper';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {
@@ -55,21 +50,11 @@ const useStyles = makeStyles()(({ spacing }) => ({
     marginTop: spacing(3),
     marginBottom: spacing(2),
   },
-  subheader: {
-    margin: spacing(2, 0, 4),
-  },
 }));
 
 export const ProgressReportDetail = () => {
   const { classes } = useStyles();
   const { id, changesetId } = useChangesetAwareIdFromUrl('reportId');
-
-  const beta = useBetaFeatures();
-  const newProgressReportBeta = beta.has('newProgressReports');
-
-  // Single file for new version, empty array for received date update.
-  const [dialogState, setUploading, upload] = useDialog<File[]>();
-  const [skipState, openSkip] = useDialog();
 
   const { data, error } = useQuery(ProgressReportDetailDocument, {
     variables: {
@@ -88,10 +73,14 @@ export const ProgressReportDetail = () => {
     );
   }
 
-  const report =
-    data?.periodicReport.__typename === 'ProgressReport'
-      ? data.periodicReport
-      : null;
+  const report = data?.periodicReport as
+    | ProgressReportDetailFragment
+    | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- safety check. It's possible with manual user input.
+  if (report && report.__typename !== 'ProgressReport') {
+    return <Navigate to="/" />;
+  }
+
   const engagement = report?.parent;
 
   return (
@@ -139,52 +128,16 @@ export const ProgressReportDetail = () => {
           </Grid>
           {(!report || report.receivedDate.canEdit) && (
             <Grid item>
-              <Tooltip title="Update received date">
-                <Fab
-                  color="primary"
-                  aria-label="Update report"
-                  loading={!report}
-                  onClick={() => setUploading([])}
-                >
+              <Tooltip title="Edit Report">
+                <FabLink to="edit" color="primary" loading={!report}>
                   <Edit />
-                </Fab>
+                </FabLink>
               </Tooltip>
-              {report && (
-                <UpdatePeriodicReportDialog
-                  {...dialogState}
-                  report={{ ...report, reportFile: upload }}
-                  editFields={[
-                    'receivedDate',
-                    ...(upload && upload.length > 0
-                      ? ['reportFile' as const]
-                      : []),
-                  ]}
-                />
-              )}
             </Grid>
           )}
-          {(!report || report.skippedReason.canEdit) && (
-            <Grid item>
-              <Tooltip
-                title={
-                  report?.skippedReason.value
-                    ? 'Edit Skipped Reason'
-                    : 'Skip Report'
-                }
-              >
-                <IconButton
-                  aria-label="Skip report"
-                  loading={!report}
-                  onClick={openSkip}
-                >
-                  <SkipIcon />
-                </IconButton>
-              </Tooltip>
-              {report && (
-                <SkipPeriodicReportDialog {...skipState} report={report} />
-              )}
-            </Grid>
-          )}
+          <Grid item>
+            <SkipReportButton report={report} />
+          </Grid>
         </Grid>
 
         {report?.skippedReason.value ? (
@@ -201,57 +154,59 @@ export const ProgressReportDetail = () => {
             </Grid>
           </Grid>
         ) : (
-          <>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              className={classes.subheader}
-            >
-              {!report ? (
-                <Skeleton width="20ch" />
-              ) : report.receivedDate.value ? (
-                <>
-                  Received on <FormattedDate date={report.receivedDate.value} />
-                </>
-              ) : !report.receivedDate.canRead ? (
-                <Redacted info="You don't have permission to view the received date" />
-              ) : (
-                'Not received yet'
-              )}
-            </Typography>
+          <Stack spacing={3} maxWidth="lg" alignItems="flex-start" mt={1}>
+            <StatusStepper
+              current={report?.status.value}
+              sx={{ width: 1, maxWidth: 'sm' }}
+            />
 
-            <Stack spacing={3} flex={1}>
-              <Grid container spacing={3} maxWidth="md">
-                <Grid item xs={12} md={7} container>
-                  <ProgressSummaryCard
-                    loading={!report}
-                    summary={report?.cumulativeSummary ?? null}
-                  />
-                </Grid>
-                <Grid item xs={12} md={5} container>
-                  {report ? (
-                    newProgressReportBeta ? (
-                      <NewProgressReportCard label="Progress Report" />
-                    ) : (
-                      <ProgressReportCard
-                        progressReport={report}
-                        disableIcon
-                        onUpload={({ files }) => setUploading(files)}
-                      />
-                    )
-                  ) : (
-                    <FieldOverviewCard />
-                  )}
-                </Grid>
-              </Grid>
-              <ProductTableList products={report?.progress} />
+            <ProgressSummaryCard
+              loading={!report}
+              summary={report?.cumulativeSummary ?? null}
+              varianceExplanation={report?.varianceExplanation}
+              actions={
+                <ButtonLink to="edit?step=progress">View Details</ButtonLink>
+              }
+              sx={{ width: 1, maxWidth: 'sm' }}
+            />
+
+            <Stack
+              spacing={3}
+              direction={{ md: 'column', lg: 'row' }}
+              sx={{
+                width: 1,
+                alignItems: { lg: 'flex-start' },
+                '& > *': {
+                  flex: { lg: 1 },
+                  maxWidth: 'sm',
+                },
+              }}
+            >
+              <PromptResponseCard
+                title="Team News"
+                promptResponse={report?.teamNews.items[0]}
+                placeholder="None yet"
+                actions={
+                  <ButtonLink to="edit?step=team-news">View Details</ButtonLink>
+                }
+              />
+
+              <PromptResponseCard
+                title="Community Story"
+                showPrompt
+                promptResponse={report?.communityStories.items[0]}
+                placeholder="No response yet"
+                actions={
+                  <ButtonLink to="edit?step=community-story">
+                    View Details
+                  </ButtonLink>
+                }
+              />
             </Stack>
-          </>
+          </Stack>
         )}
       </main>
-      {newProgressReportBeta && report && (
-        <ProgressReportDrawer reportId={report.id} />
-      )}
+      <ProgressReportDrawer reportId={id} />
     </div>
   );
 };
