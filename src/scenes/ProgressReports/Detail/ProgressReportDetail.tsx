@@ -154,50 +154,56 @@ export const ProgressReportDetail = () => {
             </Grid>
           </Grid>
         ) : (
-          <>
-            <StatusStepper current={report?.status.value} sx={{ mb: 4 }} />
-
-            <PromptResponseCard
-              title="Team News"
-              promptResponse={report?.teamNews.items[0]}
-              placeholder="None yet"
-              actions={
-                <ButtonLink to="edit?step=team-news">View Details</ButtonLink>
-              }
-              sx={{ maxWidth: 'sm', mb: 4 }}
+          <Stack spacing={3} maxWidth="lg" alignItems="flex-start" mt={1}>
+            <StatusStepper
+              current={report?.status.value}
+              sx={{ width: 1, maxWidth: 'sm' }}
             />
 
-            <PromptResponseCard
-              title="Community Story"
-              showPrompt
-              promptResponse={report?.communityStories.items[0]}
-              placeholder="No response yet"
+            <ProgressSummaryCard
+              loading={!report}
+              summary={report?.cumulativeSummary ?? null}
+              varianceExplanation={report?.varianceExplanation}
               actions={
-                <ButtonLink to="edit?step=community-story">
-                  View Details
-                </ButtonLink>
+                <ButtonLink to="edit?step=progress">View Details</ButtonLink>
               }
-              sx={{ maxWidth: 'sm', mb: 4 }}
+              sx={{ width: 1, maxWidth: 'sm' }}
             />
 
-            <Stack spacing={3} flex={1}>
-              <Grid container spacing={3} maxWidth="md">
-                <Grid item xs={12} md={7} container>
-                  <ProgressSummaryCard
-                    loading={!report}
-                    summary={report?.cumulativeSummary ?? null}
-                    varianceExplanation={report?.varianceExplanation}
-                    sx={{ width: 1 }}
-                    actions={
-                      <ButtonLink to="edit?step=progress">
-                        View Details
-                      </ButtonLink>
-                    }
-                  />
-                </Grid>
-              </Grid>
+            <Stack
+              spacing={3}
+              direction={{ md: 'column', lg: 'row' }}
+              sx={{
+                width: 1,
+                alignItems: { lg: 'flex-start' },
+                '& > *': {
+                  flex: { lg: 1 },
+                  maxWidth: 'sm',
+                },
+              }}
+            >
+              <PromptResponseCard
+                title="Team News"
+                promptResponse={report?.teamNews.items[0]}
+                placeholder="None yet"
+                actions={
+                  <ButtonLink to="edit?step=team-news">View Details</ButtonLink>
+                }
+              />
+
+              <PromptResponseCard
+                title="Community Story"
+                showPrompt
+                promptResponse={report?.communityStories.items[0]}
+                placeholder="No response yet"
+                actions={
+                  <ButtonLink to="edit?step=community-story">
+                    View Details
+                  </ButtonLink>
+                }
+              />
             </Stack>
-          </>
+          </Stack>
         )}
       </main>
       <ProgressReportDrawer reportId={id} />
