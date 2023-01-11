@@ -147,6 +147,7 @@ export const ExplanationOfProgress = ({ report }: ReportProp) => {
               helperText={false}
               margin="none"
               disabled={!explanation.reasons.canEdit}
+              required
             >
               <EnumOption<OptionGroup>
                 value="behind"
