@@ -160,6 +160,10 @@ export const ProgressReportDetail = () => {
             <PromptResponseCard
               title="Team News"
               promptResponse={report?.teamNews.items[0]}
+              placeholder="None yet"
+              actions={
+                <ButtonLink to="edit?step=team-news">View Details</ButtonLink>
+              }
               sx={{ maxWidth: 'sm', mb: 4 }}
             />
 
@@ -167,6 +171,12 @@ export const ProgressReportDetail = () => {
               title="Community Story"
               showPrompt
               promptResponse={report?.communityStories.items[0]}
+              placeholder="No response yet"
+              actions={
+                <ButtonLink to="edit?step=community-story">
+                  View Details
+                </ButtonLink>
+              }
               sx={{ maxWidth: 'sm', mb: 4 }}
             />
 

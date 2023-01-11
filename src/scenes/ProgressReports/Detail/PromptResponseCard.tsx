@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  CardActions,
   CardContent,
   CardProps,
   Stack,
@@ -11,16 +12,21 @@ import { PromptResponseFragment } from '~/common/fragments';
 import { RichTextView } from '../../../components/RichText';
 import { VariantChip } from '../../../components/VariantChip';
 
-interface PromptResponseCardProps extends Omit<CardProps, 'title'> {
+interface PromptResponseCardProps
+  extends Omit<CardProps, 'title' | 'placeholder'> {
   title: ReactNode;
   promptResponse?: PromptResponseFragment;
   showPrompt?: boolean;
+  placeholder?: ReactNode;
+  actions?: ReactNode;
 }
 
 export const PromptResponseCard = ({
   title,
   promptResponse,
   showPrompt,
+  placeholder,
+  actions,
   ...rest
 }: PromptResponseCardProps) => {
   const variantResponse = promptResponse?.responses
@@ -52,10 +58,13 @@ export const PromptResponseCard = ({
         )}
         {response ? (
           <RichTextView data={response} />
+        ) : typeof placeholder === 'string' ? (
+          <Typography color="text.secondary">{placeholder}</Typography>
         ) : (
-          <Typography color="text.secondary">None yet</Typography>
+          placeholder
         )}
       </CardContent>
+      {actions && <CardActions>{actions}</CardActions>}
     </Card>
   );
 };
