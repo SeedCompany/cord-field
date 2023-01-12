@@ -1,16 +1,15 @@
-import { CalendarDate, isSecured, Nullable } from '~/common';
+import { CalendarDate, isSecured, Nullable, SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
-import {
-  PeriodicReportFragment,
-  SecuredPeriodicReportFragment,
-} from './PeriodicReport.graphql';
+import { PeriodicReportFragment } from './PeriodicReport.graphql';
+
+type Report = Pick<PeriodicReportFragment, 'start' | 'end'>;
 
 export const ReportLabel = ({
   report,
 }: {
-  report: SecuredPeriodicReportFragment | Nullable<PeriodicReportFragment>;
+  report: SecuredProp<Report> | Nullable<Report>;
 }) => {
-  let rep: Nullable<PeriodicReportFragment>;
+  let rep: Nullable<Report>;
   if (isSecured(report)) {
     if (!report.canRead) {
       return <Redacted info="You cannot view this report" width="100%" />;
