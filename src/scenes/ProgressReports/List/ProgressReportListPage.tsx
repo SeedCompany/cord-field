@@ -41,6 +41,9 @@ export const ProgressReportListPage = () => {
         <ProjectBreadcrumb key="project" data={engagement?.project} />,
         <EngagementBreadcrumb key="engagement" data={engagement} />,
       ]}
+      TableCardProps={{
+        sx: { maxWidth: 400 },
+      }}
     >
       <ProgressReportsTable
         loading={!engagement}

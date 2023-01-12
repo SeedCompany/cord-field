@@ -1,7 +1,8 @@
-import { Box, Breadcrumbs, Card, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Card, CardProps, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ReportType } from '~/api/schema.graphql';
+import { extendSx, StyleProps } from '~/common';
 import { Breadcrumb } from '../Breadcrumb';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportsTable } from './PeriodicReportsTable';
@@ -13,6 +14,9 @@ export const PeriodicReportsList = ({
   children,
   reports,
   onRowClick,
+  sx,
+  className,
+  TableCardProps,
 }: {
   type: ReportType;
   breadcrumbs?: ReactNode[];
@@ -20,7 +24,8 @@ export const PeriodicReportsList = ({
   children?: ReactNode;
   reports?: readonly PeriodicReportFragment[];
   onRowClick?: (report: PeriodicReportFragment) => void;
-}) => {
+  TableCardProps?: CardProps;
+} & StyleProps) => {
   const reportTypeName = `${type} Reports`;
 
   return (
@@ -43,7 +48,9 @@ export const PeriodicReportsList = ({
             display: 'flex',
             flexDirection: 'column',
           },
+          ...extendSx(sx),
         ]}
+        className={className}
       >
         <Helmet title={`${reportTypeName} - ${pageTitleSuffix}`} />
         <Breadcrumbs
@@ -59,7 +66,7 @@ export const PeriodicReportsList = ({
           {reportTypeName}
         </Typography>
 
-        <Card>
+        <Card {...TableCardProps}>
           {children ?? (
             <PeriodicReportsTable
               data={reports}

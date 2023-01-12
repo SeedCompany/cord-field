@@ -49,7 +49,7 @@ export const ProgressReportsTable = ({
       {
         headerName: 'Period',
         field: 'start',
-        width: 135,
+        flex: 1,
         renderCell: ({ row: report }) => (
           <Box
             component="span"
@@ -68,7 +68,7 @@ export const ProgressReportsTable = ({
         field: 'status',
         valueGetter: ({ row: { skippedReason, status } }) =>
           skippedReason.value ? 'Skipped' : status.value,
-        width: 200,
+        flex: 1,
         renderCell: (params) => {
           const value = params.value as StatusCellVal;
           if (!value) {
