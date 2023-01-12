@@ -10,7 +10,7 @@ const CreateProduct = loadable(() => import('../Products'), {
   resolveComponent: (m) => m.CreateProduct,
 });
 const ProgressReportsList = loadable(() => import('../ProgressReports'), {
-  resolveComponent: (m) => m.ProgressReportsList,
+  resolveComponent: (m) => m.ProgressReportListPage,
 });
 
 export const Engagements = () => (

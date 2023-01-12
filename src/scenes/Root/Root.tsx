@@ -31,7 +31,7 @@ const Products = loadable(() => import('../Products'), {
   resolveComponent: (m) => m.Products,
 });
 const ProgressReports = loadable(() => import('../ProgressReports'), {
-  resolveComponent: (m) => m.ProgressReports,
+  resolveComponent: (m) => m.ProgressReportRouter,
 });
 const Languages = loadable(() => import('../Languages'), {
   resolveComponent: (m) => m.Languages,

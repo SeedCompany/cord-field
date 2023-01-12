@@ -11,7 +11,7 @@ import { PeriodicReportFragment } from '../../../components/PeriodicReports/Peri
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProgressReportsDocument } from './ProgressReportList.graphql';
 
-export const ProgressReportsList = () => {
+export const ProgressReportListPage = () => {
   const { id: engagementId, changesetId } =
     useChangesetAwareIdFromUrl('engagementId');
   const { data, error } = useQuery(ProgressReportsDocument, {
