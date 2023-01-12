@@ -1,32 +1,27 @@
 import { useQuery } from '@apollo/client';
-import { useNavigate } from 'react-router-dom';
-import {
-  idForUrl,
-  useChangesetAwareIdFromUrl,
-} from '../../../components/Changeset';
+import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
-import { PeriodicReportsList } from '../../../components/PeriodicReports';
-import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.graphql';
+import { PeriodicReportsList as PeriodicReportListLayout } from '../../../components/PeriodicReports';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { ProgressReportsDocument } from './ProgressReportList.graphql';
+import { ProgressReportsOfEngagementDocument as ReportsOfEngagement } from './ProgressReportsOfEngagement.graphql';
+import { ProgressReportsTable } from './ProgressReportsTable';
 
 export const ProgressReportListPage = () => {
   const { id: engagementId, changesetId } =
     useChangesetAwareIdFromUrl('engagementId');
-  const { data, error } = useQuery(ProgressReportsDocument, {
+  const { data, error } = useQuery(ReportsOfEngagement, {
     variables: {
       engagementId,
       changeset: changesetId,
     },
   });
-  const navigate = useNavigate();
 
   if (error) {
     return (
       <Error page error={error}>
         {{
-          NotFound: 'Could not find project or engagement',
+          NotFound: 'Could not find engagement',
           Default: 'Error loading progress reports',
         }}
       </Error>
@@ -38,20 +33,19 @@ export const ProgressReportListPage = () => {
       ? data.engagement
       : undefined;
 
-  const handleRowClick = (report: PeriodicReportFragment) => {
-    navigate(`/progress-reports/${idForUrl(report)}`);
-  };
-
   return (
-    <PeriodicReportsList
+    <PeriodicReportListLayout
       type="Progress"
       pageTitleSuffix={engagement?.project.name.value ?? 'A Project'}
       breadcrumbs={[
         <ProjectBreadcrumb key="project" data={engagement?.project} />,
         <EngagementBreadcrumb key="engagement" data={engagement} />,
       ]}
-      reports={engagement?.progressReports.items}
-      onRowClick={handleRowClick}
-    />
+    >
+      <ProgressReportsTable
+        loading={!engagement}
+        rows={engagement?.progressReports.items ?? []}
+      />
+    </PeriodicReportListLayout>
   );
 };

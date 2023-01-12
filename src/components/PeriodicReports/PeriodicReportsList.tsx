@@ -31,12 +31,14 @@ export const PeriodicReportsList = ({
   type,
   breadcrumbs = [],
   pageTitleSuffix,
+  children,
   reports,
   onRowClick,
 }: {
   type: ReportType;
   breadcrumbs?: ReactNode[];
   pageTitleSuffix?: string;
+  children?: ReactNode;
   reports?: readonly PeriodicReportFragment[];
   onRowClick?: (report: PeriodicReportFragment) => void;
 }) => {
@@ -61,12 +63,14 @@ export const PeriodicReportsList = ({
         </Typography>
 
         <Card>
-          <PeriodicReportsTable
-            data={reports}
-            onRowClick={
-              onRowClick ? (params) => onRowClick(params.row) : undefined
-            }
-          />
+          {children ?? (
+            <PeriodicReportsTable
+              data={reports}
+              onRowClick={
+                onRowClick ? (params) => onRowClick(params.row) : undefined
+              }
+            />
+          )}
         </Card>
       </main>
     </div>
