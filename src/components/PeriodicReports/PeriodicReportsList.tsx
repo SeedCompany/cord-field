@@ -1,51 +1,57 @@
-import { Breadcrumbs, Card, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Card, CardProps, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
+import { extendSx, StyleProps } from '~/common';
 import { Breadcrumb } from '../Breadcrumb';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportsTable } from './PeriodicReportsTable';
-
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  main: {
-    padding: spacing(4),
-    maxWidth: breakpoints.values.md,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  header: {
-    margin: spacing(3, 0),
-  },
-}));
 
 export const PeriodicReportsList = ({
   type,
   breadcrumbs = [],
   pageTitleSuffix,
+  children,
   reports,
   onRowClick,
+  sx,
+  className,
+  TableCardProps,
 }: {
   type: ReportType;
   breadcrumbs?: ReactNode[];
   pageTitleSuffix?: string;
+  children?: ReactNode;
   reports?: readonly PeriodicReportFragment[];
   onRowClick?: (report: PeriodicReportFragment) => void;
-}) => {
-  const { classes } = useStyles();
+  TableCardProps?: CardProps;
+} & StyleProps) => {
   const reportTypeName = `${type} Reports`;
 
   return (
-    <div className={classes.root}>
-      <main className={classes.main}>
+    <Box
+      sx={{
+        flex: 1,
+        overflowY: 'auto',
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Box
+        component="main"
+        sx={[
+          {
+            padding: 4,
+            maxWidth: 'md',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+          },
+          ...extendSx(sx),
+        ]}
+        className={className}
+      >
         <Helmet title={`${reportTypeName} - ${pageTitleSuffix}`} />
         <Breadcrumbs
           children={[
@@ -56,19 +62,21 @@ export const PeriodicReportsList = ({
           ]}
         />
 
-        <Typography variant="h2" className={classes.header}>
+        <Typography variant="h2" sx={{ my: 3 }}>
           {reportTypeName}
         </Typography>
 
-        <Card>
-          <PeriodicReportsTable
-            data={reports}
-            onRowClick={
-              onRowClick ? (params) => onRowClick(params.row) : undefined
-            }
-          />
+        <Card {...TableCardProps}>
+          {children ?? (
+            <PeriodicReportsTable
+              data={reports}
+              onRowClick={
+                onRowClick ? (params) => onRowClick(params.row) : undefined
+              }
+            />
+          )}
         </Card>
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 };
