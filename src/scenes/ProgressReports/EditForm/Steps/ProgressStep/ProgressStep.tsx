@@ -33,7 +33,7 @@ export const ProgressStep = ({ report }: ReportProp) => {
 
   const processRowUpdate = useUpdateSteps();
 
-  const [variant, setVariant] = useState(variants[0]);
+  const [variant, setVariant] = useState(variants[variants.length - 1]);
 
   const progressByCategory = variant
     ? progressByVariant.get(variant)!
