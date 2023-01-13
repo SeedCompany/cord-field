@@ -1,5 +1,6 @@
 import { FolderOpen, Language, Person } from '@mui/icons-material';
 import {
+  Box,
   List,
   ListItemIcon,
   ListItemText,
@@ -9,29 +10,30 @@ import {
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { ComponentType } from 'react';
-import { makeStyles } from 'tss-react/mui';
+// import { makeStyles } from 'tss-react/mui';
+import { extendSx, StyleProps } from '~/common';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { CreateButtonMenu } from '../Creates';
 import { sidebarTheme } from './sidebar.theme';
 import { SidebarHeader } from './SidebarHeader';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    maxWidth: 248,
-    overflowY: 'auto',
-  },
-  content: {
-    padding: spacing(0, 2),
-  },
-  createNewItem: {
-    margin: spacing(4, 2, 1),
-    width: `calc(100% - ${spacing(2 * 2)})`,
-  },
-}));
+// const useStyles = makeStyles()(({ spacing }) => ({
+//   root: {
+//     maxWidth: 248,
+//     overflowY: 'auto',
+//   },
+//   content: {
+//     padding: spacing(0, 2),
+//   },
+//   createNewItem: {
+//     margin: spacing(4, 2, 1),
+//     width: `calc(100% - ${spacing(2 * 2)})`,
+//   },
+// }));
 
-export const Sidebar = () => {
-  const { classes } = useStyles();
+export const Sidebar = ({ sx }: StyleProps) => {
+  // const { classes } = useStyles();
 
   const navList = (
     <List
@@ -48,12 +50,28 @@ export const Sidebar = () => {
 
   return (
     <ThemeProvider theme={sidebarTheme}>
-      <Paper elevation={0} square className={classes.root}>
+      <Paper
+        elevation={0}
+        square
+        sx={[
+          {
+            maxWidth: 248,
+            overflowY: 'auto',
+          },
+          ...extendSx(sx),
+        ]}
+      >
         <SidebarHeader />
-        <div className={classes.content}>
-          <CreateButtonMenu fullWidth className={classes.createNewItem} />
+        <Box sx={{ py: 0, px: 2 }}>
+          <CreateButtonMenu
+            fullWidth
+            sx={(theme) => ({
+              m: theme.spacing(4, 2, 1),
+              width: `calc(100% - ${theme.spacing(2 * 2)})`,
+            })}
+          />
           {navList}
-        </div>
+        </Box>
       </Paper>
     </ThemeProvider>
   );

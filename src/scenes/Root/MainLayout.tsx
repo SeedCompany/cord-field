@@ -1,3 +1,4 @@
+import { useMediaQuery } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -5,6 +6,7 @@ import { Error, useResetErrorOnLocationChange } from '../../components/Error';
 import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
+import { MobileNavbar } from './Header/MobileNavbar';
 import { Sidebar } from './Sidebar';
 
 const useStyles = makeStyles()(() => ({
@@ -23,7 +25,17 @@ const useStyles = makeStyles()(() => ({
 export const MainLayout = () => {
   useAuthRequired();
   const { classes } = useStyles();
-  return (
+
+  const isMobile = useMediaQuery('(max-width: 600px)');
+
+  return isMobile ? (
+    <div className={classes.main}>
+      <CreateDialogProviders>
+        <MobileNavbar />
+      </CreateDialogProviders>
+      <Outlet />
+    </div>
+  ) : (
     <div className={classes.root}>
       <CreateDialogProviders>
         <Sidebar />

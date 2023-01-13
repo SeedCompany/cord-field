@@ -4,7 +4,15 @@ import {
   NotificationsNone,
   SupervisedUserCircle,
 } from '@mui/icons-material';
-import { Card, IconButton, MenuProps, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  IconButton,
+  MenuProps,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { useContext, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
@@ -25,14 +33,19 @@ const useStyles = makeStyles()(({ typography, spacing }) => ({
   },
 }));
 
+const mobileContrastText = (theme: Theme) => {
+  return { color: theme.palette.primary.contrastText };
+};
+
 export const ProfileToolbar = () => {
   const { classes } = useStyles();
   const { session } = useSession();
   const impersonation = useContext(ImpersonationContext);
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
+  const isMobile = useMediaQuery('(max-width: 600px)');
 
-  return (
+  return !isMobile ? (
     <>
       <Card className={classes.card}>
         <Typography className={classes.name} color="primary">
@@ -62,5 +75,29 @@ export const ProfileToolbar = () => {
         onClose={() => setActionsAnchor(null)}
       />
     </>
+  ) : (
+    <Box sx={{ mb: -1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <IconButton
+          color="secondary"
+          aria-controls="profile-menu"
+          aria-haspopup="true"
+          onClick={(e) => setProfileAnchor(e.currentTarget)}
+        >
+          <AccountCircle sx={{ color: mobileContrastText, ml: -2 }} />
+        </IconButton>
+        <Typography sx={{ color: mobileContrastText }}>
+          Account Settings
+        </Typography>
+        <ProfileMenu
+          anchorEl={profileAnchor}
+          onClose={() => setProfileAnchor(null)}
+        />
+        <UserActionsMenu
+          anchorEl={actionsAnchor}
+          onClose={() => setActionsAnchor(null)}
+        />
+      </Box>
+    </Box>
   );
 };
