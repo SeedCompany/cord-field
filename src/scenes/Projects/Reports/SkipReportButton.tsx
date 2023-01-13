@@ -16,11 +16,13 @@ export const SkipReportButton = ({
     return null;
   }
   return (
-    <Tooltip title={isSkipped ? 'Edit Skipped Reason' : 'Skip Report'}>
-      <IconButton loading={!report} onClick={openSkip}>
-        <SkipIcon />
-        {report && <SkipPeriodicReportDialog {...skipState} report={report} />}
-      </IconButton>
-    </Tooltip>
+    <>
+      <Tooltip title={isSkipped ? 'Edit Skipped Reason' : 'Skip Report'}>
+        <IconButton loading={!report} onClick={openSkip}>
+          <SkipIcon />
+        </IconButton>
+      </Tooltip>
+      {report && <SkipPeriodicReportDialog {...skipState} report={report} />}
+    </>
   );
 };
