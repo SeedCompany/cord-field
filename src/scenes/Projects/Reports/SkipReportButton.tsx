@@ -17,7 +17,7 @@ export const SkipReportButton = ({
   }
   return (
     <Tooltip title={isSkipped ? 'Edit Skipped Reason' : 'Skip Report'}>
-      <IconButton aria-label="Skip report" loading={!report} onClick={openSkip}>
+      <IconButton loading={!report} onClick={openSkip}>
         <SkipIcon />
         {report && <SkipPeriodicReportDialog {...skipState} report={report} />}
       </IconButton>
