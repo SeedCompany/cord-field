@@ -1,8 +1,9 @@
 import { Search } from '@mui/icons-material';
-import { InputAdornment } from '@mui/material';
+import { Box, InputAdornment, useMediaQuery } from '@mui/material';
 import { Form } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { extendSx, StyleProps } from '~/common';
 import { TextField } from '../../../../components/form';
 import { makeQueryHandler, StringParam } from '../../../../hooks';
 
@@ -21,12 +22,14 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
   },
 }));
 
-export const HeaderSearch = () => {
+export const HeaderSearch = ({ sx }: StyleProps) => {
   const { classes } = useStyles();
   const [{ q: search = '' }] = useSearch();
   const navigate = useNavigate();
 
-  return (
+  const isMobile = useMediaQuery('(max-width: 600px)');
+
+  return isMobile ? (
     <Form
       initialValues={{ search }}
       onSubmit={({ search }) => {
@@ -36,7 +39,59 @@ export const HeaderSearch = () => {
       }}
     >
       {({ handleSubmit }) => (
-        <form onSubmit={handleSubmit} className={classes.root}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={[
+            ...extendSx(sx),
+            {
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              maxWidth: 500,
+              mr: 0.5,
+            },
+          ]}
+        >
+          <Search sx={{ color: 'primary.contrastText' }} />
+          <TextField
+            name="search"
+            variant="outlined"
+            placeholder="Search..."
+            size="small"
+            sx={[
+              {
+                '& .MuiInputBase-root': {
+                  color: 'primary.contrastText',
+                  bgcolor: 'grey.600',
+                  borderRadius: 0,
+                  mb: -1,
+                },
+              },
+            ]}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  disablePointerEvents
+                ></InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+      )}
+    </Form>
+  ) : (
+    <Form
+      initialValues={{ search }}
+      onSubmit={({ search }) => {
+        if (search) {
+          navigate(`/search?q=${search}`);
+        }
+      }}
+    >
+      {({ handleSubmit }) => (
+        <Box component="form" onSubmit={handleSubmit} className={classes.root}>
           <TextField
             name="search"
             variant="outlined"
@@ -51,7 +106,7 @@ export const HeaderSearch = () => {
               ),
             }}
           />
-        </form>
+        </Box>
       )}
     </Form>
   );
