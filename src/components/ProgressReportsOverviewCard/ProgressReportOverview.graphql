@@ -1,0 +1,29 @@
+fragment ProgressReportOverviewItem on ProgressReport {
+  ...Id
+  status {
+    value
+  }
+  due
+  start
+  end
+
+  ...PeriodicReport
+}
+
+fragment ProgressReportOverview on LanguageEngagement {
+  ...Id
+  currentProgressReportDue {
+    canRead
+    canEdit
+    value {
+      ...ProgressReportOverviewItem
+    }
+  }
+  nextProgressReportDue {
+    canRead
+    canEdit
+    value {
+      ...ProgressReportOverviewItem
+    }
+  }
+}

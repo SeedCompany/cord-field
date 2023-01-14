@@ -18,9 +18,8 @@ import { DialogForm } from '../../../../components/Dialog/DialogForm';
 import { FileActionsContextProvider } from '../../../../components/files/FileActions';
 import { HandleUploadCompletedFunction } from '../../../../components/files/hooks';
 import { EnumField, EnumOption } from '../../../../components/form';
-import { PeriodicReportCard } from '../../../../components/PeriodicReports';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
-import { ProgressAndPlanningFragment } from './ProgressAndPlanning.graphql';
+import { EngagementPlanningSpreadsheetFragment } from './PlanningSpreadsheet.graphql';
 
 const useStyles = makeStyles()(({ spacing, typography }) => ({
   section: {
@@ -34,19 +33,8 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
 }));
 
 interface Props extends StyleProps {
-  engagement: ProgressAndPlanningFragment;
+  engagement: EngagementPlanningSpreadsheetFragment;
 }
-
-export const ProgressReports = ({ engagement, ...rest }: Props) => (
-  <PeriodicReportCard
-    {...rest}
-    type="Progress"
-    dueCurrently={engagement.currentProgressReportDue}
-    dueNext={engagement.nextProgressReportDue}
-    disableIcon
-    hasDetailPage
-  />
-);
 
 export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
   const [dialogState, setUploading, upload] =
