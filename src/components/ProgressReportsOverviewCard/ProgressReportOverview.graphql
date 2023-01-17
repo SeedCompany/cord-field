@@ -1,12 +1,4 @@
 fragment ProgressReportOverviewItem on ProgressReport {
-  ...Id
-  status {
-    value
-  }
-  due
-  start
-  end
-
   ...PeriodicReport
 }
 
