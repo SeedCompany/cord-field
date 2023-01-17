@@ -75,9 +75,14 @@ export const ReportInfo = ({
 };
 
 export const SkippedText = () => (
-  <Grid container alignItems="center" justifyContent="center">
+  <Grid
+    container
+    alignItems="center"
+    justifyContent="center"
+    sx={{ mt: '-4px' }}
+  >
     <Typography variant="inherit">Skipped</Typography>
-    <SkipNextRounded fontSize="small" />
+    <SkipNextRounded fontSize="small" sx={{ mt: '2px', mr: '-5px' }} />
   </Grid>
 );
 
