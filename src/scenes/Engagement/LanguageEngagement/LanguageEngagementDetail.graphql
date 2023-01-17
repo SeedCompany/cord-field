@@ -1,7 +1,8 @@
 fragment LanguageEngagementDetail on LanguageEngagement {
   ...Id
   ...LanguageEngagementHeader
-  ...ProgressAndPlanning
+  ...ProgressReportOverview
+  ...EngagementPlanningSpreadsheet
   ...LanguageEngagementDatesForm
   ...EngagementDescription
   ceremony {

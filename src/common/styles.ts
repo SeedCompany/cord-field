@@ -23,3 +23,23 @@ export const applyBreakpoint = (
           bpProp.slice(0, 2) as Breakpoint
         )]: css,
       };
+
+/**
+ * A helper to format the grid-template-areas CSS prop.
+ * @example
+ * <Box
+ *   sx={{
+ *     display: 'grid',
+ *     ...gridTemplateAreas`
+ *       row1 col2
+ *       row2 col2
+ *     `,
+ *     }} />
+ */
+export const gridTemplateAreas = (...args: Parameters<typeof String.raw>) => ({
+  gridTemplateAreas: String.raw(...args)
+    .trim()
+    .split('\n')
+    .map((q) => `"${q.trim()}"`)
+    .join('\n'),
+});

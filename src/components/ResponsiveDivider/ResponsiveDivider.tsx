@@ -1,7 +1,7 @@
-import { Divider, DividerProps } from '@mui/material';
+import { Box, Divider, DividerProps } from '@mui/material';
 import { ComponentType } from 'react';
 import { withStyles } from 'tss-react/mui';
-import { applyBreakpoint, BreakpointAt } from '~/common';
+import { applyBreakpoint, BreakpointAt, extendSx, StyleProps } from '~/common';
 
 export interface ResponsiveDividerProps extends DividerProps {
   vertical?: BreakpointAt;
@@ -27,4 +27,31 @@ export const ResponsiveDivider = withStyles(
       }),
     },
   })
+);
+
+/**
+ * Horizontal divider until `verticalWhen` css query is matched.
+ */
+export const ResponsiveDivider2 = ({
+  verticalWhen,
+  DividerProps,
+  ...rest
+}: { verticalWhen: string; DividerProps?: DividerProps } & StyleProps) => (
+  <Box
+    {...rest}
+    sx={[
+      {
+        hr: { display: 'none' },
+        'hr:nth-of-type(1)': { display: 'block' },
+        [verticalWhen]: {
+          display: 'flex',
+          'hr:nth-of-type(2)': { display: 'initial' },
+        },
+      },
+      ...extendSx(rest.sx),
+    ]}
+  >
+    <Divider {...DividerProps} />
+    <Divider {...DividerProps} orientation="vertical" flexItem />
+  </Box>
 );

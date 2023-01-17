@@ -1,2 +1,2 @@
 export * from './PeriodicReportsList';
-export * from './PeriodicReportCard';
+export * from './OverviewCard/PeriodicReportCard';

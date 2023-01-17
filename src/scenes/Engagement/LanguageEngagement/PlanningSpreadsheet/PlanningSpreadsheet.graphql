@@ -1,0 +1,10 @@
+fragment EngagementPlanningSpreadsheet on LanguageEngagement {
+  ...Id
+  pnp {
+    canRead
+    canEdit
+    value {
+      ...FileNodeInfo
+    }
+  }
+}

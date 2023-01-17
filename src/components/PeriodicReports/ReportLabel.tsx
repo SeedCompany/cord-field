@@ -22,7 +22,9 @@ export const ReportLabel = ({
   if (!rep) {
     return null;
   }
-  return <>{getLabel(rep.start, rep.end)}</>;
+  return (
+    <span css={{ whiteSpace: 'nowrap' }}>{getLabel(rep.start, rep.end)}</span>
+  );
 };
 
 const getLabel = (start: CalendarDate, end: CalendarDate) =>
