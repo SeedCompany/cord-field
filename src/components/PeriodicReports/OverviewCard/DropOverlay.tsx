@@ -2,8 +2,8 @@ import { Cancel, CloudUpload } from '@mui/icons-material';
 import { Typography } from '@mui/material';
 import { keyframes } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
-import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
-import { ReportLabel } from './ReportLabel';
+import { SecuredPeriodicReportFragment } from '../PeriodicReport.graphql';
+import { ReportLabel } from '../ReportLabel';
 
 const upAndDown = keyframes({
   '0%, 100%': { transform: 'translateY(-4px)' },

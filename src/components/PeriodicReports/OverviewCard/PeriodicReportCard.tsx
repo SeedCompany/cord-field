@@ -1,67 +1,44 @@
 import { AssignmentOutlined, BarChart, ShowChart } from '@mui/icons-material';
 import {
+  Box,
   Button,
   Card,
   CardActions,
-  Divider,
   Tooltip,
   Typography,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { makeStyles } from 'tss-react/mui';
 import { ReportType } from '~/api/schema.graphql';
-import { Many, SecuredProp, simpleSwitch, StyleProps } from '~/common';
+import {
+  extendSx,
+  gridTemplateAreas,
+  Many,
+  SecuredProp,
+  simpleSwitch,
+  StyleProps,
+} from '~/common';
 import {
   EditablePeriodicReportField,
   UpdatePeriodicReportDialog,
-} from '../../scenes/Projects/Reports/UpdatePeriodicReportDialog';
-import { useDialog } from '../Dialog';
+} from '../../../scenes/Projects/Reports/UpdatePeriodicReportDialog';
+import { useDialog } from '../../Dialog';
 import {
   FileActionsContextProvider,
   useFileActions,
-} from '../files/FileActions';
-import { HugeIcon } from '../Icons';
-import { ButtonLink, CardActionAreaLink } from '../Routing';
+} from '../../files/FileActions';
+import { HugeIcon } from '../../Icons';
+import {
+  ButtonLink,
+  CardActionAreaLink,
+  CardActionAreaLinkProps,
+} from '../../Routing';
+import { PeriodicReportFragment } from '../PeriodicReport.graphql';
+import { ReportLabel } from '../ReportLabel';
 import { DropOverlay } from './DropOverlay';
-import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { ReportInfo } from './ReportInfo';
-import { ReportLabel } from './ReportLabel';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'relative',
-    outline: 'none',
-  },
-  topArea: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    alignItems: 'flex-start',
-    padding: spacing(3, 4),
-  },
-  icon: {
-    marginRight: spacing(4),
-  },
-  rightContent: {
-    flex: 1,
-    alignSelf: 'flex-start',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-  },
-  relevantReports: {
-    display: 'flex',
-  },
-  relevantReport: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-}));
+import { ReportInfoContainer } from './ReportInfoContainer';
 
 export interface PeriodicReportCardProps extends StyleProps {
   type: ReportType;
@@ -73,7 +50,6 @@ export interface PeriodicReportCardProps extends StyleProps {
 
 const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
   const { type, dueCurrently, dueNext, disableIcon, hasDetailPage } = props;
-  const { classes, cx } = useStyles();
 
   const currentFile = dueCurrently?.value?.reportFile;
   const needsUpload =
@@ -102,13 +78,13 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
 
   return (
     <>
-      <Card
+      <PeriodicReportCardRoot
         {...getRootProps()}
         tabIndex={-1}
-        className={cx(classes.root, props.className)}
+        className={props.className}
         sx={props.sx}
       >
-        <CardActionAreaLink to={link} className={classes.topArea}>
+        <PeriodicReportCardContent to={link} icon={!disableIcon}>
           {!disableIcon && (
             <HugeIcon
               icon={simpleSwitch(type, {
@@ -116,38 +92,23 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
                 Financial: ShowChart,
                 Progress: BarChart,
               })}
-              className={classes.icon}
+              sx={{ gridArea: 'icon' }}
             />
           )}
 
-          <div className={classes.rightContent}>
-            <Typography variant="h4" paragraph>
-              {`${type} Reports`}
-            </Typography>
-            <div className={classes.relevantReports}>
-              <ReportInfo
-                title="Current"
-                report={dueCurrently}
-                className={classes.relevantReport}
-              />
-              <Divider
-                orientation="vertical"
-                flexItem
-                variant="middle"
-                sx={{ mx: 2 }}
-              />
-              <ReportInfo
-                title="Next"
-                report={dueNext}
-                className={classes.relevantReport}
-              />
-            </div>
-          </div>
-        </CardActionAreaLink>
-        <CardActions>
-          <ButtonLink color="primary" to={link}>
-            View Reports
-          </ButtonLink>
+          <Typography variant="h4" sx={{ gridArea: 'title' }}>
+            {`${type} Reports`}
+          </Typography>
+          <ReportInfoContainer
+            horizontalAt={260}
+            spaceEvenlyAt={400}
+            sx={{ gridArea: 'info' }}
+          >
+            <ReportInfo title="Current" report={dueCurrently} />
+            <ReportInfo title="Next" report={dueNext} />
+          </ReportInfoContainer>
+        </PeriodicReportCardContent>
+        <CardActions sx={{ justifyContent: 'space-between' }}>
           {needsUpload ? (
             <Tooltip
               title={
@@ -184,11 +145,16 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
                 </Button>
               </Tooltip>
             )
-          ) : null}
+          ) : (
+            <Box flex={1} />
+          )}
+          <ButtonLink color="primary" to={link}>
+            All Reports
+          </ButtonLink>
         </CardActions>
         <DropOverlay report={dueCurrently} show={isDragActive} />
         <input {...getInputProps()} name="report_file_uploader" />
-      </Card>
+      </PeriodicReportCardRoot>
       {dueCurrently?.value?.reportFile.canEdit && fileBeingEdited ? (
         <UpdatePeriodicReportDialog
           {...editState}
@@ -199,6 +165,53 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
     </>
   );
 };
+
+const PeriodicReportCardRoot = styled(Card)({
+  flex: 1,
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
+  outline: 'none',
+  containerType: 'inline-size',
+});
+
+const PeriodicReportCardContent = ({
+  icon,
+  ...props
+}: CardActionAreaLinkProps & { icon: boolean }) => (
+  <CardActionAreaLink
+    {...props}
+    sx={[
+      {
+        flex: 1,
+        py: 3,
+        px: 4,
+        display: 'grid',
+        gap: 3,
+        gridTemplateColumns: 'min-content 1fr',
+        ...gridTemplateAreas`
+          title title
+          info info
+        `,
+        ...(icon && {
+          ...gridTemplateAreas`
+            icon title
+            info info
+          `,
+          [`@container (min-width: 430px)`]: {
+            ...gridTemplateAreas`
+              icon title
+              icon info
+            `,
+            '.MuiAvatar-root': { alignSelf: 'start' },
+          },
+        }),
+      },
+      ...extendSx(props.sx),
+    ]}
+  />
+);
 
 export const PeriodicReportCard = (props: PeriodicReportCardProps) => (
   <FileActionsContextProvider>

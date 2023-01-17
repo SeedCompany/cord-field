@@ -1,35 +1,26 @@
 import { SkipNextRounded } from '@mui/icons-material';
-import { Grid, Skeleton, Typography } from '@mui/material';
+import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { FormattedDate, FormattedDateTime } from '../Formatters';
-import { PaperTooltip } from '../PaperTooltip';
-import { Redacted } from '../Redacted';
-import { SecuredPeriodicReportFragment } from './PeriodicReport.graphql';
-import { ReportLabel } from './ReportLabel';
-
-const useStyles = makeStyles()(() => ({
-  label: {
-    whiteSpace: 'nowrap',
-  },
-}));
+import { CalendarDate, StyleProps } from '~/common';
+import { FormattedDate, FormattedDateTime } from '../../Formatters';
+import { PaperTooltip } from '../../PaperTooltip';
+import { Redacted } from '../../Redacted';
+import { SecuredPeriodicReportFragment } from '../PeriodicReport.graphql';
+import { ReportLabel } from '../ReportLabel';
 
 export const ReportInfo = ({
   title,
   report,
-  className,
+  ...rest
 }: {
   title: ReactNode;
   report?: SecuredPeriodicReportFragment;
-  className?: string;
-}) => {
-  const { classes } = useStyles();
-
+} & StyleProps) => {
   const file = report?.value?.reportFile;
   const section = (
-    <div className={className}>
+    <Box display="flex" flexDirection="column" {...rest}>
       <Typography
         variant="body2"
         display="inline"
@@ -38,12 +29,7 @@ export const ReportInfo = ({
       >
         {title}
       </Typography>
-      <Typography
-        variant="h4"
-        display="inline"
-        gutterBottom
-        className={classes.label}
-      >
+      <Typography variant="h4" display="inline" gutterBottom>
         {!report ? (
           <Skeleton />
         ) : report.canRead && !report.value ? (
@@ -70,26 +56,13 @@ export const ReportInfo = ({
         ) : report.value ? (
           report.value.skippedReason.value &&
           !report.value.receivedDate.value ? (
-            <Grid container alignItems="center">
-              <Typography variant="inherit">Skipped</Typography>
-              <SkipNextRounded fontSize="small" />
-            </Grid>
+            <SkippedText />
           ) : (
-            <>
-              Due{' '}
-              <FormattedDate
-                date={report.value.due}
-                displayOptions={
-                  report.value.due.diffNow('years').years < 1 // same year
-                    ? omit(DateTime.DATE_SHORT, 'year')
-                    : undefined
-                }
-              />
-            </>
+            <Due date={report.value.due} />
           )
         ) : null}
       </Typography>
-    </div>
+    </Box>
   );
 
   return (
@@ -100,3 +73,24 @@ export const ReportInfo = ({
     />
   );
 };
+
+export const SkippedText = () => (
+  <Grid container alignItems="center" justifyContent="center">
+    <Typography variant="inherit">Skipped</Typography>
+    <SkipNextRounded fontSize="small" />
+  </Grid>
+);
+
+export const Due = ({ date }: { date: CalendarDate }) => (
+  <>
+    Due{' '}
+    <FormattedDate
+      date={date}
+      displayOptions={
+        date.diffNow('years').years < 1 // same year
+          ? omit(DateTime.DATE_SHORT, 'year')
+          : undefined
+      }
+    />
+  </>
+);
