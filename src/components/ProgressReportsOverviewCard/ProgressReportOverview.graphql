@@ -1,5 +1,14 @@
 fragment ProgressReportOverviewItem on ProgressReport {
-  ...PeriodicReport
+  ...Id
+  start
+  end
+  due
+  status {
+    value
+  }
+  skippedReason {
+    value
+  }
 }
 
 fragment ProgressReportOverview on LanguageEngagement {
