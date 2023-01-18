@@ -72,4 +72,11 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
+  ProgressReport: {
+    fields: {
+      varianceExplanation: {
+        merge: true,
+      },
+    },
+  },
 };
