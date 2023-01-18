@@ -125,6 +125,7 @@ export const ProjectOverview = () => {
     directoryId,
     loading: directoryLoading,
     canRead: canReadDirectory,
+    project: projectDirectoryInfo,
   } = useProjectCurrentDirectory();
   const uploadProjectFiles = useUploadProjectFiles();
 
@@ -460,7 +461,7 @@ export const ProjectOverview = () => {
               <FilesOverviewCard
                 loading={!project || directoryLoading}
                 redacted={canReadDirectory === false}
-                total={undefined}
+                total={projectDirectoryInfo?.rootDirectory.value?.totalFiles}
               />
             </Grid>
           </Grid>
