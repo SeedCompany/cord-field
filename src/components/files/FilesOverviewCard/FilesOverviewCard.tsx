@@ -21,7 +21,7 @@ export const FilesOverviewCard = ({
       viewLabel="View Files"
       data={{
         to: 'files',
-        value: total ? String(formatNumber(total)) : '∞',
+        value: total != null ? String(formatNumber(total)) : '∞',
       }}
       icon={LibraryBooksOutlined}
       {...rest}
