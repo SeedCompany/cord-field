@@ -210,8 +210,8 @@ export const CreateProduct = () => {
       </Breadcrumbs>
       <Error error={error}>
         {{
-          NotFound: 'Could not find Engagement',
-          Default: 'Error loading Engagement',
+          NotFound: 'Cannot create goal for this unknown engagement',
+          Default: 'Failed to load engagement info needed to create goal',
         }}
       </Error>
       {!error && (
