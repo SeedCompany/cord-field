@@ -123,8 +123,8 @@ export const ProjectOverview = () => {
 
   const {
     directoryId,
-    loading: directoryIdLoading,
-    canRead: canReadDirectoryId,
+    loading: directoryLoading,
+    canRead: canReadDirectory,
   } = useProjectCurrentDirectory();
   const uploadProjectFiles = useUploadProjectFiles();
 
@@ -430,8 +430,8 @@ export const ProjectOverview = () => {
                 <input {...getInputProps()} />
                 <Tooltip title="Upload Files">
                   <Fab
-                    loading={!project || directoryIdLoading}
-                    disabled={canReadDirectoryId === false}
+                    loading={!project || directoryLoading}
+                    disabled={canReadDirectory === false}
                     onClick={openFileBrowser}
                     color="primary"
                     aria-label="Upload Files"
@@ -458,9 +458,9 @@ export const ProjectOverview = () => {
             <Grid item xs={12} md={6}>
               {/* TODO When file api is finished need to update query and pass in file information */}
               <FilesOverviewCard
-                loading={!project}
+                loading={!project || directoryLoading}
+                redacted={canReadDirectory === false}
                 total={undefined}
-                redacted={canReadDirectoryId === true}
               />
             </Grid>
           </Grid>
