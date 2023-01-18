@@ -3,6 +3,7 @@ import { setIn } from 'final-form';
 import { useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
+import { defaultHandlers } from '~/api';
 import {
   CreateLanguage,
   SensitivityList,
@@ -81,14 +82,14 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
       decorators={decorators}
       fieldsPrefix="language"
       errorHandlers={{
-        Input: (e, next) =>
+        Input: (e, next, util) =>
           e.field === 'language.hasExternalFirstScripture'
             ? setIn(
                 {},
                 e.field,
-                'Language already engaged with first Scripture'
+                'Language already has an engagement which claims first Scripture'
               )
-            : next(e),
+            : defaultHandlers.Input(e, next, util),
       }}
     >
       {({ values }: { values: Partial<LanguageFormValues<Mutation>> }) => {

@@ -37,6 +37,7 @@ if (process.env.NODE_ENV !== 'production') {
       await import('lodash').then((_) => ({ _ })),
       await import('luxon'),
       await import('./common/CalenderDate'),
+      await import('./common').then((common) => ({ common })),
       await import('js-cookie').then((Cookies) => ({ Cookies }))
     );
     // Do hacking to show dates easier

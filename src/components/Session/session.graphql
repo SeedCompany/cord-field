@@ -3,6 +3,9 @@ query Session {
     user {
       ...LoggedInUser
     }
+    betaFeatures {
+      ...features
+    }
     powers
   }
 }
@@ -17,6 +20,9 @@ fragment LoggedInUser on User {
       name
     }
   }
+  roles {
+    value
+  }
   fullName
   realFirstName {
     value
@@ -30,4 +36,8 @@ fragment LoggedInUser on User {
   displayLastName {
     value
   }
+}
+
+fragment features on BetaFeatures {
+  projectChangeRequests
 }

@@ -13,3 +13,8 @@ export const useNumberFormatter = (options?: Intl.NumberFormatOptions) => {
     [formatter]
   );
 };
+
+export const FormattedNumber = ({ value }: { value: Nullable<number> }) => {
+  const formatNumber = useNumberFormatter();
+  return <>{formatNumber(value)}</>;
+};

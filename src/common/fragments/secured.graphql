@@ -30,3 +30,23 @@ fragment securedDateRange on SecuredDateRange {
     end
   }
 }
+
+fragment SecuredPrompt on SecuredPrompt {
+  canRead
+  canEdit
+  value {
+    ...Prompt
+  }
+}
+
+fragment SecuredRichTextNullable on SecuredRichTextNullable {
+  canEdit
+  canRead
+  value
+}
+
+fragment SecuredStringList on SecuredStringList {
+  canRead
+  canEdit
+  value
+}

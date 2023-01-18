@@ -1,2 +1,2 @@
-export * from './ProgressReports';
+export * from './ProgressReportRouter';
 export * from './List';

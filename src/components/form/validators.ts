@@ -6,11 +6,11 @@ import { Nullable } from '~/common';
 /**
  * A little stricter than upstream with the return type
  */
-export type Validator<Value> = (
+export type Validator<Value, Async extends boolean | undefined = undefined> = (
   value: Value,
   allValues: Record<string, any>,
   meta?: FieldState<Value>
-) => Promisable<string | undefined>;
+) => Async extends true ? Promisable<string | undefined> : string | undefined;
 
 export const required = (value: unknown) => (value ? undefined : 'Required');
 

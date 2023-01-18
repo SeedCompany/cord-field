@@ -62,7 +62,7 @@ export const typePolicies: TypePolicies = {
     merge: true,
   },
   ProductProgress: {
-    keyFields: ['product', ['id'], 'report', ['id']],
+    keyFields: ['product', ['id'], 'report', ['id'], 'variant', ['key']],
   },
   LanguageEngagement: {
     fields: {

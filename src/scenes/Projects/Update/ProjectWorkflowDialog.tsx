@@ -6,9 +6,9 @@ import {
   ProjectStep,
   ProjectStepLabels,
   ProjectStepList,
-  TransitionType,
 } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
+import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import {
   DialogForm,
   DialogFormProps,
@@ -16,21 +16,11 @@ import {
 import {
   SubmitAction,
   SubmitButton,
-  SubmitButtonProps,
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
 import { UpdateProjectDocument } from './UpdateProject.graphql';
-
-const transitionTypeToColor: Record<
-  TransitionType,
-  SubmitButtonProps['color']
-> = {
-  Approve: 'primary',
-  Neutral: 'secondary',
-  Reject: 'error',
-};
 
 type UpdateProjectDialogProps = Except<
   DialogFormProps<SubmitAction & { project?: { step?: ProjectStep } }>,
@@ -101,11 +91,10 @@ export const ProjectWorkflowDialog = ({
           >
             <Grid item>
               <SubmitButton
+                {...transitionTypeStyles[transition.type]}
                 // Ensure submit action/step is unique by appending index. This prevents
                 // multiple spinners for the same next step with different labels.
                 action={`${transition.to}:${i}`}
-                color={transitionTypeToColor[transition.type]}
-                variant={transition.type === 'Approve' ? 'contained' : 'text'}
                 disabled={transition.disabled}
               >
                 {transition.label}

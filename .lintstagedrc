@@ -1,4 +1,4 @@
 "**/*.{ts,tsx}":
-  - eslint --ext .ts,.tsx --fix --max-warnings 0
+  - eslint --ext .ts,.tsx --fix
 "**/*.graphql":
   - prettier --write

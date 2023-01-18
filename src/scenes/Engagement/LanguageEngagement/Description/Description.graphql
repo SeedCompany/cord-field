@@ -1,0 +1,8 @@
+fragment EngagementDescription on LanguageEngagement {
+  ...Id
+  description {
+    canRead
+    canEdit
+    value
+  }
+}

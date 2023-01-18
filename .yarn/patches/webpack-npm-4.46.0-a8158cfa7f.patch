@@ -1,0 +1,12 @@
+diff --git a/lib/util/createHash.js b/lib/util/createHash.js
+index 64de510da5c054682329e59f2e98287d7cd76b28..69eaa02ee07e1c71ade83941d33da1c3ba95b621 100644
+--- a/lib/util/createHash.js
++++ b/lib/util/createHash.js
+@@ -127,6 +127,7 @@ module.exports = algorithm => {
+ 	if (typeof algorithm === "function") {
+ 		return new BulkUpdateDecorator(new algorithm());
+ 	}
++	algorithm = algorithm === 'md4' ? 'md5' : algorithm;
+ 	switch (algorithm) {
+ 		// TODO add non-cryptographic algorithm here
+ 		case "debug":

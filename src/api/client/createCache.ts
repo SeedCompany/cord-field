@@ -19,7 +19,11 @@ export const createCache = () => {
   });
 
   if (typeof window !== 'undefined') {
-    cache.restore((window as any).__APOLLO_STATE__);
+    const data = (window as any).__APOLLO_STATE__;
+    cache.restore(data);
+    if (process.env.NODE_ENV === 'production') {
+      console.log('Initializing Apollo cache from server', data);
+    }
   }
 
   return cache;

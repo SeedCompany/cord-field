@@ -1,1 +1,1 @@
-export * from './ProgressReportList';
+export * from './ProgressReportListPage';

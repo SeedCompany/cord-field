@@ -32,4 +32,7 @@ fragment ProductProgressRef on ProductProgress {
   report {
     ...Id
   }
+  variant {
+    ...variant
+  }
 }

@@ -5,7 +5,11 @@ import { useEffect } from 'react';
 import { SessionOutput } from '~/api/schema.graphql';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
 import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
-import { LoggedInUserFragment, SessionDocument } from './session.graphql';
+import {
+  FeaturesFragment as BetaFeatures,
+  LoggedInUserFragment,
+  SessionDocument,
+} from './session.graphql';
 
 export const useSession = () => {
   const { data, loading: sessionLoading } = useQuery(SessionDocument, {
@@ -13,8 +17,9 @@ export const useSession = () => {
   });
   const session = data?.session.user;
   const powers = data?.session.powers;
+  const betaFeatures = data?.session.betaFeatures;
 
-  return { session, sessionLoading, powers };
+  return { session, sessionLoading, powers, betaFeatures };
 };
 
 export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
@@ -41,8 +46,12 @@ export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
   }
 };
 
-export const useBetaFeatures = () =>
-  useSession().powers?.includes('BetaFeatures');
+export const useBetaFeatures = (): ReadonlySet<keyof BetaFeatures> =>
+  new Set(
+    Object.entries(useSession().betaFeatures || {}).flatMap(([key, value]) =>
+      value ? (key as keyof BetaFeatures) : []
+    )
+  );
 
 export const useIdentifyInLogRocket = () => {
   const { session: user } = useSession();
@@ -55,6 +64,7 @@ export const useIdentifyInLogRocket = () => {
       pickBy({
         name: user.fullName,
         email: user.email.value,
+        roles: user.roles.value.join(','),
         timezone: user.timezone.value?.name,
       }) as Record<string, string>
     );

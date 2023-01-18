@@ -74,10 +74,12 @@ export const renderValidationErrors = (e: ValidationError) =>
  * These are the default handlers which are used as fallbacks
  * when handlers are not specified.
  */
-const defaultHandlers: ErrorHandlers = {
+export const defaultHandlers = {
   Validation: renderValidationErrors,
   Input: (e, next, { hasField }) =>
     e.field && hasField(e.field) ? setIn({}, e.field, e.message) : next(e),
+  Duplicate: (e, next, { hasField }) =>
+    hasField(e.field) ? setIn({}, e.field, 'Already in use') : next(e),
 
   // Assume server errors are handled separately
   // Return failure but no error message
@@ -86,7 +88,7 @@ const defaultHandlers: ErrorHandlers = {
     console.error(message);
     return message;
   },
-};
+} satisfies ErrorHandlers;
 
 /**
  * Handles the error according to the form error handlers passed in.

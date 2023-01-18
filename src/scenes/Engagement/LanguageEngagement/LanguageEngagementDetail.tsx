@@ -2,14 +2,16 @@ import { Add } from '@mui/icons-material';
 import { Card, Grid, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { Fab } from '../../../components/Fab';
+import { ProgressReportsOverviewCard } from '../../../components/ProgressReportsOverviewCard/ProgressReportsOverviewCard';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
 import { ProductList } from '../../Products/List/ProductList';
 import { EngagementQuery } from '../Engagement.graphql';
 import { CeremonyForm } from './Ceremony';
 import { DatesForm } from './DatesForm';
+import { LanguageEngagementDescription } from './Description';
 import { LanguageEngagementHeader } from './Header';
-import { PlanningSpreadsheet, ProgressReports } from './ProgressAndPlanning';
+import { PlanningSpreadsheet } from './PlanningSpreadsheet';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
@@ -60,7 +62,10 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
           <Grid item lg={5} container direction="column" spacing={3}>
             <Grid item container spacing={3}>
               <Grid item container className={classes.details}>
-                <ProgressReports engagement={engagement} />
+                <ProgressReportsOverviewCard
+                  dueCurrently={engagement.currentProgressReportDue}
+                  dueNext={engagement.nextProgressReportDue}
+                />
               </Grid>
               <Grid item container className={classes.details}>
                 <PlanningSpreadsheet engagement={engagement} />
@@ -94,6 +99,9 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
             direction="column"
             spacing={2}
           >
+            <Grid item>
+              <LanguageEngagementDescription engagement={engagement} />
+            </Grid>
             <Grid item container spacing={2} alignItems="center">
               <Grid item component={Typography} variant="h3" paragraph>
                 Goals

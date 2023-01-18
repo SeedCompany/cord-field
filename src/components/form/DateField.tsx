@@ -53,6 +53,7 @@ export const DateField = ({
   const i10nCtx = useLocalization();
   const validator: Validator<Nullable<CalendarDate>> = (val) => {
     let error: DateError | null = validateDate({
+      // @ts-expect-error BaseDateValidationProps are typed as required. They are not.
       props,
       value: val,
       adapter: i10nCtx,

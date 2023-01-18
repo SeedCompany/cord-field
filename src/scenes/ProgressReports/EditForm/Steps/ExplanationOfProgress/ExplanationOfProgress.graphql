@@ -1,0 +1,25 @@
+fragment ExplanationOfProgressStep on ProgressReport {
+  id
+  varianceExplanation {
+    ...varianceExplanation # read view
+    comments {
+      ...SecuredRichTextNullable
+    }
+    reasonOptions {
+      ahead
+      behind
+      onTime
+    }
+    reasons {
+      ...SecuredStringList
+    }
+  }
+}
+
+mutation ExplainProgressVariance(
+  $input: ProgressReportVarianceExplanationInput!
+) {
+  explainProgressVariance(input: $input) {
+    ...ExplanationOfProgressStep
+  }
+}

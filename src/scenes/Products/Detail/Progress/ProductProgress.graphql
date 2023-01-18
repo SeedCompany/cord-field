@@ -3,10 +3,13 @@ fragment ProductProgress on ProductProgress {
     id
   } # For cache id
   report {
-    ...PeriodicReport
+    id
   }
   steps {
     ...StepProgress
+  }
+  variant {
+    ...variant
   }
 }
 

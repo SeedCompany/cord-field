@@ -60,7 +60,7 @@ const ProjectDetails = () => (
       <Route
         path="change-requests"
         element={
-          useBetaFeatures() ? (
+          useBetaFeatures().has('projectChangeRequests') ? (
             <ChangeRequestList />
           ) : (
             <Navigate to=".." replace />

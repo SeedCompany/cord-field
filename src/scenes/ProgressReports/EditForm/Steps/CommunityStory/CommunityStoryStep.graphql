@@ -1,0 +1,32 @@
+mutation CreateCommunityStory($input: ChoosePrompt!) {
+  createProgressReportCommunityStory(input: $input) {
+    ...promptResponse
+    # Fetch the list of stories again to connect this new item to our cached list
+    parent {
+      ... on ProgressReport {
+        id
+        communityStories {
+          ...Pagination
+          items {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateCommunityStoryResponse($input: UpdatePromptVariantResponse!) {
+  updateProgressReportCommunityStoryResponse(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation ChangeProgressReportCommunityStoryPrompt($input: ChangePrompt!) {
+  changeProgressReportCommunityStoryPrompt(input: $input) {
+    id
+    prompt {
+      ...SecuredPrompt
+    }
+  }
+}

@@ -1,0 +1,13 @@
+query ProgressReportsOfEngagement($engagementId: ID!, $changeset: ID) {
+  engagement(id: $engagementId, changeset: $changeset) {
+    ...Id
+    ...EngagementBreadcrumb
+    ... on LanguageEngagement {
+      progressReports(input: { count: 100, order: DESC }) {
+        items {
+          ...ProgressReportListItem
+        }
+      }
+    }
+  }
+}

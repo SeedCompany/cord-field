@@ -1,0 +1,73 @@
+query ProgressReportEdit($progressReportId: ID!) {
+  periodicReport(id: $progressReportId) {
+    ...ProgressReportEdit
+  }
+}
+
+fragment ProgressReportEdit on ProgressReport {
+  ...PeriodicReport
+  cumulativeSummary {
+    ...ProgressSummary
+  }
+
+  teamNews {
+    ...promptResponseList
+  }
+  communityStories {
+    ...promptResponseList
+  }
+  progress {
+    ...ProgressReportProgress
+  }
+  progressForAllVariants {
+    ...ProgressReportProgress
+  }
+  status {
+    ...ProgressReportStatus
+  }
+  ...ExplanationOfProgressStep
+  parent {
+    id
+    canDelete
+    sensitivity
+    language {
+      value {
+        id
+        displayName {
+          canRead
+          value
+        }
+      }
+    }
+    project {
+      id
+      name {
+        canRead
+        value
+      }
+      primaryLocation {
+        value {
+          name {
+            canRead
+            value
+          }
+        }
+      }
+      fieldRegion {
+        value {
+          name {
+            value
+            canRead
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment ProgressReportProgress on ProductProgress {
+  variant {
+    ...variant
+  }
+  ...ProgressOfProductForReport
+}
