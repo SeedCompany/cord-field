@@ -6,6 +6,7 @@ query ProjectRootDirectory($id: ID!, $changeset: ID) {
       canRead
       value {
         id
+        totalFiles
       }
     }
   }
