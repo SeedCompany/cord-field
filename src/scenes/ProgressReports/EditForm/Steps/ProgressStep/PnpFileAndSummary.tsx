@@ -32,7 +32,7 @@ export const PnpFileAndSummary = ({
         {!report.reportFile.value && (
           <Grid item md={6} sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="body2">
-              (TENTATIVE COPY) Please upload the PnP for this reporting period.
+              Please upload the PnP for this reporting period.
               The progress data will populate the charts below.
             </Typography>
           </Grid>
