@@ -1,16 +1,11 @@
-import { ComponentType } from 'react';
-import { ReportProp } from '../ReportProp';
 import { CommunityStoryStep } from './CommunityStory';
 import { ExplanationOfProgress } from './ExplanationOfProgress/ExplanationOfProgress';
 import { ProgressStep } from './ProgressStep';
+import { GroupedStepMapShape } from './step.types';
 import { SubmitReportStep } from './SubmitReportStep';
 import { TeamNewsStep } from './TeamNews';
 
-export const Steps: {
-  [Section in string]: ReadonlyArray<
-    [label: string, component: ComponentType<ReportProp>]
-  >;
-} = {
+export const Steps: GroupedStepMapShape = {
   'Narrative Report': [
     ['Team News', TeamNewsStep],
     ['Community Story', CommunityStoryStep],
@@ -21,3 +16,5 @@ export const Steps: {
   ],
   'Final Details': [['Submit Report', SubmitReportStep]],
 };
+
+export * from './step.types';

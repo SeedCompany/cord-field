@@ -1,15 +1,10 @@
 import { Box } from '@mui/material';
 import { useProgressReportContext } from './ProgressReportContext';
 import { ReportProp } from './ReportProp';
-import { Steps } from './Steps';
 import { NextStepButton } from './Steps/NextStepButton';
 
-const stepMap = Object.fromEntries(Object.values(Steps).flat());
-
 export const StepContainer = ({ report }: ReportProp) => {
-  const { stepName, step: stepIndex } = useProgressReportContext();
-  const Step = stepMap[stepName];
-  const isLastStep = stepIndex >= Object.keys(stepMap).length - 1;
+  const { CurrentStep, isLast } = useProgressReportContext();
 
   return (
     <div
@@ -31,9 +26,11 @@ export const StepContainer = ({ report }: ReportProp) => {
         <NextStepButton />
       </Box>
 
-      <Box sx={{ p: 2, mb: 2 }}>{Step && <Step report={report} />}</Box>
+      <Box sx={{ p: 2, mb: 2 }}>
+        <CurrentStep report={report} />
+      </Box>
 
-      {!isLastStep && <NextStepButton sx={{ mr: 2, mb: 2 }} />}
+      {!isLast && <NextStepButton sx={{ mr: 2, mb: 2 }} />}
     </div>
   );
 };

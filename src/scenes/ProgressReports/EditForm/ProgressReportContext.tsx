@@ -1,20 +1,16 @@
 import { kebabCase } from 'lodash';
-import { createContext, useCallback, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
-import { Steps } from './Steps';
-
-const flatSteps = Object.values(Steps)
-  .flat()
-  .map((step) => step[0]);
+import { GroupedStepMapShape, StepComponent, Steps } from './Steps';
 
 interface ProgressReportContext {
-  setProgressReportStep: (step: number | string) => void;
+  groupedStepMap: GroupedStepMapShape;
+  CurrentStep: StepComponent;
+  isLast: boolean;
   nextStep: () => void;
   previousStep: () => void;
-
-  step: number;
-  stepName: string;
+  setProgressReportStep: (step: number | string) => void;
 }
 
 const ProgressReportContext = createContext<ProgressReportContext | null>(null);
@@ -26,47 +22,46 @@ const useStepState = makeQueryHandler({
 export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
-  const stepName = useMemo(() => {
-    const name = urlStep
-      ? flatSteps.find((step) => kebabCase(step) === urlStep)
-      : undefined;
-    return name ?? flatSteps[0]!;
-  }, [urlStep]);
-  const stepIndex = flatSteps.indexOf(stepName);
+  const { groupedStepMap, stepMap, flatSteps } = useMemo(() => {
+    const groupedStepMap = Steps;
+    const stepMap = Object.fromEntries(Object.values(groupedStepMap).flat());
+    const flatSteps = Object.keys(stepMap);
+    return { groupedStepMap, stepMap, flatSteps };
+  }, []);
 
-  const setStep = useCallback(
-    (nameOrIndex: number | string) => {
+  const context = useMemo(() => {
+    const stepName =
+      (urlStep
+        ? flatSteps.find((step) => kebabCase(step) === urlStep)
+        : undefined) ?? flatSteps[0]!;
+    const stepIndex = flatSteps.indexOf(stepName);
+
+    const setStep = (nameOrIndex: number | string) => {
       const name =
         typeof nameOrIndex === 'number' ? flatSteps[nameOrIndex] : nameOrIndex;
       setStepState({
         step: kebabCase(name),
       });
-    },
-    [setStepState]
-  );
+    };
 
-  const nextStep = useCallback(() => {
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- linter is confused
-    setStep(Math.min(stepIndex + 1, flatSteps.length - 1));
-  }, [setStep, stepIndex]);
-
-  const previousStep = useCallback(() => {
-    setStep(Math.max(stepIndex - 1, 0));
-  }, [setStep, stepIndex]);
-
-  const value = useMemo(
-    () => ({
-      step: stepIndex,
-      stepName,
+    const context: ProgressReportContext = {
+      CurrentStep: stepMap[stepName] ?? Noop,
+      groupedStepMap,
+      isLast: stepIndex >= flatSteps.length - 1,
       setProgressReportStep: setStep,
-      nextStep,
-      previousStep,
-    }),
-    [stepIndex, stepName, setStep, nextStep, previousStep]
-  );
+      nextStep: () => {
+        setStep(Math.min(stepIndex + 1, flatSteps.length - 1));
+      },
+      previousStep: () => {
+        setStep(Math.max(stepIndex - 1, 0));
+      },
+    };
+    return context;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlStep, setStepState]);
 
   return (
-    <ProgressReportContext.Provider value={value}>
+    <ProgressReportContext.Provider value={context}>
       {children}
     </ProgressReportContext.Provider>
   );
@@ -81,3 +76,5 @@ export const useProgressReportContext = () => {
   }
   return context;
 };
+
+const Noop = (_props: unknown) => null;
