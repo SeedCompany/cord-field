@@ -1,13 +1,13 @@
 import { Box, Typography } from '@mui/material';
-import { ReportProp } from '../../ReportProp';
 import { Prompt, VariantResponses } from '../PromptVariant';
+import { StepComponent } from '../step.types';
 import {
   ChangeProgressReportCommunityStoryPromptDocument as ChangePrompt,
   CreateCommunityStoryDocument as CreateStory,
   UpdateCommunityStoryResponseDocument as UpdateResponse,
 } from './CommunityStoryStep.graphql';
 
-export const CommunityStoryStep = ({ report }: ReportProp) => {
+export const CommunityStoryStep: StepComponent = ({ report }) => {
   const story = report.communityStories.items[0];
 
   return (
@@ -38,3 +38,4 @@ export const CommunityStoryStep = ({ report }: ReportProp) => {
     </div>
   );
 };
+CommunityStoryStep.enableWhen = ({ report }) => report.communityStories.canRead;

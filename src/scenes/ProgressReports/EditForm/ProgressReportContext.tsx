@@ -2,6 +2,7 @@ import { kebabCase } from 'lodash';
 import { createContext, useContext, useMemo } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
+import { ReportProp } from './ReportProp';
 import { GroupedStepMapShape, StepComponent, Steps } from './Steps';
 
 interface ProgressReportContext {
@@ -19,15 +20,25 @@ const useStepState = makeQueryHandler({
   step: StringParam,
 });
 
-export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
+export const ProgressReportContextProvider = ({
+  report,
+  children,
+}: Partial<ReportProp> & ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
   const { groupedStepMap, stepMap, flatSteps } = useMemo(() => {
-    const groupedStepMap = Steps;
+    const groupedStepMap = Object.fromEntries(
+      Object.entries(Steps).flatMap(([title, steps]) => {
+        const enabled = steps.filter(([_, { enableWhen }]) =>
+          report == null ? true : enableWhen?.({ report }) ?? true
+        );
+        return enabled.length > 0 ? [[title, enabled]] : [];
+      })
+    );
     const stepMap = Object.fromEntries(Object.values(groupedStepMap).flat());
     const flatSteps = Object.keys(stepMap);
     return { groupedStepMap, stepMap, flatSteps };
-  }, []);
+  }, [report]);
 
   const context = useMemo(() => {
     const stepName =
@@ -58,7 +69,7 @@ export const ProgressReportContextProvider = ({ children }: ChildrenProp) => {
     };
     return context;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlStep, setStepState]);
+  }, [urlStep, setStepState, report]);
 
   return (
     <ProgressReportContext.Provider value={context}>
