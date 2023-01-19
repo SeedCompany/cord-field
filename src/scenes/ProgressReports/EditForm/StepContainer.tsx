@@ -30,7 +30,7 @@ export const StepContainer = ({ report }: ReportProp) => {
         <CurrentStep report={report} />
       </Box>
 
-      {!isLast && <NextStepButton sx={{ mr: 2, mb: 2 }} />}
+      {!isLast && <NextStepButton sx={{ mr: 1, mb: 2 }} />}
     </div>
   );
 };
