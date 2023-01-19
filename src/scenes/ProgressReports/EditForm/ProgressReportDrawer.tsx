@@ -64,7 +64,7 @@ export const ProgressReportDrawer = ({
   }
 
   return (
-    <ProgressReportContextProvider>
+    <ProgressReportContextProvider report={report}>
       <CustomDrawer
         open={open}
         onClose={() => navigate('..')}

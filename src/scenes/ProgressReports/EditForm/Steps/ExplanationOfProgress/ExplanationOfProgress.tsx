@@ -20,7 +20,7 @@ import {
 import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField } from '~/components/RichText';
 import { VarianceExplanation } from '../../../Detail/VarianceExplanation/VarianceExplanation';
-import { ReportProp } from '../../ReportProp';
+import { StepComponent } from '../step.types';
 import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql';
 
 type OptionGroup = RequiredKeysOf<ReasonOptions>;
@@ -50,7 +50,7 @@ interface FormShape {
   comments?: RichTextData;
 }
 
-export const ExplanationOfProgress = ({ report }: ReportProp) => {
+export const ExplanationOfProgress: StepComponent = ({ report }) => {
   const { varianceExplanation: explanation } = report;
   const optionsByGroup = explanation.reasonOptions;
 

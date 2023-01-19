@@ -8,11 +8,11 @@ import {
   ProductTable,
   RowData as ProductTableRowData,
 } from '../../../Detail/ProductTable';
-import { ReportProp } from '../../ReportProp';
+import { StepComponent } from '../step.types';
 import { PnpFileAndSummary } from './PnpFileAndSummary';
 import { VariantSelector } from './VariantSelector';
 
-export const ProgressStep = ({ report }: ReportProp) => {
+export const ProgressStep: StepComponent = ({ report }) => {
   const progressByVariant = useMemo(
     () =>
       new Map(
@@ -75,6 +75,8 @@ export const ProgressStep = ({ report }: ReportProp) => {
     </Stack>
   );
 };
+ProgressStep.enableWhen = ({ report }) =>
+  report.progressForAllVariants.length > 0 || report.reportFile.canRead;
 
 const useUpdateSteps = () => {
   const [update] = useMutation(UpdateStepProgressDocument);
