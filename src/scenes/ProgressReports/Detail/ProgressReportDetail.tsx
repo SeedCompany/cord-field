@@ -156,6 +156,7 @@ export const ProgressReportDetail = () => {
         ) : (
           <Stack spacing={3} maxWidth="lg" alignItems="flex-start" mt={1}>
             <StatusStepper
+              loading={!report}
               current={report?.status.value}
               sx={{ width: 1, maxWidth: 'sm' }}
             />
