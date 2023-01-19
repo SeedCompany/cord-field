@@ -94,7 +94,7 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
         sx={{ mt: 2, gap: 2, display: 'flex', alignItems: 'flex-end' }}
       >
         <span>
-          <ReportLabel report={report} /> &mdash; Field Report
+          Quarterly Report &mdash; <ReportLabel report={report} />
         </span>
         {report.status.value && (
           <Chip color="info" label={StatusLabels[report.status.value]!} />
