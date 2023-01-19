@@ -78,7 +78,7 @@ export const ProgressReportDetail = () => {
     | undefined;
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- safety check. It's possible with manual user input.
   if (report && report.__typename !== 'ProgressReport') {
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   const engagement = report?.parent;
