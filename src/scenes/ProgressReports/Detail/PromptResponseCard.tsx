@@ -4,6 +4,7 @@ import {
   CardActions,
   CardContent,
   CardProps,
+  Skeleton,
   Stack,
   Typography,
 } from '@mui/material';
@@ -16,6 +17,7 @@ interface PromptResponseCardProps
   extends Omit<CardProps, 'title' | 'placeholder'> {
   title: ReactNode;
   promptResponse?: PromptResponseFragment;
+  loading: boolean;
   showPrompt?: boolean;
   placeholder?: ReactNode;
   actions?: ReactNode;
@@ -24,6 +26,7 @@ interface PromptResponseCardProps
 export const PromptResponseCard = ({
   title,
   promptResponse,
+  loading,
   showPrompt,
   placeholder,
   actions,
@@ -56,7 +59,12 @@ export const PromptResponseCard = ({
             <RichTextView data={prompt.value?.text.value} />
           </Box>
         )}
-        {response ? (
+        {loading ? (
+          <>
+            <Skeleton width="60%" />
+            <Skeleton width="40%" />
+          </>
+        ) : response ? (
           <RichTextView data={response} />
         ) : typeof placeholder === 'string' ? (
           <Typography color="text.secondary">{placeholder}</Typography>

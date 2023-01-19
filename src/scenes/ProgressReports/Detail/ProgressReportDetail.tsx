@@ -156,6 +156,7 @@ export const ProgressReportDetail = () => {
         ) : (
           <Stack spacing={3} maxWidth="lg" alignItems="flex-start" mt={1}>
             <StatusStepper
+              loading={!report}
               current={report?.status.value}
               sx={{ width: 1, maxWidth: 'sm' }}
             />
@@ -185,6 +186,7 @@ export const ProgressReportDetail = () => {
               <PromptResponseCard
                 title="Team News"
                 promptResponse={report?.teamNews.items[0]}
+                loading={!report}
                 placeholder="None yet"
                 actions={
                   <ButtonLink to="edit?step=team-news">View Details</ButtonLink>
@@ -195,6 +197,7 @@ export const ProgressReportDetail = () => {
                 title="Community Story"
                 showPrompt
                 promptResponse={report?.communityStories.items[0]}
+                loading={!report}
                 placeholder="No response yet"
                 actions={
                   <ButtonLink to="edit?step=community-story">
