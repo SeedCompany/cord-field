@@ -185,6 +185,7 @@ export const ProgressReportDetail = () => {
               <PromptResponseCard
                 title="Team News"
                 promptResponse={report?.teamNews.items[0]}
+                loading={!report}
                 placeholder="None yet"
                 actions={
                   <ButtonLink to="edit?step=team-news">View Details</ButtonLink>
@@ -195,6 +196,7 @@ export const ProgressReportDetail = () => {
                 title="Community Story"
                 showPrompt
                 promptResponse={report?.communityStories.items[0]}
+                loading={!report}
                 placeholder="No response yet"
                 actions={
                   <ButtonLink to="edit?step=community-story">
