@@ -6,9 +6,9 @@ import { SubmitReportStep } from './SubmitReportStep';
 import { TeamNewsStep } from './TeamNews';
 
 export const Steps: GroupedStepMapShape = {
-  'Narrative Report': [
+  'Investor Connection': [
     ['Team News', TeamNewsStep],
-    ['Community Story', CommunityStoryStep],
+    ['Story', CommunityStoryStep],
   ],
   'Project Management': [
     ['Progress', ProgressStep],

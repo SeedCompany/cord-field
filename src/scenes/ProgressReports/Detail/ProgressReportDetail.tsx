@@ -66,8 +66,8 @@ export const ProgressReportDetail = () => {
     return (
       <Error page error={error}>
         {{
-          NotFound: 'Could not find progress report',
-          Default: 'Error loading progress report',
+          NotFound: 'Could not find quarterly report',
+          Default: 'Error loading quarterly report',
         }}
       </Error>
     );
@@ -86,7 +86,7 @@ export const ProgressReportDetail = () => {
   return (
     <div className={classes.root}>
       <main className={classes.main}>
-        <Helmet title="Progress Report" />
+        <Helmet title="Quarterly Report" />
         <Breadcrumbs
           children={[
             <ProjectBreadcrumb key="project" data={engagement?.project} />,
@@ -99,7 +99,7 @@ export const ProgressReportDetail = () => {
                   : undefined
               }
             >
-              {!report ? <Skeleton width={200} /> : 'Progress Reports'}
+              {!report ? <Skeleton width={200} /> : 'Quarterly Reports'}
             </Breadcrumb>,
             <Breadcrumb key="report" to=".">
               {!report ? (
@@ -120,7 +120,7 @@ export const ProgressReportDetail = () => {
           <Grid item component={Typography} variant="h2">
             {data ? (
               <>
-                Progress Report - <ReportLabel report={report} />
+                Quarterly Report - <ReportLabel report={report} />
               </>
             ) : (
               <Skeleton width={442} />
@@ -194,7 +194,7 @@ export const ProgressReportDetail = () => {
               />
 
               <PromptResponseCard
-                title="Community Story"
+                title="Story"
                 showPrompt
                 promptResponse={report?.communityStories.items[0]}
                 loading={!report}

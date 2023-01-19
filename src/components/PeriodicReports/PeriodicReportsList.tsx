@@ -26,7 +26,7 @@ export const PeriodicReportsList = ({
   onRowClick?: (report: PeriodicReportFragment) => void;
   TableCardProps?: CardProps;
 } & StyleProps) => {
-  const reportTypeName = `${type} Reports`;
+  const reportTypeName = `${type === 'Progress' ? 'Quarterly' : type} Reports`;
 
   return (
     <Box
