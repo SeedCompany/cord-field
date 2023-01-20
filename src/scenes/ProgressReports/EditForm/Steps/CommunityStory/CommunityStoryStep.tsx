@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import { simpleSwitch } from '~/common';
 import { Prompt, VariantResponses } from '../PromptVariant';
 import { StepComponent } from '../step.types';
 import {
@@ -6,6 +7,7 @@ import {
   CreateCommunityStoryDocument as CreateStory,
   UpdateCommunityStoryResponseDocument as UpdateResponse,
 } from './CommunityStoryStep.graphql';
+import { StoryFieldOperationsText, StoryPartnerText } from './Instructions';
 
 export const CommunityStoryStep: StepComponent = ({ report }) => {
   const story = report.communityStories.items[0];
@@ -33,7 +35,16 @@ export const CommunityStoryStep: StepComponent = ({ report }) => {
             </Typography>
           }
         />
-        <VariantResponses promptResponse={story} doc={UpdateResponse} />
+        <VariantResponses
+          promptResponse={story}
+          doc={UpdateResponse}
+          instructions={(variant) =>
+            simpleSwitch(variant, {
+              draft: <StoryPartnerText />,
+              fpm: <StoryFieldOperationsText />,
+            })
+          }
+        />
       </Box>
     </div>
   );
