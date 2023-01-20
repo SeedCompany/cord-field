@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Box, Drawer, Typography } from '@mui/material';
+import { Box, Drawer } from '@mui/material';
 import { ReactNode } from 'react';
 import { useMatch } from 'react-router-dom';
 import { Error } from '~/components/Error';
@@ -55,16 +55,18 @@ export const ProgressReportDrawer = ({
     );
   }
 
-  if (report?.__typename !== 'ProgressReport') {
-    return (
-      <Typography color="error">
-        This is not the correct type of progress report
-      </Typography>
-    );
+  if (report && report.__typename !== 'ProgressReport') {
+    // Detail page will handle an incorrect type
+    return null;
+  }
+
+  if (!report) {
+    // TODO loading state
+    return null;
   }
 
   return (
-    <ProgressReportContextProvider>
+    <ProgressReportContextProvider report={report}>
       <CustomDrawer
         open={open}
         onClose={() => navigate('..')}

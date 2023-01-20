@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import { memoize } from 'lodash';
-import { RoleLabels, RoleList } from '~/api/schema.graphql';
+import { RoleLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -15,6 +15,7 @@ import {
   TextField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import { useSession } from '../../../components/Session';
 import { UserFormFragment } from './UserForm.graphql';
 
 export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
@@ -34,6 +35,7 @@ export const UserForm = <T, R = void>({
   prefix,
   ...rest
 }: UserFormProps<T, R>) => {
+  const { session } = useSession();
   return (
     <DialogForm<T, R>
       DialogProps={{
@@ -135,13 +137,14 @@ export const UserForm = <T, R = void>({
           {(props) => (
             <AutocompleteField
               multiple
-              options={RoleList}
+              options={
+                user?.roles.assignableRoles ??
+                session?.roles.assignableRoles ??
+                []
+              }
               getOptionLabel={labelFrom(RoleLabels)}
               label="Roles"
               variant="outlined"
-              getOptionDisabled={(role) =>
-                user ? !user.roles.assignableRoles.includes(role) : true
-              }
               {...props}
             />
           )}

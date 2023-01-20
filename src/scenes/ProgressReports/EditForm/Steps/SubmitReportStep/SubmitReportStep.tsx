@@ -3,14 +3,14 @@ import { useSnackbar } from 'notistack';
 import { Form } from 'react-final-form';
 import { RichTextField } from '~/components/RichText';
 import { useNavigate } from '~/components/Routing';
-import { ReportProp } from '../../ReportProp';
+import { StepComponent } from '../step.types';
 import { TransitionButtons } from './TransitionButtons';
 import {
   TransitionFormValues,
   useExecuteTransition,
 } from './useExecuteTransition';
 
-export const SubmitReportStep = ({ report }: ReportProp) => {
+export const SubmitReportStep: StepComponent = ({ report }) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -47,3 +47,5 @@ export const SubmitReportStep = ({ report }: ReportProp) => {
     </Form>
   );
 };
+SubmitReportStep.enableWhen = ({ report }) =>
+  report.status.canBypassTransitions || report.status.transitions.length > 0;

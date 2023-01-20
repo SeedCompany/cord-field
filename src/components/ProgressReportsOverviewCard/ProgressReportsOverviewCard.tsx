@@ -26,7 +26,7 @@ export const ProgressReportsOverviewCard = ({
   <Card {...rest} sx={{ width: 1 }}>
     <CardContent sx={{ width: 1 }}>
       <Typography variant="h4" paragraph>
-        Progress Reports
+        Quarterly Reports
       </Typography>
       <ReportInfoContainer horizontalAt={260} spaceEvenlyAt={430}>
         {dueCurrently?.value && (

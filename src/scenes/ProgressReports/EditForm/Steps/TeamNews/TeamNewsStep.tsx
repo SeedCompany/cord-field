@@ -3,12 +3,13 @@ import { Box, Typography } from '@mui/material';
 import { ProgressButton } from '../../../../../components/ProgressButton';
 import { ReportProp } from '../../ReportProp';
 import { VariantResponses } from '../PromptVariant';
+import { StepComponent } from '../step.types';
 import {
   CreateProgressReportNewsDocument as CreateNews,
   UpdateProgressReportNewsResponseDocument as UpdateResponse,
 } from './TeamNewsStep.graphql';
 
-export const TeamNewsStep = ({ report }: ReportProp) => {
+export const TeamNewsStep: StepComponent = ({ report }) => {
   const news = report.teamNews.items[0];
 
   return (
@@ -23,6 +24,7 @@ export const TeamNewsStep = ({ report }: ReportProp) => {
     </Box>
   );
 };
+TeamNewsStep.enableWhen = ({ report }) => report.teamNews.canRead;
 
 const CreateFromFirstPrompt = ({ report }: ReportProp) => {
   const news = report.teamNews.items[0];

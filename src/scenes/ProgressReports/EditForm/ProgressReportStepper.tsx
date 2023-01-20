@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import { Sx } from '~/common';
 import { useProgressReportContext } from './ProgressReportContext';
-import { Steps } from './Steps';
 
 const stepperSx: Sx = (theme) => ({
   '&': {
@@ -64,7 +63,8 @@ const singleConnectorSx: Sx = {
 };
 
 export const ProgressReportStepper = () => {
-  const { setProgressReportStep, stepName } = useProgressReportContext();
+  const { setProgressReportStep, groupedStepMap, CurrentStep } =
+    useProgressReportContext();
 
   return (
     <Paper elevation={4} sx={{ mr: 2, borderRadius: 0.6 }}>
@@ -72,16 +72,16 @@ export const ProgressReportStepper = () => {
         <Typography sx={{ p: 2, pt: 3 }}>Steps:</Typography>
       </div>
       <Box sx={{ p: 2, pt: 0 }}>
-        {Object.entries(Steps).map(([title, steps], index) => (
+        {Object.entries(groupedStepMap).map(([title, steps], index) => (
           <div key={title}>
             {index > 0 && <StepConnector sx={singleConnectorSx} />}
             <Typography sx={typographySx}>{title}</Typography>
             <Stepper orientation="vertical" sx={stepperSx}>
-              {steps.map(([label]) => (
+              {steps.map(([label, StepComp]) => (
                 <Step
                   key={label}
                   onClick={() => setProgressReportStep(label)}
-                  active={stepName === label}
+                  active={StepComp === CurrentStep}
                 >
                   <StepButton icon={' '}>{label}</StepButton>
                 </Step>

@@ -19,6 +19,9 @@ export const PnpFileAndSummary = ({
 
   return (
     <Grid container spacing={2} {...rest}>
+      <Grid item>
+        <Typography variant="h3">Progress</Typography>
+      </Grid>
       {report.cumulativeSummary ? (
         <Grid item md={6}>
           <ProgressSummaryCard
@@ -29,15 +32,13 @@ export const PnpFileAndSummary = ({
         </Grid>
       ) : null}
       <Grid container item md={report.cumulativeSummary ? 6 : 12} spacing={2}>
-        {!report.reportFile.value && (
-          <Grid item md={6} sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="body2">
-              (TENTATIVE COPY) Please upload the PnP for this reporting period.
-              The progress data will populate the charts below.
-            </Typography>
-          </Grid>
-        )}
         <Grid item md={6} justifyItems="end">
+          {!report.reportFile.value && report.reportFile.canEdit && (
+            <Typography variant="body2" paragraph>
+              Please upload the PnP for this reporting period. The progress data
+              will populate the table below.
+            </Typography>
+          )}
           <ProgressReportCard
             progressReport={report}
             disableIcon
