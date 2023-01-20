@@ -34,20 +34,25 @@ export const TransitionButtons = ({ report, size }: TransitionButtonsProps) => {
   );
   return (
     <>
-      {report.status.transitions.map(({ id, type, label, to }, index) => (
-        <Fragment key={id}>
-          {index > 0 && transitionDivider}
-          <Tooltip title={`This will change the report to ${StatusLabels[to]}`}>
-            <SubmitButton
-              size={size ?? 'medium'}
-              {...transitionTypeStyles[type]}
-              action={id}
+      {report.status.transitions
+        .slice()
+        .reverse()
+        .map(({ id, type, label, to }, index) => (
+          <Fragment key={id}>
+            {index > 0 && transitionDivider}
+            <Tooltip
+              title={`This will change the report to ${StatusLabels[to]}`}
             >
-              {label}
-            </SubmitButton>
-          </Tooltip>
-        </Fragment>
-      ))}
+              <SubmitButton
+                size={size ?? 'medium'}
+                {...transitionTypeStyles[type]}
+                action={id}
+              >
+                {label}
+              </SubmitButton>
+            </Tooltip>
+          </Fragment>
+        ))}
       {report.status.canBypassTransitions && (
         <>
           {report.status.transitions.length > 0 && transitionDivider}
