@@ -1,6 +1,5 @@
 import { ArrowBack } from '@mui/icons-material';
-import { Box, Card, Chip, Divider, Typography } from '@mui/material';
-import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLists';
+import { Box, Card, Divider, Typography } from '@mui/material';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { ButtonLink } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
@@ -96,9 +95,6 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
         <span>
           Quarterly Report &mdash; <ReportLabel report={report} />
         </span>
-        {report.status.value && (
-          <Chip color="info" label={StatusLabels[report.status.value]!} />
-        )}
       </Typography>
     </Box>
   );
