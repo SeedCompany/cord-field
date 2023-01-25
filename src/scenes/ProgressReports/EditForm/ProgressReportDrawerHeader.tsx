@@ -27,17 +27,6 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
       >
         Back To Overview
       </ButtonLink>
-      <Box sx={{ display: 'flex', mt: 2 }}>
-        <Typography variant="h2">{project.name.value}</Typography>
-        <Divider
-          orientation="vertical"
-          flexItem
-          sx={{ mx: 2, borderRightColor: 'black', borderRightWidth: 2 }}
-        />
-        <Typography variant="h2">
-          {language.value?.displayName.value}
-        </Typography>
-      </Box>
       <Box
         sx={{
           marginTop: 1,
@@ -88,6 +77,18 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
           </Typography>
         </Card>
       </Box>
+      <Box sx={{ display: 'flex', mt: 2 }}>
+        <Typography variant="h5">{project.name.value}</Typography>
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{ mx: 2, borderRightColor: 'black', borderRightWidth: 2 }}
+        />
+        <Typography variant="h5">
+          {language.value?.displayName.value}
+        </Typography>
+      </Box>
+
       <Typography
         variant="h2"
         sx={{ mt: 2, gap: 2, display: 'flex', alignItems: 'flex-end' }}
