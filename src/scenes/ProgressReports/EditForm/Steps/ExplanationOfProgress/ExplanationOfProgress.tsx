@@ -122,8 +122,8 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
         Explanation of Progress
       </Typography>
       <Typography paragraph>
-        Please provide an explanation of the state of progress for this
-        reporting period.
+        Select the appropriate state of Language Engagement Goal/Translation
+        Progress.
       </Typography>
 
       <Form<FormShape>
