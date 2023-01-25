@@ -26,7 +26,7 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
         startIcon={<ArrowBack />}
         sx={{ alignSelf: 'start' }}
       >
-        Back
+        Back To Overview
       </ButtonLink>
       <Box sx={{ display: 'flex', mt: 2 }}>
         <Typography variant="h2">{project.name.value}</Typography>
