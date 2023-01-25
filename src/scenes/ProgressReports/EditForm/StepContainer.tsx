@@ -19,7 +19,7 @@ export const StepContainer = ({ report }: ReportProp) => {
           display: 'flex',
           justifyContent: 'end',
           padding: 1,
-          border: `solid ${theme.palette.divider}`,
+          borderBottom: `solid ${theme.palette.divider}`,
           borderWidth: '1px 0',
         })}
       >
