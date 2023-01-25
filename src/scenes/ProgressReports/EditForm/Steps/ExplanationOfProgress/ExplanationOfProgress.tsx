@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import type { OutputData as RichTextData } from '@editorjs/editorjs';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Tooltip, Typography } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { DateTime } from 'luxon';
@@ -149,21 +149,29 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
               disabled={!explanation.reasons.canEdit}
               required
             >
-              <EnumOption<OptionGroup>
-                value="behind"
-                label="Behind / Delayed"
-                color="error"
-              />
-              <EnumOption<OptionGroup>
-                value="onTime"
-                label="On Time"
-                color="info"
-              />
-              <EnumOption<OptionGroup>
-                value="ahead"
-                label="Ahead"
-                color="success"
-              />
+              {/* Source or truth for thresholds:
+                  https://github.com/SeedCompany/cord-api-v3/blob/master/src/components/progress-summary/dto/schedule-status.enum.ts#L13-L17 */}
+              <Tooltip title="> -10%" placement="top">
+                <EnumOption<OptionGroup>
+                  value="behind"
+                  label="Behind / Delayed"
+                  color="error"
+                />
+              </Tooltip>
+              <Tooltip title="-10% to 30%" placement="top">
+                <EnumOption<OptionGroup>
+                  value="onTime"
+                  label="On Time"
+                  color="info"
+                />
+              </Tooltip>
+              <Tooltip title="> 30%" placement="top">
+                <EnumOption<OptionGroup>
+                  value="ahead"
+                  label="Ahead"
+                  color="success"
+                />
+              </Tooltip>
             </EnumField>
 
             {optionsByGroup[group].length > 0 && (
