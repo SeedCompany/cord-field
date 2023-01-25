@@ -9,6 +9,7 @@ interface ProgressReportContext {
   groupedStepMap: GroupedStepMapShape;
   CurrentStep: StepComponent;
   isLast: boolean;
+  isFirst: boolean;
   nextStep: () => void;
   previousStep: () => void;
   setProgressReportStep: (step: number | string) => void;
@@ -58,6 +59,7 @@ export const ProgressReportContextProvider = ({
     const context: ProgressReportContext = {
       CurrentStep: stepMap[stepName] ?? Noop,
       groupedStepMap,
+      isFirst: stepIndex <= 0,
       isLast: stepIndex >= flatSteps.length - 1,
       setProgressReportStep: setStep,
       nextStep: () => {
