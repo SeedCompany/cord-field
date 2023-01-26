@@ -16,7 +16,7 @@ export const NextStepButton = ({ sx }: StyleProps) => {
       <Button
         sx={sx}
         onClick={nextStep}
-        variant="text"
+        variant="outlined"
         color="secondary"
         endIcon={
           <ArrowForward

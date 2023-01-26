@@ -16,7 +16,7 @@ export const PreviousStepButton = ({ sx }: StyleProps) => {
       <Button
         sx={sx}
         onClick={previousStep}
-        variant="text"
+        variant="outlined"
         color="secondary"
         startIcon={
           <ArrowBack
