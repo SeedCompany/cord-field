@@ -46,6 +46,7 @@ fragment ProgressReportEdit on ProgressReport {
         value
       }
       primaryLocation {
+        canRead
         value {
           name {
             canRead
@@ -54,6 +55,7 @@ fragment ProgressReportEdit on ProgressReport {
         }
       }
       fieldRegion {
+        canRead
         value {
           name {
             value

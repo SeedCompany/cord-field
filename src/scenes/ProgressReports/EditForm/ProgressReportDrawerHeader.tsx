@@ -1,6 +1,11 @@
-import { ArrowBack } from '@mui/icons-material';
-import { Box, Card, Divider, Stack, Typography } from '@mui/material';
+import {
+  ArrowBack,
+  Public as GlobeIcon,
+  Place as MapPinIcon,
+} from '@mui/icons-material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import { increaseAlpha } from '~/common';
+import { DataButton } from '~/components/DataButton';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { ButtonLink } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
@@ -38,45 +43,37 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
           },
         }}
       >
-        <Card elevation={0} variant="outlined" sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" color="text.gray">
-            Location
-          </Typography>
-          {project.primaryLocation.value?.name.canRead && (
-            <div css={{ display: 'flex' }}>
-              <Typography variant="body1">
-                {project.primaryLocation.value.name.value}
-              </Typography>
-              {project.fieldRegion.value && (
-                <span
-                  css={(theme) => ({
-                    marginRight: theme.spacing(1),
-                    marginLeft: theme.spacing(1),
-                  })}
-                >
-                  |
-                </span>
-              )}
-              <Typography variant="body1">
-                {project.fieldRegion.value?.name.value}
-              </Typography>
-            </div>
-          )}
-        </Card>
-        <Card elevation={0} variant="outlined" sx={{ px: 2, py: 1 }}>
-          <Typography variant="subtitle2" color="text.gray">
-            Sensitivity
-          </Typography>
-          <Typography variant="body1" sx={{ textTransform: 'uppercase' }}>
+        <Stack direction="row" spacing={1}>
+          <DataButton
+            label="Primary Location"
+            startIcon={<MapPinIcon color="info" />}
+            empty="None"
+            secured={project.primaryLocation}
+            redacted="You do not have permission to view primary location"
+            children={(location) => location.name.value}
+          />
+          <DataButton
+            label="Field Region"
+            startIcon={<GlobeIcon color="info" />}
+            empty="None"
+            secured={project.fieldRegion}
+            redacted="You do not have permission to view field region"
+            children={(location) => location.name.value}
+          />
+          <DataButton
+            label="Sensitivity"
+            loading={!project}
+            startIcon={
+              <SensitivityIcon
+                value={sensitivity}
+                loading={!project}
+                disableTooltip
+              />
+            }
+          >
             {sensitivity}
-            <SensitivityIcon
-              value={sensitivity}
-              sx={{
-                height: 16,
-              }}
-            />
-          </Typography>
-        </Card>
+          </DataButton>
+        </Stack>
       </Box>
       <Box sx={{ display: 'flex', mt: 2 }}>
         <Stack
