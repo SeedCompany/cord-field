@@ -1,15 +1,11 @@
-import { InfoOutlined } from '@mui/icons-material';
-import { Box, Button, Chip } from '@mui/material';
+import { Box, Chip } from '@mui/material';
 import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLists';
-import { useDialog } from '~/components/Dialog';
-import { InstructionsDialog } from './InstructionsDialog';
+import { InstructionsButton } from './InstructionsDialog';
 import { ProgressReportStepper } from './ProgressReportStepper';
 import { ReportDue } from './ReportDue';
 import { ReportProp } from './ReportProp';
 
 export const ProgressReportSidebar = ({ report }: ReportProp) => {
-  const [instructionsState, showInstructions] = useDialog();
-
   return (
     <Box
       sx={{
@@ -22,14 +18,7 @@ export const ProgressReportSidebar = ({ report }: ReportProp) => {
         position: 'fixed',
       }}
     >
-      <Button
-        endIcon={<InfoOutlined />}
-        color="secondary"
-        onClick={showInstructions}
-        sx={{ ml: -1 }}
-      >
-        Instructions
-      </Button>
+      <InstructionsButton sx={{ ml: -1 }} />
 
       {report.status.value && (
         <Box my={1}>
@@ -41,7 +30,6 @@ export const ProgressReportSidebar = ({ report }: ReportProp) => {
         <ReportDue date={report.due} />
       </Box>
       <ProgressReportStepper />
-      <InstructionsDialog {...instructionsState} />
     </Box>
   );
 };
