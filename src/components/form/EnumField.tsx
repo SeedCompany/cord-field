@@ -17,6 +17,8 @@ import { sortBy } from 'lodash';
 import {
   createContext,
   FocusEvent,
+  ForwardedRef,
+  forwardRef,
   MouseEvent,
   ReactElement,
   ReactNode,
@@ -321,7 +323,10 @@ export type EnumOptionsProps<T extends string> = {
   color?: ToggleButtonProps['color'];
 } & MergeExclusive<{ value: T }, { default: true }>;
 
-export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {
+const EnumOptionInner = <T extends string>(
+  props: EnumOptionsProps<T>,
+  ref: ForwardedRef<HTMLElement>
+) => {
   const { variant, isChecked, onChange, ...ctx } = useEnumContext<T>();
   const { disabled = ctx.disabled, value: name, default: _, ...rest } = props;
 
@@ -329,6 +334,7 @@ export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {
     return (
       <FormControlLabel
         {...rest}
+        ref={ref}
         name={name ?? 'default'}
         checked={isChecked(name)}
         onChange={(_, checked) => onChange(name, checked)}
@@ -355,6 +361,7 @@ export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {
     return (
       <ToggleButton
         {...rest}
+        ref={ref as ForwardedRef<HTMLButtonElement>}
         value={name ?? 'default'}
         selected={selected}
         onChange={(_) => onChange(name, !selected)}
@@ -367,6 +374,11 @@ export const EnumOption = <T extends string>(props: EnumOptionsProps<T>) => {
 
   return null;
 };
+EnumOptionInner.displayName = 'EnumOption';
+
+export const EnumOption = forwardRef(EnumOptionInner) as <T extends string>(
+  props: EnumOptionsProps<T> & { ref?: ForwardedRef<HTMLElement> }
+) => ReactElement | null;
 
 interface EnumContextValue<Opt extends string> {
   fieldName: string;
