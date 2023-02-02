@@ -850,7 +850,7 @@ export const fileTypes: FileType[] = [
 
 const previewableTypes = fileTypes.filter((type) => type.previewSupported);
 
-export type PreviewableMimeType = typeof previewableTypes[number]['mimeType'];
+export type PreviewableMimeType = (typeof previewableTypes)[number]['mimeType'];
 
 export const previewableImageTypes = previewableTypes.filter(
   (type) => type.Icon === ImageIcon && type.previewSupported

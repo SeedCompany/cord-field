@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { OperationVariables, useQuery } from '@apollo/client';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { AutocompleteProps } from '@mui/material';
@@ -6,7 +6,11 @@ import { useCallback, useMemo, useState } from 'react';
 import { Merge } from 'type-fest';
 import { isNetworkRequestInFlight } from '../../api';
 
-type AutocompleteQueryOptions<Data, Variables, Item> = Merge<
+type AutocompleteQueryOptions<
+  Data,
+  Variables extends OperationVariables,
+  Item
+> = Merge<
   QueryHookOptions<Data, Variables>,
   {
     /** Where in the query result is the list? */
@@ -27,7 +31,11 @@ export type AutocompleteResult<Item, Data> = Pick<
 /**
  * A wrapper around useQuery for use with <AutocompleteField />
  */
-export const useAutocompleteQuery = <Data, Variables, Item>(
+export const useAutocompleteQuery = <
+  Data,
+  Variables extends OperationVariables,
+  Item
+>(
   doc: TypedDocumentNode<Data, Variables>,
   options: AutocompleteQueryOptions<Data, Variables, Item>
 ): AutocompleteResult<Item, Data> => {
