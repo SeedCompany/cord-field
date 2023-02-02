@@ -3,6 +3,7 @@ import type { OutputData as RichTextData } from '@editorjs/editorjs';
 import { Card, CardContent, Tooltip, Typography } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
+import { camelCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
 import { Form, FormProps } from 'react-final-form';
@@ -64,14 +65,9 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
       : undefined;
 
     if (!group) {
-      const variance = report.cumulativeSummary?.variance;
-      group = !variance
-        ? 'onTime'
-        : variance >= 0.1
-        ? 'ahead'
-        : variance >= -0.1
-        ? 'behind'
-        : 'onTime';
+      group = camelCase(
+        report.varianceExplanation.scheduleStatus ?? 'OnTime'
+      ) as OptionGroup;
     }
 
     return {
