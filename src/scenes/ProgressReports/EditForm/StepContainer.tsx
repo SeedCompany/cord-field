@@ -1,11 +1,45 @@
-import { Box } from '@mui/material';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import { Box, Button } from '@mui/material';
 import { useProgressReportContext } from './ProgressReportContext';
 import { ReportProp } from './ReportProp';
-import { NextStepButton } from './Steps/NextStepButton';
-import { PreviousStepButton } from './Steps/PreviousStepButton';
 
 export const StepContainer = ({ report }: ReportProp) => {
-  const { CurrentStep, isLast, isFirst } = useProgressReportContext();
+  const { CurrentStep, previousStep, nextStep, isLast, isFirst } =
+    useProgressReportContext();
+
+  const previousButton = !isFirst && (
+    <Button
+      variant="outlined"
+      color="secondary"
+      onClick={previousStep}
+      startIcon={
+        <ArrowBack
+          sx={{
+            marginBottom: '-3px',
+          }}
+        />
+      }
+    >
+      Previous
+    </Button>
+  );
+
+  const nextButton = !isLast && (
+    <Button
+      variant="outlined"
+      color="secondary"
+      onClick={nextStep}
+      endIcon={
+        <ArrowForward
+          sx={{
+            marginBottom: '-3px',
+          }}
+        />
+      }
+    >
+      Next
+    </Button>
+  );
 
   return (
     <div
@@ -29,8 +63,7 @@ export const StepContainer = ({ report }: ReportProp) => {
           },
         ]}
       >
-        {!isFirst && <PreviousStepButton />}
-        {!isLast && <NextStepButton />}
+        {previousButton} {nextButton}
       </Box>
 
       <Box sx={{ p: 2, mb: 2 }}>
@@ -49,8 +82,7 @@ export const StepContainer = ({ report }: ReportProp) => {
           },
         ]}
       >
-        {!isFirst && <PreviousStepButton sx={{ mr: 1, mb: 2 }} />}
-        {!isLast && <NextStepButton sx={{ mr: 1, mb: 2 }} />}
+        {previousButton} {nextButton}
       </Box>
     </div>
   );
