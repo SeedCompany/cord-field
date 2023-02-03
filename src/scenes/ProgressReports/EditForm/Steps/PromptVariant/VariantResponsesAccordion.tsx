@@ -7,10 +7,9 @@ import {
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { Form, FormProps } from 'react-final-form';
 import { Scalars } from '~/api/schema/schema.graphql';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
-import { SubmitButton } from '~/components/form';
+import { Form, FormProps, SubmitButton } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField, RichTextView } from '~/components/RichText';
 import { RoleIcon } from '~/components/RoleIcon';
