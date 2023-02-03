@@ -1,5 +1,5 @@
 import { useDebounceFn } from 'ahooks';
-import { useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useForm, useFormState } from 'react-final-form';
 
 export interface AutoSubmitOptions {
@@ -61,3 +61,7 @@ export const AutoSubmit = (options: AutoSubmitOptions) => {
 
   return null;
 };
+
+export const AutoSubmitOptionsContext = createContext<
+  AutoSubmitOptions | undefined
+>(undefined);

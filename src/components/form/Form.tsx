@@ -5,7 +5,12 @@ import {
 } from 'react-final-form';
 import { Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError } from '../../api';
-import { AutoSubmit, AutoSubmitOptions } from './AutoSubmit';
+import {
+  AutoSubmit,
+  AutoSubmitOptions,
+  AutoSubmitOptionsContext,
+  defaultAutoSubmitOptions,
+} from './AutoSubmit';
 import { FieldGroup } from './FieldGroup';
 
 export interface FormProps<
@@ -98,8 +103,15 @@ export function Form<
       }}
     >
       {(renderProps) => {
-        const renderedForm =
+        let renderedForm =
           typeof children === 'function' ? children(renderProps) : children;
+        renderedForm = autoSubmitOptions ? (
+          <AutoSubmitOptionsContext.Provider value={autoSubmitOptions}>
+            {renderedForm}
+          </AutoSubmitOptionsContext.Provider>
+        ) : (
+          renderedForm
+        );
 
         return (
           <FieldGroup replace prefix={fieldsPrefix}>
