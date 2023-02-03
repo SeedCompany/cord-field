@@ -5,6 +5,7 @@ import {
 } from 'react-final-form';
 import { Promisable } from 'type-fest';
 import { ErrorHandlers, handleFormError } from '../../api';
+import { AutoSubmit, AutoSubmitOptions } from './AutoSubmit';
 import { FieldGroup } from './FieldGroup';
 
 export interface FormProps<
@@ -47,6 +48,8 @@ export interface FormProps<
 
   /** Error handlers for errors thrown from onSubmit callback */
   errorHandlers?: ErrorHandlers;
+
+  autoSubmit?: AutoSubmitOptions | boolean;
 }
 
 export function Form<
@@ -61,8 +64,15 @@ export function Form<
   onCleanSubmit,
   errorHandlers,
   children,
+  autoSubmit: autoSubmitProp,
   ...props
 }: FormProps<FormValues, InitialFormValues, SubmitResult>) {
+  const autoSubmitOptions = !autoSubmitProp
+    ? undefined
+    : autoSubmitProp === true
+    ? defaultAutoSubmitOptions
+    : autoSubmitProp;
+
   return (
     <FinalForm<FormValues, InitialFormValues>
       {...props}
@@ -93,6 +103,7 @@ export function Form<
 
         return (
           <FieldGroup replace prefix={fieldsPrefix}>
+            {autoSubmitOptions && <AutoSubmit {...autoSubmitOptions} />}
             {renderedForm}
           </FieldGroup>
         );
