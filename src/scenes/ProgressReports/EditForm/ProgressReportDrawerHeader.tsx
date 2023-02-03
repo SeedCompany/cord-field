@@ -1,5 +1,5 @@
 import { ArrowBack } from '@mui/icons-material';
-import { Box, Card, Divider, Typography } from '@mui/material';
+import { Box, Card, Divider, Stack, Typography } from '@mui/material';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { ButtonLink } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
@@ -78,15 +78,16 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
         </Card>
       </Box>
       <Box sx={{ display: 'flex', mt: 2 }}>
-        <Typography variant="h5">{project.name.value}</Typography>
-        <Divider
-          orientation="vertical"
-          flexItem
-          sx={{ mx: 2, borderRightColor: 'black', borderRightWidth: 2 }}
-        />
-        <Typography variant="h5">
-          {language.value?.displayName.value}
-        </Typography>
+        <Stack
+          direction="row"
+          divider={<Divider orientation="vertical" variant="middle" flexItem />}
+          sx={{ gap: 2 }}
+        >
+          <Typography variant="h5">{project.name.value}</Typography>
+          <Typography variant="h5">
+            {language.value?.displayName.value}
+          </Typography>
+        </Stack>
       </Box>
 
       <Typography
