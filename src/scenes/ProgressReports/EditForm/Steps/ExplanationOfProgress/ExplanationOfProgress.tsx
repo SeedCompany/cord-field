@@ -6,19 +6,18 @@ import onFieldChange from 'final-form-calculate';
 import { camelCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
-import { Form, FormProps } from 'react-final-form';
 import { RequiredKeysOf } from 'type-fest';
-import { handleFormError } from '~/api';
 import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
 import { canEditAny } from '~/common';
 import {
   EnumField,
   EnumOption,
+  Form,
+  FormProps,
+  SavingStatus,
   SecuredField,
-  SubmitButton,
   SubmitError,
 } from '~/components/form';
-import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField } from '~/components/RichText';
 import { VarianceExplanation } from '../../../Detail/VarianceExplanation/VarianceExplanation';
 import { StepComponent } from '../step.types';
@@ -78,23 +77,17 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [explanation]);
 
-  const onSubmit: FormProps<FormShape>['onSubmit'] = async (input, form) => {
-    try {
-      if (form.getState().dirty) {
-        await explainVariance({
-          variables: {
-            input: {
-              report: report.id,
-              reasons: input.reasons ? [input.reasons] : [],
-              comments: input.comments,
-            },
-          },
-        });
-      }
-      setSavedAt(DateTime.local());
-    } catch (e) {
-      return await handleFormError(e, form);
-    }
+  const onSubmit: FormProps<FormShape>['onSubmit'] = async (input) => {
+    await explainVariance({
+      variables: {
+        input: {
+          report: report.id,
+          reasons: input.reasons ? [input.reasons] : [],
+          comments: input.comments,
+        },
+      },
+    });
+    setSavedAt(DateTime.local());
   };
 
   if (!canEditAny(explanation)) {
@@ -126,8 +119,10 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
         onSubmit={onSubmit}
         decorators={decorators}
         initialValues={initialValues}
+        autoSubmit
+        keepDirtyOnReinitialize
       >
-        {({ handleSubmit, values: { group } }) => (
+        {({ handleSubmit, values: { group }, submitting }) => (
           <Card
             component="form"
             onSubmit={handleSubmit}
@@ -187,19 +182,13 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
                   label="Optional Comments"
                   tools={['paragraph', 'delimiter', 'marker']}
                   {...props}
+                  helperText={
+                    <SavingStatus submitting={submitting} savedAt={savedAt} />
+                  }
                 />
               )}
             </SecuredField>
-
             <SubmitError />
-            <SubmitButton color="primary" size="medium" fullWidth={false}>
-              Save
-            </SubmitButton>
-            {savedAt && (
-              <Typography variant="caption" component="div" sx={{ mt: 1 }}>
-                Saved at <FormattedDateTime date={savedAt} relative />
-              </Typography>
-            )}
           </Card>
         )}
       </Form>
