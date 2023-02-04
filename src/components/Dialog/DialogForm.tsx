@@ -15,29 +15,26 @@ import {
 import { FormApi } from 'final-form';
 import { isFunction, mergeWith } from 'lodash';
 import { ReactNode, useCallback, useMemo, useRef } from 'react';
-import {
-  Form,
-  FormProps,
-  FormRenderProps,
-  RenderableProps,
-} from 'react-final-form';
+import { FormRenderProps, RenderableProps } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
-import { Except, Promisable } from 'type-fest';
-import { ErrorHandlers, handleFormError, inChangesetVar } from '~/api';
+import { Except } from 'type-fest';
+import { inChangesetVar } from '~/api';
 import { callAll } from '~/common';
 import { ChangesetModificationWarning } from '../Changeset/ChangesetModificationWarning';
-import { AllowFormCloseContext } from '../form/AllowClose';
 import {
   blurOnSubmit,
   focusFirstFieldRegistered,
   focusFirstFieldWithSubmitError,
-} from '../form/decorators';
-import { FieldGroup } from '../form/FieldGroup';
-import { SubmitButton, SubmitButtonProps } from '../form/SubmitButton';
+  Form,
+  FormProps,
+  SubmitButton,
+  SubmitButtonProps,
+} from '../form';
+import { AllowFormCloseContext } from '../form/AllowClose';
 
 export type DialogFormProps<T, R = void> = Omit<
-  FormProps<T>,
-  'onSubmit' | keyof RenderableProps<any>
+  FormProps<T, Partial<T>, R>,
+  keyof RenderableProps<any>
 > & {
   title?: ReactNode;
 
@@ -47,31 +44,6 @@ export type DialogFormProps<T, R = void> = Omit<
   SubmitProps?: SubmitButtonProps;
   closeLabel?: ReactNode | false;
   CloseProps?: ButtonProps;
-
-  /**
-   * Optionally call onSubmit even if form is clean,
-   * OR, when a string value, if `sendIfClean === data.submitAction`.
-   * Else just close dialog.
-   */
-  sendIfClean?: boolean | string;
-
-  /** A prefix for all form fields */
-  fieldsPrefix?: string;
-
-  /**
-   * A bit different than Final Form's onSubmit.
-   * The function should throw errors instead of returning them,
-   * and should return the result passed to onSuccess callback.
-   */
-  onSubmit: (values: T, form: FormApi<T>) => Promisable<R>;
-
-  /**
-   * After the form submits successfully it calls this with the result.
-   */
-  onSuccess?: (result: R) => void;
-
-  /** Error handlers for errors thrown from onSubmit callback */
-  errorHandlers?: ErrorHandlers;
 
   /**
    * Is this form changeset aware?
@@ -119,15 +91,10 @@ export function DialogForm<T, R = void>({
   SubmitProps,
   closeLabel,
   CloseProps,
-  sendIfClean,
   open,
-  onSuccess,
-  errorHandlers,
   onClose,
-  fieldsPrefix = '',
   children,
   DialogProps,
-  onSubmit,
   changesetAware,
   disableChangesetWarning,
   TransitionProps,
@@ -155,29 +122,16 @@ export function DialogForm<T, R = void>({
   }, []);
 
   return (
-    <Form<T>
+    <Form<T, Partial<T>, R>
       decorators={defaultDecorators}
       {...FormProps}
-      onSubmit={async (data, form) => {
-        const submitAction = (data as any).submitAction;
-
-        const submitCleanForm =
-          sendIfClean === true || (sendIfClean && sendIfClean === submitAction);
-
-        const shouldSubmit = submitCleanForm || form.getState().dirty;
-
-        if (!shouldSubmit) {
-          onClose?.('cleanSubmit', form);
-          return null;
-        }
-        try {
-          const res = await onSubmit(data, form);
-          onSuccess?.(res);
-          onClose?.('success', form);
-          return null;
-        } catch (e) {
-          return await handleFormError(e, form, errorHandlers);
-        }
+      onCleanSubmit={(form) => {
+        onClose?.('cleanSubmit', form);
+        FormProps.onCleanSubmit?.(form);
+      }}
+      onSuccess={(res, form) => {
+        onClose?.('success', form);
+        FormProps.onSuccess?.(res, form);
       }}
     >
       {({ handleSubmit, submitting, form, ...rest }) => {
@@ -251,11 +205,9 @@ export function DialogForm<T, R = void>({
         );
 
         return (
-          <FieldGroup replace prefix={fieldsPrefix}>
-            <AllowFormCloseContext.Provider value={allowDialogClose}>
-              {renderedForm}
-            </AllowFormCloseContext.Provider>
-          </FieldGroup>
+          <AllowFormCloseContext.Provider value={allowDialogClose}>
+            {renderedForm}
+          </AllowFormCloseContext.Provider>
         );
       }}
     </Form>

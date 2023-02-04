@@ -1,13 +1,7 @@
 import { useMutation } from '@apollo/client';
-import { isEqual, noop } from 'lodash';
 import { useMemo } from 'react';
-import { Form, FormSpy } from 'react-final-form';
 import { UpdateLanguageEngagementInput as UpdateEngagementInput } from '~/api/schema.graphql';
-import {
-  DateField,
-  FieldGroup,
-  SecuredField,
-} from '../../../../components/form';
+import { DateField, Form, SecuredField } from '../../../../components/form';
 import { UpdateLanguageEngagementDocument as UpdateEngagement } from '../../EditEngagement/EditEngagementDialog.graphql';
 import { LanguageEngagementDatesFormFragment as Engagement } from './DatesForm.graphql';
 
@@ -26,29 +20,20 @@ export const DatesForm = ({ engagement }: { engagement: Engagement }) => {
   );
 
   return (
-    <Form<UpdateEngagementInput> initialValues={initialValues} onSubmit={noop}>
-      {() => (
-        <FieldGroup prefix="engagement">
-          <FormSpy<UpdateEngagementInput>
-            subscription={{ values: true }}
-            onChange={({ values: input }) => {
-              if (!isEqual(initialValues, input)) {
-                void updateEngagement({ variables: { input } });
-              }
-            }}
-          />
-          <SecuredField obj={engagement} name="completeDate">
-            {(props) => (
-              <DateField {...props} label="Translation Complete Date" />
-            )}
-          </SecuredField>
-          <SecuredField obj={engagement} name="disbursementCompleteDate">
-            {(props) => (
-              <DateField {...props} label="Disbursement Complete Date" />
-            )}
-          </SecuredField>
-        </FieldGroup>
-      )}
+    <Form<UpdateEngagementInput>
+      initialValues={initialValues}
+      onSubmit={async (input) => {
+        await updateEngagement({ variables: { input } });
+      }}
+      autoSubmit
+      fieldsPrefix="engagement"
+    >
+      <SecuredField obj={engagement} name="completeDate">
+        {(props) => <DateField {...props} label="Translation Complete Date" />}
+      </SecuredField>
+      <SecuredField obj={engagement} name="disbursementCompleteDate">
+        {(props) => <DateField {...props} label="Disbursement Complete Date" />}
+      </SecuredField>
     </Form>
   );
 };
