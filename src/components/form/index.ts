@@ -13,6 +13,7 @@ export * from './FieldGroup';
 export * from './FormattedTextField';
 export * from './NumberField';
 export * from './PasswordField';
+export * from './SavingStatus';
 export * from './SecuredField';
 export * from './SelectField';
 export * from './SubmitButton';

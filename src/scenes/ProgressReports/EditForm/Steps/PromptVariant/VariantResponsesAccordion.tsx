@@ -8,8 +8,7 @@ import {
 import { useState } from 'react';
 import { Scalars } from '~/api/schema/schema.graphql';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
-import { Form, FormProps } from '~/components/form';
-import { FormattedDateTime } from '~/components/Formatters';
+import { Form, FormProps, SavingStatus } from '~/components/form';
 import { RichTextField, RichTextView } from '~/components/RichText';
 import { RoleIcon } from '~/components/RoleIcon';
 
@@ -78,17 +77,10 @@ export const VariantResponsesAccordion = ({
                     response.variant.responsibleRole === 'Marketing'
                   }
                   helperText={
-                    submitting ? (
-                      'Saving...'
-                    ) : response.modifiedAt ? (
-                      <>
-                        Saved{' '}
-                        <FormattedDateTime
-                          date={response.modifiedAt}
-                          relative
-                        />
-                      </>
-                    ) : null
+                    <SavingStatus
+                      submitting={submitting}
+                      savedAt={response.modifiedAt}
+                    />
                   }
                 />
               </form>
