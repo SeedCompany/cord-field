@@ -64,7 +64,7 @@ export const VariantResponsesAccordion = ({
               response: response.response.value,
             }}
           >
-            {({ handleSubmit }) => (
+            {({ handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
                 <RichTextField
                   name="response"
@@ -75,13 +75,20 @@ export const VariantResponsesAccordion = ({
                   showCharacterCount={
                     response.variant.responsibleRole === 'Marketing'
                   }
+                  helperText={
+                    submitting ? (
+                      'Saving...'
+                    ) : response.modifiedAt ? (
+                      <>
+                        Saved{' '}
+                        <FormattedDateTime
+                          date={response.modifiedAt}
+                          relative
+                        />
+                      </>
+                    ) : null
+                  }
                 />
-                {response.modifiedAt && (
-                  <Typography variant="caption" sx={{ mb: 1 }} component="div">
-                    Saved at{' '}
-                    <FormattedDateTime date={response.modifiedAt} relative />
-                  </Typography>
-                )}
                 <SubmitButton variant="outlined" color="secondary">
                   Save Progress
                 </SubmitButton>
