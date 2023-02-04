@@ -8,7 +8,7 @@ import {
 import { useState } from 'react';
 import { Scalars } from '~/api/schema/schema.graphql';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
-import { Form, FormProps, SubmitButton } from '~/components/form';
+import { Form, FormProps } from '~/components/form';
 import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField, RichTextView } from '~/components/RichText';
 import { RoleIcon } from '~/components/RoleIcon';
@@ -30,6 +30,10 @@ export const VariantResponsesAccordion = ({
   onSubmit,
 }: VariantResponsesAccordionProps) => {
   const [expanded, setExpanded] = useState(_expanded ?? false);
+  const [initialValues] = useState(() => ({
+    variant: response.variant.key,
+    response: response.response.value,
+  }));
 
   if (!response.response.canRead) {
     return null;
@@ -59,10 +63,8 @@ export const VariantResponsesAccordion = ({
         {response.response.canEdit ? (
           <Form<FormShape>
             onSubmit={onSubmit}
-            initialValues={{
-              variant: response.variant.key,
-              response: response.response.value,
-            }}
+            initialValues={initialValues}
+            autoSubmit
           >
             {({ handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
@@ -89,9 +91,6 @@ export const VariantResponsesAccordion = ({
                     ) : null
                   }
                 />
-                <SubmitButton variant="outlined" color="secondary">
-                  Save Progress
-                </SubmitButton>
               </form>
             )}
           </Form>
