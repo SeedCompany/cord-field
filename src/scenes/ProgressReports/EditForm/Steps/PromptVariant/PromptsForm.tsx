@@ -1,9 +1,14 @@
 import { Box } from '@mui/material';
 import { ReactNode } from 'react';
-import { Form, FormProps } from 'react-final-form';
 import { StyleProps } from '~/common';
 import { PromptFragment as Prompt } from '~/common/fragments';
-import { EnumField, EnumOption, SubmitButton } from '~/components/form';
+import {
+  EnumField,
+  EnumOption,
+  Form,
+  FormProps,
+  SubmitButton,
+} from '~/components/form';
 import { RichTextView } from '~/components/RichText';
 
 export interface PromptSelection {
