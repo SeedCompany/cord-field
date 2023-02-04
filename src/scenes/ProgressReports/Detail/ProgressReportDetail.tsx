@@ -200,9 +200,7 @@ export const ProgressReportDetail = () => {
                 loading={!report}
                 placeholder="No response yet"
                 actions={
-                  <ButtonLink to="edit?step=community-story">
-                    View Details
-                  </ButtonLink>
+                  <ButtonLink to="edit?step=story">View Details</ButtonLink>
                 }
               />
             </Stack>
