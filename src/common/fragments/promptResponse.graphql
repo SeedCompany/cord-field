@@ -37,4 +37,5 @@ fragment variantResponse on VariantResponse {
     canEdit
     value
   }
+  modifiedAt
 }

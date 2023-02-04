@@ -5,7 +5,6 @@ import {
   AccordionSummary,
   Typography,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Scalars } from '~/api/schema/schema.graphql';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
@@ -31,7 +30,6 @@ export const VariantResponsesAccordion = ({
   onSubmit,
 }: VariantResponsesAccordionProps) => {
   const [expanded, setExpanded] = useState(_expanded ?? false);
-  const [savedAt, setSavedAt] = useState<DateTime | null>(null);
 
   if (!response.response.canRead) {
     return null;
@@ -78,16 +76,13 @@ export const VariantResponsesAccordion = ({
                     response.variant.responsibleRole === 'Marketing'
                   }
                 />
-                {savedAt && (
+                {response.modifiedAt && (
                   <Typography variant="caption" sx={{ mb: 1 }} component="div">
-                    Saved at <FormattedDateTime date={savedAt} relative />
+                    Saved at{' '}
+                    <FormattedDateTime date={response.modifiedAt} relative />
                   </Typography>
                 )}
-                <SubmitButton
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => setSavedAt(DateTime.now())}
-                >
+                <SubmitButton variant="outlined" color="secondary">
                   Save Progress
                 </SubmitButton>
               </form>
