@@ -45,21 +45,16 @@ export const Prompt = ({
     });
   };
 
-  const handleUpdatePrompt: PromptsFormProps['onSubmit'] = async (
-    values,
-    form
-  ) => {
+  const handleUpdatePrompt: PromptsFormProps['onSubmit'] = async (values) => {
     if (!promptResponse) return;
-    if (form.getState().dirty) {
-      await updatePrompt({
-        variables: {
-          input: {
-            id: promptResponse.id,
-            prompt: values.prompt,
-          },
+    await updatePrompt({
+      variables: {
+        input: {
+          id: promptResponse.id,
+          prompt: values.prompt,
         },
-      });
-    }
+      },
+    });
     setIsChangingPrompt(false);
   };
 
@@ -86,6 +81,7 @@ export const Prompt = ({
         availablePrompts={list.available.prompts}
         preamble={promptInstructions}
         onSubmit={handlePromptSelection}
+        onCleanSubmit={() => setIsChangingPrompt(false)}
         initialValues={initialValues}
         sx={{ mb: 4 }}
       />

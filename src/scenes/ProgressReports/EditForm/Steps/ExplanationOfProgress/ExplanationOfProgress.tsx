@@ -1,23 +1,23 @@
 import { useMutation } from '@apollo/client';
 import type { OutputData as RichTextData } from '@editorjs/editorjs';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Tooltip, Typography } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
+import { camelCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
-import { Form, FormProps } from 'react-final-form';
 import { RequiredKeysOf } from 'type-fest';
-import { handleFormError } from '~/api';
 import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
 import { canEditAny } from '~/common';
 import {
   EnumField,
   EnumOption,
+  Form,
+  FormProps,
+  SavingStatus,
   SecuredField,
-  SubmitButton,
   SubmitError,
 } from '~/components/form';
-import { FormattedDateTime } from '~/components/Formatters';
 import { RichTextField } from '~/components/RichText';
 import { VarianceExplanation } from '../../../Detail/VarianceExplanation/VarianceExplanation';
 import { StepComponent } from '../step.types';
@@ -64,14 +64,9 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
       : undefined;
 
     if (!group) {
-      const variance = report.cumulativeSummary?.variance;
-      group = !variance
-        ? 'onTime'
-        : variance >= 0.1
-        ? 'ahead'
-        : variance >= -0.1
-        ? 'behind'
-        : 'onTime';
+      group = camelCase(
+        report.varianceExplanation.scheduleStatus ?? 'OnTime'
+      ) as OptionGroup;
     }
 
     return {
@@ -82,23 +77,17 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [explanation]);
 
-  const onSubmit: FormProps<FormShape>['onSubmit'] = async (input, form) => {
-    try {
-      if (form.getState().dirty) {
-        await explainVariance({
-          variables: {
-            input: {
-              report: report.id,
-              reasons: input.reasons ? [input.reasons] : [],
-              comments: input.comments,
-            },
-          },
-        });
-      }
-      setSavedAt(DateTime.local());
-    } catch (e) {
-      return await handleFormError(e, form);
-    }
+  const onSubmit: FormProps<FormShape>['onSubmit'] = async (input) => {
+    await explainVariance({
+      variables: {
+        input: {
+          report: report.id,
+          reasons: input.reasons ? [input.reasons] : [],
+          comments: input.comments,
+        },
+      },
+    });
+    setSavedAt(DateTime.local());
   };
 
   if (!canEditAny(explanation)) {
@@ -122,16 +111,18 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
         Explanation of Progress
       </Typography>
       <Typography paragraph>
-        Please provide an explanation of the state of progress for this
-        reporting period.
+        Select the appropriate state of Language Engagement Goal/Translation
+        Progress.
       </Typography>
 
       <Form<FormShape>
         onSubmit={onSubmit}
         decorators={decorators}
         initialValues={initialValues}
+        autoSubmit
+        keepDirtyOnReinitialize
       >
-        {({ handleSubmit, values: { group } }) => (
+        {({ handleSubmit, values: { group }, submitting }) => (
           <Card
             component="form"
             onSubmit={handleSubmit}
@@ -149,21 +140,29 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
               disabled={!explanation.reasons.canEdit}
               required
             >
-              <EnumOption<OptionGroup>
-                value="behind"
-                label="Behind / Delayed"
-                color="error"
-              />
-              <EnumOption<OptionGroup>
-                value="onTime"
-                label="On Time"
-                color="info"
-              />
-              <EnumOption<OptionGroup>
-                value="ahead"
-                label="Ahead"
-                color="success"
-              />
+              {/* Source or truth for thresholds:
+                  https://github.com/SeedCompany/cord-api-v3/blob/master/src/components/progress-summary/dto/schedule-status.enum.ts#L13-L17 */}
+              <Tooltip title="> -10%" placement="top">
+                <EnumOption<OptionGroup>
+                  value="behind"
+                  label="Behind / Delayed"
+                  color="error"
+                />
+              </Tooltip>
+              <Tooltip title="-10% to 30%" placement="top">
+                <EnumOption<OptionGroup>
+                  value="onTime"
+                  label="On Time"
+                  color="info"
+                />
+              </Tooltip>
+              <Tooltip title="> 30%" placement="top">
+                <EnumOption<OptionGroup>
+                  value="ahead"
+                  label="Ahead"
+                  color="success"
+                />
+              </Tooltip>
             </EnumField>
 
             {optionsByGroup[group].length > 0 && (
@@ -183,19 +182,13 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
                   label="Optional Comments"
                   tools={['paragraph', 'delimiter', 'marker']}
                   {...props}
+                  helperText={
+                    <SavingStatus submitting={submitting} savedAt={savedAt} />
+                  }
                 />
               )}
             </SecuredField>
-
             <SubmitError />
-            <SubmitButton color="primary" size="medium" fullWidth={false}>
-              Save
-            </SubmitButton>
-            {savedAt && (
-              <Typography variant="caption" component="div" sx={{ mt: 1 }}>
-                Saved at <FormattedDateTime date={savedAt} relative />
-              </Typography>
-            )}
           </Card>
         )}
       </Form>

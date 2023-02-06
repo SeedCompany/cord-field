@@ -79,5 +79,5 @@ export const productTypes = [
 ] as const;
 
 export type ProductTypes =
-  | typeof productTypes[number]
+  | (typeof productTypes)[number]
   | 'DerivativeScriptureProduct';

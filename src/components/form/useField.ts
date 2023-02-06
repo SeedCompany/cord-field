@@ -1,9 +1,10 @@
 import { identity } from 'lodash';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { UseFieldConfig, useField as useFinalField } from 'react-final-form';
 import { Except } from 'type-fest';
 import { callSome, Many, many, Nullable } from '~/common';
 import { useFirstMountState } from '~/hooks';
+import { AutoSubmitOptionsContext } from './AutoSubmit';
 import { useFieldName } from './FieldGroup';
 import { isEqualBy, isListEqualBy, useFocus, useIsSubmitting } from './util';
 import {
@@ -121,7 +122,9 @@ export const useField = <
   });
   const submitting = useIsSubmitting();
 
-  const disabled = disabledProp ?? meta.submitting;
+  const autoSubmit = useContext(AutoSubmitOptionsContext);
+
+  const disabled = disabledProp ?? autoSubmit ? false : meta.submitting;
 
   const firstRender = useFirstMountState();
   const focused = disabled

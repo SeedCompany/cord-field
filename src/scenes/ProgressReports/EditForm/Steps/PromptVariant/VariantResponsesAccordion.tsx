@@ -5,13 +5,10 @@ import {
   AccordionSummary,
   Typography,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { Form, FormProps } from 'react-final-form';
 import { Scalars } from '~/api/schema/schema.graphql';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
-import { SubmitButton } from '~/components/form';
-import { FormattedDateTime } from '~/components/Formatters';
+import { Form, FormProps, SavingStatus } from '~/components/form';
 import { RichTextField, RichTextView } from '~/components/RichText';
 import { RoleIcon } from '~/components/RoleIcon';
 
@@ -32,7 +29,10 @@ export const VariantResponsesAccordion = ({
   onSubmit,
 }: VariantResponsesAccordionProps) => {
   const [expanded, setExpanded] = useState(_expanded ?? false);
-  const [savedAt, setSavedAt] = useState<DateTime | null>(null);
+  const [initialValues] = useState(() => ({
+    variant: response.variant.key,
+    response: response.response.value,
+  }));
 
   if (!response.response.canRead) {
     return null;
@@ -62,12 +62,10 @@ export const VariantResponsesAccordion = ({
         {response.response.canEdit ? (
           <Form<FormShape>
             onSubmit={onSubmit}
-            initialValues={{
-              variant: response.variant.key,
-              response: response.response.value,
-            }}
+            initialValues={initialValues}
+            autoSubmit
           >
-            {({ handleSubmit }) => (
+            {({ handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
                 <RichTextField
                   name="response"
@@ -78,19 +76,13 @@ export const VariantResponsesAccordion = ({
                   showCharacterCount={
                     response.variant.responsibleRole === 'Marketing'
                   }
+                  helperText={
+                    <SavingStatus
+                      submitting={submitting}
+                      savedAt={response.modifiedAt}
+                    />
+                  }
                 />
-                {savedAt && (
-                  <Typography variant="caption" sx={{ mb: 1 }} component="div">
-                    Saved at <FormattedDateTime date={savedAt} relative />
-                  </Typography>
-                )}
-                <SubmitButton
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => setSavedAt(DateTime.now())}
-                >
-                  Save Progress
-                </SubmitButton>
               </form>
             )}
           </Form>

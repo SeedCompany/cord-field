@@ -20,18 +20,16 @@ export const VariantResponses = ({
   return (
     <VariantResponsesForm
       promptResponse={promptResponse}
-      onSubmit={async (values, form) => {
-        if (form.getState().dirty) {
-          await setResponse({
-            variables: {
-              input: {
-                id: promptResponse.id,
-                response: values.response,
-                variant: values.variant,
-              },
+      onSubmit={async (values) => {
+        await setResponse({
+          variables: {
+            input: {
+              id: promptResponse.id,
+              response: values.response,
+              variant: values.variant,
             },
-          });
-        }
+          },
+        });
       }}
     />
   );
