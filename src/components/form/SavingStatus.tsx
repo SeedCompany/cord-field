@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { ReactElement } from 'react';
 import { Nullable } from '../../common';
-import { FormattedDateTime } from '../Formatters';
+import { RelativeDateTime } from '../Formatters';
 
 export const SavingStatus = ({
   submitting,
@@ -14,6 +14,6 @@ export const SavingStatus = ({
     <>Saving...</>
   ) : savedAt ? (
     <>
-      Saved <FormattedDateTime date={savedAt} relative />
+      Saved <RelativeDateTime date={savedAt} />
     </>
   ) : null;

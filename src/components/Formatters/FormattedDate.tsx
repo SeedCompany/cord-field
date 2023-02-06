@@ -1,8 +1,11 @@
 import { Tooltip } from '@mui/material';
+import { useRafInterval } from 'ahooks';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
+import { memo, useState } from 'react';
 import { MergeExclusive } from 'type-fest';
 import { DateRange } from '~/api/schema.graphql';
 import { CalendarDate, Nullable } from '~/common';
+import { useLocale } from '../../hooks';
 import { useDateFormatter, useDateTimeFormatter } from './useDateFormatter';
 
 export const FormattedDate = ({
@@ -52,20 +55,50 @@ FormattedDateRange.orNull = (range: Nullable<DateRange>) =>
     <FormattedDateRange range={range} />
   );
 
-export const FormattedDateTime = ({
-  date,
-  relative,
-}: {
-  date: Nullable<DateTime>;
-  relative?: boolean;
-}) => {
+export const FormattedDateTime = ({ date }: { date: Nullable<DateTime> }) => {
   const format = useDateTimeFormatter();
-  // ToDo: when using relative, we should update using a defined interval
   return date ? (
     <Tooltip title={format(date, DateTime.DATETIME_HUGE)}>
-      <time dateTime={date.toUTC().toISO()}>
-        {relative ? date.toRelative() : format(date)}
-      </time>
+      <time dateTime={date.toUTC().toISO()}>{format(date)}</time>
     </Tooltip>
   ) : null;
 };
+
+export const RelativeDateTime = memo(function RelativeDateTime({
+  date,
+}: {
+  date: DateTime;
+}) {
+  const locale = useLocale();
+  date = locale ? date.setLocale(locale) : date;
+  const absoluteFormat = useDateTimeFormatter();
+  const [now, setNow] = useState(() => DateTime.now());
+
+  const diff = date.diff(now);
+
+  const [formatted, delay] =
+    Math.abs(diff.as('days')) > 1
+      ? [absoluteFormat(date), undefined]
+      : Math.abs(diff.as('hours')) > 1
+      ? [date.toRelative(), 60_000] // 1 minute
+      : Math.abs(diff.as('minutes')) > 1
+      ? [date.toRelative(), 30_000] // 30 seconds
+      : Math.abs(diff.as('seconds')) > 30
+      ? [date.toRelative({ unit: 'minutes', padding: 30_000 }), 10_000]
+      : diff.as('seconds') < -10
+      ? ['a few seconds ago', 500]
+      : diff.as('seconds') > 10
+      ? ['in a few seconds', 500]
+      : diff.as('seconds') > 0
+      ? ['now', 500]
+      : ['just now', 500];
+
+  // Using RAF to avoid renders while in background
+  useRafInterval(() => setNow(DateTime.now()), delay);
+
+  return (
+    <Tooltip title={absoluteFormat(date, DateTime.DATETIME_HUGE)}>
+      <time dateTime={date.toUTC().toISO()}>{formatted}</time>
+    </Tooltip>
+  );
+});
