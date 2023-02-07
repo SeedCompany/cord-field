@@ -1,5 +1,6 @@
 import { ArrowBack } from '@mui/icons-material';
 import { Box, Card, Divider, Stack, Typography } from '@mui/material';
+import { increaseAlpha } from '~/common';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { ButtonLink } from '~/components/Routing';
 import { SensitivityIcon } from '~/components/Sensitivity';
@@ -80,7 +81,20 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
       <Box sx={{ display: 'flex', mt: 2 }}>
         <Stack
           direction="row"
-          divider={<Divider orientation="vertical" variant="middle" flexItem />}
+          divider={
+            <Divider
+              orientation="vertical"
+              variant="middle"
+              flexItem
+              sx={(theme) => ({
+                // Tweak color to be more visible since it's so small.
+                borderColor: increaseAlpha(theme.palette.divider, 0.2),
+                // Center vertically better with font line height
+                position: 'relative',
+                top: 3,
+              })}
+            />
+          }
           sx={{ gap: 2 }}
         >
           <Typography variant="h5">{project.name.value}</Typography>
