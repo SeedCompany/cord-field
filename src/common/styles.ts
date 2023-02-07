@@ -1,4 +1,6 @@
 import { Breakpoint, Breakpoints } from '@mui/material';
+import { decomposeColor, recomposeColor } from '@mui/material/styles';
+import { clamp } from 'lodash';
 import { CSSObject as CSSProperties } from 'tss-react';
 import { lowerCase } from './case';
 
@@ -43,3 +45,14 @@ export const gridTemplateAreas = (...args: Parameters<typeof String.raw>) => ({
     .map((q) => `"${q.trim()}"`)
     .join('\n'),
 });
+
+/**
+ * Add this amount to the alpha channel of a color.
+ */
+export const increaseAlpha = (color: string, amount: number) => {
+  const parts = decomposeColor(color);
+  const alpha = parts.values[3];
+  if (!alpha) return color;
+  parts.values[3] = clamp(clamp(amount, 0, 1) + alpha, 0, 1);
+  return recomposeColor(parts);
+};
