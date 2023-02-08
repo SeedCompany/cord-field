@@ -1,89 +1,59 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
+import { flexColumn, StyleProps } from '~/common';
 import { useProgressReportContext } from './ProgressReportContext';
 import { ReportProp } from './ReportProp';
 
-export const StepContainer = ({ report }: ReportProp) => {
-  const { CurrentStep, previousStep, nextStep, isLast, isFirst } =
-    useProgressReportContext();
-
-  const previousButton = !isFirst && (
-    <Button
-      variant="outlined"
-      color="secondary"
-      onClick={previousStep}
-      startIcon={
-        <ArrowBack
-          sx={{
-            marginBottom: '-3px',
-          }}
-        />
-      }
-    >
-      Previous
-    </Button>
-  );
-
-  const nextButton = !isLast && (
-    <Button
-      variant="outlined"
-      color="secondary"
-      onClick={nextStep}
-      endIcon={
-        <ArrowForward
-          sx={{
-            marginBottom: '-3px',
-          }}
-        />
-      }
-    >
-      Next
-    </Button>
-  );
+export const StepContainer = ({ report, ...rest }: ReportProp & StyleProps) => {
+  const { CurrentStep } = useProgressReportContext();
 
   return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
-    >
-      <Box
-        sx={[
-          (theme) => ({
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: 1,
-            borderBottom: `solid ${theme.palette.divider}`,
-            borderWidth: '1px 0',
-          }),
-          isFirst && {
-            justifyContent: 'flex-end',
-          },
-        ]}
-      >
-        {previousButton} {nextButton}
-      </Box>
-
+    <Box {...rest} css={flexColumn}>
+      <NavButtons css={{ borderBottomStyle: 'solid' }} />
       <Box sx={{ p: 2, mb: 2 }}>
         <CurrentStep report={report} />
       </Box>
+      <NavButtons css={{ borderTopStyle: 'solid' }} />
+    </Box>
+  );
+};
 
-      <Box
-        sx={[
-          {
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: 1,
-          },
-          isFirst && {
-            justifyContent: 'flex-end',
-          },
-        ]}
-      >
-        {previousButton} {nextButton}
-      </Box>
-    </div>
+const NavButtons = (props: StyleProps) => {
+  const { isLast, isFirst, previousStep, nextStep } =
+    useProgressReportContext();
+
+  return (
+    <Box
+      {...props}
+      css={(theme) => ({
+        display: 'grid',
+        justifyContent: 'space-between',
+        padding: theme.spacing(1, 0),
+        borderWidth: '1px 0',
+        borderColor: theme.palette.divider,
+      })}
+    >
+      {!isFirst && (
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={previousStep}
+          startIcon={<ArrowBack />}
+        >
+          Previous
+        </Button>
+      )}
+      {!isLast && (
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={nextStep}
+          endIcon={<ArrowForward />}
+          css={{ gridColumnStart: 2 }}
+        >
+          Next
+        </Button>
+      )}
+    </Box>
   );
 };

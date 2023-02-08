@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { Box, Drawer } from '@mui/material';
-import { ReactNode } from 'react';
 import { useMatch } from 'react-router-dom';
-import { Error } from '~/components/Error';
+import { ChildrenProp, flexColumn } from '~/common';
 import { useNavigate } from '~/components/Routing';
 import { ProgressReportContextProvider } from './ProgressReportContext';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
 import { ProgressReportEditDocument } from './ProgressReportEdit.graphql';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
+import { ReportProp } from './ReportProp';
 import { StartReportPage } from './StartReportPage';
 import { StepContainer } from './StepContainer';
 
@@ -18,10 +18,6 @@ interface ProgressReportDrawerProps {
 export const ProgressReportDrawer = ({
   reportId,
 }: ProgressReportDrawerProps) => {
-  const open = !!useMatch('progress-reports/:id/edit');
-
-  const navigate = useNavigate();
-
   const { data, error } = useQuery(ProgressReportEditDocument, {
     variables: {
       progressReportId: reportId,
@@ -29,34 +25,8 @@ export const ProgressReportDrawer = ({
   });
   const report = data?.periodicReport;
 
-  if (
-    report?.__typename === 'ProgressReport' &&
-    report.status.value === 'NotStarted'
-  ) {
-    return (
-      <ProgressReportContextProvider>
-        <CustomDrawer open={open} onClose={() => navigate('../')}>
-          <StartReportPage report={report} />
-        </CustomDrawer>
-      </ProgressReportContextProvider>
-    );
-  }
-
-  if (error) {
-    return (
-      <CustomDrawer open={open} onClose={() => navigate('../')}>
-        <Error page error={error}>
-          {{
-            NotFound: 'Could not find progress report',
-            Default: 'Error loading progress report',
-          }}
-        </Error>
-      </CustomDrawer>
-    );
-  }
-
-  if (report && report.__typename !== 'ProgressReport') {
-    // Detail page will handle an incorrect type
+  if (error || (report && report.__typename !== 'ProgressReport')) {
+    // Detail page will handle an incorrect type or loading errors
     return null;
   }
 
@@ -67,72 +37,52 @@ export const ProgressReportDrawer = ({
 
   return (
     <ProgressReportContextProvider report={report}>
-      <CustomDrawer
-        open={open}
-        onClose={() => navigate('..')}
-        sidebar={<ProgressReportSidebar report={report} />}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <ProgressReportDrawerHeader report={report} />
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <StepContainer report={report} />
-        </Box>
-      </CustomDrawer>
+      <EditShell>
+        <EditLayout report={report} />
+      </EditShell>
     </ProgressReportContextProvider>
   );
 };
 
-const CustomDrawer = ({
-  sidebar,
-  children,
-  open,
-  onClose,
-}: {
-  sidebar?: ReactNode;
-  children: ReactNode;
-  open: boolean;
-  hideStepper?: boolean;
-  onClose?: () => void;
-}) => {
+const EditShell = ({ children }: ChildrenProp) => {
+  const open = !!useMatch('progress-reports/:id/edit');
+  const navigate = useNavigate();
+
   return (
     <Drawer
       anchor="right"
       open={open}
-      onClose={onClose}
+      onClose={() => navigate('../')}
       sx={{
         '& .MuiDrawer-paper': {
           width: '100%',
         },
       }}
     >
-      <Box display="flex" height={1} width={sidebar ? 'calc(100% - 300px)' : 1}>
-        <Box
-          sx={{
-            width: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: 2,
-            pt: 0,
-          }}
-        >
-          {children}
-        </Box>
-        {sidebar}
-      </Box>
+      {children}
     </Drawer>
+  );
+};
+
+const EditLayout = ({ report }: ReportProp) => {
+  if (report.status.value === 'NotStarted') {
+    return <StartReportPage report={report} />;
+  }
+
+  return (
+    <Box sx={{ m: 4, mt: 2, display: 'flex', gap: 4 }}>
+      <Box css={flexColumn} sx={{ flex: 1, gap: 2 }}>
+        <ProgressReportDrawerHeader report={report} />
+        <StepContainer report={report} />
+      </Box>
+      <ProgressReportSidebar
+        report={report}
+        sx={(theme) => ({
+          top: theme.spacing(2), // matches mt above
+          position: 'sticky',
+          alignSelf: 'start',
+        })}
+      />
+    </Box>
   );
 };

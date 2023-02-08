@@ -1,5 +1,5 @@
 import { Breakpoint, Breakpoints } from '@mui/material';
-import { decomposeColor, recomposeColor } from '@mui/material/styles';
+import { css, decomposeColor, recomposeColor } from '@mui/material/styles';
 import { clamp } from 'lodash';
 import { CSSObject as CSSProperties } from 'tss-react';
 import { lowerCase } from './case';
@@ -56,3 +56,8 @@ export const increaseAlpha = (color: string, amount: number) => {
   parts.values[3] = clamp(clamp(amount, 0, 1) + alpha, 0, 1);
   return recomposeColor(parts);
 };
+
+export const flexColumn = css({
+  display: 'flex',
+  flexDirection: 'column',
+});
