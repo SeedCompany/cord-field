@@ -6,6 +6,7 @@ import {
   Stepper,
   Typography,
 } from '@mui/material';
+import { Fragment } from 'react';
 import { Sx } from '~/common';
 import { useProgressReportContext } from './ProgressReportContext';
 
@@ -66,24 +67,39 @@ export const ProgressReportStepper = () => {
     useProgressReportContext();
 
   return (
-    <Paper elevation={4} sx={{ p: 2 }}>
-      <Typography paragraph>Steps:</Typography>
+    <Paper
+      elevation={4}
+      sx={{ p: 2 }}
+      component="nav"
+      aria-label="Quarterly Report Steps"
+    >
+      <Typography component="h3" paragraph aria-hidden>
+        Steps:
+      </Typography>
       {Object.entries(groupedStepMap).map(([title, steps], index) => (
-        <div key={title}>
+        <Fragment key={title}>
           {index > 0 && <StepConnector sx={singleConnectorSx} />}
-          <Typography sx={typographySx}>{title}</Typography>
+          <Typography component="h4" sx={typographySx}>
+            {title}
+          </Typography>
           <Stepper orientation="vertical" sx={stepperSx}>
             {steps.map(([label, StepComp]) => (
               <Step
                 key={label}
                 onClick={() => setProgressReportStep(label)}
                 active={StepComp === CurrentStep}
+                disabled={StepComp === CurrentStep}
               >
-                <StepButton icon={' '}>{label}</StepButton>
+                <StepButton
+                  icon={' '}
+                  aria-current={StepComp === CurrentStep ? 'step' : undefined}
+                >
+                  {label}
+                </StepButton>
               </Step>
             ))}
           </Stepper>
-        </div>
+        </Fragment>
       ))}
     </Paper>
   );
