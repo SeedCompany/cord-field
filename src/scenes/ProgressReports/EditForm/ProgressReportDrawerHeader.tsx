@@ -4,7 +4,7 @@ import {
   Place as MapPinIcon,
 } from '@mui/icons-material';
 import { Box, Divider, Stack, Typography } from '@mui/material';
-import { increaseAlpha } from '~/common';
+import { flexColumn, increaseAlpha } from '~/common';
 import { DataButton } from '~/components/DataButton';
 import { ReportLabel } from '~/components/PeriodicReports/ReportLabel';
 import { ButtonLink } from '~/components/Routing';
@@ -17,14 +17,7 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
   const sensitivity = report.parent.sensitivity;
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        width: 1,
-        flexDirection: 'column',
-        padding: 2,
-      }}
-    >
+    <Box css={flexColumn}>
       <ButtonLink
         to=".."
         color="secondary"

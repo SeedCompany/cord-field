@@ -1,5 +1,4 @@
 import {
-  Box,
   Paper,
   Step,
   StepButton,
@@ -67,29 +66,25 @@ export const ProgressReportStepper = () => {
     useProgressReportContext();
 
   return (
-    <Paper elevation={4} sx={{ mr: 2, borderRadius: 0.6 }}>
-      <div>
-        <Typography sx={{ p: 2, pt: 3 }}>Steps:</Typography>
-      </div>
-      <Box sx={{ p: 2, pt: 0 }}>
-        {Object.entries(groupedStepMap).map(([title, steps], index) => (
-          <div key={title}>
-            {index > 0 && <StepConnector sx={singleConnectorSx} />}
-            <Typography sx={typographySx}>{title}</Typography>
-            <Stepper orientation="vertical" sx={stepperSx}>
-              {steps.map(([label, StepComp]) => (
-                <Step
-                  key={label}
-                  onClick={() => setProgressReportStep(label)}
-                  active={StepComp === CurrentStep}
-                >
-                  <StepButton icon={' '}>{label}</StepButton>
-                </Step>
-              ))}
-            </Stepper>
-          </div>
-        ))}
-      </Box>
+    <Paper elevation={4} sx={{ p: 2 }}>
+      <Typography paragraph>Steps:</Typography>
+      {Object.entries(groupedStepMap).map(([title, steps], index) => (
+        <div key={title}>
+          {index > 0 && <StepConnector sx={singleConnectorSx} />}
+          <Typography sx={typographySx}>{title}</Typography>
+          <Stepper orientation="vertical" sx={stepperSx}>
+            {steps.map(([label, StepComp]) => (
+              <Step
+                key={label}
+                onClick={() => setProgressReportStep(label)}
+                active={StepComp === CurrentStep}
+              >
+                <StepButton icon={' '}>{label}</StepButton>
+              </Step>
+            ))}
+          </Stepper>
+        </div>
+      ))}
     </Paper>
   );
 };

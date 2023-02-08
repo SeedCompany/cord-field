@@ -1,9 +1,10 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
+import { flexColumn, StyleProps } from '~/common';
 import { useProgressReportContext } from './ProgressReportContext';
 import { ReportProp } from './ReportProp';
 
-export const StepContainer = ({ report }: ReportProp) => {
+export const StepContainer = ({ report, ...rest }: ReportProp & StyleProps) => {
   const { CurrentStep, previousStep, nextStep, isLast, isFirst } =
     useProgressReportContext();
 
@@ -42,13 +43,7 @@ export const StepContainer = ({ report }: ReportProp) => {
   );
 
   return (
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
-    >
+    <Box {...rest} css={flexColumn}>
       <Box
         sx={[
           (theme) => ({
@@ -84,6 +79,6 @@ export const StepContainer = ({ report }: ReportProp) => {
       >
         {previousButton} {nextButton}
       </Box>
-    </div>
+    </Box>
   );
 };
