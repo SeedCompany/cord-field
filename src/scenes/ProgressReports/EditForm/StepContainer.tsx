@@ -9,16 +9,11 @@ export const StepContainer = ({ report, ...rest }: ReportProp & StyleProps) => {
 
   return (
     <Box {...rest} css={flexColumn}>
-      <NavButtons
-        css={(theme) => ({
-          borderBottom: `solid ${theme.palette.divider}`,
-          borderWidth: '1px 0',
-        })}
-      />
+      <NavButtons css={{ borderBottomStyle: 'solid' }} />
       <Box sx={{ p: 2, mb: 2 }}>
         <CurrentStep report={report} />
       </Box>
-      <NavButtons />
+      <NavButtons css={{ borderTopStyle: 'solid' }} />
     </Box>
   );
 };
@@ -33,7 +28,9 @@ const NavButtons = (props: StyleProps) => {
       css={(theme) => ({
         display: 'grid',
         justifyContent: 'space-between',
-        padding: theme.spacing(1),
+        padding: theme.spacing(1, 0),
+        borderWidth: '1px 0',
+        borderColor: theme.palette.divider,
       })}
     >
       {!isFirst && (
