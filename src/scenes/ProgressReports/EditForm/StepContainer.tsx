@@ -5,80 +5,58 @@ import { useProgressReportContext } from './ProgressReportContext';
 import { ReportProp } from './ReportProp';
 
 export const StepContainer = ({ report, ...rest }: ReportProp & StyleProps) => {
-  const { CurrentStep, previousStep, nextStep, isLast, isFirst } =
-    useProgressReportContext();
-
-  const previousButton = !isFirst && (
-    <Button
-      variant="outlined"
-      color="secondary"
-      onClick={previousStep}
-      startIcon={
-        <ArrowBack
-          sx={{
-            marginBottom: '-3px',
-          }}
-        />
-      }
-    >
-      Previous
-    </Button>
-  );
-
-  const nextButton = !isLast && (
-    <Button
-      variant="outlined"
-      color="secondary"
-      onClick={nextStep}
-      endIcon={
-        <ArrowForward
-          sx={{
-            marginBottom: '-3px',
-          }}
-        />
-      }
-    >
-      Next
-    </Button>
-  );
+  const { CurrentStep } = useProgressReportContext();
 
   return (
     <Box {...rest} css={flexColumn}>
-      <Box
-        sx={[
-          (theme) => ({
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: 1,
-            borderBottom: `solid ${theme.palette.divider}`,
-            borderWidth: '1px 0',
-          }),
-          isFirst && {
-            justifyContent: 'flex-end',
-          },
-        ]}
-      >
-        {previousButton} {nextButton}
-      </Box>
-
+      <NavButtons
+        css={(theme) => ({
+          borderBottom: `solid ${theme.palette.divider}`,
+          borderWidth: '1px 0',
+        })}
+      />
       <Box sx={{ p: 2, mb: 2 }}>
         <CurrentStep report={report} />
       </Box>
+      <NavButtons />
+    </Box>
+  );
+};
 
-      <Box
-        sx={[
-          {
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: 1,
-          },
-          isFirst && {
-            justifyContent: 'flex-end',
-          },
-        ]}
-      >
-        {previousButton} {nextButton}
-      </Box>
+const NavButtons = (props: StyleProps) => {
+  const { isLast, isFirst, previousStep, nextStep } =
+    useProgressReportContext();
+
+  return (
+    <Box
+      {...props}
+      css={(theme) => ({
+        display: 'grid',
+        justifyContent: 'space-between',
+        padding: theme.spacing(1),
+      })}
+    >
+      {!isFirst && (
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={previousStep}
+          startIcon={<ArrowBack />}
+        >
+          Previous
+        </Button>
+      )}
+      {!isLast && (
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={nextStep}
+          endIcon={<ArrowForward />}
+          css={{ gridColumnStart: 2 }}
+        >
+          Next
+        </Button>
+      )}
     </Box>
   );
 };
