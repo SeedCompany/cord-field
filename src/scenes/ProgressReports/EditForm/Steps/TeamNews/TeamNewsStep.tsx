@@ -1,9 +1,14 @@
 import { useMutation } from '@apollo/client';
 import { Box, Typography } from '@mui/material';
+import { simpleSwitch } from '~/common';
 import { ProgressButton } from '../../../../../components/ProgressButton';
 import { ReportProp } from '../../ReportProp';
 import { VariantResponses } from '../PromptVariant';
 import { StepComponent } from '../step.types';
+import {
+  TeamNewsFieldOperationsInstructions,
+  TeamNewsPartnerInstructions,
+} from './Instructions';
 import {
   CreateProgressReportNewsDocument as CreateNews,
   UpdateProgressReportNewsResponseDocument as UpdateResponse,
@@ -19,7 +24,16 @@ export const TeamNewsStep: StepComponent = ({ report }) => {
           Share some team news
         </Typography>
         <CreateFromFirstPrompt report={report} />
-        <VariantResponses promptResponse={news} doc={UpdateResponse} />
+        <VariantResponses
+          promptResponse={news}
+          doc={UpdateResponse}
+          instructions={(variant) =>
+            simpleSwitch(variant, {
+              draft: <TeamNewsPartnerInstructions />,
+              fpm: <TeamNewsFieldOperationsInstructions />,
+            })
+          }
+        />
       </Box>
     </Box>
   );

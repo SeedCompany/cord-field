@@ -1,5 +1,7 @@
+import { InfoOutlined } from '@mui/icons-material';
 import {
   Button,
+  ButtonProps,
   Dialog,
   DialogActions,
   DialogContent,
@@ -7,7 +9,25 @@ import {
   DialogTitle,
   Typography,
 } from '@mui/material';
+import { useDialog } from '../../../components/Dialog';
 import { useSession } from '../../../components/Session';
+
+export const InstructionsButton = (props: ButtonProps) => {
+  const [instructionsState, showInstructions] = useDialog();
+  return (
+    <>
+      <Button
+        color="secondary"
+        endIcon={<InfoOutlined />}
+        {...props}
+        onClick={showInstructions}
+      >
+        Instructions
+      </Button>
+      <InstructionsDialog {...instructionsState} />
+    </>
+  );
+};
 
 export const InstructionsDialog = (props: DialogProps) => {
   const { session } = useSession();

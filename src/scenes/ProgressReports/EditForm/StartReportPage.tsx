@@ -28,7 +28,7 @@ export const StartReportPage = ({ report }: ReportProp) => {
           startIcon={<ArrowBack />}
           sx={{ alignSelf: 'start' }}
         >
-          Back
+          Back To Overview
         </ButtonLink>
       </Box>
 

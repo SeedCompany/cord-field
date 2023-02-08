@@ -22,7 +22,7 @@ export const DataButton = <T extends any>({
   ...props
 }: Omit<ButtonProps, 'children'> & {
   loading?: boolean;
-  secured?: SecuredProp<T>;
+  secured?: Omit<SecuredProp<T>, 'canEdit'>;
   redacted?: TooltipProps['title'];
   children: ((value: T) => ReactNode) | ReactNode;
   empty?: ReactNode;
