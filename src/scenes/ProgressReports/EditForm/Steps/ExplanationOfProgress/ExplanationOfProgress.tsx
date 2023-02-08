@@ -179,6 +179,7 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
             <SecuredField obj={explanation} name="comments">
               {(props) => (
                 <RichTextField
+                  placeholder="Optional: Audience - internal - Add clarifying information you would like to share internally with Seed Co team members"
                   label="Optional Comments"
                   tools={['paragraph', 'delimiter', 'marker']}
                   {...props}

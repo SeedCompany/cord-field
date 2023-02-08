@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { PromptResponseFragment as PromptResponse } from '~/common/fragments';
 import {
   VariantResponsesAccordion,
@@ -8,10 +8,12 @@ import {
 export interface VariantResponsesFormProps
   extends Pick<VariantResponsesAccordionProps, 'onSubmit'> {
   promptResponse: PromptResponse;
+  instructions?: (variantKey: string) => ReactNode;
 }
 
 export const VariantResponsesForm = ({
   promptResponse,
+  instructions,
   ...rest
 }: VariantResponsesFormProps) => {
   const { responses, expanded } = useMemo(() => {
@@ -38,6 +40,7 @@ export const VariantResponsesForm = ({
           response={response}
           expanded={expanded.has(response.variant.key)}
           key={response.variant.key}
+          instructions={instructions?.(response.variant.key)}
           {...rest}
         />
       ))}

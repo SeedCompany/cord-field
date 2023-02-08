@@ -35,7 +35,11 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
           <Typography variant="h3" paragraph>
             Submit Report
           </Typography>
-          <RichTextField name="notes" label="Final Notes" />
+          <RichTextField
+            name="notes"
+            label="Final Notes"
+            placeholder="Optional: Audience - internal - Share additional information related to the team or language engagement not covered in the Quarterly Report with Seed Co team members"
+          />
           <Typography align="center" paragraph>
             To complete this report, please choose the next action
           </Typography>

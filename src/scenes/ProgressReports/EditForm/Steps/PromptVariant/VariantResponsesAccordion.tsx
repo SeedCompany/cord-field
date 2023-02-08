@@ -5,12 +5,13 @@ import {
   AccordionSummary,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Scalars } from '~/api/schema/schema.graphql';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
 import { Form, FormProps, SavingStatus } from '~/components/form';
 import { RichTextField, RichTextView } from '~/components/RichText';
 import { RoleIcon } from '~/components/RoleIcon';
+import { InstructionsToggle } from './VariantInstructionsToggle';
 
 interface FormShape {
   variant: string;
@@ -21,11 +22,13 @@ export interface VariantResponsesAccordionProps
   extends Pick<FormProps<FormShape>, 'onSubmit'> {
   response: VariantResponse;
   expanded?: boolean;
+  instructions?: ReactNode;
 }
 
 export const VariantResponsesAccordion = ({
   response,
   expanded: _expanded,
+  instructions,
   onSubmit,
 }: VariantResponsesAccordionProps) => {
   const [expanded, setExpanded] = useState(_expanded ?? false);
@@ -58,6 +61,7 @@ export const VariantResponsesAccordion = ({
         <RoleIcon variantRole={response.variant.responsibleRole} />
         <span>{response.variant.label}</span>
       </AccordionSummary>
+
       <AccordionDetails sx={{ px: 4 }}>
         {response.response.canEdit ? (
           <Form<FormShape>
@@ -67,6 +71,12 @@ export const VariantResponsesAccordion = ({
           >
             {({ handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
+                {instructions && (
+                  <InstructionsToggle sx={{ mb: 2 }}>
+                    {instructions}
+                  </InstructionsToggle>
+                )}
+
                 <RichTextField
                   name="response"
                   label="Response"
