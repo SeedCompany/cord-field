@@ -8,11 +8,15 @@ import { SubmitButton } from '~/components/form';
 import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql';
 import { BypassButton } from './BypassButton';
 
-interface TransitionButtonsProps extends Pick<ButtonProps, 'size'> {
+interface TransitionButtonsProps extends Pick<ButtonProps, 'size' | 'onClick'> {
   report: ProgressReportEditFragment;
 }
 
-export const TransitionButtons = ({ report, size }: TransitionButtonsProps) => {
+export const TransitionButtons = ({
+  report,
+  size,
+  onClick,
+}: TransitionButtonsProps) => {
   const form = useForm();
   const {
     submitting,
@@ -47,6 +51,7 @@ export const TransitionButtons = ({ report, size }: TransitionButtonsProps) => {
                 size={size ?? 'medium'}
                 {...transitionTypeStyles[type]}
                 action={id}
+                onClick={onClick}
               >
                 {label}
               </SubmitButton>
