@@ -14,7 +14,7 @@ export interface TransitionFormValues extends SubmitAction<'bypass'> {
 
 interface UseExecuteTransitionParams {
   id: string;
-  after?: () => Promisable<void>;
+  after?: (values: TransitionFormValues) => Promisable<void>;
 }
 
 export const useExecuteTransition = ({
@@ -41,6 +41,6 @@ export const useExecuteTransition = ({
       },
     });
 
-    await after?.();
+    await after?.(values);
   };
 };
