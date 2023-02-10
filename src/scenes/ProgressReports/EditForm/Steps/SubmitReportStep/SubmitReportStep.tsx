@@ -1,9 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { useState } from 'react';
 import { Form } from 'react-final-form';
 import { RichTextField } from '~/components/RichText';
 import { useNavigate } from '~/components/Routing';
 import { StepComponent } from '../step.types';
+import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
 import { TransitionButtons } from './TransitionButtons';
 import {
   TransitionFormValues,
@@ -14,8 +16,15 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
+  // Maintain the old status state while closing the drawer.
+  // Prevents a flash of the new status before the drawer closes.
+  const [prevStatus, setPrevStatus] = useState<ProgressReportStatusFragment>();
+
   const executeTransition = useExecuteTransition({
     id: report.id,
+    before: () => {
+      setPrevStatus(report.status);
+    },
     after: () => {
       enqueueSnackbar('Report submitted — Thanks!', {
         variant: 'success',
@@ -44,7 +53,7 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
             To complete this report, please choose the next action
           </Typography>
           <Box maxWidth={450} mx="auto">
-            <TransitionButtons status={report.status} />
+            <TransitionButtons status={prevStatus ?? report.status} />
           </Box>
         </Box>
       )}
