@@ -14,11 +14,13 @@ export interface TransitionFormValues extends SubmitAction<'bypass'> {
 
 interface UseExecuteTransitionParams {
   id: string;
-  after?: () => Promisable<void>;
+  before?: (values: TransitionFormValues) => Promisable<void>;
+  after?: (values: TransitionFormValues) => Promisable<void>;
 }
 
 export const useExecuteTransition = ({
   id,
+  before,
   after,
 }: UseExecuteTransitionParams) => {
   const [executeTransition] = useMutation(TransitionProgressReportDocument);
@@ -28,6 +30,8 @@ export const useExecuteTransition = ({
     if (isBypass && !values.bypassStatus) {
       return;
     }
+
+    await before?.(values);
 
     await executeTransition({
       variables: {
@@ -41,6 +45,6 @@ export const useExecuteTransition = ({
       },
     });
 
-    await after?.();
+    await after?.(values);
   };
 };

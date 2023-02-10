@@ -60,7 +60,7 @@ export const StartReportPage = ({ report }: ReportProp) => {
         <Form onSubmit={onSubmit}>
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
-              <TransitionButtons report={report} size="large" />
+              <TransitionButtons status={report.status} size="large" />
             </form>
           )}
         </Form>
