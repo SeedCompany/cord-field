@@ -20,10 +20,12 @@ export const TransitionButtons = ({
   const form = useForm();
   const {
     submitting,
+    submitSucceeded,
     values: { bypassStatus },
   } = useFormState({
     subscription: {
       submitting: true,
+      submitSucceeded: true,
       values: true,
     },
   });
@@ -45,16 +47,23 @@ export const TransitionButtons = ({
           <Fragment key={id}>
             {index > 0 && transitionDivider}
             <Tooltip
-              title={`This will change the report to ${StatusLabels[to]}`}
+              title={
+                !submitting &&
+                !submitSucceeded &&
+                `This will change the report to ${StatusLabels[to]}`
+              }
             >
-              <SubmitButton
-                size={size ?? 'medium'}
-                {...transitionTypeStyles[type]}
-                action={id}
-                onClick={onClick}
-              >
-                {label}
-              </SubmitButton>
+              {/* Span because disabled button doesn't emit blur event for tooltip */}
+              <span>
+                <SubmitButton
+                  size={size ?? 'medium'}
+                  {...transitionTypeStyles[type]}
+                  action={id}
+                  onClick={onClick}
+                >
+                  {label}
+                </SubmitButton>
+              </span>
             </Tooltip>
           </Fragment>
         ))}
