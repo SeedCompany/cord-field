@@ -36,7 +36,7 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
           },
         }}
       >
-        <Stack direction="row" spacing={1}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           <DataButton
             label="Primary Location"
             startIcon={<MapPinIcon color="info" />}
@@ -66,7 +66,7 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
           >
             {sensitivity}
           </DataButton>
-        </Stack>
+        </Box>
       </Box>
       <Box sx={{ display: 'flex', mt: 2 }}>
         <Stack
