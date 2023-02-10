@@ -172,9 +172,9 @@ export const ProgressReportDetail = () => {
             />
 
             <Stack
-              spacing={3}
               direction={{ md: 'column', lg: 'row' }}
               sx={{
+                gap: 3,
                 width: 1,
                 alignItems: { lg: 'flex-start' },
                 '& > *': {
