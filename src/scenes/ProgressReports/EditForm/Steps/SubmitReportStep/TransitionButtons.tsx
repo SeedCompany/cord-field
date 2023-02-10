@@ -5,15 +5,15 @@ import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLis
 import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { SubmitButton } from '~/components/form';
-import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql';
 import { BypassButton } from './BypassButton';
+import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
 
 interface TransitionButtonsProps extends Pick<ButtonProps, 'size' | 'onClick'> {
-  report: ProgressReportEditFragment;
+  status: ProgressReportStatusFragment;
 }
 
 export const TransitionButtons = ({
-  report,
+  status: { transitions, canBypassTransitions },
   size,
   onClick,
 }: TransitionButtonsProps) => {
@@ -40,7 +40,7 @@ export const TransitionButtons = ({
   );
   return (
     <>
-      {report.status.transitions
+      {transitions
         .slice()
         .reverse()
         .map(({ id, type, label, to }, index) => (
@@ -67,9 +67,9 @@ export const TransitionButtons = ({
             </Tooltip>
           </Fragment>
         ))}
-      {report.status.canBypassTransitions && (
+      {canBypassTransitions && (
         <>
-          {report.status.transitions.length > 0 && transitionDivider}
+          {transitions.length > 0 && transitionDivider}
           <BypassButton
             value={bypassStatus}
             onChange={setBypassStatus}

@@ -44,7 +44,7 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
             To complete this report, please choose the next action
           </Typography>
           <Box maxWidth={450} mx="auto">
-            <TransitionButtons report={report} />
+            <TransitionButtons status={report.status} />
           </Box>
         </Box>
       )}
