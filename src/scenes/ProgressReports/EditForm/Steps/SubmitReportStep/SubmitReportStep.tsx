@@ -1,7 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Form } from 'react-final-form';
+import { explosionFromElement, useConfetti } from '~/components/Confetti';
 import { RichTextField } from '~/components/RichText';
 import { useNavigate } from '~/components/Routing';
 import { StepComponent } from '../step.types';
@@ -15,6 +16,9 @@ import {
 export const SubmitReportStep: StepComponent = ({ report }) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const createConfetti = useConfetti();
+
+  const lastSubmitButton = useRef<HTMLElement>();
 
   // Maintain the old status state while closing the drawer.
   // Prevents a flash of the new status before the drawer closes.
@@ -25,11 +29,24 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
     before: () => {
       setPrevStatus(report.status);
     },
-    after: () => {
-      enqueueSnackbar('Report submitted — Thanks!', {
-        variant: 'success',
-      });
-      navigate('..');
+    after: (values) => {
+      const transition = report.status.transitions.find(
+        (transition) => transition.id === values.submitAction
+      );
+      const buttonEl = lastSubmitButton.current;
+
+      if (transition?.type === 'Approve' && buttonEl) {
+        const confettiOptions = {
+          ...explosionFromElement(buttonEl),
+        };
+        createConfetti(confettiOptions);
+        setTimeout(() => navigate('..'), confettiOptions.tweenDuration);
+      } else {
+        enqueueSnackbar('Report submitted — Thanks!', {
+          variant: 'success',
+        });
+        navigate('..');
+      }
     },
   });
 
@@ -53,7 +70,12 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
             To complete this report, please choose the next action
           </Typography>
           <Box maxWidth={450} mx="auto">
-            <TransitionButtons status={prevStatus ?? report.status} />
+            <TransitionButtons
+              status={prevStatus ?? report.status}
+              onClick={(event) => {
+                lastSubmitButton.current = event.currentTarget;
+              }}
+            />
           </Box>
         </Box>
       )}
