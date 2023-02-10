@@ -21,10 +21,5 @@ export const explosionFromElement = (el: HTMLElement) =>
 
 const sourceFromElement = (el: HTMLElement) => {
   const { x, y, width, height } = el.getBoundingClientRect();
-  const initialSize = { w: width / 2, h: height / 2 };
-  return {
-    x: x + (width - initialSize.w) / 2,
-    y: y + (height - initialSize.h) / 2,
-    ...initialSize,
-  };
+  return { x, y, w: width, h: height };
 };
