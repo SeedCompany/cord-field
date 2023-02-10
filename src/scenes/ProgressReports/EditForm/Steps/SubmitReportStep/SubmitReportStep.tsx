@@ -2,7 +2,11 @@ import { Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
 import { Form } from 'react-final-form';
-import { explosionFromElement, useConfetti } from '~/components/Confetti';
+import {
+  explosionFromElement,
+  randomColorPalette,
+  useConfetti,
+} from '~/components/Confetti';
 import { RichTextField } from '~/components/RichText';
 import { useNavigate } from '~/components/Routing';
 import { StepComponent } from '../step.types';
@@ -38,6 +42,7 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
       if (transition?.type === 'Approve' && buttonEl) {
         const confettiOptions = {
           ...explosionFromElement(buttonEl),
+          colors: randomColorPalette(),
         };
         createConfetti(confettiOptions);
         setTimeout(() => navigate('..'), confettiOptions.tweenDuration);
