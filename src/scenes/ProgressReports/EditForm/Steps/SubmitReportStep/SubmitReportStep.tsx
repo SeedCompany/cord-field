@@ -1,9 +1,16 @@
 import { Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { useRef, useState } from 'react';
 import { Form } from 'react-final-form';
+import {
+  explosionFromElement,
+  randomColorPalette,
+  useConfetti,
+} from '~/components/Confetti';
 import { RichTextField } from '~/components/RichText';
 import { useNavigate } from '~/components/Routing';
 import { StepComponent } from '../step.types';
+import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
 import { TransitionButtons } from './TransitionButtons';
 import {
   TransitionFormValues,
@@ -13,14 +20,38 @@ import {
 export const SubmitReportStep: StepComponent = ({ report }) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const createConfetti = useConfetti();
+
+  const lastSubmitButton = useRef<HTMLElement>();
+
+  // Maintain the old status state while closing the drawer.
+  // Prevents a flash of the new status before the drawer closes.
+  const [prevStatus, setPrevStatus] = useState<ProgressReportStatusFragment>();
 
   const executeTransition = useExecuteTransition({
     id: report.id,
-    after: () => {
-      enqueueSnackbar('Report submitted — Thanks!', {
-        variant: 'success',
-      });
-      navigate('..');
+    before: () => {
+      setPrevStatus(report.status);
+    },
+    after: (values) => {
+      const transition = report.status.transitions.find(
+        (transition) => transition.id === values.submitAction
+      );
+      const buttonEl = lastSubmitButton.current;
+
+      if (transition?.type === 'Approve' && buttonEl) {
+        const confettiOptions = {
+          ...explosionFromElement(buttonEl),
+          colors: randomColorPalette(),
+        };
+        createConfetti(confettiOptions);
+        setTimeout(() => navigate('..'), confettiOptions.tweenDuration);
+      } else {
+        enqueueSnackbar('Report submitted — Thanks!', {
+          variant: 'success',
+        });
+        navigate('..');
+      }
     },
   });
 
@@ -44,7 +75,12 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
             To complete this report, please choose the next action
           </Typography>
           <Box maxWidth={450} mx="auto">
-            <TransitionButtons report={report} />
+            <TransitionButtons
+              status={prevStatus ?? report.status}
+              onClick={(event) => {
+                lastSubmitButton.current = event.currentTarget;
+              }}
+            />
           </Box>
         </Box>
       )}

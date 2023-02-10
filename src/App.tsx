@@ -4,6 +4,7 @@ import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import { ApolloProvider } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
+import { ConfettiProvider } from './components/Confetti';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
 import { UploadProvider as FileUploadProvider } from './components/Upload';
@@ -42,6 +43,7 @@ export const appProviders = [
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,
   <FileUploadProvider key="files" />,
+  <ConfettiProvider key="confetti" />,
 ];
 
 export const App = () => (

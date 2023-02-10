@@ -5,21 +5,27 @@ import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLis
 import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { SubmitButton } from '~/components/form';
-import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql';
 import { BypassButton } from './BypassButton';
+import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
 
-interface TransitionButtonsProps extends Pick<ButtonProps, 'size'> {
-  report: ProgressReportEditFragment;
+interface TransitionButtonsProps extends Pick<ButtonProps, 'size' | 'onClick'> {
+  status: ProgressReportStatusFragment;
 }
 
-export const TransitionButtons = ({ report, size }: TransitionButtonsProps) => {
+export const TransitionButtons = ({
+  status: { transitions, canBypassTransitions },
+  size,
+  onClick,
+}: TransitionButtonsProps) => {
   const form = useForm();
   const {
     submitting,
+    submitSucceeded,
     values: { bypassStatus },
   } = useFormState({
     subscription: {
       submitting: true,
+      submitSucceeded: true,
       values: true,
     },
   });
@@ -34,28 +40,36 @@ export const TransitionButtons = ({ report, size }: TransitionButtonsProps) => {
   );
   return (
     <>
-      {report.status.transitions
+      {transitions
         .slice()
         .reverse()
         .map(({ id, type, label, to }, index) => (
           <Fragment key={id}>
             {index > 0 && transitionDivider}
             <Tooltip
-              title={`This will change the report to ${StatusLabels[to]}`}
+              title={
+                !submitting &&
+                !submitSucceeded &&
+                `This will change the report to ${StatusLabels[to]}`
+              }
             >
-              <SubmitButton
-                size={size ?? 'medium'}
-                {...transitionTypeStyles[type]}
-                action={id}
-              >
-                {label}
-              </SubmitButton>
+              {/* Span because disabled button doesn't emit blur event for tooltip */}
+              <span>
+                <SubmitButton
+                  size={size ?? 'medium'}
+                  {...transitionTypeStyles[type]}
+                  action={id}
+                  onClick={onClick}
+                >
+                  {label}
+                </SubmitButton>
+              </span>
             </Tooltip>
           </Fragment>
         ))}
-      {report.status.canBypassTransitions && (
+      {canBypassTransitions && (
         <>
-          {report.status.transitions.length > 0 && transitionDivider}
+          {transitions.length > 0 && transitionDivider}
           <BypassButton
             value={bypassStatus}
             onChange={setBypassStatus}
