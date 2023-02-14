@@ -28,7 +28,7 @@ import {
 } from './ProgressReportDetail.graphql';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 import { PromptResponseCard } from './PromptResponseCard';
-import { StatusStepper } from './StatusStepper';
+import { WorkflowCard } from './WorkflowCard';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {
@@ -139,12 +139,7 @@ export const ProgressReportDetail = () => {
           </Grid>
         ) : (
           <Stack spacing={3} maxWidth="lg" alignItems="flex-start" mt={1}>
-            <StatusStepper
-              loading={!report}
-              current={report?.status.value}
-              sx={{ width: 1, maxWidth: 'sm' }}
-            />
-
+            <WorkflowCard report={report} sx={{ width: 1, maxWidth: 'sm' }} />
             <ProgressSummaryCard
               loading={!report}
               summary={report?.cumulativeSummary ?? null}

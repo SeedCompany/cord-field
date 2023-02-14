@@ -27,6 +27,9 @@ fragment ProgressReportDetail on ProgressReport {
   varianceExplanation {
     ...varianceExplanation
   }
+  workflowEvents {
+    ...workflowEvent
+  }
 }
 
 fragment ProgressSummary on ProgressSummary {
