@@ -21,6 +21,7 @@ import { Redacted } from '../../../components/Redacted';
 import { TogglePinButton } from '../../../components/TogglePinButton';
 import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.graphql';
+import { ImpersonationToggle } from './ImpersonationToggle';
 import { UserDocument } from './UserDetail.graphql';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
@@ -97,6 +98,7 @@ export const UserDetail = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
+            <ImpersonationToggle user={user} />
           </div>
           <DisplayProperty
             label="Email"
