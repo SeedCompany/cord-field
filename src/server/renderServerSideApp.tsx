@@ -18,6 +18,11 @@ import { TssCacheProvider } from 'tss-react';
 import { createClient } from '~/api/client/createClient';
 import { ErrorCache } from '~/api/client/links/errorCache.link';
 import { basePathOfUrl, trailingSlash } from '~/common';
+import {
+  Impersonation,
+  impersonationFromCookie,
+  ImpersonationProvider,
+} from '../api/client/ImpersonationContext';
 import { App } from '../App';
 import { Nest } from '../components/Nest';
 import { ServerLocation } from '../components/Routing';
@@ -31,6 +36,7 @@ export const renderServerSideApp = async (
   req: ExpressRequest,
   res: ExpressResponse
 ) => {
+  const impersonation = impersonationFromCookie(req.cookies);
   const errorCache: ErrorCache = {};
   const apollo = createClient({ ssr: { req, res }, errorCache });
 
@@ -50,7 +56,14 @@ export const renderServerSideApp = async (
   const location = new ServerLocation();
 
   const markup = await getMarkupFromTree({
-    tree: <ServerApp req={req} apollo={apollo} helmetContext={helmetContext} />,
+    tree: (
+      <ServerApp
+        req={req}
+        apollo={apollo}
+        helmetContext={helmetContext}
+        impersonation={impersonation}
+      />
+    ),
     renderFunction: (tree) => {
       return renderToString(
         location.wrap(extractor.collectChunks(ssrStyles.wrap(tree)))
@@ -112,10 +125,12 @@ const ServerApp = ({
   req,
   helmetContext,
   apollo,
+  impersonation,
 }: {
   req: ExpressRequest;
   helmetContext?: Partial<FilledContext>;
   apollo: ApolloClient<unknown>;
+  impersonation: Impersonation | null;
 }) => (
   <Nest
     elements={[
@@ -130,6 +145,7 @@ const ServerApp = ({
         basename={basePath}
         location={req.originalUrl}
       />,
+      <ImpersonationProvider key="impersonation" initial={impersonation} />,
       <ApolloProvider key="apollo" client={apollo} children={[]} />,
     ]}
   >
