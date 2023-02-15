@@ -3,7 +3,7 @@ import {
   getApolloContext,
 } from '@apollo/client';
 import { useLatest } from 'ahooks';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ChildrenProp } from '~/common';
 import { createClient } from './createClient';
 import { ImpersonationContext } from './ImpersonationContext';
@@ -27,6 +27,21 @@ export const ApolloProvider = ({ children }: ChildrenProp) => {
       impersonation: impersonationRef,
     });
   });
+
+  // Reset store when impersonation changes
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    void client.resetStore();
+  }, [
+    client,
+    firstRender,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [impersonation.user, ...(impersonation.roles ?? [])].join(','),
+  ]);
 
   // Don't redefine provider if client is already defined, essentially making
   // this provider a noop.
