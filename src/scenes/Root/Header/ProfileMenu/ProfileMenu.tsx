@@ -7,6 +7,7 @@ import { useDialog } from '../../../../components/Dialog';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';
 import { ChangePassword } from '../../../Authentication/ChangePassword';
+import { ImpersonationMenuItem } from './ImpersonationDialog';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   menu: {
@@ -65,6 +66,11 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
             Change Password
           </MenuItem>
         )}
+        <ImpersonationMenuItem
+          onClick={(event) => {
+            props.onClose?.(event, 'backdropClick');
+          }}
+        />
         <MenuItemLink to="/logout">Sign Out</MenuItemLink>
       </Menu>
       <ChangePassword {...changePasswordState} />
