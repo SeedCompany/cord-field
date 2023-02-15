@@ -38,7 +38,11 @@ export const renderServerSideApp = async (
 ) => {
   const impersonation = impersonationFromCookie(req.cookies);
   const errorCache: ErrorCache = {};
-  const apollo = createClient({ ssr: { req, res }, errorCache });
+  const apollo = createClient({
+    ssr: { req, res },
+    errorCache,
+    impersonation: { current: impersonation },
+  });
 
   const helmetContext: Partial<FilledContext> = {};
   const extractor = new ChunkExtractor({
