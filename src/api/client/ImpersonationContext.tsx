@@ -1,7 +1,14 @@
+import { useLatest } from 'ahooks';
 import Cookies from 'js-cookie';
 import { noop, pickBy } from 'lodash';
-import { createContext, useCallback, useMemo, useState } from 'react';
-import { ChildrenProp } from '~/common';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { ChildrenProp, Many, many } from '~/common';
 import { Role } from '../schema/schema.graphql';
 
 export interface Impersonation {
@@ -52,6 +59,35 @@ export const ImpersonationProvider = ({
     }),
     [impersonation, set]
   );
+
+  // Expose devtools API
+  const latest = useLatest(value);
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    Object.defineProperty(window, 'impersonation', {
+      writable: true,
+      configurable: true,
+      value: {
+        get user() {
+          return latest.current.user;
+        },
+        set user(value) {
+          latest.current.set({ user: value });
+        },
+        get roles() {
+          return latest.current.roles;
+        },
+        set roles(value: Many<Role> | undefined) {
+          latest.current.set({ roles: value ? many(value) : undefined });
+        },
+        clear() {
+          latest.current.set();
+        },
+      },
+    });
+  }, [latest]);
 
   return (
     <ImpersonationContext.Provider value={value}>
