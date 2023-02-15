@@ -16,10 +16,11 @@ export const useSession = () => {
     ssr: true,
   });
   const session = data?.session.user;
+  const impersonator = data?.session.impersonator;
   const powers = data?.session.powers;
   const betaFeatures = data?.session.betaFeatures;
 
-  return { session, sessionLoading, powers, betaFeatures };
+  return { session, sessionLoading, impersonator, powers, betaFeatures };
 };
 
 export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
@@ -54,9 +55,10 @@ export const useBetaFeatures = (): ReadonlySet<keyof BetaFeatures> =>
   );
 
 export const useIdentifyInLogRocket = () => {
-  const { session: user } = useSession();
+  const { session, impersonator } = useSession();
+  const user = impersonator ?? session;
   useEffect(() => {
-    if (!user) {
+    if (!user || !process.env.RAZZLE_LOG_ROCKET_APP_ID) {
       return;
     }
     LogRocket.identify(
