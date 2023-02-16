@@ -1,7 +1,15 @@
 import { ApolloError } from '@apollo/client';
 import { Button, Grid, Typography } from '@mui/material';
 import { isPlainObject } from 'lodash';
-import { ElementType, isValidElement, ReactNode } from 'react';
+import {
+  ElementType,
+  isValidElement,
+  ReactNode,
+  useEffect,
+  useRef,
+} from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { getErrorInfo } from '~/api';
 import { ButtonLink, StatusCode, useNavigate } from '../Routing';
@@ -25,7 +33,7 @@ export interface ErrorProps {
    * An object can also be given to specify react nodes or render functions for
    * each error code.
    */
-  children: ReactNode | ErrorRenderers;
+  children?: ReactNode | ErrorRenderers;
   /**
    * The error. This is used to determine if component should show
    * and it's given to the children error rendering functions
@@ -69,7 +77,8 @@ export const Error = ({
   const node =
     isPlainObject(children) && !isValidElement(children)
       ? renderError(error, children as ErrorRenderers)
-      : children;
+      : children ?? 'Something went wrong';
+
   const rendered =
     typeof node !== 'string' ? (
       node
@@ -107,4 +116,17 @@ export const Error = ({
       )}
     </Component>
   );
+};
+
+export const useResetErrorOnLocationChange = () => {
+  const location = useLocation();
+  const errorBoundaryRef = useRef<ErrorBoundary | null>(null);
+
+  useEffect(() => {
+    if (errorBoundaryRef.current?.state.error) {
+      errorBoundaryRef.current.reset();
+    }
+  }, [location]);
+
+  return errorBoundaryRef;
 };

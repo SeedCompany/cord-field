@@ -27,6 +27,13 @@ export const appComponents = ({
           minHeight: '100vh',
           display: 'flex',
         },
+        // Idk what this iframe is, but it's overlaying over everything and showing nothing.
+        // Disable pointer events so DevTools will select through it.
+        ...(process.env.NODE_ENV !== 'production' && {
+          'body > iframe': {
+            pointerEvents: 'none',
+          },
+        }),
       },
     },
     MuiButton: {
