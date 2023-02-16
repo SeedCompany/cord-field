@@ -1,7 +1,12 @@
 import loadable from '@loadable/component';
 import { CssBaseline } from '@mui/material';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes } from 'react-router-dom';
-import { NotFoundRoute } from '../../components/Error';
+import {
+  Error,
+  NotFoundRoute,
+  useResetErrorOnLocationChange,
+} from '../../components/Error';
 import { useIdentifyInLogRocket, useSession } from '../../components/Session';
 import {
   AuthLayout,
@@ -85,7 +90,12 @@ export const Root = () => {
     <>
       <CssBaseline />
       <AppMetadata />
-      {routes}
+      <ErrorBoundary
+        fallback={<Error show page />}
+        ref={useResetErrorOnLocationChange()}
+      >
+        {routes}
+      </ErrorBoundary>
     </>
   );
 };
