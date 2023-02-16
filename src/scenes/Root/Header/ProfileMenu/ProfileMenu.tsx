@@ -1,10 +1,13 @@
 import { Divider, Menu, MenuItem, MenuProps, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useContext } from 'react';
 import { makeStyles } from 'tss-react/mui';
+import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { useDialog } from '../../../../components/Dialog';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';
 import { ChangePassword } from '../../../Authentication/ChangePassword';
+import { ImpersonationMenuItem } from './ImpersonationDialog';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   menu: {
@@ -23,6 +26,8 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
   const { classes } = useStyles();
   const { spacing } = useTheme();
   const { session } = useSession();
+  const impersonation = useContext(ImpersonationContext);
+
   const [changePasswordState, changePassword] = useDialog();
   const userId = session?.id;
 
@@ -51,14 +56,21 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
         {userId && (
           <MenuItemLink to={`/users/${userId}`}>View Profile</MenuItemLink>
         )}
-        <MenuItem
+        {!impersonation.enabled && (
+          <MenuItem
+            onClick={(event) => {
+              changePassword();
+              props.onClose?.(event, 'backdropClick');
+            }}
+          >
+            Change Password
+          </MenuItem>
+        )}
+        <ImpersonationMenuItem
           onClick={(event) => {
-            changePassword();
             props.onClose?.(event, 'backdropClick');
           }}
-        >
-          Change Password
-        </MenuItem>
+        />
         <MenuItemLink to="/logout">Sign Out</MenuItemLink>
       </Menu>
       <ChangePassword {...changePasswordState} />

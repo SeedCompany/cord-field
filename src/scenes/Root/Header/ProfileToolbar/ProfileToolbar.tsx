@@ -2,10 +2,12 @@ import {
   AccountCircle,
   MoreVert,
   NotificationsNone,
+  SupervisedUserCircle,
 } from '@mui/icons-material';
 import { Card, IconButton, MenuProps, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
+import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
 import { UserActionsMenu } from '../UserActionsMenu';
@@ -26,6 +28,7 @@ const useStyles = makeStyles()(({ typography, spacing }) => ({
 export const ProfileToolbar = () => {
   const { classes } = useStyles();
   const { session } = useSession();
+  const impersonation = useContext(ImpersonationContext);
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
 
@@ -41,7 +44,7 @@ export const ProfileToolbar = () => {
           aria-haspopup="true"
           onClick={(e) => setProfileAnchor(e.currentTarget)}
         >
-          <AccountCircle />
+          {impersonation.enabled ? <SupervisedUserCircle /> : <AccountCircle />}
         </IconButton>
         <IconButton>
           <NotificationsNone />

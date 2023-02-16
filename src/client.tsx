@@ -9,6 +9,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { TssCacheProvider } from 'tss-react';
 import { basePathOfUrl } from '~/common';
+import { ImpersonationProvider } from './api/client/ImpersonationContext';
 import { App } from './App';
 import { Nest } from './components/Nest';
 import { createMuiEmotionCache, createTssEmotionCache } from './theme/emotion';
@@ -64,6 +65,7 @@ const clientOnlyProviders = [
   <DndProvider key="dnd" backend={HTML5Backend} />,
   <CacheProvider key="emotion-mui" value={emotionCacheMui} />,
   <TssCacheProvider key="emotion-tss" value={emotionCacheTss} children={[]} />,
+  <ImpersonationProvider key="impersonation" />,
 ];
 
 void Promise.all(setup).then(() => {

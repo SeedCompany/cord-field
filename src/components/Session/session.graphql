@@ -3,6 +3,9 @@ query Session {
     user {
       ...LoggedInUser
     }
+    impersonator {
+      ...LoggedInUser
+    }
     betaFeatures {
       ...features
     }

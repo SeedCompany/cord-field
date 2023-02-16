@@ -35,7 +35,7 @@ export const UserActionsMenu = (props: Partial<MenuProps>) => {
 
   return (
     <Menu
-      id="profile-menu"
+      id="user-actions-menu"
       keepMounted
       open={Boolean(props.anchorEl)}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

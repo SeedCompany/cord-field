@@ -126,15 +126,13 @@ export const ProgressReportDetail = () => {
               <Skeleton width={442} />
             )}
           </Grid>
-          {(!report || report.receivedDate.canEdit) && (
-            <Grid item>
-              <Tooltip title="Edit Report">
-                <FabLink to="edit" color="primary" loading={!report}>
-                  <Edit />
-                </FabLink>
-              </Tooltip>
-            </Grid>
-          )}
+          <Grid item>
+            <Tooltip title="Edit Report">
+              <FabLink to="edit" color="primary" loading={!report}>
+                <Edit />
+              </FabLink>
+            </Tooltip>
+          </Grid>
           <Grid item>
             <SkipReportButton report={report} />
           </Grid>
