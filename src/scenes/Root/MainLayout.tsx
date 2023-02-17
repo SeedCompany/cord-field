@@ -1,5 +1,7 @@
+import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { Error, useResetErrorOnLocationChange } from '../../components/Error';
 import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
@@ -28,7 +30,12 @@ export const MainLayout = () => {
       </CreateDialogProviders>
       <div className={classes.main}>
         <Header />
-        <Outlet />
+        <ErrorBoundary
+          fallback={<Error show page />}
+          ref={useResetErrorOnLocationChange()}
+        >
+          <Outlet />
+        </ErrorBoundary>
       </div>
     </div>
   );
