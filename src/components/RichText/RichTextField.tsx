@@ -16,6 +16,7 @@ import {
   TextField,
   TextFieldProps,
 } from '@mui/material';
+import { useDebounceFn } from 'ahooks';
 import { identity, isEqual, pick, sumBy } from 'lodash';
 import {
   forwardRef,
@@ -103,26 +104,32 @@ export function RichTextField({
   // the async save finishes that only the latest change is used.
   // This is probably excessive; I'm just trying to prevent race conditions.
   const latestChangeTimestamp = useRef(0);
-  const onChange = ((api, event) => {
-    latestChangeTimestamp.current = event.timeStamp;
-    input.onChange(savingSigil); // Prevent submitting while saving
-    void api.saver.save().then((data) => {
-      if (latestChangeTimestamp.current > event.timeStamp) {
-        // A newer change is already in progress
-        return;
-      }
+  const onChange = useDebounceFn(
+    ((api, event) => {
+      latestChangeTimestamp.current = event.timeStamp;
+      input.onChange(savingSigil); // Prevent submitting while saving
+      void api.saver.save().then((data) => {
+        if (latestChangeTimestamp.current > event.timeStamp) {
+          // A newer change is already in progress
+          return;
+        }
 
-      if (showCharacterCount) {
-        data.characterCount = countCharacters(data);
-      }
+        if (showCharacterCount) {
+          data.characterCount = countCharacters(data);
+        }
 
-      if (process.env.NODE_ENV !== 'production') {
-        data = Object.freeze(data);
-      }
-      internallyProduced.add(data);
-      input.onChange(data);
-    });
-  }) satisfies EditorConfig['onChange'];
+        if (process.env.NODE_ENV !== 'production') {
+          data = Object.freeze(data);
+        }
+        internallyProduced.add(data);
+        input.onChange(data);
+      });
+    }) satisfies EditorConfig['onChange'],
+    {
+      wait: 200,
+      maxWait: 200,
+    }
+  );
 
   const val = input.value as RichTextData | undefined;
   useEffect(() => {
@@ -194,7 +201,7 @@ export function RichTextField({
                     setReady(true);
                   }}
                   readOnly={meta.disabled}
-                  onChange={onChange}
+                  onChange={onChange.run}
                 >
                   <ClickAwayListener onClickAway={() => input.onBlur()}>
                     <FormControl
