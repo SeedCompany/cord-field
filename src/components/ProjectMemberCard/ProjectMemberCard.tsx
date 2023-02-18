@@ -10,7 +10,7 @@ import { makeStyles } from 'tss-react/mui';
 import { RoleLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';
-import { useDateTimeFormatter } from '../Formatters';
+import { FormattedDateTime } from '../Formatters';
 import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 
 const useStyles = makeStyles()(({ spacing }) => ({
@@ -47,9 +47,6 @@ export const ProjectMemberCard = ({
   className,
 }: ProjectMemberCardProps) => {
   const { classes } = useStyles();
-  const dateTimeFormatter = useDateTimeFormatter();
-
-  const createdAtString = dateTimeFormatter(projectMember?.createdAt);
 
   return (
     <Card className={className}>
@@ -94,7 +91,9 @@ export const ProjectMemberCard = ({
           {!projectMember ? (
             <Skeleton variant="text" width="23ch" />
           ) : (
-            `Member Since ${createdAtString}`
+            <>
+              Member Since <FormattedDateTime date={projectMember.createdAt} />
+            </>
           )}
         </Typography>
       </CardActions>
