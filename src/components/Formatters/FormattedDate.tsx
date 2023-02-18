@@ -8,20 +8,20 @@ import { CalendarDate, Nullable } from '~/common';
 import { useLocale } from '../../hooks';
 import { useDateFormatter, useDateTimeFormatter } from './useDateFormatter';
 
-export const FormattedDate = ({
+export const FormattedDate = memo(function FormattedDate({
   date,
   displayOptions,
 }: {
   date: Nullable<CalendarDate>;
   displayOptions?: DateTimeFormatOptions;
-}) => {
+}) {
   const format = useDateFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATE_HUGE)}>
       <time dateTime={date.toISODate()}>{format(date, displayOptions)}</time>
     </Tooltip>
   ) : null;
-};
+});
 
 export const FormattedDateRange = ({
   start,
@@ -55,14 +55,18 @@ FormattedDateRange.orNull = (range: Nullable<DateRange>) =>
     <FormattedDateRange range={range} />
   );
 
-export const FormattedDateTime = ({ date }: { date: Nullable<DateTime> }) => {
+export const FormattedDateTime = memo(function FormattedDateTime({
+  date,
+}: {
+  date: Nullable<DateTime>;
+}) {
   const format = useDateTimeFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATETIME_HUGE)}>
       <time dateTime={date.toUTC().toISO()}>{format(date)}</time>
     </Tooltip>
   ) : null;
-};
+});
 
 export const RelativeDateTime = memo(function RelativeDateTime({
   date,
