@@ -20,7 +20,7 @@ import { BooleanProperty } from '../../../components/BooleanProperty';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
-import { useDateTimeFormatter } from '../../../components/Formatters';
+import { FormattedDateTime } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { TogglePinButton } from '../../../components/TogglePinButton';
@@ -98,7 +98,6 @@ const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
 export const PartnerDetail = () => {
   const { classes } = useStyles();
   const { partnerId = '' } = useParams();
-  const formatDateTime = useDateTimeFormatter();
 
   const { data, error } = useQuery(PartnerDocument, {
     variables: {
@@ -158,7 +157,7 @@ export const PartnerDetail = () => {
             </Typography>
             {partner && (
               <Typography variant="body2" color="textSecondary">
-                Created {formatDateTime(partner.createdAt)}
+                Created <FormattedDateTime date={partner.createdAt} />
               </Typography>
             )}
           </div>

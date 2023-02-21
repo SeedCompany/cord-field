@@ -16,7 +16,7 @@ import { canEditAny } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { DateField, FieldGroup, SubmitError } from '../../../components/form';
-import { useDateFormatter } from '../../../components/Formatters';
+import { FormattedDate } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import {
   CeremonyCardFragment,
@@ -60,7 +60,6 @@ export const CeremonyCard = ({
   const loading = canRead == null;
 
   const { classes, cx } = useStyles();
-  const formatDate = useDateFormatter();
   const [updateCeremony] = useMutation(UpdateCeremonyDocument);
   const [dialogState, openDialog] = useDialog();
 
@@ -137,7 +136,11 @@ export const CeremonyCard = ({
             >
               {!loading ? (
                 canRead && ceremony?.estimatedDate.canRead ? (
-                  formatDate(estimatedDate?.value) || <>&nbsp;</>
+                  estimatedDate?.value ? (
+                    <FormattedDate date={estimatedDate.value} />
+                  ) : (
+                    <>&nbsp;</>
+                  )
                 ) : (
                   <Redacted
                     info="You don't have permission to view the estimated date"

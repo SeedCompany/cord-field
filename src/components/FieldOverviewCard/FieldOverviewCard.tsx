@@ -13,7 +13,7 @@ import { To } from 'history';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { useDateTimeFormatter } from '../Formatters';
+import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 
@@ -83,7 +83,6 @@ export const FieldOverviewCard = ({
   viewLabel: buttonLabel,
 }: FieldOverviewCardProps) => {
   const { classes, cx } = useStyles();
-  const dateTimeFormatter = useDateTimeFormatter();
 
   const showData = !loading && !redacted;
   const ActionArea = showData && data?.to ? CardActionAreaLink : CardActionArea;
@@ -149,7 +148,10 @@ export const FieldOverviewCard = ({
                   {loading ? (
                     <Skeleton />
                   ) : data?.updatedAt ? (
-                    <> Updated {dateTimeFormatter(data.updatedAt)}</>
+                    <>
+                      {' '}
+                      Updated <FormattedDateTime date={data.updatedAt} />
+                    </>
                   ) : null}
                 </Typography>
               )}

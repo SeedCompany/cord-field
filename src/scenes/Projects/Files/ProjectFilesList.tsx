@@ -31,8 +31,8 @@ import {
 import { fileIcon } from '../../../components/files/fileTypes';
 import {
   formatFileSize,
+  FormattedDateTime,
   parseFileNameAndExtension,
-  useDateTimeFormatter,
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { ContentContainer } from '../../../components/Layout';
@@ -74,7 +74,6 @@ const ProjectFilesListWrapped = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
   const { projectUrl } = useProjectId();
-  const formatDate = useDateTimeFormatter();
 
   const { openFilePreview } = useFileActions();
 
@@ -151,7 +150,7 @@ const ProjectFilesListWrapped = () => {
       width: 150,
       valueGetter: ({ row }) =>
         row.__typename === 'File' ? row.modifiedAt : row.createdAt,
-      valueFormatter: ({ value }) => formatDate(value),
+      renderCell: ({ value }) => <FormattedDateTime date={value} />,
     },
     {
       headerName: 'Modified By',

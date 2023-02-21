@@ -2,7 +2,7 @@ import { Skeleton, Typography } from '@mui/material';
 import { useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { CalendarDate, Nullable, SecuredProp } from '~/common';
-import { useDateFormatter } from '../../../components/Formatters';
+import { FormattedDate } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 
 const useStyles = makeStyles()(({ palette, spacing }) => ({
@@ -38,7 +38,6 @@ interface LargeDateProps {
 
 export const LargeDate = ({ date, className }: LargeDateProps) => {
   const { classes, cx } = useStyles();
-  const formatDate = useDateFormatter();
   const [placeholderNow] = useState(() => CalendarDate.local());
 
   return (
@@ -52,10 +51,12 @@ export const LargeDate = ({ date, className }: LargeDateProps) => {
       )}
     >
       {date?.value ? (
-        formatDate(date.value)
+        <FormattedDate date={date.value} />
       ) : (
         <>
-          <span className={classes.hidden}>{formatDate(placeholderNow)}</span>
+          <span className={classes.hidden}>
+            <FormattedDate date={placeholderNow} />
+          </span>
           {!date ? (
             <Skeleton variant="rectangular" className={classes.skeleton} />
           ) : !date.canRead ? (
