@@ -93,9 +93,11 @@ export const Due = ({ date }: { date: CalendarDate }) => (
       date={date}
       displayOptions={
         date.diffNow('years').years < 1 // same year
-          ? omit(DateTime.DATE_SHORT, 'year')
+          ? DATE_SHORT_NO_YEAR
           : undefined
       }
     />
   </>
 );
+
+const DATE_SHORT_NO_YEAR = omit(DateTime.DATE_SHORT, 'year');

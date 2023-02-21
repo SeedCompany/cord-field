@@ -5,7 +5,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
-import { useDateTimeFormatter } from '../../Formatters';
+import { FormattedDateTime } from '../../Formatters';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -35,7 +35,6 @@ interface FileVersionItemProps {
 
 export const FileVersionItem = (props: FileVersionItemProps) => {
   const { classes } = useStyles();
-  const formatDate = useDateTimeFormatter();
   const { openFilePreview } = useFileActions();
   const { version, actions } = props;
 
@@ -72,9 +71,12 @@ export const FileVersionItem = (props: FileVersionItemProps) => {
         onClick={() => openFilePreview(version)}
         className={classes.text}
         primary={name}
-        secondary={`Created on ${formatDate(createdAt)}${
-          createdByUser ? ` by ${createdByUser}` : ''
-        }`}
+        secondary={
+          <>
+            Created <FormattedDateTime date={createdAt} />
+            {createdByUser ? ` by ${createdByUser}` : ''}
+          </>
+        }
       />
       <ListItemSecondaryAction>
         <ActionsMenu item={version} actions={menuActions} />

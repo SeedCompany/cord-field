@@ -16,7 +16,7 @@ import {
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import {
-  useDateFormatter,
+  FormattedDate,
   useNumberFormatter,
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
@@ -101,7 +101,6 @@ export const LanguageDetail = () => {
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
-  const formatDate = useDateFormatter();
   const formatNumber = useNumberFormatter();
 
   const [removeLocation, { loading: removing }] = useMutation(
@@ -216,7 +215,7 @@ export const LanguageDetail = () => {
           />
           <DisplayProperty
             label="Sponsor Start Date"
-            value={formatDate(sponsorStartDate?.value)}
+            value={<FormattedDate date={sponsorStartDate?.value} />}
             loading={!language}
           />
           <DisplayProperty

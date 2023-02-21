@@ -8,20 +8,22 @@ import { CalendarDate, Nullable } from '~/common';
 import { useLocale } from '../../hooks';
 import { useDateFormatter, useDateTimeFormatter } from './useDateFormatter';
 
-export const FormattedDate = ({
+export const FormattedDate = memo(function FormattedDate({
   date,
   displayOptions,
 }: {
   date: Nullable<CalendarDate>;
   displayOptions?: DateTimeFormatOptions;
-}) => {
+}) {
+  date = asLuxonInstance(date, CalendarDate);
+
   const format = useDateFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATE_HUGE)}>
       <time dateTime={date.toISODate()}>{format(date, displayOptions)}</time>
     </Tooltip>
   ) : null;
-};
+});
 
 export const FormattedDateRange = ({
   start,
@@ -55,20 +57,28 @@ FormattedDateRange.orNull = (range: Nullable<DateRange>) =>
     <FormattedDateRange range={range} />
   );
 
-export const FormattedDateTime = ({ date }: { date: Nullable<DateTime> }) => {
+export const FormattedDateTime = memo(function FormattedDateTime({
+  date,
+}: {
+  date: Nullable<DateTime>;
+}) {
+  date = asLuxonInstance(date, DateTime);
+
   const format = useDateTimeFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATETIME_HUGE)}>
       <time dateTime={date.toUTC().toISO()}>{format(date)}</time>
     </Tooltip>
   ) : null;
-};
+});
 
 export const RelativeDateTime = memo(function RelativeDateTime({
   date,
 }: {
   date: DateTime;
 }) {
+  date = asLuxonInstance(date, DateTime)!;
+
   const locale = useLocale();
   date = locale ? date.setLocale(locale) : date;
   const absoluteFormat = useDateTimeFormatter();
@@ -102,3 +112,18 @@ export const RelativeDateTime = memo(function RelativeDateTime({
     </Tooltip>
   );
 });
+
+// Under some circumstances, the Apollo scalar read policy is ignored, causing
+// this date to just be an ISO string.
+// This is just a workaround, to try to prevent errors for users.
+// https://github.com/apollographql/apollo-client/issues/9293
+function asLuxonInstance(
+  date: DateTime | null | undefined,
+  cls: typeof DateTime
+) {
+  return !date
+    ? null
+    : cls.isDateTime(date)
+    ? date
+    : cls.fromISO(date as unknown as string);
+}
