@@ -28,9 +28,9 @@ import { HandleUploadCompletedFunction, useUploadFiles } from '../files/hooks';
 import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
-import { DropzoneOverlay } from '../Upload';
+import { DropOverlay } from '../Upload/DropOverlay';
 
-const useStyles = makeStyles()(({ palette, spacing, typography }) => ({
+const useStyles = makeStyles()(({ palette, spacing }) => ({
   root: {
     flex: 1,
     position: 'relative',
@@ -51,9 +51,6 @@ const useStyles = makeStyles()(({ palette, spacing, typography }) => ({
   avatar: {
     width: 58,
     height: 58,
-  },
-  dropzoneText: {
-    fontSize: typography.h2.fontSize,
   },
   addIcon: {
     color: 'white',
@@ -225,11 +222,9 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
     const card = (
       <Card {...getRootProps()} className={cx(classes.root, className)} sx={sx}>
         <input {...getInputProps()} name="defined_file_version_uploader" />
-        <DropzoneOverlay
-          classes={{ text: classes.dropzoneText }}
-          isDragActive={isDragActive}
-          message={!file ? `Add ${label} file` : 'Drop new version to upload'}
-        />
+        <DropOverlay isDragActive={isDragActive}>
+          {!file ? `Add ${label} file` : 'Drop new version to upload'}
+        </DropOverlay>
         <CardActionArea
           {...rest}
           ref={ref}
