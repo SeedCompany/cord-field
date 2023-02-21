@@ -37,7 +37,7 @@ import {
 import { IconButton } from '../../../components/IconButton';
 import { ContentContainer } from '../../../components/Layout';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { DropzoneOverlay } from '../../../components/Upload';
+import { DropOverlay } from '../../../components/Upload/DropOverlay';
 import { useProjectId } from '../useProjectId';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import { DirectoryBreadcrumb } from './DirectoryBreadcrumb';
@@ -51,7 +51,6 @@ import { FileOrDirectory, isDirectory } from './util';
 const useStyles = makeStyles()(({ palette, spacing, breakpoints }) => ({
   dropzone: {
     overflowY: 'auto',
-    position: 'relative',
     width: '100%',
     height: '100%',
   },
@@ -220,10 +219,6 @@ const ProjectFilesListWrapped = () => {
         }`}
       />
       <input {...getInputProps()} name="files_list_uploader" />
-      <DropzoneOverlay
-        isDragActive={isDragActive}
-        message="Drop files to start uploading"
-      />
       <ContentContainer>
         {error || (!loading && !items) ? (
           <Error show error={error}>
@@ -267,7 +262,10 @@ const ProjectFilesListWrapped = () => {
               </Box>
             )}
             <section className={classes.tableWrapper}>
-              <Card>
+              <Card css={{ position: 'relative' }}>
+                <DropOverlay isDragActive={isDragActive}>
+                  Drop files to start uploading
+                </DropOverlay>
                 <DataGrid
                   loading={loading}
                   rows={rowData}
