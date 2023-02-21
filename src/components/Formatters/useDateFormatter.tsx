@@ -12,7 +12,9 @@ const useTimezone = () => {
   return timezone;
 };
 
-// Returns function for format date or date range
+/**
+ * @deprecated Use FormattedDate component instead
+ */
 export const useDateFormatter = () => {
   const locale = useLocale();
 
@@ -27,7 +29,9 @@ export const useDateFormatter = () => {
   return formatDate;
 };
 
-// Returns function for format date time or date time range
+/**
+ * @deprecated Use FormattedDateTime component instead
+ */
 export const useDateTimeFormatter = () => {
   const locale = useLocale();
   const timeZone = useTimezone();
