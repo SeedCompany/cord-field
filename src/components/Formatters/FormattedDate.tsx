@@ -15,6 +15,8 @@ export const FormattedDate = memo(function FormattedDate({
   date: Nullable<CalendarDate>;
   displayOptions?: DateTimeFormatOptions;
 }) {
+  date = asLuxonInstance(date, CalendarDate);
+
   const format = useDateFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATE_HUGE)}>
@@ -60,6 +62,8 @@ export const FormattedDateTime = memo(function FormattedDateTime({
 }: {
   date: Nullable<DateTime>;
 }) {
+  date = asLuxonInstance(date, DateTime);
+
   const format = useDateTimeFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATETIME_HUGE)}>
@@ -73,6 +77,8 @@ export const RelativeDateTime = memo(function RelativeDateTime({
 }: {
   date: DateTime;
 }) {
+  date = asLuxonInstance(date, DateTime)!;
+
   const locale = useLocale();
   date = locale ? date.setLocale(locale) : date;
   const absoluteFormat = useDateTimeFormatter();
@@ -106,3 +112,18 @@ export const RelativeDateTime = memo(function RelativeDateTime({
     </Tooltip>
   );
 });
+
+// Under some circumstances, the Apollo scalar read policy is ignored, causing
+// this date to just be an ISO string.
+// This is just a workaround, to try to prevent errors for users.
+// https://github.com/apollographql/apollo-client/issues/9293
+function asLuxonInstance(
+  date: DateTime | null | undefined,
+  cls: typeof DateTime
+) {
+  return !date
+    ? null
+    : cls.isDateTime(date)
+    ? date
+    : cls.fromISO(date as unknown as string);
+}
