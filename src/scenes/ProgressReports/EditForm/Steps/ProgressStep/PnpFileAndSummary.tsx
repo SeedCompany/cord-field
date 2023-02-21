@@ -1,7 +1,5 @@
 import { Grid, Typography } from '@mui/material';
 import { StyleProps } from '~/common';
-import { useDialog } from '~/components/Dialog';
-import { UpdatePeriodicReportDialog } from '../../../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProgressReportCard } from '../../../Detail/ProgressReportCard';
 import { ProgressSummaryCard } from '../../../Detail/ProgressSummaryCard';
 import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql';
@@ -14,9 +12,6 @@ export const PnpFileAndSummary = ({
   report,
   ...rest
 }: PnpFileAndSummaryParams) => {
-  // Single file for the new version, empty array for received date update.
-  const [dialogState, setUploading, upload] = useDialog<File[]>();
-
   return (
     <Grid container spacing={2} {...rest}>
       <Grid item>
@@ -39,19 +34,7 @@ export const PnpFileAndSummary = ({
               will populate the table below.
             </Typography>
           )}
-          <ProgressReportCard
-            progressReport={report}
-            disableIcon
-            onUpload={({ files }) => setUploading(files)}
-          />
-          <UpdatePeriodicReportDialog
-            {...dialogState}
-            report={{ ...report, reportFile: upload }}
-            editFields={[
-              'receivedDate',
-              ...(upload && upload.length > 0 ? ['reportFile' as const] : []),
-            ]}
-          />
+          <ProgressReportCard progressReport={report} disableIcon />
         </Grid>
       </Grid>
     </Grid>
