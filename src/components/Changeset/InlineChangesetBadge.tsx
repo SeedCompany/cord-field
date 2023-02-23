@@ -1,17 +1,16 @@
 import { Box, Grid, TooltipProps, Typography } from '@mui/material';
 import { startCase } from 'lodash';
 import { ReactNode } from 'react';
-import { extendSx, Sx } from '../../common';
+import { extendSx, StyleProps } from '~/common';
 import { PaperTooltip } from '../PaperTooltip';
 import { DiffMode } from './ChangesetDiffContext';
 import { ChangesetIcon } from './ChangesetIcon';
 import { modeToPalette } from './theme';
 
-export interface InlineChangesetBadgeProps {
+export interface InlineChangesetBadgeProps extends StyleProps {
   mode?: DiffMode;
   moreInfo?: ReactNode;
   tooltipProps?: Omit<TooltipProps, 'title' | 'children'>;
-  sx?: Sx;
 }
 
 /**

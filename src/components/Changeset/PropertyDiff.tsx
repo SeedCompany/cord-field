@@ -2,7 +2,7 @@ import { Grid, Typography } from '@mui/material';
 import { alpha as fade } from '@mui/material/styles';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { Sx } from '~/common';
+import { StyleProps } from '~/common';
 
 const useStyles = makeStyles()(({ palette, shape, spacing }) => ({
   diff: {
@@ -33,9 +33,7 @@ export const PropertyDiff = <T extends any>({
   previous: T;
   current: T;
   labelBy?: (item: T) => ReactNode;
-  sx?: Sx;
-  className?: string;
-}) => {
+} & StyleProps) => {
   const { classes, cx } = useStyles();
   return (
     <Grid
