@@ -2,7 +2,7 @@ import { Box, Breadcrumbs, Card, CardProps, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ReportType } from '~/api/schema.graphql';
-import { extendSx, StyleProps } from '~/common';
+import { defaultSx, StyleProps } from '~/common';
 import { Breadcrumb } from '../Breadcrumb';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 import { PeriodicReportsTable } from './PeriodicReportsTable';
@@ -40,16 +40,13 @@ export const PeriodicReportsList = ({
     >
       <Box
         component="main"
-        sx={[
-          {
-            padding: 4,
-            maxWidth: 'md',
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-          },
-          ...extendSx(sx),
-        ]}
+        sx={defaultSx(sx, {
+          padding: 4,
+          maxWidth: 'md',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        })}
         className={className}
       >
         <Helmet title={`${reportTypeName} - ${pageTitleSuffix}`} />
