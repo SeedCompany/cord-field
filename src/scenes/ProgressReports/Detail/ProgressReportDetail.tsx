@@ -12,11 +12,9 @@ import {
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
-import { Breadcrumb } from '../../../components/Breadcrumb';
-import {
-  idForUrl,
-  useChangesetAwareIdFromUrl,
-} from '../../../components/Changeset';
+import { ProgressReportBreadcrumb } from '~/components/ProgressReportBreadcrumb';
+import { ProgressReportListBreadcrumb } from '~/components/ProgressReportListBreadcrumb';
+import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
@@ -91,23 +89,11 @@ export const ProgressReportDetail = () => {
           children={[
             <ProjectBreadcrumb key="project" data={engagement?.project} />,
             <EngagementBreadcrumb key="engagement" data={engagement} />,
-            <Breadcrumb
+            <ProgressReportListBreadcrumb
               key="report-list"
-              to={
-                engagement
-                  ? `/engagements/${idForUrl(engagement)}/reports/progress`
-                  : undefined
-              }
-            >
-              {!report ? <Skeleton width={200} /> : 'Quarterly Reports'}
-            </Breadcrumb>,
-            <Breadcrumb key="report" to=".">
-              {!report ? (
-                <Skeleton width={200} />
-              ) : (
-                <ReportLabel report={report} />
-              )}
-            </Breadcrumb>,
+              engagement={engagement}
+            />,
+            <ProgressReportBreadcrumb data={report} key="report" />,
           ]}
         />
 
