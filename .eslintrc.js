@@ -61,10 +61,19 @@ const restrictedImports = [
     message: 'Import functions directly to enable tree-shaking at build time',
   },
 
+  // Import css & keyframes straight from emotion (not any re-export from other libs)
+  // This ensures their babel plugin works correctly.
+  {
+    path: ['tss-react', '@mui/system', '@mui/material', '@mui/material/styles'],
+    importNames: ['css', 'keyframes'],
+    replacement: { path: '@emotion/react' },
+    message: "Import from '@emotion/react' instead",
+  },
+
   // Our babel import transforms don't work with these exports
   {
     path: '@mui/material',
-    importNames: ['css', 'styled', 'keyframes', 'useTheme'],
+    importNames: ['styled', 'useTheme'],
     replacement: { path: '@mui/material/styles' },
     message: "Import from '@mui/material/styles' instead",
   },
@@ -72,7 +81,7 @@ const restrictedImports = [
   // Hide emotion as much as possible
   {
     pattern: '@emotion/react',
-    allowNames: ['CacheProvider', 'EmotionCache'],
+    allowNames: ['CacheProvider', 'EmotionCache', 'css', 'keyframes'],
     message: "Import from '@mui/material/styles' instead",
     replacement: { path: '@mui/material/styles' },
   },

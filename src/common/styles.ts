@@ -1,5 +1,6 @@
+import { css } from '@emotion/react';
 import { Breakpoint, Breakpoints } from '@mui/material';
-import { css, decomposeColor, recomposeColor } from '@mui/material/styles';
+import { decomposeColor, recomposeColor } from '@mui/material/styles';
 import { clamp } from 'lodash';
 import { CSSObject as CSSProperties } from 'tss-react';
 import { lowerCase } from './case';
