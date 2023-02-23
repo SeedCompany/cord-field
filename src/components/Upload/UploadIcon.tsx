@@ -1,6 +1,6 @@
+import { css, keyframes } from '@emotion/react';
 import { Cancel, CloudUpload } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material';
-import { css, keyframes } from '@mui/material/styles';
 import { forwardRef } from 'react';
 
 interface UploadIconProps extends SvgIconProps {
