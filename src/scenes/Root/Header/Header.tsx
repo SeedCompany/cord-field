@@ -21,7 +21,7 @@ const headerSx = (theme: Theme) => ({
 
 export const Header = () => {
   return (
-    <Box component="header" test-id="test-header" sx={headerSx}>
+    <Box component="header" sx={headerSx}>
       <HeaderSearch />
       <ProfileToolbar />
     </Box>
