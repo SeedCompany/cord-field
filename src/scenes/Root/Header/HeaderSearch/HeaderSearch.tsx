@@ -42,7 +42,7 @@ const inputSx = (theme: Theme) => ({
       borderRadius: 0,
       mb: -1,
       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'grey.600',
+        borderColor: 'grey.100',
       },
     },
   },
@@ -52,11 +52,14 @@ const inputSx = (theme: Theme) => ({
       bgcolor: 'background.paper',
       borderRadius: 1,
       mb: 0,
+      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'primary.main',
+      },
     },
   },
 });
 
-const searchSx = { color: { xs: 'primary.contrastText', sm: 'initial' } };
+const searchSx = { color: { xs: 'primary.contrastText', sm: 'inherit' } };
 
 export const HeaderSearch = ({ sx }: StyleProps) => {
   const { classes } = useStyles();
