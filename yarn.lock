@@ -3582,9 +3582,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@seedcompany/eslint-plugin@npm:^3.4.0":
-  version: 3.4.0
-  resolution: "@seedcompany/eslint-plugin@npm:3.4.0"
+"@seedcompany/eslint-plugin@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "@seedcompany/eslint-plugin@npm:3.4.1"
   dependencies:
     "@typescript-eslint/eslint-plugin": ^5.28.0
     "@typescript-eslint/parser": ^5.28.0
@@ -3612,7 +3612,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: c9d5b49f5cd09630cc21d7fc619c99d31edcddd0dff54672dc05a07ec0cbf177ab253845478f81431852858e25824d099c0b04bf93090ff4ce86d213d949925b
+  checksum: 2a5ade0f4a9efedaca047bfca9f8c2a0a65eb6050adb43911efef6730009bbb9ab7b3a8475af0266969f9562953e5b1155f3bf4570d4de02b6f7569a07998c0b
   languageName: node
   linkType: hard
 
@@ -7026,7 +7026,7 @@ __metadata:
     "@react-editor-js/client": ^2.1.0
     "@react-editor-js/core": ^2.1.0
     "@react-editor-js/server": ^2.1.0
-    "@seedcompany/eslint-plugin": ^3.4.0
+    "@seedcompany/eslint-plugin": ^3.4.1
     "@testing-library/dom": ^8.20.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
