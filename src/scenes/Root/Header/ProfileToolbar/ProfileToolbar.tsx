@@ -11,11 +11,11 @@ import {
   MenuProps,
   Theme,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import { useContext, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
+import { extendSx, StyleProps } from '~/common';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
 import { UserActionsMenu } from '../UserActionsMenu';
@@ -34,37 +34,97 @@ const useStyles = makeStyles()(({ typography, spacing }) => ({
 }));
 
 const mobileContrastText = (theme: Theme) => {
-  return { color: theme.palette.primary.contrastText };
+  return theme.palette.primary.contrastText;
 };
 
-export const ProfileToolbar = () => {
+const iconsSx = (theme: Theme) => ({
+  '&.MuiIconButton-root': {
+    [theme.breakpoints.up('xs')]: {
+      color: mobileContrastText,
+    },
+    [theme.breakpoints.up('sm')]: {
+      color: theme.palette.secondary.main,
+    },
+  },
+});
+
+const cardSx = (theme: Theme) => ({
+  [theme.breakpoints.up('xs')]: {
+    backgroundColor: theme.palette.background.sidebar,
+    justifyContent: 'space-between',
+    boxShadow: 0,
+    mb: -1,
+    ml: -2,
+    borderRadius: 0,
+  },
+  [theme.breakpoints.up('sm')]: {
+    backgroundColor: theme.palette.background.default,
+    boxShadow: theme.shadows[4],
+    borderRadius: theme.shape.borderRadius / 6,
+  },
+  [theme.breakpoints.up('mobile')]: {
+    justifyContent: 'flex-end',
+    mb: 0,
+    ml: 1,
+  },
+});
+
+export const ProfileToolbar = ({ sx }: StyleProps) => {
   const { classes } = useStyles();
   const { session } = useSession();
   const impersonation = useContext(ImpersonationContext);
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
-  const isMobile = useMediaQuery('(max-width: 600px)');
 
-  return !isMobile ? (
+  return (
     <>
-      <Card className={classes.card}>
-        <Typography className={classes.name} color="primary">
+      <Card className={classes.card} sx={[cardSx, ...extendSx(sx)]}>
+        <Typography
+          className={classes.name}
+          color="primary"
+          sx={{ display: { xs: 'none', sm: 'flex' } }}
+        >
           Hi, {session?.realFirstName.value ?? 'Friend'}
         </Typography>
         <IconButton
-          color="secondary"
           aria-controls="profile-menu"
           aria-haspopup="true"
           onClick={(e) => setProfileAnchor(e.currentTarget)}
+          sx={iconsSx}
         >
           {impersonation.enabled ? <SupervisedUserCircle /> : <AccountCircle />}
         </IconButton>
-        <IconButton>
-          <NotificationsNone />
-        </IconButton>
-        <IconButton onClick={(e) => setActionsAnchor(e.currentTarget)}>
-          <MoreVert />
-        </IconButton>
+        <Typography
+          sx={(theme) => ({
+            [theme.breakpoints.up('xs')]: {
+              color: mobileContrastText,
+              display: 'flex',
+            },
+            [theme.breakpoints.up('sm')]: {
+              display: 'none',
+            },
+          })}
+        >
+          Account Settings
+        </Typography>
+        <Box
+          sx={(theme) => ({
+            [theme.breakpoints.up('xs')]: {
+              display: 'none',
+            },
+            [theme.breakpoints.up('sm')]: {
+              display: 'flex',
+              justifyContent: 'space-between',
+            },
+          })}
+        >
+          <IconButton>
+            <NotificationsNone />
+          </IconButton>
+          <IconButton onClick={(e) => setActionsAnchor(e.currentTarget)}>
+            <MoreVert />
+          </IconButton>
+        </Box>
       </Card>
       <ProfileMenu
         anchorEl={profileAnchor}
@@ -75,29 +135,5 @@ export const ProfileToolbar = () => {
         onClose={() => setActionsAnchor(null)}
       />
     </>
-  ) : (
-    <Box sx={{ mb: -1 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <IconButton
-          color="secondary"
-          aria-controls="profile-menu"
-          aria-haspopup="true"
-          onClick={(e) => setProfileAnchor(e.currentTarget)}
-        >
-          <AccountCircle sx={{ color: mobileContrastText, ml: -2 }} />
-        </IconButton>
-        <Typography sx={{ color: mobileContrastText }}>
-          Account Settings
-        </Typography>
-        <ProfileMenu
-          anchorEl={profileAnchor}
-          onClose={() => setProfileAnchor(null)}
-        />
-        <UserActionsMenu
-          anchorEl={actionsAnchor}
-          onClose={() => setActionsAnchor(null)}
-        />
-      </Box>
-    </Box>
   );
 };

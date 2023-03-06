@@ -65,12 +65,15 @@ export const MobileNavbar = ({ sx }: StyleProps) => {
   return (
     <AppBar
       position="sticky"
-      sx={{
-        bgcolor: 'secondary.main',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden',
-      }}
+      sx={[
+        {
+          bgcolor: 'secondary.main',
+          display: 'flex',
+          alignItems: 'center',
+          overflow: 'hidden',
+        },
+        ...extendSx(sx),
+      ]}
     >
       <Container maxWidth="lg" disableGutters={true}>
         <Toolbar>
@@ -82,7 +85,6 @@ export const MobileNavbar = ({ sx }: StyleProps) => {
                 justifyContent: 'space-between',
                 width: '100%',
               },
-              ...extendSx(sx),
             ]}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>

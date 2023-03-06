@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { ComponentType } from 'react';
-// import { makeStyles } from 'tss-react/mui';
 import { extendSx, StyleProps } from '~/common';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
@@ -18,23 +17,7 @@ import { CreateButtonMenu } from '../Creates';
 import { sidebarTheme } from './sidebar.theme';
 import { SidebarHeader } from './SidebarHeader';
 
-// const useStyles = makeStyles()(({ spacing }) => ({
-//   root: {
-//     maxWidth: 248,
-//     overflowY: 'auto',
-//   },
-//   content: {
-//     padding: spacing(0, 2),
-//   },
-//   createNewItem: {
-//     margin: spacing(4, 2, 1),
-//     width: `calc(100% - ${spacing(2 * 2)})`,
-//   },
-// }));
-
 export const Sidebar = ({ sx }: StyleProps) => {
-  // const { classes } = useStyles();
-
   const navList = (
     <List
       component="nav"
