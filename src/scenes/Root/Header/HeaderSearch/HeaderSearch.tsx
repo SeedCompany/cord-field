@@ -11,7 +11,7 @@ export const useSearch = makeQueryHandler({
   q: StringParam,
 });
 
-const useStyles = makeStyles()(({ palette, spacing }) => ({
+const useStyles = makeStyles()(({ palette }) => ({
   input: {
     background: palette.background.paper,
   },
