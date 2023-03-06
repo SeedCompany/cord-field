@@ -61,6 +61,7 @@ const cardSx = (theme: Theme) => ({
     backgroundColor: theme.palette.background.default,
     boxShadow: theme.shadows[4],
     borderRadius: theme.shape.borderRadius / 6,
+    m: 0,
   },
   [theme.breakpoints.up('mobile')]: {
     justifyContent: 'flex-end',

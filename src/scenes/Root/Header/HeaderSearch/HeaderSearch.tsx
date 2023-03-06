@@ -12,29 +12,23 @@ export const useSearch = makeQueryHandler({
 });
 
 const useStyles = makeStyles()(({ palette, spacing }) => ({
-  root: {
-    flex: 1,
-    maxWidth: 500,
-    marginRight: spacing(3),
-  },
   input: {
     background: palette.background.paper,
   },
 }));
 
-const containerSx = (theme: Theme) => ({
+const formSx = (theme: Theme) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
   [theme.breakpoints.up('xs')]: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    maxWidth: 500,
-    mr: 0.5,
     ml: 4,
+    mr: 0,
   },
   [theme.breakpoints.up('sm')]: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    m: 0,
+  },
+  [theme.breakpoints.up('mobile')]: {
     maxWidth: 500,
     mr: 3,
   },
@@ -82,8 +76,7 @@ export const HeaderSearch = ({ sx }: StyleProps) => {
         <Box
           component="form"
           onSubmit={handleSubmit}
-          className={classes.root}
-          sx={[containerSx, ...extendSx(sx)]}
+          sx={[formSx, ...extendSx(sx)]}
         >
           <TextField
             name="search"
