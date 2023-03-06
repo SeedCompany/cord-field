@@ -1,5 +1,5 @@
 import { Search } from '@mui/icons-material';
-import { Box, InputAdornment, useMediaQuery } from '@mui/material';
+import { Box, InputAdornment, Theme } from '@mui/material';
 import { Form } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -22,14 +22,54 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
   },
 }));
 
+const containerSx = (theme: Theme) => ({
+  [theme.breakpoints.up('xs')]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    maxWidth: 500,
+    mr: 0.5,
+    ml: 4,
+  },
+  [theme.breakpoints.up('sm')]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    maxWidth: 500,
+    mr: 3,
+  },
+});
+
+const inputSx = (theme: Theme) => ({
+  [theme.breakpoints.up('xs')]: {
+    '& .MuiInputBase-root': {
+      color: 'primary.contrastText',
+      bgcolor: 'grey.600',
+      borderRadius: 0,
+      mb: -1,
+      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: 'grey.600',
+      },
+    },
+  },
+  [theme.breakpoints.up('sm')]: {
+    '& .MuiInputBase-root': {
+      color: 'text.primary',
+      bgcolor: 'background.paper',
+      borderRadius: 1,
+      mb: 0,
+    },
+  },
+});
+
+const searchSx = { color: { xs: 'primary.contrastText', sm: 'initial' } };
+
 export const HeaderSearch = ({ sx }: StyleProps) => {
   const { classes } = useStyles();
   const [{ q: search = '' }] = useSearch();
   const navigate = useNavigate();
 
-  const isMobile = useMediaQuery('(max-width: 600px)');
-
-  return isMobile ? (
+  return (
     <Form
       initialValues={{ search }}
       onSubmit={({ search }) => {
@@ -42,66 +82,20 @@ export const HeaderSearch = ({ sx }: StyleProps) => {
         <Box
           component="form"
           onSubmit={handleSubmit}
-          sx={[
-            ...extendSx(sx),
-            {
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              maxWidth: 500,
-              mr: 0.5,
-            },
-          ]}
+          className={classes.root}
+          sx={[containerSx, ...extendSx(sx)]}
         >
-          <Search sx={{ color: 'primary.contrastText' }} />
-          <TextField
-            name="search"
-            variant="outlined"
-            placeholder="Search..."
-            size="small"
-            sx={[
-              {
-                '& .MuiInputBase-root': {
-                  color: 'primary.contrastText',
-                  bgcolor: 'grey.600',
-                  borderRadius: 0,
-                  mb: -1,
-                },
-              },
-            ]}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment
-                  position="start"
-                  disablePointerEvents
-                ></InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-      )}
-    </Form>
-  ) : (
-    <Form
-      initialValues={{ search }}
-      onSubmit={({ search }) => {
-        if (search) {
-          navigate(`/search?q=${search}`);
-        }
-      }}
-    >
-      {({ handleSubmit }) => (
-        <Box component="form" onSubmit={handleSubmit} className={classes.root}>
           <TextField
             name="search"
             variant="outlined"
             placeholder="Projects, Languages, Locations, People, Partners"
             size="small"
+            sx={inputSx}
             InputProps={{
               className: classes.input,
               startAdornment: (
                 <InputAdornment position="start" disablePointerEvents>
-                  <Search />
+                  <Search sx={searchSx} />
                 </InputAdornment>
               ),
             }}
