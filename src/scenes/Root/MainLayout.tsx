@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@mui/material';
+import { Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { useAuthRequired } from '../Authentication';
@@ -23,25 +23,19 @@ const useStyles = makeStyles()(() => ({
 export const MainLayout = () => {
   useAuthRequired();
   const { classes } = useStyles();
-
-  const isMobile = useMediaQuery('(max-width: 600px)');
-
-  return isMobile ? (
-    <div className={classes.main}>
+  return (
+    <Box
+      className={classes.root}
+      sx={{ flexDirection: { xs: 'column', sm: 'row' } }}
+    >
       <CreateDialogProviders>
-        <MobileNavbar />
-      </CreateDialogProviders>
-      <Outlet />
-    </div>
-  ) : (
-    <div className={classes.root}>
-      <CreateDialogProviders>
-        <Sidebar />
+        <Sidebar sx={{ display: { xs: 'none', sm: 'block' } }} />
+        <MobileNavbar sx={{ display: { xs: 'flex', sm: 'none' } }} />
       </CreateDialogProviders>
       <div className={classes.main}>
         <Header />
         <Outlet />
       </div>
-    </div>
+    </Box>
   );
 };

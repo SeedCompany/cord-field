@@ -10,6 +10,7 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     mode: dark ? 'dark' : 'light',
     background: {
       default: dark ? '#303030' : grey[50], // MUI v4 default
+      sidebar: '#3c444e',
     },
     primary: {
       main: mainGreen,
@@ -49,12 +50,17 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
 };
 
 declare module '@mui/material/styles' {
+  interface TypeBackground {
+    sidebar: string;
+  }
   interface Palette {
     create: Palette['primary'];
     roles: Partial<Record<Role, Pick<PaletteColor, 'main'>>>;
+    background: TypeBackground;
   }
   interface PaletteOptions {
     create: PaletteOptions['primary'];
     roles: Partial<Record<Role, PaletteColorOptions>>;
+    background?: Partial<TypeBackground>;
   }
 }
