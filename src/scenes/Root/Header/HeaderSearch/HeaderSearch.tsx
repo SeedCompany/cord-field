@@ -22,14 +22,21 @@ const formSx = {
 };
 
 const inputSx = {
+  my: { xs: 0 },
+  mt: { sm: 1 },
+  display: { xs: 'flex', sm: 'inline-flex' },
+  alignItems: { xs: 'center' },
+
   '& .MuiInputBase-root': {
     color: { xs: 'primary.contrastText', sm: 'text.primary' },
     bgcolor: { xs: 'grey.600', sm: 'background.paper' },
     borderRadius: { xs: 0, sm: 1 },
-    mb: { xs: -1, sm: 0 },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderColor: { xs: 'grey.100', sm: 'primary.main' },
     },
+  },
+  '& .MuiFormHelperText-root': {
+    display: { xs: 'none', sm: 'block' },
   },
 };
 

@@ -25,7 +25,6 @@ const useStyles = makeStyles()(({ typography, spacing }) => ({
     flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
-    padding: spacing(1),
   },
   name: {
     fontWeight: typography.weight.medium,
@@ -53,8 +52,7 @@ const cardSx = (theme: Theme) => ({
     backgroundColor: theme.palette.background.sidebar,
     justifyContent: 'space-between',
     boxShadow: 0,
-    mb: -1,
-    ml: -2,
+    mb: 0,
     borderRadius: 0,
   },
   [theme.breakpoints.up('sm')]: {
@@ -62,6 +60,7 @@ const cardSx = (theme: Theme) => ({
     boxShadow: theme.shadows[4],
     borderRadius: theme.shape.borderRadius / 6,
     m: 0,
+    p: 1,
   },
   [theme.breakpoints.up('mobile')]: {
     justifyContent: 'flex-end',
