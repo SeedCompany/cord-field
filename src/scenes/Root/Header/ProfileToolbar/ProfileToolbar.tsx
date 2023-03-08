@@ -4,73 +4,35 @@ import {
   NotificationsNone,
   SupervisedUserCircle,
 } from '@mui/icons-material';
-import {
-  Box,
-  Card,
-  IconButton,
-  MenuProps,
-  Theme,
-  Typography,
-} from '@mui/material';
+import { Box, Card, IconButton, MenuProps, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
-import { extendSx, StyleProps } from '~/common';
+import { alignItemsCenter, extendSx, StyleProps, Sx } from '~/common';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
 import { UserActionsMenu } from '../UserActionsMenu';
 
-const useStyles = makeStyles()(({ typography, spacing }) => ({
-  card: {
-    flexShrink: 0,
-    display: 'flex',
-    alignItems: 'center',
-  },
-  name: {
-    fontWeight: typography.weight.medium,
-    margin: spacing(0, 1, 0, 2),
-  },
-}));
-
-const mobileContrastText = (theme: Theme) => {
-  return theme.palette.primary.contrastText;
-};
-
-const iconsSx = (theme: Theme) => ({
+const iconsSx = {
   '&.MuiIconButton-root': {
-    [theme.breakpoints.up('xs')]: {
-      color: mobileContrastText,
-    },
-    [theme.breakpoints.up('sm')]: {
-      color: theme.palette.secondary.main,
+    color: {
+      xs: 'primary.contrastText',
+      sm: 'secondary.main',
     },
   },
-});
+} satisfies Sx;
 
-const cardSx = (theme: Theme) => ({
-  [theme.breakpoints.up('xs')]: {
-    backgroundColor: theme.palette.background.sidebar,
-    justifyContent: 'space-between',
-    boxShadow: 0,
-    mb: 0,
-    borderRadius: 0,
-  },
-  [theme.breakpoints.up('sm')]: {
-    backgroundColor: theme.palette.background.default,
-    boxShadow: theme.shadows[4],
-    borderRadius: theme.shape.borderRadius / 6,
-    m: 0,
-    p: 1,
-  },
-  [theme.breakpoints.up('mobile')]: {
-    justifyContent: 'flex-end',
-    mb: 0,
-    ml: 1,
-  },
-});
+const cardSx = {
+  flexShrink: 0,
+  m: { sm: 0 },
+  p: { sm: 1 },
+  boxShadow: { xs: 0, sm: 4 },
+  borderRadius: { xs: 0, sm: 1 },
+  backgroundColor: { xs: 'background.sidebar', sm: 'background.default' },
+  justifyContent: { xs: 'space-between', mobile: 'flex-end' },
+  ml: { xs: 0, mobile: 1 },
+} satisfies Sx;
 
 export const ProfileToolbar = ({ sx }: StyleProps) => {
-  const { classes } = useStyles();
   const { session } = useSession();
   const impersonation = useContext(ImpersonationContext);
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
@@ -78,11 +40,14 @@ export const ProfileToolbar = ({ sx }: StyleProps) => {
 
   return (
     <>
-      <Card className={classes.card} sx={[cardSx, ...extendSx(sx)]}>
+      <Card css={alignItemsCenter} sx={[cardSx, ...extendSx(sx)]}>
         <Typography
-          className={classes.name}
           color="primary"
-          sx={{ display: { xs: 'none', sm: 'flex' } }}
+          fontWeight="medium"
+          sx={{
+            display: { xs: 'none', sm: 'flex' },
+            m: (theme) => theme.spacing(0, 1, 0, 2),
+          }}
         >
           Hi, {session?.realFirstName.value ?? 'Friend'}
         </Typography>
@@ -95,28 +60,18 @@ export const ProfileToolbar = ({ sx }: StyleProps) => {
           {impersonation.enabled ? <SupervisedUserCircle /> : <AccountCircle />}
         </IconButton>
         <Typography
-          sx={(theme) => ({
-            [theme.breakpoints.up('xs')]: {
-              color: mobileContrastText,
-              display: 'flex',
-            },
-            [theme.breakpoints.up('sm')]: {
-              display: 'none',
-            },
-          })}
+          sx={{
+            display: { xs: 'flex', sm: 'none' },
+            color: { xs: 'primary.contrastText' },
+          }}
         >
           Account Settings
         </Typography>
         <Box
-          sx={(theme) => ({
-            [theme.breakpoints.up('xs')]: {
-              display: 'none',
-            },
-            [theme.breakpoints.up('sm')]: {
-              display: 'flex',
-              justifyContent: 'space-between',
-            },
-          })}
+          sx={{
+            display: { xs: 'none', sm: 'flex' },
+            justifyContent: { xs: 'space-between' },
+          }}
         >
           <IconButton>
             <NotificationsNone />
