@@ -1,8 +1,7 @@
 import { Search } from '@mui/icons-material';
-import { Box, InputAdornment, Theme } from '@mui/material';
+import { Box, InputAdornment } from '@mui/material';
 import { Form } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { extendSx, StyleProps } from '~/common';
 import { TextField } from '../../../../components/form';
 import { makeQueryHandler, StringParam } from '../../../../hooks';
@@ -11,58 +10,32 @@ export const useSearch = makeQueryHandler({
   q: StringParam,
 });
 
-const useStyles = makeStyles()(({ palette }) => ({
-  input: {
-    background: palette.background.paper,
-  },
-}));
-
-const formSx = (theme: Theme) => ({
+const formSx = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  [theme.breakpoints.up('xs')]: {
-    ml: 4,
-    mr: 0,
-  },
-  [theme.breakpoints.up('sm')]: {
-    m: 0,
-  },
-  [theme.breakpoints.up('mobile')]: {
-    maxWidth: 500,
-    mr: 3,
-  },
-});
+  width: 1,
+  m: { sm: 0 },
+  mr: { xs: 0, mobile: 3 },
+  ml: { xs: 4 },
+  maxWidth: { mobile: 500 },
+};
 
-const inputSx = (theme: Theme) => ({
-  [theme.breakpoints.up('xs')]: {
-    '& .MuiInputBase-root': {
-      color: 'primary.contrastText',
-      bgcolor: 'grey.600',
-      borderRadius: 0,
-      mb: -1,
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'grey.100',
-      },
+const inputSx = {
+  '& .MuiInputBase-root': {
+    color: { xs: 'primary.contrastText', sm: 'text.primary' },
+    bgcolor: { xs: 'grey.600', sm: 'background.paper' },
+    borderRadius: { xs: 0, sm: 1 },
+    mb: { xs: -1, sm: 0 },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: { xs: 'grey.100', sm: 'primary.main' },
     },
   },
-  [theme.breakpoints.up('sm')]: {
-    '& .MuiInputBase-root': {
-      color: 'text.primary',
-      bgcolor: 'background.paper',
-      borderRadius: 1,
-      mb: 0,
-      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: 'primary.main',
-      },
-    },
-  },
-});
+};
 
 const searchSx = { color: { xs: 'primary.contrastText', sm: 'inherit' } };
 
 export const HeaderSearch = ({ sx }: StyleProps) => {
-  const { classes } = useStyles();
   const [{ q: search = '' }] = useSearch();
   const navigate = useNavigate();
 
@@ -88,7 +61,6 @@ export const HeaderSearch = ({ sx }: StyleProps) => {
             size="small"
             sx={inputSx}
             InputProps={{
-              className: classes.input,
               startAdornment: (
                 <InputAdornment position="start" disablePointerEvents>
                   <Search sx={searchSx} />
