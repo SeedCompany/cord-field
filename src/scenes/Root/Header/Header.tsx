@@ -6,8 +6,8 @@ const headerSx = (theme: Theme) => ({
   padding: theme.spacing(4, 4, 1, 4),
   justifyContent: 'space-between',
   display: { xs: 'none', sm: 'flex' },
-  flexDirection: { xs: 'column', mobile: 'row' },
-  alignItems: { xs: 'strecth', mobile: 'flex-start' },
+  flexDirection: { sm: 'column', mobile: 'row' },
+  alignItems: { mobile: 'flex-start' },
 });
 
 export const Header = () => {
