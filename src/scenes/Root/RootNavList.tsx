@@ -38,7 +38,7 @@ const NavItem = ({ icon: Icon, label, ...props }: NavItemProps) => (
   </ListItemLink>
 );
 
-const MobileDiviver = () => (
+const MobileDivider = () => (
   <Divider
     sx={{
       ...bgColorContrast,
@@ -58,11 +58,11 @@ export const RootNavList = ({ subheader }: { subheader: ReactNode }) => (
       sx={{ px: 1, pb: 0, mt: { sm: 4 } }}
       subheader={subheader}
     >
-      <MobileDiviver />
+      <MobileDivider />
       {navItems.map(({ label, to, icon }) => (
         <NavItem key={label} to={to} icon={icon} label={label} />
       ))}
-      <MobileDiviver />
+      <MobileDivider />
     </List>
     <CreateButtonMenu
       sx={(theme) => ({
