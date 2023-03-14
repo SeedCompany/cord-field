@@ -4,10 +4,12 @@ import {
   Box,
   Drawer,
   IconButton,
+  Theme,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   alignItemsCenter,
   extendSx,
@@ -22,7 +24,16 @@ import { ProfileToolbar } from './ProfileToolbar';
 const colorContrast = { color: 'primary.contrastText' } satisfies Sx;
 
 export const MobileNavbar = ({ sx }: StyleProps) => {
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setOpen(false);
+    }
+  }, [isMobile]);
 
   return (
     <AppBar
