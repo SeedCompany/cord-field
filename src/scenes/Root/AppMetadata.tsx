@@ -4,7 +4,10 @@ export const AppMetadata = () => (
   <Helmet titleTemplate="%s - CORD Field" defaultTitle="CORD Field">
     <html lang="en" />
     <meta charSet="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
 
     {/* sofia-pro font */}
     <link href="https://use.typekit.net/qrd6jxb.css" rel="stylesheet" />
