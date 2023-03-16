@@ -34,9 +34,10 @@ import {
   CardActionAreaLink,
   CardActionAreaLinkProps,
 } from '../../Routing';
+import { DropOverlay } from '../../Upload/DropOverlay';
 import { PeriodicReportFragment } from '../PeriodicReport.graphql';
 import { ReportLabel } from '../ReportLabel';
-import { DropOverlay } from './DropOverlay';
+import { ReportFileDropInfo } from './ReportFileDropInfo';
 import { ReportInfo } from './ReportInfo';
 import { ReportInfoContainer } from './ReportInfoContainer';
 
@@ -152,7 +153,9 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
             All Reports
           </ButtonLink>
         </CardActions>
-        <DropOverlay report={dueCurrently} show={isDragActive} />
+        <DropOverlay isDragActive={isDragActive}>
+          <ReportFileDropInfo report={dueCurrently} />
+        </DropOverlay>
         <input {...getInputProps()} name="report_file_uploader" />
       </PeriodicReportCardRoot>
       {dueCurrently?.value?.reportFile.canEdit && fileBeingEdited ? (
