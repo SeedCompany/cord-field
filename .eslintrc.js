@@ -5,7 +5,7 @@ const roots = fs
   .readdirSync('./src')
   .flatMap((item) => (fs.statSync(`./src/${item}`).isDirectory() ? item : []));
 
-/** @type import('@seedcompany/eslint-plugin/dist/rules/no-restricted-imports').ImportRestriction[] */
+/** @type import('@seedcompany/eslint-plugin').ImportRestriction[] */
 const restrictedImports = [
   {
     path: 'react',
