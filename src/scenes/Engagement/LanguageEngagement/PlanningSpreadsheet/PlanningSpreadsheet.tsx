@@ -83,9 +83,6 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
             know which methodology the new goals should have.
           </Typography>
           <EnumField name="methodology" layout="column" helperText={false}>
-            <div className={classes.section}>
-              <EnumOption default label="Skip extracting goals" />
-            </div>
             {entries({
               ...pick(
                 ApproachMethodologies,
