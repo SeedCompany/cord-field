@@ -15,15 +15,26 @@ import {
 
 type FormValues = LocationFormValues<CreateLocationType>;
 type SubmitResult = CreateLocationMutation['createLocation']['location'];
-export type CreateLocationProps = Except<
-  LocationFormProps<FormValues, SubmitResult>,
-  'onSubmit'
->;
+type FormProps = LocationFormProps<FormValues, SubmitResult>;
+
+export type CreateLocationProps = Except<FormProps, 'onSubmit'>;
 
 export const CreateLocation = (props: CreateLocationProps) => {
   const [createLocation] = useMutation(CreateLocationDocument);
   const { enqueueSnackbar } = useSnackbar();
 
+  const onSubmit: FormProps['onSubmit'] = async ({
+    location: { fundingAccountId, ...rest },
+  }) => {
+    const input: CreateLocationType = {
+      ...rest,
+      fundingAccountId: fundingAccountId?.id,
+    };
+    const { data } = await createLocation({
+      variables: { input: { location: input } },
+    });
+    return data!.createLocation.location;
+  };
   return (
     <LocationForm<FormValues, SubmitResult>
       title="Create Location"
@@ -38,19 +49,7 @@ export const CreateLocation = (props: CreateLocationProps) => {
         });
       }}
       {...props}
-      onSubmit={async ({ location: { fundingAccountId, ...rest } }) => {
-        const { data } = await createLocation({
-          variables: {
-            input: {
-              location: {
-                ...rest,
-                fundingAccountId: fundingAccountId?.id,
-              },
-            },
-          },
-        });
-        return data!.createLocation.location;
-      }}
+      onSubmit={onSubmit}
     />
   );
 };

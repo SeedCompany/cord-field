@@ -9,10 +9,9 @@ import {
 } from '../LocationForm';
 import { UpdateLocationDocument } from './EditLocation.graphql';
 
-export type EditLocationProps = Except<
-  LocationFormProps<LocationFormValues<UpdateLocation>>,
-  'onSubmit' | 'initialValues'
->;
+type FormProps = LocationFormProps<LocationFormValues<UpdateLocation>>;
+
+export type EditLocationProps = Except<FormProps, 'onSubmit' | 'initialValues'>;
 
 export const EditLocation = (props: EditLocationProps) => {
   const [updateLocation] = useMutation(UpdateLocationDocument);
@@ -34,26 +33,25 @@ export const EditLocation = (props: EditLocationProps) => {
     [location]
   );
 
+  const onSubmit: FormProps['onSubmit'] = async ({
+    location: { isoAlpha3, fundingAccountId, ...rest },
+  }) => {
+    const input: UpdateLocation = {
+      ...rest,
+      isoAlpha3: isoAlpha3 ?? null,
+      fundingAccountId: fundingAccountId?.id ?? null,
+    };
+
+    await updateLocation({
+      variables: { input: { location: input } },
+    });
+  };
   return (
     <LocationForm
       title="Edit Location"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({
-        location: { isoAlpha3, fundingAccountId, ...rest },
-      }) => {
-        await updateLocation({
-          variables: {
-            input: {
-              location: {
-                ...rest,
-                isoAlpha3: isoAlpha3 ?? null,
-                fundingAccountId: fundingAccountId?.id ?? null,
-              },
-            },
-          },
-        });
-      }}
+      onSubmit={onSubmit}
     />
   );
 };
