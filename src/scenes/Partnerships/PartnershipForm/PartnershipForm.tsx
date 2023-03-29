@@ -124,7 +124,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                   )}
                 </SecuredField>
 
-                {partnership?.primary && (
+                {partnership?.primary.canEdit && (
                   <EnumField
                     label="Financial Reporting Frequency"
                     options={PeriodTypeList}
