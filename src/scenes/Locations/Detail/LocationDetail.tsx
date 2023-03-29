@@ -15,6 +15,7 @@ import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { FormattedDateTime } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
+import { StyledRemoteSvg } from '../../../components/StyledRemoteSvg';
 import { EditLocation } from '../Edit';
 import { LocationDocument } from './LocationDetail.graphql';
 
@@ -131,6 +132,23 @@ export const LocationDetail = () => {
             }`}
             loading={!location}
           />
+          {location?.mapImage.value && (
+            <StyledRemoteSvg
+              url={location.mapImage.value.url}
+              sx={(theme) => ({
+                maxWidth: 400,
+                '#Area': {
+                  stroke: theme.palette.text.primary,
+                },
+                '#Selected_Location': {
+                  fill: theme.palette.primary.main,
+                },
+                '#Highlight_Circle': {
+                  fill: theme.palette.primary.light,
+                },
+              })}
+            />
+          )}
         </div>
       )}
       <EditLocation location={location} {...editLocationState} />

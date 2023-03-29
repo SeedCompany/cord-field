@@ -29,4 +29,12 @@ fragment LocationDetail on Location {
       ...FundingAccountCard
     }
   }
+  mapImage {
+    canRead
+    canEdit
+    value {
+      id
+      url
+    }
+  }
 }
