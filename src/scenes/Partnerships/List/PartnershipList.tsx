@@ -83,11 +83,7 @@ export const PartnershipList = () => {
         renderSkeleton={<PartnershipCard />}
       />
       {project && partnership && (
-        <EditPartnership
-          {...editDialogState}
-          partnership={partnership}
-          project={project}
-        />
+        <EditPartnership {...editDialogState} partnership={partnership} />
       )}
       {project && (
         <CreatePartnership {...createDialogState} project={project} />
