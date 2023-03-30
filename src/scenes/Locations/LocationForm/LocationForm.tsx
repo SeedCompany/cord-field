@@ -13,6 +13,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import {
   AlphaUppercaseField,
+  DropzoneField,
   SecuredField,
   SelectField,
   SubmitError,
@@ -31,6 +32,7 @@ export interface LocationFormValues<
     CreateOrUpdateType,
     {
       fundingAccountId?: FundingAccountLookupItem | null;
+      mapImage?: File[];
     }
   >;
 }
@@ -100,6 +102,19 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
         <SecuredField obj={location} name="fundingAccountId">
           {(props) => <FundingAccountField margin="none" {...props} />}
         </SecuredField>
+      </Grid>
+      <Grid item xs={12}>
+        <DropzoneField
+          name="mapImage"
+          label={
+            <>
+              Map Image
+              <br />
+              Click or drop image here to upload
+            </>
+          }
+          disabled={location?.mapImage.canEdit}
+        />
       </Grid>
     </Grid>
   </DialogForm>
