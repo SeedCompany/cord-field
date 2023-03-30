@@ -1,10 +1,12 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
+import { readFragment } from '~/api';
 import { Partnership } from '~/api/schema.graphql';
-import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';
+import { IdFragment } from '~/common';
+import { ProjectOldPrimaryPartnershipsFragmentDoc } from './projectOldPrimaryPartnerships.graphql';
 
 export const updateOldPrimaryPartnership =
   <R>(
-    project: ProjectPartnershipsQuery['project'],
+    project: IdFragment,
     getUpdated: (res: R) => Pick<Partnership, 'id' | 'primary'>
   ): MutationUpdaterFunction<R, unknown, unknown, ApolloCache<unknown>> =>
   (cache: ApolloCache<unknown>, res) => {
@@ -17,10 +19,18 @@ export const updateOldPrimaryPartnership =
       return;
     }
 
-    const oldPrimaryPartnership = project.partnerships.items.find(
-      (partnership) =>
-        partnership.id !== updated.id && partnership.primary.value
-    );
+    const projectPartnershipInfo = readFragment(cache, {
+      object: project,
+      fragment: ProjectOldPrimaryPartnershipsFragmentDoc,
+    });
+    if (!projectPartnershipInfo) {
+      return; // info that would be stale is not cached, nothing to do
+    }
+    const oldPrimaryPartnership =
+      projectPartnershipInfo.partnerships.items.find(
+        (partnership) =>
+          partnership.id !== updated.id && partnership.primary.value
+      );
     if (!oldPrimaryPartnership) {
       return;
     }
@@ -28,8 +38,8 @@ export const updateOldPrimaryPartnership =
     cache.modify({
       id: cache.identify(oldPrimaryPartnership),
       fields: {
-        primary: () => ({
-          ...oldPrimaryPartnership.primary,
+        primary: (existing) => ({
+          ...existing,
           value: false,
         }),
       },

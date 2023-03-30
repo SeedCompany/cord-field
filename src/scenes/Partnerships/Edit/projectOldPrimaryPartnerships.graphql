@@ -1,0 +1,11 @@
+fragment projectOldPrimaryPartnerships on Project {
+  ...Id
+  partnerships {
+    items {
+      id
+      primary {
+        value
+      }
+    }
+  }
+}
