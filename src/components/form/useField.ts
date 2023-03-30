@@ -124,7 +124,7 @@ export const useField = <
 
   const autoSubmit = useContext(AutoSubmitOptionsContext);
 
-  const disabled = disabledProp ?? autoSubmit ? false : meta.submitting;
+  const disabled = disabledProp ?? (autoSubmit ? false : meta.submitting);
 
   const firstRender = useFirstMountState();
   const focused = disabled
