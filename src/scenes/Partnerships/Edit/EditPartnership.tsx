@@ -8,7 +8,6 @@ import { callAll } from '~/common';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
-import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';
 import {
   hasManagingType,
   PartnershipForm,
@@ -34,7 +33,6 @@ type EditPartnershipProps = Except<
   PartnershipFormProps<EditPartnershipFormInput>,
   'onSubmit' | 'initialValues'
 > & {
-  project: ProjectPartnershipsQuery['project'];
   partnership: PartnershipFormFragment;
 };
 
@@ -69,7 +67,8 @@ const updatedPartnership = (res: UpdatePartnershipMutation) =>
   res.updatePartnership.partnership;
 
 export const EditPartnership = (props: EditPartnershipProps) => {
-  const { partnership, project } = props;
+  const { partnership } = props;
+  const { project } = partnership;
 
   const [updatePartnership] = useMutation(UpdatePartnershipDocument);
   const [deletePartnership] = useMutation(DeletePartnershipDocument, {

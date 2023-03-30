@@ -52,5 +52,13 @@ fragment PartnershipForm on Partnership {
     canEdit
     canRead
   }
+  project: parent {
+    ...Id
+    financialReportPeriod {
+      canRead
+      canEdit
+      value
+    }
+  }
   ...PartnershipToCheckBudgetChange
 }
