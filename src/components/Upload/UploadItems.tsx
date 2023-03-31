@@ -38,7 +38,7 @@ export const UploadItems = (props: UploadItemsProps) => {
     <>
       {areFilesUploading ? (
         <>
-          {submittedFiles.map((file) => (
+          {[...submittedFiles].reverse().map((file) => (
             <UploadItem
               key={file.queueId}
               file={file}
