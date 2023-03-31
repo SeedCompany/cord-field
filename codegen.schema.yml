@@ -52,5 +52,6 @@ generates:
         JSONObject: Record<string, any>
         URL: string
         RichText: RichTextData
+      defaultScalarType: unknown
       skipTypename: false
       enumsAsTypes: true
