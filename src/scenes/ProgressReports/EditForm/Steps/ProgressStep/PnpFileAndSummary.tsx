@@ -19,7 +19,7 @@ export const PnpFileAndSummary = ({
 
   return (
     <Grid container spacing={2} {...rest}>
-      <Grid item>
+      <Grid item xs={12}>
         <Typography variant="h3">Progress</Typography>
       </Grid>
       {report.cumulativeSummary ? (
