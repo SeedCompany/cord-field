@@ -2,6 +2,7 @@ import { Reference } from '@apollo/client';
 import {
   FieldFunctionOptions,
   FieldPolicy,
+  KeySpecifier,
 } from '@apollo/client/cache/inmemory/policies';
 import {
   isObject,
@@ -21,6 +22,8 @@ import {
 } from '../../../caching';
 import { sortingFromArgs } from '../../../caching/lists/util';
 import { Order } from '../../schema.graphql';
+
+type KeyArgs = KeySpecifier | false;
 
 export type PaginatedListArgs = InputArg<PaginatedListInput>;
 
@@ -203,10 +206,8 @@ const reverse = <T>(list: readonly T[]): readonly T[] => list.slice().reverse();
 // Converts an object to a list of Apollo key specifiers
 // Empty objects are assumed to be the same as omission and therefore
 // left out of the key specifier
-const objectToKeyArgs = (obj: Record<string, any>): KeySpecifier => {
+const objectToKeyArgs = (obj: Record<string, any>): KeyArgs => {
   const keys = objectToKeyArgsRecurse(cleanEmptyObjects(obj));
-  // @ts-expect-error false is fine as a key specifier but Apollo types
-  // incorrectly say that it's not ok when using a function.
   return keys.length > 1 ? keys : false;
 };
 const objectToKeyArgsRecurse = (obj: Record<string, any>): KeySpecifier =>
@@ -235,5 +236,3 @@ const cleanEmptyObjects = (obj: Record<string, any>): Record<string, any> => {
   }
   return res;
 };
-
-type KeySpecifier = Array<string | any[]>;
