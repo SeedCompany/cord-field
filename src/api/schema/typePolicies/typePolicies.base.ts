@@ -11,7 +11,7 @@ type FieldPolicies<T> = {
   [K in keyof T]?: FieldPolicy<T[K]> | FieldReadFunction<T[K]>;
 };
 
-type KeySpecifier<K = string> = ReadonlyArray<K | readonly any[]>;
+type KeySpecifier<K = string> = ReadonlyArray<K | KeySpecifier>;
 
 type GqlTypeMapAndQueries = GqlTypeMap & { Query: Query; Mutation: Mutation };
 
