@@ -31,20 +31,16 @@ const errorRenderer =
     }
 
     for (const gqlError of graphQLErrors || []) {
-      const ext = gqlError.extensions as {
-        code: string;
-        status: number;
-        exception?: { stacktrace: string[] };
-      };
-      const schemaError = ext.code === 'INTERNAL_SERVER_ERROR';
+      const codes = new Set(gqlError.extensions.codes as string[]);
+      const stacktrace = (gqlError.extensions.stacktrace ?? []) as string[];
 
-      if (!schemaError && ext.status < 500) {
+      // don't show client errors unless they are API communication related
+      if (codes.has('Client') && !codes.has('GraphQL')) {
         continue;
       }
 
-      const trace: string[] = ext.exception?.stacktrace ?? [];
-      if (trace.length > 0 && !schemaError) {
-        console.error(trace.join('\n'));
+      if (stacktrace.length > 0) {
+        console.error(stacktrace.join('\n'));
       }
       enqueueSnackbar(gqlError.message, {
         variant: 'error',
