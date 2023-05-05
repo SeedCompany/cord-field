@@ -1,0 +1,23 @@
+name: PR Previews
+on:
+  pull_request:
+    types:
+      - opened
+      - closed
+      - labeled
+      - unlabeled
+      - synchronize
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Trigger AWS CodePipeline
+        uses: zulhfreelancer/aws-codepipeline-action@v1.0.7
+        with:
+          aws-region: "us-east-1"
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-key: ${{ secrets.AWS_SECRET_KEY }}
+          pipeline-name: ${{ secrets.AWS_PIPELINE_NAME }}
