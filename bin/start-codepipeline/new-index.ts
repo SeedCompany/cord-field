@@ -3,6 +3,7 @@ import {
   GetPipelineCommand,
   GetPipelineExecutionCommand,
   ListPipelineExecutionsCommand,
+  PipelineDeclaration,
   PipelineExecutionStatus,
   StartPipelineExecutionCommand,
   UpdatePipelineCommand,
@@ -33,9 +34,17 @@ const getNewestExecutionId = async (pipelineName: string): Promise<string> => {
 const updatePipeline = async (
   pipelineName: string,
   gitBranch: string,
-  existingPipeline: any
+  existingPipeline: PipelineDeclaration | undefined
 ): Promise<void> => {
-  const sourceAction = existingPipeline.stages[0]!.actions[0];
+  if (!existingPipeline) {
+    throw new Error(`Pipeline '${pipelineName}' not found`);
+  }
+
+  if (!existingPipeline.stages || existingPipeline.stages.length === 0) {
+    throw new Error(`Pipeline '${pipelineName}' has no stages`);
+  }
+
+  const sourceAction = existingPipeline.stages[0]!.actions![0]!;
   sourceAction.configuration!.Branch = gitBranch;
 
   const command = new UpdatePipelineCommand({
@@ -128,7 +137,7 @@ const run = async (): Promise<void> => {
   if (gitBranch) {
     const getPipelineCommand = new GetPipelineCommand({ name: pipelineName });
     const pipeline = await CLIENT.send(getPipelineCommand);
-    await updatePipeline(pipelineName, gitBranch, pipeline);
+    await updatePipeline(pipelineName, gitBranch, pipeline.pipeline);
   }
 
   try {
