@@ -7,6 +7,11 @@ on:
       - labeled
       - unlabeled
       - synchronize
+  push:
+    # all branches except master and develop
+    branches-ignore:
+      - master
+      - develop
 
 jobs:
   deploy:
@@ -16,8 +21,10 @@ jobs:
 
       - name: Trigger AWS CodePipeline
         uses: zulhfreelancer/aws-codepipeline-action@v1.0.7
+        # only trigger when PR is labeled with 'preview-it' or when PR is closed or when label is removed
+        if: (github.event_name == 'pull_request' && github.event.*.labels == 'preview-it') || github.event_name == 'closed' || github.event_name == 'unlabeled'
         with:
-          aws-region: "us-east-1"
+          aws-region: "us-east-2"
           aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-key: ${{ secrets.AWS_SECRET_KEY }}
           pipeline-name: ${{ secrets.AWS_PIPELINE_NAME }}
