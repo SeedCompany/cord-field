@@ -31,7 +31,6 @@ runs:
     - name: Start CodePipeline
       run: yarn trigger-codepipeline
       shell: bash
-      # provide the inputs to the script
       env:
         AWS_REGION: ${{ inputs.aws-region }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key }}
@@ -39,11 +38,6 @@ runs:
         PIPELINE_NAME: ${{ inputs.pipeline-name }}
         GIT_BRANCH: ${{ inputs.git-branch }}
         ROLE_ARN: ${{ inputs.role-arn }}
-        # aws-access-key: ${{ inputs.aws-access-key }}
-        # aws-secret-key: ${{ inputs.aws-secret-key }}
-        # pipeline-name: ${{ inputs.pipeline-name }}
-        # git-branch: ${{ inputs.git-branch }}
-        # role-arn: ${{ inputs.role-arn }}
 
 branding:
   icon: "cloud"
