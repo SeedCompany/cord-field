@@ -1,11 +1,12 @@
 import {
   CodePipelineClient,
+  GetPipelineCommand,
   GetPipelineExecutionCommand,
   ListPipelineExecutionsCommand,
   PipelineExecutionStatus,
   StartPipelineExecutionCommand,
+  UpdatePipelineCommand,
 } from '@aws-sdk/client-codepipeline';
-import * as codebuild from './codebuild';
 import { sleep } from './util';
 
 const CLIENT = new CodePipelineClient({});
@@ -29,10 +30,36 @@ const getNewestExecutionId = async (pipelineName: string): Promise<string> => {
   throw new Error('No Pipeline executions found');
 };
 
+const updatePipeline = async (
+  pipelineName: string,
+  gitBranch: string,
+  existingPipeline: any
+): Promise<void> => {
+  const sourceAction = existingPipeline.stages[0]!.actions[0];
+  sourceAction.configuration!.Branch = gitBranch;
+
+  const command = new UpdatePipelineCommand({
+    pipeline: {
+      ...existingPipeline,
+      stages: [...existingPipeline.stages],
+    },
+  });
+  try {
+    await CLIENT.send(command);
+    console.log("Pipeline's been updated with the new source");
+
+    console.log('Starting pipeline execution...');
+  } catch (error) {
+    console.error(
+      `An error occured while updating pipeline '${pipelineName}' with new source.`
+    );
+    throw error;
+  }
+};
+
 const waitForPipeline = async (
   pipelineName: string,
-  pipelineExecutionId: string,
-  codebuilds?: string[]
+  pipelineExecutionId: string
 ): Promise<boolean> => {
   await sleep(10);
   const command = new GetPipelineExecutionCommand({
@@ -52,23 +79,10 @@ const waitForPipeline = async (
     const { status } = data.pipelineExecution;
     switch (status) {
       case PipelineExecutionStatus.InProgress: {
-        if (codebuilds) {
-          const projectToBuildBatchId =
-            await codebuild.getInProgressProjectToBatchIds(codebuilds);
-          if (projectToBuildBatchId.length > 0) {
-            await codebuild.forwardLogEventsFromCodebuild(
-              projectToBuildBatchId[0]!
-            );
-          }
-        }
         console.log(
           `Pipeline '${pipelineName}' in progress waiting for 10 more seconds.`
         );
-        return await waitForPipeline(
-          pipelineName,
-          pipelineExecutionId,
-          codebuilds
-        );
+        return await waitForPipeline(pipelineName, pipelineExecutionId);
       }
       case PipelineExecutionStatus.Cancelled: {
         console.log(
@@ -78,7 +92,7 @@ const waitForPipeline = async (
         console.log(
           `Waiting on pipeline '${pipelineName}' with new execution id '${newExecutionId}'`
         );
-        return await waitForPipeline(pipelineName, newExecutionId, codebuilds);
+        return await waitForPipeline(pipelineName, newExecutionId);
       }
       case PipelineExecutionStatus.Succeeded:
         console.log(`Pipeline '${pipelineName}' succeeded.`);
@@ -107,26 +121,28 @@ const waitForPipeline = async (
 };
 
 const run = async (): Promise<void> => {
-  let codebuilds;
-  const pipelineName: string = process.env.PIPELINE_NAME!;
-  const wait: boolean = process.env.WAIT === 'true';
-
+  const pipelineName = process.env.PIPELINE_NAME!;
+  const gitBranch = process.env.GIT_BRANCH;
   const command = new StartPipelineExecutionCommand({ name: pipelineName });
+
+  if (gitBranch) {
+    const getPipelineCommand = new GetPipelineCommand({ name: pipelineName });
+    const pipeline = await CLIENT.send(getPipelineCommand);
+    await updatePipeline(pipelineName, gitBranch, pipeline);
+  }
 
   try {
     const data = await CLIENT.send(command);
     if (!data.pipelineExecutionId) {
       throw new Error('No Execution ID');
     }
-    if (wait) {
-      const executionResult = await waitForPipeline(
-        pipelineName,
-        data.pipelineExecutionId,
-        codebuilds
-      );
-      if (!executionResult) {
-        throw new Error('Execution was unsucessful.');
-      }
+
+    const executionResult = await waitForPipeline(
+      pipelineName,
+      data.pipelineExecutionId
+    );
+    if (!executionResult) {
+      throw new Error('Execution was unsucessful.');
     }
   } catch (error) {
     console.error(
