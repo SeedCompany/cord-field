@@ -118,6 +118,8 @@
     "xss": "^1.0.14"
   },
   "devDependencies": {
+    "@aws-sdk/client-codebuild": "^3.328.0",
+    "@aws-sdk/client-codepipeline": "^3.328.0",
     "@babel/core": "^7.20.12",
     "@babel/helper-plugin-utils": "^7.18.9",
     "@babel/plugin-proposal-numeric-separator": "^7.18.6",
