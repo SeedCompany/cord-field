@@ -17,7 +17,7 @@
     "gql-gen:operations": "yarn gql-gen-base -c codegen.operations.yml",
     "gql-gen-base": "TS_NODE_PROJECT=tsconfig.codegen.json graphql-codegen -r ts-node/register -r ./src/api/schema/codeGenUtil/loadEnv.codegen",
     "postinstall": "patch-typed-document-node || true",
-    "trigger-codepipeline": "node bin/start-codepipeline.js"
+    "trigger-codepipeline": "rm -rf bin/dist && tsc -p bin && node bin/dist/start-codepipeline"
   },
   "engines": {
     "node": ">=16"

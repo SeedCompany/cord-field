@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk';
+import * as AWS from 'aws-sdk';
 
 function triggerPipeline({
   codepipeline,
@@ -60,6 +60,7 @@ function updatePipeline({
 }
 
 function run() {
+  console.log('Starting pipeline update...');
   try {
     const awsRegion = process.env.AWS_REGION!;
     const awsAccessKey = process.env.AWS_ACCESS_KEY_ID!;
@@ -67,8 +68,6 @@ function run() {
     const pipelineName = process.env.PIPELINE_NAME!;
     const roleArn = process.env.ROLE_ARN!;
     const gitBranch = process.env.GIT_BRANCH!;
-
-    AWS.config = new AWS.Config();
 
     AWS.config.update({
       region: awsRegion,

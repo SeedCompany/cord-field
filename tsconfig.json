@@ -23,6 +23,6 @@
       "*": ["./typings/*"]
     }
   },
-  "include": ["src", "**/*", ".eslintrc.js", "bin"],
+  "include": ["src", "**/*", ".eslintrc.js"],
   "exclude": ["**/*.stories.tsx", "build", "node_modules"]
 }
