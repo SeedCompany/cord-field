@@ -109,7 +109,8 @@ const waitForPipeline = async (
       case PipelineExecutionStatus.Failed:
         console.error(`Pipeline '${pipelineName}' failed.`);
         return false;
-      case PipelineExecutionStatus.Stopping || PipelineExecutionStatus.Stopped:
+      case PipelineExecutionStatus.Stopping:
+      case PipelineExecutionStatus.Stopped:
         console.error(`Pipeline '${pipelineName}' stopped.`);
         return false;
       case PipelineExecutionStatus.Superseded:
@@ -132,7 +133,6 @@ const waitForPipeline = async (
 const run = async (): Promise<void> => {
   const pipelineName = process.env.PIPELINE_NAME!;
   const gitBranch = process.env.GIT_BRANCH;
-  const command = new StartPipelineExecutionCommand({ name: pipelineName });
 
   if (gitBranch) {
     const getPipelineCommand = new GetPipelineCommand({ name: pipelineName });
@@ -141,6 +141,7 @@ const run = async (): Promise<void> => {
   }
 
   try {
+    const command = new StartPipelineExecutionCommand({ name: pipelineName });
     const data = await CLIENT.send(command);
     if (!data.pipelineExecutionId) {
       throw new Error('No Execution ID');
