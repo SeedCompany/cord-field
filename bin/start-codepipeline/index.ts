@@ -7,14 +7,15 @@ export class TriggerPipeline {
   private readonly gitBranch?: string;
   private timesChecked = 0;
 
+  // returns the number of seconds to wait before checking the pipeline status again
   private get delay() {
-    if (this.timesChecked < 1) {
+    if (this.timesChecked < 4) {
       return 60;
     }
     if (this.timesChecked < 10) {
-      return 20;
+      return 30;
     }
-    return this.timesChecked < 30 ? 10 : 5;
+    return this.timesChecked < 30 ? 20 : 10;
   }
 
   private sleep(s: number) {
