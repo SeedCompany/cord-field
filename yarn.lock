@@ -6267,7 +6267,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.1372.0":
+"aws-sdk@npm:2.1372.0":
   version: 2.1372.0
   resolution: "aws-sdk@npm:2.1372.0"
   dependencies:
@@ -7962,7 +7962,7 @@ __metadata:
     "@typescript-eslint/parser": "*"
     "@typescript-eslint/types": "*"
     ahooks: ^3.7.4
-    aws-sdk: ^2.1372.0
+    aws-sdk: "npm:2.1372.0"
     babel-loader: ^8.3.0
     babel-plugin-transform-imports: ^2.0.0
     babel-plugin-transform-rename-import: ^2.3.0

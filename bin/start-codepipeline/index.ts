@@ -1,9 +1,6 @@
 import { PipelineExecutionStatus } from '@aws-sdk/client-codepipeline';
 import * as AWS from 'aws-sdk';
 
-const sleep = (s: number) =>
-  new Promise((resolve) => setTimeout(resolve, s * 1000));
-
 export class TriggerPipeline {
   private readonly codepipeline: AWS.CodePipeline;
   private readonly pipelineName: string;
@@ -18,6 +15,10 @@ export class TriggerPipeline {
       return 20;
     }
     return this.timesChecked < 30 ? 10 : 5;
+  }
+
+  private sleep(s: number) {
+    return new Promise((resolve) => setTimeout(resolve, s * 1000));
   }
 
   async triggerPipeline() {
@@ -142,10 +143,10 @@ export class TriggerPipeline {
         `Waiting for ${this.delay} seconds because it's the first check.`,
         'This is to avoid false negatives and to make sure the pipeline received the execution request and is in the queue.'
       );
-      await sleep(this.delay);
+      await this.sleep(this.delay);
     } else {
       console.log(`Waiting for ${this.delay} seconds...`);
-      await sleep(this.delay);
+      await this.sleep(this.delay);
     }
 
     const execution = await this.getPipelineExecution(executionId);
