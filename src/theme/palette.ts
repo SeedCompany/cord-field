@@ -11,7 +11,7 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     background: {
       // default: dark ? '#303030' : grey[50], // MUI v4 default
       // make bg red
-      default: '#ff0000',
+      default: '#ff5555',
     },
     primary: {
       main: mainGreen,
