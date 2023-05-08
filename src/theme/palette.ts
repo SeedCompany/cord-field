@@ -9,7 +9,9 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
     background: {
-      default: dark ? '#303030' : grey[50], // MUI v4 default
+      // default: dark ? '#303030' : grey[50], // MUI v4 default
+      // make bg red
+      default: '#ff0000',
     },
     primary: {
       main: mainGreen,
