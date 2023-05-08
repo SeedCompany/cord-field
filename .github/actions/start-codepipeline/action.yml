@@ -16,9 +16,6 @@ inputs:
   git-branch:
     description: "The name of the branch to trigger the pipeline"
     required: false
-  role-arn:
-    description: "The ARN of the IAM role to use when calling CodePipeline"
-    required: true
 
 runs:
   using: "composite"
