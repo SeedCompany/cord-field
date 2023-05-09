@@ -423,18 +423,6 @@ export const ProjectOverview = () => {
                 onClick={() => editField(['marketingLocationId'])}
               />
             </Grid>
-            <Grid item>
-              <DataButton
-                label="Anticipated Engagement Count"
-                startIcon={<GlobalSearchIcon color="info" />}
-                empty="None"
-                loading={!project}
-                secured={project?.anticipatedEngagementCount}
-                redacted="You do not have permission to view the anticipated engagement amount"
-                onClick={() => editField(['anticipatedEngagementCount'])}
-                children={project?.anticipatedEngagementCount.value}
-              />
-            </Grid>
           </Grid>
 
           <Grid container spacing={1} alignItems="center">

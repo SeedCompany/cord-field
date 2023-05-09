@@ -12,11 +12,6 @@ fragment ProjectOverview on Project {
     canEdit
     value
   }
-  anticipatedEngagementCount {
-    canRead
-    canEdit
-    value
-  }
   name {
     canRead
     canEdit
