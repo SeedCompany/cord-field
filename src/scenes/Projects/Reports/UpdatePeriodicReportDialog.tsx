@@ -1,8 +1,9 @@
+import { Typography } from '@mui/material';
 import { pick } from 'lodash';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { UpdatePeriodicReportInput } from '~/api/schema.graphql';
-import { ExtractStrict, many, Many } from '~/common';
+import { CalendarDate, ExtractStrict, many, Many } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -34,11 +35,13 @@ type UpdatePeriodicReportDialogProps = Except<
 > & {
   report: Omit<PeriodicReportFragment, 'reportFile'> & { reportFile?: File[] };
   editFields?: Many<EditablePeriodicReportField>;
+  showFinalSubmissionWarning?: boolean;
 };
 
 export const UpdatePeriodicReportDialog = ({
   report,
   editFields: editFieldsProp,
+  showFinalSubmissionWarning,
   ...props
 }: UpdatePeriodicReportDialogProps) => {
   const editFields = useMemo(
@@ -88,6 +91,14 @@ export const UpdatePeriodicReportDialog = ({
         await updatePeriodicReport(id, reportFile, receivedDate)
       }
     >
+      {isFinalReport(report.start, report.end) &&
+        showFinalSubmissionWarning && (
+          <Typography variant="body1" color="error">
+            There are previous reporting periods that do not have data
+            submitted. Are you sure you want to supersede those with this
+            submission?
+          </Typography>
+        )}
       <SubmitError />
       {!updateReceivedDateOnly ? <DropzoneField name="reportFile" /> : null}
       <DateField
@@ -99,3 +110,6 @@ export const UpdatePeriodicReportDialog = ({
     </DialogForm>
   );
 };
+
+const isFinalReport = (start: CalendarDate, end: CalendarDate) =>
+  +start === +end;
