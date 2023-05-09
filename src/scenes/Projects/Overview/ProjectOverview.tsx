@@ -7,6 +7,7 @@ import {
   TravelExplore as GlobalSearchIcon,
   Public as GlobeIcon,
   Place as MapPinIcon,
+  Numbers,
   Publish,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
@@ -426,7 +427,7 @@ export const ProjectOverview = () => {
             <Grid item>
               <DataButton
                 label="Anticipated Engagement Count"
-                startIcon={<GlobalSearchIcon color="info" />}
+                startIcon={<Numbers color="info" />}
                 empty="None"
                 loading={!project}
                 secured={project?.anticipatedEngagementCount}

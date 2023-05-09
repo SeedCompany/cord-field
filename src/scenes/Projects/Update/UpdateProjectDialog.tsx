@@ -19,6 +19,7 @@ import {
   DateField,
   EnumField,
   FieldGroup,
+  NumberField,
   SecuredField,
   SubmitError,
   TextField,
@@ -59,7 +60,7 @@ const fieldMapping: Record<
   ComponentType<ProjectFieldProps>
 > = {
   anticipatedEngagementCount: ({ props }) => (
-    <TextField {...props} label="Anticipated Engagement Count" />
+    <NumberField {...props} label="Anticipated Engagement Count" />
   ),
   name: ({ props }) => <TextField {...props} label="Project Name" />,
   primaryLocationId: ({ props }) => (
