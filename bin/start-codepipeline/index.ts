@@ -1,5 +1,14 @@
-import { PipelineExecutionStatus } from '@aws-sdk/client-codepipeline';
 import * as AWS from 'aws-sdk';
+
+// take from `aws-sdk/clients/codepipeline` and remove the "string" type
+type PipelineExecutionStatus =
+  | 'Cancelled'
+  | 'InProgress'
+  | 'Stopped'
+  | 'Stopping'
+  | 'Succeeded'
+  | 'Superseded'
+  | 'Failed';
 
 export class TriggerPipeline {
   private readonly codepipeline: AWS.CodePipeline;
@@ -155,28 +164,29 @@ export class TriggerPipeline {
     this.timesChecked++;
 
     // get type Status from execution and remove the "string" type
-    const status = execution.status as PipelineExecutionStatus;
+    const status = execution.status!;
 
     const delay = this.delay;
 
-    switch (status) {
-      case PipelineExecutionStatus.InProgress:
+    switch (status as PipelineExecutionStatus) {
+      case 'InProgress':
         console.log(
           `Pipeline '${this.pipelineName}' in progress waiting for ${delay} more seconds.`
         );
         return await this.waitForPipelineExecution(executionId);
 
-      case PipelineExecutionStatus.Succeeded:
+      case 'Succeeded' as PipelineExecutionStatus:
         console.log(`Pipeline '${this.pipelineName}' succeeded.`);
         return true;
-      case PipelineExecutionStatus.Failed:
+      case 'Failed':
         console.error(`Pipeline '${this.pipelineName}' failed.`);
         return false;
-      case PipelineExecutionStatus.Stopping:
-      case PipelineExecutionStatus.Stopped:
+      case 'Stopping':
+      case 'Stopped':
+      case 'Cancelled':
         console.error(`Pipeline '${this.pipelineName}' stopped.`);
         return false;
-      case PipelineExecutionStatus.Superseded:
+      case 'Superseded':
         console.warn(
           `Pipeline '${this.pipelineName}' was superseded. Skipping rest of the execution.`
         );
