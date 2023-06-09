@@ -1,7 +1,6 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { CordIcon } from '../../../components/Icons';
-import { SwooshBackground } from './SwooshBackground';
 
 const useStyles = makeStyles()(({ spacing, typography }) => ({
   root: {
@@ -24,21 +23,68 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
 }));
 
 export const SidebarHeader = () => {
-  const { classes } = useStyles();
-
   return (
-    <div className={classes.root}>
-      <SwooshBackground />
-      <div className={classes.floating}>
-        <CordIcon sx={{ color: 'inherit', fontSize: 40 }} />
-        <Typography
-          className={classes.copyright}
-          display="block"
-          variant="caption"
-        >
-          © Seed Company
+    <Box
+      sx={{
+        display: 'flex',
+        width: 1,
+        height: 72,
+        alignItems: 'center',
+      }}
+    >
+      <CordIcon
+        fontSize="large"
+        sx={{
+          borderRadius: '0',
+          justifySelf: 'center',
+          width: 60,
+          height: 32,
+        }}
+      />
+      <Box
+        sx={{
+          display: 'flex',
+          flex: 1,
+          height: 1,
+          pl: 2,
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          backgroundColor: 'white',
+          justifyContent: 'center',
+          color: '#091016',
+        }}
+      >
+        <Typography variant="h4" color="inherit">
+          Cord Field
         </Typography>
-      </div>
-    </div>
+        <Typography variant="caption" color="inherit">
+          by Seed Company
+        </Typography>
+      </Box>
+    </Box>
+
+    // <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    //   <CordIcon fontSize="large" sx={[...extendSx(sx)]} />
+    //   <Box>
+    //     <Typography variant="h4">Cord Field</Typography>
+    //     <Typography variant="caption">by Seed Company</Typography>
+    //   </Box>
+    // </Box>
   );
+
+  // return (
+  //   <div className={classes.root}>
+  //     <SwooshBackground />
+  //     <div className={classes.floating}>
+  //       <CordIcon sx={{ color: 'inherit', fontSize: 40 }} />
+  //       <Typography
+  //         className={classes.copyright}
+  //         display="block"
+  //         variant="caption"
+  //       >
+  //         © Seed Company
+  //       </Typography>
+  //     </div>
+  //   </div>
+  // );
 };

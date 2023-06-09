@@ -241,4 +241,13 @@ declare module '@mui/material/styles' {
   interface BreakpointOverrides {
     mobile: true;
   }
+
+  interface PaletteOptions {
+    icons?: {
+      active?: string;
+      inactive?: string;
+      backgroundActive?: string;
+      backgroundInactive?: string;
+    };
+  }
 }

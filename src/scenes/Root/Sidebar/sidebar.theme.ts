@@ -12,6 +12,12 @@ export const sidebarTheme = createMuiTheme({
       ...base.palette.background,
       paper: '#3c444e',
     },
+    icons: {
+      active: '#ffffff',
+      inactive: '#BEC0C4',
+      backgroundActive: '#29b67e',
+      backgroundInactive: '#3c444e',
+    },
   },
   components: {
     ...base.components,
@@ -28,16 +34,15 @@ export const sidebarTheme = createMuiTheme({
           borderRadius: 14,
           // Same as default just changes the color from primary to white
           '&.Mui-selected': {
-            backgroundColor: alpha(
-              listItemColor,
-              base.palette.action.selectedOpacity
-            ),
-            '&.Mui-focusVisible': {
-              backgroundColor: alpha(
-                listItemColor,
-                base.palette.action.selectedOpacity +
-                  base.palette.action.focusOpacity
-              ),
+            '& .MuiListItemText-root': {
+              display: 'flex',
+              flex: 1,
+              height: '100%',
+              backgroundColor: '#ffffff',
+            },
+            '& .MuiListItemIcon-root': {
+              backgroundColor: '#29B67E',
+              color: '#ffffff',
             },
             '&:hover': {
               backgroundColor: alpha(

@@ -1,4 +1,3 @@
-import { Add } from '@mui/icons-material';
 import { ButtonProps, Menu, MenuItem, MenuProps } from '@mui/material';
 import { startCase } from 'lodash';
 import { useContext, useState } from 'react';
@@ -37,11 +36,11 @@ export const CreateButtonMenu = (props: CreateButtonMenuProps) => {
       <CreateButton
         aria-controls="create-menu"
         aria-haspopup="true"
-        startIcon={<Add />}
+        // startIcon={<Add />}
         onClick={openAddMenu}
         {...rest}
       >
-        Create New Item
+        Add Item
       </CreateButton>
       <Menu
         id="create-menu"

@@ -1,9 +1,8 @@
-import { ListSubheader, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { extendSx, StyleProps } from '~/common';
-import { RootNavList } from '../RootNavList';
 import { sidebarTheme } from './sidebar.theme';
-import { SidebarHeader } from './SidebarHeader';
+import { SidebarDrawer } from './SidebarDrawer';
 
 export const Sidebar = ({ sx }: StyleProps) => {
   return (
@@ -15,14 +14,17 @@ export const Sidebar = ({ sx }: StyleProps) => {
           {
             maxWidth: 248,
             overflowY: 'auto',
+            zIndex: 999,
+            backgroundColor: 'white',
           },
           ...extendSx(sx),
         ]}
       >
-        <SidebarHeader />
-        <RootNavList
+        {/* <SidebarHeader /> */}
+        {/* <RootNavList
           subheader={<ListSubheader component="div">MENU</ListSubheader>}
-        />
+        /> */}
+        <SidebarDrawer />
       </Paper>
     </ThemeProvider>
   );
