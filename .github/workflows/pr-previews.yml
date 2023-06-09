@@ -1,0 +1,41 @@
+name: PR Previews
+on:
+  # only trigger when PR is opened, closed, labeled, unlabeled 
+  # or synchronized (updated) or when a push is made on the PR branch
+  pull_request:
+    types:
+      - opened
+      - closed
+      - labeled
+      - unlabeled
+      - synchronize
+
+jobs:
+  deploy:
+    # only trigger when PR is labeled with 'preview-it' or when PR is closed or when label is removed
+    if: contains(github.event.pull_request.labels.*.name, 'preview-it') || github.event_name == 'closed' || github.event_name == 'unlabeled'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Save branch name
+        run: echo "BRANCH=${GITHUB_REF}" >> $GITHUB_ENV
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Trigger AWS CodePipeline
+        # uses: zulhfreelancer/aws-codepipeline-action@v1.0.7
+        uses: ./.github/actions/start-codepipeline
+        with:
+          aws-region: "us-east-2"
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-key: ${{ secrets.AWS_SECRET_KEY }}
+          pipeline-name: ${{ secrets.AWS_PIPELINE_NAME }}
+          git-branch: ${{ github.event.pull_request.head.ref }}
+          role-arn: ${{ secrets.AWS_ROLE_ARN }}

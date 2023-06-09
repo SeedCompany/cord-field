@@ -8,6 +8,7 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
+import { ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
@@ -42,7 +43,7 @@ const useStyles = makeStyles()(({ palette, spacing }) => {
 });
 
 export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> & {
-  label?: string;
+  label?: ReactNode;
   multiple?: boolean;
   className?: string;
 };

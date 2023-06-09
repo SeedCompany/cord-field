@@ -1,0 +1,44 @@
+name: "Start AWS CodePipeline"
+description: "Trigger a pipeline in AWS CodePipeline from GitHub Actions"
+inputs:
+  aws-region:
+    description: "AWS Region where the CodePipeline is located"
+    required: true
+  aws-access-key:
+    description: "AWS Access Key ID to trigger CodePipeline"
+    required: true
+  aws-secret-key:
+    description: "AWS Secret Key to trigger CodePipeline"
+    required: true
+  pipeline-name:
+    description: "The name of the pipeline"
+    required: true
+  git-branch:
+    description: "The name of the branch to trigger the pipeline"
+    required: true
+  role-arn:
+    description: "The ARN of the IAM role to use when calling CodePipeline"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        cache: yarn
+    
+    - name: Start CodePipeline
+      run: yarn trigger-codepipeline
+      shell: bash
+      env:
+        AWS_REGION: ${{ inputs.aws-region }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-key }}
+        PIPELINE_NAME: ${{ inputs.pipeline-name }}
+        GIT_BRANCH: ${{ inputs.git-branch }}
+        ROLE_ARN: ${{ inputs.role-arn }}
+
+branding:
+  icon: "cloud"
+  color: "orange"

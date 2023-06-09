@@ -20,7 +20,9 @@ export const FormattedDate = memo(function FormattedDate({
   const format = useDateFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATE_HUGE)}>
-      <time dateTime={date.toISODate()}>{format(date, displayOptions)}</time>
+      <time dateTime={date.toISODate() ?? undefined}>
+        {format(date, displayOptions)}
+      </time>
     </Tooltip>
   ) : null;
 });
@@ -67,7 +69,7 @@ export const FormattedDateTime = memo(function FormattedDateTime({
   const format = useDateTimeFormatter();
   return date ? (
     <Tooltip title={format(date, DateTime.DATETIME_HUGE)}>
-      <time dateTime={date.toUTC().toISO()}>{format(date)}</time>
+      <time dateTime={date.toUTC().toISO() ?? undefined}>{format(date)}</time>
     </Tooltip>
   ) : null;
 });
@@ -108,7 +110,7 @@ export const RelativeDateTime = memo(function RelativeDateTime({
 
   return (
     <Tooltip title={absoluteFormat(date, DateTime.DATETIME_HUGE)}>
-      <time dateTime={date.toUTC().toISO()}>{formatted}</time>
+      <time dateTime={date.toUTC().toISO() ?? undefined}>{formatted}</time>
     </Tooltip>
   );
 });

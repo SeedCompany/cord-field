@@ -72,7 +72,7 @@ export class CalendarDate
     return this.toLocaleString(DateTime.DATE_SHORT);
   }
 
-  toISO(_options?: ToISOTimeOptions): string {
+  toISO(_options?: ToISOTimeOptions) {
     return this.toISODate();
   }
 

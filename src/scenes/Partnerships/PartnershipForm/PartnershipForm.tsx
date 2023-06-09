@@ -6,7 +6,6 @@ import {
   PartnershipAgreementStatusLabels,
   PartnershipAgreementStatusList,
   PartnerType,
-  PeriodType,
   PeriodTypeList,
 } from '~/api/schema.graphql';
 import { labelFrom, Nullable } from '~/common';
@@ -40,9 +39,7 @@ type PartnershipFormValues = Partial<
 
 export type PartnershipFormProps<T extends PartnershipFormValues> =
   DialogFormProps<T> & {
-    partnership?: PartnershipFormFragment & {
-      financialReportPeriod?: PeriodType;
-    };
+    partnership?: PartnershipFormFragment;
   };
 
 export const hasManagingType = (types: Nullable<readonly PartnerType[]>) =>
@@ -125,11 +122,18 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                 </SecuredField>
 
                 {partnership?.primary && (
-                  <EnumField
-                    label="Financial Reporting Frequency"
-                    options={PeriodTypeList}
+                  <SecuredField
+                    obj={partnership.project}
                     name="financialReportPeriod"
-                  />
+                  >
+                    {(props) => (
+                      <EnumField
+                        label="Financial Reporting Frequency"
+                        options={PeriodTypeList}
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
                 )}
               </>
             ) : null}
