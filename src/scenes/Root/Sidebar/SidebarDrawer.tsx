@@ -23,7 +23,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  borderRight: '1px solid #fafafa',
+  // borderRight: '1px solid #fafafa',
   overflowX: 'hidden',
   width: 60,
 });

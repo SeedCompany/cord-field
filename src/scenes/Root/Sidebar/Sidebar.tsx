@@ -8,7 +8,7 @@ export const Sidebar = ({ sx }: StyleProps) => {
   return (
     <ThemeProvider theme={sidebarTheme}>
       <Paper
-        elevation={0}
+        elevation={2}
         square
         sx={[
           {

@@ -1,26 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { CordIcon } from '../../../components/Icons';
-
-const useStyles = makeStyles()(({ spacing, typography }) => ({
-  root: {
-    position: 'relative',
-  },
-  floating: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: '15%',
-    padding: spacing(0, 4, 0, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-  },
-  copyright: {
-    fontWeight: typography.fontWeightLight,
-  },
-}));
 
 export const SidebarHeader = () => {
   return (
@@ -47,6 +26,7 @@ export const SidebarHeader = () => {
           flex: 1,
           height: 1,
           pl: 2,
+          borderTopRightRadius: 5,
           flexDirection: 'column',
           alignItems: 'flex-start',
           backgroundColor: 'white',

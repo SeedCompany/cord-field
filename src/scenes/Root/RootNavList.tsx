@@ -1,19 +1,10 @@
 import { FolderOpen, Language, Person } from '@mui/icons-material';
-import {
-  Divider,
-  List,
-  ListItemIcon,
-  ListItemText,
-  SvgIconProps,
-} from '@mui/material';
+import { List, ListItemIcon, ListItemText, SvgIconProps } from '@mui/material';
 import { ComponentType, ReactNode } from 'react';
 import { Sx } from '~/common';
 import { PeopleJoinedIcon } from '~/components/Icons';
 import { ListItemLink, ListItemLinkProps } from '~/components/Routing';
 
-const designCollapsedWidth = 60;
-
-const bgColorContrast = { bgcolor: 'primary.contrastText' } satisfies Sx;
 const colorContrast = { color: 'primary.contrastText' } satisfies Sx;
 const bgColorWhite = { bgcolor: 'white' } satisfies Sx;
 const colorBlack = { color: 'black' } satisfies Sx;
@@ -72,17 +63,17 @@ const NavItem = ({ icon: Icon, label, ...props }: NavItemProps) => (
   </ListItemLink>
 );
 
-const MobileDivider = () => (
-  <Divider
-    sx={{
-      ...bgColorContrast,
-      ml: -1,
-      // 8px is the padding of the List
-      width: 'calc(100% + 8px * 2)',
-      display: { sm: 'none' },
-    }}
-  />
-);
+// const MobileDivider = () => (
+//   <Divider
+//     sx={{
+//       ...bgColorContrast,
+//       ml: -1,
+//       // 8px is the padding of the List
+//       width: 'calc(100% + 8px * 2)',
+//       display: { sm: 'none' },
+//     }}
+//   />
+// );
 
 export const RootNavList = ({ subheader }: { subheader?: ReactNode }) => (
   <List
@@ -91,11 +82,11 @@ export const RootNavList = ({ subheader }: { subheader?: ReactNode }) => (
     sx={{ p: 0, ...bgColorWhite, ...colorBlack }}
     subheader={subheader}
   >
-    <MobileDivider />
+    {/* <MobileDivider /> */}
     {navItems.map(({ label, to, icon }) => (
       <NavItem key={label} to={to} icon={icon} label={label} />
     ))}
-    <MobileDivider />
+    {/* <MobileDivider /> */}
     {/* <Box
       sx={{
         width: designCollapsedWidth,
@@ -119,12 +110,12 @@ export const RootNavList = ({ subheader }: { subheader?: ReactNode }) => (
   </List>
 );
 
-export const getActiveItemLabel = () => {
-  const path = typeof window === 'undefined' ? '' : window.location.pathname;
-  if (path.includes('/users/')) {
-    return 'Profile';
-  }
+// export const getActiveItemLabel = () => {
+//   const path = typeof window === 'undefined' ? '' : window.location.pathname;
+//   if (path.includes('/users/')) {
+//     return 'Profile';
+//   }
 
-  const activeItem = navItems.find(({ to }) => path.startsWith(to));
-  return activeItem?.label ?? 'Projects';
-};
+//   const activeItem = navItems.find(({ to }) => path.startsWith(to));
+//   return activeItem?.label ?? 'Projects';
+// };
