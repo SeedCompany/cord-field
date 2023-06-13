@@ -1,6 +1,6 @@
 name: PR Previews
 on:
-  # only trigger when PR is opened, closed, labeled, unlabeled 
+  # only trigger when PR is opened, closed, labeled, unlabeled
   # or synchronized (updated) or when a push is made on the PR branch
   pull_request:
     types:
@@ -11,9 +11,13 @@ on:
       - synchronize
 
 jobs:
-  deploy:
-    # only trigger when PR is labeled with 'preview-it' or when PR is closed or when label is removed
-    if: contains(github.event.pull_request.labels.*.name, 'preview-it') || github.event_name == 'closed' || github.event_name == 'unlabeled'
+  build-and-deploy:
+    if: |
+      contains(github.event.pull_request.labels.*.name, 'preview-it') || 
+      (
+        github.event.action == 'unlabeled' && 
+        !contains(github.event.pull_request.labels.*.name, 'preview-it')
+      )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,13 +33,20 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Trigger AWS CodePipeline
-        # uses: zulhfreelancer/aws-codepipeline-action@v1.0.7
+      - name: Trigger EKS Build Pipeline
         uses: ./.github/actions/start-codepipeline
+        if: github.event.action != 'closed'
         with:
-          aws-region: "us-east-2"
+          aws-region: 'us-east-2'
           aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-key: ${{ secrets.AWS_SECRET_KEY }}
           pipeline-name: ${{ secrets.AWS_PIPELINE_NAME }}
           git-branch: ${{ github.event.pull_request.head.ref }}
-          role-arn: ${{ secrets.AWS_ROLE_ARN }}
+
+      - name: Trigger EKS Deploy Pipeline
+        uses: ./.github/actions/start-codepipeline
+        with:
+          aws-region: 'us-east-2'
+          aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-key: ${{ secrets.AWS_SECRET_KEY }}
+          pipeline-name: 'EKS-Infra'
