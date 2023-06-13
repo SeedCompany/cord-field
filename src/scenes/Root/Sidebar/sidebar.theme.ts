@@ -38,7 +38,6 @@ export const sidebarTheme = createMuiTheme({
               display: 'flex',
               flex: 1,
               height: '100%',
-              backgroundColor: '#ffffff',
             },
             '& .MuiListItemIcon-root': {
               backgroundColor: '#29B67E',

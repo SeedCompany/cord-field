@@ -7088,6 +7088,7 @@ __metadata:
     final-form: "patch:final-form@npm:4.20.9#.yarn/patches/final-form.patch"
     final-form-calculate: "patch:final-form-calculate@1.3.2#.yarn/patches/final-form-calculate.patch"
     graphql: ^16.6.0
+    hamburger-react: ^2.5.0
     helmet: ^6.0.1
     history: ^5.3.0
     html-react-parser: ^3.0.8
@@ -10051,6 +10052,15 @@ __metadata:
   dependencies:
     duplexer: ^0.1.2
   checksum: 2df97f359696ad154fc171dcb55bc883fe6e833bca7a65e457b9358f3cb6312405ed70a8da24a77c1baac0639906cd52358dc0ce2ec1a937eaa631b934c94194
+  languageName: node
+  linkType: hard
+
+"hamburger-react@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "hamburger-react@npm:2.5.0"
+  peerDependencies:
+    react: ^16.8 || ^17 || ^18
+  checksum: 5c3835a1b271fd50f5fcc600d55d0dc296cb05c2eed5ec4bf6386c3da6f5b33a370f6ff5b81ebe97f29beb41cc37f5f5d4c5ff958507435e6561a15c8f7e3562
   languageName: node
   linkType: hard
 
