@@ -13,13 +13,10 @@ on:
 jobs:
   build-and-deploy:
     if: |
-      contains(github.event.pull_request.labels.*.name, 'preview-it') && 
-      github.event_name == 'pull_request' && 
+      contains(github.event.pull_request.labels.*.name, 'preview-it') || 
       (
-        github.event.action == 'labeled' || 
-        github.event.action == 'closed' || 
-        github.event.action == 'synchronize' || 
-        github.event.action == 'unlabeled'
+        github.event.action == 'unlabeled' && 
+        !contains(github.event.pull_request.labels.*.name, 'preview-it')
       )
     runs-on: ubuntu-latest
     steps:
@@ -38,8 +35,7 @@ jobs:
 
       - name: Trigger EKS Build Pipeline
         uses: ./.github/actions/start-codepipeline
-        # only trigger when PR is labeled with 'preview-it' and is opened or synchronized (updated)
-        if: contains(github.event.pull_request.labels.*.name, 'preview-it') && (github.event_name == 'pull_request' && (github.event.action == 'labeled' || github.event.action == 'synchronize'))
+        if: github.event.action != 'closed'
         with:
           aws-region: 'us-east-2'
           aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
@@ -47,11 +43,8 @@ jobs:
           pipeline-name: ${{ secrets.AWS_PIPELINE_NAME }}
           git-branch: ${{ github.event.pull_request.head.ref }}
 
-      - name: Trigger EKS Infrastructure Pipeline
+      - name: Trigger EKS Deploy Pipeline
         uses: ./.github/actions/start-codepipeline
-
-        # only trigger when PR is labeled with 'preview-it' or when PR is closed
-        if: contains(github.event.pull_request.labels.*.name, 'preview-it') || (github.event_name == 'pull_request' && (github.event.action == 'closed' || github.event.action == 'synchronize' ||  github.event.action == 'unlabeled'))
         with:
           aws-region: 'us-east-2'
           aws-access-key: ${{ secrets.AWS_ACCESS_KEY }}
