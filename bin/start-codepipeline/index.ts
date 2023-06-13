@@ -122,27 +122,13 @@ export class TriggerPipeline {
   }
 
   async getPipelineExecution(executionId: string) {
-    return await new Promise<AWS.CodePipeline.PipelineExecution>(
-      (resolve, reject) => {
-        this.codepipeline.getPipelineExecution(
-          {
-            pipelineName: this.pipelineName,
-            pipelineExecutionId: executionId,
-          },
-          function (
-            err: AWS.AWSError | undefined,
-            okData: AWS.CodePipeline.GetPipelineExecutionOutput
-          ) {
-            if (err) {
-              console.error(err);
-              reject(err);
-            } else {
-              resolve(okData.pipelineExecution!);
-            }
-          }
-        );
-      }
-    );
+    const result = await this.codepipeline
+      .getPipelineExecution({
+        pipelineName: this.pipelineName,
+        pipelineExecutionId: executionId,
+      })
+      .promise();
+    return result.pipelineExecution!;
   }
 
   async waitForPipelineExecution(executionId: string): Promise<boolean> {
@@ -163,19 +149,18 @@ export class TriggerPipeline {
 
     this.timesChecked++;
 
-    // get type Status from execution and remove the "string" type
-    const status = execution.status!;
+    const status = execution.status as PipelineExecutionStatus;
 
     const delay = this.delay;
 
-    switch (status as PipelineExecutionStatus) {
+    switch (status) {
       case 'InProgress':
         console.log(
           `Pipeline '${this.pipelineName}' in progress waiting for ${delay} more seconds.`
         );
         return await this.waitForPipelineExecution(executionId);
 
-      case 'Succeeded' as PipelineExecutionStatus:
+      case 'Succeeded':
         console.log(`Pipeline '${this.pipelineName}' succeeded.`);
         return true;
       case 'Failed':
