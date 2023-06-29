@@ -15,9 +15,10 @@ const formSx = {
   alignItems: 'center',
   justifyContent: 'flex-end',
   width: 1,
-  m: { sm: 0 },
-  mr: { xs: 0, mobile: 3 },
-  ml: { xs: 4 },
+  height: 1,
+  m: { sm: 1 },
+  mr: { xs: 4 },
+  ml: { xs: 5, sm: 3 },
   maxWidth: { mobile: 500 },
 };
 

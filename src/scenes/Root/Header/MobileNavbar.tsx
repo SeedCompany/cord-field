@@ -20,6 +20,7 @@ import { RootNavList } from '../RootNavList';
 import { SidebarHeader } from '../Sidebar';
 import { sidebarTheme } from '../Sidebar/sidebar.theme';
 import { HeaderSearch } from './HeaderSearch';
+import { ProfileToolbar } from './ProfileToolbar';
 
 // const colorContrast = { color: 'primary.contrastText' } satisfies Sx;
 
@@ -63,6 +64,7 @@ export const MobileNavbar = ({ sx }: StyleProps) => {
               </IconButton>
             </Box>
             <HeaderSearch />
+            <ProfileToolbar />
           </Box>
           <Drawer
             open={open}
@@ -101,9 +103,6 @@ export const MobileNavbar = ({ sx }: StyleProps) => {
                 }}
               />
             </Box>
-            {/* <Box sx={{ position: 'absolute', bottom: 0 }}>
-              <ProfileToolbar />
-            </Box> */}
           </Drawer>
         </Toolbar>
       </AppBar>

@@ -63,18 +63,6 @@ const NavItem = ({ icon: Icon, label, ...props }: NavItemProps) => (
   </ListItemLink>
 );
 
-// const MobileDivider = () => (
-//   <Divider
-//     sx={{
-//       ...bgColorContrast,
-//       ml: -1,
-//       // 8px is the padding of the List
-//       width: 'calc(100% + 8px * 2)',
-//       display: { sm: 'none' },
-//     }}
-//   />
-// );
-
 export const RootNavList = ({ subheader }: { subheader?: ReactNode }) => (
   <List
     component="nav"
@@ -82,11 +70,9 @@ export const RootNavList = ({ subheader }: { subheader?: ReactNode }) => (
     sx={{ p: 0, ...bgColorWhite, ...colorBlack }}
     subheader={subheader}
   >
-    {/* <MobileDivider /> */}
     {navItems.map(({ label, to, icon }) => (
       <NavItem key={label} to={to} icon={icon} label={label} />
     ))}
-    {/* <MobileDivider /> */}
     {/* <Box
       sx={{
         width: designCollapsedWidth,
@@ -109,13 +95,3 @@ export const RootNavList = ({ subheader }: { subheader?: ReactNode }) => (
     </Box> */}
   </List>
 );
-
-// export const getActiveItemLabel = () => {
-//   const path = typeof window === 'undefined' ? '' : window.location.pathname;
-//   if (path.includes('/users/')) {
-//     return 'Profile';
-//   }
-
-//   const activeItem = navItems.find(({ to }) => path.startsWith(to));
-//   return activeItem?.label ?? 'Projects';
-// };
