@@ -43,6 +43,15 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
           horizontal: 'right',
         }}
         classes={{ paper: classes.menu }}
+        sx={{
+          // something is overiding the background and text color on mobile
+          // sizes so I added this to override it.
+          '& .MuiList-root': {
+            bgcolor: '#ffffff',
+          },
+          '& .MuiTypography-root': { color: 'background.sidebar' },
+          '& .MuiMenuItem-root': { color: 'background.sidebar' },
+        }}
         {...props}
       >
         <Typography
@@ -52,6 +61,7 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
         >
           Profile Info
         </Typography>
+        {/*divider is not showing up on xs screen sizes, can't figure out why*/}
         <Divider {...skipAutoFocus} />
         {userId && (
           <MenuItemLink to={`/users/${userId}`}>View Profile</MenuItemLink>

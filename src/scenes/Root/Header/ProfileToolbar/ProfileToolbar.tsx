@@ -1,42 +1,45 @@
+import { AccountCircle, SupervisedUserCircle } from '@mui/icons-material';
 import {
-  AccountCircle,
-  MoreVert,
-  NotificationsNone,
-  SupervisedUserCircle,
-} from '@mui/icons-material';
-import { Box, Card, IconButton, MenuProps, Typography } from '@mui/material';
+  Card,
+  IconButton,
+  MenuProps,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { useContext, useState } from 'react';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { alignItemsCenter, extendSx, StyleProps, Sx } from '~/common';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
-import { UserActionsMenu } from '../UserActionsMenu';
 
 const iconsSx = {
   '&.MuiIconButton-root': {
-    color: {
-      xs: 'primary.contrastText',
-      sm: 'secondary.main',
-    },
+    color: 'secondary.main',
   },
 } satisfies Sx;
 
 const cardSx = {
   flexShrink: 0,
-  m: { sm: 0 },
-  p: { sm: 1 },
-  boxShadow: { xs: 0, sm: 4 },
-  borderRadius: { xs: 0, sm: 1 },
-  backgroundColor: { xs: 'background.sidebar', sm: 'background.default' },
-  justifyContent: { xs: 'space-between', mobile: 'flex-end' },
-  ml: { xs: 0, mobile: 1 },
+  mb: { sm: 1 },
+  boxShadow: 'none',
+  backgroundColor: '#ffffff',
+  mr: 2,
 } satisfies Sx;
 
 export const ProfileToolbar = ({ sx }: StyleProps) => {
   const { session } = useSession();
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
+  const userFullName = `${session?.realFirstName.value ?? ''} ${
+    session?.realLastName.value ?? ''
+  }`;
+  const firstInitial = session?.realFirstName.value?.slice(0, 1);
+  const lastInitial = session?.realLastName.value?.slice(0, 1);
+
   const impersonation = useContext(ImpersonationContext);
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
-  const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
 
   return (
     <>
@@ -44,12 +47,12 @@ export const ProfileToolbar = ({ sx }: StyleProps) => {
         <Typography
           color="primary"
           fontWeight="medium"
-          sx={{
-            display: { xs: 'none', sm: 'flex' },
-            m: (theme) => theme.spacing(0, 1, 0, 2),
-          }}
+          sx={(theme) => ({
+            display: 'flex',
+            m: theme.spacing(0, 0, 0, 2),
+          })}
         >
-          Hi, {session?.realFirstName.value ?? 'Friend'}
+          {!isMobile ? userFullName : `${firstInitial}${lastInitial}`}
         </Typography>
         <IconButton
           aria-controls="profile-menu"
@@ -57,37 +60,16 @@ export const ProfileToolbar = ({ sx }: StyleProps) => {
           onClick={(e) => setProfileAnchor(e.currentTarget)}
           sx={iconsSx}
         >
-          {impersonation.enabled ? <SupervisedUserCircle /> : <AccountCircle />}
+          {impersonation.enabled ? (
+            <SupervisedUserCircle sx={{ color: '#091016' }} />
+          ) : (
+            <AccountCircle sx={{ color: '#091016' }} />
+          )}
         </IconButton>
-        <Typography
-          sx={{
-            display: { xs: 'flex', sm: 'none' },
-            color: { xs: 'primary.contrastText' },
-          }}
-        >
-          Account Settings
-        </Typography>
-        <Box
-          sx={{
-            display: { xs: 'none', sm: 'flex' },
-            justifyContent: { xs: 'space-between' },
-          }}
-        >
-          <IconButton>
-            <NotificationsNone />
-          </IconButton>
-          <IconButton onClick={(e) => setActionsAnchor(e.currentTarget)}>
-            <MoreVert />
-          </IconButton>
-        </Box>
       </Card>
       <ProfileMenu
         anchorEl={profileAnchor}
         onClose={() => setProfileAnchor(null)}
-      />
-      <UserActionsMenu
-        anchorEl={actionsAnchor}
-        onClose={() => setActionsAnchor(null)}
       />
     </>
   );

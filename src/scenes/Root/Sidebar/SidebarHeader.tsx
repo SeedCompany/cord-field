@@ -26,7 +26,6 @@ export const SidebarHeader = () => {
           flex: 1,
           height: 1,
           pl: 2,
-          borderTopRightRadius: 5,
           flexDirection: 'column',
           alignItems: 'flex-start',
           backgroundColor: 'white',
@@ -42,29 +41,5 @@ export const SidebarHeader = () => {
         </Typography>
       </Box>
     </Box>
-
-    // <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-    //   <CordIcon fontSize="large" sx={[...extendSx(sx)]} />
-    //   <Box>
-    //     <Typography variant="h4">Cord Field</Typography>
-    //     <Typography variant="caption">by Seed Company</Typography>
-    //   </Box>
-    // </Box>
   );
-
-  // return (
-  //   <div className={classes.root}>
-  //     <SwooshBackground />
-  //     <div className={classes.floating}>
-  //       <CordIcon sx={{ color: 'inherit', fontSize: 40 }} />
-  //       <Typography
-  //         className={classes.copyright}
-  //         display="block"
-  //         variant="caption"
-  //       >
-  //         © Seed Company
-  //       </Typography>
-  //     </div>
-  //   </div>
-  // );
 };
