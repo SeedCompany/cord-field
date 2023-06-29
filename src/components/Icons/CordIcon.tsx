@@ -4,7 +4,7 @@ import { extendSx } from '~/common';
 export const CordIcon = (props: SvgIconProps) => (
   <SvgIcon
     {...props}
-    sx={[{ color: '#409E04' }, ...extendSx(props.sx)]}
+    sx={[{ color: '#29b67e' }, ...extendSx(props.sx)]}
     viewBox="0 0 21 24"
   >
     <path

@@ -36,6 +36,12 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       primary: dark ? '#f3f4f6' : '#3c444e',
       secondary: '#8f928b',
     },
+    icons: {
+      active: '#ffffff',
+      inactive: '#BEC0C4',
+      backgroundActive: '#29b67e',
+      backgroundInactive: '#3c444e',
+    },
 
     // TODO theme.palette.augmentColor()
     roles: {

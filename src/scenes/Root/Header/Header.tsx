@@ -1,14 +1,13 @@
-import { Box, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import { HeaderSearch } from './HeaderSearch';
 import { ProfileToolbar } from './ProfileToolbar';
 
-const headerSx = (theme: Theme) => ({
-  padding: theme.spacing(4, 4, 1, 4),
+const headerSx = {
   justifyContent: 'space-between',
+  alignItems: 'center',
   display: { xs: 'none', sm: 'flex' },
-  flexDirection: { sm: 'column', mobile: 'row' },
-  alignItems: { mobile: 'flex-start' },
-});
+  bgcolor: '#ffffff',
+};
 
 export const Header = () => {
   return (

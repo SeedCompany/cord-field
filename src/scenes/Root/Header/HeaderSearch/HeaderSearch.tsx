@@ -15,9 +15,10 @@ const formSx = {
   alignItems: 'center',
   justifyContent: 'flex-end',
   width: 1,
-  m: { sm: 0 },
-  mr: { xs: 0, mobile: 3 },
-  ml: { xs: 4 },
+  height: 1,
+  m: { sm: 1 },
+  mr: { xs: 4 },
+  ml: { xs: 5, sm: 3 },
   maxWidth: { mobile: 500 },
 };
 
@@ -28,9 +29,11 @@ const inputSx = {
   alignItems: { xs: 'center' },
 
   '& .MuiInputBase-root': {
-    color: { xs: 'primary.contrastText', sm: 'text.primary' },
-    bgcolor: { xs: 'grey.600', sm: 'background.paper' },
-    borderRadius: { xs: 0, sm: 1 },
+    color: { xs: '#091016', sm: 'text.primary' },
+    bgcolor: 'white',
+    borderRadius: 1,
+    border: '1px solid',
+    borderColor: { xs: '#D1DADF', sm: 'primary.main' },
     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderColor: { xs: 'grey.100', sm: 'primary.main' },
     },
@@ -40,7 +43,7 @@ const inputSx = {
   },
 };
 
-const searchSx = { color: { xs: 'primary.contrastText', sm: 'inherit' } };
+const searchSx = { color: { xs: '#091016', sm: 'black' } };
 
 export const HeaderSearch = ({ sx }: StyleProps) => {
   const [{ q: search = '' }] = useSearch();
@@ -64,11 +67,11 @@ export const HeaderSearch = ({ sx }: StyleProps) => {
           <TextField
             name="search"
             variant="outlined"
-            placeholder="Projects, Languages, Locations, People, Partners"
+            placeholder="Search"
             size="small"
             sx={inputSx}
             InputProps={{
-              startAdornment: (
+              endAdornment: (
                 <InputAdornment position="start" disablePointerEvents>
                   <Search sx={searchSx} />
                 </InputAdornment>
