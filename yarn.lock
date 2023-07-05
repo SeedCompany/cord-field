@@ -19296,7 +19296,7 @@ __metadata:
 
 "webpack@patch:webpack@npm:4.46.0#.yarn/patches/webpack-npm-4.46.0-a8158cfa7f.patch::locator=cord-field%40workspace%3A.":
   version: 4.46.0
-  resolution: "webpack@patch:webpack@npm%3A4.46.0#.yarn/patches/webpack-npm-4.46.0-a8158cfa7f.patch::version=4.46.0&hash=e47c2a&locator=cord-field%40workspace%3A."
+  resolution: "webpack@patch:webpack@npm%3A4.46.0#.yarn/patches/webpack-npm-4.46.0-a8158cfa7f.patch::version=4.46.0&hash=a71fdd&locator=cord-field%40workspace%3A."
   dependencies:
     "@webassemblyjs/ast": 1.9.0
     "@webassemblyjs/helper-module-context": 1.9.0
@@ -19328,7 +19328,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 4a26798af1e26139209697b5d938f93538f3814fd47257bc1f40924c83e0fc355c7885adc61892a2166fd605d870a5aa7994c22e37650f5a00d13a5f99cabdf4
+  checksum: d638f564d37c5a2ca8c9d27f00490f7da3ec23f5623d4bd1ae98ed6d72bee41a534c45470170422b58258dcfd0c48cca7a55c38ecaed66299b2e6b08ab7733b7
   languageName: node
   linkType: hard
 
