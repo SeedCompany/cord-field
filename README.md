@@ -4,7 +4,13 @@
 
 - `yarn`
 
-To run the web server (for development) run: `yarn start`
+*note*: Node 15+ is required and 18+ is recommended. If you run in to an compilation with the node server error where the Buffer object does not have a 'blob' property this is likely the issue. You can check your node version by running 'node -v'
+
+First run the graphql server 'yarn gql-gen'
+
+Next to run the web server (for development) run: `yarn start`
+
+We are patching an issue with openssl. In the interim should you get an openssl error you can run 'export NODE_OPTIONS=--openssl-legacy-provider' from the terminal. To avoid having to do this each time you have a new terminal window you can add that same line to your .zshrc or .bashrc located in your device's user directory ('cd ~')
 
 To view storybook run: `yarn storybook`
 
