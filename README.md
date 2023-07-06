@@ -4,9 +4,9 @@
 
 - `yarn`
 
-*note*: Node 15+ is required and 18+ is recommended. If you run in to an compilation with the node server error where the Buffer object does not have a 'blob' property this is likely the issue. You can check your node version by running 'node -v'
+*note*: Current version of nodejs or at least the LTS version is recommended. If you run in to an compilation with the node server error where the Buffer object does not have a 'blob' property this is likely the issue. You can check your node version by running 'node -v'
 
-First run the graphql server 'yarn gql-gen'
+First run the graphql server 'yarn gql-gen' be sure the api server is running first
 
 Next to run the web server (for development) run: `yarn start`
 
