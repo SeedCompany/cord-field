@@ -10,10 +10,6 @@ First run the graphql server 'yarn gql-gen'
 
 Next to run the web server (for development) run: `yarn start`
 
-We are patching an issue with openssl. In the interim should you get an openssl error you can run 'export NODE_OPTIONS=--openssl-legacy-provider' from the terminal. To avoid having to do this each time you have a new terminal window you can add that same line to your .zshrc or .bashrc located in your device's user directory ('cd ~')
-
-To view storybook run: `yarn storybook`
-
 ### Connecting to the API Server
 
 By default, this project will attempt to access the `cord-api-v3` project that's running locally on your machine.
