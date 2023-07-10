@@ -1,12 +1,15 @@
 # CORD Field
 
+## Pre-requisites
+
+You can see the complete setup guide for your local environment in the [cord-docs wiki here.](https://github.com/SeedCompany/cord-docs/wiki#new-hire-on-boarding)
+
 ## Developer Setup
 
 - `yarn`
+- *note*: Current version of nodejs or at least the LTS version is recommended. If you run in to a compilation with the node server error where the Buffer object does not have a 'blob' property, this is likely the issue. You can check your node version by running `node -v`
 
-*note*: Current version of nodejs or at least the LTS version is recommended. If you run in to an compilation with the node server error where the Buffer object does not have a 'blob' property this is likely the issue. You can check your node version by running 'node -v'
-
-First run the graphql server 'yarn gql-gen' be sure the api server is running first
+- First run the graphql server `yarn gql-gen` be sure the api server is running first
 
 Next to run the web server (for development) run: `yarn start`
 
