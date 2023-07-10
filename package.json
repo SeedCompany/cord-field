@@ -114,7 +114,7 @@
     "ts-essentials": "^9.3.0",
     "tss-react": "^3.7.1",
     "validator": "^13.7.0",
-    "xlsx": "^0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
     "xss": "^1.0.14"
   },
   "devDependencies": {
