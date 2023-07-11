@@ -30,7 +30,12 @@ import {
   useState,
 } from 'react';
 import filterXSS from 'xss';
-import { extendSx, Nullable, StyleProps } from '../../common';
+import {
+  extendSx,
+  handleMsUnorderedList,
+  Nullable,
+  StyleProps,
+} from '~/common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
 import { FormattedNumber } from '../Formatters';
@@ -132,6 +137,20 @@ export function RichTextField({
   );
 
   const val = input.value as RichTextData | undefined;
+
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) =>
+      handleMsUnorderedList(event, input);
+
+    if (isReady) {
+      document.getElementById(id)?.addEventListener('paste', handlePaste);
+    }
+    // cleanup the listener when we unmount this component
+    return () => {
+      document.getElementById(id)?.removeEventListener('paste', handlePaste);
+    };
+  }, [isReady, id, input]);
+
   useEffect(() => {
     if (!instanceRef.current || !isReady) {
       return;
