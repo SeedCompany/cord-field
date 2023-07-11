@@ -2,5 +2,5 @@ schema: schema.graphql
 extensions:
   endpoints:
     default:
-      url: https://localhost:3001/graphql
+      url: ${CORD_URL}/graphql
 documents: src/**/*.graphql
