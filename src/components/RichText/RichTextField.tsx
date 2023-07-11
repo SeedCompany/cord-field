@@ -16,7 +16,7 @@ import {
   TextField,
   TextFieldProps,
 } from '@mui/material';
-import { useDebounceFn } from 'ahooks';
+import { useDebounceFn, useEventListener } from 'ahooks';
 import { identity, isEqual, pick, sumBy } from 'lodash';
 import {
   forwardRef,
@@ -134,18 +134,13 @@ export function RichTextField({
 
   const val = input.value as RichTextData | undefined;
 
-  useEffect(() => {
-    const handlePaste = (event: ClipboardEvent) =>
+  useEventListener(
+    'paste',
+    (event: ClipboardEvent) => {
       handleMsUnorderedList(event, input);
-
-    if (isReady) {
-      document.getElementById(id)?.addEventListener('paste', handlePaste);
-    }
-    // cleanup the listener when we unmount this component
-    return () => {
-      document.getElementById(id)?.removeEventListener('paste', handlePaste);
-    };
-  }, [isReady, id, input]);
+    },
+    { target: ref }
+  );
 
   useEffect(() => {
     if (!instanceRef.current || !isReady) {
