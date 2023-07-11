@@ -6,14 +6,14 @@ export const handleMsUnorderedList = (
   event: ClipboardEvent,
   input: FieldInputProps<Nullable<RichTextData>>
 ) => {
-  event.preventDefault();
   const text: string | undefined = event.clipboardData?.getData('text');
 
   // Match any line that starts with "•\t" followed by anything until the end of the line
   const matches: RegExpMatchArray | null | undefined = text?.match(/•\t(.*)/g);
 
   if (matches) {
-    // If there are matches, create an array of strings without the "•\t" prefix
+    // If there are matches, prevent default actions, then create an array of strings without the "•\t" prefix
+    event.preventDefault();
     const listItems: string[] = matches.map((item) => item.replace(/•\t/, ''));
 
     // Now create a new object that conforms to the structure of RichTextData
@@ -32,8 +32,5 @@ export const handleMsUnorderedList = (
     };
 
     input.onChange(newData);
-  } else {
-    // If there are no matches, paste the text as is
-    input.onChange(text);
   }
 };
