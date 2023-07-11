@@ -1,6 +1,6 @@
 import { OutputData as RichTextData } from '@editorjs/editorjs';
 import { FieldInputProps } from 'react-final-form';
-import { Nullable } from './types';
+import { Nullable } from '~/common/types';
 
 export const handleMsUnorderedList = (
   event: ClipboardEvent,

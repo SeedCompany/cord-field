@@ -30,17 +30,13 @@ import {
   useState,
 } from 'react';
 import filterXSS from 'xss';
-import {
-  extendSx,
-  handleMsUnorderedList,
-  Nullable,
-  StyleProps,
-} from '~/common';
+import { extendSx, Nullable, StyleProps } from '~/common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
 import { FormattedNumber } from '../Formatters';
 import { EditorJsTheme } from './EditorJsTheme';
 import type { ToolKey } from './editorJsTools';
+import { handleMsUnorderedList } from './ms-word-helpers';
 import { RichTextView } from './RichTextView';
 
 declare module '@editorjs/editorjs/types/data-formats/output-data' {
