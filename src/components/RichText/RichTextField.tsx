@@ -137,7 +137,8 @@ export function RichTextField({
   useEventListener(
     'paste',
     (event: ClipboardEvent) => {
-      const formattedUl = handleMsUnorderedList(event);
+      const formattedUl: RichTextData | undefined =
+        handleMsUnorderedList(event);
       if (formattedUl) {
         event.preventDefault();
         input.onChange(formattedUl);
