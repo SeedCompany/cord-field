@@ -16,7 +16,8 @@
     "gql-gen:schema": "yarn gql-gen-base -c codegen.schema.yml",
     "gql-gen:operations": "yarn gql-gen-base -c codegen.operations.yml",
     "gql-gen-base": "TS_NODE_PROJECT=tsconfig.codegen.json graphql-codegen -r ts-node/register -r ./src/api/schema/codeGenUtil/loadEnv.codegen",
-    "postinstall": "patch-typed-document-node || true"
+    "postinstall": "patch-typed-document-node || true",
+    "trigger-codepipeline": "rm -rf bin/dist && tsc -p bin && node bin/dist/start-codepipeline"
   },
   "engines": {
     "node": ">=16"
@@ -113,7 +114,7 @@
     "ts-essentials": "^9.3.0",
     "tss-react": "^3.7.1",
     "validator": "^13.7.0",
-    "xlsx": "^0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
     "xss": "^1.0.14"
   },
   "devDependencies": {
@@ -177,6 +178,7 @@
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
     "@typescript-eslint/types": "*",
+    "aws-sdk": "npm:2.1372.0",
     "babel-loader": "^8.3.0",
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-rename-import": "^2.3.0",

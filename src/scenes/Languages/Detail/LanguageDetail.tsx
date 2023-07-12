@@ -214,6 +214,11 @@ export const LanguageDetail = () => {
             loading={!language}
           />
           <DisplayProperty
+            label="Ethnologue Population"
+            value={formatNumber(ethnologue?.population.value)}
+            loading={!language}
+          />
+          <DisplayProperty
             label="Sponsor Start Date"
             value={<FormattedDate date={sponsorStartDate?.value} />}
             loading={!language}
