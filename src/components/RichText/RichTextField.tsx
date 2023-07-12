@@ -16,7 +16,7 @@ import {
   TextField,
   TextFieldProps,
 } from '@mui/material';
-import { useDebounceFn } from 'ahooks';
+import { useDebounceFn, useEventListener } from 'ahooks';
 import { identity, isEqual, pick, sumBy } from 'lodash';
 import {
   forwardRef,
@@ -30,12 +30,13 @@ import {
   useState,
 } from 'react';
 import filterXSS from 'xss';
-import { extendSx, Nullable, StyleProps } from '../../common';
+import { extendSx, Nullable, StyleProps } from '~/common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
 import { FormattedNumber } from '../Formatters';
 import { EditorJsTheme } from './EditorJsTheme';
 import type { ToolKey } from './editorJsTools';
+import { handleMsUnorderedList } from './ms-word-helpers';
 import { RichTextView } from './RichTextView';
 
 declare module '@editorjs/editorjs/types/data-formats/output-data' {
@@ -132,6 +133,20 @@ export function RichTextField({
   );
 
   const val = input.value as RichTextData | undefined;
+
+  useEventListener(
+    'paste',
+    (event: ClipboardEvent) => {
+      const formattedUl: RichTextData | undefined =
+        handleMsUnorderedList(event);
+      if (formattedUl) {
+        event.preventDefault();
+        input.onChange(formattedUl);
+      }
+    },
+    { target: ref }
+  );
+
   useEffect(() => {
     if (!instanceRef.current || !isReady) {
       return;
