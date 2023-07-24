@@ -1,5 +1,9 @@
 fragment EngagementBreadcrumb on Engagement {
   ...Id
+  nameWhenUnknown {
+    value
+    canRead
+  }
   project {
     ...ProjectBreadcrumb
   }

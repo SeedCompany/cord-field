@@ -19,7 +19,6 @@ import {
   DateField,
   EnumField,
   FieldGroup,
-  NumberField,
   SecuredField,
   SubmitError,
   TextField,
@@ -45,7 +44,6 @@ export type EditableProjectField = ExtractStrict<
   | 'primaryLocationId'
   | 'sensitivity'
   | 'marketingLocationId'
-  | 'anticipatedEngagementCount'
 >;
 
 interface ProjectFieldProps {
@@ -59,9 +57,6 @@ const fieldMapping: Record<
   EditableProjectField,
   ComponentType<ProjectFieldProps>
 > = {
-  anticipatedEngagementCount: ({ props }) => (
-    <NumberField {...props} label="Anticipated Engagement Count" />
-  ),
   name: ({ props }) => <TextField {...props} label="Project Name" />,
   primaryLocationId: ({ props }) => (
     <LocationField {...props} label="Primary Location" />

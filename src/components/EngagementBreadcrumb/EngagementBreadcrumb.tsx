@@ -18,11 +18,13 @@ export const EngagementBreadcrumb = ({
       to={data ? `/engagements/${idForUrl(data)}` : undefined}
       data={
         data?.__typename === 'LanguageEngagement'
-          ? data.language.value?.name
+          ? data.language.value?.name ?? data.nameWhenUnknown
           : data?.__typename === 'InternshipEngagement'
           ? {
-              canRead: !!data.intern.value?.fullName,
-              value: data.intern.value?.fullName,
+              canRead: !!(
+                data.intern.value?.fullName || data.nameWhenUnknown.value
+              ),
+              value: data.intern.value?.fullName ?? data.nameWhenUnknown.value,
             }
           : undefined
       }

@@ -1,6 +1,10 @@
 query Engagement($engagementId: ID!, $changeset: ID) {
   engagement(id: $engagementId, changeset: $changeset) {
     ...Id
+    nameWhenUnknown {
+      value
+      canRead
+    }
     ...LanguageEngagementDetail
     ...InternshipEngagementDetail
     ...EngagementToDelete

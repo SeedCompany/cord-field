@@ -1,5 +1,9 @@
 fragment InternshipEngagementListItem on InternshipEngagement {
   ...Id
+  nameWhenUnknown {
+    value
+    canRead
+  }
   status {
     value
     canRead

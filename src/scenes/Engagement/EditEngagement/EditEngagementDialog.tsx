@@ -3,7 +3,7 @@ import { setIn } from 'final-form';
 import { compact, keyBy, pick, startCase } from 'lodash';
 import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { invalidateProps } from '~/api';
+import { addItemToList, invalidateProps } from '~/api';
 import {
   InternshipDomainLabels,
   InternshipPositionLabels,
@@ -12,6 +12,7 @@ import {
   UpdateLanguageEngagement,
 } from '~/api/schema.graphql';
 import {
+  callAll,
   DisplayLocationFragment,
   ExtractStrict,
   labelFrom,
@@ -19,6 +20,10 @@ import {
   many,
   MethodologyToApproach,
 } from '~/common';
+import {
+  Id_InternshipProject_Fragment as InternshipProjectIdFragment,
+  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
+} from '~/common/fragments';
 import {
   DialogForm,
   DialogFormProps,
@@ -33,13 +38,21 @@ import {
   TextField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
-import { LocationField, UserField } from '../../../components/form/Lookup';
+import {
+  LanguageField,
+  LanguageLookupItem,
+  LocationField,
+  UserField,
+} from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql';
+import { recalculateSensitivity } from '../LanguageEngagement/Create/recalculateSensitivity';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql';
 import {
   UpdateInternshipEngagementDocument,
+  UpdateInternshipEngagementMutation,
   UpdateLanguageEngagementDocument,
+  UpdateLanguageEngagementMutation,
 } from './EditEngagementDialog.graphql';
 
 export type Engagement = InternshipEngagement | LanguageEngagement;
@@ -55,10 +68,12 @@ export type EditableEngagementField = ExtractStrict<
   | 'position'
   | 'countryOfOriginId'
   | 'mentorId'
+  | 'internId'
   | 'firstScripture'
   | 'lukePartnership'
   | 'paratextRegistryId'
   | 'openToInvestorVisit'
+  | 'languageId'
 >;
 
 interface EngagementFieldProps {
@@ -88,6 +103,7 @@ const fieldMapping: Record<
       />
     </>
   ),
+  languageId: ({ props }) => <LanguageField {...props} label="Language" />,
   completeDate: ({ props, engagement }) => (
     <DateField
       {...props}
@@ -136,6 +152,7 @@ const fieldMapping: Record<
     <LocationField {...props} label="Country of Origin" />
   ),
   mentorId: ({ props }) => <UserField {...props} label="Mentor" />,
+  internId: ({ props }) => <UserField {...props} label="Intern" />,
   firstScripture: ({ props }) => (
     <CheckboxField {...props} label="First Scripture" keepHelperTextSpacing />
   ),
@@ -154,23 +171,31 @@ interface EngagementFormValues {
   engagement: Merge<
     UpdateLanguageEngagement & UpdateInternshipEngagement,
     {
+      languageId?: LanguageLookupItem | null;
       mentorId?: UserLookupItemFragment | null;
+      internId?: UserLookupItemFragment | null;
       countryOfOriginId?: DisplayLocationFragment | null;
     }
   >;
 }
+
+type ProjectIdFragment =
+  | TranslationProjectIdFragment
+  | InternshipProjectIdFragment;
 
 export type EditEngagementDialogProps = Except<
   DialogFormProps<EngagementFormValues>,
   'onSubmit' | 'initialValues'
 > & {
   engagement: Engagement;
+  project: ProjectIdFragment;
   editFields?: Many<EditableEngagementField>;
 };
 
 export const EditEngagementDialog = ({
   engagement,
   editFields: editFieldsProp,
+  project,
   ...props
 }: EditEngagementDialogProps) => {
   const editFields = useMemo(
@@ -217,11 +242,13 @@ export const EditEngagementDialog = ({
             firstScripture: engagement.firstScripture.value,
             paratextRegistryId: engagement.paratextRegistryId.value,
             openToInvestorVisit: engagement.openToInvestorVisit.value,
+            languageId: engagement.language.value,
           }
         : {
             methodologies: engagement.methodologies.value,
             position: engagement.position.value,
             mentorId: engagement.mentor.value,
+            internId: engagement.intern.value,
             countryOfOriginId: engagement.countryOfOrigin.value,
           }),
     };
@@ -297,20 +324,37 @@ export const EditEngagementDialog = ({
       }}
       onSubmit={async (
         {
-          engagement: { mentorId: mentor, countryOfOriginId: country, ...rest },
+          engagement: {
+            internId: intern,
+            mentorId: mentor,
+            countryOfOriginId: country,
+            languageId: language,
+            ...rest
+          },
         },
         form
       ) => {
+        const languageId = language?.id;
         const mentorId = mentor?.id;
+        const internId = intern?.id;
         const countryOfOriginId = country?.id;
         const input = {
           engagement: {
             ...rest,
+            ...(internId ? { internId } : {}),
             ...(mentorId ? { mentorId } : {}),
+            ...(languageId ? { languageId } : {}),
             ...(countryOfOriginId ? { countryOfOriginId } : {}),
           },
           changeset: engagement.changeset?.id,
         };
+
+        const languageRef = languageId
+          ? ({
+              __typename: 'Language',
+              id: languageId,
+            } as const)
+          : ({} as const);
 
         await updateEngagement({
           variables: { input },
@@ -325,6 +369,26 @@ export const EditEngagementDialog = ({
                 invalidateProps(cache, engagement, 'progressReports');
               }
             }
+            if (languageRef.id)
+              callAll(
+                addItemToList({
+                  listId: [project, 'engagements'],
+                  outputToItem: (res: UpdateLanguageEngagementMutation) =>
+                    res.updateLanguageEngagement.engagement,
+                }),
+                addItemToList({
+                  listId: [languageRef, 'projects'],
+                  outputToItem: () => project,
+                }),
+                recalculateSensitivity(project)
+              );
+
+            if (internId)
+              addItemToList({
+                listId: [project, 'engagements'],
+                outputToItem: (res: UpdateInternshipEngagementMutation) =>
+                  res.updateInternshipEngagement.engagement,
+              });
           },
         });
       }}

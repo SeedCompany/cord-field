@@ -1,5 +1,5 @@
-import { DateRange } from '@mui/icons-material';
-import { Breadcrumbs, Grid, Typography } from '@mui/material';
+import { DateRange, Edit } from '@mui/icons-material';
+import { Breadcrumbs, Fab, Grid, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import {
@@ -65,13 +65,15 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
   }
 
   const intern = engagement.intern.value;
-  const name = intern?.fullName;
+  const name = intern?.fullName ?? engagement.nameWhenUnknown.value;
+  const unknown = engagement.nameWhenUnknown.value;
+  const canEditIntern = engagement.intern.canEdit;
 
   return (
     <>
       <Helmet
-        title={`${name ?? 'An Engagement'} in ${
-          engagement.project.name.value ?? 'a project'
+        title={`${name ?? unknown ?? 'An Engagement'} in ${
+          engagement.project.name.value ?? unknown ?? 'a project'
         }`}
       />
       <div className={classes.root}>
@@ -96,7 +98,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                     item
                     className={name ? undefined : classes.nameRedacted}
                   >
-                    {intern ? (
+                    {intern && !unknown ? (
                       <Link variant="h2" to={`/users/${intern.id}`}>
                         {name ?? (
                           <Redacted
@@ -105,6 +107,8 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                           />
                         )}
                       </Link>
+                    ) : !intern && unknown ? (
+                      <Typography variant="h2">{unknown}</Typography>
                     ) : (
                       <Typography variant="h2">
                         <Redacted
@@ -114,6 +118,19 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                       </Typography>
                     )}
                   </Grid>
+                  {canEditIntern && (
+                    <Grid item>
+                      <Tooltip title="Update Intern">
+                        <Fab
+                          color="primary"
+                          aria-label="Update Intern"
+                          onClick={() => show(['internId'])}
+                        >
+                          <Edit />
+                        </Fab>
+                      </Tooltip>
+                    </Grid>
+                  )}
                   <Grid item>
                     <DeleteEngagement
                       project={engagement.project}
@@ -251,6 +268,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
         {...editState}
         engagement={engagement}
         editFields={editField}
+        project={engagement.project}
       />
       {workflowEngagement && (
         <EngagementWorkflowDialog

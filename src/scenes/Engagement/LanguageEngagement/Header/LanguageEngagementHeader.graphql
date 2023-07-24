@@ -3,6 +3,8 @@ fragment LanguageEngagementHeader on LanguageEngagement {
   ...EngagementBreadcrumb
   createdAt
   language {
+    canRead
+    canEdit
     value {
       id
       displayName {

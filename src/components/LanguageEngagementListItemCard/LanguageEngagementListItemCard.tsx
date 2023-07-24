@@ -60,13 +60,17 @@ export const LanguageEngagementListItemCard = (
     className,
     status,
     products,
+    nameWhenUnknown,
   } = props;
 
   const numberFormatter = useNumberFormatter();
   const { classes, cx } = useStyles();
 
   const language = securedLanguage.value;
-  const name = language?.name.value ?? language?.displayName.value;
+  const name =
+    language?.name.value ??
+    language?.displayName.value ??
+    nameWhenUnknown.value;
   const population = language?.population.value;
   const registryOfDialectsCode = language?.registryOfDialectsCode.value;
   const ethnologueCode = language?.ethnologue.code.value;

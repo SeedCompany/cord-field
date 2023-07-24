@@ -9,13 +9,14 @@ import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
-import { SubmitError } from '../../../../components/form';
+import { CheckboxField, SubmitError } from '../../../../components/form';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
 import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.graphql';
 
 interface CreateInternshipEngagementFormValues {
   engagement: {
-    internId: UserLookupItem;
+    internId?: UserLookupItem;
+    isUnknown: boolean;
   };
 }
 
@@ -35,6 +36,7 @@ export const CreateInternshipEngagement = ({
   ...props
 }: CreateInternshipEngagementProps) => {
   const [createEngagement] = useMutation(CreateInternshipEngagementDocument);
+
   const submit = async ({
     engagement,
   }: CreateInternshipEngagementFormValues) => {
@@ -43,7 +45,7 @@ export const CreateInternshipEngagement = ({
         input: {
           engagement: {
             projectId: project.id,
-            internId: engagement.internId.id,
+            internId: engagement.internId ? engagement.internId.id : undefined,
           },
           changeset: project.changeset?.id,
         },
@@ -61,13 +63,28 @@ export const CreateInternshipEngagement = ({
       title="Create Intern Engagement"
       changesetAware
     >
-      <SubmitError />
-      <UserField
-        name="engagement.internId"
-        label="Intern"
-        placeholder="Enter person's name"
-        required
-      />
+      {({
+        values,
+      }: {
+        values: Partial<CreateInternshipEngagementFormValues>;
+      }) => {
+        return (
+          <>
+            <CheckboxField
+              name="engagement.isUnknown"
+              label="Intern is unknown"
+              margin="none"
+            />
+            <UserField
+              disabled={values.engagement?.isUnknown}
+              name="engagement.internId"
+              label="Intern"
+              placeholder="Enter person's name (Leave blank for unknown)"
+            />
+            <SubmitError />
+          </>
+        );
+      }}
     </DialogForm>
   );
 };

@@ -7,7 +7,6 @@ import {
   TravelExplore as GlobalSearchIcon,
   Public as GlobeIcon,
   Place as MapPinIcon,
-  Numbers,
   Publish,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
@@ -386,8 +385,6 @@ export const ProjectOverview = () => {
                 </Grid>
               </Tooltip>
             )}
-          </Grid>
-          <Grid container spacing={1} alignItems="center">
             <Grid item>
               <DataButton
                 label="Primary Location"
@@ -422,18 +419,6 @@ export const ProjectOverview = () => {
                 redacted="You do not have permission to view the marketing location"
                 children={(location) => location.name.value}
                 onClick={() => editField(['marketingLocationId'])}
-              />
-            </Grid>
-            <Grid item>
-              <DataButton
-                label="Anticipated Engagement Count"
-                startIcon={<Numbers color="info" />}
-                empty="None"
-                loading={!project}
-                secured={project?.anticipatedEngagementCount}
-                redacted="You do not have permission to view the anticipated engagement amount"
-                onClick={() => editField(['anticipatedEngagementCount'])}
-                children={project?.anticipatedEngagementCount.value}
               />
             </Grid>
           </Grid>
