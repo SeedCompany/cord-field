@@ -1,31 +1,80 @@
 import { OutputData as RichTextData } from '@editorjs/editorjs';
 
-export const handleMsUnorderedList = (
+const hasWordListMarkers = (text: string) => {
+  return /•\t(.*)/.test(text) || /^\d+\.\s(.*)/m.test(text);
+};
+
+const isUnorderedList = (text: string) => {
+  return /•\t(.*)/.test(text);
+};
+
+const isOrderedList = (text: string) => {
+  return /^\d+\.\s(.*)/.test(text);
+};
+
+const createListBlock = (items: string[], style: 'unordered' | 'ordered') => {
+  return {
+    type: 'list',
+    data: {
+      style: style,
+      items: items,
+    },
+  };
+};
+
+const createParagraphBlock = (text: string) => {
+  return {
+    type: 'paragraph',
+    data: {
+      text: text.trim(),
+    },
+  };
+};
+
+export const handleMsPasteFormatting = (
   event: ClipboardEvent
 ): RichTextData | undefined => {
   const text = event.clipboardData?.getData('text');
 
-  // Match any line that starts with "•\t" followed by anything until the end of the line
-  const matches = text?.match(/•\t(.*)/g);
-
-  if (!matches) {
+  if (!text || !hasWordListMarkers(text)) {
     return undefined;
   }
-  // If there are matches, prevent default actions, then create an array of strings without the "•\t" prefix
-  const listItems = matches.map((item) => item.replace(/•\t/, ''));
 
-  // Now create a new object that conforms to the structure of RichTextData
-  // Assumption is that all the list items should be part of a single unordered list
+  const lines = text.split('\n');
+  const blocks = [];
+  let listItems: string[] = [];
+  let listType: 'unordered' | 'ordered' = 'unordered';
+  let paragraphText = '';
+
+  lines.forEach((line) => {
+    if (!line.trim() && paragraphText) {
+      blocks.push(createParagraphBlock(paragraphText));
+      paragraphText = '';
+    } else if (isUnorderedList(line)) {
+      listType = 'unordered';
+      listItems.push(line.replace(/•\t/, ''));
+    } else if (isOrderedList(line)) {
+      listType = 'ordered';
+      listItems.push(line.replace(/^\d+\.\s/, ''));
+    } else {
+      if (listItems.length) {
+        blocks.push(createListBlock(listItems, listType));
+        listItems = [];
+      }
+      paragraphText += line + ' ';
+    }
+  });
+
+  if (listItems.length) {
+    blocks.push(createListBlock(listItems, listType));
+  }
+
+  if (paragraphText.trim()) {
+    blocks.push(createParagraphBlock(paragraphText));
+  }
+
   return {
     time: Date.now(),
-    blocks: [
-      {
-        type: 'list',
-        data: {
-          style: 'unordered',
-          items: listItems,
-        },
-      },
-    ],
+    blocks: blocks,
   };
 };
