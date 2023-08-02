@@ -1,10 +1,5 @@
 import { OutputData as RichTextData } from '@editorjs/editorjs';
 
-interface ParsedLine {
-  type: string;
-  text: string;
-}
-
 export const handleMsPasteFormatting = (
   event: ClipboardEvent
 ): RichTextData | undefined => {
