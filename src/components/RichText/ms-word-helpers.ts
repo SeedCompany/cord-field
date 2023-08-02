@@ -24,7 +24,7 @@ export const handleMsPasteFormatting = (
     return { type: 'p', text: line };
   });
 
-  const groupedLines = groupSiblingsBy(parsedLines, (line) => line?.type);
+  const groupedLines = groupSiblingsBy(parsedLines, (line) => line.type);
 
   const blocks = groupedLines.map((lines) => {
     const type = lines[0]!.type;
@@ -46,13 +46,10 @@ export const handleMsPasteFormatting = (
   };
 };
 
-const groupSiblingsBy = <T>(
-  items: readonly T[],
-  by: (item: T | undefined) => unknown
-) =>
+const groupSiblingsBy = <T>(items: readonly T[], by: (item: T) => unknown) =>
   items.reduce((acc: T[][], cur: T) => {
     // If it's the first item or different from the last, start a new group
-    if (!acc.length || by(acc.at(-1)![0]) !== by(cur)) {
+    if (!acc.length || by(acc.at(-1)![0]!) !== by(cur)) {
       acc.push([cur]);
     } else {
       // Otherwise, add it to the current group
