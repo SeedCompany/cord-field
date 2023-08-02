@@ -16,11 +16,9 @@ export const handleMsPasteFormatting = (
     if (isOrderedList(line)) {
       return { type: 'ol', text: line.replace(/^\d+\.\s/, '') };
     }
-
     if (line === '\r') {
       return { type: 'break', text: line };
     }
-
     return { type: 'p', text: line };
   });
 
@@ -36,7 +34,6 @@ export const handleMsPasteFormatting = (
     if (type === 'ul') {
       return createListBlock(textLines, 'unordered');
     }
-
     return createParagraphBlock(textLines);
   });
 
@@ -58,36 +55,24 @@ const groupSiblingsBy = <T>(items: readonly T[], by: (item: T) => unknown) =>
     return acc;
   }, []);
 
-const createParagraphBlock = (text: string[]) => {
-  return {
-    type: 'paragraph',
-    data: {
-      text: text.join(' '),
-    },
-  };
-};
+const createParagraphBlock = (text: string[]) => ({
+  type: 'paragraph',
+  data: {
+    text: text.join(' '),
+  },
+});
 
-const createListBlock = (
-  items: string[],
-  style: 'unordered' | 'ordered' | null
-) => {
-  return {
-    type: 'list',
-    data: {
-      style: style,
-      items: items,
-    },
-  };
-};
+const createListBlock = (items: string[], style: 'unordered' | 'ordered') => ({
+  type: 'list',
+  data: {
+    style: style,
+    items: items,
+  },
+});
 
-const hasWordListMarkers = (text: string) => {
-  return isUnorderedList(text) || isOrderedList(text);
-};
+const hasWordListMarkers = (text: string) =>
+  isUnorderedList(text) || isOrderedList(text);
 
-const isUnorderedList = (text: string) => {
-  return /•\t(.*)/.test(text);
-};
+const isUnorderedList = (text: string) => /•\t(.*)/.test(text);
 
-const isOrderedList = (text: string) => {
-  return /^\d+\.\s(.*)/.test(text);
-};
+const isOrderedList = (text: string) => /^\d+\.\s(.*)/.test(text);
