@@ -51,7 +51,7 @@ export const handleMsPasteFormatting = (
   };
 };
 
-const groupSiblingsBy = <T extends ParsedLine>(
+const groupSiblingsBy = <T>(
   items: readonly T[],
   by: (item: T | undefined) => unknown
 ) =>
