@@ -14,7 +14,7 @@ export const handleMsPasteFormatting = (
     return;
   }
 
-  const parsedLines = text.split('\n').map((line, index) => {
+  const parsedLines = text.split('\n').map((line) => {
     if (isUnorderedList(line)) {
       return { type: 'ul', text: line.replace(/•\t/, '') };
     }
@@ -23,7 +23,7 @@ export const handleMsPasteFormatting = (
     }
 
     if (line === '\r') {
-      return { type: 'break', text: line, index };
+      return { type: 'break', text: line };
     }
 
     return { type: 'p', text: line };
