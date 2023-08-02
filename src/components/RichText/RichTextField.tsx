@@ -36,7 +36,7 @@ import { getHelperText, showError } from '../form/util';
 import { FormattedNumber } from '../Formatters';
 import { EditorJsTheme } from './EditorJsTheme';
 import type { ToolKey } from './editorJsTools';
-import { handleMsUnorderedList } from './ms-word-helpers';
+import { handleMsPasteFormatting } from './ms-word-helpers';
 import { RichTextView } from './RichTextView';
 
 declare module '@editorjs/editorjs/types/data-formats/output-data' {
@@ -138,7 +138,7 @@ export function RichTextField({
     'paste',
     (event: ClipboardEvent) => {
       const formattedUl: RichTextData | undefined =
-        handleMsUnorderedList(event);
+        handleMsPasteFormatting(event);
       if (formattedUl) {
         event.preventDefault();
         input.onChange(formattedUl);
