@@ -14,13 +14,18 @@ export const handleMsPasteFormatting = (
     return;
   }
 
-  const parsedLines = text.split('\n').map((line) => {
+  const parsedLines = text.split('\n').map((line, index) => {
     if (isUnorderedList(line)) {
       return { type: 'ul', text: line.replace(/•\t/, '') };
     }
     if (isOrderedList(line)) {
       return { type: 'ol', text: line.replace(/^\d+\.\s/, '') };
     }
+
+    if (line === '\r') {
+      return { type: 'break', text: line, index };
+    }
+
     return { type: 'p', text: line };
   });
 
@@ -53,9 +58,6 @@ const groupSiblingsBy = <T extends ParsedLine>(
   items.reduce((acc: T[][], cur: T) => {
     // If it's the first item or different from the last, start a new group
     if (!acc.length || by(acc.at(-1)![0]) !== by(cur)) {
-      acc.push([cur]);
-      // if it's a paragraph and the line is empty, start a new group
-    } else if (cur.type === 'p' && cur.text === '\r') {
       acc.push([cur]);
     } else {
       // Otherwise, add it to the current group
