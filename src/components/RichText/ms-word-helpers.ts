@@ -96,7 +96,7 @@ const createListBlock = (
 };
 
 const hasWordListMarkers = (text: string) => {
-  return /•\t(.*)/.test(text) || /^\d+\.\s(.*)/m.test(text);
+  return isUnorderedList(text) || isOrderedList(text);
 };
 
 const isUnorderedList = (text: string) => {
