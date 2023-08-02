@@ -1,18 +1,9 @@
 import { OutputData as RichTextData } from '@editorjs/editorjs';
 
-interface BlockState {
-  blocks: any[];
-  paragraphText: string;
-  listItems: string[];
-  listType: 'unordered' | 'ordered' | null;
+interface ParsedLine {
+  type: string;
+  text: string;
 }
-
-const initialBlockState: BlockState = {
-  blocks: [],
-  paragraphText: '',
-  listItems: [],
-  listType: null,
-};
 
 export const handleMsPasteFormatting = (
   event: ClipboardEvent
@@ -23,61 +14,61 @@ export const handleMsPasteFormatting = (
     return;
   }
 
-  const lines = text.split('\n');
-  // split the text by newline character and start the reduction loop
-  const blocksState: BlockState = lines.reduce(
-    (acc: BlockState, line: string): BlockState => {
-      // if we have a paragraph and the line is empty, create a paragraph block and reset the paragraph text
-      if (!line.trim() && acc.paragraphText) {
-        return {
-          ...acc,
-          blocks: [...acc.blocks, createParagraphBlock(acc.paragraphText)],
-          paragraphText: '',
-        };
-        // if we have an unordered list item add it to the list items array from which the block will be constructed
-      } else if (isUnorderedList(line)) {
-        return {
-          ...acc,
-          listType: 'unordered',
-          listItems: [...acc.listItems, line.replace(/•\t/, '')],
-        };
-        // Same thing here but for an ordered list
-      } else if (isOrderedList(line)) {
-        return {
-          ...acc,
-          listType: 'ordered',
-          listItems: [...acc.listItems, line.replace(/^\d+\.\s/, '')],
-        };
-        // if we have a completed list build the block and reset the list items array
-      } else if (acc.listItems.length) {
-        return {
-          listType: acc.listType,
-          listItems: [],
-          blocks: [...acc.blocks, createListBlock(acc.listItems, acc.listType)],
-          paragraphText: acc.paragraphText + line + ' ',
-        };
-        // Otherwise just add the line to the paragraph text
-      } else {
-        return {
-          ...acc,
-          paragraphText: acc.paragraphText + line + ' ',
-        };
-      }
-    },
-    initialBlockState
-  );
+  const parsedLines = text.split('\n').map((line) => {
+    if (isUnorderedList(line)) {
+      return { type: 'ul', text: line.replace(/•\t/, '') };
+    }
+    if (isOrderedList(line)) {
+      return { type: 'ol', text: line.replace(/^\d+\.\s/, '') };
+    }
+    return { type: 'p', text: line };
+  });
+
+  const groupedLines = groupSiblingsBy(parsedLines, (line) => line?.type);
+
+  const blocks = groupedLines.map((lines) => {
+    const type = lines[0]!.type;
+    const textLines = lines.map((line) => line.text);
+
+    if (type === 'ol') {
+      return createListBlock(textLines, 'ordered');
+    }
+    if (type === 'ul') {
+      return createListBlock(textLines, 'unordered');
+    }
+
+    return createParagraphBlock(textLines);
+  });
 
   return {
     time: Date.now(),
-    blocks: blocksState.blocks,
+    blocks,
   };
 };
 
-const createParagraphBlock = (text: string) => {
+const groupSiblingsBy = <T extends ParsedLine>(
+  items: readonly T[],
+  by: (item: T | undefined) => unknown
+) =>
+  items.reduce((acc: T[][], cur: T) => {
+    // If it's the first item or different from the last, start a new group
+    if (!acc.length || by(acc.at(-1)![0]) !== by(cur)) {
+      acc.push([cur]);
+      // if it's a paragraph and the line is empty, start a new group
+    } else if (cur.type === 'p' && cur.text === '\r') {
+      acc.push([cur]);
+    } else {
+      // Otherwise, add it to the current group
+      acc.at(-1)!.push(cur);
+    }
+    return acc;
+  }, []);
+
+const createParagraphBlock = (text: string[]) => {
   return {
     type: 'paragraph',
     data: {
-      text: text.trim(),
+      text: text.join(' '),
     },
   };
 };
