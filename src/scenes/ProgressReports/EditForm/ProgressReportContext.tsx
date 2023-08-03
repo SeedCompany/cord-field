@@ -1,12 +1,14 @@
 import { kebabCase } from 'lodash';
 import { createContext, useContext, useMemo } from 'react';
 import { ChildrenProp } from '~/common';
+import { useSession } from '~/components/Session';
 import { makeQueryHandler, StringParam } from '~/hooks';
 import { ReportProp } from './ReportProp';
 import { GroupedStepMapShape, StepComponent } from './Steps';
 
 interface ProgressReportContext {
   groupedStepMap: GroupedStepMapShape;
+  stepsMissingData: GroupedStepMapShape;
   CurrentStep: StepComponent;
   isLast: boolean;
   isFirst: boolean;
@@ -42,6 +44,26 @@ export const ProgressReportContextProvider = ({
     return { groupedStepMap, stepMap, flatSteps };
   }, [report, steps]);
 
+  const { session } = useSession();
+  const currentUserRoles = useMemo(
+    () => new Set(session?.roles.value),
+    [session]
+  );
+
+  const { stepsMissingData } = useMemo(() => {
+    const stepsMissingData = Object.fromEntries(
+      Object.entries(groupedStepMap).flatMap(([title, steps]) => {
+        const missingSteps = steps.filter(([_, { isMissing }]) =>
+          report == null
+            ? true
+            : isMissing?.({ report, currentUserRoles }) ?? false
+        );
+        return missingSteps.length > 0 ? [[title, missingSteps]] : [];
+      })
+    );
+    return { stepsMissingData };
+  }, [currentUserRoles, groupedStepMap, report]);
+
   const context = useMemo(() => {
     const stepName =
       (urlStep
@@ -60,6 +82,7 @@ export const ProgressReportContextProvider = ({
     const context: ProgressReportContext = {
       CurrentStep: stepMap[stepName] ?? Noop,
       groupedStepMap,
+      stepsMissingData,
       isFirst: stepIndex <= 0,
       isLast: stepIndex >= flatSteps.length - 1,
       setProgressReportStep: setStep,

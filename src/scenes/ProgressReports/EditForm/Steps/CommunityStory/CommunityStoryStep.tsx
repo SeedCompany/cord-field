@@ -50,3 +50,18 @@ export const CommunityStoryStep: StepComponent = ({ report }) => {
   );
 };
 CommunityStoryStep.enableWhen = ({ report }) => report.communityStories.canRead;
+
+CommunityStoryStep.isMissing = ({ report, currentUserRoles }) => {
+  if (report.communityStories.items.length === 0) return true;
+
+  const isMissingResponses = report.communityStories.items[0]?.responses.some(
+    (item) => {
+      return item.variant.responsibleRole
+        ? currentUserRoles.has(item.variant.responsibleRole) &&
+            !item.response.value &&
+            item.response.canEdit
+        : false;
+    }
+  );
+  return isMissingResponses ?? false;
+};

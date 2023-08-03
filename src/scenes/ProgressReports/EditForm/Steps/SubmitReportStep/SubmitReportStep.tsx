@@ -2,31 +2,37 @@ import { Box, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useRef, useState } from 'react';
 import { Form } from 'react-final-form';
+import { useNavigate } from 'react-router-dom';
+import { defer } from '~/common/defer';
 import {
   explosionFromElement,
   randomColorPalette,
   useConfetti,
 } from '~/components/Confetti';
 import { RichTextField } from '~/components/RichText';
-import { useNavigate } from '~/components/Routing';
-import { StepComponent } from '../step.types';
-import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
-import { TransitionButtons } from './TransitionButtons';
+import { useProgressReportContext } from '../../ProgressReportContext';
+import { StepComponent } from '../../Steps';
+import { TransitionButtons } from '../../Steps/SubmitReportStep/TransitionButtons';
 import {
   TransitionFormValues,
   useExecuteTransition,
-} from './useExecuteTransition';
+} from '../../Steps/SubmitReportStep/useExecuteTransition';
+import { ConfirmEmptyVariants } from './ConfirmVariantDialog';
+import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
 
 export const SubmitReportStep: StepComponent = ({ report }) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const createConfetti = useConfetti();
-
   const lastSubmitButton = useRef<HTMLElement>();
 
   // Maintain the old status state while closing the drawer.
   // Prevents a flash of the new status before the drawer closes.
   const [prevStatus, setPrevStatus] = useState<ProgressReportStatusFragment>();
+
+  const { stepsMissingData } = useProgressReportContext();
+  const hasMissingFields = Object.keys(stepsMissingData).length;
+  const onConfirmRef = useRef<((confirm: boolean) => void) | undefined>();
 
   const executeTransition = useExecuteTransition({
     id: report.id,
@@ -55,8 +61,25 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
     },
   });
 
+  const handleFormSubmit = async (values: TransitionFormValues) => {
+    const transition = report.status.transitions.find(
+      (transition) => transition.id === values.submitAction
+    );
+    const isApprovalTransition = transition?.type === 'Approve';
+    if (isApprovalTransition && hasMissingFields) {
+      const confirming = defer<boolean>();
+      onConfirmRef.current = confirming.resolve;
+      const confirmed = await confirming;
+      onConfirmRef.current = undefined;
+      if (!confirmed) {
+        return {};
+      }
+    }
+    await executeTransition(values);
+  };
+
   return (
-    <Form<TransitionFormValues> onSubmit={executeTransition}>
+    <Form<TransitionFormValues> onSubmit={handleFormSubmit}>
       {({ handleSubmit }) => (
         <Box
           component="form"
@@ -82,10 +105,16 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
               }}
             />
           </Box>
+          <ConfirmEmptyVariants
+            open={!!onConfirmRef.current}
+            onConfirm={() => onConfirmRef.current?.(true)}
+            onClose={() => onConfirmRef.current?.(false)}
+          />
         </Box>
       )}
     </Form>
   );
 };
+
 SubmitReportStep.enableWhen = ({ report }) =>
   report.status.canBypassTransitions || report.status.transitions.length > 0;
