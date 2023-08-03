@@ -9,7 +9,7 @@ import {
   RoleLabels,
   RoleList,
 } from '~/api/schema.graphql';
-import { labelFrom } from '~/common';
+import { labelFrom, reorderListsByAvailable } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -98,7 +98,11 @@ export const CreateProjectMember = ({
             <AutocompleteField
               disabled={!canRead || !userRoles}
               multiple
-              options={RoleList}
+              options={
+                userRoles
+                  ? reorderListsByAvailable(userRoles, RoleList)
+                  : RoleList
+              }
               getOptionLabel={labelFrom(RoleLabels)}
               name="roles"
               label="Roles"
