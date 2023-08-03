@@ -109,9 +109,6 @@ export const CreateProjectMember = ({
                     : `You cannot read this person's roles`
                   : 'Select a person first'
               }
-              getOptionDisabled={(option) =>
-                !!userRoles && !userRoles.includes(option)
-              }
               variant="outlined"
             />
           </>
