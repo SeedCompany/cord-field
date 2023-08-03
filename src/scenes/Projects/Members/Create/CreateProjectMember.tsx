@@ -7,9 +7,8 @@ import { addItemToList } from '~/api';
 import {
   CreateProjectMember as CreateProjectMemberInput,
   RoleLabels,
-  RoleList,
 } from '~/api/schema.graphql';
-import { labelFrom, reorderListsByAvailable } from '~/common';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -98,11 +97,8 @@ export const CreateProjectMember = ({
             <AutocompleteField
               disabled={!canRead || !userRoles}
               multiple
-              options={
-                userRoles
-                  ? reorderListsByAvailable(userRoles, RoleList)
-                  : RoleList
-              }
+              options={userRoles || []}
+              noOptionsText="No roles assignable to this person"
               getOptionLabel={labelFrom(RoleLabels)}
               name="roles"
               label="Roles"

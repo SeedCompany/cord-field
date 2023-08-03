@@ -90,13 +90,3 @@ export const splice = <T>(
  */
 export const notNullish = <T>(item: T | null | undefined): item is T =>
   item != null;
-
-// simple utility function to move the available options for select list to the top of the list in the UI
-export const reorderListsByAvailable = (
-  activeList: readonly any[],
-  allList: readonly any[]
-) => {
-  return activeList.concat(
-    allList.filter((item) => !activeList.includes(item))
-  );
-};
