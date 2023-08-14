@@ -302,7 +302,7 @@ export const ProjectOverview = () => {
             <Tooltip
               title={
                 isTranslation
-                  ? 'Sensitivity is automatically determined by the most sensitive language engaged'
+                  ? `${project?.sensitivity} Sensitivity - This is automatically determined by the most sensitive language engaged`
                   : ''
               }
             >
