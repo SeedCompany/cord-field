@@ -7,7 +7,6 @@ import { addItemToList } from '~/api';
 import {
   CreateProjectMember as CreateProjectMemberInput,
   RoleLabels,
-  RoleList,
 } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
@@ -98,7 +97,8 @@ export const CreateProjectMember = ({
             <AutocompleteField
               disabled={!canRead || !userRoles}
               multiple
-              options={RoleList}
+              options={userRoles || []}
+              noOptionsText="No roles assignable to this person"
               getOptionLabel={labelFrom(RoleLabels)}
               name="roles"
               label="Roles"
@@ -108,9 +108,6 @@ export const CreateProjectMember = ({
                     ? ''
                     : `You cannot read this person's roles`
                   : 'Select a person first'
-              }
-              getOptionDisabled={(option) =>
-                !!userRoles && !userRoles.includes(option)
               }
               variant="outlined"
             />
