@@ -12,7 +12,7 @@ export const createImpersonationLink = (
       ...prev.headers,
       ...pickBy({
         'x-cord-impersonate-user': ref?.current?.user,
-        'x-cord-impersonate-roles': ref?.current?.roles?.join(','),
+        'x-cord-impersonate-role': ref?.current?.roles?.join(','),
       }),
     },
   }));
