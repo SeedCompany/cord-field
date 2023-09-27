@@ -1,4 +1,4 @@
-import { CalendarDate, isSecured, Nullable, SecuredProp } from '~/common';
+import { isSecured, Nullable, SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 
@@ -22,14 +22,16 @@ export const ReportLabel = ({
   if (!rep) {
     return null;
   }
-  return (
-    <span css={{ whiteSpace: 'nowrap' }}>{getLabel(rep.start, rep.end)}</span>
-  );
+  return <span css={{ whiteSpace: 'nowrap' }}>{getReportLabel(rep)}</span>;
 };
 
-const getLabel = (start: CalendarDate, end: CalendarDate) =>
-  +start === +end
+export const getReportLabel = (report?: Report) => {
+  const { start, end } = report ?? {};
+
+  if (!start || !end) return null;
+  return +start === +end
     ? 'Final'
     : start.hasSame(end, 'month')
     ? start.toFormat('LLLL yyyy')
     : `Q${start.fiscalQuarter} FY${start.fiscalYear}`;
+};

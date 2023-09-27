@@ -1,5 +1,4 @@
 import {
-  Card,
   Skeleton,
   Step,
   StepButton,
@@ -41,7 +40,6 @@ export const StatusStepper = ({
 
   return (
     <Stepper
-      component={Card}
       activeStep={currentIndex}
       alternativeLabel={!mobile}
       orientation={mobile ? 'vertical' : 'horizontal'}
