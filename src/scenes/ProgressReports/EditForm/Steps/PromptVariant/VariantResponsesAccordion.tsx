@@ -1,16 +1,10 @@
-import { ExpandMore } from '@mui/icons-material';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Typography,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 import { ReactNode, useState } from 'react';
 import { Scalars } from '~/api/schema/schema.graphql';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
 import { Form, FormProps, SavingStatus } from '~/components/form';
 import { RichTextField, RichTextView } from '~/components/RichText';
-import { RoleIcon } from '~/components/RoleIcon';
+import { VariantAccordion } from '../VariantAccordion';
 import { InstructionsToggle } from './VariantInstructionsToggle';
 
 interface FormShape {
@@ -27,11 +21,10 @@ export interface VariantResponsesAccordionProps
 
 export const VariantResponsesAccordion = ({
   response,
-  expanded: _expanded,
+  expanded,
   instructions,
   onSubmit,
 }: VariantResponsesAccordionProps) => {
-  const [expanded, setExpanded] = useState(_expanded ?? false);
   const [initialValues] = useState(() => ({
     variant: response.variant.key,
     response: response.response.value,
@@ -42,68 +35,47 @@ export const VariantResponsesAccordion = ({
   }
 
   return (
-    <Accordion
-      key={response.variant.key}
-      expanded={expanded}
-      elevation={2}
-      square
-    >
-      <AccordionSummary
-        aria-controls={`${response.variant.key}-content`}
-        expandIcon={<ExpandMore />}
-        sx={{
-          '& .MuiAccordionSummary-content': {
-            alignItems: 'center',
-          },
-        }}
-        onClick={() => setExpanded(!expanded)}
-      >
-        <RoleIcon variantRole={response.variant.responsibleRole} />
-        <span>{response.variant.label}</span>
-      </AccordionSummary>
+    <VariantAccordion variant={response.variant} expanded={expanded}>
+      {response.response.canEdit ? (
+        <Form<FormShape>
+          onSubmit={onSubmit}
+          initialValues={initialValues}
+          autoSubmit
+        >
+          {({ handleSubmit, submitting }) => (
+            <form onSubmit={handleSubmit}>
+              {instructions && (
+                <InstructionsToggle sx={{ mb: 2 }}>
+                  {instructions}
+                </InstructionsToggle>
+              )}
 
-      <AccordionDetails sx={{ px: 4 }}>
-        {response.response.canEdit ? (
-          <Form<FormShape>
-            onSubmit={onSubmit}
-            initialValues={initialValues}
-            autoSubmit
-          >
-            {({ handleSubmit, submitting }) => (
-              <form onSubmit={handleSubmit}>
-                {instructions && (
-                  <InstructionsToggle sx={{ mb: 2 }}>
-                    {instructions}
-                  </InstructionsToggle>
-                )}
-
-                <RichTextField
-                  name="response"
-                  label="Response"
-                  tools={['paragraph', 'delimiter', 'marker', 'list']}
-                  // Only marketing writers should be concerned with this.
-                  // Everyone else we want as much info as possible.
-                  showCharacterCount={
-                    response.variant.responsibleRole === 'Marketing'
-                  }
-                  helperText={
-                    <SavingStatus
-                      submitting={submitting}
-                      savedAt={response.modifiedAt}
-                    />
-                  }
-                />
-              </form>
-            )}
-          </Form>
-        ) : response.response.value ? (
-          <RichTextView data={response.response.value} />
-        ) : (
-          <Typography color="textSecondary" paragraph>
-            No response given yet
-          </Typography>
-        )}
-      </AccordionDetails>
-    </Accordion>
+              <RichTextField
+                name="response"
+                label="Response"
+                tools={['paragraph', 'delimiter', 'marker', 'list']}
+                // Only marketing writers should be concerned with this.
+                // Everyone else we want as much info as possible.
+                showCharacterCount={
+                  response.variant.responsibleRole === 'Marketing'
+                }
+                helperText={
+                  <SavingStatus
+                    submitting={submitting}
+                    savedAt={response.modifiedAt}
+                  />
+                }
+              />
+            </form>
+          )}
+        </Form>
+      ) : response.response.value ? (
+        <RichTextView data={response.response.value} />
+      ) : (
+        <Typography color="textSecondary" paragraph>
+          No response given yet
+        </Typography>
+      )}
+    </VariantAccordion>
   );
 };
