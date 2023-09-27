@@ -14,6 +14,7 @@ import {
   ValueIteratee,
 } from 'lodash';
 import { isListNotEmpty, Nullable, splice, unwrapSecured } from '~/common';
+import { VariantFragment } from '../../../../common/fragments';
 import {
   InputArg,
   PaginatedListInput,
@@ -126,6 +127,22 @@ const mergeList = (
   const readSecuredField = (field: string) => (ref: Reference) => {
     const secured = readField(field, ref);
     const fieldVal = unwrapSecured(secured);
+
+    // Hack to handle sorting with variants,
+    // whose sort keys do not match a field name that's a primitive.
+    // This logic needs to be exposed to pageLimitPagination
+    // Something like pageLimitPagination({
+    //   getSortValue: {
+    //    variant: (variant) => variant.key,
+    if (
+      fieldVal &&
+      typeof fieldVal === 'object' &&
+      '__typename' in fieldVal &&
+      fieldVal.__typename === 'Variant'
+    ) {
+      return (fieldVal as VariantFragment).key;
+    }
+
     return fieldVal;
   };
 
