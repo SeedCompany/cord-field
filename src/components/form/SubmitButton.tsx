@@ -35,55 +35,7 @@ export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
     { children, spinner = true, action, disabled, ...rest },
     ref
   ) {
-    const form = useForm('SubmitButton');
-    const {
-      hasValidationErrors,
-      submitting,
-      touched,
-      validating,
-      submitErrors,
-      dirtyFieldsSinceLastSubmit,
-      values,
-    } = useFormState({
-      subscription: {
-        submitErrors: true,
-        dirtyFieldsSinceLastSubmit: true,
-        hasValidationErrors: true,
-        submitting: true,
-        touched: true,
-        validating: true,
-        values: true,
-      },
-    });
-    // Ignore FORM_ERROR since it doesn't count as it doesn't go to a field.
-    // We'll assume that the form _can_ be re-submitted with these errors.
-    // It could be a server error, connection error, etc.
-    const fieldSubmitErrors = useMemo(
-      () => omit(submitErrors ?? {}, FORM_ERROR),
-      [submitErrors]
-    );
-
-    const allFieldsTouched = touched
-      ? Object.values(touched).every((field) => field)
-      : false;
-
-    const allFieldsWithSubmitErrorsAreDirty = useMemo(() => {
-      if (!submitErrors || Object.keys(fieldSubmitErrors).length === 0) {
-        return true;
-      }
-      const unchangedSubmitErrors = Object.keys(
-        dirtyFieldsSinceLastSubmit
-      ).reduce(
-        (remaining: Partial<typeof fieldSubmitErrors> | undefined, field) => {
-          return remaining ? setIn(remaining, field, undefined) : undefined;
-        },
-        cloneDeep(fieldSubmitErrors)
-      );
-      return (
-        !unchangedSubmitErrors ||
-        Object.keys(unchangedSubmitErrors).length === 0
-      );
-    }, [submitErrors, fieldSubmitErrors, dirtyFieldsSinceLastSubmit]);
+    const sb = useSubmitButton({ action });
 
     return (
       <ProgressButton
@@ -98,21 +50,11 @@ export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
             return;
           }
           e.preventDefault();
-          form.change('submitAction', action);
-
-          void form.submit();
+          sb.submit();
         }}
         type="submit"
-        disabled={
-          disabled ||
-          submitting ||
-          validating ||
-          (allFieldsTouched && hasValidationErrors) ||
-          // disable if there are submit/server errors for specific fields
-          // and they have not been changed since last submit
-          !allFieldsWithSubmitErrorsAreDirty
-        }
-        progress={spinner && submitting && values.submitAction === action}
+        disabled={disabled || sb.disabled}
+        progress={spinner && sb.submitting}
         ref={ref}
       >
         {Children.count(children) ? children : 'Submit'}
@@ -120,3 +62,72 @@ export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
     );
   }
 );
+
+export const useSubmitButton = ({ action }: { action?: string }) => {
+  const form = useForm('SubmitButton');
+  const {
+    hasValidationErrors,
+    submitting,
+    touched,
+    validating,
+    submitErrors,
+    dirtyFieldsSinceLastSubmit,
+    values,
+  } = useFormState({
+    subscription: {
+      submitErrors: true,
+      dirtyFieldsSinceLastSubmit: true,
+      hasValidationErrors: true,
+      submitting: true,
+      touched: true,
+      validating: true,
+      values: true,
+    },
+  });
+  // Ignore FORM_ERROR since it doesn't count as it doesn't go to a field.
+  // We'll assume that the form _can_ be re-submitted with these errors.
+  // It could be a server error, connection error, etc.
+  const fieldSubmitErrors = useMemo(
+    () => omit(submitErrors ?? {}, FORM_ERROR),
+    [submitErrors]
+  );
+
+  const allFieldsTouched = touched
+    ? Object.values(touched).every((field) => field)
+    : false;
+
+  const allFieldsWithSubmitErrorsAreDirty = useMemo(() => {
+    if (!submitErrors || Object.keys(fieldSubmitErrors).length === 0) {
+      return true;
+    }
+    const unchangedSubmitErrors = Object.keys(
+      dirtyFieldsSinceLastSubmit
+    ).reduce(
+      (remaining: Partial<typeof fieldSubmitErrors> | undefined, field) => {
+        return remaining ? setIn(remaining, field, undefined) : undefined;
+      },
+      cloneDeep(fieldSubmitErrors)
+    );
+    return (
+      !unchangedSubmitErrors || Object.keys(unchangedSubmitErrors).length === 0
+    );
+  }, [submitErrors, fieldSubmitErrors, dirtyFieldsSinceLastSubmit]);
+
+  const disabled =
+    submitting ||
+    validating ||
+    (allFieldsTouched && hasValidationErrors) ||
+    // disable if there are submit/server errors for specific fields
+    // and they have not been changed since last submit
+    !allFieldsWithSubmitErrorsAreDirty;
+
+  const progress = submitting && values.submitAction === action;
+
+  const submit = () => {
+    form.change('submitAction', action);
+
+    void form.submit();
+  };
+
+  return { disabled, submitting: progress, submit };
+};
