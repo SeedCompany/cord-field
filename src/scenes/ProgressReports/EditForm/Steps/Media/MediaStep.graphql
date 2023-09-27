@@ -1,0 +1,32 @@
+mutation CreateMedia($input: UploadProgressReportMedia!) {
+  uploadProgressReportMedia(input: $input) {
+    ...mediaStep
+  }
+}
+
+mutation UpdateMedia($input: UpdateProgressReportMedia!) {
+  updateProgressReportMedia(input: $input) {
+    ...progressReportMedia
+  }
+}
+mutation DeleteMedia($deleteProgressReportMediaId: ID!) {
+  deleteProgressReportMedia(id: $deleteProgressReportMediaId) {
+    ...mediaStep
+  }
+}
+
+fragment mediaStep on ProgressReport {
+  id
+  sensitivity
+  media(input: { sort: "createdAt", order: ASC }) {
+    items {
+      ...progressReportMedia
+    }
+    availableVariants {
+      variant {
+        ...variant
+      }
+      canCreate
+    }
+  }
+}

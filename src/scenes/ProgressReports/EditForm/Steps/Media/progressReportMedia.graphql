@@ -1,0 +1,25 @@
+fragment progressReportMedia on ProgressReportMedia {
+  variant {
+    ...variant
+  }
+  variantGroup
+  id
+  category
+  media {
+    id
+    ...image
+  }
+  canEdit
+  canDelete
+}
+
+fragment image on Image {
+  id
+  caption
+  url
+  dimensions {
+    aspectRatio
+    height
+    width
+  }
+}
