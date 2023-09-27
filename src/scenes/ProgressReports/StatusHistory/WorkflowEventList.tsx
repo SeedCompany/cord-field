@@ -1,5 +1,6 @@
 import { ArrowForwardRounded as ArrowRightIcon } from '@mui/icons-material';
-import { Box, Card, Collapse, Divider, Stack, Typography } from '@mui/material';
+import { Box, Card, Divider, Stack, Typography } from '@mui/material';
+import { Fragment } from 'react';
 import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLists';
 import { RelativeDateTime } from '~/components/Formatters';
 import { RichTextView } from '~/components/RichText';
@@ -19,41 +20,60 @@ export const WorkFlowEventList = ({
   }
 
   return (
-    <Card sx={{ p: 4, overflowY: 'auto' }}>
-      <Stack
-        component="ul"
-        divider={<Divider />}
-        spacing={1}
-        sx={{ listStyle: 'none' }}
-      >
-        {events.map((event: WorkflowEventFragment, i: number) => {
-          return (
-            <li key={i}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography
-                  variant="h4"
-                  sx={{ display: 'flex', alignItems: 'center' }}
-                >
-                  {StatusLabels[events[i - 1]?.status ?? 'NotStarted']}
-                  <ArrowRightIcon sx={{ mx: 1 }} aria-label="transitioned to" />
-                  {StatusLabels[event.status]}
-                </Typography>
-                <Typography variant="caption" sx={{ ml: 1 }}>
-                  {event.who.value?.fullName}{' '}
-                  <RelativeDateTime date={event.at} />
-                </Typography>
-              </Box>
-              <Collapse in={showNotes}>
-                {event.notes.value && (
-                  <Box sx={{ px: 3, pt: 1 }}>
-                    <RichTextView data={event.notes.value} />
-                  </Box>
-                )}
-              </Collapse>
-            </li>
-          );
-        })}
-      </Stack>
-    </Card>
+    <Stack
+      component={Card}
+      divider={<Divider sx={{ mx: -2, gridColumn: '1 / -1' }} />}
+      sx={{
+        overflow: 'initial',
+        py: 1,
+        px: 2,
+        listStyle: 'none',
+        display: 'grid',
+        rowGap: 1,
+        columnGap: 2,
+        alignItems: 'center',
+        gridTemplateColumns:
+          '[from] min-content [arrow] min-content [to] min-content [at] auto',
+        containerType: 'inline-size',
+      }}
+    >
+      {events.map((event: WorkflowEventFragment, i: number) => (
+        <Fragment key={event.id}>
+          <Typography variant="h4" gridColumn="from" whiteSpace="nowrap">
+            {StatusLabels[events[i - 1]?.status ?? 'NotStarted']}
+          </Typography>
+          <ArrowRightIcon
+            fontSize="small"
+            sx={{ gridColumn: 'arrow' }}
+            aria-label="transitioned to"
+          />
+          <Typography variant="h4" gridColumn="to" whiteSpace="nowrap">
+            {StatusLabels[event.status]}
+          </Typography>
+          <Typography
+            variant="caption"
+            sx={{
+              gridColumn: '1 / -1',
+              '@container (min-width: 500px)': {
+                gridColumn: 'at',
+              },
+            }}
+          >
+            {event.who.value?.fullName} <RelativeDateTime date={event.at} />
+          </Typography>
+          {showNotes && event.notes.value && (
+            <Box
+              sx={{
+                gridColumn: '1 / -1',
+                px: 2,
+                '> *:last-child': { mb: 0 },
+              }}
+            >
+              <RichTextView data={event.notes.value} />
+            </Box>
+          )}
+        </Fragment>
+      ))}
+    </Stack>
   );
 };

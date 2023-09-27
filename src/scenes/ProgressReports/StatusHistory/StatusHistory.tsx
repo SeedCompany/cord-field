@@ -93,7 +93,7 @@ export const StatusHistory = () => {
           alignItems: 'center',
         }}
       >
-        <Typography variant="h3" paragraph>
+        <Typography component="h1" variant="h3">
           Status History
         </Typography>
         <FormControlLabel
