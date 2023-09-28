@@ -19,6 +19,8 @@ export const WorkFlowEventList = ({
     return null;
   }
 
+  const reversedEvents = [...events].reverse();
+
   return (
     <Stack
       component={Card}
@@ -37,10 +39,10 @@ export const WorkFlowEventList = ({
         containerType: 'inline-size',
       }}
     >
-      {events.map((event: WorkflowEventFragment, i: number) => (
+      {reversedEvents.map((event: WorkflowEventFragment, i: number) => (
         <Fragment key={event.id}>
           <Typography variant="h4" gridColumn="from" whiteSpace="nowrap">
-            {StatusLabels[events[i - 1]?.status ?? 'NotStarted']}
+            {StatusLabels[reversedEvents[i + 1]?.status ?? 'NotStarted']}
           </Typography>
           <ArrowRightIcon
             fontSize="small"
