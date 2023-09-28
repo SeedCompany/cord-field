@@ -15,6 +15,7 @@ import {
   FormProps,
   SelectField,
   SubmitAction,
+  SubmitError,
   TextField,
 } from '~/components/form';
 import { ImageField } from './ImageField';
@@ -71,60 +72,64 @@ export const MediaInfoForm = ({
       sendIfClean="delete"
     >
       {({ handleSubmit }) => (
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 2,
-          }}
-        >
-          {!existingImage && !isFirstUpload && (
+        <>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 2,
+              mb: 1,
+            }}
+          >
+            {!existingImage && !isFirstUpload && (
+              <ImageField
+                name="newVersion"
+                sensitivity={sensitivity}
+                canDelete={false}
+                sx={{ flex: 1, mt: 1, minWidth: 195 }}
+                instructionMessage="Click or drop to add an edited version of the previous role's image"
+              />
+            )}
             <ImageField
-              name="newVersion"
+              name="newFile"
+              current={existingImage}
               sensitivity={sensitivity}
-              canDelete={false}
+              canDelete={existingMedia?.canDelete ?? false}
               sx={{ flex: 1, mt: 1, minWidth: 195 }}
-              instructionMessage="Click or drop to add an edited version of the previous role's image"
+              instructionMessage={
+                isFirstUpload
+                  ? 'Click or drop to add an image'
+                  : 'Click or drop to add a completely different image, because the previous is not suitable'
+              }
             />
-          )}
-          <ImageField
-            name="newFile"
-            current={existingImage}
-            sensitivity={sensitivity}
-            canDelete={existingMedia?.canDelete ?? false}
-            sx={{ flex: 1, mt: 1, minWidth: 195 }}
-            instructionMessage={
-              isFirstUpload
-                ? 'Click or drop to add an image'
-                : 'Click or drop to add a completely different image, because the previous is not suitable'
-            }
-          />
-          {existingImage && (
-            <Stack gap="inherit" flex={2} minWidth={270}>
-              <SelectField
-                label="Photo Category"
-                name="category"
-                disabled={!existingMedia?.canEdit}
-                options={ProgressReportMediaCategoryList}
-                variant="outlined"
-                getOptionLabel={labelFrom(ProgressReportMediaCategoryLabels)}
-                helperText={false}
-              />
-              <TextField
-                variant="outlined"
-                multiline
-                name="caption"
-                label="Caption"
-                disabled={!existingMedia?.canEdit}
-                placeholder="Enter Photo Caption"
-                minRows={3}
-                margin="none"
-              />
-            </Stack>
-          )}
-        </Box>
+            {existingImage && (
+              <Stack gap="inherit" flex={2} minWidth={270}>
+                <SelectField
+                  label="Photo Category"
+                  name="category"
+                  disabled={!existingMedia?.canEdit}
+                  options={ProgressReportMediaCategoryList}
+                  variant="outlined"
+                  getOptionLabel={labelFrom(ProgressReportMediaCategoryLabels)}
+                  helperText={false}
+                />
+                <TextField
+                  variant="outlined"
+                  multiline
+                  name="caption"
+                  label="Caption"
+                  disabled={!existingMedia?.canEdit}
+                  placeholder="Enter Photo Caption"
+                  minRows={3}
+                  margin="none"
+                />
+              </Stack>
+            )}
+          </Box>
+          <SubmitError />
+        </>
       )}
     </Form>
   );
