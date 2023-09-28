@@ -96,7 +96,9 @@ export function SelectField<T, Multiple extends boolean | undefined>({
           </MenuItem>
         ))}
       </Select>
-      <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
+      {helperText !== false && (
+        <FormHelperText>{getHelperText(meta, helperText)}</FormHelperText>
+      )}
     </FormControl>
   );
 }

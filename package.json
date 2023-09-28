@@ -22,7 +22,7 @@
   "engines": {
     "node": ">=16"
   },
-  "packageManager": "yarn@3.4.1",
+  "packageManager": "yarn@3.6.3",
   "dependencies": {
     "@apollo/client": "^3.7.6",
     "@babel/runtime": "^7.20.13",

@@ -1,5 +1,6 @@
 import { Clear as ClearIcon } from '@mui/icons-material';
 import {
+  Box,
   IconButton,
   List,
   ListItem,
@@ -12,20 +13,17 @@ import { ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
+import { extendSx, StyleProps } from '~/common';
 import { fileIcon } from '../files/fileTypes';
 import { FieldConfig, useField } from './useField';
 
-const useStyles = makeStyles()(({ palette, spacing }) => {
+const useStyles = makeStyles()(({ palette, spacing, shape }) => {
   const dropzoneHoverStyle = {
-    backgroundColor: palette.grey[200],
     borderColor: palette.primary.main,
   };
   return {
-    root: {
-      marginBottom: spacing(2),
-    },
     dropzone: {
-      backgroundColor: palette.grey[300],
+      borderRadius: shape.borderRadius,
       border: `2px dashed ${palette.divider}`,
       cursor: 'pointer',
       padding: spacing(3),
@@ -42,17 +40,20 @@ const useStyles = makeStyles()(({ palette, spacing }) => {
   };
 });
 
-export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> & {
-  label?: ReactNode;
-  multiple?: boolean;
-  className?: string;
-};
+export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> &
+  StyleProps & {
+    label?: ReactNode;
+    multiple?: boolean;
+    disableFileList?: boolean;
+  };
 
 export function DropzoneField({
   multiple = false,
   label = 'Click or drag files here',
   name: nameProp,
   className,
+  sx,
+  disableFileList,
 }: DropzoneFieldProps) {
   const { classes, cx } = useStyles();
 
@@ -91,7 +92,7 @@ export function DropzoneField({
   });
 
   return (
-    <div className={cx(classes.root, className)}>
+    <Box sx={[{ mb: 2 }, ...extendSx(sx)]} className={className}>
       <div
         className={cx(classes.dropzone, {
           [classes.active]: isDragActive,
@@ -103,7 +104,7 @@ export function DropzoneField({
           {label}
         </Typography>
       </div>
-      {currentFiles.length > 0 && (
+      {!disableFileList && currentFiles.length > 0 && (
         <List dense className={classes.files}>
           {currentFiles.map((file, index) => {
             const { name, type } = file;
@@ -129,6 +130,6 @@ export function DropzoneField({
           })}
         </List>
       )}
-    </div>
+    </Box>
   );
 }

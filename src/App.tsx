@@ -2,13 +2,12 @@ import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
-import { ApolloProvider } from './api';
+import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { ConfettiProvider } from './components/Confetti';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
 import { UploadProvider as FileUploadProvider } from './components/Upload';
-import { SensitiveOperations } from './scenes/Authentication';
 import { Root } from './scenes/Root';
 import { createTheme } from './theme';
 
@@ -19,7 +18,11 @@ if (logRocketAppId) {
     network: {
       requestSanitizer(request) {
         // Relies on operation name suffix which do in Apollo HttpLink config
-        if (SensitiveOperations.some((op) => request.url.endsWith('/' + op))) {
+        if (
+          [...GqlSensitiveOperations].some((op) =>
+            request.url.endsWith(`/${op}`)
+          )
+        ) {
           request.body = undefined;
         }
         return request;

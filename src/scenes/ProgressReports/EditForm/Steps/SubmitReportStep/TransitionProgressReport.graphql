@@ -6,5 +6,9 @@ mutation TransitionProgressReport(
     status {
       ...ProgressReportStatus
     }
+    # This is needed for updating the cache for the workflow events
+    workflowEvents {
+      ...workflowEvent
+    }
   }
 }

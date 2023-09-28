@@ -1,0 +1,22 @@
+fragment workflowEvent on ProgressReportWorkflowEvent {
+  id
+  at
+  status
+  transition {
+    to
+    label
+    type
+  }
+  notes {
+    canEdit
+    canRead
+    value
+  }
+  who {
+    canEdit
+    canRead
+    value {
+      fullName
+    }
+  }
+}
