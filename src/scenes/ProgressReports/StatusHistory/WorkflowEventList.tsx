@@ -1,7 +1,10 @@
 import { ArrowForwardRounded as ArrowRightIcon } from '@mui/icons-material';
 import { Box, Card, Divider, Stack, Typography } from '@mui/material';
 import { Fragment } from 'react';
-import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLists';
+import {
+  ProgressReportStatusLabels as StatusLabels,
+  ProgressReportStatusList as StatusList,
+} from '~/api/schema/enumLists';
 import { RelativeDateTime } from '~/components/Formatters';
 import { RichTextView } from '~/components/RichText';
 import { WorkflowEventFragment } from '../Detail/WorkflowEvent.graphql';
@@ -18,6 +21,14 @@ export const WorkFlowEventList = ({
   if (!events) {
     return null;
   }
+
+  const list = events
+    .map((event, i) => ({
+      ...event,
+      prevStatus: StatusLabels[events[i - 1]?.status ?? StatusList[0]!],
+      status: StatusLabels[event.status],
+    }))
+    .reverse();
 
   return (
     <Stack
@@ -37,10 +48,10 @@ export const WorkFlowEventList = ({
         containerType: 'inline-size',
       }}
     >
-      {events.map((event: WorkflowEventFragment, i: number) => (
+      {list.map((event) => (
         <Fragment key={event.id}>
           <Typography variant="h4" gridColumn="from" whiteSpace="nowrap">
-            {StatusLabels[events[i - 1]?.status ?? 'NotStarted']}
+            {event.prevStatus}
           </Typography>
           <ArrowRightIcon
             fontSize="small"
@@ -48,7 +59,7 @@ export const WorkFlowEventList = ({
             aria-label="transitioned to"
           />
           <Typography variant="h4" gridColumn="to" whiteSpace="nowrap">
-            {StatusLabels[event.status]}
+            {event.status}
           </Typography>
           <Typography
             variant="caption"
