@@ -20,7 +20,7 @@
     "trigger-codepipeline": "rm -rf bin/dist && tsc -p bin && node bin/dist/start-codepipeline"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "packageManager": "yarn@3.6.3",
   "dependencies": {
