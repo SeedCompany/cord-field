@@ -6,7 +6,6 @@ import onFieldChange from 'final-form-calculate';
 import { camelCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
-import { RequiredKeysOf } from 'type-fest';
 import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
 import { canEditAny } from '~/common';
 import {
@@ -23,9 +22,11 @@ import { VarianceExplanation } from '../../../Detail/VarianceExplanation/Varianc
 import { StepComponent } from '../step.types';
 import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql';
 
-type OptionGroup = RequiredKeysOf<ReasonOptions>;
+type OptionGroup = typeof groups extends Array<infer T> ? T : never;
 
-const groups: OptionGroup[] = ['behind', 'onTime', 'ahead'];
+const groups = ['behind', 'onTime', 'ahead'] satisfies Array<
+  keyof ReasonOptions
+>;
 
 const decorators: Array<Decorator<FormShape>> = [
   onFieldChange({
