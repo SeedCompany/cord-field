@@ -1,5 +1,4 @@
 import { useMutation } from '@apollo/client';
-import type { OutputData as RichTextData } from '@editorjs/editorjs';
 import { Card, CardContent, Tooltip, Typography } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
@@ -7,7 +6,7 @@ import { camelCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
 import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
-import { canEditAny } from '~/common';
+import { canEditAny, RichTextJson } from '~/common';
 import {
   EnumField,
   EnumOption,
@@ -48,7 +47,7 @@ const decorators: Array<Decorator<FormShape>> = [
 interface FormShape {
   group: OptionGroup;
   reasons?: string;
-  comments?: RichTextData;
+  comments?: RichTextJson;
 }
 
 export const ExplanationOfProgress: StepComponent = ({ report }) => {

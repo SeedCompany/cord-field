@@ -2,7 +2,9 @@ import { DateTime } from 'luxon';
 import { CalendarDate } from '~/common';
 import { Scalars } from '../../schema.graphql';
 
-export const Parsers: { [K in keyof Scalars]?: (val: any) => Scalars[K] } = {
+export const Parsers: {
+  [K in keyof Scalars]?: (val: any) => Scalars[K]['output'];
+} = {
   Date: (val) => CalendarDate.fromISO(val),
   DateTime: (val) => DateTime.fromISO(val),
 };

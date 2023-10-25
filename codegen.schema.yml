@@ -43,15 +43,14 @@ generates:
           placement: prepend
           content: |
             import { DateTime } from 'luxon';
-            import { CalendarDate } from '~/common';
-            import type { OutputData as RichTextData } from '@editorjs/editorjs';
+            import { CalendarDate, RichTextJson } from '~/common';
     config:
       scalars:
         Date: CalendarDate
         DateTime: DateTime
         JSONObject: Record<string, any>
         URL: string
-        RichText: RichTextData
+        RichText: RichTextJson
       defaultScalarType: unknown
       skipTypename: false
       enumsAsTypes: true

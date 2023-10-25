@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { ReactNode, useState } from 'react';
-import { Scalars } from '~/api/schema/schema.graphql';
+import { RichTextJson } from '~/common';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
 import { Form, FormProps, SavingStatus } from '~/components/form';
 import { RichTextField, RichTextView } from '~/components/RichText';
@@ -9,7 +9,7 @@ import { InstructionsToggle } from './VariantInstructionsToggle';
 
 interface FormShape {
   variant: string;
-  response: Scalars['RichText'] | null;
+  response: RichTextJson | null;
 }
 
 export interface VariantResponsesAccordionProps
