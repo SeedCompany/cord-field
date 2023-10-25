@@ -170,8 +170,10 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
               <EnumField
                 name="reasons"
                 label="Select a reason"
-                options={optionsByGroup[group]}
                 required
+                options={optionsByGroup[group].filter(
+                  (reason) => !optionsByGroup.deprecated.includes(reason)
+                )}
                 layout="column"
                 disabled={!explanation.reasons.canEdit}
               />
