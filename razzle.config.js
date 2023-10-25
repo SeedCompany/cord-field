@@ -19,6 +19,11 @@ const modifyWebpackOptions = ({
     cache: path.resolve(__dirname, 'cache/terser-webpack-plugin'),
   };
 
+  // Run editorjs through babel, since the current loader doesn't understand the newer syntax.
+  options.babelRule.include.push(
+    require.resolve('@editorjs/editorjs').replace('.umd.js', '.mjs')
+  );
+
   return options;
 };
 

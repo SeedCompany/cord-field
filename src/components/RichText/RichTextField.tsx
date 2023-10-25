@@ -30,7 +30,7 @@ import {
   useState,
 } from 'react';
 import filterXSS from 'xss';
-import { extendSx, Nullable, StyleProps } from '~/common';
+import { extendSx, many, Nullable, StyleProps } from '~/common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
 import { FormattedNumber } from '../Formatters';
@@ -107,10 +107,13 @@ export function RichTextField({
   const latestChangeTimestamp = useRef(0);
   const onChange = useDebounceFn(
     ((api, event) => {
-      latestChangeTimestamp.current = event.timeStamp;
+      // Last event timestamp of change batch
+      const changeAt = many(event).at(-1)!.timeStamp;
+
+      latestChangeTimestamp.current = changeAt;
       input.onChange(savingSigil); // Prevent submitting while saving
       void api.saver.save().then((data) => {
-        if (latestChangeTimestamp.current > event.timeStamp) {
+        if (latestChangeTimestamp.current > changeAt) {
           // A newer change is already in progress
           return;
         }

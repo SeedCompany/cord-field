@@ -1653,13 +1653,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codexteam/icons@npm:0.1.0":
-  version: 0.1.0
-  resolution: "@codexteam/icons@npm:0.1.0"
-  checksum: df50a6606aed5e4375ca2c7c21da7bb91877022793a2362bc37135309d92c86695619887160416db64d9e1fb1c063761e6aacebe1ce478ef43e59ca75d8f6ab5
-  languageName: node
-  linkType: hard
-
 "@codexteam/icons@npm:^0.0.4":
   version: 0.0.4
   resolution: "@codexteam/icons@npm:0.0.4"
@@ -1678,6 +1671,13 @@ __metadata:
   version: 0.0.6
   resolution: "@codexteam/icons@npm:0.0.6"
   checksum: b2d4aa71d2608f53922ca164e4c5ecb4cf446498ca65efe7da7b19c4642f6dca68119da2df5ff740e11e6e3f4dfcd822920694cab2f70ab2f1c3d2ae33b6ebfd
+  languageName: node
+  linkType: hard
+
+"@codexteam/icons@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@codexteam/icons@npm:0.3.0"
+  checksum: 4949e753a9f8d0442c581512566167dddf7853fce0aa388ec9ddd9acc2aa3f081192d266c0eb1a2f78154492f376f7ce042f69ca45cad9a1f02583ab70e0000b
   languageName: node
   linkType: hard
 
@@ -1753,12 +1753,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@editorjs/checklist@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@editorjs/checklist@npm:1.4.0"
+"@editorjs/checklist@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "@editorjs/checklist@npm:1.5.0"
   dependencies:
-    "@codexteam/icons": ^0.0.4
-  checksum: e38ff46af5626fffdede7d462a32a587086968e915924661bab4b90d491fa74f4bc8f65cf49b42f976a02f709c0df720dcc626b2c22ee2b94703a9bd6a5cf0d9
+    "@codexteam/icons": ^0.3.0
+  checksum: cf71993ba60d1301d4b9fdb8709ee4f37f87430cf74548e710dc8a829c7b624b11f2a7c8b90fe21526e7002664d3e04880309849e9c21ae322a64b5be33dc829
   languageName: node
   linkType: hard
 
@@ -1780,23 +1780,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@editorjs/editorjs@npm:^2.26.5":
-  version: 2.26.5
-  resolution: "@editorjs/editorjs@npm:2.26.5"
-  dependencies:
-    "@codexteam/icons": 0.1.0
-    codex-notifier: ^1.1.2
-    codex-tooltip: ^1.0.5
-    html-janitor: ^2.0.4
-    nanoid: ^3.1.22
-  checksum: 899741482b421ca8ca0f6662e9a446043a255e607b39f08394a669c0f5efa68590197dd4f740ada47ba3a72fb830c3e7e7efca0a2680338ec1a240e509f1acd4
+"@editorjs/editorjs@npm:^2.28.2":
+  version: 2.28.2
+  resolution: "@editorjs/editorjs@npm:2.28.2"
+  checksum: a4bfde1d30d9582e2fe11fa4416283a7329aec8a5789610e34c5e23b5c622956e40b7e2a05f20843ebacdd87bbc547ee2ae844e10a7313a8feb7bb6b3e5b67bc
   languageName: node
   linkType: hard
 
-"@editorjs/embed@npm:^2.5.3":
-  version: 2.5.3
-  resolution: "@editorjs/embed@npm:2.5.3"
-  checksum: 15bb800187d934e49b93828fe4e4c89464cbbfe2e78e37a19bfc96551a9a0fd3f60719c7ee9af02254a06d42e9e2d1e6fef0fc6593bc99d7bc5e525b0d1b77bd
+"@editorjs/embed@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "@editorjs/embed@npm:2.6.0"
+  checksum: 396b22d65b8c185826647da2ff7d40217c91a904a48e5d7c9b802a311919d4d17018b92f8012dcaea93b1fffcba2c39e2e72d34f8b833d408bf0b867b28441cb
   languageName: node
   linkType: hard
 
@@ -1809,12 +1803,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@editorjs/image@npm:^2.8.1":
-  version: 2.8.1
-  resolution: "@editorjs/image@npm:2.8.1"
+"@editorjs/image@npm:^2.8.2":
+  version: 2.8.2
+  resolution: "@editorjs/image@npm:2.8.2"
   dependencies:
     "@codexteam/icons": ^0.0.6
-  checksum: b25cca35cc9c68e21cbeb6c3469f468435f2cc5c8e92033986247140afaae60b738d1f7050027a3df763c231f66f2d677906e45e2bf248464cebd85e89c2161c
+  checksum: 5ac759b4e08aea4160bfc237e558d37211ffdde4544efbcd6acd169ea411d07e3ac35956c976210d4a85c8dc6ff435282ec328d0d7bd659220c326328759320e
   languageName: node
   linkType: hard
 
@@ -1855,12 +1849,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@editorjs/paragraph@npm:^2.9.0":
-  version: 2.9.0
-  resolution: "@editorjs/paragraph@npm:2.9.0"
+"@editorjs/paragraph@npm:^2.11.3":
+  version: 2.11.3
+  resolution: "@editorjs/paragraph@npm:2.11.3"
   dependencies:
     "@codexteam/icons": ^0.0.4
-  checksum: f91acaee6d052ad78b9ee3245a2bdf02627dac66e7f8bbdb9676d3bfa85dc91d0cc25508b68c9b4cbaa1dd1a1ccba8689e4b54ede36ea5d950adf8a06458a79a
+  checksum: 80b040d1b6d57436c1c6186db0c903cc09076d608e4525b3ca058a24ad0eb6a9bfa80a9096518171ca45aacde20f60189311e970e4c5fd3ff67a61ae7babb987
   languageName: node
   linkType: hard
 
@@ -1891,12 +1885,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@editorjs/table@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@editorjs/table@npm:2.2.0"
+"@editorjs/table@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@editorjs/table@npm:2.2.2"
   dependencies:
     "@codexteam/icons": ^0.0.6
-  checksum: 6d74843b1048cf84c6a04a511328c282abd6411d3f16d37354f6b112482e838a5ffd43a52c91e0b209cf20bb1979ba77222a6fa772c12375cf0076ee64a5ec26
+  checksum: 42b131c9ae32f12a0e0c621d5d2f230fc3422659509bdd34a4315658641c45a6ee995bb985fbc80c030886bb5c121ece2ecbad91220070a663685ced43ae8a14
   languageName: node
   linkType: hard
 
@@ -6826,20 +6820,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"codex-notifier@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "codex-notifier@npm:1.1.2"
-  checksum: 2130f5b1ff2a55417cb40132b8fa220139e761f95b9183a3616cf595c4d9cb1777a0e90675ac69a5c22253013f65ae76428f09946c69b08b11b846b1f849e461
-  languageName: node
-  linkType: hard
-
-"codex-tooltip@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "codex-tooltip@npm:1.0.5"
-  checksum: 8ea91ce69853b7054f7379710ce03163fc1262db20f4e56a38d4eb946ece37fa18b07d13df6fb72d3b7fce768af26c8af169766b0aed1f9625210fe05e182f20
-  languageName: node
-  linkType: hard
-
 "collect-v8-coverage@npm:^1.0.0":
   version: 1.0.1
   resolution: "collect-v8-coverage@npm:1.0.1"
@@ -7209,22 +7189,22 @@ __metadata:
     "@babel/types": ^7.20.7
     "@date-io/core": ^2.17.0
     "@date-io/luxon": ^2.17.0
-    "@editorjs/checklist": ^1.4.0
+    "@editorjs/checklist": ^1.5.0
     "@editorjs/code": ^2.8.0
     "@editorjs/delimiter": ^1.3.0
-    "@editorjs/editorjs": ^2.26.5
-    "@editorjs/embed": ^2.5.3
+    "@editorjs/editorjs": ^2.28.2
+    "@editorjs/embed": ^2.6.0
     "@editorjs/header": ^2.7.0
-    "@editorjs/image": ^2.8.1
+    "@editorjs/image": ^2.8.2
     "@editorjs/inline-code": ^1.4.0
     "@editorjs/link": ^2.5.0
     "@editorjs/list": ^1.8.0
     "@editorjs/marker": ^1.3.0
-    "@editorjs/paragraph": ^2.9.0
+    "@editorjs/paragraph": ^2.11.3
     "@editorjs/quote": ^2.5.0
     "@editorjs/raw": ^2.4.0
     "@editorjs/simple-image": ^1.5.1
-    "@editorjs/table": ^2.2.0
+    "@editorjs/table": ^2.2.2
     "@editorjs/warning": ^1.3.0
     "@emotion/babel-plugin": ^11.10.5
     "@emotion/cache": ^11.10.5
@@ -10589,13 +10569,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-janitor@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "html-janitor@npm:2.0.4"
-  checksum: e571c8d75363a2c448507dff7654bbe35cf66755295a71e20289d1374d73786430ff2525b742d69adabeb6697c90c17d9b04fb70ce8de14b2ef635b4e06d0161
-  languageName: node
-  linkType: hard
-
 "html-minifier-terser@npm:^5.0.1":
   version: 5.1.1
   resolution: "html-minifier-terser@npm:5.1.1"
@@ -13785,7 +13758,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.1.22, nanoid@npm:^3.3.4":
+"nanoid@npm:^3.3.4":
   version: 3.3.4
   resolution: "nanoid@npm:3.3.4"
   bin:
