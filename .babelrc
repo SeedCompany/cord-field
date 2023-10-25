@@ -20,7 +20,7 @@
     ["@babel/plugin-transform-runtime", {
       "absoluteRuntime": true
     }],
-    "@babel/plugin-proposal-numeric-separator",
+    "@babel/plugin-transform-numeric-separator",
     "./src/server/disableSsrByDefault",
     "@loadable/babel-plugin",
     ["babel-plugin-transform-imports", {
