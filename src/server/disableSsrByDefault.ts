@@ -75,5 +75,5 @@ export default ({ types }: { types: Types }): PluginObj<State> => ({
   },
 });
 
-const isPropertyName = (name: string) => (prop: { type: unknown }) =>
+const isPropertyName = (name: string) => (prop: types.Node) =>
   isProperty(prop) && isIdentifier(prop.key) && prop.key.name === name;

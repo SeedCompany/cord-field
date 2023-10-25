@@ -13,6 +13,6 @@ export const Fab = forwardRef<HTMLButtonElement, FabProps>(function Fab(
   { loading, ...props },
   ref
 ) {
-  const fab = <MUIFab ref={ref} {...props} className={props.className} />;
+  const fab = <MUIFab ref={ref} {...props} />;
   return loading ? <Skeleton variant="circular">{fab}</Skeleton> : fab;
 });

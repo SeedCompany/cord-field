@@ -13,10 +13,8 @@ export class LuxonCalenderDateUtils extends LuxonUtils {
     this.inner = new LuxonUtils(...args);
   }
 
-  // @ts-expect-error super return type not nullable even though that's what src does
   date = (value?: any) => {
     const d = this.inner.date(value);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return d ? CalendarDate.fromDateTime(d) : null;
   };
 
@@ -24,10 +22,8 @@ export class LuxonCalenderDateUtils extends LuxonUtils {
     return CalendarDate.fromISO(iso);
   };
 
-  // @ts-expect-error super return type not nullable even though that's what src does
   parse = (value: string, format: string) => {
     const d = this.inner.parse(value, format);
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return d ? CalendarDate.fromDateTime(d) : null;
   };
 

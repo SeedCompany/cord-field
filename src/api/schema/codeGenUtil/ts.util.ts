@@ -126,7 +126,7 @@ export const exportedConst = (
 });
 
 export const writeStringArray = (items: readonly string[]) =>
-  writeArray(items.map((item) => createStringLiteral(item)));
+  writeArray(items.map((item) => ts.factory.createStringLiteral(item, true)));
 
 export const writeArray =
   (items: ReadonlyArray<ts.Expression | string>) =>
@@ -138,12 +138,3 @@ export const writeArray =
     }
     writer.write(']');
   };
-
-export const createStringLiteral = (text: string, doubleQuote = false) => {
-  const literal = ts.createStringLiteral(text);
-  if (!doubleQuote) {
-    // @ts-expect-error this is undocumented
-    literal.singleQuote = true;
-  }
-  return literal;
-};

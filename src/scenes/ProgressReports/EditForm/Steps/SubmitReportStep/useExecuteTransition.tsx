@@ -1,14 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { Promisable } from 'type-fest';
-import {
-  Scalars,
-  ProgressReportStatus as Status,
-} from '~/api/schema/schema.graphql';
+import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql';
+import { RichTextJson } from '~/common';
 import { SubmitAction } from '~/components/form';
 import { TransitionProgressReportDocument } from './TransitionProgressReport.graphql';
 
 export interface TransitionFormValues extends SubmitAction<'bypass'> {
-  notes?: Scalars['RichText'];
+  notes?: RichTextJson;
   bypassStatus?: Status;
 }
 

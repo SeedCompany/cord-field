@@ -8,6 +8,7 @@ export * from './displayEnums';
 export * from './fragments/common';
 export * from './isTypename';
 export * from './log';
+export * from './scalar.types';
 export * from './secured';
 export * from './sensitivity';
 export * from './simpleSwitch';

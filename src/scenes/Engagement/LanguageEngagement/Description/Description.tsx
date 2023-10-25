@@ -3,7 +3,7 @@ import { Check, Clear, Edit } from '@mui/icons-material';
 import { CircularProgress, Stack, Tooltip, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { Form } from 'react-final-form';
-import { Scalars } from '~/api/schema/schema.graphql';
+import { RichTextJson } from '~/common';
 import { IconButton } from '../../../../components/IconButton';
 import { RichTextField, RichTextView } from '../../../../components/RichText';
 import { UpdateLanguageEngagementDocument } from '../../EditEngagement/EditEngagementDialog.graphql';
@@ -14,7 +14,7 @@ interface Props {
 }
 
 interface FormShape {
-  description: Scalars['RichText'] | null;
+  description: RichTextJson | null;
 }
 
 export const LanguageEngagementDescription = ({ engagement }: Props) => {
