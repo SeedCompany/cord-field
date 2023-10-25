@@ -1,7 +1,8 @@
 import { useApolloClient } from '@apollo/client';
+import { mapKeys, Nil } from '@seedcompany/common';
 import { createContext, useCallback, useContext, useMemo } from 'react';
 import { Entity } from '~/api';
-import { ChildrenProp, IdFragment, mapFromList, Nullable } from '~/common';
+import { ChildrenProp, IdFragment } from '~/common';
 import {
   ChangesetDiffFragment as Diff,
   ChangesetDiffItemFragment as DiffItem,
@@ -18,7 +19,7 @@ type DetermineChangesetDiffItemFn = <
   T extends Entity,
   TDiffItem extends EntityFromChangesetDiff<T>
 >(
-  obj: Nullable<T>
+  obj: T | Nil
 ) =>
   | { mode: undefined; current: undefined; previous: undefined }
   | { mode: 'added'; current: TDiffItem; previous: undefined }
@@ -53,20 +54,23 @@ export const ChangesetDiffProvider = (
   } & ChildrenProp
 ) => {
   const apollo = useApolloClient();
-  const diff: ProcessedDiff = useMemo(() => {
-    const toCacheId = (obj: any) => {
-      const id = apollo.cache.identify(obj);
-      return id ? ([id, obj] as const) : null;
-    };
-    return {
-      added: mapFromList(props.value?.added ?? [], toCacheId),
-      removed: mapFromList(props.value?.removed ?? [], toCacheId),
-      changed: mapFromList(props.value?.changed ?? [], (obj) => {
-        const pair = toCacheId(obj.updated);
-        return pair ? [pair[0], obj] : null;
-      }),
-    };
-  }, [apollo, props.value]);
+  const diff: ProcessedDiff = useMemo(
+    () => ({
+      added: mapKeys.fromList(
+        props.value?.added ?? [],
+        (obj, { SKIP }) => apollo.cache.identify(obj) ?? SKIP
+      ).asRecord,
+      removed: mapKeys.fromList(
+        props.value?.removed ?? [],
+        (obj, { SKIP }) => apollo.cache.identify(obj) ?? SKIP
+      ).asRecord,
+      changed: mapKeys.fromList(
+        props.value?.changed ?? [],
+        (obj, { SKIP }) => apollo.cache.identify(obj.updated) ?? SKIP
+      ).asRecord,
+    }),
+    [apollo, props.value]
+  );
 
   const determineChangesetDiffItem = useCallback(
     (obj: any) => {

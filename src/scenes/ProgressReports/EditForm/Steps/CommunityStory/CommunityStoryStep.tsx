@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { simpleSwitch } from '~/common';
+import { simpleSwitch } from '@seedcompany/common';
 import { Prompt, VariantResponses } from '../PromptVariant';
 import { StepComponent } from '../step.types';
 import {

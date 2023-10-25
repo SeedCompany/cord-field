@@ -1,5 +1,5 @@
 import { Skeleton, Typography } from '@mui/material';
-import { groupBy } from 'lodash';
+import { entries, groupToMapBy } from '@seedcompany/common';
 import { ProductTable } from './ProductTable';
 import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
 
@@ -8,15 +8,18 @@ interface ProductTableListProps {
 }
 
 export const ProductTableList = ({ products }: ProductTableListProps) => {
-  const grouped = groupBy(products, (product) => product.product.category);
+  const grouped = groupToMapBy(
+    products ?? [],
+    (product) => product.product.category
+  );
 
   return (
     <>
       <Typography variant="h3">
         {products ? 'Progress for Goals' : <Skeleton width="25%" />}
       </Typography>
-      {Object.entries(grouped).map(([category, products]) => (
-        <ProductTable key={category} category={category} products={products} />
+      {entries(grouped).map(([category, products]) => (
+        <ProductTable key={category} category={category!} products={products} />
       ))}
     </>
   );

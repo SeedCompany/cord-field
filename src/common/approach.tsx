@@ -4,9 +4,9 @@ import {
   PlayCircleFilled,
   Translate,
 } from '@mui/icons-material';
+import { entries, mapValues } from '@seedcompany/common';
 import { ReactNode } from 'react';
 import { ProductApproach, ProductMethodology } from '~/api/schema.graphql';
-import { entries, mapFromList } from './array-helpers';
 
 export const ApproachMethodologies: Record<
   ProductApproach,
@@ -32,7 +32,7 @@ export const ApproachMethodologies: Record<
 export const MethodologyToApproach = entries(ApproachMethodologies).reduce(
   (map, [approach, methodologies]) => ({
     ...map,
-    ...mapFromList(methodologies, (methodology) => [methodology, approach]),
+    ...mapValues.fromList(methodologies, () => approach).asRecord,
   }),
   {}
 ) as Record<ProductMethodology, ProductApproach>;

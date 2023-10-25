@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material';
-import { mapFromList } from '../../common';
+import { mapEntries } from '@seedcompany/common';
 
 export const EditorJsTheme = (theme: Theme) => ({
   zIndex: 2, // keep toolbars above other fields' input labels.
@@ -67,7 +67,7 @@ export const EditorJsTheme = (theme: Theme) => ({
   },
 
   // Sync Header block to theme
-  ...mapFromList([1, 2, 3, 4, 5, 6] as const, (level) => {
+  ...mapEntries([1, 2, 3, 4, 5, 6], (level) => {
     const v = `h${level}` as const;
     const styles = {
       ...theme.typography[v],
@@ -75,7 +75,7 @@ export const EditorJsTheme = (theme: Theme) => ({
       mb: '0.35em', // matches MUI Typography gutterBottom
     };
     return [v, styles];
-  }),
+  }).asRecord,
 
   // Sync Delimiter block to theme
   '.ce-delimiter': {

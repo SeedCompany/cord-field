@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Card, CardContent, Tooltip, Typography } from '@mui/material';
+import { IterableItem } from '@seedcompany/common';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { camelCase } from 'lodash';
@@ -21,7 +22,7 @@ import { VarianceExplanation } from '../../../Detail/VarianceExplanation/Varianc
 import { StepComponent } from '../step.types';
 import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql';
 
-type OptionGroup = typeof groups extends Array<infer T> ? T : never;
+type OptionGroup = IterableItem<typeof groups>;
 
 const groups = ['behind', 'onTime', 'ahead'] satisfies Array<
   keyof ReasonOptions

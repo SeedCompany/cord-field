@@ -1,12 +1,13 @@
 import { DateRange } from '@mui/icons-material';
 import { Breadcrumbs, Grid, Typography } from '@mui/material';
+import { Many } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import {
   EngagementStatusLabels,
   InternshipPositionLabels,
 } from '~/api/schema.graphql';
-import { labelFrom, Many } from '~/common';
+import { labelFrom } from '~/common';
 import { DataButton } from '../../../components/DataButton';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';

@@ -8,17 +8,11 @@ import {
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { Many, simpleSwitch } from '@seedcompany/common';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ReportType } from '~/api/schema.graphql';
-import {
-  extendSx,
-  gridTemplateAreas,
-  Many,
-  SecuredProp,
-  simpleSwitch,
-  StyleProps,
-} from '~/common';
+import { extendSx, gridTemplateAreas, SecuredProp, StyleProps } from '~/common';
 import {
   EditablePeriodicReportField,
   UpdatePeriodicReportDialog,

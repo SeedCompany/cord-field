@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { Many, many } from '@seedcompany/common';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { ComponentType, useMemo } from 'react';
@@ -9,7 +10,7 @@ import {
   PartnerTypeList,
   UpdatePartner,
 } from '~/api/schema.graphql';
-import { ExtractStrict, labelFrom, Many, many } from '~/common';
+import { ExtractStrict, labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,

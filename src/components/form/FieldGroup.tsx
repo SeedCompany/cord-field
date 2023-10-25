@@ -1,4 +1,4 @@
-import { compact } from 'lodash';
+import { isNotFalsy } from '@seedcompany/common';
 import { createContext, useContext } from 'react';
 import { ChildrenProp } from '~/common';
 
@@ -20,5 +20,5 @@ export const FieldGroup = ({
 
 export const useFieldName = (name: string) => {
   const prefix = useContext(FieldGroupContext);
-  return compact([prefix, name]).join('.');
+  return [prefix, name].filter(isNotFalsy).join('.');
 };

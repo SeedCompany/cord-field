@@ -1,10 +1,10 @@
-import { orderBy } from 'lodash';
+import { sortBy } from '@seedcompany/common';
 import { Sensitivity } from '~/api/schema.graphql';
 
 export const highestSensitivity = (
   sensitivities: Sensitivity[],
   defaultLevel: Sensitivity
-) => orderBy(sensitivities, (sens) => ranks[sens], 'desc')[0] ?? defaultLevel;
+) => sortBy(sensitivities, (sens) => ranks[sens]).at(-1) ?? defaultLevel;
 
 const ranks: Record<Sensitivity, number> = {
   Low: 0,

@@ -19,8 +19,9 @@ const modifyWebpackOptions = ({
     cache: path.resolve(__dirname, 'cache/terser-webpack-plugin'),
   };
 
-  // Run editorjs through babel, since the current loader doesn't understand the newer syntax.
+  // Run these through babel, since the current loader doesn't understand the newer syntax.
   options.babelRule.include.push(
+    require.resolve('@seedcompany/common').replace('.cjs', '.js'),
     require.resolve('@editorjs/editorjs').replace('.umd.js', '.mjs')
   );
 
@@ -35,6 +36,8 @@ const modifyWebpackConfig = (opts) => {
   const isServer = target === 'node';
 
   config.resolve.plugins.push(new TsconfigPathsPlugin());
+
+  config.resolve.alias['@seedcompany/common'] = '@seedcompany/common/index.js';
 
   const define = (key, value) => {
     opts.options.webpackOptions.definePluginOptions[key] = value;

@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
 import { Alert } from '@mui/material';
-import { isBoolean } from 'lodash';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { ProductStepLabels, ProgressMeasurement } from '~/api/schema.graphql';
@@ -58,9 +57,10 @@ export const StepEditDialog = ({
       {...props}
       initialValues={initialValues}
       onSubmit={async (data) => {
-        const completed = isBoolean(data.completed)
-          ? +data.completed
-          : data.completed;
+        const completed =
+          typeof data.completed === 'boolean'
+            ? +data.completed
+            : data.completed;
         await update({
           variables: {
             input: {

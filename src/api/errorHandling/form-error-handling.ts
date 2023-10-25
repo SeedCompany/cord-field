@@ -1,5 +1,5 @@
+import { isNotFalsy, mapValues } from '@seedcompany/common';
 import { FORM_ERROR, FormApi, setIn, SubmissionErrors } from 'final-form';
-import { identity, mapValues } from 'lodash';
 import { Promisable } from 'type-fest';
 import { ErrorMap, getErrorInfo, ValidationError } from './error.types';
 
@@ -68,7 +68,9 @@ const expandDotNotation = (input: Record<string, any>) =>
 
 // We'll just use the first human error string for each field
 export const renderValidationErrors = (e: ValidationError) =>
-  expandDotNotation(mapValues(e.errors, (er) => Object.values(er)[0]));
+  expandDotNotation(
+    mapValues(e.errors, (_, er) => Object.values(er)[0]).asRecord
+  );
 
 /**
  * These are the default handlers which are used as fallbacks
@@ -109,7 +111,7 @@ export const handleFormError = async <T, P>(
     // get handler for each code
     .map((c) => mergedHandlers[c])
     // remove unhandled codes
-    .filter(identity)
+    .filter(isNotFalsy)
     // normalize handlers to a standard function shape
     .map((h) => resolveHandler(h, utils))
     // In order to build the next function for each handler we need to start

@@ -1,5 +1,9 @@
-import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
-import { orderBy } from 'lodash';
+import {
+  ApolloCache,
+  MutationUpdaterFunction,
+  Reference,
+} from '@apollo/client';
+import { sortBy } from '@seedcompany/common';
 import { Except } from 'type-fest';
 import { unwrapSecured } from '~/common';
 import { modifyChangesetDiff } from '../../changesets';
@@ -81,7 +85,7 @@ export const addItemToList =
         return;
       }
 
-      let newList = [...existing.items, newItemRef];
+      let newList: readonly Reference[] = [...existing.items, newItemRef];
 
       // Sort the new item appropriately given the list's sort/order params
       const args = argsFromStoreFieldName(storeFieldName);
@@ -90,15 +94,15 @@ export const addItemToList =
         defaultSortingForList(listId)
       );
       if (sort && order) {
-        newList = orderBy(
-          newList,
+        newList = sortBy(newList, [
           (ref) => {
             const field = readField(sort, ref);
             const fieldVal = unwrapSecured(field);
-            return fieldVal;
+            // Unsafely assume this value is sortable
+            return fieldVal as any;
           },
-          order.toLowerCase() as Lowercase<Order>
-        );
+          order.toLowerCase() as Lowercase<Order>,
+        ]);
       }
 
       return {

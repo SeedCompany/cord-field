@@ -7,7 +7,8 @@ import {
   GridValueGetterParams,
   GridValueSetterParams,
 } from '@mui/x-data-grid';
-import { sortBy, sumBy } from 'lodash';
+import { sortBy } from '@seedcompany/common';
+import { sumBy } from 'lodash';
 import { ComponentType, useMemo } from 'react';
 import { onUpdateChangeFragment, readFragment } from '~/api';
 import { IdFragment, SecuredProp } from '~/common';

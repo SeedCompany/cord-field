@@ -1,8 +1,9 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
-import { difference, sortBy, uniqBy } from 'lodash';
+import { isNotNil, sortBy } from '@seedcompany/common';
+import { difference, uniqBy } from 'lodash';
 import { readFragment } from '~/api';
 import { StepProgress } from '~/api/schema.graphql';
-import { IdFragment, notNullish } from '~/common';
+import { IdFragment } from '~/common';
 import { ProductFormFragment } from '../ProductForm/ProductForm.graphql';
 import {
   modifyProgressRelatingToEngagement,
@@ -58,7 +59,7 @@ export const updateProgressSteps =
           ? [current.progressOfCurrentReportDue]
           : []),
         ...(current?.progressReports ?? []),
-      ].filter(notNullish),
+      ].filter(isNotNil),
       (pp) => pp.report?.id
     );
 

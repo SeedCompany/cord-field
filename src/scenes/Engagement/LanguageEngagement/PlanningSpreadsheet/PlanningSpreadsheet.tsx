@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Tooltip, Typography } from '@mui/material';
+import { entries } from '@seedcompany/common';
 import { pick } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
 import {
@@ -9,7 +10,6 @@ import {
 import {
   ApproachMethodologies,
   displayMethodology,
-  entries,
   StyleProps,
 } from '~/common';
 import { DefinedFileCard } from '../../../../components/DefinedFileCard';
@@ -99,7 +99,7 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
                 <Typography className={classes.label}>
                   {ProductApproachLabels[approach]}
                 </Typography>
-                {methodologies.map((option: Methodology) => (
+                {methodologies.map((option) => (
                   <EnumOption
                     key={option}
                     label={displayMethodology(option)}

@@ -1,4 +1,4 @@
-import { groupBy, isEqual, sum } from 'lodash';
+import { isEqual, sum } from 'lodash';
 import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
 import { ScriptureFragment } from '../fragments';
 import { Nullable } from '../types';
@@ -252,15 +252,6 @@ export const getUnspecifiedScriptureDisplay = (
 
   return `${book} (${totalVerses} / ${validTotalVerses} verses)`;
 };
-
-/**
- * Creates a dictionary from an array of scripture ranges
- * Keys are bible books and the values are array of scriptureRanges that start with that book
- */
-export const scriptureRangeDictionary = (
-  scriptureReferenceArr: readonly ScriptureRange[] | undefined = []
-): Record<string, ScriptureRange[]> =>
-  groupBy(scriptureReferenceArr, (range) => range.start.book);
 
 export const getFullBookRange = (book: string): ScriptureRange => {
   const bookObject = books.find((bookObj) => bookObj.names.includes(book));

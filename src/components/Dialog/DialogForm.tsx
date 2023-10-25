@@ -13,7 +13,7 @@ import {
   TransitionProps,
 } from '@mui/material/transitions';
 import { FormApi } from 'final-form';
-import { isFunction, mergeWith } from 'lodash';
+import { mergeWith } from 'lodash';
 import { ReactNode, useCallback, useMemo, useRef } from 'react';
 import { FormRenderProps, RenderableProps } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
@@ -112,7 +112,8 @@ export function DialogForm<T, R = void>({
       DialogProps?.TransitionProps,
       TransitionProps,
       ourTransitionProps,
-      (a, b) => (isFunction(a) && isFunction(b) ? callAll(a, b) : b)
+      (a, b) =>
+        typeof a === 'function' && typeof b === 'function' ? callAll(a, b) : b
     );
   }, [DialogProps?.TransitionProps, TransitionProps]);
 
