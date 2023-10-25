@@ -116,7 +116,9 @@ export const PeriodicReportsTableInContext = ({
                 ...(report.receivedDate.canEdit && !report.skippedReason.value
                   ? [FileAction.UpdateReceivedDate]
                   : []),
-                ...(!report.receivedDate.value && !report.skippedReason.value
+                ...(!report.receivedDate.value &&
+                !report.skippedReason.value &&
+                report.skippedReason.canEdit
                   ? [FileAction.Skip]
                   : []),
                 ...(report.skippedReason.value
