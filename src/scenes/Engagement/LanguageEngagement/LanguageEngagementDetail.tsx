@@ -1,10 +1,9 @@
 import { Add } from '@mui/icons-material';
 import { Card, Grid, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
-import { Fab } from '../../../components/Fab';
 import { ProgressReportsOverviewCard } from '../../../components/ProgressReportsOverviewCard/ProgressReportsOverviewCard';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
-import { Link } from '../../../components/Routing';
+import { FabLink } from '../../../components/Routing';
 import { ProductList } from '../../Products/List/ProductList';
 import { EngagementQuery } from '../Engagement.graphql';
 import { CeremonyForm } from './Ceremony';
@@ -108,15 +107,9 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
               </Grid>
               <Grid item>
                 <Tooltip title="Create Goal">
-                  <Fab
-                    // @ts-expect-error it works. These generics are hard to express.
-                    component={Link}
-                    to="./products/create"
-                    color="error"
-                    size="small"
-                  >
+                  <FabLink to="./products/create" color="error" size="small">
                     <Add />
-                  </Fab>
+                  </FabLink>
                 </Tooltip>
               </Grid>
             </Grid>

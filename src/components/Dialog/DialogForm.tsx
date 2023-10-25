@@ -151,7 +151,6 @@ export function DialogForm<T, R = void>({
             aria-labelledby={title ? 'dialog-form' : undefined}
             PaperProps={{
               ...DialogProps?.PaperProps,
-              // @ts-expect-error MUI types don't model this correctly.
               component: 'form',
             }}
             onSubmit={handleSubmit}

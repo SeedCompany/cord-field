@@ -1,21 +1,15 @@
-import { FabProps as MUIFabProps } from '@mui/material';
+import { Fab, FabProps as MUIFabProps, Skeleton } from '@mui/material';
 import { forwardRef } from 'react';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps } from 'react-router-dom';
-import { Fab, FabProps as OurFabProps } from '../Fab';
+import { FabProps as OurFabProps } from '../Fab';
 
-export type FabLinkProps = MUIFabProps<typeof Link, LinkProps> &
+export type FabLinkProps = Omit<MUIFabProps<typeof Link, LinkProps>, 'href'> &
   Pick<OurFabProps, 'loading'>;
 
 export const FabLink = forwardRef<HTMLAnchorElement, FabLinkProps>(
-  function FabLink(props, ref) {
-    return (
-      <Fab
-        {...props}
-        // @ts-expect-error some TS wrapper is make this type crap out
-        component={Link}
-        ref={ref as any}
-      />
-    );
+  function FabLink({ loading, ...props }, ref) {
+    const fab = <Fab {...props} component={Link} ref={ref} />;
+    return loading ? <Skeleton variant="circular">{fab}</Skeleton> : fab;
   }
 );
