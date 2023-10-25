@@ -1690,10 +1690,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@date-io/core@npm:^2.15.0, @date-io/core@npm:^2.16.0":
-  version: 2.16.0
-  resolution: "@date-io/core@npm:2.16.0"
-  checksum: 336d0dd90fd0848116472cfb0e694e85860b2916952304201bb4d3a23d453d44589d346494584faba0fc05751cc38f1880889ce48cd982377aac2bfb20469b8a
+"@date-io/core@npm:^2.15.0, @date-io/core@npm:^2.16.0, @date-io/core@npm:^2.17.0":
+  version: 2.17.0
+  resolution: "@date-io/core@npm:2.17.0"
+  checksum: 008dfc79eb54256805113d76feca82fe0b08a245ecbfb2d53809e6a129dc201f9dbd053c8ad63512203ab1a13ff7f76de0edc31829588ef507d53307974c29a8
   languageName: node
   linkType: hard
 
@@ -1725,17 +1725,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@date-io/luxon@npm:^2.15.0, @date-io/luxon@npm:^2.16.1":
-  version: 2.16.1
-  resolution: "@date-io/luxon@npm:2.16.1"
+"@date-io/luxon@npm:^2.15.0, @date-io/luxon@npm:^2.17.0":
+  version: 2.17.0
+  resolution: "@date-io/luxon@npm:2.17.0"
   dependencies:
-    "@date-io/core": ^2.16.0
+    "@date-io/core": ^2.17.0
   peerDependencies:
     luxon: ^1.21.3 || ^2.x || ^3.x
   peerDependenciesMeta:
     luxon:
       optional: true
-  checksum: ac3f667ff122728e7559fac96f75bc85109d0054bf3955c1aea9d8365e08bd49ed51780f7f3900160773c0ed584db21556ea7d49acf075c61a30eb0b0e5da935
+  checksum: 26a23640a15f0628f4d020a9ee78d3b73b774226b9d68afd5022a1e8ee041475dde86b13051aca8d290ad264bcbdefb811d0e68054d8153aa15fd0cd70ab77d4
   languageName: node
   linkType: hard
 
@@ -7207,8 +7207,8 @@ __metadata:
     "@babel/plugin-transform-runtime": ^7.23.2
     "@babel/runtime": ^7.23.2
     "@babel/types": ^7.20.7
-    "@date-io/core": ^2.16.0
-    "@date-io/luxon": ^2.16.1
+    "@date-io/core": ^2.17.0
+    "@date-io/luxon": ^2.17.0
     "@editorjs/checklist": ^1.4.0
     "@editorjs/code": ^2.8.0
     "@editorjs/delimiter": ^1.3.0
