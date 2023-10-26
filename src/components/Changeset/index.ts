@@ -12,3 +12,4 @@ export * from './ChangesetContext';
 export * from './PropertyDiff';
 export * from './useChangesetAwareIdFromUrl';
 export * from './Grid';
+export * from './ChangesetPropList';

@@ -1,4 +1,10 @@
-import { Badge, Grid, TooltipProps, Typography } from '@mui/material';
+import {
+  Badge,
+  BadgeOrigin,
+  Grid,
+  TooltipProps,
+  Typography,
+} from '@mui/material';
 import { startCase } from 'lodash';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -61,6 +67,7 @@ interface ChangesetBadgeOwnProps {
   disableOutline?: boolean;
   moreInfo?: ReactNode;
   TooltipProps?: Omit<TooltipProps, 'title' | 'children'>;
+  anchorOrigin?: Partial<BadgeOrigin>;
 }
 
 export interface ChangesetBadgeProps
@@ -68,7 +75,14 @@ export interface ChangesetBadgeProps
     UseStyles<typeof useStyles> {}
 
 export const ChangesetBadge = (props: ChangesetBadgeProps) => {
-  const { mode, disableOutline, children, moreInfo, TooltipProps } = props;
+  const {
+    mode,
+    disableOutline,
+    children,
+    moreInfo,
+    TooltipProps,
+    anchorOrigin,
+  } = props;
   const outline = !disableOutline;
   const { classes, cx } = useStyles(props, {
     props: { classes: props.classes },
@@ -80,7 +94,10 @@ export const ChangesetBadge = (props: ChangesetBadgeProps) => {
 
   return (
     <Badge
-      anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+      anchorOrigin={{
+        horizontal: anchorOrigin?.horizontal ?? 'left',
+        vertical: anchorOrigin?.vertical ?? 'top',
+      }}
       component={BadgeWithTooltip}
       tooltip={(content: ReactElement) => (
         <PaperTooltip

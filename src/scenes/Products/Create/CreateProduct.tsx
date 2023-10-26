@@ -38,8 +38,11 @@ export const CreateProduct = () => {
   const { classes } = useStyles();
   const navigate = useNavigate();
 
-  const { id: engagementId, changesetId } =
-    useChangesetAwareIdFromUrl('engagementId');
+  const {
+    id: engagementId,
+    changesetId,
+    mergedId,
+  } = useChangesetAwareIdFromUrl('engagementId');
 
   const { data, loading } = useQuery(ProductInfoForCreateDocument, {
     variables: {
@@ -123,6 +126,7 @@ export const CreateProduct = () => {
         const { data } = await createOtherProduct({
           variables: {
             input: {
+              changeset: changesetId,
               engagementId,
               title: title || '',
               description,
@@ -135,6 +139,7 @@ export const CreateProduct = () => {
         const { data } = await createDirectScriptureProduct({
           variables: {
             input: {
+              changeset: changesetId,
               engagementId,
               scriptureReferences: parsedScriptureReferences,
               unspecifiedScripture:
@@ -155,6 +160,7 @@ export const CreateProduct = () => {
         const { data } = await createDerivativeScriptureProduct({
           variables: {
             input: {
+              changeset: changesetId,
               engagementId,
               ...inputs,
               produces: produces!.id,
@@ -192,8 +198,7 @@ export const CreateProduct = () => {
 
     try {
       await Promise.all([createProduct(), updatePpm()]);
-
-      navigate(`/engagements/${engagementId}`);
+      navigate(`/engagements/${mergedId}`);
     } catch (e) {
       return await handleFormError(e, form);
     }

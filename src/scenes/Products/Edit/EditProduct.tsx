@@ -217,6 +217,7 @@ export const EditProduct = () => {
         await updateOtherProduct({
           variables: {
             input: {
+              changeset: changesetId,
               id: product.id,
               ...input,
               title,
@@ -228,6 +229,7 @@ export const EditProduct = () => {
         await updateDirectScriptureProduct({
           variables: {
             input: {
+              changeset: changesetId,
               id: product.id,
               ...input,
               scriptureReferences: parsedScriptureReferences,
@@ -247,6 +249,7 @@ export const EditProduct = () => {
         await updateDerivativeScriptureProduct({
           variables: {
             input: {
+              changeset: changesetId,
               id: product.id,
               ...input,
               produces: produces!.id,
