@@ -1,7 +1,8 @@
 import { SkipNextRounded as SkipIcon } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
-import { Many, without } from 'lodash';
+import { Many } from '@seedcompany/common';
+import { without } from 'lodash';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { Except } from 'type-fest';

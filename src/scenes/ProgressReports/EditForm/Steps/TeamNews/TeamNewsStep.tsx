@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Box, Typography } from '@mui/material';
-import { simpleSwitch } from '~/common';
+import { simpleSwitch } from '@seedcompany/common';
 import { ProgressButton } from '../../../../../components/ProgressButton';
 import { ReportProp } from '../../ReportProp';
 import { VariantResponses } from '../PromptVariant';

@@ -1,8 +1,9 @@
 import { Badge, Grid, TooltipProps, Typography } from '@mui/material';
+import { mapEntries } from '@seedcompany/common';
 import { startCase } from 'lodash';
 import { cloneElement, isValidElement, ReactElement, ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { mapFromList, UseStyles } from '~/common';
+import { UseStyles } from '~/common';
 import { BadgeWithTooltip } from '../BadgeWithTooltip';
 import { PaperTooltip } from '../PaperTooltip';
 import { DiffMode } from './ChangesetDiffContext';
@@ -19,14 +20,14 @@ const useStyles = makeStyles<
   badge: {
     padding: 0,
     cursor: 'help',
-    ...mapFromList(['added', 'changed', 'removed'] as const, (mode) => {
+    ...mapEntries(['added', 'changed', 'removed'], (mode) => {
       const paletteKey = modeToPalette[mode];
       const css = {
         color: palette[paletteKey].contrastText,
         background: palette[paletteKey].main,
       };
       return [`&.${classes[mode]}`, css];
-    }),
+    }).asRecord,
   },
   icon: {
     fontSize: 12,

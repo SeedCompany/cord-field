@@ -1,5 +1,4 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
-import { isFunction } from 'lodash';
 import { DateTime, Interval } from 'luxon';
 import { invalidateProps } from '~/api';
 import { Project as ProjectShape } from '~/api/schema.graphql';
@@ -23,16 +22,18 @@ export const invalidateBudgetRecords =
     updatedOrFn: Partnership | ((res: R) => Partnership)
   ): MutationUpdaterFunction<R, unknown, unknown, ApolloCache<unknown>> =>
   (cache: ApolloCache<unknown>, res) => {
-    const previous: Partnership = isFunction(previousOrFn)
-      ? res.data
-        ? previousOrFn(res.data)
-        : undefined
-      : previousOrFn;
-    const updated: Partnership = isFunction(updatedOrFn)
-      ? res.data
-        ? updatedOrFn(res.data)
-        : undefined
-      : updatedOrFn;
+    const previous: Partnership =
+      typeof previousOrFn === 'function'
+        ? res.data
+          ? previousOrFn(res.data)
+          : undefined
+        : previousOrFn;
+    const updated: Partnership =
+      typeof updatedOrFn === 'function'
+        ? res.data
+          ? updatedOrFn(res.data)
+          : undefined
+        : updatedOrFn;
 
     const change = determineChange(previous, updated);
     if (change == null) {

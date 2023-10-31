@@ -1,12 +1,5 @@
-import {
-  compact,
-  invert,
-  mapKeys,
-  mapValues,
-  omit,
-  pick,
-  pickBy,
-} from 'lodash';
+import { isNotFalsy, mapKeys, mapValues } from '@seedcompany/common';
+import { invert, omit, pick, pickBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
@@ -18,7 +11,6 @@ import {
   StringParam,
   QueryParamConfig as UpstreamQueryParamConfig,
 } from 'serialize-query-params';
-import { entries, mapFromList } from '~/common';
 import { areListsEqual, compareNullable } from '../components/form/util';
 
 export { NumberParam, StringParam } from 'serialize-query-params';
@@ -33,8 +25,8 @@ export interface QueryParamConfig<Val, Encoded = Val>
 export const ListParam: QueryParamConfig<string[] | undefined> = {
   encode: (val) => encodeDelimitedArray(val, ',') || undefined,
   decode: (val) => {
-    const list = compact(decodeDelimitedArray(val, ','));
-    return list.length > 0 ? list : undefined;
+    const list = decodeDelimitedArray(val, ',')?.filter(isNotFalsy);
+    return list && list.length > 0 ? list : undefined;
   },
   equals: compareNullable(areListsEqual),
 };
@@ -49,33 +41,33 @@ export const BooleanParam = (): QueryParamConfig<boolean | undefined> => ({
       : undefined,
 });
 
-export const EnumListParam = <T extends string>(
+export const EnumListParam = <const T extends string>(
   options: readonly T[],
   mappingOverride?: Partial<Record<T, string>>
 ): QueryParamConfig<readonly T[] | undefined> => {
-  const decodeMapping = mapFromList(options, (opt) => [
-    mappingOverride?.[opt] ?? opt.toLowerCase(),
-    opt,
-  ]);
+  const decodeMapping = mapKeys.fromList(options, (opt) => {
+    return mappingOverride?.[opt] ?? opt.toLowerCase();
+  }).asRecord;
   const encodeMapping = invert(decodeMapping);
   return withTransform(ListParam, {
     encode: (value, encoder) =>
       encoder(value?.map((v) => encodeMapping[v] ?? v)),
     decode: (raw, decoder) => {
-      const value = compact(decoder(raw)?.map((v) => decodeMapping[v]));
-      return value.length > 0 ? value : undefined;
+      const value = decoder(raw)
+        ?.map((v) => decodeMapping[v])
+        .filter(isNotFalsy);
+      return value && value.length > 0 ? value : undefined;
     },
   });
 };
 
-export const EnumParam = <T extends string>(
+export const EnumParam = <const T extends string>(
   options: readonly T[],
   mappingOverride?: Partial<Record<T, string>>
 ): QueryParamConfig<T | undefined> => {
-  const decodeMapping = mapFromList(options, (opt) => [
-    mappingOverride?.[opt] ?? opt.toLowerCase(),
-    opt,
-  ]);
+  const decodeMapping = mapKeys.fromList(options, (opt) => {
+    return mappingOverride?.[opt] ?? opt.toLowerCase();
+  }).asRecord;
   const encodeMapping = invert(decodeMapping);
   return withTransform(StringParam, {
     encode: (value, encoder) =>
@@ -186,12 +178,15 @@ type QueryParamConfigMapShape = Record<string, QueryParamConfig<any>>;
 export const makeQueryHandler = <QPCMap extends QueryParamConfigMapShape>(
   paramConfigMap: QPCMap
 ) => {
-  const rawKeysToOurs = mapFromList(entries(paramConfigMap), ([key, value]) => [
-    value.key ?? key,
-    key,
-  ]);
+  const rawKeysToOurs = mapKeys(
+    paramConfigMap,
+    (key, value) => value.key ?? key
+  ).asRecord;
   const rawKeys = Object.keys(rawKeysToOurs);
-  const defaultValues = mapValues(paramConfigMap, (c) => c.defaultValue);
+  const defaultValues = mapValues(
+    paramConfigMap,
+    (_, c) => c.defaultValue
+  ).asRecord;
 
   return () => {
     const [search, setNext] = useSearchParams();
@@ -205,11 +200,14 @@ export const makeQueryHandler = <QPCMap extends QueryParamConfigMapShape>(
       const filtered = pick(toObj, rawKeys);
 
       // convert raw keys to our keys
-      const mapped = mapKeys(filtered, (_, key) => rawKeysToOurs[key]);
+      const mapped = mapKeys(filtered, (key) => rawKeysToOurs[key]).asRecord;
       // decode values
       const decoded = decodeQueryParams(paramConfigMap, mapped as any);
       // merge in default values
-      const defaulted = { ...defaultValues, ...decoded };
+      const defaulted: DecodedValueMap<QPCMap> = {
+        ...defaultValues,
+        ...decoded,
+      };
 
       return [defaulted, unrelated] as const;
     }, [search]);
@@ -225,8 +223,8 @@ export const makeQueryHandler = <QPCMap extends QueryParamConfigMapShape>(
         // convert our keys to the configured raw keys
         const mapped = mapKeys(
           filtered,
-          (_, key) => paramConfigMap[key]!.key ?? key
-        );
+          (key) => paramConfigMap[key]!.key ?? key
+        ).asRecord;
         // Merge in unrelated query params so they are preserved
         const merged = { ...unrelated, ...mapped };
 

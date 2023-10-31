@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
+import { isNotFalsy, Many, many, mapKeys } from '@seedcompany/common';
 import { setIn } from 'final-form';
-import { compact, keyBy, pick, startCase } from 'lodash';
+import { pick, startCase } from 'lodash';
 import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
@@ -15,8 +16,6 @@ import {
   DisplayLocationFragment,
   ExtractStrict,
   labelFrom,
-  Many,
-  many,
   MethodologyToApproach,
 } from '~/common';
 import {
@@ -115,7 +114,7 @@ const fieldMapping: Record<
       engagement.__typename === 'InternshipEngagement'
         ? engagement.position.options
         : [];
-    const groups = keyBy(options, (o) => o.position);
+    const groups = mapKeys.fromList(options, (o) => o.position).asRecord;
     return (
       <AutocompleteField
         {...props}
@@ -123,10 +122,12 @@ const fieldMapping: Record<
         options={options.map((o) => o.position)}
         groupBy={(p) => {
           const option = groups[p];
-          return compact([
-            labelFrom(InternshipProgramLabels)(option?.program),
-            labelFrom(InternshipDomainLabels)(option?.domain),
-          ]).join(' - ');
+          return [
+            labelFrom(InternshipProgramLabels)(option.program),
+            labelFrom(InternshipDomainLabels)(option.domain),
+          ]
+            .filter(isNotFalsy)
+            .join(' - ');
         }}
         getOptionLabel={labelFrom(InternshipPositionLabels)}
       />

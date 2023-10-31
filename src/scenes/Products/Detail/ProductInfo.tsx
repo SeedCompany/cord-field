@@ -6,10 +6,11 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
+import { mapEntries } from '@seedcompany/common';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
-import { displayMethodologyWithLabel, mapFromList } from '~/common';
+import { displayMethodologyWithLabel } from '~/common';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
@@ -28,10 +29,10 @@ const useStyles = makeStyles()(() => ({
 
 export const ProductInfo = ({ product }: { product?: Product }) => {
   const { classes } = useStyles();
-  const ppm = mapFromList(
+  const ppm = mapEntries(
     product?.engagement.partnershipsProducingMediums.items ?? [],
     (pair) => [pair.medium, pair.partnership]
-  );
+  ).asRecord;
   return (
     <>
       {product?.__typename === 'OtherProduct' && (

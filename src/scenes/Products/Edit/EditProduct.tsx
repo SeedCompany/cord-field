@@ -1,15 +1,14 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
+import { entries, mapEntries } from '@seedcompany/common';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import {
   callAll,
-  entries,
   getFullBookRange,
   isFullBookRange,
-  mapFromList,
   removeScriptureTypename,
 } from '~/common';
 import { handleFormError, removeItemFromList } from '../../../api';
@@ -158,10 +157,10 @@ export const EditProduct = () => {
               description: product.description.value || '',
             }
           : undefined),
-        producingMediums: mapFromList(
+        producingMediums: mapEntries(
           engagement?.partnershipsProducingMediums.items ?? [],
           (pair) => [pair.medium, pair.partnership ?? undefined]
-        ),
+        ).asRecord,
       },
     };
     return values;

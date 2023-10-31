@@ -13,7 +13,7 @@ import {
   ToggleButtonGroup,
   ToggleButtonProps,
 } from '@mui/material';
-import { sortBy } from 'lodash';
+import { Many, many, sortBy } from '@seedcompany/common';
 import {
   createContext,
   FocusEvent,
@@ -28,7 +28,7 @@ import {
 } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { Except, MergeExclusive } from 'type-fest';
-import { Many, many, StyleProps } from '~/common';
+import { StyleProps } from '~/common';
 import { FieldConfig, useField, Value } from './useField';
 import { getHelperText, showError } from './util';
 

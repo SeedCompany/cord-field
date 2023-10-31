@@ -1,5 +1,5 @@
 import { Merge } from 'type-fest';
-import { ChangesetIdFragment, has, IdFragment } from '~/common';
+import { ChangesetIdFragment, IdFragment } from '~/common';
 
 export const hasChangeset = (
   data: IdFragment
@@ -9,7 +9,7 @@ export const hasChangeset = (
     ChangesetIdFragment,
     { changeset: NonNullable<ChangesetIdFragment['changeset']> }
   >
-> => has('changeset', data) && !!data.changeset;
+> => 'changeset' in data && !!data.changeset;
 
 export const getChangeset = (data: IdFragment) =>
   hasChangeset(data) ? data.changeset : undefined;

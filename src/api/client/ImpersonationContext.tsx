@@ -1,3 +1,4 @@
+import { Many, many } from '@seedcompany/common';
 import { useLatest } from 'ahooks';
 import Cookies from 'js-cookie';
 import { noop, pickBy } from 'lodash';
@@ -8,7 +9,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { ChildrenProp, Many, many } from '~/common';
+import { ChildrenProp } from '~/common';
 import { Role } from '../schema/schema.graphql';
 
 export interface Impersonation {

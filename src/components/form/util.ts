@@ -1,4 +1,4 @@
-import { difference, differenceWith, isEmpty, isEqual } from 'lodash';
+import { difference, differenceWith, isEqual } from 'lodash';
 import { MutableRefObject, ReactNode, useCallback, useRef } from 'react';
 import { FieldMetaState, useFormState } from 'react-final-form';
 import { Nullable } from '~/common';
@@ -50,11 +50,11 @@ export const isListEqualBy = <T>(compareBy: (item: T) => any) =>
   );
 
 export const areListsEqual = (a: any, b: any) =>
-  isEmpty(difference(a, b)) && isEmpty(difference(b, a));
+  difference(a, b).length === 0 && difference(b, a).length === 0;
 
 export const areListsDeepEqual = (a: any, b: any) =>
-  isEmpty(differenceWith(a, b, isEqual)) &&
-  isEmpty(differenceWith(b, a, isEqual));
+  differenceWith(a, b, isEqual).length === 0 &&
+  differenceWith(b, a, isEqual).length === 0;
 
 export const compareNullable =
   <T>(fn: (a: T, b: T) => boolean) =>

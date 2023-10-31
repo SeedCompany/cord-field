@@ -11,8 +11,6 @@ export * from './log';
 export * from './scalar.types';
 export * from './secured';
 export * from './sensitivity';
-export * from './simpleSwitch';
-export * from './sleep';
 export * from './styles';
 export * from './sx';
 export * from './types';

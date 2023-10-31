@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
+import { entries, mapEntries } from '@seedcompany/common';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { addItemToList, handleFormError } from '~/api';
-import { callAll, entries, getFullBookRange, mapFromList } from '~/common';
+import { callAll, getFullBookRange } from '~/common';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -85,10 +86,10 @@ export const CreateProduct = () => {
       product: {
         title: '',
         bookSelection: 'full',
-        producingMediums: mapFromList(
+        producingMediums: mapEntries(
           engagement?.partnershipsProducingMediums.items ?? [],
           (pair) => [pair.medium, pair.partnership ?? undefined]
-        ),
+        ).asRecord,
       },
     };
     return values;

@@ -6,7 +6,8 @@ import {
   GridRenderCellParams,
   GridRenderEditCellParams,
 } from '@mui/x-data-grid';
-import { sortBy, uniq } from 'lodash';
+import { mapEntries, sortBy } from '@seedcompany/common';
+import { uniq } from 'lodash';
 import { useMemo } from 'react';
 import { LiteralUnion } from 'type-fest';
 import {
@@ -14,7 +15,7 @@ import {
   ProductStepLabels,
   SecuredFloatNullable,
 } from '~/api/schema.graphql';
-import { isSecured, mapFromList } from '../../../common';
+import { isSecured } from '../../../common';
 import { bookIndexFromName } from '../../../common/biblejs';
 import { EditNumberCell } from '../../../components/Grid/EditNumberCell';
 import { Link } from '../../../components/Routing';
@@ -166,10 +167,8 @@ export const ProductTable = ({
       data: progress,
       label: product.label ?? '',
       plannedSteps: new Set(progress.steps.map((s) => s.step)),
-      ...mapFromList(progress.steps, ({ step, completed }) => [
-        step,
-        completed,
-      ]),
+      ...mapEntries(progress.steps, ({ step, completed }) => [step, completed])
+        .asRecord,
     };
     return row;
   });

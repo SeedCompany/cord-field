@@ -11,12 +11,13 @@ import {
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Many } from '@seedcompany/common';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { ProjectStepLabels } from '~/api/schema.graphql';
-import { labelFrom, Many } from '~/common';
+import { labelFrom } from '~/common';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';

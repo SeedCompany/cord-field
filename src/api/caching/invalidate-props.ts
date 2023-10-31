@@ -1,10 +1,10 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
-import { compact, Many } from 'lodash';
-import { mapFromList, Nullable } from '~/common';
+import { Modifier } from '@apollo/client/cache';
+import { isNotFalsy, Many, mapValues, Nil } from '@seedcompany/common';
 import { GqlObject, GqlTypeOf } from '../schema';
 
 type PropKeys<OwningObj extends GqlObject> = ReadonlyArray<
-  Many<Nullable<keyof GqlTypeOf<OwningObj> & string>>
+  Many<(keyof GqlTypeOf<OwningObj> & string) | Nil>
 >;
 
 /**
@@ -28,12 +28,14 @@ export const invalidateProps = <OwningObj extends GqlObject>(
 
   cache.modify({
     id,
-    fields: mapFromList(compact(fields.flat()), (field) => [
-      field,
-      (_, { DELETE }) => DELETE,
-    ]),
+    fields: mapValues.fromList(
+      fields.flat().filter(isNotFalsy),
+      () => deleteField
+    ).asRecord,
   });
 };
+
+const deleteField: Modifier<any> = (_, { DELETE }) => DELETE;
 
 /**
  * A variant of {@link invalidateProps} that can be given directly to a

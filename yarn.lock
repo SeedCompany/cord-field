@@ -3843,6 +3843,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@seedcompany/common@npm:>=0.13 <1":
+  version: 0.13.1
+  resolution: "@seedcompany/common@npm:0.13.1"
+  peerDependencies:
+    luxon: ^3.3.0
+  peerDependenciesMeta:
+    luxon:
+      optional: true
+  checksum: 50f72ec4f0fe9c826a2ca16232c42053944aea34dd78587b85841f0253abeb5b9cdae6b15dca1f0fdc8c464bdba905e8a1d23e6c81d5c1b7f7fddd3144538529
+  languageName: node
+  linkType: hard
+
 "@seedcompany/eslint-plugin@npm:^3.4.1":
   version: 3.4.1
   resolution: "@seedcompany/eslint-plugin@npm:3.4.1"
@@ -7455,6 +7467,7 @@ __metadata:
     "@react-editor-js/client": "npm:^2.1.0"
     "@react-editor-js/core": "npm:^2.1.0"
     "@react-editor-js/server": "npm:^2.1.0"
+    "@seedcompany/common": "npm:>=0.13 <1"
     "@seedcompany/eslint-plugin": "npm:^3.4.1"
     "@testing-library/dom": "npm:^8.20.1"
     "@testing-library/jest-dom": "npm:^5.17.0"

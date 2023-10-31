@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Stack } from '@mui/material';
-import { groupBy, isEmpty, sortBy } from 'lodash';
+import { entries, groupToMapBy, mapEntries, sortBy } from '@seedcompany/common';
 import { useMemo, useState } from 'react';
 import { Error } from '../../../../../components/Error';
 import { UpdateStepProgressDocument } from '../../../../Products/Detail/Progress/ProductProgress.graphql';
@@ -15,18 +15,16 @@ import { VariantSelector } from './VariantSelector';
 export const ProgressStep: StepComponent = ({ report }) => {
   const progressByVariant = useMemo(
     () =>
-      new Map(
-        report.progressForAllVariants.map((progress) => {
-          const { variant } = progress[0]!;
-          const progressByCategory = groupBy(
-            sortBy(progress, ({ product: { category } }) =>
-              category === 'Scripture' ? '' : category
-            ),
-            (product) => product.product.category
-          );
-          return [variant, progressByCategory];
-        })
-      ),
+      mapEntries(report.progressForAllVariants, (progress) => {
+        const { variant } = progress[0]!;
+        const progressByCategory = groupToMapBy(
+          sortBy(progress, ({ product: { category } }) =>
+            category === 'Scripture' ? '' : category
+          ),
+          (product) => product.product.category
+        );
+        return [variant, progressByCategory];
+      }).asMap,
     [report]
   );
   const variants = [...progressByVariant.keys()];
@@ -39,7 +37,7 @@ export const ProgressStep: StepComponent = ({ report }) => {
     ? progressByVariant.get(variant)!
     : undefined;
 
-  if (!variant || !progressByCategory || isEmpty(progressByCategory)) {
+  if (!variant || !progressByCategory || progressByCategory.size === 0) {
     return <Error disableButtons>No progress available for this report.</Error>;
   }
 
@@ -55,10 +53,10 @@ export const ProgressStep: StepComponent = ({ report }) => {
     <Stack spacing={4}>
       <PnpFileAndSummary report={report} />
 
-      {Object.entries(progressByCategory).map(([category, progress]) => (
+      {entries(progressByCategory).map(([category, progress]) => (
         <ProductTable
           key={category}
-          category={category}
+          category={category!}
           products={progress}
           GridProps={{
             pagination: true,

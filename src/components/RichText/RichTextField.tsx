@@ -16,6 +16,7 @@ import {
   TextField,
   TextFieldProps,
 } from '@mui/material';
+import { many } from '@seedcompany/common';
 import { useDebounceFn, useEventListener } from 'ahooks';
 import { identity, isEqual, pick, sumBy } from 'lodash';
 import {
@@ -30,7 +31,7 @@ import {
   useState,
 } from 'react';
 import filterXSS from 'xss';
-import { extendSx, many, Nullable, StyleProps } from '~/common';
+import { extendSx, Nullable, StyleProps } from '~/common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
 import { FormattedNumber } from '../Formatters';

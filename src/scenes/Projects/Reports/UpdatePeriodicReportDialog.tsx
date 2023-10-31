@@ -1,8 +1,9 @@
+import { many, Many } from '@seedcompany/common';
 import { pick } from 'lodash';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { UpdatePeriodicReportInput } from '~/api/schema.graphql';
-import { ExtractStrict, many, Many } from '~/common';
+import { ExtractStrict } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
