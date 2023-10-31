@@ -10,10 +10,9 @@ import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
-import { Fab } from '../../../components/Fab';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
-import { Link } from '../../../components/Routing';
+import { FabLink } from '../../../components/Routing';
 import { ProductDetailFragment as Product } from './ProductDetail.graphql';
 
 const useStyles = makeStyles()(() => ({
@@ -58,14 +57,9 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
           </Grid>
           <Grid item>
             <Tooltip title="Edit Goal">
-              <Fab
-                color="primary"
-                // @ts-expect-error it works. These generics are hard to express.
-                component={Link}
-                to="edit"
-              >
+              <FabLink color="primary" to="edit">
                 <Edit />
-              </Fab>
+              </FabLink>
             </Tooltip>
           </Grid>
         </Grid>

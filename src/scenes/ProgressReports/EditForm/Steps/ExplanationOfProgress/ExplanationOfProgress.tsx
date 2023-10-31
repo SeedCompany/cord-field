@@ -1,14 +1,12 @@
 import { useMutation } from '@apollo/client';
-import type { OutputData as RichTextData } from '@editorjs/editorjs';
 import { Card, CardContent, Tooltip, Typography } from '@mui/material';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { camelCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
-import { RequiredKeysOf } from 'type-fest';
 import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
-import { canEditAny } from '~/common';
+import { canEditAny, RichTextJson } from '~/common';
 import {
   EnumField,
   EnumOption,
@@ -23,9 +21,11 @@ import { VarianceExplanation } from '../../../Detail/VarianceExplanation/Varianc
 import { StepComponent } from '../step.types';
 import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql';
 
-type OptionGroup = RequiredKeysOf<ReasonOptions>;
+type OptionGroup = typeof groups extends Array<infer T> ? T : never;
 
-const groups: OptionGroup[] = ['behind', 'onTime', 'ahead'];
+const groups = ['behind', 'onTime', 'ahead'] satisfies Array<
+  keyof ReasonOptions
+>;
 
 const decorators: Array<Decorator<FormShape>> = [
   onFieldChange({
@@ -47,7 +47,7 @@ const decorators: Array<Decorator<FormShape>> = [
 interface FormShape {
   group: OptionGroup;
   reasons?: string;
-  comments?: RichTextData;
+  comments?: RichTextJson;
 }
 
 export const ExplanationOfProgress: StepComponent = ({ report }) => {
@@ -122,7 +122,7 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
         autoSubmit
         keepDirtyOnReinitialize
       >
-        {({ handleSubmit, values: { group }, submitting }) => (
+        {({ handleSubmit, values: { group, reasons }, submitting }) => (
           <Card
             component="form"
             onSubmit={handleSubmit}
@@ -169,11 +169,27 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
               <EnumField
                 name="reasons"
                 label="Select a reason"
-                options={optionsByGroup[group]}
                 required
                 layout="column"
                 disabled={!explanation.reasons.canEdit}
-              />
+              >
+                {optionsByGroup[group].flatMap((reason) => {
+                  const isDeprecated =
+                    optionsByGroup.deprecated.includes(reason);
+                  if (isDeprecated && reason !== reasons) {
+                    // Don't even show deprecated options if they are not currently selected
+                    return [];
+                  }
+                  return (
+                    <EnumOption
+                      key={reason}
+                      label={reason}
+                      value={reason}
+                      disabled={isDeprecated}
+                    />
+                  );
+                })}
+              </EnumField>
             )}
 
             <SecuredField obj={explanation} name="comments">

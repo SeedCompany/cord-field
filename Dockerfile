@@ -1,5 +1,5 @@
 # base ================================
-FROM ghcr.io/tarampampam/node:16-alpine as node
+FROM public.ecr.aws/docker/library/node:20-slim as node
 
 LABEL org.opencontainers.image.title="CORD UI"
 LABEL org.opencontainers.image.vendor="Seed Company"

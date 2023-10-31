@@ -31,6 +31,7 @@ export const EmailField = ({
     required={required}
     {...rest}
     inputMode="email"
+    parse={(v) => v || null}
     replace={(v) => (caseSensitive ? v : v.toLowerCase())}
   />
 );

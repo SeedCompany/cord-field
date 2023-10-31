@@ -13,9 +13,9 @@ on:
 jobs:
   build-and-deploy:
     if: |
-      contains(github.event.pull_request.labels.*.name, 'preview-it') || 
+      contains(github.event.pull_request.labels.*.name, 'preview-it') ||
       (
-        github.event.action == 'unlabeled' && 
+        github.event.action == 'unlabeled' &&
         !contains(github.event.pull_request.labels.*.name, 'preview-it')
       )
     runs-on: ubuntu-latest
@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
           cache: yarn
 
       - name: Install dependencies

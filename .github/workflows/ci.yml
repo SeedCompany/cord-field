@@ -21,13 +21,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: yarn
 
-      - name: Install dependencies
-        run: yarn install && yarn dedupe --check
+      - name: Node Setup & Yarn Install
+        uses: ./.github/actions/setup
+
+      - name: Check for no duplicate dependencies
+        run: yarn dedupe --check
 
       - name: Match API PR
         uses: actions-ecosystem/action-regex-match@v2

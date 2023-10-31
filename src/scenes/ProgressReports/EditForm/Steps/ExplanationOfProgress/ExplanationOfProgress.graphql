@@ -9,6 +9,7 @@ fragment ExplanationOfProgressStep on ProgressReport {
       ahead
       behind
       onTime
+      deprecated
     }
     reasons {
       ...SecuredStringList
