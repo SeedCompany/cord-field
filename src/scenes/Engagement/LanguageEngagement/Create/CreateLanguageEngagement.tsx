@@ -20,7 +20,7 @@ import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
   engagement: {
-    languageId: LanguageLookupItem;
+    languageId?: LanguageLookupItem;
   };
 }
 
@@ -41,31 +41,44 @@ export const CreateLanguageEngagement = ({
 }: CreateLanguageEngagementProps) => {
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
-    const languageRef = {
-      __typename: 'Language',
-      id: engagement.languageId.id,
-    } as const;
+    const languageRef = engagement.languageId
+      ? ({
+          __typename: 'Language',
+          id: engagement.languageId.id,
+        } as const)
+      : ({ __typename: 'Language' } as const);
+
     await createEngagement({
       variables: {
         input: {
           engagement: {
             projectId: project.id,
-            languageId: engagement.languageId.id,
+            languageId: engagement.languageId
+              ? engagement.languageId.id
+              : undefined,
           },
           changeset: project.changeset?.id,
         },
       },
-      update: callAll(
-        addItemToList({
-          listId: [project, 'engagements'],
-          outputToItem: (res) => res.createLanguageEngagement.engagement,
-        }),
-        addItemToList({
-          listId: [languageRef, 'projects'],
-          outputToItem: () => project,
-        }),
-        recalculateSensitivity(project)
-      ),
+      update: languageRef.id
+        ? callAll(
+            addItemToList({
+              listId: [project, 'engagements'],
+              outputToItem: (res) => res.createLanguageEngagement.engagement,
+            }),
+            addItemToList({
+              listId: [languageRef, 'projects'],
+              outputToItem: () => project,
+            }),
+            recalculateSensitivity(project)
+          )
+        : callAll(
+            addItemToList({
+              listId: [project, 'engagements'],
+              outputToItem: (res) => res.createLanguageEngagement.engagement,
+            }),
+            recalculateSensitivity(project)
+          ),
     });
   };
   return (
@@ -76,7 +89,10 @@ export const CreateLanguageEngagement = ({
       changesetAware
     >
       <SubmitError />
-      <LanguageField name="engagement.languageId" label="Language" required />
+      <LanguageField
+        name="engagement.languageId"
+        label="Language (Leave blank if unknown)"
+      />
     </DialogForm>
   );
 };

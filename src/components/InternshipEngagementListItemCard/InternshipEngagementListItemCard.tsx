@@ -43,7 +43,7 @@ export const InternshipEngagementListItemCard = (
 ) => {
   const { classes, cx } = useStyles();
 
-  const fullName = props.intern.value?.fullName;
+  const fullName = props.intern.value?.fullName ?? props.nameWhenUnknown.value;
   const endDate = getEndDate(props);
   const position = props.position.value;
   const country = props.countryOfOrigin.value?.name.value;

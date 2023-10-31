@@ -53,7 +53,10 @@ export const LanguageEngagementHeader = ({
     useDialog<Engagement>();
 
   const language = engagement.language.value;
-  const langName = language?.name.value ?? language?.displayName.value;
+  const langName =
+    language?.name.value ??
+    language?.displayName.value ??
+    engagement.nameWhenUnknown.value;
   const ptRegistryId = engagement.paratextRegistryId;
   const editable = canEditAny(engagement);
 
@@ -73,7 +76,7 @@ export const LanguageEngagementHeader = ({
       <Grid item>
         <Grid container spacing={3} alignItems="center">
           <Grid item className={langName ? undefined : classes.nameRedacted}>
-            {language ? (
+            {language && !engagement.nameWhenUnknown.value ? (
               <Link variant="h2" to={`/languages/${language.id}`}>
                 {langName ?? (
                   <Redacted
@@ -82,6 +85,8 @@ export const LanguageEngagementHeader = ({
                   />
                 )}
               </Link>
+            ) : !language && langName ? (
+              <Typography variant="h2">{langName}</Typography>
             ) : (
               <Typography variant="h2">
                 <Redacted
@@ -99,6 +104,7 @@ export const LanguageEngagementHeader = ({
                   aria-label="Update language engagement"
                   onClick={() =>
                     show([
+                      'languageId',
                       'firstScripture',
                       'lukePartnership',
                       'openToInvestorVisit',
@@ -195,6 +201,7 @@ export const LanguageEngagementHeader = ({
       <EditEngagementDialog
         {...editState}
         engagement={engagement}
+        project={engagement.project}
         editFields={editField}
       />
       {workflowEngagement && (
