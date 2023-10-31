@@ -45,6 +45,15 @@ export const PeriodicReportsTableInContext = ({
   const [editState, editField, fieldsBeingEdited] =
     useDialog<Many<EditablePeriodicReportField>>();
 
+  const showFinalSubmissionWarning = data
+    ? data.filter(
+        (report) =>
+          report.skippedReason.value !== null ||
+          report.reportFile.value !== null
+      ).length <
+      data.length - 1
+    : false;
+
   const columns: Array<GridColDef<PeriodicReportFragment>> = [
     {
       headerName: 'Period',
@@ -176,6 +185,7 @@ export const PeriodicReportsTableInContext = ({
           {...editState}
           editFields={fieldsBeingEdited}
           report={reportBeingEdited}
+          showFinalSubmissionWarning={showFinalSubmissionWarning}
         />
       ) : null}
 
