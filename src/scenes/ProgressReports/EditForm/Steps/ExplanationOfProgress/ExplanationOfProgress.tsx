@@ -122,7 +122,7 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
         autoSubmit
         keepDirtyOnReinitialize
       >
-        {({ handleSubmit, values: { group }, submitting }) => (
+        {({ handleSubmit, values: { group, reasons }, submitting }) => (
           <Card
             component="form"
             onSubmit={handleSubmit}
@@ -169,11 +169,27 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
               <EnumField
                 name="reasons"
                 label="Select a reason"
-                options={optionsByGroup[group]}
                 required
                 layout="column"
                 disabled={!explanation.reasons.canEdit}
-              />
+              >
+                {optionsByGroup[group].flatMap((reason) => {
+                  const isDeprecated =
+                    optionsByGroup.deprecated.includes(reason);
+                  if (isDeprecated && reason !== reasons) {
+                    // Don't even show deprecated options if they are not currently selected
+                    return [];
+                  }
+                  return (
+                    <EnumOption
+                      key={reason}
+                      label={reason}
+                      value={reason}
+                      disabled={isDeprecated}
+                    />
+                  );
+                })}
+              </EnumField>
             )}
 
             <SecuredField obj={explanation} name="comments">
