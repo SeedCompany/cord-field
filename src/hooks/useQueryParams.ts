@@ -1,4 +1,9 @@
-import { isNotFalsy, mapKeys, mapValues } from '@seedcompany/common';
+import {
+  isNotFalsy,
+  mapEntries,
+  mapKeys,
+  mapValues,
+} from '@seedcompany/common';
 import { invert, omit, pick, pickBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -178,10 +183,10 @@ type QueryParamConfigMapShape = Record<string, QueryParamConfig<any>>;
 export const makeQueryHandler = <QPCMap extends QueryParamConfigMapShape>(
   paramConfigMap: QPCMap
 ) => {
-  const rawKeysToOurs = mapKeys(
-    paramConfigMap,
-    (key, value) => value.key ?? key
-  ).asRecord;
+  const rawKeysToOurs = mapEntries(paramConfigMap, ([key, value]) => [
+    value.key ?? key,
+    key,
+  ]).asRecord;
   const rawKeys = Object.keys(rawKeysToOurs);
   const defaultValues = mapValues(
     paramConfigMap,
