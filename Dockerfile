@@ -36,6 +36,8 @@ RUN yarn gql-gen -e && yarn razzle build --noninteractive
 
 # Remove dev dependencies
 RUN yarn workspaces focus --all --production
+# Remove yarn cache to reduce image size
+RUN yarn cache clean --all
 
 # run =================================
 FROM node as run
