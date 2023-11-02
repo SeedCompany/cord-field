@@ -25,7 +25,9 @@ FROM node as builder
 # Install dependencies (in separate docker layer from app code)
 COPY .yarn .yarn
 COPY package.json yarn.lock .yarnrc.yml ./
-ENV VERBOSE_YARN_LOG=discard
+ENV VERBOSE_YARN_LOG=discard \
+    # Use the local cache folder so libs are correctly copied in runtime stage
+    YARN_ENABLE_GLOBAL_CACHE=false
 RUN yarn install --immutable
 
 COPY . .
