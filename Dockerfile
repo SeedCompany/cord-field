@@ -36,10 +36,10 @@ ARG API_BASE_URL
 ENV RAZZLE_API_BASE_URL=$API_BASE_URL
 RUN yarn gql-gen -e && yarn razzle build --noninteractive
 
-# Remove dev dependencies
-RUN yarn workspaces focus --all --production
-# Remove yarn cache to reduce image size
+# Clear all downloaded libraries to reduce image size
 RUN yarn cache clean --all
+# Re-install prod dependencies
+RUN yarn workspaces focus --all --production
 
 # run =================================
 FROM node as run
