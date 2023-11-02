@@ -1,6 +1,8 @@
 # base ================================
 FROM public.ecr.aws/docker/library/node:20-slim as node
 
+RUN corepack enable
+
 LABEL org.opencontainers.image.title="CORD UI"
 LABEL org.opencontainers.image.vendor="Seed Company"
 LABEL org.opencontainers.image.source=https://github.com/SeedCompany/cord-field
