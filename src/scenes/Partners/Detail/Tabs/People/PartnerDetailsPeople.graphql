@@ -1,0 +1,9 @@
+fragment partnerDetailPeople on Partner {
+  pointOfContact {
+    canRead
+    canEdit
+    value {
+      ...UserListItem
+    }
+  }
+}
