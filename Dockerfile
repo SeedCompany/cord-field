@@ -1,25 +1,24 @@
-# base ================================
 FROM public.ecr.aws/docker/library/node:20-slim as node
 
-RUN corepack enable
+RUN <<EOF
+set -e
 
-LABEL org.opencontainers.image.title="CORD UI"
-LABEL org.opencontainers.image.vendor="Seed Company"
-LABEL org.opencontainers.image.source=https://github.com/SeedCompany/cord-field
-LABEL org.opencontainers.image.licenses="MIT"
+apt-get update
+
+# Install wget/curl for health checks
+apt-get install -y --no-install-recommends ca-certificates wget curl
+
+# Clean up cache to reduce image size
+apt-get clean -q -y
+rm -rf /var/lib/apt/lists/*
+
+corepack enable
+
+EOF
 
 WORKDIR /app
+ENV NODE_ENV=production
 
-ENV NODE_ENV=production \
-    PORT=80
-EXPOSE 80
-
-ARG GIT_HASH
-ARG GIT_BRANCH
-RUN echo RAZZLE_GIT_HASH=$GIT_HASH >> .env
-RUN echo RAZZLE_GIT_BRANCH=$GIT_BRANCH >> .env
-
-# builder =============================
 FROM node as builder
 
 # Install dependencies (in separate docker layer from app code)
@@ -41,11 +40,23 @@ RUN yarn cache clean --all
 # Re-install prod dependencies
 RUN yarn workspaces focus --all --production
 
-# run =================================
 FROM node as run
 
 COPY --from=builder /app/.yarn ./.yarn
 COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
 COPY --from=builder /app/build ./build
 
+LABEL org.opencontainers.image.title="CORD UI"
+LABEL org.opencontainers.image.vendor="Seed Company"
+LABEL org.opencontainers.image.source=https://github.com/SeedCompany/cord-field
+LABEL org.opencontainers.image.licenses="MIT"
+
+ENV PORT=80
+EXPOSE 80
+
 CMD ["yarn", "node", "build/server.js"]
+
+ARG GIT_HASH
+ARG GIT_BRANCH
+RUN echo RAZZLE_GIT_HASH=$GIT_HASH >> .env
+RUN echo RAZZLE_GIT_BRANCH=$GIT_BRANCH >> .env
