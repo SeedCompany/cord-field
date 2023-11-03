@@ -2,25 +2,25 @@ import { ApolloCache, isReference, TypePolicies } from '@apollo/client';
 import type { Reference } from '@apollo/client';
 import { Modifier } from '@apollo/client/cache/core/types/common';
 import type { EntityStore } from '@apollo/client/cache/inmemory/entityStore';
+import { mapValues, Nil } from '@seedcompany/common';
 import type { ConditionalKeys } from 'type-fest';
-import { keys, mapFromList, Nullable } from '~/common';
 import type { Entity, GqlTypeOf } from '../../schema';
 import type { Query } from '../../schema/schema.graphql';
 import { typePolicies } from '../../schema/typePolicies';
 import { PaginatedListOutput, SortableListInput } from './types';
 
 // Only the keys of T that represent list fields.
-type ListFieldKeys<T> = ConditionalKeys<T, Nullable<PaginatedListOutput<any>>>;
+type ListFieldKeys<T> = ConditionalKeys<T, PaginatedListOutput<any> | Nil>;
 
 type ObjectWithField<Obj extends Entity> =
-  | [existingObject: Nullable<Obj>, field: ListFieldKeys<GqlTypeOf<Obj>>]
+  | [existingObject: Obj | Nil, field: ListFieldKeys<GqlTypeOf<Obj>>]
   | [ref: Reference, field: string];
 
 export type ListIdentifier<OwningObj extends Entity> =
   | ListFieldKeys<Query>
   | ObjectWithField<OwningObj>;
 
-export type ListModifier = Modifier<Nullable<PaginatedListOutput<Reference>>>;
+export type ListModifier = Modifier<PaginatedListOutput<Reference> | Nil>;
 
 export interface ModifyListOptions<OwningObj extends Entity, Args> {
   cache: ApolloCache<unknown>;
@@ -47,7 +47,7 @@ export const modifyList = <OwningObj extends Entity, Args>({
   // @ts-expect-error assuming in memory cache with entity store
   const store: EntityStore | null = cache.data;
   const obj = store?.toObject()[id ?? 'ROOT_QUERY'] ?? {};
-  const listVariations = keys(obj)
+  const listVariations = Object.keys(obj)
     .filter(
       (query) =>
         query === field ||
@@ -71,7 +71,7 @@ export const modifyList = <OwningObj extends Entity, Args>({
       }
     });
 
-  const fields = mapFromList(listVariations, (field) => [field, modifier]);
+  const fields = mapValues.fromList(listVariations, () => modifier).asRecord;
   cache.modify({
     ...(id ? { id } : {}),
     fields,

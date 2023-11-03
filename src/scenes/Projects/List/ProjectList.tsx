@@ -7,12 +7,12 @@ import {
   Tab,
   Typography,
 } from '@mui/material';
+import { simpleSwitch } from '@seedcompany/common';
 import { omit, pickBy } from 'lodash';
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { Project } from '~/api/schema.graphql';
-import { simpleSwitch } from '~/common';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
@@ -60,6 +60,7 @@ export const ProjectList = () => {
           ...simpleSwitch(filters.tab, {
             mine: { mine: true },
             pinned: { pinned: true },
+            all: {},
           }),
         },
       },

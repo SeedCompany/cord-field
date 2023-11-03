@@ -4,7 +4,7 @@ import {
   Remove as RemoveIcon,
 } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material';
-import { simpleSwitch } from '~/common';
+import { simpleSwitch } from '@seedcompany/common';
 import { DiffMode } from './ChangesetDiffContext';
 
 export interface ChangesetIconProps extends SvgIconProps {

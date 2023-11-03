@@ -1,5 +1,4 @@
 import { RadioGroup } from '@mui/material';
-import { isString } from 'lodash';
 import { ReactNode } from 'react';
 import { Order } from '~/api/schema.graphql';
 
@@ -25,7 +24,7 @@ export const SortControl = <T extends any>({
     value={value}
     onChange={(e) => {
       // ignore DOM event
-      if (isString(e.target.value)) {
+      if (typeof e.target.value === 'string') {
         return;
       }
       onChange(e.target.value);

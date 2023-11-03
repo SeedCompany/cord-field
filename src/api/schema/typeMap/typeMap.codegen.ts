@@ -1,5 +1,6 @@
+import { sortBy } from '@seedcompany/common';
 import { GraphQLNamedType, isAbstractType, isObjectType } from 'graphql';
-import { difference, sortBy } from 'lodash';
+import { difference } from 'lodash';
 import { OptionalKind, PropertySignatureStructure } from 'ts-morph';
 import { getSchemaTypes } from '../codeGenUtil/gql.util';
 import { tsMorphPlugin } from '../codeGenUtil/ts.util';

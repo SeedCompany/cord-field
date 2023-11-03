@@ -1,6 +1,5 @@
 import { Badge, Button } from '@mui/material';
 import { ReactNode } from 'react';
-import { keys } from '~/common';
 import { useDialog } from '../Dialog';
 import { DialogForm } from '../Dialog/DialogForm';
 
@@ -19,7 +18,7 @@ export function FilterButtonDialog<T>({
 
   return (
     <>
-      <Badge badgeContent={keys(values).length} color="primary">
+      <Badge badgeContent={Object.keys(values).length} color="primary">
         <Button variant="outlined" color="secondary" onClick={() => open()}>
           Filter Options
         </Button>

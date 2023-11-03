@@ -1,5 +1,6 @@
+import { sortBy } from '@seedcompany/common';
 import { GraphQLEnumType, GraphQLEnumValue } from 'graphql';
-import { lowerCase, sortBy } from 'lodash';
+import { lowerCase } from 'lodash';
 import { titleCase } from 'title-case';
 import {
   addExportedConst,

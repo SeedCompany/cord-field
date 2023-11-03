@@ -4,10 +4,8 @@ import {
   FieldPolicy,
   KeySpecifier,
 } from '@apollo/client/cache/inmemory/policies';
+import { sortBy } from '@seedcompany/common';
 import {
-  isObject,
-  last,
-  orderBy,
   sortedIndexBy,
   sortedLastIndexBy,
   uniqBy,
@@ -143,7 +141,8 @@ const mergeList = (
       return (fieldVal as VariantFragment).key;
     }
 
-    return fieldVal;
+    // Unsafely assume this value is sortable
+    return fieldVal as any;
   };
 
   let items: readonly Reference[];
@@ -172,11 +171,10 @@ const mergeList = (
   if (sort && order && uniqueItems.length !== items.length) {
     // If we found duplicates, re-sort the list, because I'm not certain
     // we removed the right one(s).
-    items = orderBy(
-      uniqueItems,
+    items = sortBy(uniqueItems, [
       readSecuredField(sort),
-      order.toLowerCase() as Lowercase<Order>
-    );
+      order.toLowerCase() as Lowercase<Order>,
+    ]);
   } else {
     items = uniqueItems;
   }
@@ -195,7 +193,7 @@ const spliceAscLists = <T>(
   // such as the same name or created time.
   const firstIdx = sortedLastIndexBy(existing, incoming[0]!, iteratee);
   // splice ending point is the first occurrence
-  const lastIdx = sortedIndexBy(existing, last(incoming)!, iteratee);
+  const lastIdx = sortedIndexBy(existing, incoming.at(-1)!, iteratee);
   // start adding incoming after firstIdx,
   // remove any items between firstIdx and lastIdx (if <= 0 this is skipped),
   // finish incoming, and continue on with rest of existing list.
@@ -232,7 +230,7 @@ const objectToKeyArgsRecurse = (obj: Record<string, any>): KeySpecifier =>
     (keyArgs: KeySpecifier, [key, val]) => [
       ...keyArgs,
       key,
-      ...(isObject(val) ? [objectToKeyArgsRecurse(val)] : []),
+      ...(val && typeof val === 'object' ? [objectToKeyArgsRecurse(val)] : []),
     ],
     []
   );
@@ -240,7 +238,7 @@ const objectToKeyArgsRecurse = (obj: Record<string, any>): KeySpecifier =>
 const cleanEmptyObjects = (obj: Record<string, any>): Record<string, any> => {
   const res: Record<string, any> = {};
   for (const [key, value] of Object.entries(obj)) {
-    if (!isObject(value)) {
+    if (!(value && typeof value === 'object')) {
       res[key] = value;
       continue;
     }

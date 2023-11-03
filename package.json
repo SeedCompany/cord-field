@@ -22,7 +22,7 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "yarn@4.0.0",
+  "packageManager": "yarn@4.0.1",
   "dependencies": {
     "@apollo/client": "3.7.*",
     "@babel/runtime": "^7.23.2",
@@ -64,6 +64,7 @@
     "@react-editor-js/client": "^2.1.0",
     "@react-editor-js/core": "^2.1.0",
     "@react-editor-js/server": "^2.1.0",
+    "@seedcompany/common": ">=0.13 <1",
     "ahooks": "^3.7.8",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",

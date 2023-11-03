@@ -1,7 +1,5 @@
-import { isPlainObject } from 'lodash';
+import { Nil } from '@seedcompany/common';
 import { ConditionalKeys } from 'type-fest';
-import { has } from './array-helpers';
-import { Nullable } from './types';
 
 interface Readable {
   canRead: boolean;
@@ -12,25 +10,26 @@ interface Editable {
 }
 
 export interface SecuredProp<T> extends Readable, Editable {
-  value?: Nullable<T>;
+  value?: T | Nil;
 }
 
 export type UnsecuredProp<T> = T extends Partial<SecuredProp<infer P>> ? P : T;
 
 export const isSecured = <T>(value: unknown): value is SecuredProp<T> =>
-  Boolean(value) &&
-  isPlainObject(value) &&
-  'canEdit' in (value as any) &&
-  'canRead' in (value as any);
+  !!value &&
+  typeof value === 'object' &&
+  'canEdit' in value &&
+  'canRead' in value;
 
-export const unwrapSecured = (value: unknown): unknown =>
-  isPlainObject(value) &&
-  has('__typename', value) &&
+export const unwrapSecured = <T>(value: T) =>
+  (!!value &&
+  typeof value === 'object' &&
+  '__typename' in value &&
   typeof value.__typename === 'string' &&
   value.__typename.startsWith('Secured') &&
-  has('value', value)
+  'value' in value
     ? value.value
-    : value;
+    : value) as T extends SecuredProp<infer U> ? U : T;
 
 /**
  * Can the user read any of the fields of this object?
@@ -38,7 +37,7 @@ export const unwrapSecured = (value: unknown): unknown =>
  * Otherwise only the keys provided will be checked.
  */
 export const canReadAny = <T, K extends ConditionalKeys<T, Readable>>(
-  obj: Nullable<T>,
+  obj: T | Nil,
   defaultValue = false,
   ...keys: K[]
 ) => {
@@ -57,7 +56,7 @@ export const canReadAny = <T, K extends ConditionalKeys<T, Readable>>(
  * Otherwise only the keys provided will be checked.
  */
 export const canEditAny = <T, K extends ConditionalKeys<T, Editable>>(
-  obj: Nullable<T>,
+  obj: T | Nil,
   defaultValue = false,
   ...keys: K[]
 ) => {

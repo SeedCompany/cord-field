@@ -1,8 +1,9 @@
+import { Many, many } from '@seedcompany/common';
 import { identity } from 'lodash';
 import { useContext, useEffect } from 'react';
 import { UseFieldConfig, useField as useFinalField } from 'react-final-form';
 import { Except } from 'type-fest';
-import { callSome, Many, many, Nullable } from '~/common';
+import { callSome, Nullable } from '~/common';
 import { useFirstMountState } from '~/hooks';
 import { AutoSubmitOptionsContext } from './AutoSubmit';
 import { useFieldName } from './FieldGroup';

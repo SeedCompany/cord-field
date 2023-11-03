@@ -1,9 +1,9 @@
 import { useApolloClient, useMutation } from '@apollo/client';
+import { delay } from '@seedcompany/common';
 import { useMount } from 'ahooks';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
-import { sleep as delay } from '~/common';
 import { AuthWaiting } from '../AuthWaiting';
 import { LogoutDocument } from './logout.graphql';
 

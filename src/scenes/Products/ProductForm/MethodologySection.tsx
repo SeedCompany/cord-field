@@ -1,10 +1,10 @@
 import { ToggleButton, Typography } from '@mui/material';
+import { entries } from '@seedcompany/common';
 import { ProductApproachLabels } from '~/api/schema.graphql';
 import {
   ApproachMethodologies,
   displayMethodology,
   displayMethodologyWithLabel,
-  entries,
 } from '~/common';
 import { EnumField, EnumOption } from '../../../components/form';
 import { useStyles } from './DefaultAccordion';

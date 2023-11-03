@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { many, Many } from '@seedcompany/common';
 import { pick } from 'lodash';
 import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
@@ -8,8 +9,6 @@ import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
   ExtractStrict,
-  many,
-  Many,
 } from '~/common';
 import {
   DialogForm,

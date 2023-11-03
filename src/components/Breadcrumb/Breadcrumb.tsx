@@ -1,6 +1,5 @@
 import { Typography } from '@mui/material';
 import { To } from 'history';
-import { isString } from 'lodash';
 import { forwardRef, ReactNode } from 'react';
 import { useMatch } from 'react-router-dom';
 import { Link, LinkProps } from '../Routing';
@@ -18,7 +17,7 @@ export const Breadcrumb = forwardRef<
   BreadcrumbProps
 >(function Breadcrumb({ to, children, LinkProps, ...rest }, ref) {
   const active =
-    useMatch(to == null ? '' : isString(to) ? to : to.pathname!) ||
+    useMatch(to == null ? '' : typeof to === 'string' ? to : to.pathname!) ||
     // RR doesn't think current page is active. maybe a bug?
     to === '.';
 

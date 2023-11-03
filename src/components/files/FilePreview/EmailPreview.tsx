@@ -1,10 +1,10 @@
 import MsgReader from '@freiraum/msgreader';
 import { Typography } from '@mui/material';
+import { mapEntries } from '@seedcompany/common';
 import parseHtml from 'html-react-parser';
 import { DateTime } from 'luxon';
 import { useCallback, useEffect, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { mapFromList } from '~/common';
 import { FormattedDateTime } from '../../Formatters';
 import { PreviewerProps } from './FilePreview';
 import { PreviewLoading } from './PreviewLoading';
@@ -14,10 +14,10 @@ export const parseEmail = (buffer: ArrayBuffer) => {
   if ('error' in data) {
     throw new Error(data.error);
   }
-  const matches = Array.from((data.headers ?? '').matchAll(/(.*): (.*)/g));
-  const headers = mapFromList(matches, (match) =>
-    match[1] && match[2] ? [match[1], match[2]] : null
-  );
+  const headers = mapEntries(
+    (data.headers ?? '').matchAll(/(.*): (.*)/g),
+    ([_, k, v], { SKIP }) => (k && v ? [k, v] : SKIP)
+  ).asRecord;
   return {
     ...data,
     from: { name: data.senderName, email: data.senderEmail },

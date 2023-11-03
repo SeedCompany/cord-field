@@ -10,7 +10,6 @@ import {
 import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
-import { simpleSwitch } from '~/common';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { ContentContainer } from '../../../components/Layout';
 import { List, useListQuery } from '../../../components/List';
@@ -48,11 +47,7 @@ export const PartnerList = () => {
     variables: {
       input: {
         ...sort.value,
-        filter: {
-          ...simpleSwitch(filters.tab, {
-            pinned: { pinned: true },
-          }),
-        },
+        filter: filters.tab === 'pinned' ? { pinned: true } : {},
       },
     },
   });

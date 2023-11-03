@@ -1,5 +1,5 @@
 import { fromPromise, RequestHandler } from '@apollo/client';
-import { sleep } from '~/common';
+import { delay } from '@seedcompany/common';
 import { GQLOperations } from '../../operationsList';
 
 let API_DEBUG = {
@@ -33,5 +33,5 @@ export const delayLink: RequestHandler = (operation, forward) => {
   ) {
     return forward(operation);
   }
-  return fromPromise(sleep(currentDelay)).flatMap(() => forward(operation));
+  return fromPromise(delay(currentDelay)).flatMap(() => forward(operation));
 };

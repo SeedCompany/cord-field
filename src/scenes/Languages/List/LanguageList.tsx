@@ -12,7 +12,6 @@ import { useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { Language } from '~/api/schema.graphql';
-import { simpleSwitch } from '~/common';
 import { FilterButtonDialog } from '../../../components/Filter';
 import { useNumberFormatter } from '../../../components/Formatters';
 import { LanguageListItemCard as LanguageCard } from '../../../components/LanguageListItemCard';
@@ -59,9 +58,7 @@ export const LanguageList = () => {
         ...sort.value,
         filter: {
           ...omit(filters, 'tab'),
-          ...simpleSwitch(filters.tab, {
-            pinned: { pinned: true },
-          }),
+          ...(filters.tab === 'pinned' ? { pinned: true } : {}),
         },
       },
     },

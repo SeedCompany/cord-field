@@ -1,9 +1,10 @@
 import { DateRange, Edit } from '@mui/icons-material';
 import { Breadcrumbs, Grid, Tooltip, Typography } from '@mui/material';
+import { Many } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
-import { canEditAny, labelFrom, Many } from '~/common';
+import { canEditAny, labelFrom } from '~/common';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { DataButton } from '../../../../components/DataButton';
 import { useDialog } from '../../../../components/Dialog';

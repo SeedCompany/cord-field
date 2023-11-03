@@ -5,7 +5,6 @@ import {
   Skeleton,
   TooltipProps,
 } from '@mui/material';
-import { isFunction } from 'lodash';
 import { ReactNode } from 'react';
 import { extendSx, SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
@@ -37,11 +36,12 @@ export const DataButton = <T extends any>({
       emptyProp
     );
 
-  const data = isFunction(children)
-    ? showData && secured?.value
-      ? children(secured.value) ?? empty
-      : empty
-    : children ?? empty;
+  const data =
+    typeof children === 'function'
+      ? showData && secured?.value
+        ? children(secured.value) ?? empty
+        : empty
+      : children ?? empty;
 
   const btn = (
     <Button

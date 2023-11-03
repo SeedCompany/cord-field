@@ -1,9 +1,9 @@
+import { many } from '@seedcompany/common';
 import { toFinite } from 'lodash';
 import { memo, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { makeStyles } from 'tss-react/mui';
 import { Merge } from 'type-fest';
-import { many } from '~/common';
 import { useIsBot } from '../../hooks';
 import { usePictureSizes } from '../PictureSizes';
 

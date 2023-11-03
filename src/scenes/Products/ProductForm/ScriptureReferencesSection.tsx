@@ -1,12 +1,10 @@
 import { ToggleButton } from '@mui/material';
+import { entries, groupToMapBy, simpleSwitch } from '@seedcompany/common';
 import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
 import {
-  entries,
   getScriptureRangeDisplay,
   getUnspecifiedScriptureDisplay,
   ScriptureRange,
-  scriptureRangeDictionary,
-  simpleSwitch,
 } from '~/common';
 import {
   AutocompleteField,
@@ -61,13 +59,13 @@ export const ScriptureReferencesSection = ({
           );
         }
 
-        return entries(scriptureRangeDictionary(scriptureReferences)).map(
-          ([book, scriptureRangeArr]) => (
-            <ToggleButton selected key={book} value={book}>
-              {getScriptureRangeDisplay(scriptureRangeArr, book)}
-            </ToggleButton>
-          )
-        );
+        return entries(
+          groupToMapBy(scriptureReferences ?? [], (range) => range.start.book)
+        ).map(([book, scriptureRangeArr]) => (
+          <ToggleButton selected key={book} value={book}>
+            {getScriptureRangeDisplay(scriptureRangeArr, book)}
+          </ToggleButton>
+        ));
       }}
     >
       <div className={classes.section}>
