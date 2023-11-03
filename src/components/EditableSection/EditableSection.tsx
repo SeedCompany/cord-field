@@ -8,13 +8,12 @@ import {
   Typography,
 } from '@mui/material';
 import { ReactNode } from 'react';
-import { StyleProps } from '~/common';
+import { ChildrenProp, StyleProps } from '~/common';
 import { IconButton } from '../IconButton';
 
-interface EditableSectionProps extends StyleProps {
-  children?: ReactNode;
-  title?: string;
-  tooltipTitle?: string;
+interface EditableSectionProps extends StyleProps, ChildrenProp {
+  title?: ReactNode;
+  editTooltip?: ReactNode;
   loading?: boolean;
   canEdit?: boolean;
   onEdit?: () => void;
@@ -25,39 +24,36 @@ export const EditableSection = ({
   canEdit,
   onEdit,
   title,
-  tooltipTitle,
+  editTooltip,
   children,
   ...rest
-}: EditableSectionProps) => {
-  return (
-    <Box {...rest} component="section">
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          p: 1,
-        }}
-      >
-        <Typography variant="h3">
-          {!loading ? title : <Skeleton width="120px" />}
-        </Typography>
-        <Tooltip title={tooltipTitle}>
-          <span>
-            <IconButton disabled={!canEdit} onClick={onEdit} loading={loading}>
-              <Edit />
-            </IconButton>
-          </span>
-        </Tooltip>
-      </Box>
-      <Divider />
-      <Stack
-        sx={{
-          p: 2,
-        }}
-      >
-        {children}
-      </Stack>
+}: EditableSectionProps) => (
+  <Box component="section" {...rest}>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        p: 1,
+      }}
+    >
+      <Typography variant="h3">
+        {!loading ? title : <Skeleton width="120px" />}
+      </Typography>
+      <Tooltip title={editTooltip ?? 'Edit'}>
+        <span>
+          <IconButton
+            disabled={!canEdit}
+            onClick={onEdit}
+            loading={loading}
+            size="small"
+          >
+            <Edit />
+          </IconButton>
+        </span>
+      </Tooltip>
     </Box>
-  );
-};
+    <Divider />
+    <Stack p={2}>{children}</Stack>
+  </Box>
+);

@@ -1,11 +1,12 @@
-import { Grid, Skeleton, Typography } from '@mui/material';
+import { Box, Skeleton, Stack, Typography } from '@mui/material';
+import { ReactNode } from 'react';
 import {
   FinancialReportingTypeLabels,
   PartnerTypeLabels,
 } from '~/api/schema.graphql';
-import { canEditAny } from '~/common';
+import { canEditAny, labelFrom, SecuredProp, StyleProps } from '~/common';
 import { EditableSection } from '~/components/EditableSection';
-import { Redacted } from '~/components/Redacted';
+import { Redacted, RedactedProps } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
 interface PartnerTypesCardProps {
@@ -26,66 +27,85 @@ export const PartnerTypesSection = ({
   );
 
   return (
-    <section>
-      <EditableSection
-        canEdit={canEdit}
-        title="Partner Type"
-        tooltipTitle="Edit Address"
-        onEdit={onEdit}
-        loading={!partner}
-      >
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
-              Role
-            </Typography>
-            {!partner ? (
-              <Skeleton width="75%" />
-            ) : partner.types.canRead ? (
-              partner.types.value.length > 0 ? (
-                partner.types.value.map((type, index) => (
-                  <Typography key={index} variant="h4" sx={{ mb: 1 }}>
-                    {PartnerTypeLabels[type]}
-                  </Typography>
-                ))
-              ) : (
-                <Typography variant="h4">None</Typography>
-              )
-            ) : (
-              <Redacted
-                info="You don't have permission to view the partner's types"
-                width="100%"
-              />
-            )}
-          </Grid>
-
-          {partner &&
-          (partner.financialReportingTypes.value.length ||
-            !partner.financialReportingTypes.canRead) ? (
-            <Grid item>
-              <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
-                Financial Reporting Types
-              </Typography>
-              {partner.financialReportingTypes.canRead ? (
-                partner.financialReportingTypes.value.length > 0 ? (
-                  partner.financialReportingTypes.value.map((type, index) => (
-                    <Typography key={index} variant="h4" sx={{ mb: 1 }}>
-                      {FinancialReportingTypeLabels[type]}
-                    </Typography>
-                  ))
-                ) : (
-                  <Typography variant="h4">None</Typography>
-                )
-              ) : (
-                <Redacted
-                  info="You don't have permission to view the partner's financial reporting types"
-                  width="75%"
-                />
-              )}
-            </Grid>
-          ) : null}
-        </Grid>
-      </EditableSection>
-    </section>
+    <EditableSection
+      canEdit={canEdit}
+      title="Partner Type"
+      onEdit={onEdit}
+      loading={!partner}
+    >
+      <Stack spacing={2}>
+        <DisplaySecuredList
+          title="Roles"
+          data={partner?.types}
+          labelBy={labelFrom(PartnerTypeLabels)}
+          redacted={{ fieldDescription: `partner's roles` }}
+        />
+        <DisplaySecuredList
+          title="Financial Reporting Types"
+          data={partner?.financialReportingTypes}
+          labelBy={labelFrom(FinancialReportingTypeLabels)}
+          redacted={{
+            fieldDescription: `partner's financial reporting types`,
+            width: '75%',
+          }}
+        />
+      </Stack>
+    </EditableSection>
   );
 };
+
+const DisplaySecuredList = <T extends string>({
+  title,
+  data,
+  labelBy,
+  redacted,
+  ...rest
+}: {
+  title: ReactNode;
+  data?: SecuredProp<readonly T[]>;
+  labelBy: (value: T) => ReactNode;
+  redacted?: Partial<RedactedProps> & { fieldDescription?: string };
+} & StyleProps) => (
+  <Box {...rest}>
+    <Typography
+      component="h4"
+      variant="body2"
+      color="textSecondary"
+      gutterBottom
+    >
+      {title}
+    </Typography>
+    {!data ? (
+      <Skeleton width="75%" />
+    ) : data.canRead ? (
+      data.value && data.value.length > 0 ? (
+        <Stack component="ul" sx={{ m: 0, p: 0, gap: 1 }}>
+          {data.value.map((type) => (
+            <Typography
+              component="li"
+              variant="h4"
+              sx={{ listStyleType: 'none' }}
+              key={type}
+            >
+              {labelBy(type)}
+            </Typography>
+          ))}
+        </Stack>
+      ) : (
+        <Typography component="p" variant="h4">
+          None
+        </Typography>
+      )
+    ) : (
+      <Redacted
+        info={
+          redacted?.fieldDescription
+            ? `You don't have permission to view the ${redacted.fieldDescription}`
+            : `You don't have permission to view this`
+        }
+        width="100%"
+        {...redacted}
+      />
+    )}
+  </Box>
+);

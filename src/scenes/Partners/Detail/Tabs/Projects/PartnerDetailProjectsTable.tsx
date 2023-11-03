@@ -1,21 +1,16 @@
 import { Box } from '@mui/material';
 import { DataGrid, DataGridProps, GridRowParams } from '@mui/x-data-grid';
+import { cmpBy, simpleSwitch } from '@seedcompany/common';
 import { useNavigate } from 'react-router-dom';
 import { ProjectStatusLabels } from '~/api/schema/enumLists';
+import { Sensitivity } from '~/api/schema/schema.graphql';
 import { labelFrom } from '~/common';
 import { SensitivityIcon } from '~/components/Sensitivity';
-import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
-import { PartnerDetailProjectsTableListItemFragment } from './PartnerDetailProjectsTable.graphql';
+import { PartnerDetailProjectsTableListItemFragment as Project } from './PartnerDetailProjectsTable.graphql';
 
 export interface PartnerDetailProjectsTableProps {
-  projects: readonly PartnerDetailProjectsTableListItemFragment[];
-  GridProps?: Omit<DataGridProps<RowData>, 'columns' | 'isCellEditable'>;
-}
-
-export interface RowData {
-  id: string;
-  label: string;
-  data: PartnerDetailsFragment[];
+  projects: readonly Project[];
+  GridProps?: Omit<DataGridProps<Project>, 'columns' | 'isCellEditable'>;
 }
 
 export const PartnerDetailProjectsTable = ({
@@ -23,35 +18,28 @@ export const PartnerDetailProjectsTable = ({
 }: PartnerDetailProjectsTableProps) => {
   const navigate = useNavigate();
 
-  const handleRowClick = (params: GridRowParams) => {
+  const handleRowClick = (params: GridRowParams<Project>) => {
     navigate(`/projects/${params.row.id}`);
   };
 
   return (
-    <DataGrid<PartnerDetailProjectsTableListItemFragment>
+    <DataGrid<Project>
       density="compact"
       initialState={{
         sorting: {
-          sortModel: [{ field: 'name', sort: 'desc' }],
+          sortModel: [{ field: 'name', sort: 'asc' }],
         },
       }}
       disableColumnMenu
       disableSelectionOnClick
       autoHeight
-      hideFooter={true}
+      hideFooter
       sx={{
-        // TODO
-        '& .MuiDataGrid-columnHeaderTitle': {
-          fontWeight: 'bold',
-        },
+        // TODO Somehow change to using Link component
         '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
         '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
           '&:focus, &:focus-within': { outline: 'none' },
         },
-        '& .MuiDataGrid-columnHeader:nth-last-of-type(-n+1) .MuiDataGrid-columnSeparator--sideRight':
-          {
-            display: 'none',
-          },
       }}
       rows={projects}
       onRowClick={handleRowClick}
@@ -84,6 +72,9 @@ export const PartnerDetailProjectsTable = ({
           headerName: 'Sensitivity',
           field: 'sensitivity',
           flex: 1,
+          sortComparator: cmpBy<Sensitivity>((v) =>
+            simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
+          ),
           renderCell: ({ value }) => (
             <Box
               display="flex"

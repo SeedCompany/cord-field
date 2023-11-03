@@ -20,7 +20,6 @@ export const PartnerContactSection = ({
     <EditableSection
       canEdit={canEdit}
       title="Contact Information"
-      tooltipTitle="Edit Address"
       onEdit={onEdit}
       loading={!partner}
     >

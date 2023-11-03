@@ -23,13 +23,13 @@ export const PartnerDetailProfile = ({ partner, editPartner }: Props) => {
         />
       </Grid>
       <Grid container spacing={3}>
-        <Grid item sm={12} md={6}>
+        <Grid item xs={12} md={6}>
           <PartnerContactSection
             partner={partner}
             onEdit={() => editPartner('address')}
           />
         </Grid>
-        <Grid item sm={12} md={6}>
+        <Grid item xs={12} md={6}>
           <PartnerTypesSection
             partner={partner}
             onEdit={() => editPartner(['types', 'financialReportingTypes'])}
