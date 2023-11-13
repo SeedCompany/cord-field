@@ -21,10 +21,14 @@ fragment DisplayUser on User {
     ...securedString
   }
   phone {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   about {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   partners {
     items {
@@ -38,7 +42,9 @@ fragment DisplayUser on User {
     value
   }
   title {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   fullName
   timezone {
