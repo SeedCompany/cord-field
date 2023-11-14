@@ -9,16 +9,24 @@ fragment DisplayUser on User {
     value
   }
   realFirstName {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   realLastName {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   displayFirstName {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   displayLastName {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   phone {
     canRead

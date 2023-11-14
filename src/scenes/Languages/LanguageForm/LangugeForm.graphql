@@ -1,52 +1,76 @@
 fragment LanguageForm on Language {
   id
   name {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   displayName {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   displayNamePronunciation {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   isDialect {
-    ...securedBool
+    canRead
+    canEdit
+    value
   }
   isSignLanguage {
-    ...securedBool
+    canRead
+    canEdit
+    value
   }
   signLanguageCode {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   ethnologue {
     name {
-      ...securedString
-    }
-    code {
-      ...securedString
-    }
-    provisionalCode {
-      ...securedString
-    }
-    population {
-      value
       canRead
       canEdit
+      value
+    }
+    code {
+      canRead
+      canEdit
+      value
+    }
+    provisionalCode {
+      canRead
+      canEdit
+      value
+    }
+    population {
+      canRead
+      canEdit
+      value
     }
   }
   populationOverride {
-    value
     canRead
     canEdit
+    value
   }
   registryOfDialectsCode {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   leastOfThese {
-    ...securedBool
+    canRead
+    canEdit
+    value
   }
   leastOfTheseReason {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   sensitivity
   sponsorEstimatedEndDate {

@@ -1,27 +1,3 @@
-fragment securedString on SecuredString {
-  canRead
-  canEdit
-  value
-}
-
-fragment securedStringNullable on SecuredStringNullable {
-  canRead
-  canEdit
-  value
-}
-
-fragment securedInt on SecuredInt {
-  canRead
-  canEdit
-  value
-}
-
-fragment securedBool on SecuredBoolean {
-  canRead
-  canEdit
-  value
-}
-
 fragment securedDateRange on SecuredDateRange {
   canRead
   canEdit
@@ -37,16 +13,4 @@ fragment SecuredPrompt on SecuredPrompt {
   value {
     ...Prompt
   }
-}
-
-fragment SecuredRichTextNullable on SecuredRichTextNullable {
-  canEdit
-  canRead
-  value
-}
-
-fragment SecuredStringList on SecuredStringList {
-  canRead
-  canEdit
-  value
 }

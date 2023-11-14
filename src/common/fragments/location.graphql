@@ -1,7 +1,9 @@
 fragment DisplayLocation on Location {
   id
   name {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
 }
 
@@ -9,7 +11,9 @@ fragment DisplayFieldRegion on FieldRegion {
   id
   createdAt
   name {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   director {
     canRead
@@ -32,7 +36,9 @@ fragment DisplayFieldZone on FieldZone {
   id
   createdAt
   name {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   director {
     canRead

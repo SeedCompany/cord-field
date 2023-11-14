@@ -16,7 +16,9 @@ fragment PartnerLookupItem on Partner {
     value {
       id
       name {
-        ...securedString
+        canRead
+        canEdit
+        value
       }
     }
   }

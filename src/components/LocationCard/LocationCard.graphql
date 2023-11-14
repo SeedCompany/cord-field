@@ -2,7 +2,9 @@ fragment LocationCard on Location {
   id
   createdAt
   name {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   # rename field so it doesn't conflict with project type in search results
   locationType: type {

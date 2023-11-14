@@ -13,7 +13,9 @@ fragment PartnerDetails on Partner {
     value {
       id
       name {
-        ...securedString
+        canRead
+        canEdit
+        value
       }
       avatarLetters
     }
@@ -26,13 +28,19 @@ fragment PartnerDetails on Partner {
     }
   }
   globalInnovationsClient {
-    ...securedBool
+    canRead
+    canEdit
+    value
   }
   pmcEntityCode {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   active {
-    ...securedBool
+    canRead
+    canEdit
+    value
   }
   types {
     canRead
@@ -45,8 +53,8 @@ fragment PartnerDetails on Partner {
     value
   }
   address {
-    canEdit
     canRead
+    canEdit
     value
   }
   projects {

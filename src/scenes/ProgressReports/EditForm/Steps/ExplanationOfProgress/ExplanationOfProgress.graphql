@@ -3,7 +3,9 @@ fragment ExplanationOfProgressStep on ProgressReport {
   varianceExplanation {
     ...varianceExplanation # read view
     comments {
-      ...SecuredRichTextNullable
+      canRead
+      canEdit
+      value
     }
     reasonOptions {
       ahead
@@ -12,7 +14,9 @@ fragment ExplanationOfProgressStep on ProgressReport {
       deprecated
     }
     reasons {
-      ...SecuredStringList
+      canRead
+      canEdit
+      value
     }
   }
 }
