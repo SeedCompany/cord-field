@@ -9,13 +9,19 @@ fragment LanguageDetail on Language {
   id
   createdAt
   name {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   displayName {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   displayNamePronunciation {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   isDialect {
     canRead
@@ -25,17 +31,25 @@ fragment LanguageDetail on Language {
   ...LeastOfThese
   ethnologue {
     code {
-      ...securedString
+      canRead
+      canEdit
+      value
     }
     provisionalCode {
-      ...securedString
+      canRead
+      canEdit
+      value
     }
     name {
-      ...securedString
+      canRead
+      canEdit
+      value
     }
   }
   registryOfDialectsCode {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   sponsorStartDate {
     canRead

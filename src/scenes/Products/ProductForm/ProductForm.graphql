@@ -95,17 +95,23 @@ fragment Producible on Producible {
   }
   ... on EthnoArt {
     name {
-      ...securedString
+      canRead
+      canEdit
+      value
     }
   }
   ... on Film {
     name {
-      ...securedString
+      canRead
+      canEdit
+      value
     }
   }
   ... on Story {
     name {
-      ...securedString
+      canRead
+      canEdit
+      value
     }
   }
 }

@@ -6,7 +6,9 @@ fragment PartnerListItem on Partner {
     value {
       id
       name {
-        ...securedString
+        canRead
+        canEdit
+        value
       }
     }
   }

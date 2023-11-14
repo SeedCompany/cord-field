@@ -3,7 +3,9 @@ mutation UpdateOrganizationName($id: ID!, $name: String!) {
     organization {
       id
       name {
-        ...securedString
+        canRead
+        canEdit
+        value
       }
       avatarLetters
     }

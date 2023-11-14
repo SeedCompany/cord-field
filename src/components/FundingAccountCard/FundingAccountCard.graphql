@@ -2,9 +2,13 @@ fragment FundingAccountCard on FundingAccount {
   id
   createdAt
   name {
-    ...securedString
+    canRead
+    canEdit
+    value
   }
   accountNumber {
-    ...securedInt
+    canRead
+    canEdit
+    value
   }
 }
