@@ -30,18 +30,11 @@ export const LanguageEngagementListItemCard = () => (
         avatarLetters: 'E',
         displayName: {},
         sensitivity: 'High',
-        presetInventory: {
-          canRead: true,
-          value: true,
-        },
       },
     }}
     project={{
       __typename: 'TranslationProject',
       id: 'abc',
-      presetInventory: {
-        value: true,
-      },
     }}
     products={{ total: 2 }}
   />

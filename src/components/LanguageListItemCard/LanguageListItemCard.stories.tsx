@@ -23,9 +23,6 @@ export const WithData = () => {
       value: number('Population', 10000),
     },
     sensitivity: select('Sensitivity', ['High', 'Medium', 'Low'], 'High'),
-    presetInventory: {
-      value: boolean('Preset Inventory', true),
-    },
     pinned: false,
   };
 
