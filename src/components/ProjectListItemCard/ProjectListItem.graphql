@@ -21,9 +21,6 @@ fragment ProjectListItem on Project {
   estimatedSubmission {
     value
   }
-  presetInventory {
-    value
-  }
   modifiedAt
   ...TogglePin
   ... on InternshipProject {

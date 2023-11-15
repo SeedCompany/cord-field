@@ -20,7 +20,6 @@ import {
   useNumberFormatter,
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
-import { PresetInventoryIconFilled } from '../../../components/Icons';
 import { LocationCard } from '../../../components/LocationCard';
 import { ProjectListItemCard } from '../../../components/ProjectListItemCard';
 import { ProjectListItemFragment } from '../../../components/ProjectListItemCard/ProjectListItem.graphql';
@@ -38,7 +37,7 @@ import {
 import { LanguagePostList } from './LanguagePostList';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles()(({ spacing, palette }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   root: {
     overflowY: 'auto',
     padding: spacing(4),
@@ -63,11 +62,6 @@ const useStyles = makeStyles()(({ spacing, palette }) => ({
   },
   hidden: {
     visibility: 'hidden',
-  },
-  presetInventoryIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    color: palette.info.main,
   },
 }));
 
@@ -164,16 +158,6 @@ export const LanguageDetail = () => {
               data={isSignLanguage}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
-            {language?.presetInventory.value && (
-              <Grid item>
-                <Tooltip title="Preset Inventory: Exposed to major investors to directly fund">
-                  <PresetInventoryIconFilled
-                    fontSize="large"
-                    className={classes.presetInventoryIcon}
-                  />
-                </Tooltip>
-              </Grid>
-            )}
           </Grid>
           <DisplayProperty
             label="Pronunciation Guide"

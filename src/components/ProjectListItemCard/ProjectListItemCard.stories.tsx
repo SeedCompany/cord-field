@@ -42,7 +42,6 @@ export const ProjectListItemCard = () => {
       },
     },
     engagements: { total: number('Engagements', 123) },
-    presetInventory: { value: true },
   };
   return (
     <Box display="flex">
