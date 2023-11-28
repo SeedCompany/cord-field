@@ -9,7 +9,7 @@ import { EditableSection } from '~/components/EditableSection';
 import { Redacted, RedactedProps } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
-interface PartnerTypesCardProps {
+interface PartnerTypesSectionProps {
   partner?: PartnerDetailsFragment;
   onEdit: () => void;
   className?: string;
@@ -18,7 +18,7 @@ interface PartnerTypesCardProps {
 export const PartnerTypesSection = ({
   partner,
   onEdit,
-}: PartnerTypesCardProps) => {
+}: PartnerTypesSectionProps) => {
   const canEdit = canEditAny(
     partner,
     false,

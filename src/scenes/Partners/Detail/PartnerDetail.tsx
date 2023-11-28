@@ -20,13 +20,15 @@ import { Error } from '~/components/Error';
 import { FormattedDateTime } from '~/components/Formatters';
 import { IconButton } from '~/components/IconButton';
 import { TogglePinButton } from '~/components/TogglePinButton';
-import { EnumParam, makeQueryHandler, withDefault } from '../../../hooks';
+import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
 import {
   PartnerDetailsFragment,
   PartnerDocument,
 } from './PartnerDetail.graphql';
+import { PartnerDetailFinance } from './Tabs/Finance/PartnerDetailFinance';
+import { PartnerDetailNotes } from './Tabs/Notes/PartnerDetailsNotes';
 import { PartnerDetailPeople } from './Tabs/People/PartnerDetailPeople';
 import { PartnerDetailProfile } from './Tabs/Profile/PartnerDetailProfile';
 import { PartnerDetailProjects } from './Tabs/Projects/PartnerDetailProjects';
@@ -34,6 +36,7 @@ import { PartnerDetailProjects } from './Tabs/Projects/PartnerDetailProjects';
 interface PartnerViewEditProps {
   partner: PartnerDetailsFragment | undefined;
   editPartner: (item: Many<EditablePartnerField>) => void;
+  includeMembership?: boolean;
 }
 
 export const PartnerDetail = () => {
@@ -134,23 +137,14 @@ const PartnerDataButtons = ({ partner, editPartner }: PartnerViewEditProps) => (
       loading={!partner}
       color={partner?.active.value ? 'success' : 'error'}
     />
-    <DataButton
-      onClick={() => editPartner('pmcEntityCode')}
-      secured={partner?.pmcEntityCode}
-      redacted="You do not have permission to view PMC Entity Code"
-      children={
-        partner?.pmcEntityCode.value &&
-        `PMC Entity Code: ${partner.pmcEntityCode.value}`
-      }
-      empty="Enter PMC Entity Code"
-      loading={!partner}
-      variant="text"
-    />
   </Box>
 );
 
 const usePartnerDetailsFilters = makeQueryHandler({
-  tab: withDefault(EnumParam(['profile', 'people', 'projects']), 'profile'),
+  tab: withDefault(
+    EnumParam(['profile', 'people', 'projects', 'finance', 'notes']),
+    'profile'
+  ),
 });
 const PartnerTabs = (props: PartnerViewEditProps) => {
   const [filters, setFilters] = usePartnerDetailsFilters();
@@ -162,18 +156,29 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         aria-label="partner navigation tabs"
       >
         <Tab label="Partner Profile" value="profile" />
+        <Tab label="Finance" value="finance" />
         <Tab label="People" value="people" />
         <Tab label="Projects" value="projects" />
+        <Tab label="Notes" value="notes" />
       </TabList>
       <Paper>
         <TabPanel value="profile">
           <PartnerDetailProfile {...props} />
+        </TabPanel>
+        <TabPanel value="finance">
+          <PartnerDetailFinance {...props} />
         </TabPanel>
         <TabPanel value="people">
           <PartnerDetailPeople {...props} />
         </TabPanel>
         <TabPanel value="projects">
           <PartnerDetailProjects {...props} />
+        </TabPanel>
+        <TabPanel value="notes">
+          {/*This check needs to be done because strict type checking in the posts type wont allow the partner to be undefined*/}
+          {props.partner ? (
+            <PartnerDetailNotes {...props} partner={props.partner} />
+          ) : null}
         </TabPanel>
       </Paper>
     </TabContext>

@@ -3,34 +3,32 @@ import { canEditAny } from '~/common';
 import { EditableSection } from '~/components/EditableSection';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
-interface PartnerContactSectionProps {
+interface PartnerFinanceSectionHeadingProps {
   partner?: PartnerDetailsFragment;
   onEdit: () => void;
 }
 
-export const PartnerContactSection = ({
+export const PartnerFinanceSectionHeading = ({
   partner,
   onEdit,
-}: PartnerContactSectionProps) => {
-  // TODO: Implement full address saving and parsing (st, city, state, etc)
-
-  const canEdit = canEditAny(partner, false, 'address');
+}: PartnerFinanceSectionHeadingProps) => {
+  const canEdit = canEditAny(partner, false, 'pmcEntityCode');
 
   return (
     <EditableSection
       canEdit={canEdit}
-      title="Contact Information"
+      title="Finance"
       onEdit={onEdit}
       loading={!partner}
     >
       <Typography variant="body2" color="textSecondary" gutterBottom>
-        Business Address
+        Transfer Method
       </Typography>
       <Typography variant="h4">
-        {!partner?.address.value ? (
+        {!partner?.pmcEntityCode.value ? (
           <Skeleton width="75%" />
         ) : (
-          partner.address.value
+          partner.pmcEntityCode.value
         )}
       </Typography>
     </EditableSection>

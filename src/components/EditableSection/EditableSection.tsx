@@ -14,9 +14,11 @@ import { IconButton } from '../IconButton';
 interface EditableSectionProps extends StyleProps, ChildrenProp {
   title?: ReactNode;
   editTooltip?: ReactNode;
+  editIcon?: ReactNode;
   loading?: boolean;
   canEdit?: boolean;
-  onEdit?: () => void;
+  onEdit?: (arg?: any) => void | Promise<void>;
+  iconLabel?: string;
 }
 
 export const EditableSection = ({
@@ -25,7 +27,9 @@ export const EditableSection = ({
   onEdit,
   title,
   editTooltip,
+  editIcon,
   children,
+  iconLabel,
   ...rest
 }: EditableSectionProps) => (
   <Box component="section" {...rest}>
@@ -41,16 +45,21 @@ export const EditableSection = ({
         {!loading ? title : <Skeleton width="120px" />}
       </Typography>
       <Tooltip title={editTooltip ?? 'Edit'}>
-        <span>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <IconButton
             disabled={!canEdit}
             onClick={onEdit}
             loading={loading}
             size="small"
           >
-            <Edit />
+            {editIcon || <Edit />}
           </IconButton>
-        </span>
+          {iconLabel && (
+            <Typography variant="body2" sx={{ ml: 1 }}>
+              {iconLabel}
+            </Typography>
+          )}
+        </Box>
       </Tooltip>
     </Box>
     <Divider />

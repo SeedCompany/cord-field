@@ -1,10 +1,9 @@
-import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import { addItemToList } from '~/api';
 import { CreatePostInput } from '~/api/schema.graphql';
+import { CreatePost as CreatePostType } from '~/api/schema/schema.graphql';
 import { PostableIdFragment } from '../PostableId.graphql';
 import { PostForm, PostFormProps } from '../PostForm';
-import { CreatePostDocument } from './CreatePost.graphql';
+import { useCreatePost } from './hooks/useCreatePost';
 
 export type CreatePostProps = Except<
   PostFormProps<CreatePostInput>,
@@ -18,31 +17,15 @@ export const CreatePost = ({
   includeMembership = false,
   ...props
 }: CreatePostProps) => {
-  const [createPost] = useMutation(CreatePostDocument, {
-    update: addItemToList({
-      listId: [parent, 'posts'],
-      outputToItem: (data) => data.createPost.post,
-    }),
-  });
+  const createPost = useCreatePost(parent);
 
   return (
     <PostForm<CreatePostInput>
       title="Add Post"
       {...props}
       includeMembership={includeMembership}
-      onSubmit={async ({ post }) => {
-        await createPost({
-          variables: {
-            input: {
-              post: {
-                parentId: parent.id,
-                body: post.body,
-                type: post.type,
-                shareability: post.shareability,
-              },
-            },
-          },
-        });
+      onSubmit={async ({ post }: { post: CreatePostType }) => {
+        await createPost(post);
       }}
     />
   );

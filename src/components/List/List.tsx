@@ -40,6 +40,7 @@ export interface ListProps<Item extends Entity>
   /** Reference to the element that is actually scrolling, if it's not this list */
   scrollRef?: RefObject<HTMLElement>;
   className?: string;
+  wideList?: boolean;
 }
 
 export const List = <Item extends Entity>(props: ListProps<Item>) => {
@@ -61,6 +62,7 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
     LoadMoreButtonProps,
     scrollRef: scrollRefProp,
     className,
+    wideList,
   } = props;
   const { classes, cx } = useStyles(props, {
     props: { classes: props.classes },
@@ -87,8 +89,21 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
                   : renderSkeleton}
               </Grid>
             ))
-          : data.items.map((item) => (
-              <Grid {...ItemProps} {...DataItemProps} item key={item.id}>
+          : data.items.map((item, index) => (
+              <Grid
+                {...ItemProps}
+                {...DataItemProps}
+                item
+                key={item.id}
+                sx={
+                  wideList
+                    ? {
+                        ...(index === 0 && { paddingTop: '0 !important' }),
+                        ...{ paddingLeft: '0 !important' },
+                      }
+                    : null
+                }
+              >
                 <ChangesetBadge mode={determineChangesetDiff(item).mode}>
                   {renderItem(item)}
                 </ChangesetBadge>

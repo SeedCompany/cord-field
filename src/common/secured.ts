@@ -5,11 +5,15 @@ interface Readable {
   canRead: boolean;
 }
 
-interface Editable {
+export interface Editable {
   canEdit: boolean;
 }
 
-export interface SecuredProp<T> extends Readable, Editable {
+export interface Creatable {
+  canCreate?: boolean;
+}
+
+export interface SecuredProp<T> extends Readable, Editable, Creatable {
   value?: T | Nil;
 }
 
