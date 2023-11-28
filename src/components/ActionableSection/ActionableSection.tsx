@@ -11,27 +11,27 @@ import { ReactNode } from 'react';
 import { ChildrenProp, StyleProps } from '~/common';
 import { IconButton } from '../IconButton';
 
-interface EditableSectionProps extends StyleProps, ChildrenProp {
+interface ActionableSectionProps extends StyleProps, ChildrenProp {
   title?: ReactNode;
-  editTooltip?: ReactNode;
-  editIcon?: ReactNode;
+  actionTooltip?: ReactNode;
+  actionIcon?: ReactNode;
   loading?: boolean;
-  canEdit?: boolean;
-  onEdit?: (arg?: any) => void | Promise<void>;
+  canPerformAction?: boolean;
+  onAction?: (arg?: any) => void | Promise<void>;
   iconLabel?: string;
 }
 
-export const EditableSection = ({
+export const ActionableSection = ({
   loading,
-  canEdit,
-  onEdit,
+  canPerformAction,
+  onAction,
   title,
-  editTooltip,
-  editIcon,
+  actionTooltip,
+  actionIcon,
   children,
   iconLabel,
   ...rest
-}: EditableSectionProps) => (
+}: ActionableSectionProps) => (
   <Box component="section" {...rest}>
     <Box
       sx={{
@@ -44,15 +44,15 @@ export const EditableSection = ({
       <Typography variant="h3">
         {!loading ? title : <Skeleton width="120px" />}
       </Typography>
-      <Tooltip title={editTooltip ?? 'Edit'}>
+      <Tooltip title={actionTooltip ?? 'Edit'}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <IconButton
-            disabled={!canEdit}
-            onClick={onEdit}
+            disabled={!canPerformAction}
+            onClick={onAction}
             loading={loading}
             size="small"
           >
-            {editIcon || <Edit />}
+            {actionIcon || <Edit />}
           </IconButton>
           {iconLabel && (
             <Typography variant="body2" sx={{ ml: 1 }}>

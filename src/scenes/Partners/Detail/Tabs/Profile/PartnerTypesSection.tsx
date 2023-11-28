@@ -5,7 +5,7 @@ import {
   PartnerTypeLabels,
 } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, SecuredProp, StyleProps } from '~/common';
-import { EditableSection } from '~/components/EditableSection';
+import { ActionableSection } from '~/components/ActionableSection';
 import { Redacted, RedactedProps } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
@@ -27,10 +27,10 @@ export const PartnerTypesSection = ({
   );
 
   return (
-    <EditableSection
-      canEdit={canEdit}
+    <ActionableSection
+      canPerformAction={canEdit}
       title="Partner Type"
-      onEdit={onEdit}
+      onAction={onEdit}
       loading={!partner}
     >
       <Stack spacing={2}>
@@ -50,7 +50,7 @@ export const PartnerTypesSection = ({
           }}
         />
       </Stack>
-    </EditableSection>
+    </ActionableSection>
   );
 };
 

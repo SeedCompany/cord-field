@@ -9,11 +9,7 @@ export interface Editable {
   canEdit: boolean;
 }
 
-export interface Creatable {
-  canCreate?: boolean;
-}
-
-export interface SecuredProp<T> extends Readable, Editable, Creatable {
+export interface SecuredProp<T> extends Readable, Editable {
   value?: T | Nil;
 }
 

@@ -1,6 +1,6 @@
 import { Skeleton, Typography } from '@mui/material';
 import { canEditAny } from '~/common';
-import { EditableSection } from '~/components/EditableSection';
+import { ActionableSection } from '~/components/ActionableSection';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
 interface PartnerFinanceSectionHeadingProps {
@@ -15,10 +15,10 @@ export const PartnerFinanceSectionHeading = ({
   const canEdit = canEditAny(partner, false, 'pmcEntityCode');
 
   return (
-    <EditableSection
-      canEdit={canEdit}
+    <ActionableSection
+      canPerformAction={canEdit}
       title="Finance"
-      onEdit={onEdit}
+      onAction={onEdit}
       loading={!partner}
     >
       <Typography variant="body2" color="textSecondary" gutterBottom>
@@ -31,6 +31,6 @@ export const PartnerFinanceSectionHeading = ({
           partner.pmcEntityCode.value
         )}
       </Typography>
-    </EditableSection>
+    </ActionableSection>
   );
 };

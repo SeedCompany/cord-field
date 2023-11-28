@@ -1,6 +1,6 @@
 import { Skeleton, Typography } from '@mui/material';
 import { canEditAny } from '~/common';
-import { EditableSection } from '~/components/EditableSection';
+import { ActionableSection } from '~/components/ActionableSection';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
 interface PartnerContactSectionProps {
@@ -17,10 +17,10 @@ export const PartnerContactSection = ({
   const canEdit = canEditAny(partner, false, 'address');
 
   return (
-    <EditableSection
-      canEdit={canEdit}
+    <ActionableSection
+      canPerformAction={canEdit}
       title="Contact Information"
-      onEdit={onEdit}
+      onAction={onEdit}
       loading={!partner}
     >
       <Typography variant="body2" color="textSecondary" gutterBottom>
@@ -33,6 +33,6 @@ export const PartnerContactSection = ({
           partner.address.value
         )}
       </Typography>
-    </EditableSection>
+    </ActionableSection>
   );
 };

@@ -1,7 +1,7 @@
 import { Add } from '@mui/icons-material';
 import { Many } from 'lodash';
+import { ActionableSection } from '~/components/ActionableSection';
 import { useDialog } from '~/components/Dialog';
-import { EditableSection } from '~/components/EditableSection';
 import { List, useListQuery } from '~/components/List';
 import { CreatePost } from '~/components/posts/CreatePost';
 import { PostableIdFragment } from '~/components/posts/PostableId.graphql';
@@ -30,15 +30,15 @@ export const PartnerDetailNotes = ({
 
   return (
     <>
-      <EditableSection
-        onEdit={createPost}
+      <ActionableSection
+        onAction={createPost}
         loading={!partner}
-        canEdit={true}
+        canPerformAction={true}
         title="Notes"
-        editTooltip="Add Note"
-        editIcon={<Add />}
+        actionTooltip="Add Note"
+        actionIcon={<Add />}
         iconLabel="Add Note"
-      ></EditableSection>
+      ></ActionableSection>
       <List
         {...posts}
         spacing={3}
