@@ -175,10 +175,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
           <PartnerDetailProjects {...props} />
         </TabPanel>
         <TabPanel value="notes">
-          {/*This check needs to be done because strict type checking in the posts type wont allow the partner to be undefined*/}
-          {props.partner ? (
-            <PartnerDetailNotes {...props} partner={props.partner} />
-          ) : null}
+          <PartnerDetailNotes {...props} />
         </TabPanel>
       </Paper>
     </TabContext>

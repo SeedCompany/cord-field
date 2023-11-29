@@ -1,16 +1,16 @@
 import { useMutation } from '@apollo/client';
 import { Many, many } from '@seedcompany/common';
-import { Decorator, FormApi } from 'final-form';
+import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { ComponentType, useMemo } from 'react';
-import { ConditionalKeys, Except, Merge } from 'type-fest';
+import { Except, Merge } from 'type-fest';
 import {
   FinancialReportingTypeLabels,
   FinancialReportingTypeList,
   PartnerTypeList,
   UpdatePartner,
 } from '~/api/schema.graphql';
-import { canEditAny, Editable, ExtractStrict, labelFrom } from '~/common';
+import { ExtractStrict, labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -57,11 +57,6 @@ type EditPartnerProps = Except<
   partner: PartnerDetailsFragment;
   editFields?: Many<EditablePartnerField>;
 };
-
-type EditableKeysOfPartnerDetailsFragment = ConditionalKeys<
-  PartnerDetailsFragment,
-  Editable
->;
 
 interface PartnerFieldProps {
   props: {
@@ -114,17 +109,18 @@ const fieldMapping: Record<
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
   ...DialogForm.defaultDecorators,
-  onFieldChange({
-    field: 'partner.types',
-    updates: {
-      'partner.financialReportingTypes': (types, currentValues) =>
-        (types as string[]).includes('Managing')
-          ? (currentValues as PartnerFormValues).partner.financialReportingTypes
-          : undefined,
-    },
-    // This needs to be done because final-form-calculate gives us a generic Decorator and ts became too strict to allow us to use it for Decorator<PartnerFormValues>
-    // Suggest revisiting when we update final-form-calculate
-  }) as Decorator<PartnerFormValues>,
+  onFieldChange(
+    // if user unselects managing type, wipe the financial reporting type values
+    {
+      field: 'partner.types',
+      updates: {
+        'partner.financialReportingTypes': (types, currentValues) =>
+          types?.includes('Managing')
+            ? currentValues.partner.financialReportingTypes
+            : undefined,
+      },
+    }
+  ),
 ];
 
 export const EditPartner = ({
@@ -171,8 +167,8 @@ export const EditPartner = ({
             address,
             ...rest
           },
-        }: PartnerFormValues,
-        form: FormApi<PartnerFormValues>
+        },
+        form
       ) => {
         const { 'partner.organizationName': nameDirty, ...dirty } =
           form.getState().dirtyFields;
@@ -205,30 +201,15 @@ export const EditPartner = ({
         <>
           <SubmitError />
           {editFields.map((name) => {
-            const lookupPartnerField: Record<
-              string,
-              EditableKeysOfPartnerDetailsFragment
-            > = {
-              organizationName: 'organization',
-              pointOfContactId: 'pointOfContact',
-              // add any other fields that need to be converted from editable field to partner field in order to check permissions there
-            };
-
             const Field = fieldMapping[name];
-            const canEdit = canEditAny(
-              partner,
-              false,
-              lookupPartnerField[name] ||
-                (name as EditableKeysOfPartnerDetailsFragment)
-            );
-            return canEdit ? (
+            return (
               <Field
                 props={{ name }}
                 key={name}
                 partner={partner}
                 values={values}
               />
-            ) : null;
+            );
           })}
         </>
       )}

@@ -1,13 +1,7 @@
 import { MoreVert } from '@mui/icons-material';
-import {
-  Container,
-  IconButton,
-  MenuProps,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { IconButton, MenuProps, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
-import { canEditAny } from '~/common';
+import { canEditAny, StyleProps } from '~/common';
 import { useDialog } from '../../Dialog';
 import { FormattedDateTime } from '../../Formatters';
 import { DeletePost } from '../DeletePost';
@@ -16,17 +10,17 @@ import { PostableIdFragment } from '../PostableId.graphql';
 import { PostListItemCardFragment } from './PostListItemCard.graphql';
 import { PostListItemMenu } from './PostListItemMenu';
 
-interface PostListItemCardProps {
+interface PostListItemCardProps extends StyleProps {
   parent: PostableIdFragment;
   post: PostListItemCardFragment;
   includeMembership: boolean;
-  className?: string;
 }
 
 export const PostListItem = ({
   parent,
   post,
   includeMembership = false,
+  ...rest
 }: PostListItemCardProps) => {
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [editState, editPost] = useDialog();
@@ -34,41 +28,33 @@ export const PostListItem = ({
   const editable = canEditAny(post);
 
   return (
-    <>
-      <Container maxWidth={false}>
+    <Stack direction="column" spacing={1} {...rest}>
+      <Stack
+        direction="row"
+        spacing={2}
+        justifyContent="space-between"
+        alignItems="flex-start"
+      >
         <Stack
           direction="column"
-          spacing={1}
-          sx={{ pr: 3.5, pl: 1, pt: 1, pb: 3 }}
+          justifyContent="center"
+          spacing={0.5}
+          flex={1}
         >
-          <Stack
-            direction="row"
-            spacing={2}
-            justifyContent="space-between"
-            alignItems="flex-start"
-          >
-            <Stack
-              direction="column"
-              justifyContent="center"
-              spacing={0.5}
-              flex={1}
-            >
-              <Typography variant="body2" color="textSecondary">
-                {post.creator.value?.fullName}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                <FormattedDateTime date={post.createdAt} />
-              </Typography>
-            </Stack>
-            {editable && (
-              <IconButton onClick={(e) => setActionsAnchor(e.currentTarget)}>
-                <MoreVert />
-              </IconButton>
-            )}
-          </Stack>
-          <Typography variant="h4">{post.body.value}</Typography>
+          <Typography variant="body2" color="textSecondary">
+            {post.creator.value?.fullName}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            <FormattedDateTime date={post.createdAt} />
+          </Typography>
         </Stack>
-      </Container>
+        {editable && (
+          <IconButton onClick={(e) => setActionsAnchor(e.currentTarget)}>
+            <MoreVert />
+          </IconButton>
+        )}
+      </Stack>
+      <Typography variant="h4">{post.body.value}</Typography>
 
       <PostListItemMenu
         anchorEl={actionsAnchor}
@@ -89,6 +75,6 @@ export const PostListItem = ({
         {...editState}
       />
       <DeletePost parent={parent} post={post} {...deleteState} />
-    </>
+    </Stack>
   );
 };

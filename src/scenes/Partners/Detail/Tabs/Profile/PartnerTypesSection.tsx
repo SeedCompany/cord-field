@@ -1,4 +1,5 @@
-import { Box, Skeleton, Stack, Typography } from '@mui/material';
+import { Edit } from '@mui/icons-material';
+import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import {
   FinancialReportingTypeLabels,
@@ -6,6 +7,7 @@ import {
 } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, SecuredProp, StyleProps } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
+import { IconButton } from '~/components/IconButton';
 import { Redacted, RedactedProps } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
@@ -28,10 +30,22 @@ export const PartnerTypesSection = ({
 
   return (
     <ActionableSection
-      canPerformAction={canEdit}
       title="Partner Type"
-      onAction={onEdit}
       loading={!partner}
+      actionTooltip={
+        <Tooltip title="Update Partner Type">
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton
+              disabled={!canEdit}
+              onClick={onEdit}
+              loading={!partner}
+              size="small"
+            >
+              <Edit />
+            </IconButton>
+          </Box>
+        </Tooltip>
+      }
     >
       <Stack spacing={2}>
         <DisplaySecuredList
