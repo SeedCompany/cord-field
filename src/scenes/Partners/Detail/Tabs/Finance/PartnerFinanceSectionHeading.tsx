@@ -3,6 +3,7 @@ import { Skeleton, Tooltip, Typography } from '@mui/material';
 import { canEditAny } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
 import { IconButton } from '~/components/IconButton';
+import { Redacted } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
 interface PartnerFinanceSectionHeadingProps {
@@ -33,14 +34,29 @@ export const PartnerFinanceSectionHeading = ({
         </Tooltip>
       }
     >
-      <Typography variant="body2" color="textSecondary" gutterBottom>
-        Transfer Method
+      <Typography
+        component="h4"
+        variant="body2"
+        color="textSecondary"
+        gutterBottom
+      >
+        PMC Entity Code
       </Typography>
-      <Typography variant="h4">
-        {!partner?.pmcEntityCode.value ? (
-          <Skeleton width="75%" />
-        ) : (
+      <Typography component="p" variant="h4">
+        {!partner ? (
+          <Skeleton width="3ch" />
+        ) : !partner.pmcEntityCode.canRead ? (
+          <Redacted info="You cannot view this partner's code" width="3ch" />
+        ) : partner.pmcEntityCode.value ? (
           partner.pmcEntityCode.value
+        ) : (
+          <Typography
+            variant="inherit"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic' }}
+          >
+            None
+          </Typography>
         )}
       </Typography>
     </ActionableSection>
