@@ -3,7 +3,7 @@ import { createContext, useContext, useMemo } from 'react';
 import { ChildrenProp } from '~/common';
 import { makeQueryHandler, StringParam } from '~/hooks';
 import { ReportProp } from './ReportProp';
-import { GroupedStepMapShape, StepComponent, Steps } from './Steps';
+import { GroupedStepMapShape, StepComponent } from './Steps';
 
 interface ProgressReportContext {
   groupedStepMap: GroupedStepMapShape;
@@ -24,12 +24,13 @@ const useStepState = makeQueryHandler({
 export const ProgressReportContextProvider = ({
   report,
   children,
-}: Partial<ReportProp> & ChildrenProp) => {
+  steps,
+}: { steps: GroupedStepMapShape } & Partial<ReportProp> & ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
   const { groupedStepMap, stepMap, flatSteps } = useMemo(() => {
     const groupedStepMap = Object.fromEntries(
-      Object.entries(Steps).flatMap(([title, steps]) => {
+      Object.entries(steps).flatMap(([title, steps]) => {
         const enabled = steps.filter(([_, { enableWhen }]) =>
           report == null ? true : enableWhen?.({ report }) ?? true
         );
@@ -39,7 +40,7 @@ export const ProgressReportContextProvider = ({
     const stepMap = Object.fromEntries(Object.values(groupedStepMap).flat());
     const flatSteps = Object.keys(stepMap);
     return { groupedStepMap, stepMap, flatSteps };
-  }, [report]);
+  }, [report, steps]);
 
   const context = useMemo(() => {
     const stepName =
