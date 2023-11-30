@@ -1,15 +1,17 @@
-import { Box, Skeleton, Stack, Typography } from '@mui/material';
+import { Edit } from '@mui/icons-material';
+import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import {
   FinancialReportingTypeLabels,
   PartnerTypeLabels,
 } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, SecuredProp, StyleProps } from '~/common';
-import { EditableSection } from '~/components/EditableSection';
+import { ActionableSection } from '~/components/ActionableSection';
+import { IconButton } from '~/components/IconButton';
 import { Redacted, RedactedProps } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
-interface PartnerTypesCardProps {
+interface PartnerTypesSectionProps {
   partner?: PartnerDetailsFragment;
   onEdit: () => void;
   className?: string;
@@ -18,7 +20,7 @@ interface PartnerTypesCardProps {
 export const PartnerTypesSection = ({
   partner,
   onEdit,
-}: PartnerTypesCardProps) => {
+}: PartnerTypesSectionProps) => {
   const canEdit = canEditAny(
     partner,
     false,
@@ -27,11 +29,21 @@ export const PartnerTypesSection = ({
   );
 
   return (
-    <EditableSection
-      canEdit={canEdit}
+    <ActionableSection
       title="Partner Type"
-      onEdit={onEdit}
       loading={!partner}
+      action={
+        <Tooltip title="Edit">
+          <IconButton
+            disabled={!canEdit}
+            onClick={onEdit}
+            loading={!partner}
+            size="small"
+          >
+            <Edit />
+          </IconButton>
+        </Tooltip>
+      }
     >
       <Stack spacing={2}>
         <DisplaySecuredList
@@ -50,7 +62,7 @@ export const PartnerTypesSection = ({
           }}
         />
       </Stack>
-    </EditableSection>
+    </ActionableSection>
   );
 };
 

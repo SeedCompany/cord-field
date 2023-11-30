@@ -6,25 +6,23 @@ import { IconButton } from '~/components/IconButton';
 import { Redacted } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
-interface PartnerContactSectionProps {
+interface PartnerFinanceSectionHeadingProps {
   partner?: PartnerDetailsFragment;
   onEdit: () => void;
 }
 
-export const PartnerContactSection = ({
+export const PartnerFinanceSectionHeading = ({
   partner,
   onEdit,
-}: PartnerContactSectionProps) => {
-  // TODO: Implement full address saving and parsing (st, city, state, etc)
-
-  const canEdit = canEditAny(partner, false, 'address');
+}: PartnerFinanceSectionHeadingProps) => {
+  const canEdit = canEditAny(partner, false, 'pmcEntityCode');
 
   return (
     <ActionableSection
-      title="Contact Information"
+      title="Finance"
       loading={!partner}
       action={
-        <Tooltip title="Edit Contact Information">
+        <Tooltip title="Edit">
           <IconButton
             disabled={!canEdit}
             onClick={onEdit}
@@ -42,15 +40,15 @@ export const PartnerContactSection = ({
         color="textSecondary"
         gutterBottom
       >
-        Business Address
+        PMC Entity Code
       </Typography>
       <Typography component="p" variant="h4">
         {!partner ? (
-          <Skeleton width="75%" />
-        ) : !partner.address.canRead ? (
-          <Redacted info="You cannot view this partner's code" width="75%" />
-        ) : partner.address.value ? (
-          partner.address.value
+          <Skeleton width="3ch" />
+        ) : !partner.pmcEntityCode.canRead ? (
+          <Redacted info="You cannot view this partner's code" width="3ch" />
+        ) : partner.pmcEntityCode.value ? (
+          partner.pmcEntityCode.value
         ) : (
           <Typography
             variant="inherit"
