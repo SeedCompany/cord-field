@@ -5,7 +5,7 @@ interface Readable {
   canRead: boolean;
 }
 
-export interface Editable {
+interface Editable {
   canEdit: boolean;
 }
 
