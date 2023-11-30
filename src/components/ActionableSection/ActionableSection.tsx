@@ -4,14 +4,14 @@ import { ChildrenProp, StyleProps } from '~/common';
 
 interface ActionableSectionProps extends StyleProps, ChildrenProp {
   title?: ReactNode;
-  actionTooltip?: ReactNode;
+  action?: ReactNode;
   loading?: boolean;
 }
 
 export const ActionableSection = ({
   loading,
   title,
-  actionTooltip,
+  action,
   children,
   ...rest
 }: ActionableSectionProps) => (
@@ -27,7 +27,7 @@ export const ActionableSection = ({
       <Typography variant="h3">
         {!loading ? title : <Skeleton width="120px" />}
       </Typography>
-      {actionTooltip}
+      {action}
     </Box>
     <Divider />
     <Stack p={2}>{children}</Stack>

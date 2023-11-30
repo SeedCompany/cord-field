@@ -1,5 +1,5 @@
 import { Edit } from '@mui/icons-material';
-import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Skeleton, Tooltip, Typography } from '@mui/material';
 import { canEditAny } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
 import { IconButton } from '~/components/IconButton';
@@ -22,18 +22,16 @@ export const PartnerContactSection = ({
     <ActionableSection
       title="Contact Information"
       loading={!partner}
-      actionTooltip={
+      action={
         <Tooltip title="Edit Contact Information">
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              disabled={!canEdit}
-              onClick={onEdit}
-              loading={!partner}
-              size="small"
-            >
-              <Edit />
-            </IconButton>
-          </Box>
+          <IconButton
+            disabled={!canEdit}
+            onClick={onEdit}
+            loading={!partner}
+            size="small"
+          >
+            <Edit />
+          </IconButton>
         </Tooltip>
       }
     >

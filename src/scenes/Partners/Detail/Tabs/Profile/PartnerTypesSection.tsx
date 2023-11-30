@@ -32,18 +32,16 @@ export const PartnerTypesSection = ({
     <ActionableSection
       title="Partner Type"
       loading={!partner}
-      actionTooltip={
-        <Tooltip title="Update Partner Type">
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              disabled={!canEdit}
-              onClick={onEdit}
-              loading={!partner}
-              size="small"
-            >
-              <Edit />
-            </IconButton>
-          </Box>
+      action={
+        <Tooltip title="Edit">
+          <IconButton
+            disabled={!canEdit}
+            onClick={onEdit}
+            loading={!partner}
+            size="small"
+          >
+            <Edit />
+          </IconButton>
         </Tooltip>
       }
     >

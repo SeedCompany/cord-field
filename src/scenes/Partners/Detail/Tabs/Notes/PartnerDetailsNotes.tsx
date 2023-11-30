@@ -1,13 +1,12 @@
 import { Add } from '@mui/icons-material';
-import { Box, Tooltip, Typography } from '@mui/material';
 import { Many } from 'lodash';
 import { ActionableSection } from '~/components/ActionableSection';
 import { useDialog } from '~/components/Dialog';
-import { IconButton } from '~/components/IconButton';
 import { List, useListQuery } from '~/components/List';
 import { CreatePost } from '~/components/posts/CreatePost';
 import { PostableIdFragment } from '~/components/posts/PostableId.graphql';
 import { PostListItem } from '~/components/posts/PostListItemCard';
+import { ProgressButton } from '~/components/ProgressButton';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerPostListDocument as PostListQuery } from '../../PartnerPostList.graphql';
 
@@ -35,27 +34,14 @@ export const PartnerDetailNotes = ({
     <ActionableSection
       loading={!partner}
       title="Notes"
-      actionTooltip={
-        <Tooltip title="Add Note">
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              disabled={false}
-              onClick={createPost}
-              loading={!partner}
-              size="small"
-              sx={{
-                '&:hover': {
-                  background: 'transparent',
-                },
-              }}
-            >
-              <Add />
-              <Typography variant="body2" sx={{ ml: 1 }}>
-                Add Note
-              </Typography>
-            </IconButton>
-          </Box>
-        </Tooltip>
+      action={
+        <ProgressButton
+          onClick={createPost}
+          progress={!partner}
+          startIcon={<Add />}
+        >
+          Add Note
+        </ProgressButton>
       }
     >
       <List
