@@ -13,7 +13,7 @@ import { PostListItemMenu } from './PostListItemMenu';
 interface PostListItemCardProps extends StyleProps {
   parent: PostableIdFragment;
   post: PostListItemCardFragment;
-  includeMembership: boolean;
+  includeMembership?: boolean;
 }
 
 export const PostListItem = ({

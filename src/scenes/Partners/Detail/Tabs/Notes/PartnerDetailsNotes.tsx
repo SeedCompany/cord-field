@@ -13,13 +13,9 @@ import { PartnerPostListDocument as PostListQuery } from '../../PartnerPostList.
 interface Props {
   partner?: PostableIdFragment;
   editPartner: (item: Many<EditablePartnerField>) => void;
-  includeMembership?: boolean | undefined;
 }
 
-export const PartnerDetailNotes = ({
-  partner,
-  includeMembership = false,
-}: Props) => {
+export const PartnerDetailNotes = ({ partner }: Props) => {
   const [createPostState, createPost] = useDialog();
 
   const posts = useListQuery(PostListQuery, {
@@ -49,7 +45,6 @@ export const PartnerDetailNotes = ({
         spacing={0}
         renderItem={(post) => (
           <PostListItem
-            includeMembership={includeMembership}
             parent={partner!} // if we have a post, we have a partner
             post={post}
             sx={{ pb: 3 }}
@@ -60,13 +55,7 @@ export const PartnerDetailNotes = ({
         loading={!partner}
       />
 
-      {partner && (
-        <CreatePost
-          {...createPostState}
-          includeMembership={includeMembership}
-          parent={partner}
-        />
-      )}
+      {partner && <CreatePost {...createPostState} parent={partner} />}
     </ActionableSection>
   );
 };
