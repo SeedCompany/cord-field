@@ -3,6 +3,7 @@ import { Skeleton, Tooltip, Typography } from '@mui/material';
 import { canEditAny } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
 import { IconButton } from '~/components/IconButton';
+import { Redacted } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
 interface PartnerContactSectionProps {
@@ -35,14 +36,29 @@ export const PartnerContactSection = ({
         </Tooltip>
       }
     >
-      <Typography variant="body2" color="textSecondary" gutterBottom>
+      <Typography
+        component="h4"
+        variant="body2"
+        color="textSecondary"
+        gutterBottom
+      >
         Business Address
       </Typography>
-      <Typography variant="h4">
-        {!partner?.address.value ? (
+      <Typography component="p" variant="h4">
+        {!partner ? (
           <Skeleton width="75%" />
-        ) : (
+        ) : !partner.address.canRead ? (
+          <Redacted info="You cannot view this partner's code" width="75%" />
+        ) : partner.address.value ? (
           partner.address.value
+        ) : (
+          <Typography
+            variant="inherit"
+            color="text.secondary"
+            sx={{ fontStyle: 'italic' }}
+          >
+            None
+          </Typography>
         )}
       </Typography>
     </ActionableSection>
