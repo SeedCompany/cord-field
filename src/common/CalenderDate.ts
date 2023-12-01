@@ -10,6 +10,7 @@ import {
   Zone,
   ZoneOptions,
 } from 'luxon';
+import { DefaultValidity, Invalid, Valid } from 'luxon/src/_util';
 
 declare module 'luxon/src/datetime' {
   interface DateTime {
@@ -31,6 +32,8 @@ Object.defineProperties(DateTime.prototype, {
   },
 });
 
+type CalendarDateMaybeValid = CalendarDate<Valid> | CalendarDate<Invalid>;
+
 /**
  * Calendar Dates have no times or timezones.
  *
@@ -39,15 +42,15 @@ Object.defineProperties(DateTime.prototype, {
  * Whether we need/want it to be type compatible with DateTime has yet to
  * be determined - currently it is.
  */
-export class CalendarDate
+export class CalendarDate<IsValid extends boolean = DefaultValidity>
   // @ts-expect-error library doesn't explicitly support extension
-  extends DateTime
+  extends DateTime<IsValid>
 {
   static isDate(o: any): o is CalendarDate {
     return o instanceof CalendarDate;
   }
 
-  static fromDateTime(dt: DateTime): CalendarDate {
+  static fromDateTime(dt: DateTime): CalendarDateMaybeValid {
     if (dt instanceof CalendarDate) {
       return dt;
     }
@@ -76,51 +79,48 @@ export class CalendarDate
     return this.toISODate();
   }
 
-  static fromHTTP(text: string, options?: DateTimeOptions): CalendarDate {
+  static fromHTTP(text: string, options?: DateTimeOptions) {
     return CalendarDate.fromDateTime(super.fromHTTP(text, options));
   }
 
-  static fromISO(text: string, options?: DateTimeOptions): CalendarDate {
+  static fromISO(text: string, options?: DateTimeOptions) {
     return CalendarDate.fromDateTime(super.fromISO(text, options));
   }
 
-  static fromJSDate(date: Date, options?: DateTimeJSOptions): CalendarDate {
+  static fromJSDate(date: Date, options?: DateTimeJSOptions) {
     return CalendarDate.fromDateTime(super.fromJSDate(date, options));
   }
 
-  static fromMillis(ms: number, options?: DateTimeOptions): CalendarDate {
+  static fromMillis(ms: number, options?: DateTimeOptions) {
     return CalendarDate.fromDateTime(super.fromMillis(ms, options));
   }
 
-  static fromObject(
-    obj: DateObjectUnits,
-    opts?: DateTimeJSOptions
-  ): CalendarDate {
+  static fromObject(obj: DateObjectUnits, opts?: DateTimeJSOptions) {
     return CalendarDate.fromDateTime(super.fromObject(obj, opts));
   }
 
-  static fromRFC2822(text: string, options?: DateTimeOptions): CalendarDate {
+  static fromRFC2822(text: string, options?: DateTimeOptions) {
     return CalendarDate.fromDateTime(super.fromRFC2822(text, options));
   }
 
-  static fromSeconds(seconds: number, options?: DateTimeOptions): CalendarDate {
-    return CalendarDate.fromDateTime(super.fromSeconds(seconds, options));
+  static fromSeconds(seconds: number, options?: DateTimeOptions) {
+    return CalendarDate.fromDateTime(
+      super.fromSeconds(seconds, options)
+    ) as CalendarDate<Valid>;
   }
 
-  static fromSQL(text: string, options?: DateTimeOptions): CalendarDate {
+  static fromSQL(text: string, options?: DateTimeOptions) {
     return CalendarDate.fromDateTime(super.fromSQL(text, options));
   }
 
-  static fromFormat(
-    text: string,
-    format: string,
-    opts?: DateTimeOptions
-  ): CalendarDate {
+  static fromFormat(text: string, format: string, opts?: DateTimeOptions) {
     return CalendarDate.fromDateTime(super.fromFormat(text, format, opts));
   }
 
-  static invalid(reason: any): CalendarDate {
-    return CalendarDate.fromDateTime(super.invalid(reason));
+  static invalid(reason: any) {
+    return CalendarDate.fromDateTime(
+      super.invalid(reason)
+    ) as CalendarDate<Invalid>;
   }
 
   static local(
@@ -132,7 +132,7 @@ export class CalendarDate
     second: number,
     millisecond: number,
     opts?: DateTimeJSOptions
-  ): DateTime;
+  ): CalendarDateMaybeValid;
   static local(
     year: number,
     month: number,
@@ -141,7 +141,7 @@ export class CalendarDate
     minute: number,
     second: number,
     opts?: DateTimeJSOptions
-  ): DateTime;
+  ): CalendarDateMaybeValid;
   static local(
     year: number,
     month: number,
@@ -149,40 +149,32 @@ export class CalendarDate
     hour: number,
     minute: number,
     opts?: DateTimeJSOptions
-  ): DateTime;
+  ): CalendarDateMaybeValid;
   static local(
     year: number,
     month: number,
     day: number,
     hour: number,
     opts?: DateTimeJSOptions
-  ): DateTime;
+  ): CalendarDateMaybeValid;
   static local(
     year: number,
     month: number,
     day: number,
     opts?: DateTimeJSOptions
-  ): DateTime;
-  static local(year: number, month: number, opts?: DateTimeJSOptions): DateTime;
-  static local(year: number, opts?: DateTimeJSOptions): DateTime;
-  static local(opts?: DateTimeJSOptions): DateTime;
+  ): CalendarDateMaybeValid;
+  static local(
+    year: number,
+    month: number,
+    opts?: DateTimeJSOptions
+  ): CalendarDateMaybeValid;
+  static local(year: number, opts?: DateTimeJSOptions): CalendarDateMaybeValid;
+  static local(opts?: DateTimeJSOptions): CalendarDate<Valid>;
   static local(...args: any) {
     const dt = super.local(...args);
     return CalendarDate.fromDateTime(dt);
   }
 
-  static max(): undefined;
-  static max(...dateTimes: DateTime[]): CalendarDate;
-  static max(...dateTimes: DateTime[]): CalendarDate | undefined {
-    return CalendarDate.fromDateTime(super.max(...dateTimes));
-  }
-
-  static min(): undefined;
-  static min(...dateTimes: DateTime[]): CalendarDate;
-  static min(...dateTimes: DateTime[]): CalendarDate | undefined {
-    return CalendarDate.fromDateTime(super.min(...dateTimes));
-  }
-
   static utc(
     year: number,
     month: number,
@@ -192,7 +184,7 @@ export class CalendarDate
     second: number,
     millisecond: number,
     options?: LocaleOptions
-  ): DateTime;
+  ): CalendarDateMaybeValid;
   static utc(
     year: number,
     month: number,
@@ -201,7 +193,7 @@ export class CalendarDate
     minute: number,
     second: number,
     options?: LocaleOptions
-  ): DateTime;
+  ): CalendarDateMaybeValid;
   static utc(
     year: number,
     month: number,
@@ -209,23 +201,27 @@ export class CalendarDate
     hour: number,
     minute: number,
     options?: LocaleOptions
-  ): DateTime;
+  ): CalendarDateMaybeValid;
   static utc(
     year: number,
     month: number,
     day: number,
     hour: number,
     options?: LocaleOptions
-  ): DateTime;
+  ): CalendarDateMaybeValid;
   static utc(
     year: number,
     month: number,
     day: number,
     options?: LocaleOptions
-  ): DateTime;
-  static utc(year: number, month: number, options?: LocaleOptions): DateTime;
-  static utc(year: number, options?: LocaleOptions): DateTime;
-  static utc(options?: LocaleOptions): DateTime;
+  ): CalendarDateMaybeValid;
+  static utc(
+    year: number,
+    month: number,
+    options?: LocaleOptions
+  ): CalendarDateMaybeValid;
+  static utc(year: number, options?: LocaleOptions): CalendarDateMaybeValid;
+  static utc(options?: LocaleOptions): CalendarDate<Valid>;
   static utc(...args: any) {
     return CalendarDate.fromDateTime(super.utc(...args));
   }
@@ -239,43 +235,43 @@ export class CalendarDate
         })
       : undefined;
 
-  endOf(unit: DateTimeUnit): CalendarDate {
-    return CalendarDate.fromDateTime(super.endOf(unit));
+  endOf(unit: DateTimeUnit): this {
+    return CalendarDate.fromDateTime(super.endOf(unit)) as this;
   }
 
-  minus(duration: DurationLike): CalendarDate {
-    return CalendarDate.fromDateTime(super.minus(duration));
+  minus(duration: DurationLike): this {
+    return CalendarDate.fromDateTime(super.minus(duration)) as this;
   }
 
-  plus(duration: DurationLike): CalendarDate {
-    return CalendarDate.fromDateTime(super.plus(duration));
+  plus(duration: DurationLike): this {
+    return CalendarDate.fromDateTime(super.plus(duration)) as this;
   }
 
-  reconfigure(properties: LocaleOptions): CalendarDate {
-    return CalendarDate.fromDateTime(super.reconfigure(properties));
+  reconfigure(properties: LocaleOptions): this {
+    return CalendarDate.fromDateTime(super.reconfigure(properties)) as this;
   }
 
-  set(values: DateObjectUnits): CalendarDate {
-    return CalendarDate.fromDateTime(super.set(values));
+  set(values: DateObjectUnits): this {
+    return CalendarDate.fromDateTime(super.set(values)) as this;
   }
 
-  setLocale(locale: string): CalendarDate {
-    return CalendarDate.fromDateTime(super.setLocale(locale));
+  setLocale(locale: string): this {
+    return CalendarDate.fromDateTime(super.setLocale(locale)) as this;
   }
 
-  setZone(_zone: string | Zone, _options?: ZoneOptions): CalendarDate {
+  setZone(_zone: string | Zone, _options?: ZoneOptions) {
+    return this as any; // noop
+  }
+
+  startOf(unit: DateTimeUnit): this {
+    return CalendarDate.fromDateTime(super.startOf(unit)) as this;
+  }
+
+  toLocal() {
     return this; // noop
   }
 
-  startOf(unit: DateTimeUnit): CalendarDate {
-    return CalendarDate.fromDateTime(super.startOf(unit));
-  }
-
-  toLocal(): CalendarDate {
-    return this; // noop
-  }
-
-  toUTC(): CalendarDate {
+  toUTC() {
     return this; // noop
   }
 }
