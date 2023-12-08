@@ -335,7 +335,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
               'leastOfThese',
               'leastOfTheseReason'
             ) && (
-              <Grid item>
+              <Grid item xs={12} md={6}>
                 <Typography variant="h4">Least of These</Typography>
                 <SecuredField obj={language} name="leastOfThese">
                   {(props) => (
@@ -353,6 +353,19 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                       placeholder="Enter Reasoning"
                       helperText="Why is this language a Least of These partnership?"
                       minRows={2}
+                      {...props}
+                    />
+                  )}
+                </SecuredField>
+              </Grid>
+            )}
+            {canReadAny(language, true, 'isLanguageOfConsulting') && (
+              <Grid item xs={12} md={6}>
+                <Typography variant="h4">Partner Language Types</Typography>
+                <SecuredField obj={language} name="isLanguageOfConsulting">
+                  {(props) => (
+                    <CheckboxField
+                      label="Is this a language of consulting?"
                       {...props}
                     />
                   )}

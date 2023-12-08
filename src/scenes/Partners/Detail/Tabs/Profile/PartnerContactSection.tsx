@@ -25,14 +25,19 @@ export const PartnerContactSection = ({
       loading={!partner}
       action={
         <Tooltip title="Edit Contact Information">
-          <IconButton
-            disabled={!canEdit}
-            onClick={onEdit}
-            loading={!partner}
-            size="small"
+          <span
+            style={{ cursor: 'not-allowed' }}
+            className={canEdit ? '' : 'your-disabled-class'}
           >
-            <Edit />
-          </IconButton>
+            <IconButton
+              disabled={!canEdit}
+              onClick={onEdit}
+              loading={!partner}
+              size="small"
+            >
+              <Edit />
+            </IconButton>
+          </span>
         </Tooltip>
       }
     >
