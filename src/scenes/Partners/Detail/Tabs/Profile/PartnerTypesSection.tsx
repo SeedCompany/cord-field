@@ -34,14 +34,16 @@ export const PartnerTypesSection = ({
       loading={!partner}
       action={
         <Tooltip title="Edit">
-          <IconButton
-            disabled={!canEdit}
-            onClick={onEdit}
-            loading={!partner}
-            size="small"
-          >
-            <Edit />
-          </IconButton>
+          <span>
+            <IconButton
+              disabled={!canEdit}
+              onClick={onEdit}
+              loading={!partner}
+              size="small"
+            >
+              <Edit />
+            </IconButton>
+          </span>
         </Tooltip>
       }
     >
