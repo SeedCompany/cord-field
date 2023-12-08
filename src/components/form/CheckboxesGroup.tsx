@@ -1,4 +1,5 @@
 import { Box, Stack } from '@mui/material';
+import { useField } from 'react-final-form';
 import { CheckboxField } from './CheckboxField';
 import { FieldGroup } from './FieldGroup';
 
@@ -14,13 +15,20 @@ export const CheckboxesGroup = ({
   prefix,
   title,
   marginBottom = 0,
+  fieldName,
 }: {
   fieldsData: FieldData[];
   labelPlacement?: 'end' | 'start' | 'top' | 'bottom';
   prefix: string;
   title: string;
   marginBottom?: number;
+  fieldName: string;
 }) => {
+  const { input } = useField<string[]>(fieldName, {
+    format: (value) => value,
+    parse: (value) => value,
+  });
+
   return (
     <Box marginBottom={marginBottom}>
       <Box>
@@ -33,9 +41,17 @@ export const CheckboxesGroup = ({
           {fieldsData.map((field) => (
             <CheckboxField
               key={field.id}
-              name={field.id}
+              name={`${prefix}.${field.id}`}
               label={field.displayName}
               labelPlacement={labelPlacement}
+              defaultValue={input.value.includes(field.id)}
+              onChange={(event) => {
+                const checked = event.target.checked;
+                const newValue = checked
+                  ? [...input.value, field.id]
+                  : input.value.filter((value) => value !== field.id);
+                input.onChange(newValue);
+              }}
             />
           ))}
         </Stack>

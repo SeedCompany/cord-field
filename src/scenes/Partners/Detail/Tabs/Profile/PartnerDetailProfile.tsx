@@ -42,10 +42,10 @@ export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => {
           <CommunicationsSection
             partner={partner}
             onEdit={() =>
-              editPartner([
-                'languagesOfConsulting',
-                'languageOfWiderCommunicationId',
-                'languageOfReportingId',
+              edit([
+                'partner.languagesOfConsulting',
+                'partner.languageOfWiderCommunicationId',
+                'partner.languageOfReportingId',
               ])
             }
           />

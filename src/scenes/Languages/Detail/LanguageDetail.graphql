@@ -85,6 +85,16 @@ fragment LanguageDetail on Language {
     canEdit
     value
   }
+  isLanguageOfWiderCommunication {
+    canRead
+    canEdit
+    value
+  }
+  isLanguageOfReporting {
+    canRead
+    canEdit
+    value
+  }
   ...FirstScripture
   ...TogglePin
 }

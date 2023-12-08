@@ -370,6 +370,33 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                     />
                   )}
                 </SecuredField>
+                {canReadAny(
+                  language,
+                  true,
+                  'isLanguageOfWiderCommunication'
+                ) && (
+                  <SecuredField
+                    obj={language}
+                    name="isLanguageOfWiderCommunication"
+                  >
+                    {(props) => (
+                      <CheckboxField
+                        label="Is this a language of wider communication?"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                )}
+                {canReadAny(language, true, 'isLanguageOfReporting') && (
+                  <SecuredField obj={language} name="isLanguageOfReporting">
+                    {(props) => (
+                      <CheckboxField
+                        label="Is this a language of reporting?"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                )}
               </Grid>
             )}
           </Grid>
