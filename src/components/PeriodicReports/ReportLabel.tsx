@@ -30,7 +30,7 @@ export const getReportLabel = (report?: Report) => {
 
   if (!start || !end) return null;
   return +start === +end
-    ? 'Final'
+    ? 'Additional Updates'
     : start.hasSame(end, 'month')
     ? start.toFormat('LLLL yyyy')
     : `Q${start.fiscalQuarter} FY${start.fiscalYear}`;
