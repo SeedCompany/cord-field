@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Edit } from '@mui/icons-material';
+import { Edit, Timeline as TimelineIcon } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import {
   Box,
@@ -130,12 +130,13 @@ const PartnerHeader = ({ partner, editPartner }: PartnerViewEditProps) => {
 const PartnerDataButtons = ({ partner, editPartner }: PartnerViewEditProps) => (
   <Box mt={3} mb={2} display="flex" gap={2}>
     <DataButton
+      label="Status"
       onClick={() => editPartner('active')}
       secured={partner?.active}
+      startIcon={<TimelineIcon color="info" />}
       redacted="You do not have permission to view Status"
       children={partner?.active.value ? 'Active' : 'Inactive'}
       loading={!partner}
-      color={partner?.active.value ? 'success' : 'error'}
     />
   </Box>
 );
