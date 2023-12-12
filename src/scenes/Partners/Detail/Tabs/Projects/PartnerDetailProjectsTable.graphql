@@ -1,0 +1,18 @@
+fragment PartnerDetailProjectsTableListItem on Project {
+  ...Id
+  name {
+    value
+  }
+  projectStatus: status
+  ... on InternshipProject {
+    engagements {
+      total
+    }
+  }
+  ... on TranslationProject {
+    engagements {
+      total
+    }
+  }
+  sensitivity
+}

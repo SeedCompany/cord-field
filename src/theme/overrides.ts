@@ -14,7 +14,6 @@ export const appComponents = ({
   palette,
   typography,
   shape,
-  transitions,
 }: Theme): Components<Theme> => {
   const dark = palette.mode === 'dark';
   const primaryColorForText = dark
@@ -187,15 +186,13 @@ export const appComponents = ({
             border: 'none',
           },
         },
-      },
-    },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-          transition: transitions.create('transform'),
-          '&.Mui-selected': {
-            transform: 'scale(1.43)', // 20px
+        columnHeaderTitle: {
+          fontWeight: typography.weight.bold,
+        },
+        columnHeader: {
+          // Don't show last column separator
+          '&:nth-last-of-type(-n+1) .MuiDataGrid-columnSeparator--sideRight': {
+            display: 'none',
           },
         },
       },
@@ -221,6 +218,11 @@ export const appComponents = ({
           fontSize: typography.pxToRem(12),
           backgroundColor: fade(palette.grey[700], 0.94),
         },
+      },
+    },
+    MuiStack: {
+      defaultProps: {
+        useFlexGap: true,
       },
     },
   };
