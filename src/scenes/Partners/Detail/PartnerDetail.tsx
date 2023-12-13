@@ -10,7 +10,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Many } from '@seedcompany/common';
+import { Many, Nil } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
@@ -19,6 +19,7 @@ import { useDialog } from '~/components/Dialog';
 import { Error } from '~/components/Error';
 import { FormattedDateTime } from '~/components/Formatters';
 import { IconButton } from '~/components/IconButton';
+import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { EditablePartnerField, EditPartner } from '../Edit';
@@ -127,15 +128,26 @@ const PartnerHeader = ({ partner, editPartner }: PartnerViewEditProps) => {
   );
 };
 
+const StatusIcon = ({ isActive }: { isActive: boolean | Nil }) =>
+  isActive ? (
+    <TimelineIcon color="info" />
+  ) : (
+    <InactiveStatusIcon color="error" />
+  );
+
 const PartnerDataButtons = ({ partner, editPartner }: PartnerViewEditProps) => (
   <Box mt={3} mb={2} display="flex" gap={2}>
     <DataButton
       label="Status"
       onClick={() => editPartner('active')}
       secured={partner?.active}
-      startIcon={<TimelineIcon color="info" />}
+      startIcon={<StatusIcon isActive={partner?.active.value} />}
       redacted="You do not have permission to view Status"
-      children={partner?.active.value ? 'Active' : 'Inactive'}
+      children={
+        <Box color={partner?.active.value ? 'inherit' : 'text.secondary'}>
+          {partner?.active.value ? 'Active' : 'Inactive'}
+        </Box>
+      }
       loading={!partner}
     />
   </Box>
