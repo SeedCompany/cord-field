@@ -1,5 +1,9 @@
 import { useQuery } from '@apollo/client';
-import { Edit, Timeline as TimelineIcon } from '@mui/icons-material';
+import {
+  Edit,
+  Event as EventIcon,
+  Timeline as TimelineIcon,
+} from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import {
   Box,
@@ -17,7 +21,7 @@ import { PartialDeep } from 'type-fest';
 import { DataButton } from '~/components/DataButton';
 import { useDialog } from '~/components/Dialog';
 import { Error } from '~/components/Error';
-import { FormattedDateTime } from '~/components/Formatters';
+import { FormattedDate, FormattedDateTime } from '~/components/Formatters';
 import { IconButton } from '~/components/IconButton';
 import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
 import { TogglePinButton } from '~/components/TogglePinButton';
@@ -148,6 +152,16 @@ const PartnerDataButtons = ({ partner, editPartner }: PartnerViewEditProps) => (
           {partner?.active.value ? 'Active' : 'Inactive'}
         </Box>
       }
+      loading={!partner}
+    />
+    <DataButton
+      label="Start Date"
+      onClick={() => editPartner(['startDate'])}
+      secured={partner?.startDate}
+      startIcon={<EventIcon color="info" />}
+      empty="None"
+      redacted="You do not have permission to view start date"
+      children={(date) => <FormattedDate date={date} />}
       loading={!partner}
     />
   </Box>

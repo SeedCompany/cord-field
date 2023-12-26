@@ -17,6 +17,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import {
   CheckboxField,
+  DateField,
   EnumField,
   SubmitError,
   TextField,
@@ -48,6 +49,7 @@ export type EditablePartnerField = ExtractStrict<
   | 'financialReportingTypes'
   | 'address'
   | 'organizationName'
+  | 'startDate'
 >;
 
 type EditPartnerProps = Except<
@@ -105,6 +107,7 @@ const fieldMapping: Record<
   organizationName: ({ props }) => (
     <TextField {...props} required label="Organization Name" />
   ),
+  startDate: ({ props }) => <DateField {...props} label="Start Date" />,
 };
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
@@ -142,6 +145,7 @@ export const EditPartner = ({
         financialReportingTypes: partner.financialReportingTypes.value,
         address: partner.address.value,
         organizationName: partner.organization.value!.name.value!,
+        startDate: partner.startDate.value,
       },
     }),
     [partner]
