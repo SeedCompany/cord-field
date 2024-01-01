@@ -42,6 +42,7 @@ interface PartnerViewEditProps {
   partner: PartnerDetailsFragment | undefined;
   editPartner: (item: Many<EditablePartnerField>) => void;
   includeMembership?: boolean;
+  onPageChange?: (page: number) => void;
 }
 
 export const PartnerDetail = () => {
@@ -51,11 +52,13 @@ export const PartnerDetail = () => {
     variables: {
       input: partnerId,
     },
+    notifyOnNetworkStatusChange: true,
   });
-  const partner = data?.partner;
 
   const [editPartnerState, editPartner, editField] =
     useDialog<Many<EditablePartnerField>>();
+
+  const partner = data?.partner;
 
   const viewEdit = { partner, editPartner };
 
@@ -173,7 +176,9 @@ const usePartnerDetailsFilters = makeQueryHandler({
     'profile'
   ),
 });
-const PartnerTabs = (props: PartnerViewEditProps) => {
+const PartnerTabs = (
+  props: PartnerViewEditProps & { onPageChange?: (page: number) => void }
+) => {
   const [filters, setFilters] = usePartnerDetailsFilters();
 
   return (
@@ -199,7 +204,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
           <PartnerDetailPeople {...props} />
         </TabPanel>
         <TabPanel value="projects">
-          <PartnerDetailProjects {...props} />
+          <PartnerDetailProjects />
         </TabPanel>
         <TabPanel value="notes">
           <PartnerDetailNotes {...props} />
