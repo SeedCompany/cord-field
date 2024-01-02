@@ -17,7 +17,7 @@ import {
   TransitionFormValues,
   useExecuteTransition,
 } from '../../Steps/SubmitReportStep/useExecuteTransition';
-import { ConfirmEmptyVariants } from './ConfirmVariantDialog';
+import { ConfirmIncompleteSubmissionDialog } from './ConfirmIncompleteSubmissionDialog';
 import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
 
 export const SubmitReportStep: StepComponent = ({ report }) => {
@@ -30,8 +30,8 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
   // Prevents a flash of the new status before the drawer closes.
   const [prevStatus, setPrevStatus] = useState<ProgressReportStatusFragment>();
 
-  const { stepsMissingData } = useProgressReportContext();
-  const hasMissingFields = Object.keys(stepsMissingData).length;
+  const { incompleteSteps } = useProgressReportContext();
+  const isIncomplete = Object.keys(incompleteSteps).length;
   const onConfirmRef = useRef<((confirm: boolean) => void) | undefined>();
 
   const executeTransition = useExecuteTransition({
@@ -66,7 +66,7 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
       (transition) => transition.id === values.submitAction
     );
     const isApprovalTransition = transition?.type === 'Approve';
-    if (isApprovalTransition && hasMissingFields) {
+    if (isApprovalTransition && isIncomplete) {
       const confirming = defer<boolean>();
       onConfirmRef.current = confirming.resolve;
       const confirmed = await confirming;
@@ -105,9 +105,9 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
               }}
             />
           </Box>
-          <ConfirmEmptyVariants
+          <ConfirmIncompleteSubmissionDialog
             open={!!onConfirmRef.current}
-            onConfirm={() => onConfirmRef.current?.(true)}
+            onSubmit={() => onConfirmRef.current?.(true)}
             onClose={() => onConfirmRef.current?.(false)}
           />
         </Box>

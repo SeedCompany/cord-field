@@ -8,7 +8,7 @@ import { GroupedStepMapShape, StepComponent } from './Steps';
 
 interface ProgressReportContext {
   groupedStepMap: GroupedStepMapShape;
-  stepsMissingData: GroupedStepMapShape;
+  incompleteSteps: GroupedStepMapShape;
   CurrentStep: StepComponent;
   isLast: boolean;
   isFirst: boolean;
@@ -50,18 +50,17 @@ export const ProgressReportContextProvider = ({
     [session]
   );
 
-  const { stepsMissingData } = useMemo(() => {
-    const stepsMissingData = Object.fromEntries(
+  const incompleteSteps = useMemo(() => {
+    return Object.fromEntries(
       Object.entries(groupedStepMap).flatMap(([title, steps]) => {
-        const missingSteps = steps.filter(([_, { isMissing }]) =>
+        const incompleteSteps = steps.filter(([_, { isIncomplete }]) =>
           report == null
             ? true
-            : isMissing?.({ report, currentUserRoles }) ?? false
+            : isIncomplete?.({ report, currentUserRoles }) ?? false
         );
-        return missingSteps.length > 0 ? [[title, missingSteps]] : [];
+        return incompleteSteps.length > 0 ? [[title, incompleteSteps]] : [];
       })
     );
-    return { stepsMissingData };
   }, [currentUserRoles, groupedStepMap, report]);
 
   const context = useMemo(() => {
@@ -82,7 +81,7 @@ export const ProgressReportContextProvider = ({
     const context: ProgressReportContext = {
       CurrentStep: stepMap[stepName] ?? Noop,
       groupedStepMap,
-      stepsMissingData,
+      incompleteSteps,
       isFirst: stepIndex <= 0,
       isLast: stepIndex >= flatSteps.length - 1,
       setProgressReportStep: setStep,
