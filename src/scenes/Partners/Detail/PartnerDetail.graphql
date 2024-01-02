@@ -57,6 +57,11 @@ fragment PartnerDetails on Partner {
     canEdit
     value
   }
+  startDate {
+    canRead
+    canEdit
+    value
+  }
   projects {
     canRead
     canCreate
