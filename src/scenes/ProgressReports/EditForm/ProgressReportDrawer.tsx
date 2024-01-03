@@ -10,6 +10,7 @@ import { ProgressReportSidebar } from './ProgressReportSidebar';
 import { ReportProp } from './ReportProp';
 import { StartReportPage } from './StartReportPage';
 import { StepContainer } from './StepContainer';
+import { Steps } from './Steps';
 
 interface ProgressReportDrawerProps {
   reportId: string;
@@ -36,7 +37,7 @@ export const ProgressReportDrawer = ({
   }
 
   return (
-    <ProgressReportContextProvider report={report}>
+    <ProgressReportContextProvider report={report} steps={Steps}>
       <EditShell>
         <EditLayout report={report} />
       </EditShell>

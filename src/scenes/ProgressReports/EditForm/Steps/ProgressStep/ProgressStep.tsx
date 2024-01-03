@@ -76,6 +76,9 @@ export const ProgressStep: StepComponent = ({ report }) => {
 ProgressStep.enableWhen = ({ report }) =>
   report.progressForAllVariants.length > 0 || report.reportFile.canRead;
 
+ProgressStep.isIncomplete = ({ report }) =>
+  !report.reportFile.value && report.reportFile.canEdit;
+
 const useUpdateSteps = () => {
   const [update] = useMutation(UpdateStepProgressDocument);
   return async (newRow: ProductTableRowData, oldRow: ProductTableRowData) => {
