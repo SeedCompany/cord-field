@@ -107,7 +107,11 @@ const PartnerHeader = ({
           <IconButton
             loading={!partner}
             onClick={() =>
-              edit(['organization.name', 'partner.globalInnovationsClient'])
+              edit([
+                'organization.name',
+                'organization.acronym',
+                'partner.globalInnovationsClient',
+              ])
             }
           >
             <Edit />

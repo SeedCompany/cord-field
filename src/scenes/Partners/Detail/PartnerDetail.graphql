@@ -67,5 +67,10 @@ fragment organizationDetails on Organization {
     canEdit
     value
   }
+  acronym {
+    canRead
+    canEdit
+    value
+  }
   avatarLetters
 }
