@@ -1,12 +1,14 @@
 import { kebabCase } from 'lodash';
 import { createContext, useContext, useMemo } from 'react';
 import { ChildrenProp } from '~/common';
+import { useSession } from '~/components/Session';
 import { makeQueryHandler, StringParam } from '~/hooks';
 import { ReportProp } from './ReportProp';
-import { GroupedStepMapShape, StepComponent, Steps } from './Steps';
+import { GroupedStepMapShape, StepComponent } from './Steps';
 
 interface ProgressReportContext {
   groupedStepMap: GroupedStepMapShape;
+  incompleteSteps: GroupedStepMapShape;
   CurrentStep: StepComponent;
   isLast: boolean;
   isFirst: boolean;
@@ -24,12 +26,13 @@ const useStepState = makeQueryHandler({
 export const ProgressReportContextProvider = ({
   report,
   children,
-}: Partial<ReportProp> & ChildrenProp) => {
+  steps,
+}: { steps: GroupedStepMapShape } & Partial<ReportProp> & ChildrenProp) => {
   const [{ step: urlStep }, setStepState] = useStepState();
 
   const { groupedStepMap, stepMap, flatSteps } = useMemo(() => {
     const groupedStepMap = Object.fromEntries(
-      Object.entries(Steps).flatMap(([title, steps]) => {
+      Object.entries(steps).flatMap(([title, steps]) => {
         const enabled = steps.filter(([_, { enableWhen }]) =>
           report == null ? true : enableWhen?.({ report }) ?? true
         );
@@ -39,7 +42,26 @@ export const ProgressReportContextProvider = ({
     const stepMap = Object.fromEntries(Object.values(groupedStepMap).flat());
     const flatSteps = Object.keys(stepMap);
     return { groupedStepMap, stepMap, flatSteps };
-  }, [report]);
+  }, [report, steps]);
+
+  const { session } = useSession();
+  const currentUserRoles = useMemo(
+    () => new Set(session?.roles.value),
+    [session]
+  );
+
+  const incompleteSteps = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(groupedStepMap).flatMap(([title, steps]) => {
+        const incompleteSteps = steps.filter(([_, { isIncomplete }]) =>
+          report == null
+            ? true
+            : isIncomplete?.({ report, currentUserRoles }) ?? false
+        );
+        return incompleteSteps.length > 0 ? [[title, incompleteSteps]] : [];
+      })
+    );
+  }, [currentUserRoles, groupedStepMap, report]);
 
   const context = useMemo(() => {
     const stepName =
@@ -59,6 +81,7 @@ export const ProgressReportContextProvider = ({
     const context: ProgressReportContext = {
       CurrentStep: stepMap[stepName] ?? Noop,
       groupedStepMap,
+      incompleteSteps,
       isFirst: stepIndex <= 0,
       isLast: stepIndex >= flatSteps.length - 1,
       setProgressReportStep: setStep,
