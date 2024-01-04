@@ -151,6 +151,9 @@ const fieldMapping = {
   'organization.acronym': ({ props }) => (
     <TextField {...props} label="Acronym" />
   ),
+  'organization.acronym': ({ props }) => (
+    <TextField {...props} label="Organization Acronym" />
+  ),
 } satisfies PossibleFields;
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
