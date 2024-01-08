@@ -1,42 +1,20 @@
-import {
-  AccountCircle,
-  MoreVert,
-  NotificationsNone,
-  SupervisedUserCircle,
-} from '@mui/icons-material';
-import { Card, IconButton, MenuProps, Typography } from '@mui/material';
+import { AccountCircle, SupervisedUserCircle } from '@mui/icons-material';
+import { IconButton, MenuProps, Stack, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { useSession } from '../../../../components/Session';
 import { ProfileMenu } from '../ProfileMenu';
-import { UserActionsMenu } from '../UserActionsMenu';
-
-const useStyles = makeStyles()(({ typography, spacing }) => ({
-  card: {
-    flexShrink: 0,
-    display: 'flex',
-    alignItems: 'center',
-    padding: spacing(1),
-  },
-  name: {
-    fontWeight: typography.weight.medium,
-    margin: spacing(0, 1, 0, 2),
-  },
-}));
 
 export const ProfileToolbar = () => {
-  const { classes } = useStyles();
   const { session } = useSession();
   const impersonation = useContext(ImpersonationContext);
   const [profileAnchor, setProfileAnchor] = useState<MenuProps['anchorEl']>();
-  const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
 
   return (
     <>
-      <Card className={classes.card}>
-        <Typography className={classes.name} color="primary">
-          Hi, {session?.realFirstName.value ?? 'Friend'}
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Typography color="primary" sx={{ fontWeight: 'medium' }}>
+          {session?.fullName}
         </Typography>
         <IconButton
           color="secondary"
@@ -46,20 +24,10 @@ export const ProfileToolbar = () => {
         >
           {impersonation.enabled ? <SupervisedUserCircle /> : <AccountCircle />}
         </IconButton>
-        <IconButton>
-          <NotificationsNone />
-        </IconButton>
-        <IconButton onClick={(e) => setActionsAnchor(e.currentTarget)}>
-          <MoreVert />
-        </IconButton>
-      </Card>
+      </Stack>
       <ProfileMenu
         anchorEl={profileAnchor}
         onClose={() => setProfileAnchor(null)}
-      />
-      <UserActionsMenu
-        anchorEl={actionsAnchor}
-        onClose={() => setActionsAnchor(null)}
       />
     </>
   );

@@ -1,4 +1,16 @@
-import { Divider, Menu, MenuItem, MenuProps, Typography } from '@mui/material';
+import {
+  VisibilityOff as HideIcon,
+  Visibility as ShowIcon,
+} from '@mui/icons-material';
+import {
+  Divider,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  MenuProps,
+  Typography,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useContext } from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -6,6 +18,7 @@ import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { useDialog } from '../../../../components/Dialog';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';
+import { useUpload } from '../../../../components/Upload';
 import { ChangePassword } from '../../../Authentication/ChangePassword';
 import { ImpersonationMenuItem } from './ImpersonationDialog';
 
@@ -15,6 +28,9 @@ const useStyles = makeStyles()(({ spacing }) => ({
   },
   menuHeading: {
     padding: spacing(1, 2, 2, 2),
+  },
+  listItemIcon: {
+    minWidth: 'unset',
   },
 }));
 
@@ -26,7 +42,10 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
   const { classes } = useStyles();
   const { spacing } = useTheme();
   const { session } = useSession();
+  const { isManagerOpen, toggleManagerOpen } = useUpload();
   const impersonation = useContext(ImpersonationContext);
+
+  const UmIcon = isManagerOpen ? HideIcon : ShowIcon;
 
   const [changePasswordState, changePassword] = useDialog();
   const userId = session?.id;
@@ -66,6 +85,18 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
             Change Password
           </MenuItem>
         )}
+        <MenuItem
+          onClick={(event) => {
+            toggleManagerOpen();
+            // @ts-expect-error yeah we are adding a reason
+            props.onClose?.(event, 'actionClicked');
+          }}
+        >
+          <ListItemIcon className={classes.listItemIcon}>
+            <UmIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Upload Manager" />
+        </MenuItem>
         <ImpersonationMenuItem
           onClick={(event) => {
             props.onClose?.(event, 'backdropClick');
