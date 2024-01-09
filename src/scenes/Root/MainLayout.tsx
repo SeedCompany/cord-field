@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -5,6 +6,7 @@ import { Error, useResetErrorOnLocationChange } from '../../components/Error';
 import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
+import { MobileNavbar } from './Header/MobileNavbar';
 import { Sidebar } from './Sidebar';
 
 const useStyles = makeStyles()(() => ({
@@ -24,9 +26,13 @@ export const MainLayout = () => {
   useAuthRequired();
   const { classes } = useStyles();
   return (
-    <div className={classes.root}>
+    <Box
+      className={classes.root}
+      sx={{ flexDirection: { xs: 'column', sm: 'row' } }}
+    >
       <CreateDialogProviders>
-        <Sidebar />
+        <Sidebar sx={{ display: { xs: 'none', sm: 'block' } }} />
+        <MobileNavbar sx={{ display: { xs: 'flex', sm: 'none' } }} />
       </CreateDialogProviders>
       <div className={classes.main}>
         <Header />
@@ -37,6 +43,6 @@ export const MainLayout = () => {
           <Outlet />
         </ErrorBoundary>
       </div>
-    </div>
+    </Box>
   );
 };

@@ -1,23 +1,20 @@
-import { makeStyles } from 'tss-react/mui';
+import { Box, Theme } from '@mui/material';
 import { HeaderSearch } from './HeaderSearch';
 import { ProfileToolbar } from './ProfileToolbar';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    padding: spacing(4, 4, 1, 4),
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-}));
+const headerSx = (theme: Theme) => ({
+  padding: theme.spacing(4, 4, 1, 4),
+  justifyContent: 'space-between',
+  display: { xs: 'none', sm: 'flex' },
+  flexDirection: { sm: 'column', mobile: 'row' },
+  alignItems: { mobile: 'flex-start' },
+});
 
 export const Header = () => {
-  const { classes } = useStyles();
-
   return (
-    <header className={classes.root}>
+    <Box component="header" sx={headerSx}>
       <HeaderSearch />
       <ProfileToolbar />
-    </header>
+    </Box>
   );
 };

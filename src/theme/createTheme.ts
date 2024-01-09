@@ -16,6 +16,12 @@ export const createTheme = ({ dark }: { dark?: boolean } = {}) => {
   });
   theme = createMuiTheme({
     ...theme,
+    breakpoints: {
+      values: {
+        ...theme.breakpoints.values,
+        mobile: 756,
+      },
+    },
     components: appComponents(theme),
   });
 

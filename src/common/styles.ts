@@ -62,3 +62,13 @@ export const flexColumn = css({
   display: 'flex',
   flexDirection: 'column',
 });
+
+export const justifySpaceBetween = css({
+  display: 'flex',
+  justifyContent: 'space-between',
+});
+
+export const alignItemsCenter = css({
+  display: 'flex',
+  alignItems: 'center',
+});

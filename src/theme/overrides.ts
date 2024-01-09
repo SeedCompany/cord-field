@@ -240,4 +240,7 @@ declare module '@mui/material/styles' {
       styleOverrides?: ComponentsOverrides<Theme>['MuiDataGrid'];
     };
   }
+  interface BreakpointOverrides {
+    mobile: true;
+  }
 }
