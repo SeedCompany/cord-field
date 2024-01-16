@@ -22,7 +22,7 @@ export const getHelperText = (
     hasError ?? showError(meta) ? meta.error || meta.submitError : helperText;
   // always pass a truthy value, aka ' ', so layout doesn't adjust
   // when an error is shown. This is per Material Design.
-  return text || (disableEmptySpacing ? '' : ' ');
+  return text || (disableEmptySpacing || helperText === false ? '' : ' ');
 };
 
 /**
