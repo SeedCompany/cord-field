@@ -1,40 +1,41 @@
 import { useQuery } from '@apollo/client';
 import { Typography } from '@mui/material';
-import { GridSortItem } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { isNetworkRequestInFlight } from '~/api';
-import { upperCase } from '~/common';
+import { Order } from '~/api/schema/schema.graphql';
+import { lowerCase, upperCase } from '~/common';
 import { PartnerDetailProjectsTable } from './PartnerDetailProjectsTable';
 import { PartnerProjectsDocument } from './PartnerProjects.graphql';
+
+const initialInput = {
+  count: 20,
+  page: 1,
+  sort: 'name',
+  order: 'ASC' as Order,
+};
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
 
-  const pageSize = 25;
-  const [page, setPage] = useState(0);
-  const [sort, setSort] = useState<GridSortItem>({
-    field: 'name',
-    sort: 'asc',
-  });
+  const [input, setInput] = useState(initialInput);
+
+  // Keep total count between page fetches
+  const total = useRef(0);
+  const singlePage = total.current <= input.count;
 
   const { data, networkStatus } = useQuery(PartnerProjectsDocument, {
     variables: {
       id: partnerId,
-      input: {
-        count: pageSize,
-        page: page + 1,
-        sort: sort.field,
-        order: upperCase(sort.sort!),
-      },
+      // If only one page, we'll do client side sorting, so skip any input changes as a single query is sufficient.
+      // Otherwise, let API handle sorting & pagination.
+      input: singlePage ? initialInput : input,
     },
     notifyOnNetworkStatusChange: true,
   });
   const projects = data?.partner.projects;
 
-  // Keep total count between page fetches
-  const total = useRef(0);
-  if (projects?.total) {
+  if (projects) {
     total.current = projects.total;
   }
 
@@ -47,18 +48,24 @@ export const PartnerDetailProjects = () => {
       rows={projects?.items ?? []}
       rowCount={total.current}
       loading={isNetworkRequestInFlight(networkStatus)}
-      page={page}
-      onPageChange={setPage}
-      sortModel={[sort]}
-      onSortModelChange={([next]) => {
-        setSort(next!);
-        setPage(0);
+      page={input.page - 1}
+      sortModel={[{ field: input.sort, sort: lowerCase(input.order) }]}
+      onPageChange={(next) => {
+        setInput((prev) => ({ ...prev, page: next + 1 }));
       }}
-      pageSize={pageSize}
-      rowsPerPageOptions={[pageSize]}
+      onSortModelChange={([next]) => {
+        setInput((prev) => ({
+          ...prev,
+          sort: next!.field,
+          order: upperCase(next!.sort!),
+          page: 1,
+        }));
+      }}
+      pageSize={input.count}
+      rowsPerPageOptions={[input.count]}
       sortingOrder={['desc', 'asc']} // no unsorted
       paginationMode="server"
-      sortingMode="server"
+      sortingMode={singlePage ? 'client' : 'server'}
       sx={{ border: 'none', pt: 1 }}
     />
   );
