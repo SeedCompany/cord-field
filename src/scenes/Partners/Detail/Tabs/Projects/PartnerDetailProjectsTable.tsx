@@ -1,36 +1,26 @@
 import { Box } from '@mui/material';
 import {
   DataGrid,
+  DataGridProps,
   GridColDef,
   GridRowParams,
-  GridSortModel,
 } from '@mui/x-data-grid';
 import { cmpBy, simpleSwitch } from '@seedcompany/common';
 import { useNavigate } from 'react-router-dom';
 import { ProjectStatusLabels } from '~/api/schema/enumLists';
 import { Sensitivity } from '~/api/schema/schema.graphql';
-import { labelFrom } from '~/common';
+import { extendSx, labelFrom } from '~/common';
 import { SensitivityIcon } from '~/components/Sensitivity';
-import {
-  PartnerDetailProjectsTableListItemFragment,
-  PartnerDetailProjectsTableListItemFragment as Project,
-} from './PartnerProjects.graphql';
+import { PartnerDetailProjectsTableListItemFragment as Project } from './PartnerProjects.graphql';
 
-export interface PartnerDetailProjectsTableProps {
-  projects: readonly PartnerDetailProjectsTableListItemFragment[];
-  onPageChange?: (page: number) => void;
-  totalRows?: number;
-  sortModel?: GridSortModel;
-  onSortModelChange?: (model: GridSortModel) => void;
-}
+export type PartnerDetailProjectsTableProps = Omit<
+  DataGridProps<Project>,
+  'columns' | 'onRowClick'
+>;
 
-export const PartnerDetailProjectsTable = ({
-  projects,
-  totalRows,
-  onPageChange,
-  sortModel,
-  onSortModelChange,
-}: PartnerDetailProjectsTableProps) => {
+export const PartnerDetailProjectsTable = (
+  props: PartnerDetailProjectsTableProps
+) => {
   const navigate = useNavigate();
 
   const handleRowClick = (params: GridRowParams<Project>) => {
@@ -41,7 +31,7 @@ export const PartnerDetailProjectsTable = ({
     {
       headerName: 'Project Name',
       field: 'name',
-      flex: 1,
+      flex: 2,
       valueGetter: ({ value }) => value.value,
       renderCell: ({ value }) => (
         <Box component="span" color="primary.main">
@@ -84,33 +74,26 @@ export const PartnerDetailProjectsTable = ({
 
   return (
     <DataGrid
-      rows={projects}
-      columns={columns}
-      pageSize={25}
-      rowCount={totalRows ?? projects.length}
-      pagination
-      paginationMode="server"
-      onPageChange={onPageChange}
       autoHeight
-      disableSelectionOnClick
       density="compact"
-      sortingOrder={['desc', 'asc']}
-      sortingMode="server"
-      sortModel={sortModel}
-      onSortModelChange={onSortModelChange}
+      disableColumnMenu
+      {...props}
+      columns={columns}
       onRowClick={handleRowClick}
-      rowsPerPageOptions={[25]}
-      initialState={{
-        sorting: {
-          sortModel: [{ field: 'name', sort: 'asc' }],
+      disableSelectionOnClick
+      sx={[
+        {
+          // TODO Somehow change to using Link component
+          '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
+          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
+            '&:focus, &:focus-within': { outline: 'none' },
+          },
         },
-      }}
-      sx={{
-        // TODO Somehow change to using Link component
-        '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
-        '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
-          '&:focus, &:focus-within': { outline: 'none' },
-        },
+        ...extendSx(props.sx),
+      ]}
+      localeText={{
+        noRowsLabel: 'This partner is not engaged in any projects',
+        ...props.localeText,
       }}
     />
   );

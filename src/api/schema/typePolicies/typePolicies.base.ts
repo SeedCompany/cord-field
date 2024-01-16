@@ -4,7 +4,7 @@ import type {
   FieldReadFunction,
   KeyFieldsFunction,
 } from '@apollo/client/cache/inmemory/policies';
-import type { Mutation, Query, SecuredProjectList } from '../schema.graphql';
+import type { Mutation, Query } from '../schema.graphql';
 import type { GqlTypeMap } from '../typeMap';
 
 type FieldPolicies<T> = {
@@ -81,25 +81,7 @@ export const typePolicies: TypePolicies = {
   },
   Partner: {
     fields: {
-      projects: {
-        merge(existing, incoming: SecuredProjectList) {
-          // If "existing" is present, then perform array merging. Otherwise, return "incoming" as is.
-          return existing
-            ? {
-                ...incoming,
-                items: [
-                  ...existing.items.filter(
-                    (existingItem) =>
-                      !new Set(incoming.items.map((item) => item.id)).has(
-                        existingItem.id
-                      )
-                  ),
-                  ...incoming.items,
-                ],
-              }
-            : incoming;
-        },
-      },
+      projects: {}, // no page merging (infinite scroll)
     },
   },
 };

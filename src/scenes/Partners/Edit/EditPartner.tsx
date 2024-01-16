@@ -195,7 +195,6 @@ export const EditPartner = ({
                     pmcEntityCode: pmcEntityCode?.toUpperCase(),
                   },
                 },
-                projectListInput: {},
               },
             }),
         ]);
