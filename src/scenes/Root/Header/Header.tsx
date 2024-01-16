@@ -1,23 +1,12 @@
-import { makeStyles } from 'tss-react/mui';
+import { AppBar, Toolbar } from '@mui/material';
 import { HeaderSearch } from './HeaderSearch';
 import { ProfileToolbar } from './ProfileToolbar';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    padding: spacing(4, 4, 1, 4),
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-}));
-
-export const Header = () => {
-  const { classes } = useStyles();
-
-  return (
-    <header className={classes.root}>
-      <HeaderSearch />
+export const Header = () => (
+  <AppBar position="static" color="inherit" elevation={1}>
+    <Toolbar sx={{ gap: 3, justifyContent: 'space-between' }}>
+      <HeaderSearch sx={{ flex: 1, maxWidth: 500 }} />
       <ProfileToolbar />
-    </header>
-  );
-};
+    </Toolbar>
+  </AppBar>
+);
