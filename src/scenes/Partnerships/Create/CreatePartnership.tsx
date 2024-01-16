@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import { addItemToList } from '~/api';
+import { addItemToList, invalidateProps } from '~/api';
 import { CreatePartnership as CreatePartnershipType } from '~/api/schema.graphql';
 import { callAll } from '~/common';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
@@ -43,7 +43,12 @@ export const CreatePartnership = ({
         outputToItem: createdPartnership,
       }),
       invalidateBudgetRecords(project, undefined, createdPartnership),
-      updateOldPrimaryPartnership(project, createdPartnership)
+      updateOldPrimaryPartnership(project, createdPartnership),
+      (cache, result) => {
+        const partner =
+          result.data?.createPartnership.partnership.partner.value;
+        partner && invalidateProps(cache, partner, 'projects');
+      }
     ),
   });
 

@@ -1,0 +1,33 @@
+query PartnerProjects($id: ID!, $input: ProjectListInput!) {
+  partner(id: $id) {
+    id
+    projects(input: $input) {
+      canRead
+      canCreate
+      hasMore
+      total
+      items {
+        ...PartnerDetailProjectsTableListItem
+      }
+    }
+  }
+}
+
+fragment PartnerDetailProjectsTableListItem on Project {
+  id
+  name {
+    value
+  }
+  status
+  ... on InternshipProject {
+    engagements {
+      total
+    }
+  }
+  ... on TranslationProject {
+    engagements {
+      total
+    }
+  }
+  sensitivity
+}
