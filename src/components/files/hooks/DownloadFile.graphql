@@ -1,17 +1,17 @@
-fragment FileDownloadUrl on FileNode {
+fragment FileUrl on FileNode {
   id
   name
   type
   ... on File {
-    downloadUrl
+    url
   }
   ... on FileVersion {
-    downloadUrl
+    url
   }
 }
 
-query FileNodeDownloadUrl($id: ID!) {
+query FileNodeUrl($id: ID!) {
   fileNode(id: $id) {
-    ...FileDownloadUrl
+    ...FileUrl
   }
 }

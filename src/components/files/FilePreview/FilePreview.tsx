@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { saveAs } from '../../../common/FileSaver';
 import { NonDirectoryActionItem } from '../FileActions';
 import {
   previewableAudioTypes,
@@ -18,7 +17,6 @@ import {
   PreviewableMimeType,
   previewableVideoTypes,
 } from '../fileTypes';
-import { useGetFileDownloadUrl } from '../hooks';
 import { HtmlPreview } from './HtmlPreview';
 import { NativePreview, NativePreviewType } from './NativePreview';
 import { PlainTextPreview } from './PlainTextPreview';
@@ -165,19 +163,17 @@ export const FilePreview = (props: FilePreviewProps) => {
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
-  const getDownloadUrl = useGetFileDownloadUrl();
   const { file, onClose, ...rest } = props;
-  const { id, mimeType, name } = file ?? {
+  const {
+    id,
+    mimeType,
+    name,
+    url: fileUrl,
+  } = file ?? {
     id: '',
     mimeType: '',
     name: '',
-  };
-
-  const handleDownload = () => {
-    saveAs(previewFile!, name, { skipCorsCheck: true });
-    // @ts-expect-error reason should be extendable by wrapping components.
-    // Used to tell actual function reason for closing and rarely used.
-    onClose?.({}, 'download');
+    fileUrl: '',
   };
 
   const handleError = useCallback(
@@ -197,7 +193,7 @@ export const FilePreview = (props: FilePreviewProps) => {
       onError: typeof handleError
     ) => {
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, { credentials: 'include' });
         if (response.status !== 200) {
           onError('Could not retrieve file');
           return;
@@ -216,17 +212,9 @@ export const FilePreview = (props: FilePreviewProps) => {
   );
 
   useEffect(() => {
-    if (id && Previewer) {
+    if (fileUrl && Previewer) {
       setPreviewLoading(true);
-      void getDownloadUrl(id)
-        .then((downloadUrl) => {
-          if (downloadUrl) {
-            void retrieveFile(downloadUrl, mimeType, handleError);
-          } else {
-            handleError('Could not get file download URL');
-          }
-        })
-        .catch(() => handleError('Could not get file download URL'));
+      void retrieveFile(fileUrl, mimeType, handleError);
     } else {
       setPreviewFile(null);
       setPreviewLoading(false);
@@ -234,9 +222,9 @@ export const FilePreview = (props: FilePreviewProps) => {
     return () => setPreviewError(null);
   }, [
     id,
+    fileUrl,
     Previewer,
     mimeType,
-    getDownloadUrl,
     handleError,
     retrieveFile,
     setPreviewError,
@@ -272,15 +260,18 @@ export const FilePreview = (props: FilePreviewProps) => {
                 />
               </Suspense>
             ) : (
-              <PreviewNotSupported file={file} onClose={onClose} />
+              <PreviewNotSupported fileUrl={fileUrl} onClose={onClose} />
             )}
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button
+          href={fileUrl}
           color="secondary"
-          onClick={handleDownload}
+          // @ts-expect-error reason should be extendable by wrapping components.
+          // Used to tell actual function reason for closing and rarely used.
+          onClick={() => onClose?.({}, 'download')}
           disabled={!previewFile}
         >
           Download

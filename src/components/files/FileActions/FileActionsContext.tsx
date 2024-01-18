@@ -15,7 +15,6 @@ import {
   FileNodeInfoFragment as FileNode,
   FileNodeInfo_FileVersion_Fragment as FileVersion,
 } from '../files.graphql';
-import { useDownloadFile } from '../hooks';
 import { DeleteFile } from './DeleteFile';
 import { FileAction } from './FileAction.enum';
 import { FileVersions } from './FileVersions';
@@ -94,8 +93,6 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
   const { children } = props;
   const [previewPage, setPreviewPage] = useState(1);
 
-  const downloadFile = useDownloadFile();
-
   const [renameState, renameFile, fileNodeToRename] =
     useDialog<FilesActionItem>();
 
@@ -109,12 +106,12 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
   const actions = useMemo(
     () => ({
       rename: (item: FilesActionItem) => renameFile(item),
-      download: (item: FilesActionItem) => void downloadFile(item),
+      download: (item: FilesActionItem) => console.log(item),
       history: (item: FileActionItem, actions: FileAction[]) =>
         showVersions({ item, actions }),
       delete: (item: FilesActionItem) => deleteFile(item),
     }),
-    [deleteFile, downloadFile, renameFile, showVersions]
+    [deleteFile, renameFile, showVersions]
   );
 
   const handleFileActionClick = useCallback(
