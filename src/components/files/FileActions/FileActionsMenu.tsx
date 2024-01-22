@@ -22,7 +22,7 @@ import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { IconButton, IconButtonProps } from '../../IconButton';
-import { Link } from '../../Routing';
+import { MenuItemLink } from '../../Routing';
 import { FileAction } from './FileAction.enum';
 import {
   DirectoryActionItem,
@@ -216,13 +216,17 @@ export const FileActionsMenu = (props: FileActionsMenuProps) => {
       {...menuProps}
     >
       {menuActions.map((action) => {
-        // using __typename here to assure this passes TS check but this should always be true for downloads anyway
-        return action === FileAction.Download && item.__typename === 'File' ? (
-          <Link key={action} to={item.url} underline="none" external={true}>
-            <MenuItem onClick={(event) => handleActionClick(event, action)}>
-              {menuItemContents(action)}
-            </MenuItem>
-          </Link>
+        return action === FileAction.Download &&
+          item.__typename !== 'Directory' ? (
+          <MenuItemLink
+            key={action}
+            // @ts-expect-error - The typename check above assures this won't be a directory, but the directory Type is still applying here despite it never truly being an option
+            to={item.url}
+            external={true}
+            onClick={(event) => handleActionClick(event, action)}
+          >
+            {menuItemContents(action)}
+          </MenuItemLink>
         ) : (
           <MenuItem
             key={action}

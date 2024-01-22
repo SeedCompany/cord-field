@@ -34,6 +34,7 @@ export const PreviewNotSupported = ({
         color="primary"
         size="large"
         startIcon={<CloudDownload />}
+        // This is still necessary to close the modal after download
         onClick={() => onClose?.({}, 'backdropClick')}
       >
         Download
