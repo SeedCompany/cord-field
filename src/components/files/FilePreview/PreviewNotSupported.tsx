@@ -18,7 +18,7 @@ export const PreviewNotSupported = ({
   fileUrl,
   onClose,
 }: {
-  fileUrl: string | undefined;
+  fileUrl: string;
   onClose?: ModalProps['onClose'];
 }) => {
   const { classes } = useStyles();

@@ -164,17 +164,6 @@ export const FilePreview = (props: FilePreviewProps) => {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const { file, onClose, ...rest } = props;
-  const {
-    id,
-    mimeType,
-    name,
-    url: fileUrl,
-  } = file ?? {
-    id: '',
-    mimeType: '',
-    name: '',
-    fileUrl: '',
-  };
 
   const handleError = useCallback(
     (error: string) => {
@@ -184,11 +173,12 @@ export const FilePreview = (props: FilePreviewProps) => {
     [setPreviewError, setPreviewLoading]
   );
 
-  const Previewer = previewers[mimeType]?.component;
-  const previewerProps = previewers[mimeType]?.props;
+  const Previewer = previewers[file?.mimeType || '']?.component;
+  const previewerProps = previewers[file?.mimeType || '']?.props;
   const retrieveFile = useCallback(
     async (
       url: string,
+      name: string,
       mimeType: PreviewableMimeType,
       onError: typeof handleError
     ) => {
@@ -208,23 +198,21 @@ export const FilePreview = (props: FilePreviewProps) => {
         onError('Could not retrieve file');
       }
     },
-    [name]
+    []
   );
 
   useEffect(() => {
-    if (fileUrl && Previewer) {
+    if (file && Previewer) {
       setPreviewLoading(true);
-      void retrieveFile(fileUrl, mimeType, handleError);
+      void retrieveFile(file.url, file.name, file.mimeType, handleError);
     } else {
       setPreviewFile(null);
       setPreviewLoading(false);
     }
     return () => setPreviewError(null);
   }, [
-    id,
-    fileUrl,
+    file,
     Previewer,
-    mimeType,
     handleError,
     retrieveFile,
     setPreviewError,
@@ -242,7 +230,7 @@ export const FilePreview = (props: FilePreviewProps) => {
       maxWidth={false}
       aria-labelledby="dialog-file-preview"
     >
-      <DialogTitle id="dialog-file-preview">{name}</DialogTitle>
+      <DialogTitle id="dialog-file-preview">{file.name}</DialogTitle>
       <DialogContent className={classes.dialogContent}>
         <Grid container direction="column" spacing={2} alignItems="center">
           <Grid item>
@@ -260,17 +248,18 @@ export const FilePreview = (props: FilePreviewProps) => {
                 />
               </Suspense>
             ) : (
-              <PreviewNotSupported fileUrl={fileUrl} onClose={onClose} />
+              <PreviewNotSupported fileUrl={file.url} onClose={onClose} />
             )}
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button
-          href={fileUrl}
+          href={file.url}
           color="secondary"
           // @ts-expect-error reason should be extendable by wrapping components.
           // Used to tell actual function reason for closing and rarely used.
+          // This is still necessary to close the modal after download
           onClick={() => onClose?.({}, 'download')}
           disabled={!previewFile}
         >
