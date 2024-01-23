@@ -1,9 +1,8 @@
-query PartnerProjects($id: ID!, $input: ProjectListInput!) {
+query PartnerProjects($id: ID!, $input: ProjectListInput) {
   partner(id: $id) {
     id
     projects(input: $input) {
       canRead
-      canCreate
       hasMore
       total
       items {
