@@ -1,8 +1,7 @@
 import { Tab, Tabs } from '@mui/material';
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { XLSX$Utils } from 'xlsx';
-import { useFileActions } from '../FileActions';
 
 const useStyles = makeStyles()(() => {
   const backgroundColor = '#e6e6e6';
@@ -125,24 +124,8 @@ const RenderedSheet = (props: Omit<SheetData, 'name'>) => {
 export const SpreadsheetView = (props: SpreadSheetViewProps) => {
   const { classes } = useStyles();
   const { data } = props;
-  const { previewPage, setPreviewPage } = useFileActions();
+  const [activeTab, setActiveTab] = useState(0);
 
-  useEffect(() => {
-    return () => setPreviewPage(1);
-  }, [setPreviewPage]);
-
-  function a11yProps(index: number) {
-    return {
-      id: `sheet-tab-${index}`,
-      'aria-controls': `sheet-tabpanel-${index}`,
-    };
-  }
-
-  const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setPreviewPage(value + 1);
-  };
-
-  const activeTab = previewPage - 1;
   return data.length === 1 ? (
     <div className={classes.container}>
       <RenderedSheet rows={data[0]!.rows} columns={data[0]!.columns} />
@@ -151,11 +134,16 @@ export const SpreadsheetView = (props: SpreadSheetViewProps) => {
     <>
       <Tabs
         value={activeTab}
-        onChange={handleChange}
+        onChange={(_, tab) => setActiveTab(tab)}
         aria-label="Spreadsheet tabs"
       >
         {data.map((sheet, index) => (
-          <Tab key={sheet.name} label={sheet.name} {...a11yProps(index)} />
+          <Tab
+            key={sheet.name}
+            label={sheet.name}
+            id={`sheet-tab-${index}`}
+            aria-controls={`sheet-tabpanel-${index}`}
+          />
         ))}
       </Tabs>
       {data.map((sheet, index) => {

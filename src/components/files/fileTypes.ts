@@ -10,860 +10,226 @@ import {
   SvgIconComponent,
   VideoLibrary as VideoIcon,
 } from '@mui/icons-material';
+import { mapKeys } from '@seedcompany/common';
+import { ComponentType } from 'react';
+import { Previewer, PreviewerProps } from './FilePreview';
 
-export interface FileType {
+export const getDirectoryComponents = () =>
+  getFileComponents(fakeDirectoryMimeType);
+
+export const getFileComponents = (mimeType: string) => ({
+  mimeType,
+  Icon: OtherIcon,
+  Previewer: Previewer.NotSupported,
+  ...fileTypes.get(mimeType),
+});
+
+const fakeDirectoryMimeType = 'directory';
+
+interface FileType {
   mimeType: string;
   Icon: SvgIconComponent;
-  previewSupported: boolean;
+  Previewer?: ComponentType<PreviewerProps>;
 }
 
-export const fileTypes: FileType[] = [
-  {
-    // Fake type just to handle icons for folders
-    mimeType: 'directory',
-    Icon: FolderIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.ms-outlook',
-    Icon: EmailIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/msword',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/octet-stream',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/pdf',
-    Icon: PdfIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/postscript',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/rtf',
-    Icon: DocumentIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.ms-excel',
-    Icon: SpreadsheetIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.ms-excel.sheet.macroenabled.12',
-    Icon: SpreadsheetIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.ms-excel.sheet.macroEnabled.12',
-    Icon: SpreadsheetIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
-    Icon: SpreadsheetIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
-    Icon: SpreadsheetIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.ms-outlook',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.ms-powerpoint',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.ms-project',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.chart',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.chart-template',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.database',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.graphics',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.graphics-template',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.image',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.image',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.image-template',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.presentation',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.presentation-template',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.spreadsheet',
-    Icon: SpreadsheetIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.spreadsheet-template',
-    Icon: SpreadsheetIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.text',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.text-master',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.text-template',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.oasis.opendocument.text-web',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType:
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType:
-      'application/vnd.openxmlformats-officedocument.presentationml.slide',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType:
-      'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType:
-      'application/vnd.openxmlformats-officedocument.presentationml.template',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType:
+const fileTypes = mapKeys.fromList<FileType, string>(
+  [
+    {
+      mimeType: fakeDirectoryMimeType,
+      Icon: FolderIcon,
+    },
+    {
+      mimeType: 'application/vnd.ms-outlook',
+      Icon: EmailIcon,
+      Previewer: Previewer.Email,
+    },
+    {
+      mimeType: 'application/pdf',
+      Icon: PdfIcon,
+      Previewer: Previewer.Pdf,
+    },
+    ...['application/rtf', 'text/rtf'].map((mimeType) => ({
+      mimeType,
+      Icon: DocumentIcon,
+      Previewer: Previewer.Rtf,
+    })),
+    ...[
+      'application/vnd.ms-excel',
+      'application/vnd.ms-excel.sheet.macroenabled.12',
+      'application/vnd.ms-excel.sheet.macroEnabled.12',
+      'application/vnd.ms-excel.sheet.binary.macroenabled.12',
+      'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    Icon: SpreadsheetIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType:
+    ].map((mimeType) => ({
+      mimeType,
+      Icon: SpreadsheetIcon,
+      Previewer: Previewer.Excel,
+    })),
+    {
+      mimeType:
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      Icon: DocumentIcon,
+      Previewer: Previewer.Word,
+    },
+    {
+      mimeType: 'text/css',
+      Icon: OtherIcon,
+      Previewer: Previewer.PlainText,
+    },
+    {
+      mimeType: 'text/csv',
+      Icon: SpreadsheetIcon,
+      Previewer: Previewer.Csv,
+    },
+    {
+      mimeType: 'text/html',
+      Icon: DocumentIcon,
+      Previewer: Previewer.Html,
+    },
+    {
+      mimeType: 'text/plain',
+      Icon: DocumentIcon,
+      Previewer: Previewer.PlainText,
+    },
+    ...[
+      'audio/3gpp',
+      'audio/3gpp2',
+      'audio/aac',
+      'audio/adpcm',
+      'audio/basic',
+      'audio/m4a',
+      'audio/midi',
+      'audio/midi',
+      'audio/mp4',
+      'audio/mpeg',
+      'audio/ogg',
+      'audio/opus',
+      'audio/vnd.rip',
+      'audio/wav',
+      'audio/webm',
+      'audio/x-aac',
+      'audio/x-aiff',
+      'audio/x-caf',
+      'audio/x-flac',
+      'audio/x-m4a',
+      'audio/x-matroska',
+      'audio/x-midi',
+      'audio/x-mpegurl',
+      'audio/x-ms-wax',
+      'audio/x-ms-wma',
+      'audio/x-pn-realaudio',
+      'audio/x-wav',
+      'audio/xm',
+    ].map((mimeType) => ({
+      mimeType,
+      Icon: AudioIcon,
+      Previewer: Previewer.Native,
+    })),
+    ...[
+      'application/vnd.oasis.opendocument.graphics',
+      'application/vnd.oasis.opendocument.graphics-template',
+      'application/vnd.oasis.opendocument.image',
+      'application/vnd.oasis.opendocument.image-template',
+      'image/bmp',
+      'image/cgm',
+      'image/g3fax',
+      'image/gif',
+      'image/ief',
+      'image/jpe',
+      'image/jpeg',
+      'image/jpg',
+      'image/ktx',
+      'image/png',
+      'image/sgi',
+      'image/svg+xml',
+      'image/tiff',
+      'image/vnd.adobe.photoshop',
+      'image/webp',
+      'image/x-cmu-raster',
+      'image/x-cmx',
+      'image/x-freehand',
+      'image/x-icon',
+      'image/x-mrsid-image',
+      'image/x-pcx',
+      'image/x-pict',
+      'image/x-portable-anymap',
+      'image/x-portable-bitmap',
+      'image/x-portable-graymap',
+      'image/x-portable-pixmap',
+      'image/x-rgb',
+      'image/x-tga',
+      'image/x-xbitmap',
+      'image/x-xpixmap',
+    ].map((mimeType) => ({
+      mimeType,
+      Icon: ImageIcon,
+      Previewer: Previewer.Native,
+    })),
+    ...[
+      'video/3gpp',
+      'video/3gpp2',
+      'video/h261',
+      'video/h263',
+      'video/h264',
+      'video/jpeg',
+      'video/jpm',
+      'video/mj2',
+      'video/mp2t',
+      'video/mp4',
+      'video/mpeg',
+      'video/ogg',
+      'video/quicktime',
+      'video/vnd.mpegurl',
+      'video/vnd.vivo',
+      'video/webm',
+      'video/x-f4v',
+      'video/x-fli',
+      'video/x-flv',
+      'video/x-m4v',
+      'video/x-matroska',
+      'video/x-mng',
+      'video/x-ms-asf',
+      'video/x-ms-vob',
+      'video/x-ms-wm',
+      'video/x-ms-wmv',
+      'video/x-ms-wmx',
+      'video/x-ms-wvx',
+      'video/x-msvideo',
+      'video/x-sgi-movie',
+      'video/x-smv',
+    ].map((mimeType) => ({
+      mimeType,
+      Icon: VideoIcon,
+      Previewer: Previewer.Native,
+    })),
+    ...[
+      'application/vnd.oasis.opendocument.spreadsheet',
+      'application/vnd.oasis.opendocument.spreadsheet-template',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-    Icon: SpreadsheetIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType:
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    Icon: DocumentIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'application/vnd.visio',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.visio',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/vnd.wordperfect',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-font-ghostscript',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-font-linux-psf',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-font-pcf',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-font-snf',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-font-type1',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-gtar',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-iso9660-image',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-ms-wmd',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-msaccess',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-mspublisher',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-mswrite',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-tar',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-tex',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-tex-tfm',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/x-texinfo',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'application/zip',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'audio/3gpp',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/3gpp2',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/aac',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/adpcm',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/basic',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/m4a',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/midi',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/midi',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/mp4',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/mpeg',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/ogg',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/opus',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/vnd.rip',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/wav',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/webm',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-aac',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-aiff',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-caf',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-flac',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-m4a',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-matroska',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-midi',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-mpegurl',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-ms-wax',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-ms-wma',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-pn-realaudio',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/x-wav',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'audio/xm',
-    Icon: AudioIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'font/otf',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'font/ttf',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'font/woff',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'font/woff2',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'image/bmp',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/cgm',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/g3fax',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/gif',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/ief',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/jpe',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/jpeg',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/jpg',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/ktx',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/png',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/sgi',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/svg+xml',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/tiff',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/vnd.adobe.photoshop',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/vnd.dwg',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'image/vnd.dxf',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'image/webp',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-3ds',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'image/x-cmu-raster',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-cmx',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-freehand',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-icon',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-mrsid-image',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-pcx',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-pict',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-portable-anymap',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-portable-bitmap',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-portable-graymap',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-portable-pixmap',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-rgb',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-tga',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-xbitmap',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-xpixmap',
-    Icon: ImageIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'image/x-xwindowdump',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'openxmlformats-officedocument.wordprocessingml.template',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'text/calendar',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'text/css',
-    Icon: OtherIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'text/csv',
-    Icon: SpreadsheetIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'text/html',
-    Icon: DocumentIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'text/plain',
-    Icon: DocumentIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'text/rtf',
-    Icon: DocumentIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'text/richtext',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'text/sgml',
-    Icon: DocumentIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'text/tab-separated-values',
-    Icon: OtherIcon,
-    previewSupported: false,
-  },
-  {
-    mimeType: 'video/3gpp',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/3gpp2',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/h261',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/h263',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/h264',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/jpeg',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/jpm',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/mj2',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/mp2t',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/mp4',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/mpeg',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/ogg',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/quicktime',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/vnd.mpegurl',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/vnd.vivo',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/webm',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-f4v',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-fli',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-flv',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-m4v',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-matroska',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-mng',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-ms-asf',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-ms-vob',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-ms-wm',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-ms-wmv',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-ms-wmx',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-ms-wvx',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-msvideo',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-sgi-movie',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-  {
-    mimeType: 'video/x-smv',
-    Icon: VideoIcon,
-    previewSupported: true,
-  },
-];
-
-const previewableTypes = fileTypes.filter((type) => type.previewSupported);
-
-export type PreviewableMimeType = (typeof previewableTypes)[number]['mimeType'];
-
-export const previewableImageTypes = previewableTypes.filter(
-  (type) => type.Icon === ImageIcon && type.previewSupported
-);
-export const previewableAudioTypes = previewableTypes.filter(
-  (type) => type.Icon === AudioIcon && type.previewSupported
-);
-export const previewableVideoTypes = previewableTypes.filter(
-  (type) => type.Icon === VideoIcon && type.previewSupported
-);
-
-export const fileIcon = (mimeType: string) => {
-  return (
-    fileTypes.find((type) => type.mimeType === mimeType)?.Icon ?? OtherIcon
-  );
-};
+    ].map((mimeType) => ({
+      mimeType,
+      Icon: SpreadsheetIcon,
+    })),
+    ...[
+      'application/msword',
+      'application/postscript',
+      'application/vnd.oasis.opendocument.text',
+      'application/vnd.oasis.opendocument.text-master',
+      'application/vnd.oasis.opendocument.text-template',
+      'application/vnd.oasis.opendocument.text-web',
+      'application/vnd.visio',
+      'application/vnd.wordperfect',
+      'application/x-font-ghostscript',
+      'application/x-ms-wmd',
+      'application/x-mswrite',
+      'application/x-tex',
+      'openxmlformats-officedocument.wordprocessingml.template',
+      'text/richtext',
+      'text/sgml',
+    ].map((mimeType) => ({
+      mimeType,
+      Icon: DocumentIcon,
+    })),
+  ],
+  (x) => x.mimeType
+).asMap;
