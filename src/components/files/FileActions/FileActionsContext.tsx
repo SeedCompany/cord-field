@@ -106,8 +106,9 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
   const actions = useMemo(
     () => ({
       rename: (item: FilesActionItem) => renameFile(item),
-      // refactor here needed at some point - recently migrated the actual download to an anchor tag wiht the URL
-      download: (item: FilesActionItem) => console.log(item),
+      download: (_item: FilesActionItem) => {
+        // download happens with browser via anchor tag
+      },
       history: (item: FileActionItem, actions: FileAction[]) =>
         showVersions({ item, actions }),
       delete: (item: FilesActionItem) => deleteFile(item),
