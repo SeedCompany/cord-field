@@ -1,12 +1,16 @@
-import { useQuery } from '@apollo/client';
+import { ApolloClient, useQuery } from '@apollo/client';
 import { Typography } from '@mui/material';
-import { useRef, useState } from 'react';
+import { uniqBy } from 'lodash';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { isNetworkRequestInFlight } from '~/api';
 import { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
 import { PartnerDetailProjectsTable } from './PartnerDetailProjectsTable';
-import { PartnerProjectsDocument } from './PartnerProjects.graphql';
+import {
+  PartnerProjectsDocument,
+  PartnerProjectsQuery,
+} from './PartnerProjects.graphql';
 
 const initialInput = {
   count: 20,
@@ -20,24 +24,32 @@ export const PartnerDetailProjects = () => {
 
   const [input, setInput] = useState(initialInput);
 
-  // Keep total count between page fetches
-  const total = useRef(0);
-  const singlePage = total.current <= input.count;
-
-  const { data, networkStatus } = useQuery(PartnerProjectsDocument, {
-    variables: {
-      id: partnerId,
-      // If only one page, we'll do client side sorting, so skip any input changes as a single query is sufficient.
-      // Otherwise, let API handle sorting & pagination.
-      input: singlePage ? initialInput : input,
-    },
-    notifyOnNetworkStatusChange: true,
+  const { data: allPages } = useQuery(PartnerProjectsDocument, {
+    variables: { id: partnerId },
+    fetchPolicy: 'cache-only',
   });
-  const projects = data?.partner.projects;
+  const isCacheComplete =
+    allPages &&
+    allPages.partner.projects.total === allPages.partner.projects.items.length;
 
-  if (projects) {
-    total.current = projects.total;
-  }
+  const {
+    data: currentPage,
+    networkStatus,
+    client,
+  } = useQuery(PartnerProjectsDocument, {
+    skip: isCacheComplete,
+    variables: { id: partnerId, input },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: (nextPage) => {
+      addToAllPagesCacheEntry(client, partnerId, nextPage);
+    },
+  });
+
+  const projects = (isCacheComplete ? allPages : currentPage)?.partner.projects;
+  const total =
+    allPages?.partner.projects.total ??
+    currentPage?.partner.projects.total ??
+    0;
 
   return projects?.canRead === false ? (
     <Typography p={3}>
@@ -46,7 +58,7 @@ export const PartnerDetailProjects = () => {
   ) : (
     <PartnerDetailProjectsTable
       rows={projects?.items ?? []}
-      rowCount={total.current}
+      rowCount={total}
       loading={isNetworkRequestInFlight(networkStatus)}
       page={input.page - 1}
       sortModel={[{ field: input.sort, sort: lowerCase(input.order) }]}
@@ -64,9 +76,46 @@ export const PartnerDetailProjects = () => {
       pageSize={input.count}
       rowsPerPageOptions={[input.count]}
       sortingOrder={['desc', 'asc']} // no unsorted
-      paginationMode="server"
-      sortingMode={singlePage ? 'client' : 'server'}
+      paginationMode={isCacheComplete ? 'client' : 'server'}
+      sortingMode={isCacheComplete ? 'client' : 'server'}
       sx={{ border: 'none', pt: 1 }}
     />
   );
 };
+
+function addToAllPagesCacheEntry(
+  client: ApolloClient<any>,
+  partnerId: string,
+  nextPage: PartnerProjectsQuery
+) {
+  client.cache.updateQuery(
+    {
+      query: PartnerProjectsDocument,
+      variables: { id: partnerId },
+    },
+    (prev) => {
+      if (
+        prev &&
+        prev.partner.projects.items.length === nextPage.partner.projects.total
+      ) {
+        return undefined; // no change
+      }
+      const mergedList = uniqBy(
+        [
+          ...(prev?.partner.projects.items ?? []),
+          ...nextPage.partner.projects.items,
+        ],
+        (project) => project.id
+      );
+      return {
+        partner: {
+          ...nextPage.partner,
+          projects: {
+            ...nextPage.partner.projects,
+            items: mergedList,
+          },
+        },
+      };
+    }
+  );
+}
