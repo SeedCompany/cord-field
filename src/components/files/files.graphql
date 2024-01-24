@@ -13,7 +13,7 @@ fragment FileNodeInfo on FileNode {
   ... on FileVersion {
     mimeType
     size
-    url
+    url(download: true)
   }
 }
 
@@ -25,5 +25,5 @@ fragment FileInfo on File {
     id
     fullName
   }
-  url
+  url(download: true)
 }
