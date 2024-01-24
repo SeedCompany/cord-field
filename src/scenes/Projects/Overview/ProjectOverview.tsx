@@ -414,14 +414,26 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <DataButton
-                label="Marketing Location"
+                label="Marketing Country"
                 startIcon={<GlobalSearchIcon color="info" />}
                 empty="None"
                 loading={!project}
-                secured={project?.marketingLocation}
-                redacted="You do not have permission to view the marketing location"
+                secured={project?.marketingCountry}
+                redacted="You do not have permission to view the marketing country"
                 children={(location) => location.name.value}
-                onClick={() => editField(['marketingLocationId'])}
+                onClick={() => editField(['marketingCountryOverrideId'])}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                label="Marketing Region"
+                startIcon={<GlobalSearchIcon color="info" />}
+                empty="None"
+                loading={!project}
+                secured={project?.marketingRegion}
+                redacted="You do not have permission to view the marketing Region"
+                children={(location) => location.name.value}
+                onClick={() => editField(['marketingRegionOverrideId'])}
               />
             </Grid>
           </Grid>

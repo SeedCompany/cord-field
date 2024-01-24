@@ -24,7 +24,28 @@ fragment ProjectOverview on Project {
       ...DisplayLocation
     }
   }
-  marketingLocation {
+  marketingCountry {
+    canRead
+    canEdit
+    value {
+      ...DisplayLocation
+    }
+  }
+  marketingRegion {
+    canRead
+    canEdit
+    value {
+      ...DisplayLocation
+    }
+  }
+  marketingCountryOverride {
+    canRead
+    canEdit
+    value {
+      ...DisplayLocation
+    }
+  }
+  marketingRegionOverride {
     canRead
     canEdit
     value {
@@ -36,6 +57,13 @@ fragment ProjectOverview on Project {
     canEdit
     value {
       ...DisplayFieldRegion
+    }
+  }
+  marketingLocation {
+    canRead
+    canEdit
+    value {
+      ...DisplayLocation
     }
   }
   mouRange {

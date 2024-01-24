@@ -42,7 +42,8 @@ export type EditableProjectField = ExtractStrict<
   | 'fieldRegionId'
   | 'primaryLocationId'
   | 'sensitivity'
-  | 'marketingLocationId'
+  | 'marketingCountryOverrideId'
+  | 'marketingRegionOverrideId'
 >;
 
 interface ProjectFieldProps {
@@ -75,8 +76,11 @@ const fieldMapping: Record<
   sensitivity: ({ props }) => (
     <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
-  marketingLocationId: ({ props }) => (
-    <LocationField {...props} label="Marketing Location" />
+  marketingCountryOverrideId: ({ props }) => (
+    <LocationField {...props} label="Marketing Country Override" />
+  ),
+  marketingRegionOverrideId: ({ props }) => (
+    <LocationField {...props} label="Marketing Region Override" />
   ),
 };
 
@@ -86,7 +90,8 @@ interface UpdateProjectFormValues {
     {
       primaryLocationId?: DisplayLocationFragment | null;
       fieldRegionId?: DisplayFieldRegionFragment | null;
-      marketingLocationId?: DisplayLocationFragment | null;
+      marketingCountryOverrideId?: DisplayLocationFragment | null;
+      marketingRegionOverrideId?: DisplayLocationFragment | null;
     }
   >;
 }
@@ -124,7 +129,8 @@ export const UpdateProjectDialog = ({
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
-      marketingLocationId: project.marketingLocation.value,
+      marketingCountryOverrideId: project.marketingCountryOverride.value,
+      marketingRegionOverrideId: project.marketingRegionOverride.value,
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
@@ -149,7 +155,8 @@ export const UpdateProjectDialog = ({
     project.mouRange.value.end,
     project.estimatedSubmission.value,
     project.sensitivity,
-    project.marketingLocation.value,
+    project.marketingCountryOverride.value,
+    project.marketingRegionOverride.value,
     project.id,
     editFields,
   ]);
@@ -191,8 +198,15 @@ export const UpdateProjectDialog = ({
                 fieldRegionId: dirtyFields['project.fieldRegionId']
                   ? data.fieldRegionId?.id ?? null
                   : undefined,
-                marketingLocationId: dirtyFields['project.marketingLocationId']
-                  ? data.marketingLocationId?.id ?? null
+                marketingCountryOverrideId: dirtyFields[
+                  'project.marketingCountryOverrideId'
+                ]
+                  ? data.marketingCountryOverrideId?.id ?? null
+                  : undefined,
+                marketingRegionOverrideId: dirtyFields[
+                  'project.marketingRegionOverrideId'
+                ]
+                  ? data.marketingRegionOverrideId?.id ?? null
                   : undefined,
               },
               changeset: project.changeset?.id,
