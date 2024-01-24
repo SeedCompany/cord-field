@@ -1,14 +1,9 @@
 import { ApolloError } from '@apollo/client';
 import { Button, Grid, Typography } from '@mui/material';
+import { usePrevious } from 'ahooks';
 import { isPlainObject } from 'lodash';
-import {
-  ElementType,
-  isValidElement,
-  ReactNode,
-  useEffect,
-  useRef,
-} from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { ElementType, isValidElement, ReactNode, useEffect } from 'react';
+import { useErrorBoundary } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { getErrorInfo } from '~/api';
@@ -70,6 +65,8 @@ export const Error = ({
   const { classes, cx } = useStyles();
   const navigate = useNavigate();
 
+  useResetErrorOnLocationChange();
+
   if (!(show ?? error)) {
     return null;
   }
@@ -119,14 +116,13 @@ export const Error = ({
 };
 
 export const useResetErrorOnLocationChange = () => {
+  const { resetBoundary } = useErrorBoundary();
   const location = useLocation();
-  const errorBoundaryRef = useRef<ErrorBoundary | null>(null);
+  const prevLocation = usePrevious(location);
 
   useEffect(() => {
-    if (errorBoundaryRef.current?.state.error) {
-      errorBoundaryRef.current.reset();
+    if (prevLocation && location !== prevLocation) {
+      resetBoundary();
     }
-  }, [location]);
-
-  return errorBoundaryRef;
+  }, [resetBoundary, location, prevLocation]);
 };

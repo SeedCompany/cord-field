@@ -1,23 +1,15 @@
-import { CircularProgress, Grid } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { Box, CircularProgress } from '@mui/material';
 
-const useStyles = makeStyles()(() => ({
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 200,
-    width: 200,
-  },
-}));
-
-export const PreviewLoading = () => {
-  const { classes } = useStyles();
-  return (
-    <Grid item>
-      <div className={classes.container}>
-        <CircularProgress size={60} />
-      </div>
-    </Grid>
-  );
-};
+export const PreviewLoading = () => (
+  <Box
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: 200,
+      minWidth: 200,
+    }}
+  >
+    <CircularProgress size={60} />
+  </Box>
+);

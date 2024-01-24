@@ -28,7 +28,10 @@ import {
   isFileVersion,
   useFileActions,
 } from '../../../components/files/FileActions';
-import { fileIcon } from '../../../components/files/fileTypes';
+import {
+  getDirectoryComponents,
+  getFileComponents,
+} from '../../../components/files/fileTypes';
 import {
   formatFileSize,
   FormattedDateTime,
@@ -134,7 +137,9 @@ const ProjectFilesListWrapped = () => {
       field: 'name',
       flex: 1,
       renderCell: ({ row, value }) => {
-        const Icon = fileIcon(isDirectory(row) ? 'directory' : row.mimeType);
+        const { Icon } = isDirectory(row)
+          ? getDirectoryComponents()
+          : getFileComponents(row.mimeType);
         return (
           <span className={classes.fileName}>
             <Icon className={classes.fileIcon} />

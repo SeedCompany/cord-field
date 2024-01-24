@@ -11,7 +11,7 @@ import {
   FileAction,
   useFileActions,
 } from '../FileActions';
-import { fileIcon } from '../fileTypes';
+import { getFileComponents } from '../fileTypes';
 import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.graphql';
 
 const useStyles = makeStyles()(({ spacing, typography }) => ({
@@ -59,7 +59,7 @@ export const FileVersionItem = (props: FileVersionItemProps) => {
   ];
 
   const { createdAt, createdBy, name } = version;
-  const Icon = fileIcon(version.mimeType);
+  const { Icon } = getFileComponents(version.mimeType);
   const createdByUser = createdBy.fullName;
 
   return (

@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { PreviewerProps } from './FilePreview';
-import { PreviewLoading } from './PreviewLoading';
+import { PreviewerProps } from '../FilePreview';
+import { useFilePreview } from '../useFilePreview';
 import {
   jsonToTableRows,
   SheetData,
@@ -11,35 +10,8 @@ import {
 } from './SpreadsheetView';
 
 export const ExcelPreview = (props: PreviewerProps) => {
-  const { file, previewLoading, setPreviewLoading, setPreviewError } = props;
-  const [sheets, setSheets] = useState<SheetData[]>([]);
-
-  const extractExcelDataFromWorkbook = useCallback(
-    async (file: File) => {
-      const { data, error } = await extractExcelData(file);
-      if (error) {
-        setPreviewError(error.message);
-      } else if (data) {
-        setSheets(data);
-        setPreviewLoading(false);
-      } else {
-        setPreviewError('Could not read spreadsheet file');
-      }
-    },
-    [setSheets, setPreviewError, setPreviewLoading]
-  );
-
-  useEffect(() => {
-    if (file) {
-      void extractExcelDataFromWorkbook(file);
-    }
-  }, [file, extractExcelDataFromWorkbook]);
-
-  return previewLoading ? (
-    <PreviewLoading />
-  ) : sheets.length < 1 ? null : (
-    <SpreadsheetView data={sheets} />
-  );
+  const sheets = useFilePreview(props.file, extractExcelData);
+  return <SpreadsheetView data={sheets} />;
 };
 
 interface TableSpan {
@@ -49,90 +21,76 @@ interface TableSpan {
   rowspan: number;
 }
 
-async function extractExcelData(file: File): Promise<{
-  data: SheetData[] | undefined;
-  error: Error | undefined;
-}> {
-  try {
-    const spreadsheetBuffer = await file.arrayBuffer();
-    const workbook = XLSX.read(spreadsheetBuffer, { type: 'buffer' });
-    const data = Object.entries(workbook.Sheets).flatMap(
-      ([name, worksheet]) => {
-        // '!ref' is a special key that gives the used cell range
-        const usedCellRange = worksheet['!ref'];
-        const hidden =
-          (workbook.Workbook?.Sheets?.find((s) => s.name === name)?.Hidden ??
-            0) > 0;
-        if (!usedCellRange || hidden) {
-          return [];
-        }
+async function extractExcelData(file: Blob): Promise<SheetData[]> {
+  const spreadsheetBuffer = await file.arrayBuffer();
+  const workbook = XLSX.read(spreadsheetBuffer, { type: 'buffer' });
+  const data = Object.entries(workbook.Sheets).flatMap(([name, worksheet]) => {
+    // '!ref' is a special key that gives the used cell range
+    const usedCellRange = worksheet['!ref'];
+    const hidden =
+      (workbook.Workbook?.Sheets?.find((s) => s.name === name)?.Hidden ?? 0) >
+      0;
+    if (!usedCellRange || hidden) {
+      return [];
+    }
 
-        const mergedCells = worksheet['!merges'];
+    const mergedCells = worksheet['!merges'];
 
-        /* `!merges` gives us the values in absolute terms, from column A
+    /* `!merges` gives us the values in absolute terms, from column A
           and row 1. But `sheet_to_json` uses the `usedCellRange`, which
           trims off empty rows and columns. So we need to figure out an
           offset to use when calculating where the merged cells actually
           occur in the resulting JSON. */
-        const range = XLSX.utils.decode_range(usedCellRange);
-        /**
-         * The `decode_range` util provides an object of this shape:
-         *
-         * {
-         *   e: { c: 13, r: 38, },
-         *   s: { c: 1, r: 3, },
-         * }
-         *
-         * Translated into a sensible naming convention:
-         *
-         * {
-         *   end: { column: 13, row: 38, },
-         *   start: { column: 1, row: 3, },
-         * }
-         */
-        const columnOffset = range.s.c;
-        const rowOffset = range.s.r;
+    const range = XLSX.utils.decode_range(usedCellRange);
+    /**
+     * The `decode_range` util provides an object of this shape:
+     *
+     * {
+     *   e: { c: 13, r: 38, },
+     *   s: { c: 1, r: 3, },
+     * }
+     *
+     * Translated into a sensible naming convention:
+     *
+     * {
+     *   end: { column: 13, row: 38, },
+     *   start: { column: 1, row: 3, },
+     * }
+     */
+    const columnOffset = range.s.c;
+    const rowOffset = range.s.r;
 
-        const spans =
-          mergedCells?.reduce((spans: TableSpan[], merge) => {
-            const startColumn = merge.s.c - columnOffset;
-            const startRow = merge.s.r - rowOffset;
-            const colspan = merge.e.c - merge.s.c + 1;
-            const rowspan = merge.e.r - merge.s.r + 1;
-            const span: TableSpan = {
-              startColumn,
-              startRow,
-              colspan,
-              rowspan,
-            };
-            return spans.concat(span);
-          }, []) ?? [];
-        const parsedRows = XLSX.utils.sheet_to_json(worksheet, {
-          header: 1,
-          defval: '',
-        });
-        const convertedRows = jsonToTableRows(parsedRows);
-        const rows = calculateMergedCells(convertedRows, spans);
-        const columns = formatColumns(usedCellRange);
-        return {
-          name,
-          rows,
-          columns,
+    const spans =
+      mergedCells?.reduce((spans: TableSpan[], merge) => {
+        const startColumn = merge.s.c - columnOffset;
+        const startRow = merge.s.r - rowOffset;
+        const colspan = merge.e.c - merge.s.c + 1;
+        const rowspan = merge.e.r - merge.s.r + 1;
+        const span: TableSpan = {
+          startColumn,
+          startRow,
+          colspan,
+          rowspan,
         };
-      }
-    );
-    return data.length > 0
-      ? { data, error: undefined }
-      : {
-          data: undefined,
-          error: new Error('Could not read spreadsheet data'),
-        };
-  } catch {
+        return spans.concat(span);
+      }, []) ?? [];
+    const parsedRows = XLSX.utils.sheet_to_json(worksheet, {
+      header: 1,
+      defval: '',
+    });
+    const convertedRows = jsonToTableRows(parsedRows);
+    const rows = calculateMergedCells(convertedRows, spans);
+    const columns = formatColumns(usedCellRange);
     return {
-      data: undefined,
-      error: new Error('Could not open spreadsheet file'),
+      name,
+      rows,
+      columns,
     };
+  });
+  if (data.length === 0) {
+    throw new Error('Could not read spreadsheet data');
   }
+  return data;
 }
 
 function formatColumns(usedCellRange: string) {

@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 import { GQLOperations } from '~/api';
 import { ChildrenProp, isTypename } from '~/common';
 import { useDialog } from '../../Dialog';
@@ -76,10 +70,6 @@ export const initialFileActionsContext = {
   handleFileActionClick: (_: HandleFileActionClickParams) => {
     return;
   },
-  previewPage: 1,
-  setPreviewPage: (_: number) => {
-    return;
-  },
   openFilePreview: (_: NonDirectoryActionItem) => {
     return;
   },
@@ -91,7 +81,6 @@ export const FileActionsContext = createContext<
 
 export const FileActionsContextProvider = (props: ChildrenProp) => {
   const { children } = props;
-  const [previewPage, setPreviewPage] = useState(1);
 
   const [renameState, renameFile, fileNodeToRename] =
     useDialog<FilesActionItem>();
@@ -137,11 +126,9 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
   const context = useMemo(
     () => ({
       handleFileActionClick,
-      previewPage,
-      setPreviewPage,
       openFilePreview,
     }),
-    [handleFileActionClick, previewPage, setPreviewPage, openFilePreview]
+    [handleFileActionClick, openFilePreview]
   );
   return (
     <FileActionsContext.Provider value={context}>
@@ -158,7 +145,9 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
           actions={versionToView?.actions}
           {...versionState}
         />
-        <FilePreview file={fileToPreview} {...previewDialogState} />
+        {fileToPreview && (
+          <FilePreview file={fileToPreview} {...previewDialogState} />
+        )}
       </>
     </FileActionsContext.Provider>
   );
