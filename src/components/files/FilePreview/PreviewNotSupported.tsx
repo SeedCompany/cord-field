@@ -1,8 +1,6 @@
 import { CloudDownload } from '@mui/icons-material';
 import { Button, ModalProps, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
-import { NonDirectoryActionItem } from '../FileActions';
-import { useDownloadFile } from '../hooks';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   container: {
@@ -17,14 +15,13 @@ const useStyles = makeStyles()(({ spacing }) => ({
 }));
 
 export const PreviewNotSupported = ({
-  file,
+  fileUrl,
   onClose,
 }: {
-  file: NonDirectoryActionItem;
+  fileUrl: string;
   onClose?: ModalProps['onClose'];
 }) => {
   const { classes } = useStyles();
-  const download = useDownloadFile();
   return (
     <div className={classes.container}>
       <Typography variant="h3" paragraph className={classes.text}>
@@ -33,12 +30,12 @@ export const PreviewNotSupported = ({
         for this file type
       </Typography>
       <Button
+        href={fileUrl}
         color="primary"
         size="large"
         startIcon={<CloudDownload />}
-        onClick={() =>
-          void download(file).then(() => onClose?.({}, 'backdropClick'))
-        }
+        // This is still necessary to close the modal after download
+        onClick={() => onClose?.({}, 'backdropClick')}
       >
         Download
       </Button>
