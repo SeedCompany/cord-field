@@ -14,7 +14,7 @@ import { useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { extendSx, StyleProps } from '~/common';
-import { fileIcon } from '../files/fileTypes';
+import { getFileComponents } from '../files';
 import { FieldConfig, useField } from './useField';
 
 const useStyles = makeStyles()(({ palette, spacing, shape }) => {
@@ -108,7 +108,7 @@ export function DropzoneField({
         <List dense className={classes.files}>
           {currentFiles.map((file, index) => {
             const { name, type } = file;
-            const Icon = fileIcon(type);
+            const { Icon } = getFileComponents(type);
             return (
               <ListItem key={index}>
                 <ListItemIcon>

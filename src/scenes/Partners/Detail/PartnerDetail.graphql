@@ -62,12 +62,5 @@ fragment PartnerDetails on Partner {
     canEdit
     value
   }
-  projects {
-    canRead
-    canCreate
-    items {
-      ...ProjectListItem
-    }
-  }
   ...TogglePin
 }

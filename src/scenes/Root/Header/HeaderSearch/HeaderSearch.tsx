@@ -1,8 +1,8 @@
 import { Search } from '@mui/icons-material';
-import { InputAdornment } from '@mui/material';
+import { Box, InputAdornment } from '@mui/material';
 import { Form } from 'react-final-form';
 import { useNavigate } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
+import { StyleProps } from '~/common';
 import { TextField } from '../../../../components/form';
 import { makeQueryHandler, StringParam } from '../../../../hooks';
 
@@ -10,19 +10,7 @@ export const useSearch = makeQueryHandler({
   q: StringParam,
 });
 
-const useStyles = makeStyles()(({ palette, spacing }) => ({
-  root: {
-    flex: 1,
-    maxWidth: 500,
-    marginRight: spacing(3),
-  },
-  input: {
-    background: palette.background.paper,
-  },
-}));
-
-export const HeaderSearch = () => {
-  const { classes } = useStyles();
+export const HeaderSearch = (props: StyleProps) => {
   const [{ q: search = '' }] = useSearch();
   const navigate = useNavigate();
 
@@ -36,14 +24,14 @@ export const HeaderSearch = () => {
       }}
     >
       {({ handleSubmit }) => (
-        <form onSubmit={handleSubmit} className={classes.root}>
+        <Box component="form" onSubmit={handleSubmit} {...props}>
           <TextField
             name="search"
             variant="outlined"
-            placeholder="Projects, Languages, Locations, People, Partners"
+            placeholder="Search"
             size="small"
+            helperText={false}
             InputProps={{
-              className: classes.input,
               startAdornment: (
                 <InputAdornment position="start" disablePointerEvents>
                   <Search />
@@ -51,7 +39,7 @@ export const HeaderSearch = () => {
               ),
             }}
           />
-        </form>
+        </Box>
       )}
     </Form>
   );

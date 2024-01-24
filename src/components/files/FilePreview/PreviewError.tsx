@@ -1,25 +1,13 @@
-import { Grid, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { Typography } from '@mui/material';
+import { FallbackProps } from 'react-error-boundary';
 
-const useStyles = makeStyles()(({ breakpoints }) => ({
-  text: {
-    maxWidth: breakpoints.values.sm,
-    textAlign: 'center',
-  },
-}));
-
-interface PreviewErrorProps {
-  errorText: string;
-}
-
-export const PreviewError = (props: PreviewErrorProps) => {
-  const { errorText } = props;
-  const { classes } = useStyles();
-  return (
-    <Grid item>
-      <Typography variant="h3" color="textSecondary" className={classes.text}>
-        {errorText}
-      </Typography>
-    </Grid>
-  );
-};
+export const PreviewError = (props: FallbackProps) => (
+  <Typography
+    variant="h3"
+    color="textSecondary"
+    textAlign="center"
+    maxWidth="sm"
+  >
+    {props.error.message}
+  </Typography>
+);

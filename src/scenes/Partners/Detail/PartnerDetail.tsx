@@ -52,10 +52,11 @@ export const PartnerDetail = () => {
       input: partnerId,
     },
   });
-  const partner = data?.partner;
 
   const [editPartnerState, editPartner, editField] =
     useDialog<Many<EditablePartnerField>>();
+
+  const partner = data?.partner;
 
   const viewEdit = { partner, editPartner };
 
@@ -188,7 +189,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         <Tab label="Projects" value="projects" />
         <Tab label="Notes" value="notes" />
       </TabList>
-      <Paper>
+      <Paper sx={{ maxWidth: 'lg' }}>
         <TabPanel value="profile">
           <PartnerDetailProfile {...props} />
         </TabPanel>
@@ -198,8 +199,8 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         <TabPanel value="people">
           <PartnerDetailPeople {...props} />
         </TabPanel>
-        <TabPanel value="projects">
-          <PartnerDetailProjects {...props} />
+        <TabPanel value="projects" sx={{ p: 0 }}>
+          <PartnerDetailProjects />
         </TabPanel>
         <TabPanel value="notes">
           <PartnerDetailNotes {...props} />

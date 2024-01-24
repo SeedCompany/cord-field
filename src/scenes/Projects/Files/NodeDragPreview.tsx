@@ -1,7 +1,10 @@
 import { Paper } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
-import { FileNodeInfoFragment } from '../../../components/files/files.graphql';
-import { fileIcon } from '../../../components/files/fileTypes';
+import {
+  FileNodeInfoFragment,
+  getDirectoryComponents,
+  getFileComponents,
+} from '../../../components/files';
 import { parseFileNameAndExtension } from '../../../components/Formatters';
 import { isDirectory } from './util';
 
@@ -20,7 +23,9 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
 export const NodeDragPreview = ({ node }: { node: FileNodeInfoFragment }) => {
   const { classes } = useStyles();
 
-  const Icon = fileIcon(isDirectory(node) ? 'directory' : node.mimeType);
+  const { Icon } = isDirectory(node)
+    ? getDirectoryComponents()
+    : getFileComponents(node.mimeType);
   return (
     <Paper elevation={12} className={classes.root}>
       <Icon className={classes.fileIcon} />

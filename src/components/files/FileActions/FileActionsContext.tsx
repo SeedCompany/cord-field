@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 import { GQLOperations } from '~/api';
 import { ChildrenProp, isTypename } from '~/common';
 import { useDialog } from '../../Dialog';
@@ -15,7 +9,6 @@ import {
   FileNodeInfoFragment as FileNode,
   FileNodeInfo_FileVersion_Fragment as FileVersion,
 } from '../files.graphql';
-import { useDownloadFile } from '../hooks';
 import { DeleteFile } from './DeleteFile';
 import { FileAction } from './FileAction.enum';
 import { FileVersions } from './FileVersions';
@@ -77,10 +70,6 @@ export const initialFileActionsContext = {
   handleFileActionClick: (_: HandleFileActionClickParams) => {
     return;
   },
-  previewPage: 1,
-  setPreviewPage: (_: number) => {
-    return;
-  },
   openFilePreview: (_: NonDirectoryActionItem) => {
     return;
   },
@@ -92,9 +81,6 @@ export const FileActionsContext = createContext<
 
 export const FileActionsContextProvider = (props: ChildrenProp) => {
   const { children } = props;
-  const [previewPage, setPreviewPage] = useState(1);
-
-  const downloadFile = useDownloadFile();
 
   const [renameState, renameFile, fileNodeToRename] =
     useDialog<FilesActionItem>();
@@ -109,12 +95,14 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
   const actions = useMemo(
     () => ({
       rename: (item: FilesActionItem) => renameFile(item),
-      download: (item: FilesActionItem) => void downloadFile(item),
+      download: (_item: FilesActionItem) => {
+        // download happens with browser via anchor tag
+      },
       history: (item: FileActionItem, actions: FileAction[]) =>
         showVersions({ item, actions }),
       delete: (item: FilesActionItem) => deleteFile(item),
     }),
-    [deleteFile, downloadFile, renameFile, showVersions]
+    [deleteFile, renameFile, showVersions]
   );
 
   const handleFileActionClick = useCallback(
@@ -138,11 +126,9 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
   const context = useMemo(
     () => ({
       handleFileActionClick,
-      previewPage,
-      setPreviewPage,
       openFilePreview,
     }),
-    [handleFileActionClick, previewPage, setPreviewPage, openFilePreview]
+    [handleFileActionClick, openFilePreview]
   );
   return (
     <FileActionsContext.Provider value={context}>
@@ -159,7 +145,9 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
           actions={versionToView?.actions}
           {...versionState}
         />
-        <FilePreview file={fileToPreview} {...previewDialogState} />
+        {fileToPreview && (
+          <FilePreview file={fileToPreview} {...previewDialogState} />
+        )}
       </>
     </FileActionsContext.Provider>
   );
