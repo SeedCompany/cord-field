@@ -59,15 +59,7 @@ export const PartnerContactSection = ({
             <Redacted info="You cannot view this partner's code" width="75%" />
           ) : partner.address.value ? (
             partner.address.value
-          ) : (
-            <Typography
-              variant="inherit"
-              color="text.secondary"
-              sx={{ fontStyle: 'italic' }}
-            >
-              None
-            </Typography>
-          )}
+          ) : null}
         </Typography>
         <Typography
           component="h4"
@@ -92,15 +84,7 @@ export const PartnerContactSection = ({
             >
               {partner.websiteUrl.value.replace(/^(https?:\/\/)/, '')}
             </Link>
-          ) : (
-            <Typography
-              variant="inherit"
-              color="text.secondary"
-              sx={{ fontStyle: 'italic' }}
-            >
-              None
-            </Typography>
-          )}
+          ) : null}
         </Typography>
         <Typography
           component="h4"
@@ -108,7 +92,7 @@ export const PartnerContactSection = ({
           color="textSecondary"
           gutterBottom
         >
-          Social URL
+          Social Media URL
         </Typography>
       </Stack>
       <Typography component="p" variant="h4">
@@ -124,15 +108,7 @@ export const PartnerContactSection = ({
           >
             {partner.socialUrl.value.replace(/^(https?:\/\/)/, '')}
           </Link>
-        ) : (
-          <Typography
-            variant="inherit"
-            color="text.secondary"
-            sx={{ fontStyle: 'italic' }}
-          >
-            None
-          </Typography>
-        )}
+        ) : null}
       </Typography>
     </ActionableSection>
   );
