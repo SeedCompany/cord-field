@@ -39,7 +39,7 @@ interface PartnerFormValues {
 }
 
 export type EditablePartnerField = ExtractStrict<
-  keyof UpdatePartner | 'organizationName',
+  keyof UpdatePartner | 'organizationName' | 'contactInfo',
   // Add more fields here as needed
   | 'pointOfContactId'
   | 'globalInnovationsClient'
@@ -47,7 +47,7 @@ export type EditablePartnerField = ExtractStrict<
   | 'active'
   | 'types'
   | 'financialReportingTypes'
-  | 'address'
+  | 'contactInfo'
   | 'organizationName'
   | 'startDate'
 >;
@@ -101,8 +101,18 @@ const fieldMapping: Record<
         getLabel={labelFrom(FinancialReportingTypeLabels)}
       />
     ) : null,
-  address: ({ props }) => (
-    <TextField {...props} label="Address" multiline minRows={2} />
+  contactInfo: ({ props }) => (
+    <>
+      <TextField
+        {...props}
+        name="address"
+        label="Address"
+        multiline
+        minRows={2}
+      />
+      <TextField {...props} name="websiteUrl" label="Website Url" />
+      <TextField {...props} name="socialUrl" label="Social Url" />
+    </>
   ),
   organizationName: ({ props }) => (
     <TextField {...props} required label="Organization Name" />
@@ -144,6 +154,8 @@ export const EditPartner = ({
         types: partner.types.value,
         financialReportingTypes: partner.financialReportingTypes.value,
         address: partner.address.value,
+        websiteUrl: partner.websiteUrl.value,
+        socialUrl: partner.socialUrl.value,
         organizationName: partner.organization.value!.name.value!,
         startDate: partner.startDate.value,
       },

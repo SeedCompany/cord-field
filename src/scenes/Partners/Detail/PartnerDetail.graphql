@@ -57,6 +57,16 @@ fragment PartnerDetails on Partner {
     canEdit
     value
   }
+  websiteUrl {
+    canRead
+    canEdit
+    value
+  }
+  socialUrl {
+    canRead
+    canEdit
+    value
+  }
   startDate {
     canRead
     canEdit
