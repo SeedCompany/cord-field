@@ -79,6 +79,8 @@ export const PartnerContactSection = ({
           ) : partner.websiteUrl.value ? (
             <Link
               external={true}
+              target="_blank"
+              rel="noreferrer noopener"
               to={partner.websiteUrl.value}
               key={partner.websiteUrl.value}
             >
@@ -103,6 +105,8 @@ export const PartnerContactSection = ({
         ) : partner.socialUrl.value ? (
           <Link
             external={true}
+            target="_blank"
+            rel="noreferrer noopener"
             to={partner.socialUrl.value}
             key={partner.socialUrl.value}
           >
