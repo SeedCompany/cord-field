@@ -39,7 +39,7 @@ export type EditableProjectField = ExtractStrict<
   | 'name'
   | 'mouRange'
   | 'estimatedSubmission'
-  | 'fieldRegionId'
+  | 'fieldRegionOverrideId'
   | 'primaryLocationId'
   | 'sensitivity'
   | 'marketingCountryOverrideId'
@@ -61,7 +61,7 @@ const fieldMapping: Record<
   primaryLocationId: ({ props }) => (
     <LocationField {...props} label="Primary Location" />
   ),
-  fieldRegionId: ({ props }) => (
+  fieldRegionOverrideId: ({ props }) => (
     <FieldRegionField {...props} label="Field Region" />
   ),
   mouRange: ({ props }) => (
@@ -77,10 +77,10 @@ const fieldMapping: Record<
     <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
   marketingCountryOverrideId: ({ props }) => (
-    <LocationField {...props} label="Marketing Country Override" />
+    <LocationField {...props} label="Marketing Country" />
   ),
   marketingRegionOverrideId: ({ props }) => (
-    <LocationField {...props} label="Marketing Region Override" />
+    <LocationField {...props} label="Marketing Region" />
   ),
 };
 
@@ -89,7 +89,7 @@ interface UpdateProjectFormValues {
     UpdateProject,
     {
       primaryLocationId?: DisplayLocationFragment | null;
-      fieldRegionId?: DisplayFieldRegionFragment | null;
+      fieldRegionOverrideId?: DisplayFieldRegionFragment | null;
       marketingCountryOverrideId?: DisplayLocationFragment | null;
       marketingRegionOverrideId?: DisplayLocationFragment | null;
     }
@@ -124,7 +124,7 @@ export const UpdateProjectDialog = ({
     > = {
       name: project.name.value,
       primaryLocationId: project.primaryLocation.value,
-      fieldRegionId: project.fieldRegion.value,
+      fieldRegionOverrideId: project.fieldRegionOverride.value,
       mouStart: project.mouRange.value.start,
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
@@ -150,7 +150,7 @@ export const UpdateProjectDialog = ({
   }, [
     project.name.value,
     project.primaryLocation.value,
-    project.fieldRegion.value,
+    project.fieldRegionOverride.value,
     project.mouRange.value.start,
     project.mouRange.value.end,
     project.estimatedSubmission.value,
@@ -195,8 +195,10 @@ export const UpdateProjectDialog = ({
                 primaryLocationId: dirtyFields['project.primaryLocationId']
                   ? data.primaryLocationId?.id ?? null
                   : undefined,
-                fieldRegionId: dirtyFields['project.fieldRegionId']
-                  ? data.fieldRegionId?.id ?? null
+                fieldRegionOverrideId: dirtyFields[
+                  'project.fieldRegionOverrideId'
+                ]
+                  ? data.fieldRegionOverrideId?.id ?? null
                   : undefined,
                 marketingCountryOverrideId: dirtyFields[
                   'project.marketingCountryOverrideId'

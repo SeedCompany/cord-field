@@ -402,6 +402,7 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <DataButton
+                name="Field Region Override"
                 label="Field Region"
                 startIcon={<GlobeIcon color="info" />}
                 empty="None"
@@ -409,11 +410,12 @@ export const ProjectOverview = () => {
                 secured={project?.fieldRegion}
                 redacted="You do not have permission to view field region"
                 children={(location) => location.name.value}
-                onClick={() => editField('fieldRegionId')}
+                onClick={() => editField('fieldRegionOverrideId')}
               />
             </Grid>
             <Grid item>
               <DataButton
+                name="Marketing Country Override"
                 label="Marketing Country"
                 startIcon={<GlobalSearchIcon color="info" />}
                 empty="None"
@@ -426,8 +428,9 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <DataButton
+                name="Marketing Region Override"
                 label="Marketing Region"
-                startIcon={<GlobalSearchIcon color="info" />}
+                startIcon={<GlobeIcon color="info" />}
                 empty="None"
                 loading={!project}
                 secured={project?.marketingRegion}

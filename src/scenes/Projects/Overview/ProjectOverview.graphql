@@ -66,6 +66,13 @@ fragment ProjectOverview on Project {
       ...DisplayLocation
     }
   }
+  fieldRegionOverride {
+    canRead
+    canEdit
+    value {
+      ...DisplayFieldRegion
+    }
+  }
   mouRange {
     ...securedDateRange
   }
