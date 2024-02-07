@@ -32,4 +32,13 @@ fragment InternshipEngagementListItem on InternshipEngagement {
   completeDate {
     value
   }
+  project {
+    marketingCountry {
+      canRead
+      canEdit
+      value {
+        ...DisplayLocation
+      }
+    }
+  }
 }

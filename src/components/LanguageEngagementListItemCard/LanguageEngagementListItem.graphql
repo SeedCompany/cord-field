@@ -42,6 +42,13 @@ fragment LanguageEngagementListItem on LanguageEngagement {
     presetInventory {
       value
     }
+    marketingCountry {
+      canRead
+      canEdit
+      value {
+        ...DisplayLocation
+      }
+    }
   }
   products {
     total
