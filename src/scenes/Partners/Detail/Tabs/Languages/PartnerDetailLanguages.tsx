@@ -52,7 +52,7 @@ export const PartnerDetailLanguages = () => {
 
   const languages = (isCacheComplete ? allPages : currentPage)?.partner
     .languages;
-  console.log(languages);
+
   const total =
     allPages?.partner.languages.total ??
     currentPage?.partner.languages.total ??
@@ -70,13 +70,6 @@ export const PartnerDetailLanguages = () => {
         </Box>
       ),
     },
-    // {
-    //   headerName: 'Status',
-    //   field: 'status',
-    //   flex: 1,
-    //   valueGetter: ({ value }) =>
-    //     labelFrom(ProjectStatusLabels)(value) || 'Value',
-    // },
     {
       headerName: 'Register of Dialects Code',
       field: 'registryOfDialectsCode',
