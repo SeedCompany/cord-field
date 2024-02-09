@@ -6,16 +6,15 @@ import { uniqBy } from 'lodash';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { isNetworkRequestInFlight } from '~/api';
-import { ProjectStatusLabels } from '~/api/schema/enumLists';
 import { Order, Sensitivity } from '~/api/schema/schema.graphql';
-import { labelFrom, lowerCase, upperCase } from '~/common';
+import { lowerCase, upperCase } from '~/common';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { PaginatedTable } from '~/components/Tables';
 import {
-  PartnerProjectsDocument,
-  PartnerProjectsQuery,
-  PartnerDetailProjectsTableListItemFragment as Project,
-} from './PartnerProjects.graphql';
+  PartnerDetailLanguagesTableListItemFragment as Language,
+  PartnerLanguagesDocument,
+  PartnerLanguagesQuery,
+} from './PartnerLanguages.graphql';
 
 const initialInput = {
   count: 20,
@@ -24,24 +23,25 @@ const initialInput = {
   order: 'ASC' as Order,
 };
 
-export const PartnerDetailProjects = () => {
+export const PartnerDetailLanguages = () => {
   const { partnerId = '' } = useParams();
 
   const [input, setInput] = useState(initialInput);
 
-  const { data: allPages } = useQuery(PartnerProjectsDocument, {
+  const { data: allPages } = useQuery(PartnerLanguagesDocument, {
     variables: { id: partnerId },
     fetchPolicy: 'cache-only',
   });
   const isCacheComplete =
     allPages &&
-    allPages.partner.projects.total === allPages.partner.projects.items.length;
+    allPages.partner.languages.total ===
+      allPages.partner.languages.items.length;
 
   const {
     data: currentPage,
     networkStatus,
     client,
-  } = useQuery(PartnerProjectsDocument, {
+  } = useQuery(PartnerLanguagesDocument, {
     skip: isCacheComplete,
     variables: { id: partnerId, input },
     notifyOnNetworkStatusChange: true,
@@ -50,15 +50,17 @@ export const PartnerDetailProjects = () => {
     },
   });
 
-  const projects = (isCacheComplete ? allPages : currentPage)?.partner.projects;
+  const languages = (isCacheComplete ? allPages : currentPage)?.partner
+    .languages;
+  console.log(languages);
   const total =
-    allPages?.partner.projects.total ??
-    currentPage?.partner.projects.total ??
+    allPages?.partner.languages.total ??
+    currentPage?.partner.languages.total ??
     0;
 
-  const columns: Array<GridColDef<Project>> = [
+  const columns: Array<GridColDef<Language>> = [
     {
-      headerName: 'Project Name',
+      headerName: 'Language Name',
       field: 'name',
       flex: 2,
       valueGetter: ({ value }) => value.value,
@@ -68,17 +70,18 @@ export const PartnerDetailProjects = () => {
         </Box>
       ),
     },
+    // {
+    //   headerName: 'Status',
+    //   field: 'status',
+    //   flex: 1,
+    //   valueGetter: ({ value }) =>
+    //     labelFrom(ProjectStatusLabels)(value) || 'Value',
+    // },
     {
-      headerName: 'Status',
-      field: 'status',
+      headerName: 'Register of Dialects Code',
+      field: 'registryOfDialectsCode',
       flex: 1,
-      valueGetter: ({ value }) => labelFrom(ProjectStatusLabels)(value),
-    },
-    {
-      headerName: 'Engagements',
-      field: 'engagements',
-      flex: 1,
-      valueGetter: ({ value }) => value.total,
+      valueGetter: ({ value }) => value.value,
     },
     {
       headerName: 'Sensitivity',
@@ -101,14 +104,14 @@ export const PartnerDetailProjects = () => {
     },
   ];
 
-  return projects?.canRead === false ? (
+  return languages?.canRead === false ? (
     <Typography p={3}>
       You don't have permission to see the projects this partner is engaged in
     </Typography>
   ) : (
-    <PaginatedTable<Project>
+    <PaginatedTable<Language>
       columns={columns}
-      rows={projects?.items ?? []}
+      rows={languages?.items ?? []}
       rowCount={total}
       loading={isNetworkRequestInFlight(networkStatus)}
       page={input.page - 1}
@@ -137,24 +140,24 @@ export const PartnerDetailProjects = () => {
 function addToAllPagesCacheEntry(
   client: ApolloClient<any>,
   partnerId: string,
-  nextPage: PartnerProjectsQuery
+  nextPage: PartnerLanguagesQuery
 ) {
   client.cache.updateQuery(
     {
-      query: PartnerProjectsDocument,
+      query: PartnerLanguagesDocument,
       variables: { id: partnerId },
     },
     (prev) => {
       if (
         prev &&
-        prev.partner.projects.items.length === nextPage.partner.projects.total
+        prev.partner.languages.items.length === nextPage.partner.languages.total
       ) {
         return undefined; // no change
       }
       const mergedList = uniqBy(
         [
-          ...(prev?.partner.projects.items ?? []),
-          ...nextPage.partner.projects.items,
+          ...(prev?.partner.languages.items ?? []),
+          ...nextPage.partner.languages.items,
         ],
         (project) => project.id
       );
@@ -162,7 +165,7 @@ function addToAllPagesCacheEntry(
         partner: {
           ...nextPage.partner,
           projects: {
-            ...nextPage.partner.projects,
+            ...nextPage.partner.languages,
             items: mergedList,
           },
         },

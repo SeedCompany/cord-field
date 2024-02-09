@@ -37,6 +37,7 @@ import { PartnerDetailNotes } from './Tabs/Notes/PartnerDetailsNotes';
 import { PartnerDetailPeople } from './Tabs/People/PartnerDetailPeople';
 import { PartnerDetailProfile } from './Tabs/Profile/PartnerDetailProfile';
 import { PartnerDetailProjects } from './Tabs/Projects/PartnerDetailProjects';
+import { PartnerDetailLanguages } from '~/scenes/Partners/Detail/Tabs/Languages/PartnerDetailLanguages';
 
 interface PartnerViewEditProps {
   partner: PartnerDetailsFragment | undefined;
@@ -170,7 +171,14 @@ const PartnerDataButtons = ({ partner, editPartner }: PartnerViewEditProps) => (
 
 const usePartnerDetailsFilters = makeQueryHandler({
   tab: withDefault(
-    EnumParam(['profile', 'people', 'projects', 'finance', 'notes']),
+    EnumParam([
+      'profile',
+      'people',
+      'projects',
+      'finance',
+      'languages',
+      'notes',
+    ]),
     'profile'
   ),
 });
@@ -187,6 +195,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         <Tab label="Finance" value="finance" />
         <Tab label="People" value="people" />
         <Tab label="Projects" value="projects" />
+        <Tab label="Languages" value="languages" />
         <Tab label="Notes" value="notes" />
       </TabList>
       <Paper sx={{ maxWidth: 'lg' }}>
@@ -201,6 +210,9 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         </TabPanel>
         <TabPanel value="projects" sx={{ p: 0 }}>
           <PartnerDetailProjects />
+        </TabPanel>
+        <TabPanel value="languages" sx={{ p: 0 }}>
+          <PartnerDetailLanguages />
         </TabPanel>
         <TabPanel value="notes">
           <PartnerDetailNotes {...props} />
