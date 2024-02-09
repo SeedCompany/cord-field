@@ -33,11 +33,11 @@ import {
   PartnerDocument,
 } from './PartnerDetail.graphql';
 import { PartnerDetailFinance } from './Tabs/Finance/PartnerDetailFinance';
+import { PartnerDetailLanguages } from './Tabs/Languages/PartnerDetailLanguages';
 import { PartnerDetailNotes } from './Tabs/Notes/PartnerDetailsNotes';
 import { PartnerDetailPeople } from './Tabs/People/PartnerDetailPeople';
 import { PartnerDetailProfile } from './Tabs/Profile/PartnerDetailProfile';
 import { PartnerDetailProjects } from './Tabs/Projects/PartnerDetailProjects';
-import { PartnerDetailLanguages } from '~/scenes/Partners/Detail/Tabs/Languages/PartnerDetailLanguages';
 
 interface PartnerViewEditProps {
   partner: PartnerDetailsFragment | undefined;
