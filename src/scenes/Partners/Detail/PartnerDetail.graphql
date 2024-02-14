@@ -91,4 +91,5 @@ fragment organizationDetails on Organization {
     canEdit
     value
   }
+  avatarLetters
 }
