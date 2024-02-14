@@ -24,8 +24,11 @@ type Unsecure<T> = T extends SecuredProp<infer U>
   : T;
 type SecuredRelation = SecuredProp<{ id: string }>;
 
-export type SecuredEditableKeys<T extends GqlObject> = keyof ChangesOf<T> &
-  string;
+export type SecuredEditableKeys<T extends GqlObject> = [
+  keyof ChangesOf<T>
+] extends [never]
+  ? string
+  : keyof ChangesOf<T> & string;
 
 /**
  * An experimental way to render a form field of a secured property.

@@ -8,6 +8,7 @@ import {
   FinancialReportingTypeLabels,
   FinancialReportingTypeList,
   PartnerTypeList,
+  UpdateOrganization,
   UpdatePartner,
 } from '~/api/schema.graphql';
 import { ExtractStrict, labelFrom } from '~/common';
@@ -19,38 +20,43 @@ import {
   CheckboxField,
   DateField,
   EnumField,
+  SecuredField,
   SubmitError,
   TextField,
 } from '../../../components/form';
 import { UserField, UserLookupItem } from '../../../components/form/Lookup';
 import { isLength } from '../../../components/form/validators';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
-import { UpdateOrganizationNameDocument } from './EditOrganizationName.graphql';
-import { UpdatePartnerDocument } from './EditPartner.graphql';
+import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
 interface PartnerFormValues {
   partner: Merge<
     UpdatePartner,
     {
       pointOfContactId?: UserLookupItem;
-      organizationName: string;
     }
   >;
+  organization: UpdateOrganization;
 }
 
-export type EditablePartnerField = ExtractStrict<
-  keyof UpdatePartner | 'organizationName',
-  // Add more fields here as needed
-  | 'pointOfContactId'
-  | 'globalInnovationsClient'
-  | 'pmcEntityCode'
-  | 'active'
-  | 'types'
-  | 'financialReportingTypes'
-  | 'address'
-  | 'organizationName'
-  | 'startDate'
->;
+export type EditablePartnerField =
+  | `partner.${ExtractStrict<
+      keyof UpdatePartner,
+      // Add more fields here as needed
+      | 'pointOfContactId'
+      | 'globalInnovationsClient'
+      | 'pmcEntityCode'
+      | 'active'
+      | 'types'
+      | 'financialReportingTypes'
+      | 'address'
+      | 'startDate'
+    >}`
+  | `organization.${ExtractStrict<
+      keyof UpdateOrganization,
+      // Add more fields here as needed
+      'name'
+    >}`;
 
 type EditPartnerProps = Except<
   DialogFormProps<PartnerFormValues>,
@@ -72,17 +78,17 @@ const fieldMapping: Record<
   EditablePartnerField,
   ComponentType<PartnerFieldProps>
 > = {
-  pointOfContactId: ({ props }) => (
+  'partner.pointOfContactId': ({ props }) => (
     <UserField {...props} label="Point of Contact" />
   ),
-  globalInnovationsClient: ({ props }) => (
+  'partner.globalInnovationsClient': ({ props }) => (
     <CheckboxField {...props} label="Global Innovations Client" />
   ),
-  active: ({ props }) => <CheckboxField {...props} label="Active" />,
-  pmcEntityCode: ({ props }) => (
+  'partner.active': ({ props }) => <CheckboxField {...props} label="Active" />,
+  'partner.pmcEntityCode': ({ props }) => (
     <TextField {...props} label="PMC Entity Code" validate={isLength(3)} />
   ),
-  types: ({ props }) => (
+  'partner.types': ({ props }) => (
     <EnumField
       multiple
       label="Types"
@@ -91,7 +97,7 @@ const fieldMapping: Record<
       {...props}
     />
   ),
-  financialReportingTypes: ({ props, values }) =>
+  'partner.financialReportingTypes': ({ props, values }) =>
     values.partner.types?.includes('Managing') ? (
       <EnumField
         label="Financial Reporting Types"
@@ -101,19 +107,21 @@ const fieldMapping: Record<
         getLabel={labelFrom(FinancialReportingTypeLabels)}
       />
     ) : null,
-  address: ({ props }) => (
+  'partner.address': ({ props }) => (
     <TextField {...props} label="Address" multiline minRows={2} />
   ),
-  organizationName: ({ props }) => (
+  'partner.startDate': ({ props }) => (
+    <DateField {...props} label="Start Date" />
+  ),
+  'organization.name': ({ props }) => (
     <TextField {...props} required label="Organization Name" />
   ),
-  startDate: ({ props }) => <DateField {...props} label="Start Date" />,
 };
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
   ...DialogForm.defaultDecorators,
   onFieldChange(
-    // if user unselects managing type, wipe the financial reporting type values
+    // if a user unselects the managing type, then wipe the financial reporting type values
     {
       field: 'partner.types',
       updates: {
@@ -128,14 +136,14 @@ const decorators: Array<Decorator<PartnerFormValues>> = [
 
 export const EditPartner = ({
   partner,
-  editFields: editFieldsProp,
+  editFields,
   ...props
 }: EditPartnerProps) => {
   const [updatePartner] = useMutation(UpdatePartnerDocument);
-  const [updateOrganizationName] = useMutation(UpdateOrganizationNameDocument);
 
-  const initialValues = useMemo(
-    () => ({
+  const initialValues = useMemo(() => {
+    const organization = partner.organization.value!;
+    return {
       partner: {
         id: partner.id,
         globalInnovationsClient: partner.globalInnovationsClient.value,
@@ -144,17 +152,14 @@ export const EditPartner = ({
         types: partner.types.value,
         financialReportingTypes: partner.financialReportingTypes.value,
         address: partner.address.value,
-        organizationName: partner.organization.value!.name.value!,
         startDate: partner.startDate.value,
       },
-    }),
-    [partner]
-  );
-
-  const editFields = useMemo(
-    () => many(editFieldsProp ?? []),
-    [editFieldsProp]
-  );
+      organization: {
+        id: organization.id,
+        name: organization.name.value,
+      },
+    } satisfies PartnerFormValues;
+  }, [partner]);
 
   return (
     <DialogForm<PartnerFormValues>
@@ -162,57 +167,51 @@ export const EditPartner = ({
       {...props}
       decorators={decorators}
       initialValues={initialValues}
-      onSubmit={async (
-        {
-          partner: {
-            pointOfContactId,
-            pmcEntityCode,
-            organizationName,
-            address,
-            ...rest
+      onSubmit={async ({ partner, organization }) => {
+        const { pointOfContactId, pmcEntityCode, address, ...partnerRest } =
+          partner;
+
+        await updatePartner({
+          variables: {
+            partner: {
+              ...partnerRest,
+              address: address ?? null,
+              pointOfContactId: pointOfContactId?.id,
+              pmcEntityCode: pmcEntityCode?.toUpperCase(),
+            },
+            organization,
           },
-        },
-        form
-      ) => {
-        const { 'partner.organizationName': nameDirty, ...dirty } =
-          form.getState().dirtyFields;
-        await Promise.all([
-          nameDirty &&
-            updateOrganizationName({
-              variables: {
-                id: partner.organization.value!.id,
-                name: organizationName,
-              },
-            }),
-          Object.keys(dirty).length > 0 &&
-            updatePartner({
-              variables: {
-                input: {
-                  partner: {
-                    ...rest,
-                    address: address ?? null,
-                    pointOfContactId: pointOfContactId?.id,
-                    pmcEntityCode: pmcEntityCode?.toUpperCase(),
-                  },
-                },
-              },
-            }),
-        ]);
+        });
       }}
-      fieldsPrefix="partner"
     >
       {({ values }) => (
         <>
           <SubmitError />
-          {editFields.map((name) => {
+          {many(editFields ?? []).map((name) => {
             const Field = fieldMapping[name];
+
+            const [prefix, suffix] = name.split('.');
+            let obj: typeof partner | (typeof partner.organization.value & {}) =
+              partner;
+            if (prefix === 'organization') {
+              if (
+                !partner.organization.canRead ||
+                !partner.organization.value
+              ) {
+                return null;
+              }
+              obj = partner.organization.value;
+            }
             return (
-              <Field
-                props={{ name }}
-                key={name}
-                partner={partner}
-                values={values}
-              />
+              <SecuredField obj={obj} name={suffix!} key={name}>
+                {(props) => (
+                  <Field
+                    props={{ ...props, name }}
+                    partner={partner}
+                    values={values}
+                  />
+                )}
+              </SecuredField>
             );
           })}
         </>

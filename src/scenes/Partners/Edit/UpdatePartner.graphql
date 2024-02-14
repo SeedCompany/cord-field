@@ -1,0 +1,15 @@
+mutation UpdatePartner(
+  $partner: UpdatePartner!
+  $organization: UpdateOrganization!
+) {
+  updatePartner(input: { partner: $partner }) {
+    partner {
+      ...partnerDetails
+    }
+  }
+  updateOrganization(input: { organization: $organization }) {
+    organization {
+      ...organizationDetails
+    }
+  }
+}

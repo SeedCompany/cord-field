@@ -1,23 +1,17 @@
 query Partner($input: ID!) {
   partner(id: $input) {
-    ...PartnerDetails
+    ...partnerDetails
   }
 }
 
-fragment PartnerDetails on Partner {
+fragment partnerDetails on Partner {
   ...Id
   createdAt
   organization {
     canRead
     canEdit
     value {
-      id
-      name {
-        canRead
-        canEdit
-        value
-      }
-      avatarLetters
+      ...organizationDetails
     }
   }
   pointOfContact {
@@ -63,4 +57,14 @@ fragment PartnerDetails on Partner {
     value
   }
   ...TogglePin
+}
+
+fragment organizationDetails on Organization {
+  ...Id
+  name {
+    canRead
+    canEdit
+    value
+  }
+  avatarLetters
 }
