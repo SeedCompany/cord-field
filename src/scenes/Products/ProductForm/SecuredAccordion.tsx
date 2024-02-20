@@ -18,11 +18,7 @@ export const SecuredAccordion = <K extends ProductKey>({
     children: (props: SecuredFieldRenderProps<K>) => ReactNode;
   }
 >) => (
-  <SecuredField
-    obj={product}
-    // @ts-expect-error yes produces key doesn't match convention of ID suffix
-    name={props.name}
-  >
+  <SecuredField obj={product} name={props.name}>
     {(fieldProps) => (
       <DefaultAccordion
         {...props}
