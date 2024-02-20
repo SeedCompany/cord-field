@@ -26,7 +26,7 @@ export const PartnerDetailProfile = ({ partner, editPartner }: Props) => {
         <Grid item xs={12} md={6}>
           <PartnerContactSection
             partner={partner}
-            onEdit={() => editPartner('address')}
+            onEdit={() => editPartner('contactInfo')}
           />
         </Grid>
         <Grid item xs={12} md={6}>
