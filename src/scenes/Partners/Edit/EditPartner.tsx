@@ -3,8 +3,9 @@ import { Many, many } from '@seedcompany/common';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { ComponentType, useMemo } from 'react';
-import { Except, Merge } from 'type-fest';
+import { Except, Merge, Paths } from 'type-fest';
 import {
+  CoerceNonPrimitives,
   FinancialReportingTypeLabels,
   FinancialReportingTypeList,
   PartnerTypeList,
@@ -29,7 +30,8 @@ import { isLength } from '../../../components/form/validators';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
-interface PartnerFormValues {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type PartnerFormValues = {
   partner: Merge<
     UpdatePartner,
     {
@@ -37,7 +39,7 @@ interface PartnerFormValues {
     }
   >;
   organization: UpdateOrganization;
-}
+};
 
 export type EditablePartnerField = keyof typeof fieldMapping;
 
@@ -59,8 +61,7 @@ interface PartnerFieldProps {
 
 type PossibleFields = Partial<
   Record<
-    | `partner.${keyof UpdatePartner}`
-    | `organization.${keyof UpdateOrganization}`,
+    Paths<CoerceNonPrimitives<PartnerFormValues>>,
     ComponentType<PartnerFieldProps>
   >
 >;
