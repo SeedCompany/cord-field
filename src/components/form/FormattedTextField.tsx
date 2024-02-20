@@ -55,22 +55,22 @@ export function FormattedTextField<FieldValue = string>({
 
   const [managedVal, setManagedVal] = useState<{
     raw: string;
-    parsed?: FieldValue;
+    parsed: FieldValue | null;
   }>({
     raw: format ? format(input.value, name) : input.value,
-    parsed: input.value ?? undefined,
+    parsed: input.value ?? null,
   });
   const updateManagedVal = useCallback(() => {
     setManagedVal({
       raw: format ? format(input.value, name) : input.value,
-      parsed: input.value ?? undefined,
+      parsed: input.value ?? null,
     });
   }, [setManagedVal, format, name, input.value]);
   useEffect(() => {
     let newVal: any = input.value;
     // FF converts undefined to "" to try to keep the input controlled
-    if (newVal === '' && managedVal.parsed === undefined) {
-      newVal = undefined;
+    if (newVal === '' && managedVal.parsed === null) {
+      newVal = null;
     }
 
     if (newVal !== managedVal.parsed) {

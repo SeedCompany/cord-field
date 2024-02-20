@@ -113,6 +113,9 @@ export const useField = <
     El,
     Value<T, Multiple>
   >(name, {
+    // Override default FF behavior to use null instead of undefined when given an empty string.
+    // We want to send that explicit null to API instead of undefined which treats it as not given & unchanged.
+    parse: (value) => (value === '' ? (null as Value<T, Multiple>) : value),
     // @ts-expect-error 2nd arg was made optional for unknown reasons.
     // Ignore this as FF always passes this value, so it's safe to use without checking for null.
     validate,
