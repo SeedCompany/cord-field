@@ -35,7 +35,7 @@ type PartnerFormValues = {
   partner: Merge<
     UpdatePartner,
     {
-      pointOfContactId?: UserLookupItem;
+      pointOfContactId: UserLookupItem | null;
     }
   >;
   organization: UpdateOrganization;
@@ -142,6 +142,7 @@ export const EditPartner = ({
         financialReportingTypes: partner.financialReportingTypes.value,
         address: partner.address.value,
         startDate: partner.startDate.value,
+        pointOfContactId: partner.pointOfContact.value ?? null,
       },
       organization: {
         id: organization.id,
@@ -157,13 +158,11 @@ export const EditPartner = ({
       decorators={decorators}
       initialValues={initialValues}
       onSubmit={async ({ partner, organization }) => {
-        const { pointOfContactId, ...partnerRest } = partner;
-
         await updatePartner({
           variables: {
             partner: {
-              ...partnerRest,
-              pointOfContactId: pointOfContactId?.id,
+              ...partner,
+              pointOfContactId: partner.pointOfContactId?.id ?? null,
             },
             organization,
           },
