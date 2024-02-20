@@ -11,7 +11,7 @@ import {
   UpdateOrganization,
   UpdatePartner,
 } from '~/api/schema.graphql';
-import { ExtractStrict, labelFrom } from '~/common';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -39,24 +39,7 @@ interface PartnerFormValues {
   organization: UpdateOrganization;
 }
 
-export type EditablePartnerField =
-  | `partner.${ExtractStrict<
-      keyof UpdatePartner,
-      // Add more fields here as needed
-      | 'pointOfContactId'
-      | 'globalInnovationsClient'
-      | 'pmcEntityCode'
-      | 'active'
-      | 'types'
-      | 'financialReportingTypes'
-      | 'address'
-      | 'startDate'
-    >}`
-  | `organization.${ExtractStrict<
-      keyof UpdateOrganization,
-      // Add more fields here as needed
-      'name'
-    >}`;
+export type EditablePartnerField = keyof typeof fieldMapping;
 
 type EditPartnerProps = Except<
   DialogFormProps<PartnerFormValues>,
@@ -74,10 +57,15 @@ interface PartnerFieldProps {
   values: PartnerFormValues;
 }
 
-const fieldMapping: Record<
-  EditablePartnerField,
-  ComponentType<PartnerFieldProps>
-> = {
+type PossibleFields = Partial<
+  Record<
+    | `partner.${keyof UpdatePartner}`
+    | `organization.${keyof UpdateOrganization}`,
+    ComponentType<PartnerFieldProps>
+  >
+>;
+
+const fieldMapping = {
   'partner.pointOfContactId': ({ props }) => (
     <UserField {...props} label="Point of Contact" />
   ),
@@ -116,7 +104,7 @@ const fieldMapping: Record<
   'organization.name': ({ props }) => (
     <TextField {...props} required label="Organization Name" />
   ),
-};
+} satisfies PossibleFields;
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
   ...DialogForm.defaultDecorators,
