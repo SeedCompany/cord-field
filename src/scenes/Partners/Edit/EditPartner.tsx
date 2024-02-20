@@ -157,14 +157,12 @@ export const EditPartner = ({
       decorators={decorators}
       initialValues={initialValues}
       onSubmit={async ({ partner, organization }) => {
-        const { pointOfContactId, pmcEntityCode, address, ...partnerRest } =
-          partner;
+        const { pointOfContactId, pmcEntityCode, ...partnerRest } = partner;
 
         await updatePartner({
           variables: {
             partner: {
               ...partnerRest,
-              address: address ?? null,
               pointOfContactId: pointOfContactId?.id,
               pmcEntityCode: pmcEntityCode?.toUpperCase(),
             },
