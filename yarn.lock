@@ -7584,7 +7584,7 @@ __metadata:
     ts-node: "npm:^10.9.1"
     tsconfig-paths-webpack-plugin: "npm:^4.1.0"
     tss-react: "npm:^3.7.1"
-    type-fest: "npm:^2.19.0"
+    type-fest: "npm:^4.10.2"
     typescript: "npm:^5.2.2"
     validator: "npm:^13.11.0"
     webpack: "npm:^4.47.0"
@@ -19200,10 +19200,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^2.13.1, type-fest@npm:^2.19.0":
+"type-fest@npm:^2.13.1":
   version: 2.19.0
   resolution: "type-fest@npm:2.19.0"
   checksum: a5a7ecf2e654251613218c215c7493574594951c08e52ab9881c9df6a6da0aeca7528c213c622bc374b4e0cb5c443aa3ab758da4e3c959783ce884c3194e12cb
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^4.10.2":
+  version: 4.10.2
+  resolution: "type-fest@npm:4.10.2"
+  checksum: 740f7d30da742ff413e8690ec10a24df054bfd87575cf92691b77f5a6b8185c582da529b84ceb13771482599e085712beec51492feaef2a1adc8661c0a47ecba
   languageName: node
   linkType: hard
 
