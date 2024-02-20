@@ -18,6 +18,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  AlphaUppercaseField,
   CheckboxField,
   DateField,
   EnumField,
@@ -26,7 +27,6 @@ import {
   TextField,
 } from '../../../components/form';
 import { UserField, UserLookupItem } from '../../../components/form/Lookup';
-import { isLength } from '../../../components/form/validators';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
@@ -75,7 +75,7 @@ const fieldMapping = {
   ),
   'partner.active': ({ props }) => <CheckboxField {...props} label="Active" />,
   'partner.pmcEntityCode': ({ props }) => (
-    <TextField {...props} label="PMC Entity Code" validate={isLength(3)} />
+    <AlphaUppercaseField chars={3} {...props} label="PMC Entity Code" />
   ),
   'partner.types': ({ props }) => (
     <EnumField
@@ -157,14 +157,13 @@ export const EditPartner = ({
       decorators={decorators}
       initialValues={initialValues}
       onSubmit={async ({ partner, organization }) => {
-        const { pointOfContactId, pmcEntityCode, ...partnerRest } = partner;
+        const { pointOfContactId, ...partnerRest } = partner;
 
         await updatePartner({
           variables: {
             partner: {
               ...partnerRest,
               pointOfContactId: pointOfContactId?.id,
-              pmcEntityCode: pmcEntityCode?.toUpperCase(),
             },
             organization,
           },
