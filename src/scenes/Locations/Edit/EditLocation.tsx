@@ -36,7 +36,7 @@ export const EditLocation = (props: EditLocationProps) => {
   );
 
   const onSubmit: FormProps['onSubmit'] = async ({
-    location: { isoAlpha3, fundingAccountId, mapImage: mapImages, ...rest },
+    location: { fundingAccountId, mapImage: mapImages, ...rest },
   }) => {
     const [uploadedImageInfo, finalizeUpload] = await uploadFile(
       mapImages?.[0]
@@ -44,7 +44,6 @@ export const EditLocation = (props: EditLocationProps) => {
 
     const input: UpdateLocation = {
       ...rest,
-      isoAlpha3: isoAlpha3 ?? null,
       fundingAccountId: fundingAccountId?.id ?? null,
       mapImage: uploadedImageInfo,
     };

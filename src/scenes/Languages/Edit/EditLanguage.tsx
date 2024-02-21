@@ -53,29 +53,16 @@ export const EditLanguage = (props: EditLanguageProps) => {
       title="Edit Language"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({
-        language: {
-          populationOverride,
-          sponsorEstimatedEndFY,
-          ethnologue,
-          ...rest
-        },
-      }) => {
+      onSubmit={async ({ language }) => {
         const result = await updateLanguage({
           variables: {
             input: {
               language: {
-                populationOverride: populationOverride ?? null,
+                ...language,
                 sponsorEstimatedEndDate:
                   CalendarDate.fiscalYearEndToCalendarDate(
-                    sponsorEstimatedEndFY
+                    language.sponsorEstimatedEndFY
                   ),
-                ethnologue: {
-                  ...ethnologue,
-                  code: ethnologue?.code ?? null,
-                  provisionalCode: ethnologue?.provisionalCode ?? null,
-                },
-                ...rest,
               },
             },
           },

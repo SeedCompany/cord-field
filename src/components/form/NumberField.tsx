@@ -165,7 +165,7 @@ const parseValidNumber = (string: string | number) => {
     return string;
   }
   const number = Number.parseFloat(string);
-  return Number.isNaN(number) ? undefined : number;
+  return Number.isNaN(number) ? null : number;
 };
 
 const replaceNumber =
