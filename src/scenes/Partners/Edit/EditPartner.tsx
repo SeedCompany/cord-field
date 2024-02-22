@@ -103,10 +103,10 @@ const fieldMapping = {
     <DateField {...props} label="Start Date" />
   ),
   'organization.name': ({ props }) => (
-    <TextField {...props} required label="Organization Name" />
+    <TextField {...props} required label="Name" />
   ),
   'organization.acronym': ({ props }) => (
-    <TextField {...props} label="Organization Acronym" />
+    <TextField {...props} label="Acronym" />
   ),
 } satisfies PossibleFields;
 
