@@ -10,6 +10,11 @@ fragment PartnerListItem on Partner {
         canEdit
         value
       }
+      acronym {
+        canRead
+        canEdit
+        value
+      }
     }
   }
   ...TogglePin

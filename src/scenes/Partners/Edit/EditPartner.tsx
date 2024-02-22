@@ -103,7 +103,10 @@ const fieldMapping = {
     <DateField {...props} label="Start Date" />
   ),
   'organization.name': ({ props }) => (
-    <TextField {...props} required label="Organization Name" />
+    <TextField {...props} required label="Name" />
+  ),
+  'organization.acronym': ({ props }) => (
+    <TextField {...props} label="Acronym" />
   ),
 } satisfies PossibleFields;
 
@@ -147,6 +150,7 @@ export const EditPartner = ({
       organization: {
         id: organization.id,
         name: organization.name.value,
+        acronym: organization.acronym.value,
       },
     } satisfies PartnerFormValues;
   }, [partner]);

@@ -90,24 +90,25 @@ const PartnerHeader = ({
   partner,
   editPartner: edit,
 }: PartnerViewEditProps) => {
-  const partnerName = partner?.organization.value?.name.value;
-  const abrev =
-    partnerName && partnerName.length >= 30
-      ? partner.organization.value.avatarLetters
-      : null;
+  const name = partner?.organization.value?.name.value;
+  const acronym = partner?.organization.value?.acronym.value;
 
   return (
     <>
-      <Helmet title={partnerName ?? undefined} />
+      <Helmet title={acronym ?? name ?? undefined} />
       <Stack direction="row" gap={1}>
         <Typography variant="h2" lineHeight="inherit" mr={1}>
-          {abrev || partnerName}
+          {acronym ?? name}
         </Typography>
         <Tooltip title="Edit Partner">
           <IconButton
             loading={!partner}
             onClick={() =>
-              edit(['organization.name', 'partner.globalInnovationsClient'])
+              edit([
+                'organization.name',
+                'organization.acronym',
+                'partner.globalInnovationsClient',
+              ])
             }
           >
             <Edit />
@@ -122,9 +123,9 @@ const PartnerHeader = ({
           }
         />
       </Stack>
-      {abrev && (
+      {acronym && (
         <Typography variant="h4" gutterBottom>
-          {partnerName}
+          {name}
         </Typography>
       )}
       {partner && (
