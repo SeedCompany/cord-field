@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
+import { Card, CardContent, Skeleton, Stack, Typography } from '@mui/material';
 import { random } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
@@ -7,7 +7,7 @@ import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
 import { PartnerListItemFragment } from './PartnerListItemCard.graphql';
 
-const useStyles = makeStyles()(({ breakpoints, spacing }) => {
+const useStyles = makeStyles()(({ breakpoints }) => {
   const cardWidth = breakpoints.values.sm;
   return {
     root: {
@@ -18,12 +18,6 @@ const useStyles = makeStyles()(({ breakpoints, spacing }) => {
     card: {
       display: 'flex',
       alignItems: 'initial',
-    },
-    cardContent: {
-      flex: 1,
-      padding: spacing(2, 3),
-      display: 'flex',
-      justifyContent: 'space-between',
     },
     pin: {
       position: 'absolute',
@@ -46,6 +40,10 @@ export const PartnerListItemCard = ({
 }: PartnerListItemCardProps) => {
   const { classes, cx } = useStyles();
 
+  const org = partner?.organization.value;
+  const acronym = org?.acronym.value;
+  const name = org?.name.value;
+
   return (
     <Card className={cx(className, classes.root)}>
       <CardActionAreaLink
@@ -53,19 +51,24 @@ export const PartnerListItemCard = ({
         to={`/partners/${partner?.id}`}
         className={classes.card}
       >
-        <CardContent className={classes.cardContent}>
-          <Grid container direction="column" spacing={1}>
-            <Grid item>
-              <Typography variant="h4">
-                {!partner ? (
-                  <Skeleton variant="text" width={`${randomNameLength()}ch`} />
-                ) : (
-                  partner.organization.value?.name.value
-                )}
-              </Typography>
-            </Grid>
-          </Grid>
-        </CardContent>
+        <Stack component={CardContent} flex={1} gap={1}>
+          <Typography variant="h4">
+            {!partner ? (
+              <Skeleton variant="text" width={`${randomNameLength()}ch`} />
+            ) : (
+              acronym ?? name
+            )}
+          </Typography>
+          {(!partner || acronym) && (
+            <Typography>
+              {!partner ? (
+                <Skeleton variant="text" width={`${randomNameLength()}ch`} />
+              ) : acronym ? (
+                name
+              ) : null}
+            </Typography>
+          )}
+        </Stack>
       </CardActionAreaLink>
       <TogglePinButton
         object={partner}

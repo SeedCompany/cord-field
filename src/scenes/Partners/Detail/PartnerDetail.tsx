@@ -86,25 +86,29 @@ export const PartnerDetail = () => {
   );
 };
 
-const PartnerHeader = ({ partner, editPartner }: PartnerViewEditProps) => {
-  const partnerName = partner?.organization.value?.name.value;
-  const abrev =
-    partnerName && partnerName.length >= 30
-      ? partner.organization.value.avatarLetters
-      : null;
+const PartnerHeader = ({
+  partner,
+  editPartner: edit,
+}: PartnerViewEditProps) => {
+  const name = partner?.organization.value?.name.value;
+  const acronym = partner?.organization.value?.acronym.value;
 
   return (
     <>
-      <Helmet title={partnerName ?? undefined} />
+      <Helmet title={acronym ?? name ?? undefined} />
       <Stack direction="row" gap={1}>
         <Typography variant="h2" lineHeight="inherit" mr={1}>
-          {abrev || partnerName}
+          {acronym ?? name}
         </Typography>
         <Tooltip title="Edit Partner">
           <IconButton
             loading={!partner}
             onClick={() =>
-              editPartner(['organizationName', 'globalInnovationsClient'])
+              edit([
+                'organization.name',
+                'organization.acronym',
+                'partner.globalInnovationsClient',
+              ])
             }
           >
             <Edit />
@@ -119,9 +123,9 @@ const PartnerHeader = ({ partner, editPartner }: PartnerViewEditProps) => {
           }
         />
       </Stack>
-      {abrev && (
+      {acronym && (
         <Typography variant="h4" gutterBottom>
-          {partnerName}
+          {name}
         </Typography>
       )}
       {partner && (
@@ -140,11 +144,14 @@ const StatusIcon = ({ isActive }: { isActive: boolean | Nil }) =>
     <InactiveStatusIcon color="error" />
   );
 
-const PartnerDataButtons = ({ partner, editPartner }: PartnerViewEditProps) => (
+const PartnerDataButtons = ({
+  partner,
+  editPartner: edit,
+}: PartnerViewEditProps) => (
   <Box mt={3} mb={2} display="flex" gap={2}>
     <DataButton
       label="Status"
-      onClick={() => editPartner('active')}
+      onClick={() => edit('partner.active')}
       secured={partner?.active}
       startIcon={<StatusIcon isActive={partner?.active.value} />}
       redacted="You do not have permission to view Status"
@@ -157,7 +164,7 @@ const PartnerDataButtons = ({ partner, editPartner }: PartnerViewEditProps) => (
     />
     <DataButton
       label="Start Date"
-      onClick={() => editPartner(['startDate'])}
+      onClick={() => edit('partner.startDate')}
       secured={partner?.startDate}
       startIcon={<EventIcon color="info" />}
       empty="None"

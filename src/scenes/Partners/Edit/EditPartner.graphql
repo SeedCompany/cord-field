@@ -1,7 +1,0 @@
-mutation UpdatePartner($input: UpdatePartnerInput!) {
-  updatePartner(input: $input) {
-    partner {
-      ...PartnerDetails
-    }
-  }
-}

@@ -11,7 +11,7 @@ interface Props {
   editPartner: (item: Many<EditablePartnerField>) => void;
 }
 
-export const PartnerDetailProfile = ({ partner, editPartner }: Props) => {
+export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => {
   return (
     <>
       <Grid container spacing={1} alignItems="center">
@@ -26,13 +26,15 @@ export const PartnerDetailProfile = ({ partner, editPartner }: Props) => {
         <Grid item xs={12} md={6}>
           <PartnerContactSection
             partner={partner}
-            onEdit={() => editPartner('address')}
+            onEdit={() => edit('partner.address')}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <PartnerTypesSection
             partner={partner}
-            onEdit={() => editPartner(['types', 'financialReportingTypes'])}
+            onEdit={() =>
+              edit(['partner.types', 'partner.financialReportingTypes'])
+            }
           />
         </Grid>
       </Grid>

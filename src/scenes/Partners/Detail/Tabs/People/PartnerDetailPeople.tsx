@@ -33,7 +33,7 @@ const useStyles = makeStyles()(({ palette }) => ({
   },
 }));
 
-export const PartnerDetailPeople = ({ partner, editPartner }: Props) => {
+export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
   const { classes } = useStyles();
 
   return (
@@ -46,7 +46,7 @@ export const PartnerDetailPeople = ({ partner, editPartner }: Props) => {
         content={
           !partner?.pointOfContact.value ? (
             <CardActionArea
-              onClick={() => editPartner('pointOfContactId')}
+              onClick={() => edit('partner.pointOfContactId')}
               className={classes.pocCardActionArea}
               aria-label="add mentor"
             >
@@ -64,7 +64,7 @@ export const PartnerDetailPeople = ({ partner, editPartner }: Props) => {
             disabled={
               !partner?.pointOfContact || !partner.pointOfContact.canEdit
             }
-            onClick={() => editPartner('pointOfContactId')}
+            onClick={() => edit('partner.pointOfContactId')}
           >
             {partner?.pointOfContact.value ? 'Edit' : 'Add'} Point of Contact
           </Button>

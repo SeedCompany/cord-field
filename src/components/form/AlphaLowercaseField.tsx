@@ -12,7 +12,7 @@ export const AlphaField = ({ chars, ...props }: AlphaFieldProps) => (
   <FormattedTextField
     accept={/[a-zA-Z]/g}
     formatInput={(value) =>
-      (value.match(/[a-zA-Z]+/g) || []).join('').substr(0, chars)
+      (value.match(/[a-zA-Z]+/g) || []).join('').slice(0, chars)
     }
     validate={isLength(chars)}
     {...props}
