@@ -151,9 +151,6 @@ const fieldMapping = {
   'organization.acronym': ({ props }) => (
     <TextField {...props} label="Acronym" />
   ),
-  'organization.acronym': ({ props }) => (
-    <TextField {...props} label="Organization Acronym" />
-  ),
 } satisfies PossibleFields;
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
@@ -173,11 +170,11 @@ const decorators: Array<Decorator<PartnerFormValues>> = [
 ];
 
 export const EditPartner = ({
-                              partner,
-                              editFields,
-                              languagesData,
-                              ...props
-                            }: EditPartnerProps) => {
+  partner,
+  editFields,
+  languagesData,
+  ...props
+}: EditPartnerProps) => {
   const [updatePartner] = useMutation(UpdatePartnerDocument);
 
   const initialValues = useMemo(() => {
@@ -197,7 +194,7 @@ export const EditPartner = ({
         pointOfContactId: partner.pointOfContact.value ?? null,
         languagesOfConsulting,
         languageOfWiderCommunicationId:
-        partner.languageOfWiderCommunication.value?.id,
+          partner.languageOfWiderCommunication.value?.id,
         languageOfReportingId: partner.languageOfReporting.value?.id,
       },
       organization: {
