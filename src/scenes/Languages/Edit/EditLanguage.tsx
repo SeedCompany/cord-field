@@ -53,7 +53,9 @@ export const EditLanguage = (props: EditLanguageProps) => {
       title="Edit Language"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({ language }) => {
+      onSubmit={async ({
+        language: { sponsorEstimatedEndFY, ...language },
+      }) => {
         const result = await updateLanguage({
           variables: {
             input: {
@@ -61,7 +63,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
                 ...language,
                 sponsorEstimatedEndDate:
                   CalendarDate.fiscalYearEndToCalendarDate(
-                    language.sponsorEstimatedEndFY
+                    sponsorEstimatedEndFY
                   ),
               },
             },
