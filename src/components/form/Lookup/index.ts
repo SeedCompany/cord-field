@@ -1,3 +1,5 @@
+import { Nil } from '@seedcompany/common';
+
 export * from './EthnoArt';
 export * from './Film';
 export * from './Language';
@@ -8,3 +10,5 @@ export * from './Story';
 export * from './User';
 export * from './Partner';
 export * from './FundingAccount';
+
+export const getLookupId = (ref: { id: string } | Nil) => (ref ? ref.id : ref);
