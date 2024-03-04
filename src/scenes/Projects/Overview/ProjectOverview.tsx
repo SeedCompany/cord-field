@@ -54,7 +54,6 @@ import { ProjectListQueryVariables } from '../List/projects.graphql';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
-import { PresetInventoryButton } from './PresetInventory';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
@@ -221,7 +220,6 @@ export const ProjectOverview = () => {
                 />
               )}
             </Typography>
-            <PresetInventoryButton project={project} />
             {(!project || project.name.canEdit) && (
               <Tooltip title="Edit Project Name">
                 <IconButton

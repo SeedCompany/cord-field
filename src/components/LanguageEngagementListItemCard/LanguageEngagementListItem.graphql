@@ -28,19 +28,6 @@ fragment LanguageEngagementListItem on LanguageEngagement {
       }
       avatarLetters
       sensitivity
-
-      # Needed so that toggling preset inventory in ProjectOverview can ask for this back from API
-      # yet also be able to fetch this from cache so it provide an optimistic response before API returns
-      presetInventory {
-        canRead
-        value
-      }
-    }
-  }
-  project {
-    ...Id
-    presetInventory {
-      value
     }
   }
   products {
