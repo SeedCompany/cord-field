@@ -32,7 +32,11 @@ import {
   TextField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
-import { LocationField, UserField } from '../../../components/form/Lookup';
+import {
+  getLookupId,
+  LocationField,
+  UserField,
+} from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql';
@@ -296,19 +300,12 @@ export const EditEngagementDialog = ({
           };
         }
       }}
-      onSubmit={async (
-        {
-          engagement: { mentorId: mentor, countryOfOriginId: country, ...rest },
-        },
-        form
-      ) => {
-        const mentorId = mentor?.id;
-        const countryOfOriginId = country?.id;
+      onSubmit={async ({ engagement: values }, form) => {
         const input = {
           engagement: {
-            ...rest,
-            ...(mentorId ? { mentorId } : {}),
-            ...(countryOfOriginId ? { countryOfOriginId } : {}),
+            ...values,
+            mentorId: getLookupId(values.mentorId),
+            countryOfOriginId: getLookupId(values.countryOfOriginId),
           },
           changeset: engagement.changeset?.id,
         };
