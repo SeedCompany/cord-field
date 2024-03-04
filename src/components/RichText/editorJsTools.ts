@@ -27,7 +27,7 @@ export const EDITOR_JS_TOOLS = defineTools({
     inlineToolbar: ['bold', 'italic', 'marker'],
   },
   // embed: Embed,
-  // table: Table,
+  // table: Tables,
   list: List,
   // warning: Warning,
   // code: Code,

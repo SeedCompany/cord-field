@@ -1,0 +1,34 @@
+query PartnerLanguages($id: ID!, $input: LanguageListInput) {
+  partner(id: $id) {
+    id
+    languages(input: $input) {
+      canRead
+      canCreate
+      hasMore
+      items {
+        ...PartnerDetailLanguagesTableListItem
+      }
+      total
+    }
+  }
+}
+
+fragment PartnerDetailLanguagesTableListItem on Language {
+  id
+  name {
+    value
+    canRead
+    canEdit
+  }
+  displayName {
+    canRead
+    canEdit
+    value
+  }
+  sensitivity
+  registryOfDialectsCode {
+    value
+    canRead
+    canEdit
+  }
+}
