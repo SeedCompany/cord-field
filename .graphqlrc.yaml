@@ -1,0 +1,6 @@
+schema: schema.graphql
+extensions:
+  endpoints:
+    default:
+      url: ${CORD_URL}/graphql
+documents: src/**/*.graphql
