@@ -418,10 +418,10 @@ export const ProjectOverview = () => {
                 startIcon={<GlobalSearchIcon color="info" />}
                 empty="None"
                 loading={!project}
-                secured={project?.marketingLocation}
+                secured={project?.marketingLocationOverride}
                 redacted="You do not have permission to view the marketing location"
                 children={(location) => location.name.value}
-                onClick={() => editField(['marketingLocationId'])}
+                onClick={() => editField(['marketingLocationOverrideId'])}
               />
             </Grid>
           </Grid>

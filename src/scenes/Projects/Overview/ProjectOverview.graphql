@@ -24,7 +24,7 @@ fragment ProjectOverview on Project {
       ...DisplayLocation
     }
   }
-  marketingLocation {
+  marketingLocationOverride {
     canRead
     canEdit
     value {
