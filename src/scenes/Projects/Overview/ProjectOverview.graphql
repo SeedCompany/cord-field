@@ -18,25 +18,27 @@ fragment ProjectOverview on Project {
     value
   }
   primaryLocation {
-    canRead
-    canEdit
-    value {
-      ...DisplayLocation
-    }
+    ...SecuredDisplayLocation
+  }
+  ...MarketingCountry
+
+  marketingRegion {
+    ...SecuredDisplayLocation
+  }
+  marketingCountryOverride {
+    ...SecuredDisplayLocation
+  }
+  marketingRegionOverride {
+    ...SecuredDisplayLocation
   }
   marketingLocation {
-    canRead
-    canEdit
-    value {
-      ...DisplayLocation
-    }
+    ...SecuredDisplayLocation
   }
   fieldRegion {
-    canRead
-    canEdit
-    value {
-      ...DisplayFieldRegion
-    }
+    ...SecuredDisplayFieldRegion
+  }
+  fieldRegionOverride {
+    ...SecuredDisplayFieldRegion
   }
   mouRange {
     ...securedDateRange
@@ -136,4 +138,9 @@ fragment ProjectEngagementList on SecuredEngagementList {
     }
   }
   ...Pagination
+}
+fragment MarketingCountry on Project {
+  marketingCountry {
+    ...SecuredDisplayLocation
+  }
 }

@@ -42,6 +42,7 @@ fragment LanguageEngagementListItem on LanguageEngagement {
     presetInventory {
       value
     }
+    ...MarketingCountry
   }
   products {
     total
