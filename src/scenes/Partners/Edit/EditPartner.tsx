@@ -2,6 +2,7 @@ import { useMutation } from '@apollo/client';
 import { Many, many } from '@seedcompany/common';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
+import { omit } from 'lodash';
 import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import {
@@ -11,6 +12,10 @@ import {
   UpdatePartner,
 } from '~/api/schema.graphql';
 import { ExtractStrict, labelFrom } from '~/common';
+import {
+  FieldData,
+  LanguageOfConsultingCheckboxes,
+} from '~/components/form/GroupedCheckboxes';
 import {
   DialogForm,
   DialogFormProps,
@@ -34,6 +39,7 @@ interface PartnerFormValues {
     {
       pointOfContactId?: UserLookupItem;
       organizationName: string;
+      languageOfConsultingCheckboxes: { [key: string]: boolean };
     }
   >;
 }
@@ -50,6 +56,7 @@ export type EditablePartnerField = ExtractStrict<
   | 'address'
   | 'organizationName'
   | 'startDate'
+  | 'languagesOfConsulting'
 >;
 
 type EditPartnerProps = Except<
@@ -58,6 +65,7 @@ type EditPartnerProps = Except<
 > & {
   partner: PartnerDetailsFragment;
   editFields?: Many<EditablePartnerField>;
+  languagesData?: FieldData[];
 };
 
 interface PartnerFieldProps {
@@ -66,6 +74,7 @@ interface PartnerFieldProps {
   };
   partner: PartnerDetailsFragment;
   values: PartnerFormValues;
+  languagesData?: FieldData[];
 }
 
 const fieldMapping: Record<
@@ -78,6 +87,14 @@ const fieldMapping: Record<
   globalInnovationsClient: ({ props }) => (
     <CheckboxField {...props} label="Global Innovations Client" />
   ),
+  languagesOfConsulting: ({ languagesData }) => {
+    return languagesData ? (
+      <LanguageOfConsultingCheckboxes
+        fieldsData={languagesData}
+        labelPlacement="end"
+      />
+    ) : null;
+  },
   active: ({ props }) => <CheckboxField {...props} label="Active" />,
   pmcEntityCode: ({ props }) => (
     <TextField {...props} label="PMC Entity Code" validate={isLength(3)} />
@@ -129,6 +146,7 @@ const decorators: Array<Decorator<PartnerFormValues>> = [
 export const EditPartner = ({
   partner,
   editFields: editFieldsProp,
+  languagesData,
   ...props
 }: EditPartnerProps) => {
   const [updatePartner] = useMutation(UpdatePartnerDocument);
@@ -146,6 +164,14 @@ export const EditPartner = ({
         address: partner.address.value,
         organizationName: partner.organization.value!.name.value!,
         startDate: partner.startDate.value,
+        languageOfConsultingCheckboxes:
+          partner.languagesOfConsulting.value.reduce(
+            (languages, language) => ({
+              ...languages,
+              [language.id]: true,
+            }),
+            {}
+          ),
       },
     }),
     [partner]
@@ -169,13 +195,23 @@ export const EditPartner = ({
             pmcEntityCode,
             organizationName,
             address,
+            languageOfConsultingCheckboxes,
             ...rest
           },
         },
         form
       ) => {
+        const languagesOfConsulting = Object.entries(
+          languageOfConsultingCheckboxes
+        )
+          .filter(([, value]) => value)
+          .map(([key]) => key);
         const { 'partner.organizationName': nameDirty, ...dirty } =
           form.getState().dirtyFields;
+
+        const restOmitted = omit(rest, 'languageOfConsultingCheckboxes');
+        console.log(languagesOfConsulting);
+
         await Promise.all([
           nameDirty &&
             updateOrganizationName({
@@ -189,10 +225,11 @@ export const EditPartner = ({
               variables: {
                 input: {
                   partner: {
-                    ...rest,
+                    ...restOmitted,
                     address: address ?? null,
                     pointOfContactId: pointOfContactId?.id,
                     pmcEntityCode: pmcEntityCode?.toUpperCase(),
+                    languagesOfConsulting,
                   },
                 },
               },
@@ -212,6 +249,7 @@ export const EditPartner = ({
                 key={name}
                 partner={partner}
                 values={values}
+                languagesData={languagesData}
               />
             );
           })}

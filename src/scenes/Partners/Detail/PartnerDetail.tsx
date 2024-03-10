@@ -24,8 +24,10 @@ import { Error } from '~/components/Error';
 import { FormattedDate, FormattedDateTime } from '~/components/Formatters';
 import { IconButton } from '~/components/IconButton';
 import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
+import { useListQuery } from '~/components/List';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { LanguagesDocument as Languages } from '../../Languages/List/languages.graphql';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
 import {
@@ -53,6 +55,24 @@ export const PartnerDetail = () => {
     },
   });
 
+  const languagesOfConsulting = useListQuery(Languages, {
+    listAt: (data) => data.languages,
+    variables: {
+      input: {
+        filter: { isLanguageOfConsulting: true },
+      },
+    },
+  });
+
+  const languagesData = languagesOfConsulting.data?.items
+    .filter((item) => item.name.value !== null && item.name.value !== undefined)
+    .map((item) => ({
+      id: item.id,
+      displayName: item.name.value ?? '',
+      label: item.name.value ?? '',
+      value: item.id,
+    }));
+
   const [editPartnerState, editPartner, editField] =
     useDialog<Many<EditablePartnerField>>();
 
@@ -75,9 +95,10 @@ export const PartnerDetail = () => {
           <PartnerTabs {...viewEdit} />
         </main>
       )}
-      {partner ? (
+      {partner && languagesData ? (
         <EditPartner
           partner={partner}
+          languagesData={languagesData}
           {...editPartnerState}
           editFields={editField}
         />

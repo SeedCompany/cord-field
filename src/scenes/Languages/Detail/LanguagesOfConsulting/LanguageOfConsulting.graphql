@@ -1,0 +1,12 @@
+fragment LanguagesOfConsulting on SecuredLanguages {
+  canRead
+  canEdit
+  value {
+    id
+    name {
+      canEdit
+      canRead
+      value
+    }
+  }
+}

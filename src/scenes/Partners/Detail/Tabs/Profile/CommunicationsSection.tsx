@@ -1,41 +1,35 @@
 import { Edit } from '@mui/icons-material';
 import { Stack, Tooltip } from '@mui/material';
-import {
-  FinancialReportingTypeLabels,
-  PartnerTypeLabels,
-} from '~/api/schema.graphql';
-import { canEditAny, labelFrom } from '~/common';
+import { canEditAny } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
 import { DisplaySecuredList } from '~/components/DisplaySecuredList/DisplaySecuredList';
 import { IconButton } from '~/components/IconButton';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
-interface PartnerTypesSectionProps {
+interface CommunicationsSectionProps {
   partner?: PartnerDetailsFragment;
   onEdit: () => void;
   className?: string;
 }
-
-export const PartnerTypesSection = ({
+export const CommunicationsSection = ({
   partner,
   onEdit,
-}: PartnerTypesSectionProps) => {
-  const canEdit = canEditAny(
+}: CommunicationsSectionProps) => {
+  const canEditLanguagesOfConsulting = canEditAny(
     partner,
     false,
-    'types',
-    'financialReportingTypes'
+    'languagesOfConsulting'
   );
 
   return (
     <ActionableSection
-      title="Partner Type"
+      title="Communications"
       loading={!partner}
       action={
         <Tooltip title="Edit">
           <span>
             <IconButton
-              disabled={!canEdit}
+              disabled={!canEditLanguagesOfConsulting}
               onClick={onEdit}
               loading={!partner}
               size="small"
@@ -48,18 +42,12 @@ export const PartnerTypesSection = ({
     >
       <Stack spacing={2}>
         <DisplaySecuredList
-          title="Roles"
-          data={partner?.types}
-          keyGetter={labelFrom(PartnerTypeLabels)}
-          redacted={{ fieldDescription: `partner's roles` }}
-        />
-        <DisplaySecuredList
-          title="Financial Reporting Types"
-          data={partner?.financialReportingTypes}
-          keyGetter={labelFrom(FinancialReportingTypeLabels)}
-          redacted={{
-            fieldDescription: `partner's financial reporting types`,
-            width: '75%',
+          title="Language of Consulting"
+          data={partner?.languagesOfConsulting}
+          redacted={{ fieldDescription: `partner's communications` }}
+          keyGetter={(item) => {
+            console.log();
+            return item.name.value || '';
           }}
         />
       </Stack>
