@@ -57,6 +57,25 @@ fragment partnerDetails on Partner {
     canEdit
     value
   }
+  languagesOfConsulting {
+    canRead
+    canEdit
+    ...LanguagesOfConsulting
+  }
+  languageOfWiderCommunication {
+    canRead
+    canEdit
+    value {
+      ...LanguageDetail
+    }
+  }
+  languageOfReporting {
+    canRead
+    canEdit
+    value {
+      ...LanguageDetail
+    }
+  }
   ...TogglePin
 }
 

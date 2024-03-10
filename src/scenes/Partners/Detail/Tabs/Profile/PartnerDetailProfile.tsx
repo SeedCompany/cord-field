@@ -1,6 +1,7 @@
 import { Grid } from '@mui/material';
 import { Many } from 'lodash';
 import { BooleanProperty } from '~/components/BooleanProperty';
+import { CommunicationsSection } from '../../../../Partners/Detail/Tabs/Profile/CommunicationsSection';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 import { PartnerContactSection } from './PartnerContactSection';
@@ -35,6 +36,12 @@ export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => {
             onEdit={() =>
               edit(['partner.types', 'partner.financialReportingTypes'])
             }
+          />
+        </Grid>
+        <Grid item xl={12}>
+          <CommunicationsSection
+            partner={partner}
+            onEdit={() => editPartner(['languagesOfConsulting'])}
           />
         </Grid>
       </Grid>
