@@ -12,10 +12,8 @@ import {
   UpdatePartner,
 } from '~/api/schema.graphql';
 import { ExtractStrict, labelFrom } from '~/common';
-import {
-  FieldData,
-  LanguageOfConsultingCheckboxes,
-} from '~/components/form/GroupedCheckboxes';
+import { CheckboxesGroup, FieldData } from '~/components/form/CheckboxesGroup';
+import { RadioButtonsGroup } from '~/components/form/RadioButtonsGroup';
 import {
   DialogForm,
   DialogFormProps,
@@ -44,6 +42,12 @@ interface PartnerFormValues {
   >;
 }
 
+interface LanguagesData {
+  languagesOfConsulting: FieldData[];
+  languagesOfWiderCommunication: FieldData[];
+  languagesOfReporting: FieldData[];
+}
+
 export type EditablePartnerField = ExtractStrict<
   keyof UpdatePartner | 'organizationName',
   // Add more fields here as needed
@@ -57,6 +61,8 @@ export type EditablePartnerField = ExtractStrict<
   | 'organizationName'
   | 'startDate'
   | 'languagesOfConsulting'
+  | 'languageOfWiderCommunicationId'
+  | 'languageOfReportingId'
 >;
 
 type EditPartnerProps = Except<
@@ -65,7 +71,7 @@ type EditPartnerProps = Except<
 > & {
   partner: PartnerDetailsFragment;
   editFields?: Many<EditablePartnerField>;
-  languagesData?: FieldData[];
+  languagesData?: LanguagesData;
 };
 
 interface PartnerFieldProps {
@@ -74,7 +80,7 @@ interface PartnerFieldProps {
   };
   partner: PartnerDetailsFragment;
   values: PartnerFormValues;
-  languagesData?: FieldData[];
+  languagesData?: LanguagesData;
 }
 
 const fieldMapping: Record<
@@ -89,9 +95,33 @@ const fieldMapping: Record<
   ),
   languagesOfConsulting: ({ languagesData }) => {
     return languagesData ? (
-      <LanguageOfConsultingCheckboxes
-        fieldsData={languagesData}
+      <CheckboxesGroup
+        fieldsData={languagesData.languagesOfConsulting}
         labelPlacement="end"
+        prefix="languageOfConsultingCheckboxes"
+        title="Languages of Consulting"
+        marginBottom={2}
+      />
+    ) : null;
+  },
+  languageOfWiderCommunicationId: ({ languagesData }) => {
+    return languagesData ? (
+      <RadioButtonsGroup
+        title="Language of Wider Communication"
+        fieldsData={languagesData.languagesOfWiderCommunication}
+        labelPlacement="end"
+        name="partner.languageOfWiderCommunicationId"
+        marginBottom={2}
+      />
+    ) : null;
+  },
+  languageOfReportingId: ({ languagesData }) => {
+    return languagesData ? (
+      <RadioButtonsGroup
+        title="Language of Reporting"
+        fieldsData={languagesData.languagesOfReporting}
+        labelPlacement="end"
+        name="partner.languageOfReportingId"
       />
     ) : null;
   },
@@ -172,6 +202,9 @@ export const EditPartner = ({
             }),
             {}
           ),
+        languageOfWiderCommunicationId:
+          partner.languageOfWiderCommunication.value?.id,
+        languageOfReportingId: partner.languageOfReporting.value?.id,
       },
     }),
     [partner]
@@ -196,6 +229,8 @@ export const EditPartner = ({
             organizationName,
             address,
             languageOfConsultingCheckboxes,
+            languageOfWiderCommunicationId,
+            languageOfReportingId,
             ...rest
           },
         },
@@ -209,8 +244,7 @@ export const EditPartner = ({
         const { 'partner.organizationName': nameDirty, ...dirty } =
           form.getState().dirtyFields;
 
-        const restOmitted = omit(rest, 'languageOfConsultingCheckboxes');
-        console.log(languagesOfConsulting);
+        const restOmitted = omit(rest, ['languageOfConsultingCheckboxes']);
 
         await Promise.all([
           nameDirty &&
@@ -226,10 +260,13 @@ export const EditPartner = ({
                 input: {
                   partner: {
                     ...restOmitted,
+                    id: partner.id,
                     address: address ?? null,
                     pointOfContactId: pointOfContactId?.id,
                     pmcEntityCode: pmcEntityCode?.toUpperCase(),
                     languagesOfConsulting,
+                    languageOfWiderCommunicationId,
+                    languageOfReportingId,
                   },
                 },
               },
