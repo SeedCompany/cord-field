@@ -1,9 +1,10 @@
 import { Edit } from '@mui/icons-material';
-import { Stack, Tooltip } from '@mui/material';
+import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { canEditAny } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
 import { DisplaySecuredList } from '~/components/DisplaySecuredList/DisplaySecuredList';
 import { IconButton } from '~/components/IconButton';
+import { Redacted } from '~/components/Redacted';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 
 interface CommunicationsSectionProps {
@@ -15,10 +16,12 @@ export const CommunicationsSection = ({
   partner,
   onEdit,
 }: CommunicationsSectionProps) => {
-  const canEditLanguagesOfConsulting = canEditAny(
+  const canEditLanguages = canEditAny(
     partner,
     false,
-    'languagesOfConsulting'
+    'languagesOfConsulting',
+    'languageOfWiderCommunication',
+    'languageOfReporting'
   );
 
   return (
@@ -29,7 +32,7 @@ export const CommunicationsSection = ({
         <Tooltip title="Edit">
           <span>
             <IconButton
-              disabled={!canEditLanguagesOfConsulting}
+              disabled={!canEditLanguages}
               onClick={onEdit}
               loading={!partner}
               size="small"
@@ -40,16 +43,63 @@ export const CommunicationsSection = ({
         </Tooltip>
       }
     >
-      <Stack spacing={2}>
+      <Stack spacing={18} direction="row">
         <DisplaySecuredList
           title="Language of Consulting"
           data={partner?.languagesOfConsulting}
           redacted={{ fieldDescription: `partner's communications` }}
           keyGetter={(item) => {
-            console.log();
             return item.name.value || '';
           }}
         />
+        <Box>
+          <Typography
+            component="h4"
+            variant="body2"
+            color="textSecondary"
+            gutterBottom
+          >
+            Language of Wider Communication
+          </Typography>
+          <Typography component="div" variant="h4">
+            {!partner ? (
+              <Skeleton width="75%" />
+            ) : !partner.languageOfWiderCommunication.canRead ? (
+              <Redacted
+                info="You cannot view this partner's Language of Wider Communication"
+                width="75%"
+              />
+            ) : partner.languageOfWiderCommunication.value ? (
+              partner.languageOfWiderCommunication.value.name.value
+            ) : (
+              <Typography variant="h4">None</Typography>
+            )}
+          </Typography>
+        </Box>
+        <Box>
+          <Typography
+            component="h4"
+            variant="body2"
+            color="textSecondary"
+            gutterBottom
+          >
+            Language of Reporting
+          </Typography>
+          <Typography component="div" variant="h4">
+            {!partner ? (
+              <Skeleton width="75%" />
+            ) : !partner.languageOfReporting.canRead ? (
+              <Redacted
+                info="You cannot view this partner's Language of Wider Communication"
+                width="75%"
+              />
+            ) : partner.languageOfReporting.value ? (
+              partner.languageOfReporting.value.name.value
+            ) : (
+              <Typography variant="h4">None</Typography>
+            )}
+          </Typography>
+        </Box>
       </Stack>
     </ActionableSection>
   );
