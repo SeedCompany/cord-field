@@ -175,9 +175,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
               display: 'none',
             },
         }}
-        isCellEditable={(params) =>
-          Boolean(budget?.canEdit && params.row.amount.canEdit)
-        }
+        isCellEditable={({ row: record }) => record.amount.canEdit}
         processRowUpdate={handleRowSave}
         experimentalFeatures={{
           newEditingApi: true,
