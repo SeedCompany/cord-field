@@ -15,6 +15,7 @@ export const useLanguageFilters = makeQueryHandler({
   isSignLanguage: withKey(BooleanParam(), 'sign-language'),
   isDialect: withKey(BooleanParam(), 'dialect'),
   presetInventory: withKey(BooleanParam(), 'presetInventory'),
+  isLanguageOfConsulting: withKey(BooleanParam(), 'isLanguageOfConsulting'),
   tab: withDefault(EnumParam(['all', 'pinned']), 'all'),
 });
 
@@ -43,6 +44,11 @@ export const LanguageFilterOptions = () => {
       <SwitchField
         name="presetInventory"
         label="Only Preset Inventory"
+        offIsNull
+      />
+      <SwitchField
+        name="isLanguageOfConsulting"
+        label="Only Show Languages of Consulting"
         offIsNull
       />
     </>

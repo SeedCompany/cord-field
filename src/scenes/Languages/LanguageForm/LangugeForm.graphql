@@ -88,4 +88,19 @@ fragment LanguageForm on Language {
     canEdit
     value
   }
+  isLanguageOfConsulting {
+    canRead
+    canEdit
+    value
+  }
+  isLanguageOfWiderCommunication {
+    canRead
+    canEdit
+    value
+  }
+  isLanguageOfReporting {
+    canRead
+    canEdit
+    value
+  }
 }

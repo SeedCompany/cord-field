@@ -24,8 +24,10 @@ import { Error } from '~/components/Error';
 import { FormattedDate, FormattedDateTime } from '~/components/Formatters';
 import { IconButton } from '~/components/IconButton';
 import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
+import { useListQuery } from '~/components/List';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { LanguagesDocument as Languages } from '../../Languages/List/languages.graphql';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
 import {
@@ -44,6 +46,11 @@ interface PartnerViewEditProps {
   includeMembership?: boolean;
 }
 
+interface Item {
+  id: string;
+  name: { value?: string | null };
+}
+
 export const PartnerDetail = () => {
   const { partnerId = '' } = useParams();
 
@@ -52,6 +59,63 @@ export const PartnerDetail = () => {
       input: partnerId,
     },
   });
+
+  const languagesOfConsulting = useListQuery(Languages, {
+    listAt: (data) => data.languages,
+    variables: {
+      input: {
+        filter: { isLanguageOfConsulting: true },
+      },
+    },
+  });
+
+  const languagesOfWiderCommunication = useListQuery(Languages, {
+    listAt: (data) => data.languages,
+    variables: {
+      input: {
+        filter: { isLanguageOfWiderCommunication: true },
+      },
+    },
+  });
+
+  const languagesOfReporting = useListQuery(Languages, {
+    listAt: (data) => data.languages,
+    variables: {
+      input: {
+        filter: { isLanguageOfReporting: true },
+      },
+    },
+  });
+
+  const mapLanguageData = (items: readonly Item[] | undefined) => {
+    if (items) {
+      return items
+        .filter(
+          (item: Item) =>
+            item.name.value !== null && item.name.value !== undefined
+        )
+        .map((item: Item) => ({
+          id: item.id,
+          displayName: item.name.value ?? '',
+          label: item.name.value ?? '',
+          value: item.id,
+        }));
+    } else {
+      return [];
+    }
+  };
+
+  const languagesData = {
+    languagesOfConsulting: mapLanguageData(
+      languagesOfConsulting.data?.items || []
+    ),
+    languagesOfWiderCommunication: mapLanguageData(
+      languagesOfWiderCommunication.data?.items || []
+    ),
+    languagesOfReporting: mapLanguageData(
+      languagesOfReporting.data?.items || []
+    ),
+  };
 
   const [editPartnerState, editPartner, editField] =
     useDialog<Many<EditablePartnerField>>();
@@ -78,6 +142,7 @@ export const PartnerDetail = () => {
       {partner ? (
         <EditPartner
           partner={partner}
+          languagesData={languagesData}
           {...editPartnerState}
           editFields={editField}
         />

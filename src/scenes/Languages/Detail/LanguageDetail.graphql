@@ -80,6 +80,21 @@ fragment LanguageDetail on Language {
       ...ProjectListItem
     }
   }
+  isLanguageOfConsulting {
+    canRead
+    canEdit
+    value
+  }
+  isLanguageOfWiderCommunication {
+    canRead
+    canEdit
+    value
+  }
+  isLanguageOfReporting {
+    canRead
+    canEdit
+    value
+  }
   ...FirstScripture
   ...TogglePin
 }

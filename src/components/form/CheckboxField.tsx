@@ -7,7 +7,7 @@ import {
   FormControlProps,
   FormHelperText,
 } from '@mui/material';
-import { ReactNode } from 'react';
+import { ChangeEvent, ReactNode } from 'react';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
 
@@ -27,6 +27,7 @@ export type CheckboxFieldProps = FieldConfig<
      * rarely have server errors.
      */
     keepHelperTextSpacing?: boolean;
+    onChange?: (event: ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   };
 
 export function CheckboxField({
@@ -38,6 +39,7 @@ export function CheckboxField({
   margin,
   variant,
   keepHelperTextSpacing,
+  onChange: onChangeExternal,
   ...props
 }: CheckboxFieldProps) {
   const defaultValue = defaultValueProp ?? false;
@@ -48,6 +50,14 @@ export function CheckboxField({
       ...props,
     }
   );
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+    input.onChange(checked);
+    if (onChangeExternal) {
+      onChangeExternal(event, checked);
+    }
+  };
 
   return (
     <FormControl
@@ -69,7 +79,7 @@ export function CheckboxField({
             inputRef={ref}
             checked={isBoolean(input.value) ? input.value : defaultValue}
             value={input.name}
-            onChange={(e) => input.onChange(e.target.checked)}
+            onChange={handleChange}
             required={props.required}
           />
         }

@@ -335,7 +335,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
               'leastOfThese',
               'leastOfTheseReason'
             ) && (
-              <Grid item>
+              <Grid item xs={12} md={6}>
                 <Typography variant="h4">Least of These</Typography>
                 <SecuredField obj={language} name="leastOfThese">
                   {(props) => (
@@ -357,6 +357,46 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                     />
                   )}
                 </SecuredField>
+              </Grid>
+            )}
+            {canReadAny(language, true, 'isLanguageOfConsulting') && (
+              <Grid item xs={12} md={6}>
+                <Typography variant="h4">Partner Language Types</Typography>
+                <SecuredField obj={language} name="isLanguageOfConsulting">
+                  {(props) => (
+                    <CheckboxField
+                      label="Is this a language of consulting?"
+                      {...props}
+                    />
+                  )}
+                </SecuredField>
+                {canReadAny(
+                  language,
+                  true,
+                  'isLanguageOfWiderCommunication'
+                ) && (
+                  <SecuredField
+                    obj={language}
+                    name="isLanguageOfWiderCommunication"
+                  >
+                    {(props) => (
+                      <CheckboxField
+                        label="Is this a language of wider communication?"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                )}
+                {canReadAny(language, true, 'isLanguageOfReporting') && (
+                  <SecuredField obj={language} name="isLanguageOfReporting">
+                    {(props) => (
+                      <CheckboxField
+                        label="Is this a language of reporting?"
+                        {...props}
+                      />
+                    )}
+                  </SecuredField>
+                )}
               </Grid>
             )}
           </Grid>

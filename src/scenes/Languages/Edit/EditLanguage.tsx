@@ -37,6 +37,7 @@ export const EditLanguage = (props: EditLanguageProps) => {
               leastOfTheseReason: language.leastOfTheseReason.value,
               isSignLanguage: language.isSignLanguage.value,
               signLanguageCode: language.signLanguageCode.value,
+              isLanguageOfConsulting: language.isLanguageOfConsulting.value,
               sensitivity: language.sensitivity,
               sponsorEstimatedEndFY:
                 language.sponsorEstimatedEndDate.value?.fiscalYear,
