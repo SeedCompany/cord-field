@@ -60,11 +60,6 @@ fragment ProjectOverview on Project {
     }
     canBypassTransitions
   }
-  presetInventory {
-    canRead
-    canEdit
-    value
-  }
   sensitivity
   modifiedAt
   ...TogglePin
