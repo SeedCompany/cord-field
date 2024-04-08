@@ -4,7 +4,6 @@ import { PartialDeep } from 'type-fest';
 import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
-import { PresetInventoryIconFilled } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
@@ -76,15 +75,6 @@ export const LanguageListItemCard = ({
                 )}
               </Typography>
             </Grid>
-
-            {language?.presetInventory.value && (
-              <Grid item>
-                <PresetInventoryIconFilled
-                  color="action"
-                  aria-label="preset inventory"
-                />
-              </Grid>
-            )}
           </Grid>
           <div className={classes.bottomSection}>
             <div className={classes.leftContent}>
