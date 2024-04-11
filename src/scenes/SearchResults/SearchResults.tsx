@@ -90,8 +90,9 @@ const displayItem = (
 ): [exact: string | ReactElement, card: ReactElement] | ReactElement | null => {
   /* eslint-disable react/jsx-key -- type is tuple not array */
   switch (item.__typename) {
+    case 'MomentumTranslationProject':
+    case 'MultiplicationTranslationProject':
     case 'InternshipProject':
-    case 'TranslationProject':
       return [
         <Navigate replace to={`/projects/${item.id}`} />,
         <ProjectListItemCard key={item.id} project={item} />,

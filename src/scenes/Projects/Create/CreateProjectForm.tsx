@@ -1,4 +1,9 @@
-import { CreateProjectInput, ProjectTypeList } from '~/api/schema.graphql';
+import {
+  CreateProjectInput,
+  ProjectTypeLabels,
+  ProjectTypeList,
+} from '~/api/schema.graphql';
+import { labelFrom } from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -20,7 +25,8 @@ export const CreateProjectForm = (props: CreateProjectFormProps) => (
       name="project.type"
       label="Type"
       options={ProjectTypeList}
-      defaultValue="Translation"
+      getLabel={labelFrom(ProjectTypeLabels)}
+      defaultValue={ProjectTypeList[0]}
       required
       variant="toggle-grouped"
     />

@@ -8,13 +8,11 @@ mutation createLanguageEngagement($input: CreateLanguageEngagementInput!) {
 
 fragment TranslationProjectSensitivity on TranslationProject {
   sensitivity
-  engagements {
+  engagements: languageEngagements {
     items {
-      ... on LanguageEngagement {
-        language {
-          value {
-            sensitivity
-          }
+      language {
+        value {
+          sensitivity
         }
       }
     }

@@ -7,7 +7,7 @@ export const recalculateSensitivity =
     projectRef: IdFragment
   ): MutationUpdaterFunction<Res, unknown, unknown, ApolloCache<unknown>> =>
   (cache) => {
-    if (projectRef.__typename !== 'TranslationProject') {
+    if (projectRef.__typename === 'InternshipProject') {
       return;
     }
 
