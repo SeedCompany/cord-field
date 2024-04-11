@@ -167,7 +167,7 @@ export const ProjectOverview = () => {
   });
 
   const isTranslation = project
-    ? project.__typename === 'TranslationProject'
+    ? project.__typename !== 'InternshipProject'
     : undefined;
 
   const engagementTypeLabel =

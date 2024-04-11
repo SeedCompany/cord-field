@@ -1,6 +1,7 @@
 import {
   Id_InternshipProject_Fragment as InternshipProjectIdFragment,
-  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
+  Id_MomentumTranslationProject_Fragment as MomentumProjectIdFragment,
+  Id_MultiplicationTranslationProject_Fragment as MultiplicationProjectIdFragment,
 } from './identity.graphql';
 
 export * from './common';
@@ -12,5 +13,6 @@ export * from './promptResponse.graphql';
 export * from './variant.graphql';
 
 export type ProjectIdFragment =
-  | TranslationProjectIdFragment
+  | MomentumProjectIdFragment
+  | MultiplicationProjectIdFragment
   | InternshipProjectIdFragment;

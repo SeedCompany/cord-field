@@ -2,6 +2,7 @@ import { Tooltip } from '@mui/material';
 import {
   ProjectStatusLabels,
   ProjectStatusList,
+  ProjectTypeLabels,
   ProjectTypeList,
   SensitivityList,
 } from '~/api/schema.graphql';
@@ -19,7 +20,7 @@ import {
 export const useProjectFilters = makeQueryHandler({
   status: EnumListParam(ProjectStatusList, { InDevelopment: 'dev' }),
   sensitivity: EnumListParam(SensitivityList),
-  type: EnumParam(ProjectTypeList),
+  type: EnumListParam(ProjectTypeList),
   onlyMultipleEngagements: withKey(BooleanParam(), 'multi'),
   tab: withDefault(EnumParam(['mine', 'all', 'pinned']), 'mine'),
 });
@@ -47,7 +48,9 @@ export const ProjectFilterOptions = () => {
       <EnumField
         name="type"
         label="Type"
+        multiple
         options={ProjectTypeList}
+        getLabel={labelFrom(ProjectTypeLabels)}
         defaultOption="Show All"
         layout="two-column"
       />
