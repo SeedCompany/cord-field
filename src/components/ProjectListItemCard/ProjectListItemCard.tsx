@@ -1,7 +1,16 @@
-import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Chip,
+  Grid,
+  Skeleton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
-import { ProjectStatusLabels } from '~/api/schema.graphql';
+import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema.graphql';
+import { labelFrom } from '~/common';
 import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -120,11 +129,17 @@ export const ProjectListItemCard = ({
               </Typography>
             </Grid>
             <Grid item>
-              <Sensitivity
-                value={project?.sensitivity}
-                loading={!project}
-                className={classes.sensitivity}
-              />
+              <Stack direction="row" spacing={2} alignItems="center">
+                <Sensitivity
+                  value={project?.sensitivity}
+                  loading={!project}
+                  className={classes.sensitivity}
+                />
+                <Chip
+                  label={labelFrom(ProjectTypeLabels)(project?.type)}
+                  variant="outlined"
+                />
+              </Stack>
             </Grid>
             <Grid item>
               {!project ? (

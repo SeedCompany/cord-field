@@ -9,6 +9,7 @@ import {
   UpdateProjectChangeRequestInput,
 } from '~/api/schema.graphql';
 import { callAll, labelFrom } from '~/common';
+import { ProjectIdFragment } from '~/common/fragments';
 import {
   DialogForm,
   DialogFormProps,
@@ -28,10 +29,7 @@ import {
 } from './UpdateProjectChangeRequest.graphql';
 
 export interface UpdateProjectChangeRequestFormParams {
-  project: {
-    __typename?: 'TranslationProject' | 'InternshipProject';
-    id: string;
-  };
+  project: ProjectIdFragment;
   changeRequest: ChangeRequest;
 }
 

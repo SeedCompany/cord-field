@@ -23,14 +23,7 @@ fragment ProjectListItem on Project {
   }
   modifiedAt
   ...TogglePin
-  ... on InternshipProject {
-    engagements {
-      total
-    }
-  }
-  ... on TranslationProject {
-    engagements {
-      total
-    }
+  engagements {
+    total
   }
 }

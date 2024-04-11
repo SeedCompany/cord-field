@@ -1,10 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import {
-  Id_InternshipProject_Fragment as InternshipProjectIdFragment,
-  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
-} from '~/common/fragments';
+import { ProjectIdFragment } from '~/common/fragments';
 import {
   DialogForm,
   DialogFormProps,
@@ -18,10 +15,6 @@ interface CreateInternshipEngagementFormValues {
     internId: UserLookupItem;
   };
 }
-
-type ProjectIdFragment =
-  | TranslationProjectIdFragment
-  | InternshipProjectIdFragment;
 
 type CreateInternshipEngagementProps = Except<
   DialogFormProps<CreateInternshipEngagementFormValues>,

@@ -230,7 +230,9 @@ const objectToKeyArgsRecurse = (obj: Record<string, any>): KeySpecifier =>
     (keyArgs: KeySpecifier, [key, val]) => [
       ...keyArgs,
       key,
-      ...(val && typeof val === 'object' ? [objectToKeyArgsRecurse(val)] : []),
+      ...(val && typeof val === 'object' && !Array.isArray(val)
+        ? [objectToKeyArgsRecurse(val)]
+        : []),
     ],
     []
   );
@@ -238,7 +240,7 @@ const objectToKeyArgsRecurse = (obj: Record<string, any>): KeySpecifier =>
 const cleanEmptyObjects = (obj: Record<string, any>): Record<string, any> => {
   const res: Record<string, any> = {};
   for (const [key, value] of Object.entries(obj)) {
-    if (!(value && typeof value === 'object')) {
+    if (!(value && typeof value === 'object' && !Array.isArray(value))) {
       res[key] = value;
       continue;
     }

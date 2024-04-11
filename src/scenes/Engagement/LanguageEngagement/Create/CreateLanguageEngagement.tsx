@@ -2,10 +2,7 @@ import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
 import { callAll } from '~/common';
-import {
-  Id_InternshipProject_Fragment as InternshipProjectIdFragment,
-  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
-} from '~/common/fragments';
+import { ProjectIdFragment } from '~/common/fragments';
 import {
   DialogForm,
   DialogFormProps,
@@ -23,10 +20,6 @@ interface CreateLanguageEngagementFormValues {
     languageId: LanguageLookupItem;
   };
 }
-
-type ProjectIdFragment =
-  | TranslationProjectIdFragment
-  | InternshipProjectIdFragment;
 
 type CreateLanguageEngagementProps = Except<
   DialogFormProps<CreateLanguageEngagementFormValues>,
