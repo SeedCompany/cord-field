@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Chip } from '@mui/material';
 import {
   DataGrid,
   DataGridProps,
@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import { cmpBy, simpleSwitch } from '@seedcompany/common';
 import { useNavigate } from 'react-router-dom';
-import { ProjectStatusLabels } from '~/api/schema/enumLists';
+import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema/enumLists';
 import { Sensitivity } from '~/api/schema/schema.graphql';
 import { extendSx, labelFrom } from '~/common';
 import { SensitivityIcon } from '~/components/Sensitivity';
@@ -46,15 +46,22 @@ export const PartnerDetailProjectsTable = (
       valueGetter: ({ value }) => labelFrom(ProjectStatusLabels)(value),
     },
     {
+      headerName: 'Type',
+      field: 'type',
+      flex: 0.75,
+      valueGetter: ({ value }) => labelFrom(ProjectTypeLabels)(value),
+      renderCell: ({ value }) => <Chip label={value} variant="outlined" />,
+    },
+    {
       headerName: 'Engagements',
       field: 'engagements',
-      flex: 1,
+      flex: 0.5,
       valueGetter: ({ value }) => value.total,
     },
     {
       headerName: 'Sensitivity',
       field: 'sensitivity',
-      flex: 1,
+      flex: 0.5,
       sortComparator: cmpBy<Sensitivity>((v) =>
         simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
       ),

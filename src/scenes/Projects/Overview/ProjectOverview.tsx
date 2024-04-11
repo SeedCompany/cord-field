@@ -10,13 +10,13 @@ import {
   Publish,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
-import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Chip, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Many } from '@seedcompany/common';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
-import { ProjectStepLabels } from '~/api/schema.graphql';
+import { ProjectStepLabels, ProjectTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
@@ -81,16 +81,17 @@ const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
     flex: 1,
     display: 'flex',
     gap: spacing(1),
-  },
-  headerLoading: {
     alignItems: 'center',
   },
   name: {
     marginRight: spacing(2), // a little extra between text and buttons
-    lineHeight: 'inherit', // centers text with buttons better
+    // centers text with buttons better
+    lineHeight: 'inherit',
+    alignSelf: 'flex-start',
   },
   nameLoading: {
     width: '30%',
+    alignSelf: 'initial',
   },
   subheader: {
     display: 'flex',
@@ -197,12 +198,7 @@ export const ProjectOverview = () => {
       </Error>
       {!error && (
         <div className={classes.main}>
-          <header
-            className={cx(
-              classes.header,
-              project ? null : classes.headerLoading
-            )}
-          >
+          <header className={classes.header}>
             <Typography
               variant="h2"
               className={cx(classes.name, project ? null : classes.nameLoading)}
@@ -220,6 +216,12 @@ export const ProjectOverview = () => {
                 />
               )}
             </Typography>
+            {project && (
+              <Chip
+                label={labelFrom(ProjectTypeLabels)(project.type)}
+                variant="outlined"
+              />
+            )}
             {(!project || project.name.canEdit) && (
               <Tooltip title="Edit Project Name">
                 <IconButton
