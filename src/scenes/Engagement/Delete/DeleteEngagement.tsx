@@ -3,10 +3,7 @@ import { DeleteOutline } from '@mui/icons-material';
 import { Tooltip, Typography } from '@mui/material';
 import { removeItemFromList } from '~/api';
 import { callAll } from '~/common';
-import {
-  Id_InternshipProject_Fragment as InternshipProjectIdFragment,
-  Id_TranslationProject_Fragment as TranslationProjectIdFragment,
-} from '~/common/fragments';
+import { ProjectIdFragment } from '~/common/fragments';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
@@ -17,10 +14,6 @@ import {
   DeleteEngagementDocument,
   EngagementToDeleteFragment,
 } from './DeleteEngagement.graphql';
-
-type ProjectIdFragment =
-  | TranslationProjectIdFragment
-  | InternshipProjectIdFragment;
 
 interface DeleteEngagementProps extends IconButtonProps {
   project: ProjectIdFragment;
