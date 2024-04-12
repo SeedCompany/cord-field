@@ -49,6 +49,7 @@ import { useBetaFeatures } from '../../../components/Session';
 import { TogglePinButton } from '../../../components/TogglePinButton';
 import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagement/Create/CreateInternshipEngagement';
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
+import { DeleteProject } from '../Delete';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/projects.graphql';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
@@ -241,6 +242,7 @@ export const ProjectOverview = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
+            {project && <DeleteProject project={project} />}
           </header>
 
           <div className={classes.subheader}>

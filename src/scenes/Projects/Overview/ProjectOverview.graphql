@@ -7,6 +7,7 @@ query ProjectOverview($input: ID!, $changeset: ID) {
 fragment ProjectOverview on Project {
   __typename
   ...Id
+  ...CanDelete
   departmentId {
     canRead
     canEdit

@@ -1,0 +1,10 @@
+mutation DeleteProject($id: ID!) {
+  deleteProject(id: $id) {
+    __typename
+  }
+}
+
+fragment CanDelete on Resource {
+  ...Id
+  canDelete
+}
