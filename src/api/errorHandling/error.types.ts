@@ -37,6 +37,10 @@ export interface ErrorMap {
    */
   Server: ErrorInfo;
 
+  // Error in GraphQL schema.
+  // Could be a Client or Server error not fulfilling the schema.
+  GraphQL: unknown;
+
   /**
    * This is a special one that allows a default handler for any
    * un-handled error codes.
