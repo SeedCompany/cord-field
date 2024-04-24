@@ -2,6 +2,16 @@ import { ApolloError } from '@apollo/client';
 import { assert } from 'ts-essentials';
 import { ProductStep } from '../schema.graphql';
 
+interface CordErrorExtensions {
+  codes: readonly Code[];
+  stacktrace?: readonly string[];
+}
+
+declare module 'graphql/error/GraphQLError' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface GraphQLErrorExtensions extends CordErrorExtensions {}
+}
+
 /**
  * This is a mapping of error codes to their error object.
  * This mapping should be expanded upon as we add and handle
@@ -39,9 +49,8 @@ export type Code = keyof ErrorMap;
 /**
  * The basic error shape
  */
-interface ErrorInfo {
+interface ErrorInfo extends CordErrorExtensions {
   message: string;
-  codes: Code[];
 }
 
 /**
