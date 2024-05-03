@@ -2,6 +2,16 @@ import { ApolloError } from '@apollo/client';
 import { assert } from 'ts-essentials';
 import { ProductStep } from '../schema.graphql';
 
+interface CordErrorExtensions {
+  codes: readonly Code[];
+  stacktrace?: readonly string[];
+}
+
+declare module 'graphql/error/GraphQLError' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface GraphQLErrorExtensions extends CordErrorExtensions {}
+}
+
 /**
  * This is a mapping of error codes to their error object.
  * This mapping should be expanded upon as we add and handle
@@ -27,6 +37,10 @@ export interface ErrorMap {
    */
   Server: ErrorInfo;
 
+  // Error in GraphQL schema.
+  // Could be a Client or Server error not fulfilling the schema.
+  GraphQL: unknown;
+
   /**
    * This is a special one that allows a default handler for any
    * un-handled error codes.
@@ -39,9 +53,8 @@ export type Code = keyof ErrorMap;
 /**
  * The basic error shape
  */
-interface ErrorInfo {
+interface ErrorInfo extends CordErrorExtensions {
   message: string;
-  codes: Code[];
 }
 
 /**
@@ -79,11 +92,11 @@ export interface StepNotPlannedError extends InputError {
 }
 
 export const isErrorCode = <K extends keyof ErrorMap>(
-  errorInfo: ReturnType<typeof getErrorInfo>,
+  errorInfo: ErrorInfo,
   code: K
-): errorInfo is ErrorMap[K] => errorInfo.codes.includes(code);
+): errorInfo is ErrorInfo & ErrorMap[K] => errorInfo.codes.includes(code);
 
-export const getErrorInfo = (e: unknown) => {
+export const getErrorInfo = (e: unknown): ErrorInfo => {
   if (!(e instanceof ApolloError) || !e.graphQLErrors[0]) {
     // This is really to make TS happy. We should always have an ApolloError here.
     assert(e instanceof Error);
@@ -93,16 +106,10 @@ export const getErrorInfo = (e: unknown) => {
     };
   }
 
-  // For mutations we will assume they will only have one error
+  // For mutations, we will assume they will only have one error
   // since they should only be doing one operation.
-  const ext = e.graphQLErrors[0].extensions as {
-    codes?: Code[];
-    code?: Code;
-  };
-  const codes: Code[] = [
-    ...(ext.codes ?? (ext.code ? [ext.code] : [])),
-    'Default',
-  ];
+  const ext = e.graphQLErrors[0].extensions;
+  const codes = [...ext.codes, 'Default' as const];
   return {
     message: e.message,
     ...ext,

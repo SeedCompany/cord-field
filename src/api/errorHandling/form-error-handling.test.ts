@@ -2,6 +2,7 @@ import { ApolloError } from '@apollo/client';
 import { createForm, FORM_ERROR, FormApi } from 'final-form';
 import { GraphQLError } from 'graphql';
 import { noop } from 'lodash';
+import { Code } from './error.types';
 import { ErrorHandlers, handleFormError } from './form-error-handling';
 
 describe('handleFormError', () => {
@@ -11,7 +12,13 @@ describe('handleFormError', () => {
   beforeEach(() => {
     error = createError({
       message: 'Not found',
-      codes: ['VerySpecific', 'NotFound', 'SomethingElse', 'Input', 'Client'],
+      codes: [
+        'VerySpecific' as any,
+        'NotFound',
+        'SomethingElse',
+        'Input',
+        'Client',
+      ],
     });
     form = createForm({
       onSubmit: noop,
@@ -123,7 +130,7 @@ const createError = ({
   ...extensions
 }: {
   message: string;
-  codes: string[];
+  codes: Code[];
   [rest: string]: unknown;
 }) => {
   return new ApolloError({
