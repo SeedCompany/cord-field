@@ -31,8 +31,8 @@ const errorRenderer =
     }
 
     for (const gqlError of graphQLErrors || []) {
-      const codes = new Set(gqlError.extensions.codes as string[]);
-      const stacktrace = (gqlError.extensions.stacktrace ?? []) as string[];
+      const codes = new Set(gqlError.extensions.codes);
+      const stacktrace = gqlError.extensions.stacktrace ?? [];
 
       // don't show client errors unless they are API communication related
       if (codes.has('Client') && !codes.has('GraphQL')) {
