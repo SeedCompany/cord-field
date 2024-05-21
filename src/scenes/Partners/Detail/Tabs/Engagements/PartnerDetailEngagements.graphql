@@ -1,0 +1,75 @@
+query PartnerDetailEngagements($id: ID!, $input: EngagementListInput) {
+  partner(id: $id) {
+    id
+    engagements(input: $input) {
+      hasMore
+      total
+      items {
+        ...PartnerDetailEngagmentsTableListItem
+      }
+    }
+  }
+}
+
+fragment PartnerDetailEngagmentsTableListItem on Engagement {
+  id
+  sensitivity
+  project {
+    ...PartnerDetailEngagementProjects
+  }
+  status {
+    value
+  }
+  ... on LanguageEngagement {
+    currentProgressReportDue {
+      value {
+        status {
+          value
+        }
+      }
+    }
+    language {
+      ...PartnerDetailEngagementLanguage
+    }
+  }
+}
+
+fragment PartnerDetailEngagementLanguage on SecuredLanguage {
+  value {
+    name {
+      value
+    }
+    ethnologue {
+      code {
+        value
+      }
+    }
+    registryOfDialectsCode {
+      value
+    }
+  }
+}
+
+fragment PartnerDetailEngagementProjects on Project {
+  id
+  name {
+    value
+  }
+  step {
+    value
+  }
+  primaryLocation {
+    value {
+      name {
+        value
+      }
+    }
+  }
+  mouStart {
+    value
+  }
+  mouEnd {
+    value
+  }
+  type
+}
