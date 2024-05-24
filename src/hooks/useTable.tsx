@@ -3,8 +3,14 @@ import {
   useQuery,
 } from '@apollo/client';
 import type { DataGridProps } from '@mui/x-data-grid';
-import { get, set, uniqBy } from 'lodash';
-import { useState } from 'react';
+import {
+  type FieldNode,
+  getOperationAST,
+  Kind,
+  type SelectionSetNode,
+} from 'graphql';
+import { get, pick, set, uniqBy } from 'lodash';
+import { useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import {
   isNetworkRequestInFlight,
@@ -33,6 +39,7 @@ const defaultInitialInput = {
   sort: 'id',
   order: 'ASC' as Order,
 };
+const defaultKeyArgs = ['__typename', 'id'];
 
 export const useTable = <
   Output extends Record<string, any>,
@@ -48,16 +55,32 @@ export const useTable = <
   variables,
   listAt,
   initialInput,
+  keyArgs = defaultKeyArgs,
 }: {
   query: DocumentNode<Output, Vars>;
   variables: Vars;
   listAt: Path;
   initialInput?: Partial<ListInput>;
+  keyArgs?: string[];
 }) => {
   const [input, onChange] = useState(() => ({
     ...defaultInitialInput,
     ...initialInput,
   }));
+
+  const queryForItemRef = useMemo(() => {
+    const queryForItemRef = structuredClone(query);
+    const listNode = getFieldPath(
+      getOperationAST(queryForItemRef)!.selectionSet,
+      [...listAt.split('.'), 'items']
+    );
+    listNode.selections = keyArgs.map((field) => ({
+      kind: Kind.FIELD,
+      name: { kind: Kind.NAME, value: field },
+    }));
+    return queryForItemRef;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- these deps should not be changing between renders
+  }, []);
 
   // Try to pull the complete list from the cache
   // This exists after all pages have been queried with the useQuery hook below.
@@ -84,7 +107,7 @@ export const useTable = <
       // This is read back in the first useQuery hook, above.
       client.cache.updateQuery(
         {
-          query,
+          query: queryForItemRef,
           variables,
         },
         (prev) => {
@@ -94,7 +117,10 @@ export const useTable = <
             return undefined; // no change
           }
           const mergedList = uniqBy(
-            [...(prevList?.items ?? []), ...nextList.items],
+            [
+              ...(prevList?.items ?? []),
+              ...nextList.items.map((item) => pick(item, keyArgs)),
+            ],
             (item) => client.cache.identify(item)
           );
           const nextCached = structuredClone(next);
@@ -142,4 +168,29 @@ export const useTable = <
   };
 
   return [dataGridProps, props] as const;
+};
+
+const getFieldPath = (
+  x: SelectionSetNode,
+  path: ReadonlyArray<string | number>
+) => {
+  let current = x;
+  for (const field of path) {
+    // only for types
+    if (typeof field === 'number') {
+      continue;
+    }
+    const selection = current.selections.find(
+      (s): s is FieldNode =>
+        s.kind === 'Field' &&
+        (s.alias?.value === field || s.name.value === field)
+    );
+    if (!selection?.selectionSet) {
+      throw new Error(
+        'Field path does not result in a selection set: ' + path.join('.')
+      );
+    }
+    current = selection.selectionSet;
+  }
+  return current;
 };
