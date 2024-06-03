@@ -5,13 +5,13 @@ query PartnerDetailEngagements($id: ID!, $input: EngagementListInput) {
       hasMore
       total
       items {
-        ...PartnerDetailEngagmentsTableListItem
+        ...PartnerDetailEngagementsTableListItem
       }
     }
   }
 }
 
-fragment PartnerDetailEngagmentsTableListItem on Engagement {
+fragment PartnerDetailEngagementsTableListItem on Engagement {
   id
   sensitivity
   project {
@@ -20,33 +20,49 @@ fragment PartnerDetailEngagmentsTableListItem on Engagement {
   status {
     value
   }
+  startDate {
+    value
+  }
+  endDate {
+    value
+  }
   ... on LanguageEngagement {
     currentProgressReportDue {
       value {
+        id
         status {
           value
         }
       }
     }
     language {
-      ...PartnerDetailEngagementLanguage
+      value {
+        ...PartnerDetailEngagementLanguage
+      }
+    }
+  }
+  ... on InternshipEngagement {
+    intern {
+      value {
+        id
+        fullName
+      }
     }
   }
 }
 
-fragment PartnerDetailEngagementLanguage on SecuredLanguage {
-  value {
-    name {
+fragment PartnerDetailEngagementLanguage on Language {
+  id
+  name {
+    value
+  }
+  ethnologue {
+    code {
       value
     }
-    ethnologue {
-      code {
-        value
-      }
-    }
-    registryOfDialectsCode {
-      value
-    }
+  }
+  registryOfDialectsCode {
+    value
   }
 }
 
@@ -60,6 +76,7 @@ fragment PartnerDetailEngagementProjects on Project {
   }
   primaryLocation {
     value {
+      id
       name {
         value
       }
