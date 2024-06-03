@@ -13,7 +13,6 @@ query PartnerDetailEngagements($id: ID!, $input: EngagementListInput) {
 
 fragment PartnerDetailEngagementsTableListItem on Engagement {
   id
-  sensitivity
   project {
     ...PartnerDetailEngagementProjects
   }
@@ -71,6 +70,7 @@ fragment PartnerDetailEngagementProjects on Project {
   name {
     value
   }
+  sensitivity
   step {
     value
   }

@@ -181,6 +181,7 @@ const columns: Array<GridColDef<Engagement>> = [
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),
+    valueGetter: ({ row }) => row.project.sensitivity,
     renderCell: ({ value }) => (
       <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
         <SensitivityIcon value={value} disableTooltip />
