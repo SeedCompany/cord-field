@@ -47,7 +47,7 @@ export const CreatePartnership = ({
       (cache, result) => {
         const partner =
           result.data?.createPartnership.partnership.partner.value;
-        partner && invalidateProps(cache, partner, 'projects');
+        partner && invalidateProps(cache, partner, 'projects', 'engagements');
       }
     ),
   });
