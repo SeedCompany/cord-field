@@ -22,7 +22,7 @@ import {
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { Link } from '../../../components/Routing';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
-import { UpdateProjectDocument } from './UpdateProject.graphql';
+import { TransitionProjectDocument } from './TransitionProject.graphql';
 
 type UpdateProjectDialogProps = Except<
   DialogFormProps<SubmitAction & { project?: { step?: ProjectStep } }>,
@@ -41,7 +41,7 @@ export const ProjectWorkflowDialog = ({
   project,
   ...props
 }: UpdateProjectDialogProps) => {
-  const [updateProject] = useMutation(UpdateProjectDocument);
+  const [transitionProject] = useMutation(TransitionProjectDocument);
   const { classes } = useStyles();
   const { canBypassTransitions, transitions } = project.step;
 
@@ -75,16 +75,13 @@ export const ProjectWorkflowDialog = ({
           return;
         }
 
-        await updateProject({
+        await transitionProject({
           variables: {
             input: {
-              project: {
-                id: project.id,
-                // remove index suffix used to make submit action unique
-                step:
-                  (submitAction?.split(':')[0] as ProjectStep | null) ?? step,
-              },
-              changeset: project.changeset?.id,
+              project: project.id,
+              // remove index suffix used to make submit action unique
+              transition: submitAction ?? step,
+              //changeset: project.changeset?.id,
             },
           },
         });
@@ -96,7 +93,7 @@ export const ProjectWorkflowDialog = ({
     >
       <SubmitError />
       <Grid container direction="column" spacing={1}>
-        {transitions.map((transition, i) => (
+        {transitions.map((transition) => (
           <Tooltip
             title={
               transition.disabledReason ??
@@ -104,14 +101,12 @@ export const ProjectWorkflowDialog = ({
                 ProjectStepLabels[transition.to]
               }`
             }
-            key={i}
+            key={transition.key}
           >
             <Grid item>
               <SubmitButton
                 {...transitionTypeStyles[transition.type]}
-                // Ensure submit action/step is unique by appending index. This prevents
-                // multiple spinners for the same next step with different labels.
-                action={`${transition.to}:${i}`}
+                action={transition.key}
                 disabled={transition.disabled}
               >
                 {transition.label}

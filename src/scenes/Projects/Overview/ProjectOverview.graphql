@@ -53,6 +53,7 @@ fragment ProjectOverview on Project {
     canEdit
     value
     transitions {
+      key
       to
       label
       type

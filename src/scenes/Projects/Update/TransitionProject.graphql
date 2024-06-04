@@ -1,0 +1,6 @@
+mutation transitionProject($input: ExecuteProjectTransitionInput!) {
+  transitionProject(input: $input) {
+    ...ProjectOverview
+    ...RecalculateChangesetDiff
+  }
+}
