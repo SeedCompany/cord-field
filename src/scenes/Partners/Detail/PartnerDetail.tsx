@@ -32,6 +32,7 @@ import {
   PartnerDetailsFragment,
   PartnerDocument,
 } from './PartnerDetail.graphql';
+import { PartnerDetailEngagements } from './Tabs/Engagements/PartnerDetailEngagements';
 import { PartnerDetailFinance } from './Tabs/Finance/PartnerDetailFinance';
 import { PartnerDetailNotes } from './Tabs/Notes/PartnerDetailsNotes';
 import { PartnerDetailPeople } from './Tabs/People/PartnerDetailPeople';
@@ -177,7 +178,14 @@ const PartnerDataButtons = ({
 
 const usePartnerDetailsFilters = makeQueryHandler({
   tab: withDefault(
-    EnumParam(['profile', 'people', 'projects', 'finance', 'notes']),
+    EnumParam([
+      'profile',
+      'people',
+      'projects',
+      'finance',
+      'notes',
+      'engagements',
+    ]),
     'profile'
   ),
 });
@@ -194,6 +202,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         <Tab label="Finance" value="finance" />
         <Tab label="People" value="people" />
         <Tab label="Projects" value="projects" />
+        <Tab label="Engagements" value="engagements" />
         <Tab label="Notes" value="notes" />
       </TabList>
       <Paper sx={{ maxWidth: 'lg' }}>
@@ -208,6 +217,9 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         </TabPanel>
         <TabPanel value="projects" sx={{ p: 0 }}>
           <PartnerDetailProjects />
+        </TabPanel>
+        <TabPanel value="engagements" sx={{ p: 0 }}>
+          <PartnerDetailEngagements />
         </TabPanel>
         <TabPanel value="notes">
           <PartnerDetailNotes {...props} />

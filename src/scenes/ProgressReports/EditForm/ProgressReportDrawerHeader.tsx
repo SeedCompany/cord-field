@@ -14,7 +14,7 @@ import { ReportProp } from './ReportProp';
 export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
   const language = report.parent.language;
   const project = report.parent.project;
-  const sensitivity = report.parent.sensitivity;
+  const { sensitivity } = project;
 
   return (
     <Box css={flexColumn}>

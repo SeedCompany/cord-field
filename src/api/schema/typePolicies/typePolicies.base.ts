@@ -82,6 +82,7 @@ export const typePolicies: TypePolicies = {
   Partner: {
     fields: {
       projects: {}, // no page merging (infinite scroll)
+      engagements: {},
     },
   },
 };

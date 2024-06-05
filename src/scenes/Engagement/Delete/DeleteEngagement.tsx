@@ -9,6 +9,7 @@ import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
 import { IconButton, IconButtonProps } from '../../../components/IconButton';
 import { useNavigate } from '../../../components/Routing';
+import { invalidatePartnersEngagements } from '../LanguageEngagement/Create/invalidatePartnersEngagements';
 import { recalculateSensitivity } from '../LanguageEngagement/Create/recalculateSensitivity';
 import {
   DeleteEngagementDocument,
@@ -36,6 +37,7 @@ export const DeleteEngagement = (props: DeleteEngagementProps) => {
         listId: 'engagements',
         item: engagement,
       }),
+      invalidatePartnersEngagements(),
       recalculateSensitivity(project)
     ),
   });

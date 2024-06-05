@@ -2,12 +2,14 @@ import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
 import { ProjectIdFragment } from '~/common/fragments';
+import { callAll } from '../../../../common';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../../components/form';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
+import { invalidatePartnersEngagements } from '../../LanguageEngagement/Create/invalidatePartnersEngagements';
 import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.graphql';
 
 interface CreateInternshipEngagementFormValues {
@@ -41,10 +43,13 @@ export const CreateInternshipEngagement = ({
           changeset: project.changeset?.id,
         },
       },
-      update: addItemToList({
-        listId: [project, 'engagements'],
-        outputToItem: (res) => res.createInternshipEngagement.engagement,
-      }),
+      update: callAll(
+        addItemToList({
+          listId: [project, 'engagements'],
+          outputToItem: (res) => res.createInternshipEngagement.engagement,
+        }),
+        invalidatePartnersEngagements()
+      ),
     });
   };
   return (
