@@ -9,7 +9,7 @@ export const useCurrencyColumn = () => {
   const col: Partial<GridColDef> = {
     align: 'right',
     headerAlign: 'right',
-    valueFormatter: ({ value }) => formatCurrency(value ?? 0),
+    valueFormatter: (value: number | null) => formatCurrency(value ?? 0),
     renderEditCell: (props) => <EditNumberCell {...props} />,
   };
   return col;

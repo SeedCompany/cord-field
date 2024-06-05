@@ -4,8 +4,9 @@ import {
   DataGrid,
   GridCellProps,
   GridColDef,
-  GridValueGetterParams,
-  GridValueSetterParams,
+  GridValidRowModel,
+  GridValueGetter,
+  GridValueSetter,
 } from '@mui/x-data-grid';
 import { sortBy } from '@seedcompany/common';
 import { sumBy } from 'lodash';
@@ -14,7 +15,7 @@ import { onUpdateChangeFragment, readFragment } from '~/api';
 import { IdFragment, SecuredProp } from '~/common';
 import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
 import {
-  changesetGridComponents,
+  changesetGridSlots,
   useDeletedItemsOfChangeset,
 } from '../../../components/Changeset';
 import { useCurrencyColumn } from '../../../components/Grid/useCurrencyColumn';
@@ -30,12 +31,18 @@ interface ProjectBudgetRecordsProps {
   loading: boolean;
 }
 
-const getSecuredValue = ({ value }: GridValueGetterParams<SecuredProp<any>>) =>
-  value?.value;
+const getSecuredValue: GridValueGetter<
+  any,
+  any,
+  any,
+  SecuredProp<any> | null
+> = (value) => value?.value;
 
 const setSecuredValue =
-  (field: string) =>
-  ({ row, value }: GridValueSetterParams) => ({
+  <R extends GridValidRowModel>(
+    field: string
+  ): GridValueSetter<R, SecuredProp<any> | null> =>
+  (value, row) => ({
     ...row,
     [field]: {
       ...row[field],
@@ -73,7 +80,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       headerName: 'Funding Partner',
       field: 'fundingPartner',
       flex: 1,
-      valueGetter: ({ row }) => row.organization.value?.name.value ?? '',
+      valueGetter: (_, row) => row.organization.value?.name.value ?? '',
     },
     {
       headerName: 'Fiscal Year',
@@ -154,10 +161,9 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         rows={rows}
         columns={columns}
         loading={loading}
-        components={{
-          Footer: () => null,
-          ...changesetGridComponents,
-          Cell: withEditTooltip(changesetGridComponents.Cell),
+        slots={{
+          ...changesetGridSlots,
+          cell: withEditTooltip(changesetGridSlots.cell),
         }}
         initialState={{
           sorting: { sortModel: [{ field: 'fiscalYear', sort: 'asc' }] },
@@ -168,7 +174,8 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         }}
         autoHeight
         disableColumnMenu
-        isRowSelectable={() => false}
+        hideFooter
+        rowSelection={false}
         sx={{
           '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
             {
@@ -177,9 +184,6 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         }}
         isCellEditable={({ row: record }) => record.amount.canEdit}
         processRowUpdate={handleRowSave}
-        experimentalFeatures={{
-          newEditingApi: true,
-        }}
       />
     </Card>
   );

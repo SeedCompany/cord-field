@@ -5,7 +5,8 @@ import { useCallback, useRef } from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 
 type EditNumberCellProps = GridRenderEditCellParams<
-  number | null | undefined
+  any,
+  string | number | null | undefined
 > & {
   max?: number;
 };

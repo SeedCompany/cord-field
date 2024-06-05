@@ -28,22 +28,22 @@ export const ProgressReportsTable = ({
       },
     }}
     disableColumnMenu
-    disableSelectionOnClick
+    disableRowSelectionOnClick
     autoHeight
+    hideFooter
     sx={{
-      '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
+      '& .MuiDataGrid-row': { cursor: 'pointer' },
       '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
         '&:focus, &:focus-within': { outline: 'none' },
       },
-      '& .MuiDataGrid-columnHeader:nth-last-of-type(-n+2) .MuiDataGrid-columnSeparator--sideRight':
+      '& .MuiDataGrid-columnHeader--last .MuiDataGrid-columnSeparator--sideRight':
         {
           display: 'none',
         },
     }}
     {...props}
-    components={{
-      Row: RowLink,
-      Footer: () => null,
+    slots={{
+      row: RowLink,
     }}
     columns={[
       {
@@ -66,7 +66,7 @@ export const ProgressReportsTable = ({
       {
         headerName: 'Status',
         field: 'status',
-        valueGetter: ({ row: { skippedReason, status } }) =>
+        valueGetter: (_, { skippedReason, status }) =>
           skippedReason.value ? 'Skipped' : status.value,
         flex: 1,
         renderCell: (params) => {

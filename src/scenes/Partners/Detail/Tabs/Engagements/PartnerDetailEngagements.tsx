@@ -1,4 +1,4 @@
-import { Box, Chip, Tooltip, Typography } from '@mui/material';
+import { Box, Chip } from '@mui/material';
 import { DataGrid, GridColDef, GridLocaleText } from '@mui/x-data-grid';
 import {
   cleanJoin,
@@ -47,14 +47,7 @@ export const PartnerDetailEngagements = () => {
         disableColumnMenu
         {...props}
         columns={columns}
-        disableSelectionOnClick
-        sx={{
-          border: 'none',
-          pt: 1,
-          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
-            '&:focus, &:focus-within': { outline: 'none' },
-          },
-        }}
+        disableRowSelectionOnClick
         localeText={localeText}
       />
     </PartnerTabContainer>
@@ -70,7 +63,7 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'Name',
     field: 'nameProjectFirst',
     minWidth: 200,
-    valueGetter: ({ row }) =>
+    valueGetter: (_, row) =>
       cleanJoin(' - ', [
         row.project.name.value,
         row.__typename === 'LanguageEngagement'
@@ -87,72 +80,65 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'Type',
     field: 'project.type',
     width: 130,
-    valueGetter: ({ row }) => labelFrom(ProjectTypeLabels)(row.project.type),
+    valueGetter: (_, row) => labelFrom(ProjectTypeLabels)(row.project.type),
     renderCell: ({ value }) => <Chip label={value} variant="outlined" />,
   },
   {
     headerName: 'Project Step',
     field: 'project.step',
     width: 250,
-    valueGetter: ({ row }) =>
+    valueGetter: (_, row) =>
       labelFrom(ProjectStepLabels)(row.project.step.value),
   },
   {
     headerName: 'Engagement Status',
     field: 'status',
     width: 190,
-    valueGetter: ({ row }) =>
+    valueGetter: (_, row) =>
       labelFrom(EngagementStatusLabels)(row.status.value),
   },
   {
     headerName: 'Country',
     field: 'project.primaryLocation.name',
-    valueGetter: ({ row }) => row.project.primaryLocation.value?.name.value,
+    valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
   },
   {
-    headerName: 'Ethnologue Code',
+    headerName: 'ISO',
+    description: 'Ethnologue Code',
     field: 'language.ethnologue.code',
     width: 75,
-    valueGetter: ({ row }) =>
+    valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.ethnologue.code.value?.toUpperCase()
         : '',
-    renderHeader: () => (
-      <Tooltip title="Ethnologue Code">
-        <Typography variant="inherit">ISO</Typography>
-      </Tooltip>
-    ),
   },
   {
-    headerName: 'Registry of Dialects',
+    headerName: 'ROD',
+    description: 'Registry of Dialects',
     field: 'language.registryOfDialectsCode',
     width: 80,
-    valueGetter: ({ row }) =>
+    valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.registryOfDialectsCode.value
         : '',
-    renderHeader: () => (
-      <Tooltip title="Registry of Dialects">
-        <Typography variant="inherit">ROD</Typography>
-      </Tooltip>
-    ),
   },
   {
     headerName: 'MOU Start',
     field: 'startDate',
-    valueGetter: ({ value }) => value.value,
+    valueGetter: (_, { startDate }) => startDate.value,
     renderCell: ({ value }) => <FormattedDate date={value} />,
   },
   {
     headerName: 'MOU End',
     field: 'endDate',
-    valueGetter: ({ value }) => value.value,
+    valueGetter: (_, { endDate }) => endDate.value,
     renderCell: ({ value }) => <FormattedDate date={value} />,
   },
   {
     headerName: 'QR Status',
+    description: 'Status of Quarterly Report Currently Due',
     field: 'currentProgressReportDue.status',
-    valueGetter: ({ row }) =>
+    valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement' &&
       row.currentProgressReportDue.value
         ? labelFrom(ProgressReportStatusLabels)(
@@ -161,11 +147,6 @@ const columns: Array<GridColDef<Engagement>> = [
         : null,
     sortComparator: cmpBy((v: string | null) =>
       ProgressReportStatusIndex.get(v)
-    ),
-    renderHeader: () => (
-      <Tooltip title="Status of Querterly Report Currently Due">
-        <Typography variant="inherit">QR Status</Typography>
-      </Tooltip>
     ),
     renderCell({ value, row }) {
       const report =
@@ -184,7 +165,7 @@ const columns: Array<GridColDef<Engagement>> = [
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),
-    valueGetter: ({ row }) => row.project.sensitivity,
+    valueGetter: (_, row) => row.project.sensitivity,
     renderCell: ({ value }) => (
       <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
         <SensitivityIcon value={value} disableTooltip />

@@ -141,10 +141,10 @@ export const useTable = <
     rows: list?.items ?? [],
     rowCount: total,
     loading: isNetworkRequestInFlight(networkStatus),
-    page: input.page - 1,
+    paginationModel: { page: input.page - 1, pageSize: input.count },
     sortModel: [{ field: input.sort, sort: lowerCase(input.order) }],
-    onPageChange: (next) => {
-      onChange((prev) => ({ ...prev, page: next + 1 }));
+    onPaginationModelChange: (next) => {
+      onChange((prev) => ({ ...prev, page: next.page + 1 }));
     },
     onSortModelChange: ([next]) => {
       onChange((prev) => ({
@@ -154,8 +154,7 @@ export const useTable = <
         page: 1,
       }));
     },
-    pageSize: input.count,
-    rowsPerPageOptions: [input.count],
+    pageSizeOptions: [input.count],
     sortingOrder: ['desc', 'asc'], // no unsorted
     paginationMode: isCacheComplete ? 'client' : 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
