@@ -189,6 +189,14 @@ const usePartnerDetailsFilters = makeQueryHandler({
     'profile'
   ),
 });
+const tabStyles = {
+  profile: { maxWidth: 'lg' },
+  finance: { maxWidth: 'lg' },
+  people: { maxWidth: 'lg' },
+  projects: { maxWidth: 'lg' },
+  engagements: { maxWidth: 'auto' },
+  notes: { maxWidth: 'lg' },
+};
 const PartnerTabs = (props: PartnerViewEditProps) => {
   const [filters, setFilters] = usePartnerDetailsFilters();
 
@@ -205,7 +213,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         <Tab label="Engagements" value="engagements" />
         <Tab label="Notes" value="notes" />
       </TabList>
-      <Paper sx={{ maxWidth: 'lg' }}>
+      <Paper sx={tabStyles[filters.tab]}>
         <TabPanel value="profile">
           <PartnerDetailProfile {...props} />
         </TabPanel>
