@@ -59,7 +59,7 @@
     "@mui/lab": "^5.0.0-alpha.150",
     "@mui/material": "^5.14.15",
     "@mui/system": "^5.14.15",
-    "@mui/x-data-grid": "^5.17.26",
+    "@mui/x-data-grid": "^7.6.2",
     "@mui/x-date-pickers": "^5.0.20",
     "@react-editor-js/client": "^2.1.0",
     "@react-editor-js/core": "^2.1.0",

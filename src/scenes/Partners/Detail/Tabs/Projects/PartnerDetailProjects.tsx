@@ -43,7 +43,6 @@ export const PartnerDetailProjects = () => {
       {...props}
       columns={columns}
       onRowClick={handleRowClick}
-      disableSelectionOnClick
       sx={{
         border: 'none',
         pt: 1,
@@ -67,7 +66,7 @@ const columns: Array<GridColDef<Project>> = [
     headerName: 'Project Name',
     field: 'name',
     flex: 2,
-    valueGetter: ({ value }) => value.value,
+    valueGetter: ({ value }) => value,
     renderCell: ({ value }) => (
       <Box component="span" color="primary.main">
         {value}
@@ -91,7 +90,7 @@ const columns: Array<GridColDef<Project>> = [
     headerName: 'Engagements',
     field: 'engagements',
     flex: 0.5,
-    valueGetter: ({ value }) => value.total,
+    valueGetter: (value) => value,
   },
   {
     headerName: 'Sensitivity',

@@ -2,7 +2,7 @@ import {
   type TypedDocumentNode as DocumentNode,
   useQuery,
 } from '@apollo/client';
-import type { DataGridProps } from '@mui/x-data-grid';
+import type { DataGridProps, GridPaginationModel } from '@mui/x-data-grid';
 import {
   type FieldNode,
   getOperationAST,
@@ -137,15 +137,23 @@ export const useTable = <
   const list = isCacheComplete ? allPagesList : currentPageList;
   const total = allPagesList?.total ?? currentPageList?.total ?? 0;
 
+  const handlePaginationModelChange = (
+    newPaginationModel: GridPaginationModel
+  ) => {
+    onChange((prev) => ({
+      ...prev,
+      page: newPaginationModel.page + 1,
+      count: newPaginationModel.pageSize,
+    }));
+  };
+
   const dataGridProps = {
     rows: list?.items ?? [],
     rowCount: total,
     loading: isNetworkRequestInFlight(networkStatus),
-    page: input.page - 1,
+    paginationModel: { page: input.page - 1, pageSize: input.count },
     sortModel: [{ field: input.sort, sort: lowerCase(input.order) }],
-    onPageChange: (next) => {
-      onChange((prev) => ({ ...prev, page: next + 1 }));
-    },
+    onPaginationModelChange: handlePaginationModelChange,
     onSortModelChange: ([next]) => {
       onChange((prev) => ({
         ...prev,
@@ -154,8 +162,7 @@ export const useTable = <
         page: 1,
       }));
     },
-    pageSize: input.count,
-    rowsPerPageOptions: [input.count],
+    pageSizeOptions: [input.count],
     sortingOrder: ['desc', 'asc'], // no unsorted
     paginationMode: isCacheComplete ? 'client' : 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
