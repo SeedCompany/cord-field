@@ -1,6 +1,6 @@
 import { Box, Divider, DividerProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { ComponentType } from 'react';
-import { withStyles } from 'tss-react/mui';
 import { applyBreakpoint, BreakpointAt, extendSx, StyleProps } from '~/common';
 
 export interface ResponsiveDividerProps extends DividerProps {
@@ -8,26 +8,25 @@ export interface ResponsiveDividerProps extends DividerProps {
   spacing?: number;
 }
 
-export const ResponsiveDivider = withStyles(
-  Divider as ComponentType<ResponsiveDividerProps>,
-  ({ spacing, breakpoints }, props) => ({
-    root: {
-      width: `calc(100% - ${spacing(props.spacing ?? 0)} * 2)`,
-      margin: spacing(0, props.spacing ?? 0),
-      '.MuiGrid-container > &': {
-        marginRight: -1,
-      },
-      ...applyBreakpoint(breakpoints, props.vertical, {
-        margin: spacing(props.spacing ?? 0, 0),
-        borderLeftWidth: 'thin',
-        // Divider orientation=vertical & flexItem
-        width: 1,
-        height: 'auto',
-        alignSelf: 'stretch',
-      }),
+export const ResponsiveDivider = styled(
+  Divider as ComponentType<ResponsiveDividerProps>
+)(({ spacing, vertical, theme }) => ({
+  root: {
+    width: `calc(100% - ${theme.spacing(spacing ?? 0)} * 2)`,
+    margin: theme.spacing(0, spacing ?? 0),
+    '.MuiGrid-container > &': {
+      marginRight: -1,
     },
-  })
-);
+    ...applyBreakpoint(theme.breakpoints, vertical, {
+      margin: theme.spacing(spacing ?? 0, 0),
+      borderLeftWidth: 'thin',
+      // Divider orientation=vertical & flexItem
+      width: 1,
+      height: 'auto',
+      alignSelf: 'stretch',
+    }),
+  },
+}));
 
 /**
  * Horizontal divider until `verticalWhen` css query is matched.
