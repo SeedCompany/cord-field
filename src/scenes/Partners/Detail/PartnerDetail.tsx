@@ -9,6 +9,7 @@ import {
   Box,
   Container,
   Paper,
+  Skeleton,
   Stack,
   Tab,
   Tooltip,
@@ -98,6 +99,11 @@ const PartnerHeader = ({
     <>
       <Helmet title={acronym ?? name ?? undefined} />
       <Stack direction="row" gap={1}>
+        {!partner && (
+          <Skeleton width={300}>
+            <Typography variant="h2" lineHeight="inherit" mr={1} />
+          </Skeleton>
+        )}
         <Typography variant="h2" lineHeight="inherit" mr={1}>
           {acronym ?? name}
         </Typography>
@@ -129,10 +135,12 @@ const PartnerHeader = ({
           {name}
         </Typography>
       )}
-      {partner && (
-        <Typography variant="body2" color="textSecondary" paragraph>
+      {partner ? (
+        <Typography variant="body2" color="textSecondary">
           Created <FormattedDateTime date={partner.createdAt} />
         </Typography>
+      ) : (
+        <Skeleton width={300} sx={{ fontSize: 'body2', mb: '-2px' }} />
       )}
     </>
   );
