@@ -40,7 +40,7 @@ export const PartnerDetailEngagements = () => {
   });
 
   return (
-    <PartnerTabContainer sx={{ p: 0 }}>
+    <PartnerTabContainer sx={{ p: 0, maxWidth: 'initial' }}>
       <DataGrid<Engagement>
         autoHeight
         density="compact"
