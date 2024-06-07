@@ -37,7 +37,7 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
   const { classes } = useStyles();
 
   return (
-    <PartnerTabContainer sx={{ pb: 2 }}>
+    <PartnerTabContainer sx={{ pb: 4 }}>
       <Typography variant="h3" gutterBottom>
         {partner ? 'Point of Contact' : <Skeleton width="120px" />}
       </Typography>

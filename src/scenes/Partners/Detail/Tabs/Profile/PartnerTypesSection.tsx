@@ -47,7 +47,14 @@ export const PartnerTypesSection = ({
         </Tooltip>
       }
     >
-      <Stack spacing={2}>
+      <Stack
+        direction="row"
+        columnGap={4}
+        rowGap={3}
+        justifyContent="space-between"
+        flexWrap="wrap"
+        maxWidth={350}
+      >
         <DisplaySecuredList
           title="Roles"
           data={partner?.types}

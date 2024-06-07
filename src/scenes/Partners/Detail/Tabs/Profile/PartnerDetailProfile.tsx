@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Unstable_Grid2 as Grid } from '@mui/material';
 import { Many } from 'lodash';
 import { BooleanProperty } from '~/components/BooleanProperty';
 import { EditablePartnerField } from '../../../Edit';
@@ -14,22 +14,20 @@ interface Props {
 
 export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => (
   <PartnerTabContainer>
-    <Grid container spacing={1} alignItems="center">
-      <BooleanProperty
-        label="Global Innovations Client"
-        redacted="You do not have permission to view whether this is a Global Innovations Client"
-        data={partner?.globalInnovationsClient}
-        wrap={(node) => <Grid item>{node}</Grid>}
-      />
-    </Grid>
+    <BooleanProperty
+      label="Global Innovations Client"
+      redacted="You do not have permission to view whether this is a Global Innovations Client"
+      data={partner?.globalInnovationsClient}
+      sx={{ mb: 1 }}
+    />
     <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
+      <Grid xs={12} md={6}>
         <PartnerContactSection
           partner={partner}
           onEdit={() => edit('partner.address')}
         />
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid xs={12} md={6}>
         <PartnerTypesSection
           partner={partner}
           onEdit={() =>
