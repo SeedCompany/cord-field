@@ -25,14 +25,16 @@ export const PartnerContactSection = ({
       loading={!partner}
       action={
         <Tooltip title="Edit Contact Information">
-          <IconButton
-            disabled={!canEdit}
-            onClick={onEdit}
-            loading={!partner}
-            size="small"
-          >
-            <Edit />
-          </IconButton>
+          <span>
+            <IconButton
+              disabled={!canEdit}
+              onClick={onEdit}
+              loading={!partner}
+              size="small"
+            >
+              <Edit />
+            </IconButton>
+          </span>
         </Tooltip>
       }
     >
