@@ -1,6 +1,5 @@
 import { Add } from '@mui/icons-material';
 import {
-  Box,
   Button,
   CardActionArea,
   CardContent,
@@ -13,6 +12,7 @@ import { square } from '~/common';
 import { Avatar } from '~/components/Avatar';
 import { UserListItemCardPortrait } from '~/components/UserListItemCard';
 import { EditablePartnerField } from '../../../Edit';
+import { PartnerTabContainer } from '../PartnerTabContainer';
 import { PartnerDetailPeopleFragment } from './PartnerDetailsPeople.graphql';
 
 interface Props {
@@ -37,7 +37,7 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
   const { classes } = useStyles();
 
   return (
-    <Box pb={2}>
+    <PartnerTabContainer sx={{ pb: 4 }}>
       <Typography variant="h3" gutterBottom>
         {partner ? 'Point of Contact' : <Skeleton width="120px" />}
       </Typography>
@@ -70,6 +70,6 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
           </Button>
         }
       />
-    </Box>
+    </PartnerTabContainer>
   );
 };
