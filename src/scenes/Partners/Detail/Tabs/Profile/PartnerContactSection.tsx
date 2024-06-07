@@ -53,6 +53,7 @@ export const PartnerContactSection = ({
           partner.address.value
         ) : (
           <Typography
+            component="span"
             variant="inherit"
             color="text.secondary"
             sx={{ fontStyle: 'italic' }}

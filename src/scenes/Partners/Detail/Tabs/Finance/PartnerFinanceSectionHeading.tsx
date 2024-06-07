@@ -51,6 +51,7 @@ export const PartnerFinanceSectionHeading = ({
           partner.pmcEntityCode.value
         ) : (
           <Typography
+            component="span"
             variant="inherit"
             color="text.secondary"
             sx={{ fontStyle: 'italic' }}
