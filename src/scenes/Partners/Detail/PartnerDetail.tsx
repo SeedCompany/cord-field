@@ -5,15 +5,7 @@ import {
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import {
-  Box,
-  Container,
-  Paper,
-  Stack,
-  Tab,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Box, Skeleton, Stack, Tab, Tooltip, Typography } from '@mui/material';
 import { Many, Nil } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -32,6 +24,7 @@ import {
   PartnerDetailsFragment,
   PartnerDocument,
 } from './PartnerDetail.graphql';
+import { PartnerDetailEngagements } from './Tabs/Engagements/PartnerDetailEngagements';
 import { PartnerDetailFinance } from './Tabs/Finance/PartnerDetailFinance';
 import { PartnerDetailNotes } from './Tabs/Notes/PartnerDetailsNotes';
 import { PartnerDetailPeople } from './Tabs/People/PartnerDetailPeople';
@@ -61,7 +54,7 @@ export const PartnerDetail = () => {
   const viewEdit = { partner, editPartner };
 
   return (
-    <Container maxWidth={false} sx={{ p: 6 }}>
+    <Box sx={{ p: 4, overflowY: 'auto' }}>
       <Error error={error}>
         {{
           NotFound: 'Could not find partner',
@@ -69,11 +62,11 @@ export const PartnerDetail = () => {
         }}
       </Error>
       {!error && (
-        <main>
+        <Stack component="main">
           <PartnerHeader {...viewEdit} />
           <PartnerDataButtons {...viewEdit} />
           <PartnerTabs {...viewEdit} />
-        </main>
+        </Stack>
       )}
       {partner ? (
         <EditPartner
@@ -82,7 +75,7 @@ export const PartnerDetail = () => {
           editFields={editField}
         />
       ) : null}
-    </Container>
+    </Box>
   );
 };
 
@@ -97,6 +90,11 @@ const PartnerHeader = ({
     <>
       <Helmet title={acronym ?? name ?? undefined} />
       <Stack direction="row" gap={1}>
+        {!partner && (
+          <Skeleton width={300}>
+            <Typography variant="h2" lineHeight="inherit" mr={1} />
+          </Skeleton>
+        )}
         <Typography variant="h2" lineHeight="inherit" mr={1}>
           {acronym ?? name}
         </Typography>
@@ -128,10 +126,12 @@ const PartnerHeader = ({
           {name}
         </Typography>
       )}
-      {partner && (
-        <Typography variant="body2" color="textSecondary" paragraph>
+      {partner ? (
+        <Typography variant="body2" color="textSecondary">
           Created <FormattedDateTime date={partner.createdAt} />
         </Typography>
+      ) : (
+        <Skeleton width={300} sx={{ fontSize: 'body2', mb: '-2px' }} />
       )}
     </>
   );
@@ -177,7 +177,14 @@ const PartnerDataButtons = ({
 
 const usePartnerDetailsFilters = makeQueryHandler({
   tab: withDefault(
-    EnumParam(['profile', 'people', 'projects', 'finance', 'notes']),
+    EnumParam([
+      'profile',
+      'people',
+      'projects',
+      'finance',
+      'notes',
+      'engagements',
+    ]),
     'profile'
   ),
 });
@@ -185,18 +192,19 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
   const [filters, setFilters] = usePartnerDetailsFilters();
 
   return (
-    <TabContext value={filters.tab}>
-      <TabList
-        onChange={(_e, tab) => setFilters({ ...filters, tab })}
-        aria-label="partner navigation tabs"
-      >
-        <Tab label="Partner Profile" value="profile" />
-        <Tab label="Finance" value="finance" />
-        <Tab label="People" value="people" />
-        <Tab label="Projects" value="projects" />
-        <Tab label="Notes" value="notes" />
-      </TabList>
-      <Paper sx={{ maxWidth: 'lg' }}>
+    <Box sx={{ '& .MuiTabPanel-root': { p: 0 } }}>
+      <TabContext value={filters.tab}>
+        <TabList
+          onChange={(_e, tab) => setFilters({ ...filters, tab })}
+          aria-label="partner navigation tabs"
+        >
+          <Tab label="Partner Profile" value="profile" />
+          <Tab label="Finance" value="finance" />
+          <Tab label="People" value="people" />
+          <Tab label="Projects" value="projects" />
+          <Tab label="Engagements" value="engagements" />
+          <Tab label="Notes" value="notes" />
+        </TabList>
         <TabPanel value="profile">
           <PartnerDetailProfile {...props} />
         </TabPanel>
@@ -206,13 +214,16 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         <TabPanel value="people">
           <PartnerDetailPeople {...props} />
         </TabPanel>
-        <TabPanel value="projects" sx={{ p: 0 }}>
+        <TabPanel value="projects">
           <PartnerDetailProjects />
+        </TabPanel>
+        <TabPanel value="engagements">
+          <PartnerDetailEngagements />
         </TabPanel>
         <TabPanel value="notes">
           <PartnerDetailNotes {...props} />
         </TabPanel>
-      </Paper>
-    </TabContext>
+      </TabContext>
+    </Box>
   );
 };

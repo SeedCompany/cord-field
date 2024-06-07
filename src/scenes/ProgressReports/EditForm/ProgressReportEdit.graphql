@@ -30,7 +30,6 @@ fragment ProgressReportEdit on ProgressReport {
   parent {
     id
     canDelete
-    sensitivity
     language {
       value {
         id
@@ -42,6 +41,7 @@ fragment ProgressReportEdit on ProgressReport {
     }
     project {
       id
+      sensitivity
       name {
         canRead
         value

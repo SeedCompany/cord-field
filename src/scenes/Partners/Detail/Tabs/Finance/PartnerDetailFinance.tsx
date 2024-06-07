@@ -1,7 +1,7 @@
-import { Grid } from '@mui/material';
 import { Many } from 'lodash';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { PartnerTabContainer } from '../PartnerTabContainer';
 import { PartnerFinanceSectionHeading } from './PartnerFinanceSectionHeading';
 
 interface Props {
@@ -9,15 +9,11 @@ interface Props {
   editPartner: (item: Many<EditablePartnerField>) => void;
 }
 
-export const PartnerDetailFinance = ({ partner, editPartner: edit }: Props) => {
-  return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <PartnerFinanceSectionHeading
-          partner={partner}
-          onEdit={() => edit('partner.pmcEntityCode')}
-        />
-      </Grid>
-    </Grid>
-  );
-};
+export const PartnerDetailFinance = ({ partner, editPartner: edit }: Props) => (
+  <PartnerTabContainer>
+    <PartnerFinanceSectionHeading
+      partner={partner}
+      onEdit={() => edit('partner.pmcEntityCode')}
+    />
+  </PartnerTabContainer>
+);

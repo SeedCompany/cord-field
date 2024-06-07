@@ -23,14 +23,16 @@ export const PartnerFinanceSectionHeading = ({
       loading={!partner}
       action={
         <Tooltip title="Edit">
-          <IconButton
-            disabled={!canEdit}
-            onClick={onEdit}
-            loading={!partner}
-            size="small"
-          >
-            <Edit />
-          </IconButton>
+          <span>
+            <IconButton
+              disabled={!canEdit}
+              onClick={onEdit}
+              loading={!partner}
+              size="small"
+            >
+              <Edit />
+            </IconButton>
+          </span>
         </Tooltip>
       }
     >
@@ -51,6 +53,7 @@ export const PartnerFinanceSectionHeading = ({
           partner.pmcEntityCode.value
         ) : (
           <Typography
+            component="span"
             variant="inherit"
             color="text.secondary"
             sx={{ fontStyle: 'italic' }}

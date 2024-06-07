@@ -78,7 +78,11 @@ export const EditPartnership = (props: EditPartnershipProps) => {
         item: partnership,
       }),
       invalidateBudgetRecords(project, partnership, undefined),
-      onUpdateInvalidateProps(partnership.partner.value!, 'projects')
+      onUpdateInvalidateProps(
+        partnership.partner.value!,
+        'projects',
+        'engagements'
+      )
     ),
   });
 

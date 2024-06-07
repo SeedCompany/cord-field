@@ -9,6 +9,7 @@ import { PostListItem } from '~/components/posts/PostListItemCard';
 import { ProgressButton } from '~/components/ProgressButton';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerPostListDocument as PostListQuery } from '../../PartnerPostList.graphql';
+import { PartnerTabContainer } from '../PartnerTabContainer';
 
 interface Props {
   partner?: PostableIdFragment;
@@ -27,35 +28,37 @@ export const PartnerDetailNotes = ({ partner }: Props) => {
   });
 
   return (
-    <ActionableSection
-      loading={!partner}
-      title="Notes"
-      action={
-        <ProgressButton
-          onClick={createPost}
-          progress={!partner}
-          startIcon={<Add />}
-        >
-          Add Note
-        </ProgressButton>
-      }
-    >
-      <List
-        {...posts}
-        spacing={0}
-        renderItem={(post) => (
-          <PostListItem
-            parent={partner!} // if we have a post, we have a partner
-            post={post}
-            sx={{ pb: 3 }}
-          />
-        )}
-        skeletonCount={0}
-        renderSkeleton={null}
+    <PartnerTabContainer>
+      <ActionableSection
         loading={!partner}
-      />
+        title="Notes"
+        action={
+          <ProgressButton
+            onClick={createPost}
+            progress={!partner}
+            startIcon={<Add />}
+          >
+            Add Note
+          </ProgressButton>
+        }
+      >
+        <List
+          {...posts}
+          spacing={0}
+          renderItem={(post) => (
+            <PostListItem
+              parent={partner!} // if we have a post, we have a partner
+              post={post}
+              sx={{ pb: 3 }}
+            />
+          )}
+          skeletonCount={0}
+          renderSkeleton={null}
+          loading={!partner}
+        />
 
-      {partner && <CreatePost {...createPostState} parent={partner} />}
-    </ActionableSection>
+        {partner && <CreatePost {...createPostState} parent={partner} />}
+      </ActionableSection>
+    </PartnerTabContainer>
   );
 };

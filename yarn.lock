@@ -6644,9 +6644,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001538, caniuse-lite@npm:^1.0.30001541":
-  version: 1.0.30001553
-  resolution: "caniuse-lite@npm:1.0.30001553"
-  checksum: 10c0/75656429566b44f968e5575f2bc4a27052ed5bb49763069f6b6c3f64c5a2d4c561dc17342faee42ef42d004572fba7c214d5321d18d9283c95f3bf17e5498355
+  version: 1.0.30001617
+  resolution: "caniuse-lite@npm:1.0.30001617"
+  checksum: 10c0/711702501063968b2807d1a8f40981e66f45eb8962968b4b84c70392dc804cee62845e8e391e9749f78ff41ca48be2a4a7a38620c44af526b5e03bc3c7a1bc0a
   languageName: node
   linkType: hard
 
@@ -7564,7 +7564,7 @@ __metadata:
     ts-node: "npm:^10.9.1"
     tsconfig-paths-webpack-plugin: "npm:^4.1.0"
     tss-react: "npm:^3.7.1"
-    type-fest: "npm:^4.10.2"
+    type-fest: "npm:^4.18.2"
     typescript: "npm:^5.2.2"
     validator: "npm:^13.11.0"
     webpack: "npm:^4.47.0"
@@ -19175,10 +19175,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^4.10.2":
-  version: 4.10.2
-  resolution: "type-fest@npm:4.10.2"
-  checksum: 10c0/740f7d30da742ff413e8690ec10a24df054bfd87575cf92691b77f5a6b8185c582da529b84ceb13771482599e085712beec51492feaef2a1adc8661c0a47ecba
+"type-fest@npm:^4.18.2":
+  version: 4.18.2
+  resolution: "type-fest@npm:4.18.2"
+  checksum: 10c0/5e669128bf7cbc9f9cea4e4862c974517a1d9f77652589c2ac0908a8be5d852d4e52593ed14f4d8a44a604fb5e8a8ec1b658e461acd8bb7592f5e5265a04cbab
   languageName: node
   linkType: hard
 

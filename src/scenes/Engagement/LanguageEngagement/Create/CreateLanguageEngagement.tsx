@@ -13,6 +13,7 @@ import {
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
 import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.graphql';
+import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
@@ -57,6 +58,7 @@ export const CreateLanguageEngagement = ({
           listId: [languageRef, 'projects'],
           outputToItem: () => project,
         }),
+        invalidatePartnersEngagements(),
         recalculateSensitivity(project)
       ),
     });
