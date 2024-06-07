@@ -20,6 +20,7 @@ import { FormattedDate } from '~/components/Formatters';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useTable } from '~/hooks';
 import { Link } from '../../../../../components/Routing';
+import { PartnerTabContainer } from '../PartnerTabContainer';
 import {
   PartnerDetailEngagementsTableListItemFragment as Engagement,
   PartnerDetailEngagementsDocument,
@@ -39,22 +40,24 @@ export const PartnerDetailEngagements = () => {
   });
 
   return (
-    <DataGrid<Engagement>
-      autoHeight
-      density="compact"
-      disableColumnMenu
-      {...props}
-      columns={columns}
-      disableSelectionOnClick
-      sx={{
-        border: 'none',
-        pt: 1,
-        '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
-          '&:focus, &:focus-within': { outline: 'none' },
-        },
-      }}
-      localeText={localeText}
-    />
+    <PartnerTabContainer sx={{ p: 0 }}>
+      <DataGrid<Engagement>
+        autoHeight
+        density="compact"
+        disableColumnMenu
+        {...props}
+        columns={columns}
+        disableSelectionOnClick
+        sx={{
+          border: 'none',
+          pt: 1,
+          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
+            '&:focus, &:focus-within': { outline: 'none' },
+          },
+        }}
+        localeText={localeText}
+      />
+    </PartnerTabContainer>
   );
 };
 

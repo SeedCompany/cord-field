@@ -5,15 +5,7 @@ import {
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import {
-  Box,
-  Paper,
-  Skeleton,
-  Stack,
-  Tab,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Box, Skeleton, Stack, Tab, Tooltip, Typography } from '@mui/material';
 import { Many, Nil } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -200,19 +192,19 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
   const [filters, setFilters] = usePartnerDetailsFilters();
 
   return (
-    <TabContext value={filters.tab}>
-      <TabList
-        onChange={(_e, tab) => setFilters({ ...filters, tab })}
-        aria-label="partner navigation tabs"
-      >
-        <Tab label="Partner Profile" value="profile" />
-        <Tab label="Finance" value="finance" />
-        <Tab label="People" value="people" />
-        <Tab label="Projects" value="projects" />
-        <Tab label="Engagements" value="engagements" />
-        <Tab label="Notes" value="notes" />
-      </TabList>
-      <Paper sx={{ maxWidth: 'lg' }}>
+    <Box sx={{ '& .MuiTabPanel-root': { p: 0 } }}>
+      <TabContext value={filters.tab}>
+        <TabList
+          onChange={(_e, tab) => setFilters({ ...filters, tab })}
+          aria-label="partner navigation tabs"
+        >
+          <Tab label="Partner Profile" value="profile" />
+          <Tab label="Finance" value="finance" />
+          <Tab label="People" value="people" />
+          <Tab label="Projects" value="projects" />
+          <Tab label="Engagements" value="engagements" />
+          <Tab label="Notes" value="notes" />
+        </TabList>
         <TabPanel value="profile">
           <PartnerDetailProfile {...props} />
         </TabPanel>
@@ -222,16 +214,16 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         <TabPanel value="people">
           <PartnerDetailPeople {...props} />
         </TabPanel>
-        <TabPanel value="projects" sx={{ p: 0 }}>
+        <TabPanel value="projects">
           <PartnerDetailProjects />
         </TabPanel>
-        <TabPanel value="engagements" sx={{ p: 0 }}>
+        <TabPanel value="engagements">
           <PartnerDetailEngagements />
         </TabPanel>
         <TabPanel value="notes">
           <PartnerDetailNotes {...props} />
         </TabPanel>
-      </Paper>
-    </TabContext>
+      </TabContext>
+    </Box>
   );
 };

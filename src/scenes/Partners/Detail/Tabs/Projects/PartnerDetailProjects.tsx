@@ -12,6 +12,7 @@ import { Sensitivity } from '~/api/schema/schema.graphql';
 import { labelFrom } from '~/common';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useTable } from '~/hooks';
+import { PartnerTabContainer } from '../PartnerTabContainer';
 import {
   PartnerProjectsDocument,
   PartnerDetailProjectsTableListItemFragment as Project,
@@ -36,25 +37,27 @@ export const PartnerDetailProjects = () => {
   };
 
   return (
-    <DataGrid<Project>
-      autoHeight
-      density="compact"
-      disableColumnMenu
-      {...props}
-      columns={columns}
-      onRowClick={handleRowClick}
-      disableSelectionOnClick
-      sx={{
-        border: 'none',
-        pt: 1,
-        // TODO Somehow change to using Link component
-        '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
-        '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
-          '&:focus, &:focus-within': { outline: 'none' },
-        },
-      }}
-      localeText={localeText}
-    />
+    <PartnerTabContainer sx={{ p: 0 }}>
+      <DataGrid<Project>
+        autoHeight
+        density="compact"
+        disableColumnMenu
+        {...props}
+        columns={columns}
+        onRowClick={handleRowClick}
+        disableSelectionOnClick
+        sx={{
+          border: 'none',
+          pt: 1,
+          // TODO Somehow change to using Link component
+          '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
+          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
+            '&:focus, &:focus-within': { outline: 'none' },
+          },
+        }}
+        localeText={localeText}
+      />
+    </PartnerTabContainer>
   );
 };
 
