@@ -7,7 +7,6 @@ import {
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import {
   Box,
-  Container,
   Paper,
   Skeleton,
   Stack,
@@ -63,7 +62,7 @@ export const PartnerDetail = () => {
   const viewEdit = { partner, editPartner };
 
   return (
-    <Container maxWidth={false} sx={{ p: 6 }}>
+    <Box sx={{ p: 4, overflowY: 'auto' }}>
       <Error error={error}>
         {{
           NotFound: 'Could not find partner',
@@ -71,11 +70,11 @@ export const PartnerDetail = () => {
         }}
       </Error>
       {!error && (
-        <main>
+        <Stack component="main">
           <PartnerHeader {...viewEdit} />
           <PartnerDataButtons {...viewEdit} />
           <PartnerTabs {...viewEdit} />
-        </main>
+        </Stack>
       )}
       {partner ? (
         <EditPartner
@@ -84,7 +83,7 @@ export const PartnerDetail = () => {
           editFields={editField}
         />
       ) : null}
-    </Container>
+    </Box>
   );
 };
 
