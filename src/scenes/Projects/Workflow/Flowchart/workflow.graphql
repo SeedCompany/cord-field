@@ -1,0 +1,45 @@
+fragment workflow on Workflow {
+  id
+  states {
+    ...workflowState
+  }
+  transitions {
+    ...workflowTransition
+  }
+}
+
+fragment workflowState on WorkflowState {
+  value
+  label
+}
+
+fragment workflowTransition on WorkflowTransition {
+  key
+  devName
+  label
+  type
+  from {
+    ...workflowState
+  }
+  to {
+    __typename
+    ... on WorkflowTransitionStaticTo {
+      state {
+        ...workflowState
+      }
+    }
+    ... on WorkflowTransitionDynamicTo {
+      id
+      label
+      relatedStates {
+        ...workflowState
+      }
+    }
+  }
+  conditions {
+    label
+  }
+  notifiers {
+    label
+  }
+}
