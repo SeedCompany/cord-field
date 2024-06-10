@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { ComponentType, useEffect } from 'react';
+import { ComponentType } from 'react';
 import ReactFlow, {
   Background,
   Controls,
@@ -8,9 +8,7 @@ import ReactFlow, {
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
-  useReactFlow,
 } from 'reactflow';
-import { determinePositions } from './layout';
 import {
   Edge as EdgeComponent,
   FlowchartStyles,
@@ -19,6 +17,7 @@ import {
 } from './nodes';
 import { NodeTypes, parseWorkflow } from './parse-node-edges';
 import { ProjectFlowchartDocument } from './ProjectFlowchart.graphql';
+import { useAutoLayout } from './useAutoLayout';
 
 const WrappedFlowchart = () => (
   <ReactFlowProvider>
@@ -29,39 +28,21 @@ const WrappedFlowchart = () => (
 export default WrappedFlowchart;
 
 const ProjectFlowchart = () => {
-  const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const autoLayout = useAutoLayout(setNodes);
 
-  const { data } = useQuery(ProjectFlowchartDocument);
-  useEffect(() => {
-    const workflow = data?.workflow;
-    if (!workflow) {
-      return;
-    }
-    const { nodes, edges } = parseWorkflow(workflow);
-
-    const positionedNodes = determinePositions(nodes, edges);
-    setNodes([...positionedNodes]);
-    setEdges([...edges]);
-    window.requestAnimationFrame(() => {
-      fitView();
-    });
-
-    // TODO Better: render, to get size, then do layout
-    setTimeout(() => {
-      setNodes((prev) => {
-        const positionedNodes = determinePositions(prev, edges);
-        setTimeout(() => {
-          fitView();
-        }, 100);
-        return positionedNodes;
-      });
-    }, 100);
-  }, [data, fitView, setEdges, setNodes]);
+  useQuery(ProjectFlowchartDocument, {
+    onCompleted: ({ workflow }) => {
+      autoLayout.reset();
+      const { nodes, edges } = parseWorkflow(workflow);
+      setNodes(nodes);
+      setEdges(edges);
+    },
+  });
 
   return (
-    <FlowchartStyles>
+    <FlowchartStyles sx={autoLayout.showSx}>
       <ReactFlow
         nodes={nodes}
         onNodesChange={onNodesChange}
@@ -70,7 +51,6 @@ const ProjectFlowchart = () => {
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         minZoom={0.1}
-        fitView
         nodesConnectable={false}
       >
         <Background />
