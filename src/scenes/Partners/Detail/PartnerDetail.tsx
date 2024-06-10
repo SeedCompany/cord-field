@@ -54,7 +54,10 @@ export const PartnerDetail = () => {
   const viewEdit = { partner, editPartner };
 
   return (
-    <Box sx={{ p: 4, overflowY: 'auto' }}>
+    <Box
+      component="main"
+      sx={{ p: 4, overflowY: 'auto', container: 'main / inline-size' }}
+    >
       <Error error={error}>
         {{
           NotFound: 'Could not find partner',
@@ -62,11 +65,11 @@ export const PartnerDetail = () => {
         }}
       </Error>
       {!error && (
-        <Stack component="main">
+        <>
           <PartnerHeader {...viewEdit} />
           <PartnerDataButtons {...viewEdit} />
           <PartnerTabs {...viewEdit} />
-        </Stack>
+        </>
       )}
       {partner ? (
         <EditPartner
@@ -197,6 +200,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="partner navigation tabs"
+          variant="scrollable"
         >
           <Tab label="Partner Profile" value="profile" />
           <Tab label="Finance" value="finance" />
