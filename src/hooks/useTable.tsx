@@ -139,7 +139,7 @@ export const useTable = <
 
   const dataGridProps = {
     rows: list?.items ?? [],
-    rowCount: total,
+    rowCount: isCacheComplete ? undefined : total,
     loading: isNetworkRequestInFlight(networkStatus),
     paginationModel: { page: input.page - 1, pageSize: input.count },
     sortModel: [{ field: input.sort, sort: lowerCase(input.order) }],
