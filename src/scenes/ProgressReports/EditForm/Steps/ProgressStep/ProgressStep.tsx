@@ -60,12 +60,13 @@ export const ProgressStep: StepComponent = ({ report }) => {
           products={progress}
           GridProps={{
             pagination: true,
-            components: {
-              Header: () => variantSelector,
+            slots: {
+              toolbar: () => variantSelector,
             },
             processRowUpdate,
-            experimentalFeatures: {
-              newEditingApi: true,
+            sx: {
+              '--DataGrid-containerBackground': 'transparent',
+              '.MuiDataGrid-columnHeaders > *': { paddingTop: 0 },
             },
           }}
         />

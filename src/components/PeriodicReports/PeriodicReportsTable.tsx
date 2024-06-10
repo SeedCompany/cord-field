@@ -50,7 +50,7 @@ export const PeriodicReportsTableInContext = ({
     {
       headerName: 'Period',
       field: 'start',
-      width: 135,
+      width: 150,
       renderCell: ({ row: report }) => (
         <Box component="span" display="inline-flex" alignItems="center" gap={1}>
           <ReportLabel report={report} />
@@ -63,7 +63,7 @@ export const PeriodicReportsTableInContext = ({
       headerName: 'Submitted By',
       field: 'modifiedBy',
       width: 200,
-      valueGetter: ({ row }) => row.reportFile.value?.modifiedBy.fullName,
+      valueGetter: (_, row) => row.reportFile.value?.modifiedBy.fullName,
       renderCell: ({ row: report, value }) =>
         report.skippedReason.value ? <>&mdash;</> : value,
     },
@@ -71,7 +71,7 @@ export const PeriodicReportsTableInContext = ({
       headerName: 'Submitted Date',
       field: 'modifiedAt',
       width: 150,
-      valueGetter: ({ row }) => row.reportFile.value?.modifiedAt,
+      valueGetter: (_, row) => row.reportFile.value?.modifiedAt,
       renderCell: ({ row: report }) =>
         report.skippedReason.value ? (
           <>&mdash;</>
@@ -189,24 +189,23 @@ export const PeriodicReportsTableInContext = ({
           },
         }}
         disableColumnMenu
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         autoHeight
+        hideFooter
         sx={{
-          '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
           '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
             '&:focus, &:focus-within': { outline: 'none' },
           },
-          '& .MuiDataGrid-columnHeader:nth-last-of-type(-n+2) .MuiDataGrid-columnSeparator--sideRight':
+          '& .MuiDataGrid-columnHeader--last .MuiDataGrid-columnSeparator--sideRight':
             {
               display: 'none',
             },
         }}
         {...props}
         rows={data ?? []}
-        components={{
-          Row: PeriodicReportRow,
-          Footer: () => null,
-          ...props.components,
+        slots={{
+          row: PeriodicReportRow,
+          ...props.slots,
         }}
         columns={columns}
         onRowClick={(params, event, details) => {

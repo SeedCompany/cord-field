@@ -22,7 +22,8 @@ const modifyWebpackOptions = ({
   // Run these through babel, since the current loader doesn't understand the newer syntax.
   options.babelRule.include.push(
     require.resolve('@seedcompany/common').replace('.cjs', '.js'),
-    require.resolve('@editorjs/editorjs').replace('.umd.js', '.mjs')
+    require.resolve('@editorjs/editorjs').replace('.umd.js', '.mjs'),
+    (path) => path.includes('/@mui-')
   );
 
   return options;

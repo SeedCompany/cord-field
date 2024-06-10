@@ -1,6 +1,6 @@
 import { Card, CardProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Children, ComponentType, Fragment } from 'react';
-import { withStyles } from 'tss-react/mui';
 import { applyBreakpoint, BreakpointAt } from '~/common';
 import { ResponsiveDivider } from '../ResponsiveDivider';
 
@@ -8,13 +8,12 @@ export interface CardGroupProps extends CardProps {
   horizontal?: BreakpointAt;
 }
 
-const CardGroupRoot = withStyles(
-  Card as ComponentType<CardGroupProps>,
-  ({ breakpoints }, props: CardGroupProps) => ({
+const CardGroupRoot = styled(Card as ComponentType<CardGroupProps>)(
+  ({ horizontal, theme }) => ({
     root: {
       display: 'flex',
       flexDirection: 'column',
-      ...applyBreakpoint(breakpoints, props.horizontal, {
+      ...applyBreakpoint(theme.breakpoints, horizontal, {
         flexDirection: 'row',
       }),
     },

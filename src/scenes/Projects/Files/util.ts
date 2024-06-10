@@ -6,6 +6,8 @@ import {
 
 export type { Directory };
 
+export type FileRowData = FileOrDirectory & { parent: Directory };
+
 export type FileOrDirectory = Directory | FileNodeInfo_File_Fragment;
 
 export const isDirectory = isTypename<Directory>('Directory');

@@ -1,0 +1,15 @@
+diff --git a/config/babel-loader/razzle-babel-loader.js b/config/babel-loader/razzle-babel-loader.js
+index 3a4f9faf50147b6b7310430f43b60ec6be8fe655..e80c7f6138cff4acd12c568d34c2dc345680e864 100644
+--- a/config/babel-loader/razzle-babel-loader.js
++++ b/config/babel-loader/razzle-babel-loader.js
+@@ -197,7 +197,9 @@ module.exports = babelLoader.custom(function(babel) {
+         {
+           'process.env.NODE_ENV': development ? 'development' : 'production',
+           'typeof window': isServer ? 'undefined' : 'object',
+-          'process.browser': isServer ? false : true,
++          // Breaks when trying to transpile `process` an npm module to shim node APIs.
++          // I never seen this check and don't think we need it.
++          // 'process.browser': isServer ? false : true,
+         },
+         'razzle-js-transform-define-instance',
+       ]);
