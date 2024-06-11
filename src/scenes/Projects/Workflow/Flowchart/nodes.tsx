@@ -1,9 +1,18 @@
 import { Box, Card, CardProps, Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { forwardRef, Fragment } from 'react';
-import { BezierEdge, EdgeProps, Handle, NodeProps, Position } from 'reactflow';
+import { forwardRef, Fragment, useCallback } from 'react';
+import {
+  BaseEdge,
+  EdgeProps,
+  getSimpleBezierPath as getPath,
+  Handle,
+  NodeProps,
+  Position,
+  useStore,
+} from 'reactflow';
 import { extendSx } from '~/common';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
+import { getEdgeSide, getNodeIntersection } from './layout';
 import { isBack } from './parse-node-edges';
 import {
   WorkflowStateFragment as State,
@@ -20,16 +29,12 @@ export const FlowchartStyles = styled(Box)(({ theme }) => ({
       fill: theme.palette.background.paper,
     },
     '.react-flow__handle': {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      transform: 'translate(-50%, -50%)',
-      background: 'transparent',
-      border: 'none',
+      opacity: 0,
+      pointerEvents: 'none',
+      cursor: 'unset',
     },
     '.react-flow__edge': {
-      '.react-flow__edge-path, .react-flow__connection-path': {
+      '.react-flow__edge-path': {
         stroke: 'var(--color)',
         strokeWidth: 2,
       },
@@ -49,17 +54,8 @@ export function StateNode({ data, selected }: NodeProps<State>) {
       <NodeCard selected={selected} color="info">
         {data.label}
       </NodeCard>
-      <Handle
-        id="back"
-        type="target"
-        position={Position.Left}
-        // style={{ left: '25%' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        // style={{ left: '75%' }}
-      />
+      <Handle id="back" type="target" position={Position.Left} />
+      <Handle type="source" position={Position.Bottom} />
     </>
   );
 }
@@ -130,14 +126,41 @@ const Notifiers = (t: Transition) => (
   </>
 );
 
-export const Edge = (props: EdgeProps<Transition>) => {
+export const Edge = ({
+  id,
+  source,
+  target,
+  ...props
+}: EdgeProps<Transition>) => {
+  const sourceNode = useStore(
+    useCallback((store) => store.nodeInternals.get(source)!, [source])
+  );
+  const targetNode = useStore(
+    useCallback((store) => store.nodeInternals.get(target)!, [target])
+  );
+
+  const sourceIntersectsAt = getNodeIntersection(sourceNode, targetNode);
+  const targetIntersectsAt = getNodeIntersection(targetNode, sourceNode);
+  const [path, labelX, labelY, offsetX, offsetY] = getPath({
+    sourceX: sourceIntersectsAt.x,
+    sourceY: sourceIntersectsAt.y,
+    sourcePosition: getEdgeSide(sourceNode, sourceIntersectsAt),
+    targetX: targetIntersectsAt.x,
+    targetY: targetIntersectsAt.y,
+    targetPosition: getEdgeSide(targetNode, targetIntersectsAt),
+  });
+  const pathProps = { path, labelX, labelY, offsetX, offsetY };
+
   const { color } = transitionTypeStyles[props.data!.type];
   return (
     <Box
       component="g"
-      sx={(theme) => ({ '--color': theme.palette[color].light })}
+      id={id}
+      sx={(theme) => ({
+        '--color': theme.palette[color][props.selected ? 'main' : 'light'],
+      })}
     >
-      <BezierEdge {...props} />
+      <BaseEdge {...props} {...pathProps} />
     </Box>
   );
 };
