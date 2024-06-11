@@ -1,22 +1,60 @@
 import Dagre from '@dagrejs/dagre';
-import { Edge, Node, Position as Side, XYPosition } from 'reactflow';
+import { mapKeys, simpleSwitch } from '@seedcompany/common';
+import { Edge as E, Node as N, Position as Side, XYPosition } from 'reactflow';
+import { NodeTypes } from './parse-node-edges';
+import {
+  WorkflowStateFragment as State,
+  WorkflowTransitionFragment as Transition,
+} from './workflow.graphql';
 
-const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
+type Node = N<State | Transition, NodeTypes>;
+type Edge = E<Transition>;
 
 export const determinePositions = (nodes: Node[], edges: Edge[]) => {
-  g.setGraph({ rankdir: 'TB' });
+  const g = new Dagre.graphlib.Graph()
+    .setDefaultEdgeLabel(() => ({}))
+    .setGraph({
+      ranksep: 80,
+      acyclicer: 'greedy',
+    });
 
-  edges.forEach((edge) => g.setEdge(edge.source, edge.target));
-  nodes.forEach((node) => g.setNode(node.id, node as any));
+  const nodeMap = mapKeys.fromList(nodes, (n) => n.id).asMap;
+
+  nodes.forEach((node) =>
+    g.setNode(node.id, {
+      ...node,
+      width: node.width!,
+      height: node.height!,
+    })
+  );
+  edges.forEach((edge) =>
+    g.setEdge(edge.source, edge.target, {
+      weight:
+        simpleSwitch(edge.data!.type, {
+          Approve: 10,
+          Neutral: 2,
+          Reject: 1,
+        })! + (nodeMap.get(edge.source)!.type === 'state' ? 2 : 0),
+    })
+  );
 
   Dagre.layout(g);
 
+  const max = {
+    x: Math.max(...nodes.map((n) => g.node(n.id).x)),
+    y: Math.max(...nodes.map((n) => g.node(n.id).y)),
+  };
+
   return nodes.map((node) => {
     const position = g.node(node.id);
-    // We are shifting the dagre node position (anchor=center center) to the top left
-    // so it matches the React Flow node anchor point (top left).
-    const x = position.x - (node.width ?? 0) / 2;
-    const y = position.y - (node.height ?? 0) / 2;
+    // Convert anchor point from dagre to react flow
+    // center/center -> top/left
+    let x = position.x - node.width! / 2;
+    const y = position.y - node.height! / 2;
+
+    // Invert x-axis because for some reason, dagre puts the starting
+    // point on the right.
+    x = max.x - x;
 
     return { ...node, position: { x, y } };
   });
