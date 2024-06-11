@@ -1,6 +1,6 @@
-import { Box, Card, CardProps, Tooltip } from '@mui/material';
+import { Box, Card, CardProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { forwardRef, Fragment, useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import {
   BaseEdge,
   EdgeProps,
@@ -14,6 +14,7 @@ import { extendSx } from '~/common';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { getEdgeSide, getNodeIntersection } from './layout';
 import { isBack } from './parse-node-edges';
+import { TransitionNodeExtra } from './transition-info';
 import {
   WorkflowStateFragment as State,
   WorkflowTransitionFragment as Transition,
@@ -66,7 +67,7 @@ export function TransitionNode({ data, selected }: NodeProps<Transition>) {
   return (
     <>
       <Handle type="target" position={Position.Top} />
-      <Tooltip title={<Notifiers {...data} />}>
+      <TransitionNodeExtra transition={data}>
         <NodeCard
           selected={selected}
           color={color}
@@ -79,7 +80,7 @@ export function TransitionNode({ data, selected }: NodeProps<Transition>) {
         >
           {data.label}
         </NodeCard>
-      </Tooltip>
+      </TransitionNodeExtra>
       <Handle type="source" position={back ? Position.Left : Position.Bottom} />
     </>
   );
@@ -113,18 +114,6 @@ const NodeCard = forwardRef<
     </Card>
   );
 });
-
-const Notifiers = (t: Transition) => (
-  <>
-    Notifiers: <br />
-    {t.notifiers.map((n) => (
-      <Fragment key={n.label}>
-        - {n.label}
-        <br />
-      </Fragment>
-    ))}
-  </>
-);
 
 export const Edge = ({
   id,
