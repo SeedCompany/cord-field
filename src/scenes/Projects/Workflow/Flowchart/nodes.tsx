@@ -1,5 +1,6 @@
-import { Box, Card, CardProps } from '@mui/material';
+import { Box, Card, CardProps, Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { forwardRef, Fragment } from 'react';
 import { BezierEdge, EdgeProps, Handle, NodeProps, Position } from 'reactflow';
 import { extendSx } from '~/common';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
@@ -69,48 +70,64 @@ export function TransitionNode({ data, selected }: NodeProps<Transition>) {
   return (
     <>
       <Handle type="target" position={Position.Top} />
-      <NodeCard
-        selected={selected}
-        color={color}
-        sx={{
-          borderRadius: 6,
-          py: 1,
-          px: 2,
-          fontSize: 'small',
-        }}
-      >
-        {data.label}
-      </NodeCard>
+      <Tooltip title={<Notifiers {...data} />}>
+        <NodeCard
+          selected={selected}
+          color={color}
+          sx={{
+            borderRadius: 6,
+            py: 1,
+            px: 2,
+            fontSize: 'small',
+          }}
+        >
+          {data.label}
+        </NodeCard>
+      </Tooltip>
       <Handle type="source" position={back ? Position.Left : Position.Bottom} />
     </>
   );
 }
 
-const NodeCard = ({
-  children,
-  selected,
-  color,
-  sx,
-}: CardProps & Pick<NodeProps, 'selected'>) => (
-  <Card
-    elevation={selected ? 4 : 1}
-    sx={[
-      (theme) => ({
-        transition: theme.transitions.create(['box-shadow', 'border-color'], {
-          duration: theme.transitions.duration.shorter,
+const NodeCard = forwardRef<
+  HTMLDivElement,
+  CardProps & Pick<NodeProps, 'selected'>
+>(function NodeCard({ children, selected, color, sx, ...rest }, ref) {
+  return (
+    <Card
+      {...rest}
+      ref={ref}
+      elevation={selected ? 4 : 1}
+      sx={[
+        (theme) => ({
+          transition: theme.transitions.create(['box-shadow', 'border-color'], {
+            duration: theme.transitions.duration.shorter,
+          }),
+          borderColor: selected ? `${color}.dark` : 'transparent',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          p: 2,
+          bgcolor: `${color}.main`,
+          color: `${color}.contrastText`,
         }),
-        borderColor: selected ? `${color}.dark` : 'transparent',
-        borderWidth: 1,
-        borderStyle: 'solid',
-        p: 2,
-        bgcolor: `${color}.main`,
-        color: `${color}.contrastText`,
-      }),
-      ...extendSx(sx),
-    ]}
-  >
-    {children}
-  </Card>
+        ...extendSx(sx),
+      ]}
+    >
+      {children}
+    </Card>
+  );
+});
+
+const Notifiers = (t: Transition) => (
+  <>
+    Notifiers: <br />
+    {t.notifiers.map((n) => (
+      <Fragment key={n.label}>
+        - {n.label}
+        <br />
+      </Fragment>
+    ))}
+  </>
 );
 
 export const Edge = (props: EdgeProps<Transition>) => {
