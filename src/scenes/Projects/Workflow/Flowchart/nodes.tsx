@@ -151,13 +151,16 @@ export const Edge = ({
   });
   const pathProps = { path, labelX, labelY, offsetX, offsetY };
 
+  const back = sourceNode.type === 'transition' && isBack(sourceNode.data);
   const { color } = transitionTypeStyles[props.data!.type];
   return (
     <Box
       component="g"
       id={id}
       sx={(theme) => ({
-        '--color': theme.palette[color][props.selected ? 'main' : 'light'],
+        '--color': back
+          ? theme.palette.grey[props.selected ? 600 : 300]
+          : theme.palette[color][props.selected ? 'main' : 'light'],
       })}
     >
       <BaseEdge {...props} {...pathProps} />
