@@ -1,13 +1,18 @@
 import { useQuery } from '@apollo/client';
-import { ComponentType } from 'react';
+import { mapEntries } from '@seedcompany/common';
+import { useDebounceFn, useLocalStorageState } from 'ahooks';
+import { ComponentType, useCallback } from 'react';
 import ReactFlow, {
+  applyNodeChanges,
   Background,
   Controls,
   EdgeTypes,
   NodeProps,
+  OnNodesChange,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
+  XYPosition,
 } from 'reactflow';
 import {
   Edge as EdgeComponent,
@@ -28,7 +33,10 @@ const WrappedFlowchart = () => (
 export default WrappedFlowchart;
 
 const ProjectFlowchart = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [storedPos, setStoredPos] = useLocalStorageState<
+    Record<string, XYPosition>
+  >('project-workflow-flowchart-node-position-map');
+  const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const autoLayout = useAutoLayout(setNodes);
 
@@ -36,10 +44,30 @@ const ProjectFlowchart = () => {
     onCompleted: ({ workflow }) => {
       autoLayout.reset();
       const { nodes, edges } = parseWorkflow(workflow);
-      setNodes(nodes);
+      const persistedPosNodes = nodes.map((node) =>
+        storedPos?.[node.id] ? { ...node, position: storedPos[node.id]! } : node
+      );
+      setNodes(persistedPosNodes);
       setEdges(edges);
     },
   });
+
+  const persist = useDebounceFn((nextNodes: typeof nodes) => {
+    setStoredPos(
+      mapEntries(nextNodes, ({ id, position }) => [id, position]).asRecord
+    );
+  });
+
+  const onNodesChange: OnNodesChange = useCallback(
+    (changes) => {
+      setNodes((prev) => {
+        const next = applyNodeChanges(changes, prev);
+        persist.run(next);
+        return next;
+      });
+    },
+    [setNodes, persist]
+  );
 
   return (
     <FlowchartStyles sx={autoLayout.showSx}>

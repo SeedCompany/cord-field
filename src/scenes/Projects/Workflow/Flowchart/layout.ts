@@ -46,6 +46,11 @@ export const determinePositions = (nodes: Node[], edges: Edge[]) => {
   };
 
   return nodes.map((node) => {
+    // node position was persisted keep user placement.
+    if (node.position.x > 0 || node.position.y > 0) {
+      return node;
+    }
+
     const position = g.node(node.id);
     // Convert anchor point from dagre to react flow
     // center/center -> top/left
