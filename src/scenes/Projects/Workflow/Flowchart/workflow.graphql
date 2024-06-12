@@ -42,4 +42,10 @@ fragment workflowTransition on WorkflowTransition {
   notifiers {
     label
   }
+  permissions {
+    role
+    readEvent
+    execute
+    condition
+  }
 }

@@ -1,5 +1,12 @@
-import { Notifications as NotificationIcon } from '@mui/icons-material';
 import {
+  Check as CheckIcon,
+  Circle as CircleIcon,
+  Notifications as NotificationIcon,
+  Security as SecurityIcon,
+  Close as XIcon,
+} from '@mui/icons-material';
+import {
+  ListItemIcon,
   ListItemText,
   MenuItem,
   MenuList,
@@ -8,6 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import { forwardRef, ReactElement } from 'react';
+import { RoleLabels } from '~/api/schema/enumLists';
 import { PaperTooltip } from '../../../../components/PaperTooltip';
 import { WorkflowTransitionFragment as Transition } from './workflow.graphql';
 
@@ -51,6 +59,7 @@ const TransitionNodeExtraMenu = forwardRef<any, any>(
     return (
       <Stack direction="row" gap={1} {...props} ref={ref}>
         <NotifiersInfo transition={transition} />
+        <PermissionInfo transition={transition} />
       </Stack>
     );
   }
@@ -80,6 +89,48 @@ const NotifierList = ({ transition }: TransitionProp) => (
           <ListItemText>{notifier.label}</ListItemText>
         </MenuItem>
       ))}
+    </MenuList>
+  </>
+);
+
+const PermissionInfo = ({ transition }: TransitionProp) => (
+  <PaperTooltip
+    title={<PermissionPopup transition={transition} />}
+    sx={{
+      '& .MuiTooltip-tooltip': {
+        padding: 0,
+      },
+    }}
+  >
+    <SecurityIcon color="action" />
+  </PaperTooltip>
+);
+
+const PermissionPopup = ({ transition }: TransitionProp) => (
+  <>
+    <Typography variant="h4" sx={{ pt: 1, px: 1 }}>
+      Permissions
+    </Typography>
+    <MenuList dense>
+      {transition.permissions
+        .filter((p) => p.execute != null)
+        .map((p) => (
+          <MenuItem key={p.role}>
+            <ListItemIcon>
+              {!p.execute ? (
+                <XIcon color="error" fontSize="small" />
+              ) : p.condition ? (
+                <CircleIcon color="warning" fontSize="small" />
+              ) : (
+                <CheckIcon color="primary" fontSize="small" />
+              )}
+            </ListItemIcon>
+            <ListItemText
+              primary={RoleLabels[p.role]}
+              secondary={p.condition}
+            />
+          </MenuItem>
+        ))}
     </MenuList>
   </>
 );
