@@ -7,7 +7,7 @@ import {
   GridValidRowModel,
   useGridApiContext,
   useGridRootProps,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { DataGridProcessedProps } from '@mui/x-data-grid/models/props/DataGridProps';
 import { Fragment } from 'react';
 import { useDetermineChangesetDiffItem } from '../ChangesetDiffContext';

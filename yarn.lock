@@ -3594,11 +3594,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-data-grid@npm:^7.6.1":
-  version: 7.6.1
-  resolution: "@mui/x-data-grid@npm:7.6.1"
+"@mui/x-data-grid-pro@npm:^7.7.0":
+  version: 7.7.0
+  resolution: "@mui/x-data-grid-pro@npm:7.7.0"
   dependencies:
-    "@babel/runtime": "npm:^7.24.6"
+    "@babel/runtime": "npm:^7.24.7"
+    "@mui/system": "npm:^5.15.15"
+    "@mui/utils": "npm:^5.15.14"
+    "@mui/x-data-grid": "npm:7.7.0"
+    "@mui/x-license": "npm:7.7.0"
+    "@types/format-util": "npm:^1.0.4"
+    clsx: "npm:^2.1.1"
+    prop-types: "npm:^15.8.1"
+    reselect: "npm:^4.1.8"
+  peerDependencies:
+    "@mui/material": ^5.15.14
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  checksum: 10c0/19174bb8205d2d1469e29bbcfab0530e6116bf58321f87386ec506f88ddc37bf414a6c8b245bdb68353c563c1475fda32b9850101fe165b8848c5a85544e0354
+  languageName: node
+  linkType: hard
+
+"@mui/x-data-grid@npm:7.7.0, @mui/x-data-grid@npm:^7.7.0":
+  version: 7.7.0
+  resolution: "@mui/x-data-grid@npm:7.7.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.24.7"
     "@mui/system": "npm:^5.15.15"
     "@mui/utils": "npm:^5.15.14"
     clsx: "npm:^2.1.1"
@@ -3608,7 +3629,7 @@ __metadata:
     "@mui/material": ^5.15.14
     react: ^17.0.0 || ^18.0.0
     react-dom: ^17.0.0 || ^18.0.0
-  checksum: 10c0/9956e11fb8e82cfd531302263cdeffff61a32890b54668785c0f452331b3d7c8b79d087fc3c597652acb5928c6f8cfc98bd79ddabaa2e9c2a1a4f35318eb7186
+  checksum: 10c0/e5c5a9d431cf697e74cc7dac021009d4b9a3129b8397272d275d8b50172e8edec6e546d623c87bca64af7934bc214d6995fa55680e0a241db22f0a8eda168b8c
   languageName: node
   linkType: hard
 
@@ -3656,7 +3677,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-license@npm:^7.7.0":
+"@mui/x-license@npm:7.7.0, @mui/x-license@npm:^7.7.0":
   version: 7.7.0
   resolution: "@mui/x-license@npm:7.7.0"
   dependencies:
@@ -4586,6 +4607,13 @@ __metadata:
     "@types/qs": "npm:*"
     "@types/serve-static": "npm:*"
   checksum: 10c0/f73f5f92bd0a0fa4697598be3122c89522caa9e3bcb14c28b5e6d58a8e47f0301027478997153ae9ee4cf3d432576fb3fb0918ea0db521cc1204f8b759828a32
+  languageName: node
+  linkType: hard
+
+"@types/format-util@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@types/format-util@npm:1.0.4"
+  checksum: 10c0/173d1f67155c82311aaa5e90467351a18db17253c7d10174dc5a54d942415f1aa1f693f33ac4b15855e6f90363becb925651337692b3817271037f3d86b6e9f5
   languageName: node
   linkType: hard
 
@@ -7870,7 +7898,8 @@ __metadata:
     "@mui/lab": "npm:^5.0.0-alpha.170"
     "@mui/material": "npm:^5.15.19"
     "@mui/system": "npm:^5.15.15"
-    "@mui/x-data-grid": "npm:^7.6.1"
+    "@mui/x-data-grid": "npm:^7.7.0"
+    "@mui/x-data-grid-pro": "npm:^7.7.0"
     "@mui/x-date-pickers": "npm:^5.0.20"
     "@mui/x-license": "npm:^7.7.0"
     "@react-editor-js/client": "npm:^2.1.0"

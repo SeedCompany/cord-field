@@ -2,7 +2,7 @@ import type { Components, Theme } from '@mui/material';
 import { alpha as fade } from '@mui/material/styles';
 
 import type {} from '@mui/x-date-pickers/themeAugmentation';
-import type {} from '@mui/x-data-grid/themeAugmentation';
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 
 export const appComponents = ({
   spacing,
