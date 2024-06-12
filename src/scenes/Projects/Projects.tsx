@@ -38,12 +38,9 @@ const ChangeRequestList = loadable(() => import('./ChangeRequest/List'), {
   resolveComponent: (m) => m.ProjectChangeRequestList,
 });
 
-const ProjectFlowchart = loadable(
-  () => import('./Workflow/Flowchart/ProjectFlowchart'),
-  {
-    resolveComponent: (m) => m.default,
-  }
-);
+const ProjectFlowchart = loadable(() => import('./Workflow/ProjectFlowchart'), {
+  resolveComponent: (m) => m.ProjectFlowchart,
+});
 
 export const Projects = () => (
   <Routes>

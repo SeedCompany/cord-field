@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { forwardRef, ReactElement } from 'react';
 import { RoleLabels } from '~/api/schema/enumLists';
-import { PaperTooltip } from '../../../../components/PaperTooltip';
+import { PaperTooltip } from '../PaperTooltip';
 import { WorkflowTransitionFragment as Transition } from './workflow.graphql';
 
 import 'reactflow/dist/style.css';

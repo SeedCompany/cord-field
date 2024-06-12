@@ -1,7 +1,8 @@
-import { useQuery } from '@apollo/client';
+import { TypedDocumentNode as DocumentNode, useQuery } from '@apollo/client';
 import { mapEntries } from '@seedcompany/common';
 import { useDebounceFn, useLocalStorageState } from 'ahooks';
-import { ComponentType, useCallback } from 'react';
+import { OperationDefinitionNode } from 'graphql';
+import { ComponentType, useCallback, useMemo } from 'react';
 import ReactFlow, {
   applyNodeChanges,
   Background,
@@ -21,26 +22,38 @@ import {
   TransitionNode,
 } from './nodes';
 import { NodeTypes, parseWorkflow } from './parse-node-edges';
-import { ProjectFlowchartDocument } from './ProjectFlowchart.graphql';
 import { useAutoLayout } from './useAutoLayout';
+import { WorkflowFragment } from './workflow.graphql';
 
-const WrappedFlowchart = () => (
+interface Props {
+  doc: DocumentNode<{ workflow: WorkflowFragment }, Record<string, never>>;
+}
+
+const WrappedFlowchart = (props: Props) => (
   <ReactFlowProvider>
-    <ProjectFlowchart />
+    <Flowchart {...props} />
   </ReactFlowProvider>
 );
 // eslint-disable-next-line react/display-name,import/no-default-export
 export default WrappedFlowchart;
 
-const ProjectFlowchart = () => {
+const Flowchart = (props: Props) => {
+  const opName = useMemo(
+    () =>
+      props.doc.definitions.find(
+        (d): d is OperationDefinitionNode => d.kind === 'OperationDefinition'
+      )!.name!.value,
+    [props.doc]
+  );
+
   const [storedPos, setStoredPos] = useLocalStorageState<
     Record<string, XYPosition>
-  >('project-workflow-flowchart-node-position-map');
+  >(`${opName}-flowchart-node-position-map`);
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const autoLayout = useAutoLayout(setNodes);
 
-  useQuery(ProjectFlowchartDocument, {
+  useQuery(props.doc, {
     onCompleted: ({ workflow }) => {
       autoLayout.reset();
       const { nodes, edges } = parseWorkflow(workflow);
