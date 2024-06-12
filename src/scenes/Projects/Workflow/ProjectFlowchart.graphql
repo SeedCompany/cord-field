@@ -1,0 +1,5 @@
+query ProjectFlowchart {
+  workflow: projectWorkflow {
+    ...workflow
+  }
+}

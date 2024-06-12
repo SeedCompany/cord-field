@@ -23,7 +23,10 @@ const modifyWebpackOptions = ({
   options.babelRule.include.push(
     require.resolve('@seedcompany/common').replace('.cjs', '.js'),
     require.resolve('@editorjs/editorjs').replace('.umd.js', '.mjs'),
-    (path) => path.includes('/@mui-')
+    (path) =>
+      path.includes('/@mui-') ||
+      path.includes('reactflow') ||
+      path.includes('dagrejs')
   );
 
   return options;
