@@ -68,10 +68,13 @@ export const ProjectWorkflowDialog = ({
       submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
       changesetAware
-      onSubmit={async ({ submitAction, project: submittedProjectFields }) => {
+      onSubmit={async ({
+        submitAction: transitionKey,
+        project: submittedProjectFields,
+      }) => {
         const step = submittedProjectFields?.step;
         // If clicking save for step override, but there is no step, do nothing.
-        if (!submitAction && !step) {
+        if (!transitionKey && !step) {
           return;
         }
 
@@ -79,9 +82,9 @@ export const ProjectWorkflowDialog = ({
           variables: {
             input: {
               project: project.id,
-              // remove index suffix used to make submit action unique
-              transition: submitAction ?? step,
-              //changeset: project.changeset?.id,
+              ...(transitionKey
+                ? { transition: transitionKey }
+                : { bypassTo: step }),
             },
           },
         });
