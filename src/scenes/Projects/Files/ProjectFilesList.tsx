@@ -13,6 +13,7 @@ import {
   GridColDef,
   GridRowParams,
   GridToolbarContainer,
+  GridToolbarProps,
 } from '@mui/x-data-grid';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
@@ -44,12 +45,12 @@ import { DropOverlay } from '../../../components/Upload/DropOverlay';
 import { useProjectId } from '../useProjectId';
 import { CreateProjectDirectory } from './CreateProjectDirectory';
 import { DirectoryBreadcrumb } from './DirectoryBreadcrumb';
-import { FileRow } from './FileRow';
+import { FileRow as FileRowComponent } from './FileRow';
 import { NodePreviewLayer } from './NodePreviewLayer';
 import { ProjectDirectoryDocument } from './ProjectFiles.graphql';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
-import { FileOrDirectory, isDirectory } from './util';
+import { FileRowData as FileRow, isDirectory } from './util';
 
 const useStyles = makeStyles()(({ palette, spacing, breakpoints }) => ({
   dropzone: {
@@ -62,7 +63,6 @@ const useStyles = makeStyles()(({ palette, spacing, breakpoints }) => ({
     maxWidth: breakpoints.values.md,
   },
   fileName: {
-    cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
   },
@@ -127,11 +127,11 @@ const ProjectFilesListWrapped = () => {
 
   const items = directoryIsNotInProject ? [] : data?.directory.children.items;
 
-  const rowData = (items ?? []).flatMap<FileOrDirectory>((item) =>
-    isFileVersion(item) ? [] : item
+  const rowData = (items ?? []).flatMap<FileRow>((item) =>
+    isFileVersion(item) ? [] : { ...item, parent: data!.directory }
   );
 
-  const columns: Array<GridColDef<FileOrDirectory>> = [
+  const columns: Array<GridColDef<FileRow>> = [
     {
       headerName: 'Name',
       field: 'name',
@@ -152,7 +152,7 @@ const ProjectFilesListWrapped = () => {
       headerName: 'Modified',
       field: 'modifiedAt',
       width: 150,
-      valueGetter: ({ row }) =>
+      valueGetter: (_, row) =>
         row.__typename === 'File' ? row.modifiedAt : row.createdAt,
       renderCell: ({ value }) => <FormattedDateTime date={value} />,
     },
@@ -160,7 +160,7 @@ const ProjectFilesListWrapped = () => {
       headerName: 'Modified By',
       field: 'modifiedBy',
       width: 150,
-      valueGetter: ({ row }) =>
+      valueGetter: (_, row) =>
         row.__typename === 'File'
           ? row.modifiedBy.fullName
           : row.createdBy.fullName,
@@ -168,7 +168,7 @@ const ProjectFilesListWrapped = () => {
     {
       headerName: 'File Size',
       field: 'size',
-      valueGetter: ({ row }) => (isDirectory(row) ? undefined : row.size),
+      valueGetter: (_, row) => (isDirectory(row) ? undefined : row.size),
       renderCell: ({ row: { type }, value: size }) =>
         type === 'Directory' ? '–' : formatFileSize(size),
     },
@@ -188,6 +188,7 @@ const ProjectFilesListWrapped = () => {
         );
         return (
           <ActionsMenu
+            IconButtonProps={{ size: 'small' }}
             actions={isDirectory(row) ? directoryActions : permittedActions}
             item={row}
             onVersionUpload={(files) =>
@@ -204,7 +205,7 @@ const ProjectFilesListWrapped = () => {
     },
   ];
 
-  const handleRowClick = ({ row }: GridRowParams<FileOrDirectory>) => {
+  const handleRowClick = ({ row }: GridRowParams<FileRow>) => {
     if (isDirectory(row)) {
       navigate(`${projectUrl}/files/${row.id}`);
     } else {
@@ -276,19 +277,16 @@ const ProjectFilesListWrapped = () => {
                   rows={rowData}
                   columns={columns}
                   onRowClick={handleRowClick}
-                  components={{
-                    Row: FileRow,
-                    Toolbar: FilesToolbar,
-                    Footer: () => null,
+                  slots={{
+                    row: FileRowComponent,
+                    toolbar: FilesToolbar,
+                    footer: () => null,
                   }}
-                  componentsProps={{
-                    row: {
-                      parent: data?.directory,
-                    },
+                  slotProps={{
                     toolbar: {
                       onUploadFiles: openFileBrowser,
                       onCreateFolder: createDirectory,
-                    },
+                    } satisfies FileToolbarProps,
                   }}
                   localeText={{
                     noRowsLabel: 'No files',
@@ -296,13 +294,10 @@ const ProjectFilesListWrapped = () => {
                   disableColumnMenu
                   autoHeight
                   sx={{
+                    '& .MuiDataGrid-row': { cursor: 'pointer' },
                     '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
                       '&:focus, &:focus-within': { outline: 'none' },
                     },
-                    '& .MuiDataGrid-columnHeader:nth-last-of-type(-n+2) .MuiDataGrid-columnSeparator--sideRight':
-                      {
-                        display: 'none',
-                      },
                   }}
                 />
               </Card>
@@ -316,13 +311,14 @@ const ProjectFilesListWrapped = () => {
   );
 };
 
+interface FileToolbarProps {
+  onUploadFiles: () => void;
+  onCreateFolder: () => void;
+}
 const FilesToolbar = ({
   onUploadFiles,
   onCreateFolder,
-}: {
-  onUploadFiles: () => void;
-  onCreateFolder: () => void;
-}) => (
+}: GridToolbarProps & Partial<FileToolbarProps>) => (
   <GridToolbarContainer>
     <div css={{ flex: 1 }} />
     <Tooltip title="Upload Files">

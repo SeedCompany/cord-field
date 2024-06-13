@@ -16,6 +16,10 @@ export const PeriodicReportRow = (props: GridRowProps) => {
           {...props}
           css={(theme) => ({
             color: skipped ? theme.palette.text.disabled : undefined,
+            cursor:
+              skipped || (report.reportFile.canRead && !report.reportFile.value)
+                ? undefined
+                : 'pointer',
           })}
         />
       </div>

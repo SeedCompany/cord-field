@@ -1,11 +1,5 @@
 import { Box, Card } from '@mui/material';
-import {
-  DataGrid,
-  DataGridProps,
-  GridColDef,
-  GridRenderCellParams,
-  GridRenderEditCellParams,
-} from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { mapEntries, sortBy } from '@seedcompany/common';
 import { uniq } from 'lodash';
 import { useMemo } from 'react';
@@ -59,7 +53,7 @@ export const ProductTable = ({
   }, [products]);
 
   const editingAttached =
-    GridProps.experimentalFeatures?.newEditingApi ||
+    !!GridProps.processRowUpdate ||
     (!!GridProps.onRowEditStop && GridProps.editMode === 'row') ||
     (!!GridProps.onCellEditStop && GridProps.editMode === 'cell');
 
@@ -68,7 +62,7 @@ export const ProductTable = ({
       headerName: category,
       field: 'label',
       minWidth: 200,
-      maxWidth: 400,
+      maxWidth: 500,
       renderHeader: () => <Box sx={{ fontSize: 24 }}>{category}</Box>,
       renderCell: ({ row: { data } }) => (
         <Link to={`../../../products/${data.product.id}`}>
@@ -77,7 +71,7 @@ export const ProductTable = ({
       ),
     },
     ...steps.map(
-      (step): GridColDef<RowData> => ({
+      (step): GridColDef<RowData, number | null | string> => ({
         renderHeader: () => {
           const label = ProductStepLabels[step];
           const sep = ['&', ' '].find((sep) => label.includes(sep)) ?? '\0';
@@ -93,11 +87,7 @@ export const ProductTable = ({
         },
         field: step,
         width: 100,
-        renderCell: ({
-          row,
-          field,
-          value,
-        }: GridRenderCellParams<number | null, RowData, string>) => {
+        renderCell: ({ row, field, value }) => {
           const securedValue = (row as any)[field];
           if (
             !row.plannedSteps.has(step) ||
@@ -122,8 +112,8 @@ export const ProductTable = ({
         },
         align: 'right',
         editable: editingAttached,
-        valueGetter: ({ value }) => value?.value,
-        valueSetter: ({ row, value: raw }) => {
+        valueGetter: (_, row) => row[step]?.value ?? null,
+        valueSetter: (raw, row) => {
           // Empty string caused by editing and committing too fast.
           // Related to https://github.com/mui/mui-x/issues/3729 I think.
           // We've seen a string here as well, I believe,
@@ -138,9 +128,7 @@ export const ProductTable = ({
               : null;
           return { ...row, [step]: { ...row[step], value } };
         },
-        renderEditCell: (
-          props: GridRenderEditCellParams<number | null, RowData>
-        ) => {
+        renderEditCell: (props) => {
           const target =
             props.row.data.product.progressTarget.value ?? undefined;
           return <EditNumberCell {...props} max={target} />;
@@ -178,17 +166,24 @@ export const ProductTable = ({
       <DataGrid<RowData>
         autoHeight
         disableColumnMenu
-        pageSize={GridProps.pagination ? 10 : tableData.length}
-        rowsPerPageOptions={[10]}
-        components={{
-          Footer: GridProps.pagination ? undefined : () => null,
-          ...GridProps.components,
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: GridProps.pagination ? 10 : tableData.length,
+            },
+          },
+        }}
+        rowSelection={false}
+        pageSizeOptions={[10]}
+        slots={{
+          footer: GridProps.pagination ? undefined : () => null,
+          ...GridProps.slots,
         }}
         {...GridProps}
         columns={columns}
         rows={tableData}
         isCellEditable={({ row, field }) => {
-          const securedValue = (row as any)[field];
+          const securedValue = row[field];
           return (
             row.plannedSteps.has(field) &&
             isSecured(securedValue) &&

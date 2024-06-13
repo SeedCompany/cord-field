@@ -1,13 +1,8 @@
-import type {
-  Components,
-  ComponentsOverrides,
-  ComponentsProps,
-  Theme,
-} from '@mui/material';
+import type { Components, Theme } from '@mui/material';
 import { alpha as fade } from '@mui/material/styles';
-import type { DataGridProps } from '@mui/x-data-grid';
+
 import type {} from '@mui/x-date-pickers/themeAugmentation';
-import type {} from '@mui/x-data-grid/themeAugmentation/overrides';
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 export const appComponents = ({
   spacing,
@@ -179,21 +174,27 @@ export const appComponents = ({
     },
     MuiDataGrid: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           // Don't wrap table in border if directly in a card, since the
           // elevated card is a good enough distinction.
-          '.MuiCard-root > &': {
+          '.MuiPaper-root > &, .MuiPaper-root > .MuiTabPanel-root > &': {
             border: 'none',
           },
-        },
+          // '--DataGrid-containerBackground': theme.palette.background.paper,
+          '& .MuiDataGrid-columnHeaders > *': {
+            paddingTop: theme.spacing(1),
+          },
+        }),
         columnHeaderTitle: {
           fontWeight: typography.weight.bold,
         },
         columnHeader: {
           // Don't show last column separator
-          '&:nth-last-of-type(-n+1) .MuiDataGrid-columnSeparator--sideRight': {
-            display: 'none',
-          },
+          // TODO what if last column needs to be resizeable?
+          '&.MuiDataGrid-columnHeader--last .MuiDataGrid-columnSeparator--sideRight':
+            {
+              display: 'none',
+            },
         },
       },
     },
@@ -227,17 +228,3 @@ export const appComponents = ({
     },
   };
 };
-
-// Remove when MUI fixes theme augmentation for DataGrid
-// It currently doesn't declare the Theme generic, so TS doesn't apply it.
-declare module '@mui/material/styles' {
-  interface ComponentsPropsList {
-    MuiDataGrid: DataGridProps;
-  }
-  interface Components<Theme = unknown> {
-    MuiDataGrid?: {
-      defaultProps?: ComponentsProps['MuiDataGrid'];
-      styleOverrides?: ComponentsOverrides<Theme>['MuiDataGrid'];
-    };
-  }
-}

@@ -1,17 +1,13 @@
 import { Box, Chip } from '@mui/material';
-import {
-  DataGrid,
-  GridColDef,
-  GridLocaleText,
-  GridRowParams,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridLocaleText } from '@mui/x-data-grid';
 import { cmpBy, simpleSwitch } from '@seedcompany/common';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema/enumLists';
 import { Sensitivity } from '~/api/schema/schema.graphql';
 import { labelFrom } from '~/common';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useTable } from '~/hooks';
+import { Link } from '../../../../../components/Routing';
 import { PartnerTabContainer } from '../PartnerTabContainer';
 import {
   PartnerProjectsDocument,
@@ -20,7 +16,6 @@ import {
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
-  const navigate = useNavigate();
 
   const [props] = useTable({
     query: PartnerProjectsDocument,
@@ -32,10 +27,6 @@ export const PartnerDetailProjects = () => {
     },
   });
 
-  const handleRowClick = (params: GridRowParams<Project>) => {
-    navigate(`/projects/${params.row.id}`);
-  };
-
   return (
     <PartnerTabContainer sx={{ p: 0 }}>
       <DataGrid<Project>
@@ -44,17 +35,7 @@ export const PartnerDetailProjects = () => {
         disableColumnMenu
         {...props}
         columns={columns}
-        onRowClick={handleRowClick}
-        disableSelectionOnClick
-        sx={{
-          border: 'none',
-          pt: 1,
-          // TODO Somehow change to using Link component
-          '& .MuiDataGrid-row:hover': { cursor: 'pointer' },
-          '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeader': {
-            '&:focus, &:focus-within': { outline: 'none' },
-          },
-        }}
+        disableRowSelectionOnClick
         localeText={localeText}
       />
     </PartnerTabContainer>
@@ -70,31 +51,29 @@ const columns: Array<GridColDef<Project>> = [
     headerName: 'Project Name',
     field: 'name',
     flex: 2,
-    valueGetter: ({ value }) => value.value,
-    renderCell: ({ value }) => (
-      <Box component="span" color="primary.main">
-        {value}
-      </Box>
+    valueGetter: (_, { name }) => name.value,
+    renderCell: ({ value, row }) => (
+      <Link to={`/projects/${row.id}`}>{value}</Link>
     ),
   },
   {
     headerName: 'Status',
     field: 'status',
     flex: 1,
-    valueGetter: ({ value }) => labelFrom(ProjectStatusLabels)(value),
+    valueGetter: labelFrom(ProjectStatusLabels),
   },
   {
     headerName: 'Type',
     field: 'type',
     flex: 0.75,
-    valueGetter: ({ value }) => labelFrom(ProjectTypeLabels)(value),
+    valueGetter: labelFrom(ProjectTypeLabels),
     renderCell: ({ value }) => <Chip label={value} variant="outlined" />,
   },
   {
     headerName: 'Engagements',
     field: 'engagements',
     flex: 0.5,
-    valueGetter: ({ value }) => value.total,
+    valueGetter: (_, { engagements }) => engagements.total,
   },
   {
     headerName: 'Sensitivity',

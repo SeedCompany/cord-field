@@ -50,7 +50,7 @@ export const ChangesetCell = (props: GridCellProps) => {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const column = apiRef.current.getColumn(props.field);
+  const { column } = props;
   if (!column.changesetAware || props.cellMode === 'edit') {
     return <GridCell {...props} />;
   }
@@ -69,28 +69,20 @@ export const ChangesetCell = (props: GridCellProps) => {
     let previousValue =
       rowDiff.previous[props.field as keyof typeof rowDiff.previous];
     previousValue = column.valueGetter
-      ? column.valueGetter({
-          value: previousValue,
-          field: props.field,
-          row: rowDiff.previous,
-          cellMode: props.cellMode ?? 'view',
-          id: props.rowId,
-          hasFocus: props.hasFocus ?? false,
-          colDef: apiRef.current.state.columns.lookup[props.field]!,
-          tabIndex: props.tabIndex,
-          rowNode: apiRef.current.state.rows.tree[props.rowId]!,
-          // deprecated
-          getValue: () => null,
-          api: apiRef.current,
-        })
+      ? column.valueGetter(
+          previousValue as never,
+          rowDiff.previous,
+          column,
+          apiRef
+        )
       : previousValue;
     const previousFormatted = column.valueFormatter
-      ? column.valueFormatter({
-          value: previousValue,
-          api: apiRef.current,
-          field: props.field,
-          id: props.rowId,
-        })
+      ? column.valueFormatter(
+          previousValue as never,
+          rowDiff.previous,
+          column,
+          apiRef
+        )
       : previousValue;
 
     if (previousFormatted === valueFormatted) {
@@ -129,8 +121,8 @@ export const ChangesetCell = (props: GridCellProps) => {
 };
 
 declare module '@mui/x-data-grid/models/colDef/gridColDef' {
-  // eslint-disable-next-line @seedcompany/no-unused-vars
-  interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
+  // eslint-disable-next-line @seedcompany/no-unused-vars,prettier/prettier
+  interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> {
     changesetAware?: boolean;
   }
 }

@@ -9,13 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 import { addItemToList, removeItemFromList } from '~/api';
 import { callAll } from '~/common';
 import { MoveFileNodeDocument } from './MoveNode.graphql';
-import {
-  Directory,
-  DndFileNode,
-  DropOnDirResult,
-  FileOrDirectory,
-  isDirectory,
-} from './util';
+import { DndFileNode, DropOnDirResult, FileRowData, isDirectory } from './util';
 
 const useStyles = makeStyles<void, 'isOver'>()(
   ({ palette, transitions }, _props, classes) => ({
@@ -45,11 +39,8 @@ const useStyles = makeStyles<void, 'isOver'>()(
   })
 );
 
-export const FileRow = ({
-  parent,
-  ...props
-}: GridRowProps & { parent: Directory }) => {
-  const node = props.row as FileOrDirectory;
+export const FileRow = (props: GridRowProps) => {
+  const node = props.row as FileRowData;
   const [{ isOver, canDrop, draggingItem }, dropRef] = useDrop(
     () => ({
       accept: DndFileNode,
@@ -92,7 +83,7 @@ export const FileRow = ({
           },
           update: callAll(
             removeItemFromList({
-              listId: [parent, 'children'],
+              listId: [node.parent, 'children'],
               item: node,
             }),
             addItemToList({
