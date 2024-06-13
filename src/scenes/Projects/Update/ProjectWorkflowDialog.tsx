@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { Grid, Tooltip, Typography } from '@mui/material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
@@ -19,6 +20,7 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import { Link } from '../../../components/Routing';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
 import { UpdateProjectDocument } from './UpdateProject.graphql';
 
@@ -45,7 +47,22 @@ export const ProjectWorkflowDialog = ({
 
   return (
     <DialogForm
-      title="Update Project"
+      title={
+        <Stack
+          direction="row"
+          gap={1}
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ mr: -1 }}
+        >
+          <span>Update Project</span>
+          <Tooltip title="View Workflow">
+            <IconButton component={Link} to="/projects/workflow">
+              <InfoIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      }
       closeLabel="Close"
       {...props}
       submitLabel={canBypassTransitions ? undefined : false}
