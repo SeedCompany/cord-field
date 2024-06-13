@@ -45,6 +45,7 @@ export const ProjectWorkflowDialog = ({
   const { classes } = useStyles();
   const { canBypassTransitions, transitions } = project.step;
 
+  const step = project.step.value;
   return (
     <DialogForm
       title={
@@ -57,7 +58,10 @@ export const ProjectWorkflowDialog = ({
         >
           <span>Update Project</span>
           <Tooltip title="View Workflow">
-            <IconButton component={Link} to="/projects/workflow">
+            <IconButton
+              component={Link}
+              to={`/projects/workflow${step ? `?state=${step}` : ''}`}
+            >
               <InfoIcon />
             </IconButton>
           </Tooltip>

@@ -1,4 +1,5 @@
 import { Box, Card, CardProps } from '@mui/material';
+import { yellow } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import { forwardRef, useCallback } from 'react';
 import {
@@ -15,6 +16,7 @@ import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { getEdgeSide, getNodeIntersection } from './layout';
 import { isBack } from './parse-node-edges';
 import { TransitionNodeExtra } from './transition-info';
+import { useHighlightedState } from './useHighlightedState';
 import {
   WorkflowStateFragment as State,
   WorkflowTransitionFragment as Transition,
@@ -49,10 +51,22 @@ export const FlowchartStyles = styled(Box)(({ theme }) => ({
 }));
 
 export function StateNode({ data, selected }: NodeProps<State>) {
+  const highlightedState = useHighlightedState();
   return (
     <>
       <Handle id="forward" type="target" position={Position.Top} />
-      <NodeCard selected={selected} color="info">
+      <NodeCard
+        selected={selected}
+        color="info"
+        sx={
+          data.value === highlightedState
+            ? {
+                borderColor: yellow.A700,
+                borderWidth: 3,
+              }
+            : {}
+        }
+      >
         {data.label}
       </NodeCard>
       <Handle id="back" type="target" position={Position.Left} />
