@@ -1,4 +1,3 @@
-import { cmpBy } from '@seedcompany/common';
 import { uniqBy } from 'lodash';
 import { Fragment } from 'react';
 import { Edge, Node } from 'reactflow';
@@ -23,18 +22,7 @@ export function parseWorkflow(workflow: Workflow) {
     })
   );
 
-  const transitionEnds = uniqBy(
-    workflow.transitions.toSorted(
-      cmpBy((t) => {
-        const endState =
-          t.to.__typename === 'WorkflowTransitionStaticTo'
-            ? t.to.state.value
-            : t.to.relatedStates[0]!.value;
-        return workflow.states.findIndex((e) => e.value === endState);
-      })
-    ),
-    transitionEndId
-  );
+  const transitionEnds = uniqBy(workflow.transitions, transitionEndId);
   const transitionEndNodes = transitionEnds.map(
     (t): Node<Transition, NodeTypes> => ({
       id: transitionEndId(t),
