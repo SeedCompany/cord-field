@@ -93,6 +93,7 @@ const Flowchart = (props: Props) => {
         edgeTypes={edgeTypes}
         minZoom={0.1}
         nodesConnectable={false}
+        proOptions={{ hideAttribution: true }}
       >
         <Background />
         <Controls />
