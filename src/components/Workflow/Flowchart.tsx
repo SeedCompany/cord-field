@@ -55,7 +55,7 @@ const Flowchart = (props: Props) => {
 
   useQuery(props.doc, {
     onCompleted: ({ workflow }) => {
-      autoLayout.reset();
+      autoLayout.restart();
       const { nodes, edges } = parseWorkflow(workflow);
       const persistedPosNodes = nodes.map((node) =>
         storedPos?.[node.id] ? { ...node, position: storedPos[node.id]! } : node
@@ -96,7 +96,7 @@ const Flowchart = (props: Props) => {
         proOptions={{ hideAttribution: true }}
       >
         <Background />
-        <Controls />
+        <Controls onResetLayout={autoLayout.reset} />
       </ReactFlow>
     </FlowchartStyles>
   );

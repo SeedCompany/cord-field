@@ -1,4 +1,5 @@
 import {
+  AutoGraph,
   Fullscreen,
   Lock,
   LockOpen as Unlock,
@@ -26,7 +27,11 @@ const selector = (s: ReactFlowState) => ({
   maxZoomReached: s.transform[2] >= s.maxZoom,
 });
 
-export const Controls = () => {
+export interface ControlsProps {
+  onResetLayout?: () => void;
+}
+
+export const Controls = (props: ControlsProps) => {
   const theme = useTheme();
   const store = useStoreApi();
   const { isInteractive, minZoomReached, maxZoomReached } = useStore(
@@ -101,6 +106,13 @@ export const Controls = () => {
             <ToggleLock />
           </Button>
         </Tooltip>
+        {props.onResetLayout && (
+          <Tooltip title="Reset Layout" placement="right">
+            <Button onClick={props.onResetLayout}>
+              <AutoGraph />
+            </Button>
+          </Tooltip>
+        )}
       </ButtonGroup>
     </Panel>
   );

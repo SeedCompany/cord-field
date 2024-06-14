@@ -16,7 +16,7 @@ export const useAutoLayout = (setNodes: Dispatch<Node[]>) => {
   const autoLayoutStage = useRef(0);
   const [show, setShow] = useToggle();
 
-  const reset = useCallback(() => {
+  const restart = useCallback(() => {
     autoLayoutStage.current = 0;
   }, []);
 
@@ -75,9 +75,22 @@ export const useAutoLayout = (setNodes: Dispatch<Node[]>) => {
     [store, api, autoLayoutStage, setShow, setNodes, highlightedState]
   );
 
+  const reset = useCallback(() => {
+    const positioned = determinePositions(
+      api.getNodes().map((node) => ({
+        ...node,
+        position: { x: 0, y: 0 },
+      })),
+      api.getEdges()
+    );
+    api.setNodes(positioned);
+    window.requestAnimationFrame(() => api.fitView());
+  }, [api]);
+
   return {
     show,
     showSx: !show ? showSx : undefined,
+    restart,
     reset,
   };
 };
