@@ -53,18 +53,23 @@ export const EditLanguage = (props: EditLanguageProps) => {
       title="Edit Language"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({
-        language: { sponsorEstimatedEndFY, ...language },
-      }) => {
+      onSubmit={async (
+        { language: { sponsorEstimatedEndFY, ...language } },
+        form
+      ) => {
+        const { dirtyFields } = form.getState();
         const result = await updateLanguage({
           variables: {
             input: {
               language: {
                 ...language,
-                sponsorEstimatedEndDate:
-                  CalendarDate.fiscalYearEndToCalendarDate(
-                    sponsorEstimatedEndFY
-                  ),
+                sponsorEstimatedEndDate: dirtyFields[
+                  'language.sponsorEstimatedEndFY'
+                ]
+                  ? CalendarDate.fiscalYearEndToCalendarDate(
+                      sponsorEstimatedEndFY
+                    ) ?? null
+                  : undefined,
               },
             },
           },
