@@ -30,7 +30,7 @@ export function parseWorkflow(workflow: Workflow) {
       position: { x: 0, y: 0 },
     })
   );
-  const nodes = [...states, ...transitions].reverse();
+  const nodes = [...states, ...transitions];
 
   const edges = uniqBy(
     workflow.transitions
