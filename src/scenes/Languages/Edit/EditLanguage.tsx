@@ -1,10 +1,21 @@
 import { useMutation } from '@apollo/client';
+import { setOf } from '@seedcompany/common';
+import { pick as lodashPick } from 'lodash';
 import { useMemo } from 'react';
-import { Except } from 'type-fest';
+import { Except, PartialDeep, Paths, PickDeep } from 'type-fest';
 import { UpdateLanguage } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';
-import { LanguageForm, LanguageFormProps } from '../LanguageForm';
+import {
+  LanguageForm,
+  LanguageFormProps,
+  LanguageFormValues,
+} from '../LanguageForm';
 import { UpdateLanguageDocument } from './EditLanguage.graphql';
+
+const pick = lodashPick as any as <T, K extends Paths<T>>(
+  obj: T,
+  paths: K[]
+) => PartialDeep<PickDeep<T, K>>;
 
 export type EditLanguageProps = Except<
   LanguageFormProps<UpdateLanguage>,
@@ -53,18 +64,32 @@ export const EditLanguage = (props: EditLanguageProps) => {
       title="Edit Language"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({
-        language: { sponsorEstimatedEndFY, ...language },
-      }) => {
+      onSubmit={async (data, form) => {
+        if (!language) {
+          throw new Error('Language not loaded yet');
+        }
+        const formState = form.getState();
+        const dirtyFields = setOf(
+          Object.keys(formState.dirtyFields) as Array<
+            Paths<LanguageFormValues<UpdateLanguage>>
+          >
+        );
+        const { sponsorEstimatedEndFY, ...changes } =
+          pick(data, [...dirtyFields]).language ?? {};
+
         const result = await updateLanguage({
           variables: {
             input: {
               language: {
-                ...language,
-                sponsorEstimatedEndDate:
-                  CalendarDate.fiscalYearEndToCalendarDate(
-                    sponsorEstimatedEndFY
-                  ),
+                id: language.id,
+                ...changes,
+                sponsorEstimatedEndDate: dirtyFields.has(
+                  'language.sponsorEstimatedEndFY'
+                )
+                  ? CalendarDate.fiscalYearEndToCalendarDate(
+                      sponsorEstimatedEndFY
+                    ) ?? null
+                  : undefined,
               },
             },
           },
