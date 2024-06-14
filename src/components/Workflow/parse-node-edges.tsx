@@ -22,24 +22,23 @@ export function parseWorkflow(workflow: Workflow) {
     })
   );
 
-  const transitionEnds = uniqBy(workflow.transitions, transitionEndId);
-  const transitionEndNodes = transitionEnds.map(
+  const transitions = workflow.transitions.map(
     (t): Node<Transition, NodeTypes> => ({
-      id: transitionEndId(t),
+      id: t.key,
       type: 'transition',
       data: t,
       position: { x: 0, y: 0 },
     })
   );
-  const nodes = [...states, ...transitionEndNodes].reverse();
+  const nodes = [...states, ...transitions].reverse();
 
   const edges = uniqBy(
     workflow.transitions
       .flatMap<Edge<Transition>>((t) => [
         ...t.from.map((from) => ({
-          id: `${from.value} -> ${transitionEndId(t)}`,
+          id: `${from.value} -> ${t.key}`,
           source: from.value,
-          target: transitionEndId(t),
+          target: t.key,
           targetHandle: 'forward',
           label: (
             <>
@@ -55,8 +54,8 @@ export function parseWorkflow(workflow: Workflow) {
         })),
         ...(isDynamic(t.to)
           ? t.to.relatedStates.map((state) => ({
-              id: `${transitionEndId(t)} -> ${state.value}`,
-              source: transitionEndId(t),
+              id: `${t.key} -> ${state.value}`,
+              source: t.key,
               target: state.value,
               targetHandle: isBack(t) ? 'back' : 'forward',
               label: isBack(t) ? 'Back' : undefined,
@@ -64,8 +63,8 @@ export function parseWorkflow(workflow: Workflow) {
             }))
           : [
               {
-                id: `${transitionEndId(t)} -> ${t.to.state.value}`,
-                source: transitionEndId(t),
+                id: `${t.key} -> ${t.to.state.value}`,
+                source: t.key,
                 target: t.to.state.value,
                 targetHandle: 'forward',
                 data: t,
@@ -85,13 +84,6 @@ export function parseWorkflow(workflow: Workflow) {
 export const isBack = (t: Transition) =>
   isDynamic(t.to) && t.to.label === 'Back';
 
-const transitionEndId = (t: Transition) => {
-  const endId =
-    t.to.__typename === 'WorkflowTransitionStaticTo'
-      ? t.to.state.value
-      : t.to.id;
-  return `${t.label} -> ${endId}`;
-};
 const isDynamic = isTypename<WorkflowTransitionDynamicTo>(
   'WorkflowTransitionDynamicTo'
 );
