@@ -20,7 +20,8 @@ export const determinePositions = (nodes: Node[], edges: Edge[]) => {
 
   const nodeMap = mapKeys.fromList(nodes, (n) => n.id).asMap;
 
-  nodes.forEach((node) =>
+  // Reversing somehow produces a better layout
+  nodes.toReversed().forEach((node) =>
     g.setNode(node.id, {
       ...node,
       width: node.width!,

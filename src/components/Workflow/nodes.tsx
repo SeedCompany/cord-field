@@ -26,7 +26,6 @@ import 'reactflow/dist/style.css';
 
 export const FlowchartStyles = styled(Box)(({ theme }) => ({
   height: '100%',
-  '.react-flow__attribution': { display: 'none' },
   '& .react-flow': {
     '.react-flow__edge-textbg': {
       fill: theme.palette.background.paper,

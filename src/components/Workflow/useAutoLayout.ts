@@ -11,32 +11,33 @@ import {
 
 export const useAutoLayout = (setNodes: Dispatch<Node[]>) => {
   const highlightedState = useHighlightedState();
-  const api = useStoreApi();
-  const { fitView, getNodes, getEdges, setCenter } = useReactFlow<
-    State | Transition
-  >();
+  const store = useStoreApi();
+  const api = useReactFlow<State | Transition>();
   const autoLayoutStage = useRef(0);
   const [show, setShow] = useToggle();
 
-  const reset = useCallback(() => {
+  const restart = useCallback(() => {
     autoLayoutStage.current = 0;
   }, []);
 
   useEffect(
     () =>
-      api.subscribe((state) => {
-        if (autoLayoutStage.current === 0 && state.getNodes()[0]?.width) {
-          // console.log('nodes have sized, positioning');
-          autoLayoutStage.current++;
-          const positioned = determinePositions(getNodes(), getEdges());
-          setNodes(positioned);
+      store.subscribe((state) => {
+        if (autoLayoutStage.current === 0) {
+          const nodes = state.getNodes();
+          if (nodes[0]?.width) {
+            // console.log('nodes have sized, positioning');
+            autoLayoutStage.current++;
+            const positioned = determinePositions(nodes, state.edges);
+            setNodes(positioned);
+          }
           return;
         }
 
         if (autoLayoutStage.current === 1) {
           // console.log('nodes have positioned, adjusting view port');
           autoLayoutStage.current++;
-          window.requestAnimationFrame(() => fitView());
+          window.requestAnimationFrame(() => api.fitView());
           return;
         }
 
@@ -52,39 +53,44 @@ export const useAutoLayout = (setNodes: Dispatch<Node[]>) => {
           if (!highlightedState) {
             return;
           }
-          const node = getNodes().find(
-            (n) =>
-              n.data.__typename === 'WorkflowState' &&
-              n.data.value === highlightedState
-          );
+          const node = state
+            .getNodes()
+            .find(
+              (n) =>
+                n.data.__typename === 'WorkflowState' &&
+                n.data.value === highlightedState
+            );
           if (!node) {
             console.warn('Could not find node to highlight');
             return;
           }
           window.requestAnimationFrame(() => {
-            setCenter(node.position.x, node.position.y, {
+            api.setCenter(node.position.x, node.position.y, {
               zoom: 0.8,
               duration: 1000,
             });
           });
         }
       }),
-    [
-      fitView,
-      api,
-      autoLayoutStage,
-      setShow,
-      getNodes,
-      getEdges,
-      setNodes,
-      setCenter,
-      highlightedState,
-    ]
+    [store, api, autoLayoutStage, setShow, setNodes, highlightedState]
   );
+
+  const reset = useCallback(() => {
+    const positioned = determinePositions(
+      api.getNodes().map((node) => ({
+        ...node,
+        position: { x: 0, y: 0 },
+      })),
+      api.getEdges()
+    );
+    api.setNodes(positioned);
+    window.requestAnimationFrame(() => api.fitView());
+  }, [api]);
 
   return {
     show,
     showSx: !show ? showSx : undefined,
+    restart,
     reset,
   };
 };

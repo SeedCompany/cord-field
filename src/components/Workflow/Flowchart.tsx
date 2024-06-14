@@ -6,7 +6,6 @@ import { ComponentType, useCallback, useMemo } from 'react';
 import ReactFlow, {
   applyNodeChanges,
   Background,
-  Controls,
   EdgeTypes,
   NodeProps,
   OnNodesChange,
@@ -15,6 +14,7 @@ import ReactFlow, {
   useNodesState,
   XYPosition,
 } from 'reactflow';
+import { Controls } from './Controls';
 import {
   Edge as EdgeComponent,
   FlowchartStyles,
@@ -55,7 +55,7 @@ const Flowchart = (props: Props) => {
 
   useQuery(props.doc, {
     onCompleted: ({ workflow }) => {
-      autoLayout.reset();
+      autoLayout.restart();
       const { nodes, edges } = parseWorkflow(workflow);
       const persistedPosNodes = nodes.map((node) =>
         storedPos?.[node.id] ? { ...node, position: storedPos[node.id]! } : node
@@ -93,9 +93,10 @@ const Flowchart = (props: Props) => {
         edgeTypes={edgeTypes}
         minZoom={0.1}
         nodesConnectable={false}
+        proOptions={{ hideAttribution: true }}
       >
         <Background />
-        <Controls />
+        <Controls onResetLayout={autoLayout.reset} />
       </ReactFlow>
     </FlowchartStyles>
   );
