@@ -6,14 +6,17 @@ import {
   Remove as ZoomOut,
 } from '@mui/icons-material';
 import { Button, ButtonGroup, Tooltip } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { useToggle } from 'ahooks';
 import { useEffect } from 'react';
 import {
+  FitViewOptions,
   Panel,
   ReactFlowState,
   useReactFlow,
   useStore,
   useStoreApi,
+  ViewportHelperFunctionOptions,
 } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 
@@ -24,6 +27,7 @@ const selector = (s: ReactFlowState) => ({
 });
 
 export const Controls = () => {
+  const theme = useTheme();
   const store = useStoreApi();
   const { isInteractive, minZoomReached, maxZoomReached } = useStore(
     selector,
@@ -40,6 +44,10 @@ export const Controls = () => {
   }
 
   const ToggleLock = isInteractive ? Unlock : Lock;
+
+  const zoomOptions = {
+    duration: theme.transitions.duration.complex,
+  } satisfies FitViewOptions & ViewportHelperFunctionOptions;
 
   return (
     <Panel position="bottom-left">
@@ -61,17 +69,20 @@ export const Controls = () => {
         })}
       >
         <Tooltip title="Zoom In" placement="right">
-          <Button onClick={() => zoomIn()} disabled={maxZoomReached}>
+          <Button onClick={() => zoomIn(zoomOptions)} disabled={maxZoomReached}>
             <ZoomIn />
           </Button>
         </Tooltip>
         <Tooltip title="Zoom Out" placement="right">
-          <Button onClick={() => zoomOut()} disabled={minZoomReached}>
+          <Button
+            onClick={() => zoomOut(zoomOptions)}
+            disabled={minZoomReached}
+          >
             <ZoomOut />
           </Button>
         </Tooltip>
         <Tooltip title="Fit View" placement="right">
-          <Button onClick={() => fitView()}>
+          <Button onClick={() => fitView(zoomOptions)}>
             <Fullscreen />
           </Button>
         </Tooltip>
