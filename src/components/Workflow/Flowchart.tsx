@@ -6,7 +6,6 @@ import { ComponentType, useCallback, useMemo } from 'react';
 import ReactFlow, {
   applyNodeChanges,
   Background,
-  Controls,
   EdgeTypes,
   NodeProps,
   OnNodesChange,
@@ -15,6 +14,7 @@ import ReactFlow, {
   useNodesState,
   XYPosition,
 } from 'reactflow';
+import { Controls } from './Controls';
 import {
   Edge as EdgeComponent,
   FlowchartStyles,

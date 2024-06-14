@@ -118,7 +118,8 @@
     "tss-react": "^3.7.1",
     "validator": "^13.11.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
-    "xss": "^1.0.14"
+    "xss": "^1.0.14",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",

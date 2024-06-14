@@ -7990,6 +7990,7 @@ __metadata:
     webpack-dynamic-public-path: "npm:^1.0.8"
     xlsx: "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
     xss: "npm:^1.0.14"
+    zustand: "npm:^4.5.2"
   dependenciesMeta:
     core-js-pure:
       built: false
@@ -21096,7 +21097,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:^4.4.1":
+"zustand@npm:^4.4.1, zustand@npm:^4.5.2":
   version: 4.5.2
   resolution: "zustand@npm:4.5.2"
   dependencies:
