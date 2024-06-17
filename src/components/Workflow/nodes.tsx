@@ -7,6 +7,7 @@ import {
   EdgeProps,
   getSimpleBezierPath as getPath,
   Handle,
+  Node as N,
   NodeProps,
   Position,
   useStore,
@@ -14,7 +15,7 @@ import {
 import { extendSx } from '~/common';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { getEdgeSide, getNodeIntersection } from './layout';
-import { isBack } from './parse-node-edges';
+import { isBack, NodeTypes } from './parse-node-edges';
 import { TransitionNodeExtra } from './transition-info';
 import { useHighlightedState } from './useHighlightedState';
 import {
@@ -23,6 +24,8 @@ import {
 } from './workflow.graphql';
 
 import 'reactflow/dist/style.css';
+
+type Node = N<State | Transition, NodeTypes>;
 
 export const FlowchartStyles = styled(Box)(({ theme }) => ({
   height: '100%',
@@ -136,26 +139,41 @@ export const Edge = ({
   target,
   ...props
 }: EdgeProps<Transition>) => {
-  const sourceNode = useStore(
+  const sourceNode: Node = useStore(
     useCallback((store) => store.nodeInternals.get(source)!, [source])
   );
-  const targetNode = useStore(
+  const targetNode: Node = useStore(
     useCallback((store) => store.nodeInternals.get(target)!, [target])
   );
 
-  const sourceIntersectsAt = getNodeIntersection(sourceNode, targetNode);
-  const targetIntersectsAt = getNodeIntersection(targetNode, sourceNode);
+  const stateMargin = { x: 6, y: 6 };
+  const transitionMargin = { x: 6, y: 6 };
+  const sourceMargin =
+    sourceNode.type === 'transition' ? transitionMargin : stateMargin;
+  const targetMargin =
+    targetNode.type === 'transition' ? transitionMargin : stateMargin;
+  const sourceIntersectsAt = getNodeIntersection(
+    sourceNode,
+    targetNode,
+    sourceMargin
+  );
+  const targetIntersectsAt = getNodeIntersection(
+    targetNode,
+    sourceNode,
+    targetMargin
+  );
   const [path, labelX, labelY, offsetX, offsetY] = getPath({
     sourceX: sourceIntersectsAt.x,
     sourceY: sourceIntersectsAt.y,
-    sourcePosition: getEdgeSide(sourceNode, sourceIntersectsAt),
+    sourcePosition: getEdgeSide(sourceNode, sourceIntersectsAt, sourceMargin),
     targetX: targetIntersectsAt.x,
     targetY: targetIntersectsAt.y,
-    targetPosition: getEdgeSide(targetNode, targetIntersectsAt),
+    targetPosition: getEdgeSide(targetNode, targetIntersectsAt, targetMargin),
   });
   const pathProps = { path, labelX, labelY, offsetX, offsetY };
 
-  const back = sourceNode.type === 'transition' && isBack(sourceNode.data);
+  const back =
+    sourceNode.type === 'transition' && isBack(sourceNode.data as Transition);
   const { color } = transitionTypeStyles[props.data!.type];
   return (
     <Box
