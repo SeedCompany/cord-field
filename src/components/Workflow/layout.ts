@@ -73,7 +73,7 @@ export const determinePositions = (nodes: Node[], edges: Edge[]) => {
 export function getNodeIntersection(
   intersectionNode: Node,
   targetNode: Node,
-  margin: XYPosition = { x: 10, y: 0 }
+  margin: XYPosition = { x: 0, y: 0 }
 ) {
   // https://math.stackexchange.com/questions/1724792/an-algorithm-for-finding-the-intersection-point-between-a-center-of-vision-and-a
   const w = intersectionNode.width! / 2 - margin.x;
@@ -98,23 +98,27 @@ export function getNodeIntersection(
 /**
  * Returns the Side/"Position" of the edge where the intersection point is
  */
-export function getEdgeSide(node: Node, intersectsAt: XYPosition) {
+export function getEdgeSide(
+  node: Node,
+  intersectsAt: XYPosition,
+  margin: XYPosition = { x: 0, y: 0 }
+) {
   const n = { ...node.positionAbsolute, ...node };
   const nx = Math.round(n.x!);
   const ny = Math.round(n.y!);
   const px = Math.round(intersectsAt.x);
-  const py = Math.round(intersectsAt.y);
+  const py = Math.round(intersectsAt.y) - margin.y;
 
-  if (px <= nx + 1) {
+  if (px - margin.x <= nx + 1) {
     return Side.Left;
   }
-  if (px >= nx + n.width! - 1) {
+  if (px + margin.x >= nx + n.width! - 1) {
     return Side.Right;
   }
-  if (py <= ny + 1) {
+  if (py - margin.y <= ny + 1) {
     return Side.Top;
   }
-  if (py >= n.y! + n.height! - 1) {
+  if (py + margin.y >= n.y! + n.height! - 1) {
     return Side.Bottom;
   }
   return Side.Top;
