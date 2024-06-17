@@ -89,9 +89,11 @@ export function TransitionNode({ data, selected }: NodeProps<Transition>) {
             py: 1,
             px: 2,
             fontSize: 'small',
+            textAlign: 'center',
           }}
         >
-          {data.label}
+          <div>{data.devName}</div>
+          <div>“{data.label}”</div>
         </NodeCard>
       </TransitionNodeExtra>
       <Handle type="source" position={back ? Position.Left : Position.Bottom} />
