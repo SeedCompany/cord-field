@@ -192,11 +192,12 @@ export const Edge = ({
       })}
     >
       <BaseEdge {...props} {...pathProps} />
-      {conditions.length > 0 && (
+      {(conditions.length > 0 || back) && (
         <LabelContainer labelX={labelX} labelY={labelY}>
           {conditions.map((c) => (
             <div key={c.label}>{c.label}</div>
           ))}
+          {back && <div>Back</div>}
         </LabelContainer>
       )}
     </Box>
