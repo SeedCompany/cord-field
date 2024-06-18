@@ -1,5 +1,4 @@
 import { uniqBy } from 'lodash';
-import { Fragment } from 'react';
 import { Edge, Node } from 'reactflow';
 import { LiteralUnion } from 'type-fest';
 import { WorkflowTransitionDynamicTo } from '~/api/schema/schema.graphql';
@@ -40,16 +39,6 @@ export function parseWorkflow(workflow: Workflow) {
           source: from.value,
           target: t.key,
           targetHandle: 'forward',
-          label: (
-            <>
-              {t.conditions.map((c) => (
-                <Fragment key={c.label}>
-                  {c.label}
-                  <br />
-                </Fragment>
-              ))}
-            </>
-          ),
           data: t,
         })),
         ...(isDynamic(t.to)
