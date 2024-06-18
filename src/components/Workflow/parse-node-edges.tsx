@@ -47,7 +47,6 @@ export function parseWorkflow(workflow: Workflow) {
               source: t.key,
               target: state.value,
               targetHandle: isBack(t) ? 'back' : 'forward',
-              label: isBack(t) ? 'Back' : undefined,
               data: t,
             }))
           : [
