@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { forwardRef, useCallback } from 'react';
 import {
   BaseEdge,
+  EdgeLabelRenderer,
   EdgeProps,
   getSimpleBezierPath as getPath,
   Handle,
@@ -12,7 +13,7 @@ import {
   Position,
   useStore,
 } from 'reactflow';
-import { extendSx } from '~/common';
+import { ChildrenProp, extendSx } from '~/common';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { getEdgeSide, getNodeIntersection } from './layout';
 import { isBack, NodeTypes } from './parse-node-edges';
@@ -139,6 +140,8 @@ export const Edge = ({
   target,
   ...props
 }: EdgeProps<Transition>) => {
+  const transition = props.data!;
+
   const sourceNode: Node = useStore(
     useCallback((store) => store.nodeInternals.get(source)!, [source])
   );
@@ -174,7 +177,10 @@ export const Edge = ({
 
   const back =
     sourceNode.type === 'transition' && isBack(sourceNode.data as Transition);
-  const { color } = transitionTypeStyles[props.data!.type];
+  const { color } = transitionTypeStyles[transition.type];
+
+  const conditions = sourceNode.type === 'state' ? transition.conditions : [];
+
   return (
     <Box
       component="g"
@@ -186,6 +192,40 @@ export const Edge = ({
       })}
     >
       <BaseEdge {...props} {...pathProps} />
+      {conditions.length > 0 && (
+        <LabelContainer labelX={labelX} labelY={labelY}>
+          {conditions.map((c) => (
+            <div key={c.label}>{c.label}</div>
+          ))}
+        </LabelContainer>
+      )}
     </Box>
   );
 };
+
+const LabelContainer = ({
+  labelX,
+  labelY,
+  children,
+}: {
+  labelX: number;
+  labelY: number;
+} & ChildrenProp) => (
+  <EdgeLabelRenderer>
+    <Box
+      sx={{
+        position: 'absolute',
+        bgcolor: 'background.paper',
+        p: 1,
+        borderRadius: 1,
+        fontSize: 12,
+        textAlign: 'center',
+      }}
+      style={{
+        transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
+      }}
+    >
+      {children}
+    </Box>
+  </EdgeLabelRenderer>
+);
