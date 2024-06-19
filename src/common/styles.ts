@@ -3,14 +3,16 @@ import { Breakpoint, Breakpoints } from '@mui/material';
 import { decomposeColor, recomposeColor } from '@mui/material/styles';
 import { clamp } from 'lodash';
 import { CSSObject as CSSProperties } from 'tss-react';
-import { lowerCase } from './case';
+import { LiteralUnion } from 'type-fest';
 
 export const square = (size: string | number) => ({
   width: size,
   height: size,
 });
 
-export type BreakpointAt = `${Breakpoint}${'Up' | 'Down'}` | boolean;
+export type BreakpointAt =
+  | LiteralUnion<`${Breakpoint}${'Up' | 'Down'}`, string>
+  | boolean;
 
 export const applyBreakpoint = (
   breakpoints: Breakpoints,
@@ -24,9 +26,15 @@ export const applyBreakpoint = (
     return {};
   }
   const [bp, dir] = bpProp.endsWith('Up')
-    ? ([bpProp.slice(0, -2) as Breakpoint, 'up'] as const)
-    : ([bpProp.slice(0, -4) as Breakpoint, 'down'] as const);
-  return { [breakpoints[dir](bp)]: css };
+    ? ([bpProp.slice(0, -2), 'up'] as const)
+    : bpProp.endsWith('Down')
+    ? ([bpProp.slice(0, -4), 'down'] as const)
+    : ([bpProp, 'up'] as const);
+  if (bp in breakpoints.values) {
+    return { [breakpoints[dir](bp as Breakpoint)]: css };
+  }
+  // Assume css query
+  return { [bpProp]: css };
 };
 
 /**
