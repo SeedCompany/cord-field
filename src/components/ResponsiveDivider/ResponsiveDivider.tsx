@@ -1,4 +1,4 @@
-import { Box, Divider, DividerProps } from '@mui/material';
+import { Divider, DividerProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ComponentType } from 'react';
 import { applyBreakpoint, BreakpointAt, extendSx, StyleProps } from '~/common';
@@ -33,24 +33,24 @@ export const ResponsiveDivider = styled(
  */
 export const ResponsiveDivider2 = ({
   verticalWhen,
-  DividerProps,
   ...rest
-}: { verticalWhen: string; DividerProps?: DividerProps } & StyleProps) => (
-  <Box
+}: {
+  verticalWhen: string;
+} & StyleProps) => (
+  <Divider
     {...rest}
     sx={[
       {
-        hr: { display: 'none' },
-        'hr:nth-of-type(1)': { display: 'block' },
         [verticalWhen]: {
-          display: 'flex',
-          'hr:nth-of-type(2)': { display: 'initial' },
+          // Divider orientation=vertical
+          borderBottomWidth: 0,
+          borderRightWidth: 'thin',
+          // Divider flexItem
+          height: 'auto',
+          alignSelf: 'stretch',
         },
       },
       ...extendSx(rest.sx),
     ]}
-  >
-    <Divider {...DividerProps} />
-    <Divider {...DividerProps} orientation="vertical" flexItem />
-  </Box>
+  />
 );
