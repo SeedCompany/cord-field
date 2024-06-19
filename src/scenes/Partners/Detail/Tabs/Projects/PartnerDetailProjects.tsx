@@ -1,5 +1,9 @@
 import { Box, Chip } from '@mui/material';
-import { DataGrid, GridColDef, GridLocaleText } from '@mui/x-data-grid';
+import {
+  DataGridPro as DataGrid,
+  GridColDef,
+  GridLocaleText,
+} from '@mui/x-data-grid-pro';
 import { cmpBy, simpleSwitch } from '@seedcompany/common';
 import { useParams } from 'react-router-dom';
 import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema/enumLists';

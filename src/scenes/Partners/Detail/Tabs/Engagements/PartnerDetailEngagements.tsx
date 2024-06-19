@@ -1,5 +1,9 @@
 import { Box, Chip } from '@mui/material';
-import { DataGrid, GridColDef, GridLocaleText } from '@mui/x-data-grid';
+import {
+  DataGridPro as DataGrid,
+  GridColDef,
+  GridLocaleText,
+} from '@mui/x-data-grid-pro';
 import {
   cleanJoin,
   cmpBy,

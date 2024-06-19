@@ -2,7 +2,7 @@ import {
   type TypedDocumentNode as DocumentNode,
   useQuery,
 } from '@apollo/client';
-import type { DataGridProps } from '@mui/x-data-grid';
+import type { DataGridProProps as DataGridProps } from '@mui/x-data-grid-pro';
 import {
   type FieldNode,
   getOperationAST,

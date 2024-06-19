@@ -1,4 +1,4 @@
-import { GridRow, GridRowProps } from '@mui/x-data-grid';
+import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 import { PaperTooltip } from '../PaperTooltip';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 

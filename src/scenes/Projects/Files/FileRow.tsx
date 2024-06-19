@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { useForkRef } from '@mui/material/utils';
-import { GridRow, GridRowProps } from '@mui/x-data-grid';
+import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';

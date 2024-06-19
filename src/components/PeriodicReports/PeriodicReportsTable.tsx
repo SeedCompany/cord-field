@@ -1,6 +1,10 @@
 import { SkipNextRounded as SkipIcon } from '@mui/icons-material';
 import { Box } from '@mui/material';
-import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
+import {
+  DataGridPro as DataGrid,
+  DataGridProProps as DataGridProps,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 import { Many } from '@seedcompany/common';
 import { without } from 'lodash';
 import { useSnackbar } from 'notistack';

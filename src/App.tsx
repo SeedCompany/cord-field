@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
@@ -33,6 +34,8 @@ if (logRocketAppId) {
     setupLogRocketReact(LogRocket);
   }
 }
+
+MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
 
 /**
  * Register all app providers here in a flat list.

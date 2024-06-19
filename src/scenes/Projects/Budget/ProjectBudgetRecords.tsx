@@ -1,13 +1,13 @@
 import { useMutation } from '@apollo/client';
 import { Card, Tooltip } from '@mui/material';
 import {
-  DataGrid,
+  DataGridPro as DataGrid,
   GridCellProps,
   GridColDef,
   GridValidRowModel,
   GridValueGetter,
   GridValueSetter,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { sortBy } from '@seedcompany/common';
 import { sumBy } from 'lodash';
 import { ComponentType, useMemo } from 'react';

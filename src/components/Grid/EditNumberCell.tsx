@@ -1,6 +1,9 @@
 import { InputBase } from '@mui/material';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
-import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid';
+import {
+  GridRenderEditCellParams,
+  useGridApiContext,
+} from '@mui/x-data-grid-pro';
 import { useCallback, useRef } from 'react';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 

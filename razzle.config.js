@@ -53,6 +53,11 @@ const modifyWebpackConfig = (opts) => {
     define('process.env', 'window.env');
   }
 
+  define(
+    'process.env.MUI_X_LICENSE_KEY',
+    JSON.stringify(process.env.MUI_X_LICENSE_KEY)
+  );
+
   if (isClient) {
     const filename = path.resolve(__dirname, 'build');
     config.plugins.push(

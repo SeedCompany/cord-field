@@ -1,11 +1,11 @@
 import { SkipNextRounded as SkipIcon } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import {
-  DataGrid,
-  DataGridProps,
+  DataGridPro as DataGrid,
+  DataGridProProps as DataGridProps,
   GridRow,
   GridRowProps,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link } from 'react-router-dom';
 import {
