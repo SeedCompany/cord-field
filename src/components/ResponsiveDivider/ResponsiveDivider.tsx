@@ -1,42 +1,21 @@
-import { Divider, DividerProps } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { ComponentType } from 'react';
+import { Divider } from '@mui/material';
 import { applyBreakpoint, BreakpointAt, extendSx, StyleProps } from '~/common';
 
-export interface ResponsiveDividerProps extends DividerProps {
-  vertical?: BreakpointAt;
-  spacing?: number;
-}
-
-export const ResponsiveDivider = styled(
-  Divider as ComponentType<ResponsiveDividerProps>
-)(({ spacing, vertical, theme }) => ({
-  root: {
-    width: `calc(100% - ${theme.spacing(spacing ?? 0)} * 2)`,
-    margin: theme.spacing(0, spacing ?? 0),
-    '.MuiGrid-container > &': {
-      marginRight: -1,
-    },
-    ...applyBreakpoint(theme.breakpoints, vertical, {
-      margin: theme.spacing(spacing ?? 0, 0),
-      borderLeftWidth: 'thin',
-      // Divider orientation=vertical & flexItem
-      width: 1,
-      height: 'auto',
-      alignSelf: 'stretch',
-    }),
-  },
-}));
-
 /**
- * Horizontal divider until `verticalWhen` css query is matched.
+ * Horizontal divider until `vertical`
  */
-export const ResponsiveDivider2 = ({
-  verticalWhen,
+export const ResponsiveDivider = ({
+  vertical,
   spacing,
   ...rest
 }: {
-  verticalWhen: string;
+  /**
+   * Can be:
+   * - true
+   * - a css media/container query
+   * - a theme breakpoint up/down i.e. "mdUp"
+   */
+  vertical?: BreakpointAt;
   spacing?: number;
 } & StyleProps) => (
   <Divider
@@ -44,7 +23,7 @@ export const ResponsiveDivider2 = ({
     sx={[
       (theme) => ({
         margin: theme.spacing(0, spacing ?? 0),
-        [verticalWhen]: {
+        ...applyBreakpoint(theme.breakpoints, vertical, {
           margin: theme.spacing(spacing ?? 0, 0),
           // Divider orientation=vertical
           borderBottomWidth: 0,
@@ -52,7 +31,7 @@ export const ResponsiveDivider2 = ({
           // Divider flexItem
           height: 'auto',
           alignSelf: 'stretch',
-        },
+        }),
       }),
       ...extendSx(rest.sx),
     ]}

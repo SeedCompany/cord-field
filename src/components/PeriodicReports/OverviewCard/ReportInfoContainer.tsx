@@ -1,6 +1,6 @@
 import { Box, Stack } from '@mui/material';
 import { ChildrenProp, extendSx, StyleProps } from '~/common';
-import { ResponsiveDivider2 as ResponsiveDivider } from '../../ResponsiveDivider';
+import { ResponsiveDivider } from '../../ResponsiveDivider';
 
 export const ReportInfoContainer = ({
   spaceEvenlyAt,
@@ -13,7 +13,7 @@ export const ReportInfoContainer = ({
     <Stack
       divider={
         <ResponsiveDivider
-          verticalWhen={`@container (min-width: ${horizontalAt}px)`}
+          vertical={`@container (min-width: ${horizontalAt}px)`}
           className="divider"
         />
       }
