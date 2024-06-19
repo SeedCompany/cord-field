@@ -1,8 +1,8 @@
 import {
   AvatarGroup,
   CardContent,
-  Grid,
   Skeleton,
+  Stack,
   Typography,
 } from '@mui/material';
 import { To } from 'history';
@@ -14,12 +14,6 @@ import { HugeIcon, HugeIconProps } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
 
 const useStyles = makeStyles()(({ spacing }) => ({
-  grid: {
-    marginBottom: spacing(2),
-  },
-  seeAll: {
-    marginLeft: 'auto',
-  },
   bottomContent: {
     display: 'flex',
     alignItems: 'center',
@@ -62,20 +56,21 @@ export const MemberListSummary = ({
   return (
     <CardActionAreaLink to={to} disabled={!members}>
       <CardContent>
-        <Grid container spacing={4} className={classes.grid}>
-          <Grid item>
-            <HugeIcon icon={icon} />
-          </Grid>
-          <Grid item>
-            <Typography>{title}</Typography>
+        <Stack direction="row" spacing={4} mb={2}>
+          <HugeIcon icon={icon} />
+          <div>
+            <Typography sx={{ whiteSpace: 'nowrap' }}>{title}</Typography>
             <Typography variant="h1">
               {!members ? <Skeleton width="1ch" variant="text" /> : total}
             </Typography>
-          </Grid>
-          <Grid item className={classes.seeAll}>
-            <Typography color="primary">See All</Typography>
-          </Grid>
-        </Grid>
+          </div>
+          <Typography
+            color="primary"
+            sx={{ flex: 1, textAlign: 'right', whiteSpace: 'nowrap' }}
+          >
+            See All
+          </Typography>
+        </Stack>
         <div className={classes.bottomContent}>
           <AvatarGroup max={max} className={classes.avatarGroup}>
             {listOrPlaceholders(members, max).map((member, i) => (
