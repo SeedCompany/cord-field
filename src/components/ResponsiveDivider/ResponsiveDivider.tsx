@@ -33,15 +33,19 @@ export const ResponsiveDivider = styled(
  */
 export const ResponsiveDivider2 = ({
   verticalWhen,
+  spacing,
   ...rest
 }: {
   verticalWhen: string;
+  spacing?: number;
 } & StyleProps) => (
   <Divider
     {...rest}
     sx={[
-      {
+      (theme) => ({
+        margin: theme.spacing(0, spacing ?? 0),
         [verticalWhen]: {
+          margin: theme.spacing(spacing ?? 0, 0),
           // Divider orientation=vertical
           borderBottomWidth: 0,
           borderRightWidth: 'thin',
@@ -49,7 +53,7 @@ export const ResponsiveDivider2 = ({
           height: 'auto',
           alignSelf: 'stretch',
         },
-      },
+      }),
       ...extendSx(rest.sx),
     ]}
   />
