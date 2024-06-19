@@ -16,16 +16,18 @@ export const applyBreakpoint = (
   breakpoints: Breakpoints,
   bpProp: BreakpointAt | undefined,
   css: CSSProperties
-) =>
-  bpProp === true
-    ? css
-    : !bpProp
-    ? {}
-    : {
-        [breakpoints[lowerCase(bpProp.slice(2) as 'Up' | 'Down')](
-          bpProp.slice(0, 2) as Breakpoint
-        )]: css,
-      };
+) => {
+  if (bpProp === true) {
+    return css;
+  }
+  if (!bpProp) {
+    return {};
+  }
+  const [bp, dir] = bpProp.endsWith('Up')
+    ? ([bpProp.slice(0, -2) as Breakpoint, 'up'] as const)
+    : ([bpProp.slice(0, -4) as Breakpoint, 'down'] as const);
+  return { [breakpoints[dir](bp)]: css };
+};
 
 /**
  * A helper to format the grid-template-areas CSS prop.
