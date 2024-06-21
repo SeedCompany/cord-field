@@ -174,17 +174,14 @@ export const appComponents = ({
     },
     MuiDataGrid: {
       styleOverrides: {
-        root: ({ theme }) => ({
+        root: {
           // Don't wrap table in border if directly in a card, since the
           // elevated card is a good enough distinction.
           '.MuiPaper-root > &, .MuiPaper-root > .MuiTabPanel-root > &': {
             border: 'none',
           },
           // '--DataGrid-containerBackground': theme.palette.background.paper,
-          '& .MuiDataGrid-columnHeaders > *:first-of-type': {
-            paddingTop: theme.spacing(1),
-          },
-        }),
+        },
         columnHeaderTitle: {
           fontWeight: typography.weight.bold,
         },
