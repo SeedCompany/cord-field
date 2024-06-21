@@ -1,6 +1,7 @@
 import { Box, Chip } from '@mui/material';
 import {
   DataGridPro as DataGrid,
+  getGridStringOperators,
   GridColDef,
   GridLocaleText,
 } from '@mui/x-data-grid-pro';
@@ -68,6 +69,14 @@ export const PartnerDetailEngagements = () => {
             left: ['nameProjectFirst'],
           },
         }}
+        sx={{
+          // Hide filter operator button when there is not multiple operators
+          // based on our own .no-filter-button
+          '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader.no-filter-button button':
+            {
+              display: 'none',
+            },
+        }}
       />
     </PartnerTabContainer>
   );
@@ -90,12 +99,17 @@ const enumColumn = <T extends string>(
     valueFormatter: (value: T) => labels[value],
   } satisfies Partial<GridColDef<any, T, string>>);
 
+const containsOp = {
+  ...getGridStringOperators()[0]!,
+  label: 'search',
+  headerLabel: 'search',
+};
+
 const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Name',
     field: 'nameProjectFirst',
     minWidth: 200,
-    filterable: true,
     valueGetter: (_, row) =>
       cleanJoin(' - ', [
         row.project.name.value,
@@ -108,6 +122,8 @@ const columns: Array<GridColDef<Engagement>> = [
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.project.id}`}>{value}</Link>
     ),
+    filterOperators: [containsOp],
+    headerClassName: 'no-filter-button',
   },
   {
     headerName: 'Type',
@@ -142,50 +158,51 @@ const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Country',
     field: 'project.primaryLocation.name',
-    filterable: false,
     valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
+    filterable: false,
   },
   {
     headerName: 'ISO',
     description: 'Ethnologue Code',
     field: 'language.ethnologue.code',
     width: 75,
-    filterable: true,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.ethnologue.code.value?.toUpperCase()
         : '',
+    filterOperators: [containsOp],
+    headerClassName: 'no-filter-button',
   },
   {
     headerName: 'ROD',
     description: 'Registry of Dialects',
     field: 'language.registryOfDialectsCode',
     width: 80,
-    filterable: true,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.registryOfDialectsCode.value
         : '',
+    filterOperators: [containsOp],
+    headerClassName: 'no-filter-button',
   },
   {
     headerName: 'MOU Start',
     field: 'startDate',
-    filterable: false,
     valueGetter: (_, { startDate }) => startDate.value,
     renderCell: ({ value }) => <FormattedDate date={value} />,
+    filterable: false,
   },
   {
     headerName: 'MOU End',
     field: 'endDate',
-    filterable: false,
     valueGetter: (_, { endDate }) => endDate.value,
     renderCell: ({ value }) => <FormattedDate date={value} />,
+    filterable: false,
   },
   {
     headerName: 'QR Status',
     description: 'Status of Quarterly Report Currently Due',
     field: 'currentProgressReportDue.status',
-    filterable: false,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement' &&
       row.currentProgressReportDue.value
@@ -207,11 +224,11 @@ const columns: Array<GridColDef<Engagement>> = [
       }
       return <Link to={`/progress-reports/${report.id}`}>{value}</Link>;
     },
+    filterable: false,
   },
   {
     headerName: 'Sensitivity',
     field: 'sensitivity',
-    filterable: false,
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),
@@ -222,6 +239,7 @@ const columns: Array<GridColDef<Engagement>> = [
         {value}
       </Box>
     ),
+    filterable: false,
   },
   {
     headerName: 'Files',
