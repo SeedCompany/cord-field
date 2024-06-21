@@ -63,10 +63,11 @@ export const useTable = <
   initialInput?: Partial<ListInput>;
   keyArgs?: string[];
 }) => {
-  const [input, onChange] = useState(() => ({
+  const resolvedInitialInput = {
     ...defaultInitialInput,
     ...initialInput,
-  }));
+  };
+  const [input, onChange] = useState(() => resolvedInitialInput);
 
   const queryForItemRef = useMemo(() => {
     const queryForItemRef = structuredClone(query);
@@ -147,15 +148,18 @@ export const useTable = <
       onChange((prev) => ({ ...prev, page: next.page + 1 }));
     },
     onSortModelChange: ([next]) => {
+      if (!next) {
+        onChange(resolvedInitialInput);
+        return;
+      }
       onChange((prev) => ({
         ...prev,
-        sort: next!.field,
-        order: upperCase(next!.sort!),
         page: 1,
+        sort: next.field,
+        order: upperCase(next.sort!),
       }));
     },
     pageSizeOptions: [input.count],
-    sortingOrder: ['desc', 'asc'], // no unsorted
     paginationMode: isCacheComplete ? 'client' : 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
   } satisfies Partial<DataGridProps>;
