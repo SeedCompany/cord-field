@@ -1,4 +1,4 @@
-import { Box, Chip } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   DataGridPro as DataGrid,
   getGridStringOperators,
@@ -133,9 +133,6 @@ const columns: Array<GridColDef<Engagement>> = [
     width: 130,
     valueGetter: (_, row) => row.project.type,
     ...enumColumn(ProjectTypeList, ProjectTypeLabels),
-    renderCell: ({ formattedValue }) => (
-      <Chip label={formattedValue} variant="outlined" />
-    ),
   },
   {
     headerName: 'Project Step',

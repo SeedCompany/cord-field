@@ -1,4 +1,4 @@
-import { Box, Chip } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   DataGridPro as DataGrid,
   GridColDef,
@@ -79,7 +79,6 @@ const columns: Array<GridColDef<Project>> = [
     field: 'type',
     width: 130,
     valueGetter: labelFrom(ProjectTypeLabels),
-    renderCell: ({ value }) => <Chip label={value} variant="outlined" />,
   },
   {
     headerName: 'Engagements',
