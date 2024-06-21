@@ -50,13 +50,15 @@ export const PartnerDetailEngagements = () => {
   return (
     <PartnerTabContainer
       sx={{
+        flex: 1,
         p: 0,
         maxWidth: '100cqw',
         width: 'min-content',
+        // idk why -50, MUI pushes down past container
+        maxHeight: 'calc(100cqh - 50px)',
       }}
     >
       <DataGrid<Engagement>
-        autoHeight
         density="compact"
         {...props}
         columns={columns}
@@ -229,6 +231,7 @@ const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Sensitivity',
     field: 'sensitivity',
+    width: 110,
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),

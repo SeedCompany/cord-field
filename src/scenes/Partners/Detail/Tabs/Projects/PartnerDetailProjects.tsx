@@ -62,7 +62,7 @@ const columns: Array<GridColDef<Project>> = [
   {
     headerName: 'Project Name',
     field: 'name',
-    minWidth: 200,
+    minWidth: 300,
     valueGetter: (_, { name }) => name.value,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.id}`}>{value}</Link>
@@ -71,7 +71,7 @@ const columns: Array<GridColDef<Project>> = [
   {
     headerName: 'Status',
     field: 'status',
-    width: 130,
+    width: 160,
     valueGetter: labelFrom(ProjectStatusLabels),
   },
   {
@@ -84,13 +84,13 @@ const columns: Array<GridColDef<Project>> = [
   {
     headerName: 'Engagements',
     field: 'engagements',
-    width: 80,
+    width: 130,
     valueGetter: (_, { engagements }) => engagements.total,
   },
   {
     headerName: 'Sensitivity',
     field: 'sensitivity',
-    width: 110,
+    width: 180,
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),
