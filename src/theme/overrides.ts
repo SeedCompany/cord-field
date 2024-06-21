@@ -199,6 +199,21 @@ export const appComponents = ({
             outline: 'none',
           },
         },
+        filterForm: {
+          // Undo MuiFormControl.defaultProps.fullWidth: true
+          '.MuiFormControl-root': {
+            '&.MuiDataGrid-filterFormDeleteIcon, &.MuiDataGrid-filterFormLogicOperatorInput':
+              {
+                width: 'initial',
+              },
+          },
+        },
+        filterFormValueInput: {
+          // Undo MuiTextField.defaultProps.margin: 'dense'
+          '.MuiFormControl-root': {
+            margin: 0,
+          },
+        },
       },
     },
     MuiTabs: {
