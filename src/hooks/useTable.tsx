@@ -2,14 +2,23 @@ import {
   type TypedDocumentNode as DocumentNode,
   useQuery,
 } from '@apollo/client';
-import type { DataGridProProps as DataGridProps } from '@mui/x-data-grid-pro';
+import {
+  FilterColumnsArgs,
+  GetColumnForNewFilterArgs,
+  GridFilterItem,
+  GridLogicOperator,
+} from '@mui/x-data-grid';
+import type {
+  DataGridProProps as DataGridProps,
+  GridFilterModel,
+} from '@mui/x-data-grid-pro';
 import {
   type FieldNode,
   getOperationAST,
   Kind,
   type SelectionSetNode,
 } from 'graphql';
-import { get, pick, set, uniqBy } from 'lodash';
+import { get, merge, pick, set, uniqBy } from 'lodash';
 import { useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import {
@@ -68,6 +77,9 @@ export const useTable = <
     ...initialInput,
   };
   const [input, onChange] = useState(() => resolvedInitialInput);
+  const [filterModel, setFilterModel] = useState<GridFilterModel>(() => ({
+    items: [],
+  }));
 
   const queryForItemRef = useMemo(() => {
     const queryForItemRef = structuredClone(query);
@@ -142,6 +154,7 @@ export const useTable = <
     rows: list?.items ?? [],
     rowCount: isCacheComplete ? undefined : total,
     loading: isNetworkRequestInFlight(networkStatus),
+    filterModel,
     paginationModel: { page: input.page - 1, pageSize: input.count },
     sortModel: [{ field: input.sort, sort: lowerCase(input.order) }],
     onPaginationModelChange: (next) => {
@@ -159,10 +172,39 @@ export const useTable = <
         order: upperCase(next.sort!),
       }));
     },
+    onFilterModelChange: (next, { api }) => {
+      setFilterModel(next);
+
+      const parts = next.items.map((item) => {
+        const col = api.getColumn(item.field);
+        return item.value == null
+          ? {}
+          : col.serverFilter
+          ? col.serverFilter(item)
+          : set({}, item.field, item.value);
+      });
+      const filter = merge({}, ...parts);
+
+      onChange((prev) => ({
+        ...prev,
+        page: 1,
+        filter,
+      }));
+    },
     pagination: total > input.count,
     pageSizeOptions: [input.count],
     paginationMode: isCacheComplete ? 'client' : 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
+    filterMode: isCacheComplete ? 'client' : 'server',
+    slotProps: {
+      filterPanel: {
+        logicOperators: [GridLogicOperator.And],
+        filterFormProps: {
+          filterColumns,
+        },
+        getColumnForNewFilter,
+      },
+    },
   } satisfies Partial<DataGridProps>;
 
   const props = {
@@ -198,3 +240,44 @@ const getFieldPath = (
   }
   return current;
 };
+
+// Copied from MUI docs
+const filterColumns = ({
+  field,
+  columns,
+  currentFilters,
+}: FilterColumnsArgs) => {
+  // remove already filtered fields from list of columns
+  const filteredFields = currentFilters.map((item) => item.field);
+  return columns
+    .filter(
+      (colDef) =>
+        colDef.filterable &&
+        (colDef.field === field || !filteredFields.includes(colDef.field))
+    )
+    .map((column) => column.field);
+};
+
+// Copied from MUI docs
+const getColumnForNewFilter = ({
+  currentFilters,
+  columns,
+}: GetColumnForNewFilterArgs) => {
+  const filteredFields = currentFilters.map(({ field }) => field);
+  const columnForNewFilter = columns
+    .filter(
+      (colDef) => colDef.filterable && !filteredFields.includes(colDef.field)
+    )
+    .find((colDef) => colDef.filterOperators?.length);
+  return columnForNewFilter?.field ?? null;
+};
+
+declare module '@mui/x-data-grid/internals' {
+  interface GridBaseColDef {
+    /**
+     * Customize how GridFilterItem converts to the filter object for API.
+     * By default, the field name becomes the path key of the object.
+     */
+    serverFilter?: (item: GridFilterItem) => Record<string, any>;
+  }
+}
