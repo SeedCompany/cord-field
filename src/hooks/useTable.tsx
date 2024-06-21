@@ -159,6 +159,7 @@ export const useTable = <
         order: upperCase(next.sort!),
       }));
     },
+    pagination: total > input.count,
     pageSizeOptions: [input.count],
     paginationMode: isCacheComplete ? 'client' : 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
