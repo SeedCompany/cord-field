@@ -3,7 +3,6 @@ import {
   DataGridPro as DataGrid,
   getGridStringOperators,
   GridColDef,
-  GridLocaleText,
 } from '@mui/x-data-grid-pro';
 import {
   cleanJoin,
@@ -63,7 +62,6 @@ export const PartnerDetailEngagements = () => {
         {...props}
         columns={columns}
         disableRowSelectionOnClick
-        localeText={localeText}
         headerFilters
         headerFilterHeight={90}
         initialState={{
@@ -82,10 +80,6 @@ export const PartnerDetailEngagements = () => {
       />
     </PartnerTabContainer>
   );
-};
-
-const localeText: Partial<GridLocaleText> = {
-  noRowsLabel: 'This partner does not have any engagements',
 };
 
 const enumColumn = <T extends string>(
