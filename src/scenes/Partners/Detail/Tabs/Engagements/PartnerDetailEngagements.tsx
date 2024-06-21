@@ -57,11 +57,12 @@ export const PartnerDetailEngagements = () => {
       <DataGrid<Engagement>
         autoHeight
         density="compact"
-        disableColumnMenu
         {...props}
         columns={columns}
         disableRowSelectionOnClick
         localeText={localeText}
+        headerFilters
+        headerFilterHeight={90}
         initialState={{
           pinnedColumns: {
             left: ['nameProjectFirst'],
