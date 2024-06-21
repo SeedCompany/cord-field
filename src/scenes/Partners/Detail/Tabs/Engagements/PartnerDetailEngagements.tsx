@@ -13,10 +13,13 @@ import {
 import { useParams } from 'react-router-dom';
 import {
   EngagementStatusLabels,
+  EngagementStatusList,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
   ProjectStepLabels,
+  ProjectStepList,
   ProjectTypeLabels,
+  ProjectTypeList,
 } from '~/api/schema.graphql';
 import { Sensitivity } from '~/api/schema/schema.graphql';
 import { labelFrom } from '~/common';
@@ -68,11 +71,25 @@ const localeText: Partial<GridLocaleText> = {
   noRowsLabel: 'This partner does not have any engagements',
 };
 
+const enumColumn = <T extends string>(
+  list: readonly T[],
+  labels: Record<T, string>
+) =>
+  ({
+    type: 'singleSelect',
+    valueOptions: list.map((v) => ({
+      value: v,
+      label: labels[v],
+    })),
+    valueFormatter: (value: T) => labels[value],
+  } satisfies Partial<GridColDef<any, T, string>>);
+
 const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Name',
     field: 'nameProjectFirst',
     minWidth: 200,
+    filterable: true,
     valueGetter: (_, row) =>
       cleanJoin(' - ', [
         row.project.name.value,
@@ -90,26 +107,36 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'Type',
     field: 'project.type',
     width: 130,
-    valueGetter: (_, row) => labelFrom(ProjectTypeLabels)(row.project.type),
-    renderCell: ({ value }) => <Chip label={value} variant="outlined" />,
+    valueGetter: (_, row) => row.project.type,
+    ...enumColumn(ProjectTypeList, ProjectTypeLabels),
+    renderCell: ({ formattedValue }) => (
+      <Chip label={formattedValue} variant="outlined" />
+    ),
   },
   {
     headerName: 'Project Step',
     field: 'project.step',
     width: 250,
-    valueGetter: (_, row) =>
-      labelFrom(ProjectStepLabels)(row.project.step.value),
+    valueGetter: (_, row) => row.project.step.value,
+    ...enumColumn(ProjectStepList, ProjectStepLabels),
   },
   {
     headerName: 'Engagement Status',
     field: 'status',
     width: 190,
-    valueGetter: (_, row) =>
+    type: 'singleSelect',
+    valueOptions: EngagementStatusList.map((v) => ({
+      value: v,
+      label: EngagementStatusLabels[v],
+    })),
+    valueGetter: (_, row) => row.status.value,
+    valueFormatter: (_, row) =>
       labelFrom(EngagementStatusLabels)(row.status.value),
   },
   {
     headerName: 'Country',
     field: 'project.primaryLocation.name',
+    filterable: false,
     valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
   },
   {
@@ -117,6 +144,7 @@ const columns: Array<GridColDef<Engagement>> = [
     description: 'Ethnologue Code',
     field: 'language.ethnologue.code',
     width: 75,
+    filterable: true,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.ethnologue.code.value?.toUpperCase()
@@ -127,6 +155,7 @@ const columns: Array<GridColDef<Engagement>> = [
     description: 'Registry of Dialects',
     field: 'language.registryOfDialectsCode',
     width: 80,
+    filterable: true,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.registryOfDialectsCode.value
@@ -135,12 +164,14 @@ const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'MOU Start',
     field: 'startDate',
+    filterable: false,
     valueGetter: (_, { startDate }) => startDate.value,
     renderCell: ({ value }) => <FormattedDate date={value} />,
   },
   {
     headerName: 'MOU End',
     field: 'endDate',
+    filterable: false,
     valueGetter: (_, { endDate }) => endDate.value,
     renderCell: ({ value }) => <FormattedDate date={value} />,
   },
@@ -148,6 +179,7 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'QR Status',
     description: 'Status of Quarterly Report Currently Due',
     field: 'currentProgressReportDue.status',
+    filterable: false,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement' &&
       row.currentProgressReportDue.value
@@ -155,6 +187,7 @@ const columns: Array<GridColDef<Engagement>> = [
             row.currentProgressReportDue.value.status.value
           )
         : null,
+    ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels),
     sortComparator: cmpBy((v: string | null) =>
       ProgressReportStatusIndex.get(v)
     ),
@@ -172,6 +205,7 @@ const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Sensitivity',
     field: 'sensitivity',
+    filterable: false,
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),
@@ -187,6 +221,7 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'Files',
     field: 'files',
     sortable: false,
+    filterable: false,
     renderCell: ({ row }) => (
       <Link to={`/projects/${row.project.id}/files`}>View Files</Link>
     ),
