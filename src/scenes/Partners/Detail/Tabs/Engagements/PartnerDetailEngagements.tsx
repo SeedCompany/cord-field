@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import {
   DataGridPro as DataGrid,
+  getGridSingleSelectOperators,
   getGridStringOperators,
   GridColDef,
 } from '@mui/x-data-grid-pro';
@@ -20,6 +21,8 @@ import {
   ProjectStepList,
   ProjectTypeLabels,
   ProjectTypeList,
+  SensitivityLabels,
+  SensitivityList,
 } from '~/api/schema.graphql';
 import { Sensitivity } from '~/api/schema/schema.graphql';
 import { labelFrom } from '~/common';
@@ -70,13 +73,12 @@ export const PartnerDetailEngagements = () => {
           },
         }}
         sx={{
-          // Hide filter operator button when there is not multiple operators
-          // based on our own .no-filter-button
-          '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader.no-filter-button button':
-            {
-              display: 'none',
-            },
+          // Hide filter operator button since there aren't multiple operators
+          '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader button': {
+            display: 'none',
+          },
         }}
+        ignoreDiacritics
       />
     </PartnerTabContainer>
   );
@@ -88,6 +90,9 @@ const enumColumn = <T extends string>(
 ) =>
   ({
     type: 'singleSelect',
+    filterOperators: getGridSingleSelectOperators().filter(
+      (op) => op.value !== 'not'
+    ),
     valueOptions: list.map((v) => ({
       value: v,
       label: labels[v],
@@ -100,11 +105,16 @@ const containsOp = {
   label: 'search',
   headerLabel: 'search',
 };
+const textColumn = {
+  filterOperators: [containsOp],
+  headerClassName: 'no-filter-button',
+};
 
 const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Name',
     field: 'nameProjectFirst',
+    ...textColumn,
     minWidth: 200,
     valueGetter: (_, row) =>
       cleanJoin(' - ', [
@@ -118,15 +128,14 @@ const columns: Array<GridColDef<Engagement>> = [
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.project.id}`}>{value}</Link>
     ),
-    filterOperators: [containsOp],
-    headerClassName: 'no-filter-button',
+    serverFilter: ({ value }) => ({ name: value }),
   },
   {
     headerName: 'Type',
     field: 'project.type',
+    ...enumColumn(ProjectTypeList, ProjectTypeLabels),
     width: 130,
     valueGetter: (_, row) => row.project.type,
-    ...enumColumn(ProjectTypeList, ProjectTypeLabels),
   },
   {
     headerName: 'Project Step',
@@ -138,12 +147,8 @@ const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Engagement Status',
     field: 'status',
+    ...enumColumn(EngagementStatusList, EngagementStatusLabels),
     width: 190,
-    type: 'singleSelect',
-    valueOptions: EngagementStatusList.map((v) => ({
-      value: v,
-      label: EngagementStatusLabels[v],
-    })),
     valueGetter: (_, row) => row.status.value,
     valueFormatter: (_, row) =>
       labelFrom(EngagementStatusLabels)(row.status.value),
@@ -151,6 +156,7 @@ const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Country',
     field: 'project.primaryLocation.name',
+    ...textColumn,
     valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
     filterable: false,
   },
@@ -158,25 +164,23 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'ISO',
     description: 'Ethnologue Code',
     field: 'language.ethnologue.code',
+    ...textColumn,
     width: 75,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.ethnologue.code.value?.toUpperCase()
         : '',
-    filterOperators: [containsOp],
-    headerClassName: 'no-filter-button',
   },
   {
     headerName: 'ROD',
     description: 'Registry of Dialects',
     field: 'language.registryOfDialectsCode',
+    ...textColumn,
     width: 80,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.registryOfDialectsCode.value
         : '',
-    filterOperators: [containsOp],
-    headerClassName: 'no-filter-button',
   },
   {
     headerName: 'MOU Start',
@@ -196,6 +200,7 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'QR Status',
     description: 'Status of Quarterly Report Currently Due',
     field: 'currentProgressReportDue.status',
+    ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels),
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement' &&
       row.currentProgressReportDue.value
@@ -203,7 +208,6 @@ const columns: Array<GridColDef<Engagement>> = [
             row.currentProgressReportDue.value.status.value
           )
         : null,
-    ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels),
     sortComparator: cmpBy((v: string | null) =>
       ProgressReportStatusIndex.get(v)
     ),
@@ -221,8 +225,9 @@ const columns: Array<GridColDef<Engagement>> = [
   },
   {
     headerName: 'Sensitivity',
-    field: 'sensitivity',
+    field: 'project.sensitivity',
     width: 110,
+    ...enumColumn(SensitivityList, SensitivityLabels),
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),
@@ -233,7 +238,6 @@ const columns: Array<GridColDef<Engagement>> = [
         {value}
       </Box>
     ),
-    filterable: false,
   },
   {
     headerName: 'Files',
