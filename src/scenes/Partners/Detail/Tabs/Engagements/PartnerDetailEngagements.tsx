@@ -69,7 +69,9 @@ export const PartnerDetailEngagements = () => {
         headerFilterHeight={90}
         initialState={{
           pinnedColumns: {
-            left: ['nameProjectFirst'],
+            // Flaky with our current layout.
+            // MUI doesn't render it a lot of the times.
+            // left: ['nameProjectFirst'],
           },
         }}
         sx={{
