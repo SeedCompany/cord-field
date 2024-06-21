@@ -1,4 +1,4 @@
-import { Box, Chip } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   DataGridPro as DataGrid,
   GridColDef,
@@ -32,9 +32,17 @@ export const PartnerDetailProjects = () => {
   });
 
   return (
-    <PartnerTabContainer sx={{ p: 0 }}>
+    <PartnerTabContainer
+      sx={{
+        flex: 1,
+        p: 0,
+        maxWidth: '100cqw',
+        width: 'min-content',
+        // idk why -50, MUI pushes down past container
+        maxHeight: 'calc(100cqh - 50px)',
+      }}
+    >
       <DataGrid<Project>
-        autoHeight
         density="compact"
         disableColumnMenu
         {...props}
@@ -54,35 +62,34 @@ const columns: Array<GridColDef<Project>> = [
   {
     headerName: 'Project Name',
     field: 'name',
-    flex: 2,
+    minWidth: 300,
     valueGetter: (_, { name }) => name.value,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.id}`}>{value}</Link>
     ),
   },
   {
-    headerName: 'Status',
-    field: 'status',
-    flex: 1,
-    valueGetter: labelFrom(ProjectStatusLabels),
-  },
-  {
     headerName: 'Type',
     field: 'type',
-    flex: 0.75,
+    width: 130,
     valueGetter: labelFrom(ProjectTypeLabels),
-    renderCell: ({ value }) => <Chip label={value} variant="outlined" />,
+  },
+  {
+    headerName: 'Status',
+    field: 'status',
+    width: 160,
+    valueGetter: labelFrom(ProjectStatusLabels),
   },
   {
     headerName: 'Engagements',
     field: 'engagements',
-    flex: 0.5,
+    width: 130,
     valueGetter: (_, { engagements }) => engagements.total,
   },
   {
     headerName: 'Sensitivity',
     field: 'sensitivity',
-    flex: 0.5,
+    width: 180,
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),

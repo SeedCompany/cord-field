@@ -1,8 +1,9 @@
-import { Box, Chip } from '@mui/material';
+import { Box } from '@mui/material';
 import {
   DataGridPro as DataGrid,
+  getGridSingleSelectOperators,
+  getGridStringOperators,
   GridColDef,
-  GridLocaleText,
 } from '@mui/x-data-grid-pro';
 import {
   cleanJoin,
@@ -13,10 +14,15 @@ import {
 import { useParams } from 'react-router-dom';
 import {
   EngagementStatusLabels,
+  EngagementStatusList,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
   ProjectStepLabels,
+  ProjectStepList,
   ProjectTypeLabels,
+  ProjectTypeList,
+  SensitivityLabels,
+  SensitivityList,
 } from '~/api/schema.graphql';
 import { Sensitivity } from '~/api/schema/schema.graphql';
 import { labelFrom } from '~/common';
@@ -46,32 +52,69 @@ export const PartnerDetailEngagements = () => {
   return (
     <PartnerTabContainer
       sx={{
+        flex: 1,
         p: 0,
         maxWidth: '100cqw',
         width: 'min-content',
+        // idk why -50, MUI pushes down past container
+        maxHeight: 'calc(100cqh - 50px)',
       }}
     >
       <DataGrid<Engagement>
-        autoHeight
         density="compact"
-        disableColumnMenu
         {...props}
         columns={columns}
         disableRowSelectionOnClick
-        localeText={localeText}
+        headerFilters
+        headerFilterHeight={90}
+        initialState={{
+          pinnedColumns: {
+            left: ['nameProjectFirst'],
+          },
+        }}
+        sx={{
+          // Hide filter operator button since there aren't multiple operators
+          '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader button': {
+            display: 'none',
+          },
+        }}
+        ignoreDiacritics
       />
     </PartnerTabContainer>
   );
 };
 
-const localeText: Partial<GridLocaleText> = {
-  noRowsLabel: 'This partner does not have any engagements',
+const enumColumn = <T extends string>(
+  list: readonly T[],
+  labels: Record<T, string>
+) =>
+  ({
+    type: 'singleSelect',
+    filterOperators: getGridSingleSelectOperators().filter(
+      (op) => op.value !== 'not'
+    ),
+    valueOptions: list.map((v) => ({
+      value: v,
+      label: labels[v],
+    })),
+    valueFormatter: (value: T) => labels[value],
+  } satisfies Partial<GridColDef<any, T, string>>);
+
+const containsOp = {
+  ...getGridStringOperators()[0]!,
+  label: 'search',
+  headerLabel: 'search',
+};
+const textColumn = {
+  filterOperators: [containsOp],
+  headerClassName: 'no-filter-button',
 };
 
 const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Name',
     field: 'nameProjectFirst',
+    ...textColumn,
     minWidth: 200,
     valueGetter: (_, row) =>
       cleanJoin(' - ', [
@@ -85,37 +128,43 @@ const columns: Array<GridColDef<Engagement>> = [
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.project.id}`}>{value}</Link>
     ),
+    serverFilter: ({ value }) => ({ name: value }),
   },
   {
     headerName: 'Type',
     field: 'project.type',
+    ...enumColumn(ProjectTypeList, ProjectTypeLabels),
     width: 130,
-    valueGetter: (_, row) => labelFrom(ProjectTypeLabels)(row.project.type),
-    renderCell: ({ value }) => <Chip label={value} variant="outlined" />,
+    valueGetter: (_, row) => row.project.type,
   },
   {
     headerName: 'Project Step',
     field: 'project.step',
     width: 250,
-    valueGetter: (_, row) =>
-      labelFrom(ProjectStepLabels)(row.project.step.value),
+    valueGetter: (_, row) => row.project.step.value,
+    ...enumColumn(ProjectStepList, ProjectStepLabels),
   },
   {
     headerName: 'Engagement Status',
     field: 'status',
+    ...enumColumn(EngagementStatusList, EngagementStatusLabels),
     width: 190,
-    valueGetter: (_, row) =>
+    valueGetter: (_, row) => row.status.value,
+    valueFormatter: (_, row) =>
       labelFrom(EngagementStatusLabels)(row.status.value),
   },
   {
     headerName: 'Country',
     field: 'project.primaryLocation.name',
+    ...textColumn,
     valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
+    filterable: false,
   },
   {
     headerName: 'ISO',
     description: 'Ethnologue Code',
     field: 'language.ethnologue.code',
+    ...textColumn,
     width: 75,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
@@ -126,6 +175,7 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'ROD',
     description: 'Registry of Dialects',
     field: 'language.registryOfDialectsCode',
+    ...textColumn,
     width: 80,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
@@ -137,17 +187,20 @@ const columns: Array<GridColDef<Engagement>> = [
     field: 'startDate',
     valueGetter: (_, { startDate }) => startDate.value,
     renderCell: ({ value }) => <FormattedDate date={value} />,
+    filterable: false,
   },
   {
     headerName: 'MOU End',
     field: 'endDate',
     valueGetter: (_, { endDate }) => endDate.value,
     renderCell: ({ value }) => <FormattedDate date={value} />,
+    filterable: false,
   },
   {
     headerName: 'QR Status',
     description: 'Status of Quarterly Report Currently Due',
     field: 'currentProgressReportDue.status',
+    ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels),
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement' &&
       row.currentProgressReportDue.value
@@ -168,10 +221,13 @@ const columns: Array<GridColDef<Engagement>> = [
       }
       return <Link to={`/progress-reports/${report.id}`}>{value}</Link>;
     },
+    filterable: false,
   },
   {
     headerName: 'Sensitivity',
-    field: 'sensitivity',
+    field: 'project.sensitivity',
+    width: 110,
+    ...enumColumn(SensitivityList, SensitivityLabels),
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),
@@ -187,6 +243,7 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'Files',
     field: 'files',
     sortable: false,
+    filterable: false,
     renderCell: ({ row }) => (
       <Link to={`/projects/${row.project.id}/files`}>View Files</Link>
     ),
