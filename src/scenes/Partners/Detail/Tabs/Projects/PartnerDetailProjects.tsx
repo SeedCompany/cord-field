@@ -69,16 +69,16 @@ const columns: Array<GridColDef<Project>> = [
     ),
   },
   {
-    headerName: 'Status',
-    field: 'status',
-    width: 160,
-    valueGetter: labelFrom(ProjectStatusLabels),
-  },
-  {
     headerName: 'Type',
     field: 'type',
     width: 130,
     valueGetter: labelFrom(ProjectTypeLabels),
+  },
+  {
+    headerName: 'Status',
+    field: 'status',
+    width: 160,
+    valueGetter: labelFrom(ProjectStatusLabels),
   },
   {
     headerName: 'Engagements',
