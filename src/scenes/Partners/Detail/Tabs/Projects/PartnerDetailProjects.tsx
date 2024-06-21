@@ -32,9 +32,17 @@ export const PartnerDetailProjects = () => {
   });
 
   return (
-    <PartnerTabContainer sx={{ p: 0 }}>
+    <PartnerTabContainer
+      sx={{
+        flex: 1,
+        p: 0,
+        maxWidth: '100cqw',
+        width: 'min-content',
+        // idk why -50, MUI pushes down past container
+        maxHeight: 'calc(100cqh - 50px)',
+      }}
+    >
       <DataGrid<Project>
-        autoHeight
         density="compact"
         disableColumnMenu
         {...props}
@@ -54,7 +62,7 @@ const columns: Array<GridColDef<Project>> = [
   {
     headerName: 'Project Name',
     field: 'name',
-    flex: 2,
+    minWidth: 200,
     valueGetter: (_, { name }) => name.value,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.id}`}>{value}</Link>
@@ -63,26 +71,26 @@ const columns: Array<GridColDef<Project>> = [
   {
     headerName: 'Status',
     field: 'status',
-    flex: 1,
+    width: 130,
     valueGetter: labelFrom(ProjectStatusLabels),
   },
   {
     headerName: 'Type',
     field: 'type',
-    flex: 0.75,
+    width: 130,
     valueGetter: labelFrom(ProjectTypeLabels),
     renderCell: ({ value }) => <Chip label={value} variant="outlined" />,
   },
   {
     headerName: 'Engagements',
     field: 'engagements',
-    flex: 0.5,
+    width: 80,
     valueGetter: (_, { engagements }) => engagements.total,
   },
   {
     headerName: 'Sensitivity',
     field: 'sensitivity',
-    flex: 0.5,
+    width: 110,
     sortComparator: cmpBy<Sensitivity>((v) =>
       simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
     ),

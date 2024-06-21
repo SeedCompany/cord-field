@@ -189,12 +189,6 @@ export const appComponents = ({
           fontWeight: typography.weight.bold,
         },
         columnHeader: {
-          // Don't show last column separator
-          // TODO what if last column needs to be resizeable?
-          '&.MuiDataGrid-columnHeader--last .MuiDataGrid-columnSeparator--sideRight':
-            {
-              display: 'none',
-            },
           '&:focus-within': {
             outline: 'none',
           },
