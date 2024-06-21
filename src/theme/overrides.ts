@@ -181,7 +181,7 @@ export const appComponents = ({
             border: 'none',
           },
           // '--DataGrid-containerBackground': theme.palette.background.paper,
-          '& .MuiDataGrid-columnHeaders > *': {
+          '& .MuiDataGrid-columnHeaders > *:first-of-type': {
             paddingTop: theme.spacing(1),
           },
         }),
