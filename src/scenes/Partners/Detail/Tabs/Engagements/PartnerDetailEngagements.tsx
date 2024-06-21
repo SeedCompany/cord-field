@@ -62,6 +62,11 @@ export const PartnerDetailEngagements = () => {
         columns={columns}
         disableRowSelectionOnClick
         localeText={localeText}
+        initialState={{
+          pinnedColumns: {
+            left: ['nameProjectFirst'],
+          },
+        }}
       />
     </PartnerTabContainer>
   );
