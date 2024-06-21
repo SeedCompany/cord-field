@@ -195,6 +195,9 @@ export const appComponents = ({
             {
               display: 'none',
             },
+          '&:focus-within': {
+            outline: 'none',
+          },
         },
       },
     },
