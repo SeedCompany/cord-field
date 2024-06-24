@@ -147,12 +147,15 @@ export const useTable = <
     ? (get(currentPage, listAt) as List)
     : undefined;
 
-  const list = isCacheComplete ? allPagesList : currentPageList;
+  const indexOffset = (input.page - 1) * input.count;
+  const list = isCacheComplete
+    ? allPagesList.items.slice(indexOffset, indexOffset + input.count)
+    : currentPageList?.items;
   const total = allPagesList?.total ?? currentPageList?.total ?? 0;
 
   const dataGridProps = {
-    rows: list?.items ?? [],
-    rowCount: isCacheComplete ? undefined : total,
+    rows: list ?? [],
+    rowCount: total,
     loading: isNetworkRequestInFlight(networkStatus),
     filterModel,
     paginationModel: { page: input.page - 1, pageSize: input.count },
@@ -193,7 +196,7 @@ export const useTable = <
     },
     pagination: total > input.count,
     pageSizeOptions: [input.count],
-    paginationMode: isCacheComplete ? 'client' : 'server',
+    paginationMode: 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
     filterMode: isCacheComplete ? 'client' : 'server',
     slotProps: {
