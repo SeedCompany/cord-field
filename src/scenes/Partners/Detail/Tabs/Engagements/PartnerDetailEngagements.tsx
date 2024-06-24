@@ -5,12 +5,7 @@ import {
   getGridStringOperators,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-import {
-  cleanJoin,
-  cmpBy,
-  mapEntries,
-  simpleSwitch,
-} from '@seedcompany/common';
+import { cleanJoin, cmpBy } from '@seedcompany/common';
 import { useParams } from 'react-router-dom';
 import {
   EngagementStatusLabels,
@@ -24,8 +19,6 @@ import {
   SensitivityLabels,
   SensitivityList,
 } from '~/api/schema.graphql';
-import { Sensitivity } from '~/api/schema/schema.graphql';
-import { labelFrom } from '~/common';
 import { FormattedDate } from '~/components/Formatters';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useTable } from '~/hooks';
@@ -87,7 +80,8 @@ export const PartnerDetailEngagements = () => {
 
 const enumColumn = <T extends string>(
   list: readonly T[],
-  labels: Record<T, string>
+  labels: Record<T, string>,
+  { orderByIndex }: { orderByIndex?: boolean } = {}
 ) =>
   ({
     type: 'singleSelect',
@@ -99,6 +93,7 @@ const enumColumn = <T extends string>(
       label: labels[v],
     })),
     valueFormatter: (value: T) => labels[value],
+    ...(orderByIndex ? { sortComparator: cmpBy((v) => list.indexOf(v)) } : {}),
   } satisfies Partial<GridColDef<any, T, string>>);
 
 const containsOp = {
@@ -143,16 +138,18 @@ const columns: Array<GridColDef<Engagement>> = [
     field: 'project.step',
     width: 250,
     valueGetter: (_, row) => row.project.step.value,
-    ...enumColumn(ProjectStepList, ProjectStepLabels),
+    ...enumColumn(ProjectStepList, ProjectStepLabels, {
+      orderByIndex: true,
+    }),
   },
   {
     headerName: 'Engagement Status',
     field: 'status',
-    ...enumColumn(EngagementStatusList, EngagementStatusLabels),
+    ...enumColumn(EngagementStatusList, EngagementStatusLabels, {
+      orderByIndex: true,
+    }),
     width: 190,
     valueGetter: (_, row) => row.status.value,
-    valueFormatter: (_, row) =>
-      labelFrom(EngagementStatusLabels)(row.status.value),
   },
   {
     headerName: 'Country',
@@ -201,18 +198,15 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'QR Status',
     description: 'Status of Quarterly Report Currently Due',
     field: 'currentProgressReportDue.status',
-    ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels),
+    ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels, {
+      orderByIndex: true,
+    }),
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement' &&
       row.currentProgressReportDue.value
-        ? labelFrom(ProgressReportStatusLabels)(
-            row.currentProgressReportDue.value.status.value
-          )
+        ? row.currentProgressReportDue.value.status.value
         : null,
-    sortComparator: cmpBy((v: string | null) =>
-      ProgressReportStatusIndex.get(v)
-    ),
-    renderCell({ value, row }) {
+    renderCell({ formattedValue: value, row }) {
       const report =
         row.__typename === 'LanguageEngagement'
           ? row.currentProgressReportDue.value
@@ -228,10 +222,9 @@ const columns: Array<GridColDef<Engagement>> = [
     headerName: 'Sensitivity',
     field: 'project.sensitivity',
     width: 110,
-    ...enumColumn(SensitivityList, SensitivityLabels),
-    sortComparator: cmpBy<Sensitivity>((v) =>
-      simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
-    ),
+    ...enumColumn(SensitivityList, SensitivityLabels, {
+      orderByIndex: true,
+    }),
     valueGetter: (_, row) => row.project.sensitivity,
     renderCell: ({ value }) => (
       <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
@@ -250,8 +243,3 @@ const columns: Array<GridColDef<Engagement>> = [
     ),
   },
 ];
-
-const ProgressReportStatusIndex = mapEntries(
-  [null, ...ProgressReportStatusList].entries(),
-  ([i, v]) => [!v ? null : ProgressReportStatusLabels[v], i - 1]
-).asMap;
