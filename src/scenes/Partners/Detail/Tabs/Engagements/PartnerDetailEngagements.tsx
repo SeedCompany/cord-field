@@ -69,11 +69,10 @@ export const PartnerDetailEngagements = () => {
         headerFilterHeight={90}
         initialState={{
           pinnedColumns: {
-            // Flaky with our current layout.
-            // MUI doesn't render it a lot of the times.
-            // left: ['nameProjectFirst'],
+            left: ['nameProjectFirst'],
           },
         }}
+        className="flex-layout"
         sx={{
           // Hide filter operator button since there aren't multiple operators
           '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader button': {
