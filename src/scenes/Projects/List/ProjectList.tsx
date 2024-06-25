@@ -112,7 +112,7 @@ export const ProjectGrid = ({ preset }: ProjectGridProps) => {
     variables: {},
     listAt: 'projects',
     initialInput: {
-      count: 4,
+      count: 20,
       sort: 'name',
     },
     ...(preset && { presetFilters: { [preset]: true } }),
