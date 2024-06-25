@@ -51,9 +51,14 @@ export const appComponents = ({
         size: 'small',
       },
     },
+    MuiPaper: {
+      defaultProps: {
+        elevation: 2,
+      },
+    },
     MuiCard: {
       defaultProps: {
-        elevation: 8,
+        elevation: 2,
       },
     },
     MuiCardActions: {
