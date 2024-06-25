@@ -15,6 +15,11 @@ export const appComponents = ({
     ? palette.primary.light
     : palette.primary.main;
   return {
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 2,
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: {
         '#root': {
