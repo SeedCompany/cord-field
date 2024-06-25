@@ -22,6 +22,7 @@ import { get, merge, pick, set, uniqBy } from 'lodash';
 import { useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import {
+  FilterableListInput,
   isNetworkRequestInFlight,
   type PaginatedListInput,
   type PaginatedListOutput,
@@ -30,8 +31,8 @@ import {
 import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
 
-type ListInput = SetNonNullable<
-  Required<SortableListInput & PaginatedListInput>
+export type ListInput = SetNonNullable<
+  SortableListInput & PaginatedListInput & FilterableListInput
 >;
 
 type PathsMatching<T, List> = {
@@ -107,13 +108,20 @@ export const useTable = <
     allPagesList && allPagesList.total === allPagesList.items.length;
 
   // Go to network when needed to fetch individual pages with server side filtering & sorting.
+
   const {
     data: currentPage,
     networkStatus,
     client,
   } = useQuery(query, {
     skip: isCacheComplete,
-    variables: { ...variables, input },
+    variables: {
+      ...variables,
+      input: {
+        ...input,
+        filter: { ...variables.input?.filter, ...input.filter },
+      },
+    },
     notifyOnNetworkStatusChange: true,
     onCompleted: (next) => {
       // Add this page to the "all pages" cache entry

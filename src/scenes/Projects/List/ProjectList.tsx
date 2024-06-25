@@ -1,129 +1,192 @@
 import { TabList as ActualTabList, TabContext, TabPanel } from '@mui/lab';
 import {
   type Tabs as __Tabs,
-  Divider,
-  Grid,
-  Skeleton,
+  Box,
+  Stack,
   Tab,
   Typography,
 } from '@mui/material';
-import { simpleSwitch } from '@seedcompany/common';
-import { omit, pickBy } from 'lodash';
-import { useRef } from 'react';
+import { GridColDef } from '@mui/x-data-grid-pro';
+import { cmpBy, simpleSwitch } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
-import { Project } from '~/api/schema.graphql';
-import { FilterButtonDialog } from '../../../components/Filter';
-import { useNumberFormatter } from '../../../components/Formatters';
-import { ContentContainer } from '../../../components/Layout';
-import { List, useListQuery } from '../../../components/List';
-import { ProjectListItemCard as ProjectCard } from '../../../components/ProjectListItemCard';
-import { SortButtonDialog, useSort } from '../../../components/Sort';
 import {
-  ProjectFilterOptions,
-  useProjectFilters,
-} from './ProjectFilterOptions';
-import { ProjectListDocument } from './projects.graphql';
-import { ProjectSortOptions } from './ProjectSortOptions';
+  ProjectStatusLabels,
+  ProjectStepLabels,
+  ProjectStepList,
+  ProjectTypeLabels,
+  Sensitivity,
+} from '~/api/schema.graphql';
+import { labelFrom } from '~/common';
+import { enumColumn, TableGrid } from '~/components/Grid/Grid';
+import { ContentContainer } from '~/components/Layout';
+import { Link } from '~/components/Routing';
+import { SensitivityIcon } from '~/components/Sensitivity';
+import { EnumParam, makeQueryHandler, useTable, withDefault } from '~/hooks';
+import {
+  ProjectGridDocument,
+  ProjectGridItemFragment,
+} from './projectList.graphql';
 
 const TabList = ActualTabList as typeof __Tabs;
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  options: {
-    margin: spacing(3, 0),
-  },
-  maxWidth: {
-    maxWidth: breakpoints.values.sm,
-    flexWrap: 'nowrap',
-  },
-  tabPanel: {
-    overflowY: 'auto',
-    // allow card shadow to bleed over instead of cutting it off
-    padding: spacing(0, 0, 0, 2),
-    margin: spacing(0, 0, 0, -2),
-  },
-  total: {
-    marginTop: spacing(2),
-  },
-}));
-
-export const ProjectList = () => {
-  const sort = useSort<Project>();
-  const [filters, setFilters] = useProjectFilters();
-  const list = useListQuery(ProjectListDocument, {
-    listAt: (data) => data.projects,
-    variables: {
-      input: {
-        ...sort.value,
-        filter: {
-          ...omit(filters, 'tab'),
-          ...simpleSwitch(filters.tab, {
-            mine: { mine: true },
-            pinned: { pinned: true },
-            all: {},
-          }),
-        },
-      },
-    },
-  });
-
-  const { classes } = useStyles();
-  const formatNumber = useNumberFormatter();
-  const scrollRef = useRef<HTMLElement>(null);
-
+export const ProjectOverlay = () => {
   return (
     <ContentContainer>
       <Helmet title="Projects" />
       <Typography variant="h2" paragraph>
         Projects
       </Typography>
-      <Grid container spacing={1} className={classes.options}>
-        <Grid item>
-          <SortButtonDialog {...sort}>
-            <ProjectSortOptions />
-          </SortButtonDialog>
-        </Grid>
-        <Grid item>
-          <FilterButtonDialog
-            values={pickBy(omit(filters, 'tab'))}
-            onChange={setFilters}
-          >
-            <ProjectFilterOptions />
-          </FilterButtonDialog>
-        </Grid>
-      </Grid>
+
+      <Stack
+        component="main"
+        sx={{
+          flex: 1,
+          p: 4,
+          overflowY: 'auto',
+        }}
+      >
+        <ProjectTabs />
+      </Stack>
+    </ContentContainer>
+  );
+};
+
+const useProjectFilters = makeQueryHandler({
+  tab: withDefault(EnumParam(['pinned', 'mine', 'all']), 'pinned'),
+});
+
+const ProjectTabs = () => {
+  const [filters, setFilters] = useProjectFilters();
+
+  return (
+    <Stack
+      sx={{
+        flex: 1,
+        minHeight: 375,
+        container: 'main / size',
+        '& .MuiTabPanel-root': {
+          flex: 1,
+          p: 0,
+          '&:not([hidden])': {
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        },
+      }}
+    >
       <TabContext value={filters.tab}>
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
           aria-label="project navigation tabs"
-          className={classes.maxWidth}
+          variant="scrollable"
         >
           <Tab label="Pinned" value="pinned" />
           <Tab label="Mine" value="mine" />
           <Tab label="All" value="all" />
         </TabList>
-        <Divider className={classes.maxWidth} />
-        <TabPanel
-          value={filters.tab}
-          className={classes.tabPanel}
-          ref={scrollRef}
-        >
-          <Typography variant="h3" className={classes.total}>
-            {list.data ? (
-              `${formatNumber(list.data.total)} Projects`
-            ) : (
-              <Skeleton width="12ch" />
-            )}
-          </Typography>
-          <List
-            {...list}
-            classes={{ container: classes.maxWidth }}
-            renderItem={(item) => <ProjectCard project={item} />}
-            renderSkeleton={<ProjectCard />}
-            scrollRef={scrollRef}
-          />
+        <TabPanel value="pinned">
+          <ProjectGrid preset="pinned" />
+        </TabPanel>
+        <TabPanel value="mine">
+          <ProjectGrid preset="mine" />
+        </TabPanel>
+        <TabPanel value="all">
+          <ProjectGrid />
         </TabPanel>
       </TabContext>
-    </ContentContainer>
+    </Stack>
   );
 };
+
+interface ProjectGridProps {
+  preset?: string;
+}
+
+export const ProjectGrid = ({ preset }: ProjectGridProps) => {
+  const [props] = useTable({
+    query: ProjectGridDocument,
+    variables: {
+      ...(preset && { input: { filter: { [preset]: true } } }),
+    },
+    listAt: 'projects',
+    initialInput: {
+      count: 20,
+      sort: 'name',
+    },
+  });
+
+  return (
+    <TableGrid<ProjectGridItemFragment>
+      {...props}
+      columns={columns}
+      tableProps={props}
+      hasTabContainer={true}
+    />
+  );
+};
+
+const columns: Array<GridColDef<ProjectGridItemFragment>> = [
+  {
+    headerName: 'Project Name',
+    field: 'name',
+    minWidth: 300,
+    filterable: false,
+    valueGetter: (_, { name }) => name.value,
+    renderCell: ({ value, row }) => (
+      <Link to={`/projects/${row.id}`}>{value}</Link>
+    ),
+  },
+  {
+    headerName: 'Country',
+    field: 'primaryLocation.name',
+    minWidth: 300,
+    filterable: false,
+    valueGetter: (_, { primaryLocation }) => primaryLocation.value?.name.value,
+  },
+  {
+    headerName: 'Project Step',
+    field: 'project.step',
+    width: 250,
+    filterable: false,
+    valueGetter: (_, row) => row.step.value,
+    ...enumColumn(ProjectStepList, ProjectStepLabels, {
+      orderByIndex: true,
+    }),
+  },
+  {
+    headerName: 'Type',
+    field: 'type',
+    width: 130,
+    filterable: false,
+    valueGetter: labelFrom(ProjectTypeLabels),
+  },
+  {
+    headerName: 'Status',
+    field: 'status',
+    width: 160,
+    filterable: false,
+    valueGetter: labelFrom(ProjectStatusLabels),
+  },
+  {
+    headerName: 'Engagements',
+    field: 'engagements',
+    width: 130,
+    filterable: false,
+    valueGetter: (_, { engagements }) => engagements.total,
+  },
+  {
+    headerName: 'Sensitivity',
+    field: 'sensitivity',
+    width: 180,
+    filterable: false,
+    sortComparator: cmpBy<Sensitivity>((v) =>
+      simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
+    ),
+    renderCell: ({ value }) => (
+      <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
+        <SensitivityIcon value={value} disableTooltip />
+        {value}
+      </Box>
+    ),
+  },
+];

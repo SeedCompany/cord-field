@@ -4,6 +4,9 @@ export interface InputArg<T> {
   input?: T | null;
 }
 
+export interface FilterableListInput {
+  filter?: Record<string, any>;
+}
 export interface SortableListInput {
   sort?: string;
   order?: Order;
