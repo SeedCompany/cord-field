@@ -51,11 +51,6 @@ export const appComponents = ({
         size: 'small',
       },
     },
-    MuiIconButton: {
-      defaultProps: {
-        size: 'large', // MUI v4 default. Consider removing.
-      },
-    },
     MuiCard: {
       defaultProps: {
         elevation: 8,
