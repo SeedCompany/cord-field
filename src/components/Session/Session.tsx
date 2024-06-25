@@ -1,7 +1,6 @@
 import { ApolloCache, useQuery } from '@apollo/client';
+import { useAsyncEffect } from 'ahooks';
 import { pickBy } from 'lodash';
-import LogRocket from 'logrocket';
-import { useEffect } from 'react';
 import { SessionOutput } from '~/api/schema.graphql';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
 import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
@@ -57,10 +56,11 @@ export const useBetaFeatures = (): ReadonlySet<keyof BetaFeatures> =>
 export const useIdentifyInLogRocket = () => {
   const { session, impersonator } = useSession();
   const user = impersonator ?? session;
-  useEffect(() => {
+  useAsyncEffect(async () => {
     if (!user || !process.env.RAZZLE_LOG_ROCKET_APP_ID) {
       return;
     }
+    const LogRocket = await import('logrocket');
     LogRocket.identify(
       user.id,
       pickBy({

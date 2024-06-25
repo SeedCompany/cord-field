@@ -1,8 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
-import LogRocket from 'logrocket';
-import setupLogRocketReact from 'logrocket-react';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { ConfettiProvider } from './components/Confetti';
@@ -14,25 +12,29 @@ import { createTheme } from './theme';
 
 const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
 if (logRocketAppId) {
-  LogRocket.init(logRocketAppId, {
-    shouldParseXHRBlob: true, // Parse API response bodies
-    network: {
-      requestSanitizer(request) {
-        // Relies on operation name suffix which do in Apollo HttpLink config
-        if (
-          [...GqlSensitiveOperations].some((op) =>
-            request.url.endsWith(`/${op}`)
-          )
-        ) {
-          request.body = undefined;
-        }
-        return request;
-      },
-    },
-  });
-  if (typeof window !== 'undefined') {
-    setupLogRocketReact(LogRocket);
-  }
+  void Promise.all([import('logrocket'), import('logrocket-react')]).then(
+    ([LogRocket, setupLogRocketReact]) => {
+      LogRocket.default.init(logRocketAppId, {
+        shouldParseXHRBlob: true, // Parse API response bodies
+        network: {
+          requestSanitizer(request) {
+            // Relies on operation name suffix which do in Apollo HttpLink config
+            if (
+              [...GqlSensitiveOperations].some((op) =>
+                request.url.endsWith(`/${op}`)
+              )
+            ) {
+              request.body = undefined;
+            }
+            return request;
+          },
+        },
+      });
+      if (typeof window !== 'undefined') {
+        setupLogRocketReact.default(LogRocket);
+      }
+    }
+  );
 }
 
 MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
