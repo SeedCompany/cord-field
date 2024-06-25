@@ -22,6 +22,7 @@ import { get, merge, pick, set, uniqBy } from 'lodash';
 import { useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import {
+  FilterableListInput,
   isNetworkRequestInFlight,
   type PaginatedListInput,
   type PaginatedListOutput,
@@ -31,7 +32,7 @@ import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
 
 type ListInput = SetNonNullable<
-  Required<SortableListInput & PaginatedListInput>
+  Required<SortableListInput & PaginatedListInput & FilterableListInput>
 >;
 
 type PathsMatching<T, List> = {
@@ -64,12 +65,14 @@ export const useTable = <
   variables,
   listAt,
   initialInput,
+  presetFilters,
   keyArgs = defaultKeyArgs,
 }: {
   query: DocumentNode<Output, Vars>;
   variables: Vars;
   listAt: Path;
   initialInput?: Partial<ListInput>;
+  presetFilters?: Record<string, any>;
   keyArgs?: string[];
 }) => {
   const resolvedInitialInput = {
@@ -99,7 +102,12 @@ export const useTable = <
   // This exists after all pages have been queried with the useQuery hook below.
   // This allows us to do client-side filtering & sorting once we have the complete list.
   const { data: allPages } = useQuery(query, {
-    variables,
+    variables: {
+      ...variables,
+      ...(presetFilters && {
+        input: { filter: { ...input.filter, ...presetFilters } },
+      }),
+    },
     fetchPolicy: 'cache-only',
   });
   const allPagesList = allPages ? (get(allPages, listAt) as List) : undefined;
@@ -113,7 +121,12 @@ export const useTable = <
     client,
   } = useQuery(query, {
     skip: isCacheComplete,
-    variables: { ...variables, input },
+    variables: {
+      ...variables,
+      ...(presetFilters
+        ? { input: { filter: { ...input.filter, ...presetFilters } } }
+        : input),
+    },
     notifyOnNetworkStatusChange: true,
     onCompleted: (next) => {
       // Add this page to the "all pages" cache entry

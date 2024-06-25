@@ -8,6 +8,9 @@ export interface SortableListInput {
   sort?: string;
   order?: Order;
 }
+export interface FilterableListInput {
+  filter?: Record<string, any>;
+}
 
 export interface PaginatedListInput {
   count?: number | null;
