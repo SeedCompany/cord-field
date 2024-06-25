@@ -8,9 +8,6 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
   const roleLuminance = dark ? 32 : 84;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
-    background: {
-      default: dark ? '#303030' : grey[50], // MUI v4 default
-    },
     primary: {
       main: mainGreen,
       contrastText: '#ffffff',
