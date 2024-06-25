@@ -34,7 +34,9 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     text: {
       // Close to #3c444e while still using alpha
       ...(!dark ? { primary: 'rgba(0, 0, 0, 0.75)' } : {}),
-      secondary: '#8f928b',
+      // Close to #8f928b while still using alpha
+      // Still it looks so contrast-less for form labels
+      // secondary: 'rgba(0, 0, 0, 0.45)',
     },
 
     // TODO theme.palette.augmentColor()
