@@ -32,7 +32,8 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       main: '#f2994a',
     },
     text: {
-      primary: dark ? '#f3f4f6' : '#3c444e',
+      // Close to #3c444e while still using alpha
+      ...(!dark ? { primary: 'rgba(0, 0, 0, 0.75)' } : {}),
       secondary: '#8f928b',
     },
 
