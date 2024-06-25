@@ -50,11 +50,6 @@ export const appComponents = ({
       defaultProps: {
         size: 'small',
       },
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-        },
-      },
     },
     MuiIconButton: {
       defaultProps: {
@@ -70,8 +65,6 @@ export const appComponents = ({
       styleOverrides: {
         root: {
           // Add divider between card content & actions
-          // Implementation is following <Divider /> from MUI v5
-          // https://github.com/mui-org/material-ui/pull/18965
           borderTop: `thin solid ${palette.divider}`,
         },
       },
@@ -82,11 +75,12 @@ export const appComponents = ({
       },
       styleOverrides: {
         root: {
-          textTransform: 'uppercase',
-          fontWeight: typography.weight.medium,
           '&.Mui-focused': {
             color: primaryColorForText,
           },
+        },
+        shrink: {
+          fontWeight: typography.weight.medium,
         },
       },
     },
@@ -94,11 +88,6 @@ export const appComponents = ({
       defaultProps: {
         // because we always shrink label we always want notch applied
         notched: true,
-      },
-      styleOverrides: {
-        notchedOutline: {
-          textTransform: 'uppercase',
-        },
       },
     },
     MuiFormControl: {
