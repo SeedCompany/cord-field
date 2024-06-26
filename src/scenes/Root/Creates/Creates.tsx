@@ -1,3 +1,4 @@
+import { mapOf } from '@seedcompany/common';
 import { ComponentType } from 'react';
 import { Except } from 'type-fest';
 import { Power } from '~/api/schema.graphql';
@@ -9,15 +10,14 @@ import { CreateProject } from '../../Projects/Create';
 import { CreateUser } from '../../Users/Create';
 
 type Create = [
-  power: Power,
   dialog: ComponentType<Except<DialogFormProps<any, any>, 'onSubmit'>>,
   label?: string
 ];
 
-export const creates: Create[] = [
-  ['CreateProject', CreateProject],
-  ['CreateLanguage', CreateLanguage],
-  ['CreateUser', CreateUser, 'Person'],
-  ['CreatePartner', CreatePartner],
-  ['CreateLocation', CreateLocation],
-];
+export const creates = mapOf<Power, Create>([
+  ['CreateProject', [CreateProject]],
+  ['CreateLanguage', [CreateLanguage]],
+  ['CreateUser', [CreateUser, 'Person']],
+  ['CreatePartner', [CreatePartner]],
+  ['CreateLocation', [CreateLocation]],
+]);
