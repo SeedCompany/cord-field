@@ -6,6 +6,8 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { cleanJoin, cmpBy } from '@seedcompany/common';
+import { merge } from 'lodash';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   EngagementStatusLabels,
@@ -22,6 +24,10 @@ import {
 import { FormattedDate } from '~/components/Formatters';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useTable } from '~/hooks';
+import {
+  DefaultDataGridStyles,
+  EmptyEnumFilterValue,
+} from '../../../../../components/Grid/DefaultDataGridStyles';
 import { Link } from '../../../../../components/Routing';
 import { PartnerTabContainer } from '../PartnerTabContainer';
 import {
@@ -42,6 +48,11 @@ export const PartnerDetailEngagements = () => {
     },
   });
 
+  const slotProps = useMemo(
+    () => merge({}, DefaultDataGridStyles.slotProps, props.slotProps),
+    [props.slotProps]
+  );
+
   return (
     <PartnerTabContainer
       sx={{
@@ -55,7 +66,9 @@ export const PartnerDetailEngagements = () => {
     >
       <DataGrid<Engagement>
         density="compact"
+        {...DefaultDataGridStyles}
         {...props}
+        slotProps={slotProps}
         columns={columns}
         disableRowSelectionOnClick
         headerFilters
@@ -88,10 +101,9 @@ const enumColumn = <T extends string>(
     filterOperators: getGridSingleSelectOperators().filter(
       (op) => op.value !== 'not'
     ),
-    valueOptions: list.map((v) => ({
-      value: v,
-      label: labels[v],
-    })),
+    valueOptions: list.slice(),
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    getOptionLabel: (v) => labels[v as T] ?? EmptyEnumFilterValue,
     valueFormatter: (value: T) => labels[value],
     ...(orderByIndex ? { sortComparator: cmpBy((v) => list.indexOf(v)) } : {}),
   } satisfies Partial<GridColDef<any, T, string>>);
@@ -163,7 +175,7 @@ const columns: Array<GridColDef<Engagement>> = [
     description: 'Ethnologue Code',
     field: 'language.ethnologue.code',
     ...textColumn,
-    width: 75,
+    width: 95,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.ethnologue.code.value?.toUpperCase()
@@ -174,7 +186,7 @@ const columns: Array<GridColDef<Engagement>> = [
     description: 'Registry of Dialects',
     field: 'language.registryOfDialectsCode',
     ...textColumn,
-    width: 80,
+    width: 95,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.registryOfDialectsCode.value

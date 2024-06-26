@@ -199,15 +199,7 @@ export const useTable = <
     paginationMode: 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
     filterMode: isCacheComplete ? 'client' : 'server',
-    slotProps: {
-      filterPanel: {
-        logicOperators: [GridLogicOperator.And],
-        filterFormProps: {
-          filterColumns,
-        },
-        getColumnForNewFilter,
-      },
-    },
+    slotProps: apiSlotProps,
   } satisfies Partial<DataGridProps>;
 
   const props = {
@@ -274,6 +266,16 @@ const getColumnForNewFilter = ({
     .find((colDef) => colDef.filterOperators?.length);
   return columnForNewFilter?.field ?? null;
 };
+
+const apiSlotProps = {
+  filterPanel: {
+    logicOperators: [GridLogicOperator.And],
+    filterFormProps: {
+      filterColumns,
+    },
+    getColumnForNewFilter,
+  },
+} satisfies DataGridProps['slotProps'];
 
 declare module '@mui/x-data-grid/internals' {
   interface GridBaseColDef {
