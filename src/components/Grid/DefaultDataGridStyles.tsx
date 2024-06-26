@@ -1,6 +1,10 @@
 import { Box, FormControl, TextFieldProps } from '@mui/material';
 import type { DataGridProProps as DataGridProps } from '@mui/x-data-grid-pro';
 
+const scrollIntoView: DataGridProps['onMenuOpen'] = ({ target }) => {
+  target?.closest('.MuiDataGrid-root')?.scrollIntoView({ block: 'center' });
+};
+
 const MyFormControl = (props: any) => (
   <FormControl
     // Revert our theme defaults adding margins to selects
@@ -53,6 +57,7 @@ export const DefaultDataGridStyles = {
       },
     },
   },
+  onMenuOpen: scrollIntoView,
 } satisfies Partial<DataGridProps>;
 
 export const EmptyEnumFilterValue = (
