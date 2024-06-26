@@ -18,18 +18,6 @@ export const AppMetadata = () => (
       />
     )}
 
-    {/* Polyfill for IntersectionObserver, ResizeObserver, AbortController */}
-    <script
-      crossOrigin="anonymous"
-      src={`https://polyfill.io/v3/polyfill.min.js?features=${encodeURIComponent(
-        [
-          'IntersectionObserverEntry',
-          'IntersectionObserver',
-          'ResizeObserver',
-          'AbortController',
-        ].join(',')
-      )}`}
-    />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
