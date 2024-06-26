@@ -1,7 +1,8 @@
 import { Add } from '@mui/icons-material';
 import { ButtonProps, Menu, MenuItem, MenuProps } from '@mui/material';
+import { entries } from '@seedcompany/common';
 import { startCase } from 'lodash';
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { Power } from '~/api/schema.graphql';
 import { CreateButton } from '../../../components/CreateButton';
 import { useSession } from '../../../components/Session';
@@ -26,9 +27,20 @@ export const CreateButtonMenu = (props: CreateButtonMenuProps) => {
     openDialog(power);
   };
 
-  const allowed = creates.filter(([power]) => powers?.includes(power));
+  const allowedCreates = useMemo(
+    () =>
+      entries(creates).flatMap(([power, [_, maybeLabel]]) =>
+        powers?.includes(power)
+          ? {
+              power,
+              label: maybeLabel ?? startCase(power.replace('Create', '')),
+            }
+          : []
+      ),
+    [powers]
+  );
 
-  if (allowed.length === 0) {
+  if (allowedCreates.length === 0) {
     return null;
   }
 
@@ -47,7 +59,6 @@ export const CreateButtonMenu = (props: CreateButtonMenuProps) => {
         id="create-menu"
         open={anchorEl !== null}
         anchorEl={anchorEl}
-        keepMounted
         onClose={closeAddMenu}
         anchorOrigin={{
           vertical: 'bottom',
@@ -59,9 +70,9 @@ export const CreateButtonMenu = (props: CreateButtonMenuProps) => {
         }}
         {...MenuProps}
       >
-        {allowed.map(([power, _, maybeLabel]) => (
+        {allowedCreates.map(({ power, label }) => (
           <MenuItem key={power} onClick={openCreate(power)}>
-            {maybeLabel ?? startCase(power.replace('Create', ''))}
+            {label}
           </MenuItem>
         ))}
       </Menu>
