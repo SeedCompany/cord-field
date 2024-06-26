@@ -21,7 +21,6 @@ import {
   SensitivityLabels,
   SensitivityList,
 } from '~/api/schema.graphql';
-import { FormattedDate } from '~/components/Formatters';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useTable } from '~/hooks';
 import {
@@ -43,7 +42,7 @@ export const PartnerDetailEngagements = () => {
     variables: { id: partnerId },
     listAt: 'partner.engagements',
     initialInput: {
-      count: 20,
+      count: 5,
       sort: 'nameProjectFirst',
     },
   });
@@ -195,15 +194,15 @@ const columns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'MOU Start',
     field: 'startDate',
-    valueGetter: (_, { startDate }) => startDate.value,
-    renderCell: ({ value }) => <FormattedDate date={value} />,
+    type: 'date',
+    valueGetter: (_, { startDate }) => startDate.value?.toJSDate(),
     filterable: false,
   },
   {
     headerName: 'MOU End',
     field: 'endDate',
-    valueGetter: (_, { endDate }) => endDate.value,
-    renderCell: ({ value }) => <FormattedDate date={value} />,
+    type: 'date',
+    valueGetter: (_, { endDate }) => endDate.value?.toJSDate(),
     filterable: false,
   },
   {
