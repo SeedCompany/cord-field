@@ -42,7 +42,7 @@ export const PartnerDetailEngagements = () => {
     variables: { id: partnerId },
     listAt: 'partner.engagements',
     initialInput: {
-      count: 5,
+      count: 25,
       sort: 'nameProjectFirst',
     },
   });
