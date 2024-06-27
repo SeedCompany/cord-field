@@ -19,7 +19,6 @@ export const TabList = <T extends string>(props: TabListProps<T>) => {
     tab: withDefault(EnumParam(labels), tabProps.default),
   })();
 
-  console.log('Tabs', tabs);
   return (
     <TabContext value={tabs.tab}>
       <MUITabList
