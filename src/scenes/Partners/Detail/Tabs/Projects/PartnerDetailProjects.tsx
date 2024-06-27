@@ -9,8 +9,8 @@ import { useParams } from 'react-router-dom';
 import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema/enumLists';
 import { Sensitivity } from '~/api/schema/schema.graphql';
 import { labelFrom } from '~/common';
+import { useDataGridSource } from '~/components/Grid';
 import { SensitivityIcon } from '~/components/Sensitivity';
-import { useTable } from '~/hooks';
 import { Link } from '../../../../../components/Routing';
 import { PartnerTabContainer } from '../PartnerTabContainer';
 import {
@@ -21,7 +21,7 @@ import {
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
 
-  const [props] = useTable({
+  const [props] = useDataGridSource({
     query: PartnerProjectsDocument,
     variables: { id: partnerId },
     listAt: 'partner.projects',

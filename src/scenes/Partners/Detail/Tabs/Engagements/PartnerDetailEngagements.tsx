@@ -20,9 +20,8 @@ import {
   SensitivityLabels,
   SensitivityList,
 } from '~/api/schema.graphql';
-import { enumColumn } from '~/components/Grid';
+import { enumColumn, useDataGridSource } from '~/components/Grid';
 import { SensitivityIcon } from '~/components/Sensitivity';
-import { useTable } from '~/hooks';
 import {
   DefaultDataGridStyles,
   flexLayout,
@@ -38,7 +37,7 @@ import {
 export const PartnerDetailEngagements = () => {
   const { partnerId = '' } = useParams();
 
-  const [props] = useTable({
+  const [props] = useDataGridSource({
     query: PartnerDetailEngagementsDocument,
     variables: { id: partnerId },
     listAt: 'partner.engagements',

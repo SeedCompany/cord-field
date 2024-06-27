@@ -53,7 +53,7 @@ const defaultInitialInput = {
 };
 const defaultKeyArgs = ['__typename', 'id'];
 
-export const useTable = <
+export const useDataGridSource = <
   Output extends Record<string, any>,
   Vars,
   Input extends Partial<ListInput>,
