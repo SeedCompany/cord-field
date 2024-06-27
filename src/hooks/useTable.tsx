@@ -8,10 +8,13 @@ import {
   GridFilterItem,
   GridLogicOperator,
 } from '@mui/x-data-grid';
-import type {
+import {
   DataGridProProps as DataGridProps,
-  GridFilterModel,
+  GridApiPro,
+  GridFetchRowsParams,
+  useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import { useDebounceFn, useLatest } from 'ahooks';
 import {
   type FieldNode,
   getOperationAST,
@@ -19,16 +22,15 @@ import {
   type SelectionSetNode,
 } from 'graphql';
 import { get, merge, pick, set, uniqBy } from 'lodash';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import {
-  isNetworkRequestInFlight,
   type PaginatedListInput,
   type PaginatedListOutput,
   type SortableListInput,
 } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
-import { lowerCase, upperCase } from '~/common';
+import { upperCase } from '~/common';
 
 type ListInput = SetNonNullable<
   Required<SortableListInput & PaginatedListInput>
@@ -43,7 +45,6 @@ type PathsMatching<T, List> = {
 }[Paths<T>];
 
 const defaultInitialInput = {
-  page: 1,
   count: 25,
   sort: 'id',
   order: 'ASC' as Order,
@@ -69,17 +70,12 @@ export const useTable = <
   query: DocumentNode<Output, Vars>;
   variables: Vars;
   listAt: Path;
-  initialInput?: Partial<ListInput>;
+  initialInput?: Partial<Omit<ListInput, 'page'>>;
   keyArgs?: string[];
 }) => {
-  const resolvedInitialInput = {
-    ...defaultInitialInput,
-    ...initialInput,
-  };
-  const [input, onChange] = useState(() => resolvedInitialInput);
-  const [filterModel, setFilterModel] = useState<GridFilterModel>(() => ({
-    items: [],
-  }));
+  const initialInputRef = useLatest(initialInput);
+  const apiRef = useGridApiRef();
+  const api: GridApiPro = apiRef.current;
 
   const queryForItemRef = useMemo(() => {
     const queryForItemRef = structuredClone(query);
@@ -98,7 +94,7 @@ export const useTable = <
   // Try to pull the complete list from the cache
   // This exists after all pages have been queried with the useQuery hook below.
   // This allows us to do client-side filtering & sorting once we have the complete list.
-  const { data: allPages } = useQuery(query, {
+  const { data: allPages, client } = useQuery(query, {
     variables,
     fetchPolicy: 'cache-only',
   });
@@ -106,94 +102,144 @@ export const useTable = <
   const isCacheComplete =
     allPagesList && allPagesList.total === allPagesList.items.length;
 
-  // Go to network when needed to fetch individual pages with server side filtering & sorting.
-  const {
-    data: currentPage,
-    networkStatus,
-    client,
-  } = useQuery(query, {
-    skip: isCacheComplete,
-    variables: { ...variables, input },
-    notifyOnNetworkStatusChange: true,
-    onCompleted: (next) => {
-      // Add this page to the "all pages" cache entry
-      // This is read back in the first useQuery hook, above.
-      client.cache.updateQuery(
-        {
-          query: queryForItemRef,
-          variables,
-        },
-        (prev) => {
-          const prevList = prev ? (get(prev, listAt) as List) : undefined;
-          const nextList = get(next, listAt) as List;
-          if (prevList && prevList.items.length === nextList.total) {
-            return undefined; // no change
-          }
-          const mergedList = uniqBy(
-            [
-              ...(prevList?.items ?? []),
-              ...nextList.items.map((item) => pick(item, keyArgs)),
-            ],
-            (item) => client.cache.identify(item)
-          );
-          const nextCached = structuredClone(next);
-          set(nextCached, listAt, { ...nextList, items: mergedList });
-          return nextCached;
+  // Add a page to the "all pages" cache entry
+  // This is read back in the first useQuery hook, above.
+  const addToAllPagesCache = (next: Output) => {
+    client.cache.updateQuery(
+      {
+        query: queryForItemRef,
+        variables,
+      },
+      (prev) => {
+        const prevList = prev ? (get(prev, listAt) as List) : undefined;
+        const nextList = get(next, listAt) as List;
+        if (prevList && prevList.items.length === nextList.total) {
+          return undefined; // no change
         }
-      );
-    },
+        const mergedList = uniqBy(
+          [
+            ...(prevList?.items ?? []),
+            ...nextList.items.map((item) => pick(item, keyArgs)),
+          ],
+          (item) => client.cache.identify(item)
+        );
+        const nextCached = structuredClone(next);
+        set(nextCached, listAt, { ...nextList, items: mergedList });
+        return nextCached;
+      }
+    );
+  };
+
+  // State for current sorting & filtering
+  const [view, setView] = useState(
+    (): Pick<DataGridProps, 'sortModel' | 'filterModel'> => ({
+      filterModel: { items: [] },
+      sortModel: [],
+    })
+  );
+  const viewRef = useLatest(view);
+
+  // Convert the view state to the input for the GQL query
+  const input = useMemo(
+    () => ({
+      ...defaultInitialInput,
+      ...initialInputRef.current,
+      ...(view.sortModel?.[0] && {
+        sort: view.sortModel[0].field,
+        order: upperCase(view.sortModel[0].sort!),
+      }),
+      filter: convertMuiFiltersToApi(view.filterModel, api),
+    }),
+    [api, initialInputRef, view]
+  );
+
+  // Grab the first page from cache/network on mount and when view changes
+  const { data: firstPage, loading } = useQuery(query, {
+    skip: isCacheComplete,
+    variables: useMemo(
+      () => ({ ...variables, input: { ...input, page: 1 } }),
+      [variables, input]
+    ),
+    onCompleted: addToAllPagesCache,
   });
-  const currentPageList = currentPage
-    ? (get(currentPage, listAt) as List)
+  const firstPageList = firstPage
+    ? (get(firstPage, listAt) as List)
     : undefined;
 
-  const list = isCacheComplete ? allPagesList : currentPageList;
-  const total = allPagesList?.total ?? currentPageList?.total ?? 0;
+  const list = isCacheComplete ? allPagesList : firstPageList;
+  const total = allPagesList?.total ?? firstPageList?.total ?? 0;
+
+  // Load additional pages imperatively as needed based on scrolling
+  // This is debounced to mostly to reduce the client side load.
+  // It is theoretical as well that some pages could be scrolled past,
+  // and the debouncing would skip those page requests.
+  const onFetchRows = useDebounceFn(
+    (params: GridFetchRowsParams) => {
+      const { firstRowToRender, lastRowToRender } = params;
+      const firstPage = Math.ceil((firstRowToRender + 1) / input.count);
+      const lastPage = Math.ceil((lastRowToRender + 1) / input.count);
+      const pages = Array.from(
+        { length: lastPage - firstPage + 1 },
+        (_, i) => firstPage + i
+      )
+        // skip the first page always loaded first by useQuery hook
+        .filter((page) => page > 1);
+
+      for (const page of pages) {
+        void client
+          .query({
+            query,
+            variables: {
+              ...variables,
+              input: { ...input, page },
+            },
+          })
+          .then((res) => {
+            // Always try to complete the list in cache.
+            addToAllPagesCache(res.data);
+
+            const isCurrent =
+              params.sortModel === viewRef.current.sortModel &&
+              params.filterModel === viewRef.current.filterModel;
+            if (!isCurrent) {
+              // Ignoring results for different view
+              return;
+            }
+
+            // Swap in real rows via the recommended process.
+            const firstRowToReplace = (page - 1) * input.count;
+            const list = (get(res.data, listAt) as List).items.slice();
+            api.unstable_replaceRows(firstRowToReplace, list);
+          });
+      }
+    },
+    {
+      wait: 500,
+    }
+  );
+
+  const onSortModelChange: DataGridProps['onSortModelChange'] & {} =
+    useCallback(
+      (sortModel) => setView((prev) => ({ ...prev, sortModel })),
+      [setView]
+    );
+  const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
+    useCallback(
+      (filterModel) => setView((prev) => ({ ...prev, filterModel })),
+      [setView]
+    );
 
   const dataGridProps = {
+    apiRef,
     rows: list?.items ?? [],
+    loading,
     rowCount: total,
-    loading: isNetworkRequestInFlight(networkStatus),
-    filterModel,
-    paginationModel: { page: input.page - 1, pageSize: input.count },
-    sortModel: [{ field: input.sort, sort: lowerCase(input.order) }],
-    onPaginationModelChange: (next) => {
-      onChange((prev) => ({ ...prev, page: next.page + 1 }));
-    },
-    onSortModelChange: ([next]) => {
-      if (!next) {
-        onChange(resolvedInitialInput);
-        return;
-      }
-      onChange((prev) => ({
-        ...prev,
-        page: 1,
-        sort: next.field,
-        order: upperCase(next.sort!),
-      }));
-    },
-    onFilterModelChange: (next, { api }) => {
-      setFilterModel(next);
-
-      const parts = next.items.map((item) => {
-        const col = api.getColumn(item.field);
-        return item.value == null
-          ? {}
-          : col.serverFilter
-          ? col.serverFilter(item)
-          : set({}, item.field, item.value);
-      });
-      const filter = merge({}, ...parts);
-
-      onChange((prev) => ({
-        ...prev,
-        page: 1,
-        filter,
-      }));
-    },
-    pagination: total > input.count,
-    pageSizeOptions: [input.count],
-    paginationMode: isCacheComplete ? 'client' : 'server',
+    ...view,
+    hideFooterPagination: true,
+    onFetchRows: onFetchRows.run,
+    onSortModelChange,
+    onFilterModelChange,
+    rowsLoadingMode: isCacheComplete ? 'client' : 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
     filterMode: isCacheComplete ? 'client' : 'server',
     slotProps: apiSlotProps,
@@ -231,6 +277,25 @@ const getFieldPath = (
     current = selection.selectionSet;
   }
   return current;
+};
+
+const convertMuiFiltersToApi = (
+  next: DataGridProps['filterModel'],
+  api: GridApiPro
+) => {
+  if (!next) {
+    return undefined;
+  }
+  const parts = next.items.map((item) => {
+    const col = api.getColumn(item.field);
+    return item.value == null
+      ? null
+      : col.serverFilter
+      ? col.serverFilter(item)
+      : set({}, item.field, item.value);
+  });
+  const filter = merge({}, ...parts);
+  return Object.keys(filter).length > 0 ? filter : undefined;
 };
 
 // Copied from MUI docs
