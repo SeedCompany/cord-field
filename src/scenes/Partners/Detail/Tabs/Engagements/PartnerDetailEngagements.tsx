@@ -1,11 +1,10 @@
 import { Box } from '@mui/material';
 import {
   DataGridPro as DataGrid,
-  getGridSingleSelectOperators,
   getGridStringOperators,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-import { cleanJoin, cmpBy } from '@seedcompany/common';
+import { cleanJoin } from '@seedcompany/common';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -21,11 +20,11 @@ import {
   SensitivityLabels,
   SensitivityList,
 } from '~/api/schema.graphql';
+import { enumColumn } from '~/components/Grid';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { useTable } from '~/hooks';
 import {
   DefaultDataGridStyles,
-  EmptyEnumFilterValue,
   flexLayout,
   noHeaderFilterButtons,
 } from '../../../../../components/Grid/DefaultDataGridStyles';
@@ -82,23 +81,6 @@ export const PartnerDetailEngagements = () => {
     </PartnerTabContainer>
   );
 };
-
-const enumColumn = <T extends string>(
-  list: readonly T[],
-  labels: Record<T, string>,
-  { orderByIndex }: { orderByIndex?: boolean } = {}
-) =>
-  ({
-    type: 'singleSelect',
-    filterOperators: getGridSingleSelectOperators().filter(
-      (op) => op.value !== 'not'
-    ),
-    valueOptions: list.slice(),
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    getOptionLabel: (v) => labels[v as T] ?? EmptyEnumFilterValue,
-    valueFormatter: (value: T) => labels[value],
-    ...(orderByIndex ? { sortComparator: cmpBy((v) => list.indexOf(v)) } : {}),
-  } satisfies Partial<GridColDef<any, T, string>>);
 
 const containsOp = {
   ...getGridStringOperators()[0]!,
