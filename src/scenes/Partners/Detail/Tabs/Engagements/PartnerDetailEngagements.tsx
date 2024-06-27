@@ -30,11 +30,11 @@ import {
   noHeaderFilterButtons,
 } from '../../../../../components/Grid/DefaultDataGridStyles';
 import { Link } from '../../../../../components/Routing';
-import { PartnerTabContainer } from '../PartnerTabContainer';
 import {
   PartnerDetailEngagementsTableListItemFragment as Engagement,
   PartnerDetailEngagementsDocument,
 } from './PartnerDetailEngagements.graphql';
+import { PartnerTabContainer } from '../PartnerTabContainer';
 
 export const PartnerDetailEngagements = () => {
   const { partnerId = '' } = useParams();

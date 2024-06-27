@@ -21,7 +21,7 @@ interface TableGridProps<T extends GridValidRowModel> {
   columns: Array<GridColDef<T>>;
   initialState?: DataGridProProps['initialState'];
   hasTabContainer?: boolean;
-  tabStyles?: SxProps<Theme> | undefined;
+  tabStyles?: SxProps<Theme>;
 }
 
 export const TabContainer = styled(Paper)(() => ({
