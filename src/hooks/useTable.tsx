@@ -30,7 +30,7 @@ import {
   type SortableListInput,
 } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
-import { upperCase } from '~/common';
+import { lowerCase, upperCase } from '~/common';
 
 type ListInput = SetNonNullable<
   Required<SortableListInput & PaginatedListInput>
@@ -134,7 +134,12 @@ export const useTable = <
   const [view, setView] = useState(
     (): Pick<DataGridProps, 'sortModel' | 'filterModel'> => ({
       filterModel: { items: [] },
-      sortModel: [],
+      sortModel: [
+        {
+          field: initialInput?.sort ?? defaultInitialInput.sort,
+          sort: lowerCase(initialInput?.order ?? defaultInitialInput.order),
+        },
+      ],
     })
   );
   const viewRef = useLatest(view);
