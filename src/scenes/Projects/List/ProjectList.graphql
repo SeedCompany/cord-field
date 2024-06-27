@@ -1,0 +1,8 @@
+query ProjectList($input: ProjectListInput) {
+  projects(input: $input) {
+    items {
+      ...projectRow
+    }
+    ...Pagination
+  }
+}
