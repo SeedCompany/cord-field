@@ -25,7 +25,7 @@ const InputComponentProps = {
   margin: 'none',
 } satisfies TextFieldProps;
 
-export const DefaultDataGridStyles = {
+export const DefaultDataGridStyles: Partial<DataGridProps> = {
   density: 'compact',
   headerFilterHeight: 90,
   ignoreDiacritics: true,

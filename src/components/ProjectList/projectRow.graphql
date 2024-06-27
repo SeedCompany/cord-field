@@ -1,0 +1,30 @@
+fragment projectRow on Project {
+  id
+  type
+  name {
+    value
+  }
+  status
+  ... on InternshipProject {
+    engagements {
+      total
+    }
+  }
+  ... on TranslationProject {
+    engagements {
+      total
+    }
+  }
+  sensitivity
+  primaryLocation {
+    value {
+      id
+      name {
+        value
+      }
+    }
+  }
+  step {
+    value
+  }
+}

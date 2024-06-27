@@ -1,39 +1,8 @@
-query ProjectGrid($input: ProjectListInput) {
+query ProjectList($input: ProjectListInput) {
   projects(input: $input) {
     items {
-      ...ProjectGridItem
+      ...projectRow
     }
     ...Pagination
-  }
-}
-
-fragment ProjectGridItem on Project {
-  id
-  type
-  name {
-    value
-  }
-  status
-  ... on InternshipProject {
-    engagements {
-      total
-    }
-  }
-  ... on TranslationProject {
-    engagements {
-      total
-    }
-  }
-  sensitivity
-  primaryLocation {
-    value {
-      id
-      name {
-        value
-      }
-    }
-  }
-  step {
-    value
   }
 }

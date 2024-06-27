@@ -1,35 +1,17 @@
-import { TabList as ActualTabList, TabContext, TabPanel } from '@mui/lab';
-import {
-  type Tabs as __Tabs,
-  Box,
-  Stack,
-  Tab,
-  Typography,
-} from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid-pro';
-import { cmpBy, simpleSwitch } from '@seedcompany/common';
+import { TabPanel } from '@mui/lab';
+import { Stack, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import {
-  ProjectStatusLabels,
-  ProjectStepLabels,
-  ProjectStepList,
-  ProjectTypeLabels,
-  Sensitivity,
-} from '~/api/schema.graphql';
-import { labelFrom } from '~/common';
-import { enumColumn, TableGrid } from '~/components/Grid/Grid';
 import { ContentContainer } from '~/components/Layout';
-import { Link } from '~/components/Routing';
-import { SensitivityIcon } from '~/components/Sensitivity';
-import { EnumParam, makeQueryHandler, useTable, withDefault } from '~/hooks';
+import { ProjectList } from '~/components/ProjectList/ProjectList';
 import {
-  ProjectGridDocument,
-  ProjectGridItemFragment,
-} from './projectList.graphql';
+  TabContainer,
+  TabList,
+  TabPanelContentContainer,
+} from '~/components/Tabs';
+import { useTable } from '~/hooks';
+import { ProjectListDocument } from './ProjectList.graphql';
 
-const TabList = ActualTabList as typeof __Tabs;
-
-export const ProjectOverlay = () => {
+export const ProjectLayout = () => {
   return (
     <ContentContainer>
       <Helmet title="Projects" />
@@ -51,60 +33,40 @@ export const ProjectOverlay = () => {
   );
 };
 
-const useProjectFilters = makeQueryHandler({
-  tab: withDefault(EnumParam(['pinned', 'mine', 'all']), 'pinned'),
-});
-
 const ProjectTabs = () => {
-  const [filters, setFilters] = useProjectFilters();
+  const tabProps = {
+    labels: [
+      { label: 'Pinned', value: 'pinned' },
+      { label: 'Mine', value: 'mine' },
+      { label: 'All', value: 'all' },
+    ],
+    default: 'mine',
+  };
 
   return (
-    <Stack
-      sx={{
-        flex: 1,
-        minHeight: 375,
-        container: 'main / size',
-        '& .MuiTabPanel-root': {
-          flex: 1,
-          p: 0,
-          '&:not([hidden])': {
-            display: 'flex',
-            flexDirection: 'column',
-          },
-        },
-      }}
-    >
-      <TabContext value={filters.tab}>
-        <TabList
-          onChange={(_e, tab) => setFilters({ ...filters, tab })}
-          aria-label="project navigation tabs"
-          variant="scrollable"
-        >
-          <Tab label="Pinned" value="pinned" />
-          <Tab label="Mine" value="mine" />
-          <Tab label="All" value="all" />
-        </TabList>
+    <TabContainer>
+      <TabList tabProps={tabProps}>
         <TabPanel value="pinned">
-          <ProjectGrid preset="pinned" />
+          <PanelContent preset="pinned" />
         </TabPanel>
         <TabPanel value="mine">
-          <ProjectGrid preset="mine" />
+          <PanelContent preset="mine" />
         </TabPanel>
         <TabPanel value="all">
-          <ProjectGrid />
+          <PanelContent />
         </TabPanel>
-      </TabContext>
-    </Stack>
+      </TabList>
+    </TabContainer>
   );
 };
 
-interface ProjectGridProps {
+interface PanelContentProps {
   preset?: string;
 }
 
-export const ProjectGrid = ({ preset }: ProjectGridProps) => {
+export const PanelContent = ({ preset }: PanelContentProps) => {
   const [props] = useTable({
-    query: ProjectGridDocument,
+    query: ProjectListDocument,
     variables: {
       ...(preset && { input: { filter: { [preset]: true } } }),
     },
@@ -116,77 +78,15 @@ export const ProjectGrid = ({ preset }: ProjectGridProps) => {
   });
 
   return (
-    <TableGrid<ProjectGridItemFragment>
-      {...props}
-      columns={columns}
-      tableProps={props}
-      hasTabContainer={true}
-    />
+    <TabPanelContentContainer>
+      <ProjectList
+        tableProps={props}
+        initialState={{
+          pinnedColumns: {
+            left: ['name'],
+          },
+        }}
+      />
+    </TabPanelContentContainer>
   );
 };
-
-const columns: Array<GridColDef<ProjectGridItemFragment>> = [
-  {
-    headerName: 'Project Name',
-    field: 'name',
-    minWidth: 300,
-    filterable: false,
-    valueGetter: (_, { name }) => name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.id}`}>{value}</Link>
-    ),
-  },
-  {
-    headerName: 'Country',
-    field: 'primaryLocation.name',
-    minWidth: 300,
-    filterable: false,
-    valueGetter: (_, { primaryLocation }) => primaryLocation.value?.name.value,
-  },
-  {
-    headerName: 'Project Step',
-    field: 'project.step',
-    width: 250,
-    filterable: false,
-    valueGetter: (_, row) => row.step.value,
-    ...enumColumn(ProjectStepList, ProjectStepLabels, {
-      orderByIndex: true,
-    }),
-  },
-  {
-    headerName: 'Type',
-    field: 'type',
-    width: 130,
-    filterable: false,
-    valueGetter: labelFrom(ProjectTypeLabels),
-  },
-  {
-    headerName: 'Status',
-    field: 'status',
-    width: 160,
-    filterable: false,
-    valueGetter: labelFrom(ProjectStatusLabels),
-  },
-  {
-    headerName: 'Engagements',
-    field: 'engagements',
-    width: 130,
-    filterable: false,
-    valueGetter: (_, { engagements }) => engagements.total,
-  },
-  {
-    headerName: 'Sensitivity',
-    field: 'sensitivity',
-    width: 180,
-    filterable: false,
-    sortComparator: cmpBy<Sensitivity>((v) =>
-      simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
-    ),
-    renderCell: ({ value }) => (
-      <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
-        <SensitivityIcon value={value} disableTooltip />
-        {value}
-      </Box>
-    ),
-  },
-];
