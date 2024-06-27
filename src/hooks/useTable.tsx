@@ -195,21 +195,19 @@ export const useTable = <
             },
           })
           .then((res) => {
-            // Always try to complete the list in cache.
-            addToAllPagesCache(res.data);
-
+            // Only apply to rows if the view hasn't changed
             const isCurrent =
               params.sortModel === viewRef.current.sortModel &&
               params.filterModel === viewRef.current.filterModel;
-            if (!isCurrent) {
-              // Ignoring results for different view
-              return;
+            if (isCurrent) {
+              // Swap in real rows via the recommended process.
+              const firstRowToReplace = (page - 1) * input.count;
+              const list = (get(res.data, listAt) as List).items.slice();
+              api.unstable_replaceRows(firstRowToReplace, list);
             }
 
-            // Swap in real rows via the recommended process.
-            const firstRowToReplace = (page - 1) * input.count;
-            const list = (get(res.data, listAt) as List).items.slice();
-            api.unstable_replaceRows(firstRowToReplace, list);
+            // Always try to complete the list in cache.
+            addToAllPagesCache(res.data);
           });
       }
     },
