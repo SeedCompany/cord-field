@@ -26,6 +26,8 @@ import { useTable } from '~/hooks';
 import {
   DefaultDataGridStyles,
   EmptyEnumFilterValue,
+  flexLayout,
+  noHeaderFilterButtons,
 } from '../../../../../components/Grid/DefaultDataGridStyles';
 import { Link } from '../../../../../components/Routing';
 import { PartnerTabContainer } from '../PartnerTabContainer';
@@ -64,27 +66,18 @@ export const PartnerDetailEngagements = () => {
       }}
     >
       <DataGrid<Engagement>
-        density="compact"
         {...DefaultDataGridStyles}
         {...props}
         slotProps={slotProps}
         columns={columns}
         disableRowSelectionOnClick
         headerFilters
-        headerFilterHeight={90}
         initialState={{
           pinnedColumns: {
             left: ['nameProjectFirst'],
           },
         }}
-        className="flex-layout"
-        sx={{
-          // Hide filter operator button since there aren't multiple operators
-          '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader button': {
-            display: 'none',
-          },
-        }}
-        ignoreDiacritics
+        sx={[flexLayout, noHeaderFilterButtons]}
       />
     </PartnerTabContainer>
   );
