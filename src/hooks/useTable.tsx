@@ -33,7 +33,9 @@ import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
 
 type ListInput = SetNonNullable<
-  Required<SortableListInput & PaginatedListInput>
+  Required<
+    SortableListInput & PaginatedListInput & { filter?: Record<string, any> }
+  >
 >;
 
 type PathsMatching<T, List> = {
@@ -53,7 +55,8 @@ const defaultKeyArgs = ['__typename', 'id'];
 
 export const useTable = <
   Output extends Record<string, any>,
-  Vars extends { input?: ListInput; [s: string]: any },
+  Vars,
+  Input extends Partial<ListInput>,
   const Path extends PathsMatching<Output, PaginatedListOutput<any>> & string,
   List extends PaginatedListOutput<any> = Get<Output, Path> extends infer U
     ? U extends PaginatedListOutput<any>
@@ -68,9 +71,9 @@ export const useTable = <
   keyArgs = defaultKeyArgs,
 }: {
   query: DocumentNode<Output, Vars>;
-  variables: Vars;
+  variables: Vars & { input?: Input };
   listAt: Path;
-  initialInput?: Partial<Omit<ListInput, 'page'>>;
+  initialInput?: Partial<Omit<Input, 'page'>>;
   keyArgs?: string[];
 }) => {
   const initialInputRef = useLatest(initialInput);
@@ -150,13 +153,19 @@ export const useTable = <
     () => ({
       ...defaultInitialInput,
       ...initialInputRef.current,
+      count: initialInputRef.current?.count ?? defaultInitialInput.count,
       ...(view.sortModel?.[0] && {
         sort: view.sortModel[0].field,
         order: upperCase(view.sortModel[0].sort!),
       }),
-      filter: convertMuiFiltersToApi(view.filterModel, api),
+      filter: convertMuiFiltersToApi(
+        api,
+        view.filterModel,
+        variables.input?.filter,
+        initialInputRef.current?.filter
+      ),
     }),
-    [api, initialInputRef, view]
+    [api, initialInputRef, variables.input?.filter, view]
   );
 
   // Grab the first page from cache/network on mount and when view changes
@@ -288,8 +297,9 @@ const getFieldPath = (
 };
 
 const convertMuiFiltersToApi = (
+  api: GridApiPro,
   next: DataGridProps['filterModel'],
-  api: GridApiPro
+  ...external: Array<Record<string, any> | undefined>
 ) => {
   if (!next) {
     return undefined;
@@ -302,7 +312,7 @@ const convertMuiFiltersToApi = (
       ? col.serverFilter(item)
       : set({}, item.field, item.value);
   });
-  const filter = merge({}, ...parts);
+  const filter = merge({}, ...parts, external);
   return Object.keys(filter).length > 0 ? filter : undefined;
 };
 
