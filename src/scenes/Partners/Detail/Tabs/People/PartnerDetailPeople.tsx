@@ -10,9 +10,9 @@ import { Many } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
 import { square } from '~/common';
 import { Avatar } from '~/components/Avatar';
+import { TabPanelContent } from '~/components/Tabs';
 import { UserListItemCardPortrait } from '~/components/UserListItemCard';
 import { EditablePartnerField } from '../../../Edit';
-import { PartnerTabContainer } from '../PartnerTabContainer';
 import { PartnerDetailPeopleFragment } from './PartnerDetailsPeople.graphql';
 
 interface Props {
@@ -37,7 +37,7 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
   const { classes } = useStyles();
 
   return (
-    <PartnerTabContainer sx={{ pb: 4 }}>
+    <TabPanelContent sx={{ pb: 4 }}>
       <Typography variant="h3" gutterBottom>
         {partner ? 'Point of Contact' : <Skeleton width="120px" />}
       </Typography>
@@ -70,6 +70,6 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
           </Button>
         }
       />
-    </PartnerTabContainer>
+    </TabPanelContent>
   );
 };

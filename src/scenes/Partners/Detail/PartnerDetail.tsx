@@ -16,6 +16,7 @@ import { Error } from '~/components/Error';
 import { FormattedDate, FormattedDateTime } from '~/components/Formatters';
 import { IconButton } from '~/components/IconButton';
 import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
+import { TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { EditablePartnerField, EditPartner } from '../Edit';
@@ -199,21 +200,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
   const [filters, setFilters] = usePartnerDetailsFilters();
 
   return (
-    <Stack
-      sx={{
-        flex: 1,
-        minHeight: 375,
-        container: 'main / size',
-        '& .MuiTabPanel-root': {
-          flex: 1,
-          p: 0,
-          '&:not([hidden])': {
-            display: 'flex',
-            flexDirection: 'column',
-          },
-        },
-      }}
-    >
+    <TabsContainer>
       <TabContext value={filters.tab}>
         <TabList
           onChange={(_e, tab) => setFilters({ ...filters, tab })}
@@ -246,6 +233,6 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
           <PartnerDetailNotes {...props} />
         </TabPanel>
       </TabContext>
-    </Stack>
+    </TabsContainer>
   );
 };

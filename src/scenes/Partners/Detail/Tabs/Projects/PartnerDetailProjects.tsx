@@ -1,103 +1,57 @@
-import { Box } from '@mui/material';
 import {
   DataGridPro as DataGrid,
-  GridColDef,
-  GridLocaleText,
+  DataGridProProps as DataGridProps,
 } from '@mui/x-data-grid-pro';
-import { cmpBy, simpleSwitch } from '@seedcompany/common';
+import { merge } from 'lodash';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema/enumLists';
-import { Sensitivity } from '~/api/schema/schema.graphql';
-import { labelFrom } from '~/common';
-import { SensitivityIcon } from '~/components/Sensitivity';
-import { useTable } from '~/hooks';
-import { Link } from '../../../../../components/Routing';
-import { PartnerTabContainer } from '../PartnerTabContainer';
 import {
-  PartnerProjectsDocument,
-  PartnerDetailProjectsTableListItemFragment as Project,
-} from './PartnerProjects.graphql';
+  DefaultDataGridStyles,
+  flexLayout,
+  noHeaderFilterButtons,
+  useDataGridSource,
+} from '~/components/Grid';
+import {
+  ProjectDataGridRowFragment as Project,
+  ProjectColumns,
+} from '~/components/ProjectDataGrid';
+import { TabPanelContent } from '~/components/Tabs';
+import { PartnerProjectsDocument } from './PartnerProjects.graphql';
+
+const initialState = {
+  pinnedColumns: {
+    left: [ProjectColumns[0]!.field],
+  },
+} satisfies DataGridProps['initialState'];
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
 
-  const [props] = useTable({
+  const [props] = useDataGridSource({
     query: PartnerProjectsDocument,
     variables: { id: partnerId },
     listAt: 'partner.projects',
     initialInput: {
       sort: 'name',
-      count: 20,
     },
   });
 
+  const slotProps = useMemo(
+    () => merge({}, DefaultDataGridStyles.slotProps, props.slotProps),
+    [props.slotProps]
+  );
+
   return (
-    <PartnerTabContainer
-      sx={{
-        flex: 1,
-        p: 0,
-        maxWidth: '100cqw',
-        width: 'min-content',
-        // idk why -50, MUI pushes down past container
-        maxHeight: 'calc(100cqh - 50px)',
-      }}
-    >
+    <TabPanelContent>
       <DataGrid<Project>
-        density="compact"
-        disableColumnMenu
+        {...DefaultDataGridStyles}
         {...props}
-        columns={columns}
-        disableRowSelectionOnClick
-        localeText={localeText}
+        slotProps={slotProps}
+        columns={ProjectColumns}
+        initialState={initialState}
+        headerFilters
+        sx={[flexLayout, noHeaderFilterButtons]}
       />
-    </PartnerTabContainer>
+    </TabPanelContent>
   );
 };
-
-const localeText: Partial<GridLocaleText> = {
-  noRowsLabel: 'This partner is not engaged in any projects',
-};
-
-const columns: Array<GridColDef<Project>> = [
-  {
-    headerName: 'Project Name',
-    field: 'name',
-    minWidth: 300,
-    valueGetter: (_, { name }) => name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.id}`}>{value}</Link>
-    ),
-  },
-  {
-    headerName: 'Type',
-    field: 'type',
-    width: 130,
-    valueGetter: labelFrom(ProjectTypeLabels),
-  },
-  {
-    headerName: 'Status',
-    field: 'status',
-    width: 160,
-    valueGetter: labelFrom(ProjectStatusLabels),
-  },
-  {
-    headerName: 'Engagements',
-    field: 'engagements',
-    width: 130,
-    valueGetter: (_, { engagements }) => engagements.total,
-  },
-  {
-    headerName: 'Sensitivity',
-    field: 'sensitivity',
-    width: 180,
-    sortComparator: cmpBy<Sensitivity>((v) =>
-      simpleSwitch(v, { Low: 0, Medium: 1, High: 2 })
-    ),
-    renderCell: ({ value }) => (
-      <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
-        <SensitivityIcon value={value} disableTooltip />
-        {value}
-      </Box>
-    ),
-  },
-];

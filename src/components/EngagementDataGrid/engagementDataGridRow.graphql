@@ -1,0 +1,74 @@
+fragment engagementDataGridRow on Engagement {
+  id
+  status {
+    value
+  }
+  startDate {
+    value
+  }
+  endDate {
+    value
+  }
+
+  project {
+    id
+    type
+    name {
+      value
+    }
+    sensitivity
+    step {
+      value
+    }
+    primaryLocation {
+      value {
+        id
+        name {
+          value
+        }
+      }
+    }
+    mouStart {
+      value
+    }
+    mouEnd {
+      value
+    }
+  }
+
+  ... on LanguageEngagement {
+    currentProgressReportDue {
+      value {
+        id
+        status {
+          value
+        }
+      }
+    }
+    language {
+      value {
+        id
+        name {
+          value
+        }
+        ethnologue {
+          code {
+            value
+          }
+        }
+        registryOfDialectsCode {
+          value
+        }
+      }
+    }
+  }
+
+  ... on InternshipEngagement {
+    intern {
+      value {
+        id
+        fullName
+      }
+    }
+  }
+}

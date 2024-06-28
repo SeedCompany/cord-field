@@ -1,7 +1,7 @@
 import { Many } from 'lodash';
+import { TabPanelContent } from '~/components/Tabs';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
-import { PartnerTabContainer } from '../PartnerTabContainer';
 import { PartnerFinanceSectionHeading } from './PartnerFinanceSectionHeading';
 
 interface Props {
@@ -10,10 +10,10 @@ interface Props {
 }
 
 export const PartnerDetailFinance = ({ partner, editPartner: edit }: Props) => (
-  <PartnerTabContainer>
+  <TabPanelContent>
     <PartnerFinanceSectionHeading
       partner={partner}
       onEdit={() => edit('partner.pmcEntityCode')}
     />
-  </PartnerTabContainer>
+  </TabPanelContent>
 );
