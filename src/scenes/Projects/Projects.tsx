@@ -18,7 +18,7 @@ const Files = loadable(() => import('./Files'), {
 const ProjectList = loadable(
   () => import(/* webpackChunkName: "Project-List" */ './List'),
   {
-    resolveComponent: (m) => m.ProjectList,
+    resolveComponent: (m) => m.ProjectLayout,
   }
 );
 const ProjectMembersList = loadable(() => import('./Members/List'), {
