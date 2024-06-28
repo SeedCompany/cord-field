@@ -32,7 +32,6 @@ export const PartnerDetailEngagements = () => {
     variables: { id: partnerId },
     listAt: 'partner.engagements',
     initialInput: {
-      count: 25,
       sort: 'nameProjectFirst',
     },
   });
@@ -51,7 +50,6 @@ export const PartnerDetailEngagements = () => {
         columns={EngagementColumns}
         initialState={initialState}
         headerFilters
-        disableRowSelectionOnClick
         sx={[flexLayout, noHeaderFilterButtons]}
       />
     </TabPanelContent>

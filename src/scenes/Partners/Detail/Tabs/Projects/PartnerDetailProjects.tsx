@@ -33,7 +33,6 @@ export const PartnerDetailProjects = () => {
     listAt: 'partner.projects',
     initialInput: {
       sort: 'name',
-      count: 20,
     },
   });
 
@@ -51,7 +50,6 @@ export const PartnerDetailProjects = () => {
         columns={ProjectColumns}
         initialState={initialState}
         headerFilters
-        disableRowSelectionOnClick
         sx={[flexLayout, noHeaderFilterButtons]}
       />
     </TabPanelContent>
