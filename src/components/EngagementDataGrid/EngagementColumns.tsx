@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { cleanJoin } from '@seedcompany/common';
 import {
@@ -10,12 +9,10 @@ import {
   ProjectStepList,
   ProjectTypeLabels,
   ProjectTypeList,
-  SensitivityLabels,
-  SensitivityList,
 } from '../../api/schema/enumLists';
 import { enumColumn, textColumn } from '../Grid';
+import { SensitivityColumn } from '../ProjectDataGrid';
 import { Link } from '../Routing';
-import { SensitivityIcon } from '../Sensitivity';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
@@ -131,19 +128,9 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     filterable: false,
   },
   {
-    headerName: 'Sensitivity',
+    ...SensitivityColumn,
     field: 'project.sensitivity',
-    width: 110,
-    ...enumColumn(SensitivityList, SensitivityLabels, {
-      orderByIndex: true,
-    }),
     valueGetter: (_, row) => row.project.sensitivity,
-    renderCell: ({ value }) => (
-      <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
-        <SensitivityIcon value={value} disableTooltip />
-        {value}
-      </Box>
-    ),
   },
   {
     headerName: 'Files',

@@ -1,0 +1,23 @@
+fragment projectDataGridRow on Project {
+  id
+  type
+  name {
+    value
+  }
+  sensitivity
+  status
+  step {
+    value
+  }
+  engagements {
+    total
+  }
+  primaryLocation {
+    value {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
