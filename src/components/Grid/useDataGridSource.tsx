@@ -14,7 +14,7 @@ import {
   GridFetchRowsParams,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { useDebounceFn, useLatest } from 'ahooks';
+import { useDebounceFn, useLatest, useMemoizedFn } from 'ahooks';
 import {
   type FieldNode,
   getOperationAST,
@@ -22,7 +22,7 @@ import {
   type SelectionSetNode,
 } from 'graphql';
 import { get, merge, pick, set, uniqBy } from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import {
   type PaginatedListInput,
@@ -254,36 +254,30 @@ export const useDataGridSource = <
   );
 
   const onSortModelChange: DataGridProps['onSortModelChange'] & {} =
-    useCallback(
-      (next) => {
-        const sortModel = next.length === 0 ? initialSort : next;
-        setView((prev) => ({
-          ...prev,
-          sortModel,
-          // API should use the new sorting state if pagination is still required.
-          // Otherwise, if pagination has been exhausted / is not needed,
-          // maintain the previously loaded first page and sort client side.
-          ...(!filteredListIsComplete ? { apiSortModel: sortModel } : {}),
-        }));
+    useMemoizedFn((next) => {
+      const sortModel = next.length === 0 ? initialSort : next;
+      setView((prev) => ({
+        ...prev,
+        sortModel,
+        // API should use the new sorting state if pagination is still required.
+        // Otherwise, if pagination has been exhausted / is not needed,
+        // maintain the previously loaded first page and sort client side.
+        ...(!filteredListIsComplete ? { apiSortModel: sortModel } : {}),
+      }));
 
-        apiRef.current.scrollToIndexes({ rowIndex: 0 });
-      },
-      [apiRef, filteredListIsComplete, initialSort, setView]
-    );
+      apiRef.current.scrollToIndexes({ rowIndex: 0 });
+    });
   const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
-    useCallback(
-      (filterModel) => {
-        setView((prev) => ({
-          ...prev,
-          filterModel,
-          // API should now use the current sorting state
-          apiSortModel: prev.sortModel,
-        }));
+    useMemoizedFn((filterModel) => {
+      setView((prev) => ({
+        ...prev,
+        filterModel,
+        // API should now use the current sorting state
+        apiSortModel: prev.sortModel,
+      }));
 
-        apiRef.current.scrollToIndexes({ rowIndex: 0 });
-      },
-      [apiRef, setView]
-    );
+      apiRef.current.scrollToIndexes({ rowIndex: 0 });
+    });
 
   // DataGrid needs help when `rows` identity changes along with picking up
   // sorting responsibility ('client').
