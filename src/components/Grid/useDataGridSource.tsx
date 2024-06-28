@@ -22,7 +22,7 @@ import {
   type SelectionSetNode,
 } from 'graphql';
 import { get, merge, pick, set, uniqBy } from 'lodash';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import {
   type PaginatedListInput,
@@ -103,7 +103,7 @@ export const useDataGridSource = <
   });
   const allPagesList = allPages ? (get(allPages, listAt) as List) : undefined;
   const isCacheComplete =
-    allPagesList && allPagesList.total === allPagesList.items.length;
+    !!allPagesList && allPagesList.total === allPagesList.items.length;
 
   // Add a page to the "all pages" cache entry
   // This is read back in the first useQuery hook, above.
@@ -141,9 +141,15 @@ export const useDataGridSource = <
     },
   ]);
   const [view, setView] = useState(
-    (): Pick<DataGridProps, 'sortModel' | 'filterModel'> => ({
+    (): Pick<DataGridProps, 'sortModel' | 'filterModel'> & {
+      // The sorting state for the first page API query.
+      // It could be the live sorting state, or a stale one,
+      // based on pagination needs.
+      apiSortModel: DataGridProps['sortModel'];
+    } => ({
       filterModel: { items: [] },
       sortModel: initialSort,
+      apiSortModel: initialSort,
     })
   );
   const viewRef = useLatest(view);
@@ -154,18 +160,24 @@ export const useDataGridSource = <
       ...defaultInitialInput,
       ...initialInputRef.current,
       count: initialInputRef.current?.count ?? defaultInitialInput.count,
-      ...(view.sortModel?.[0] && {
-        sort: view.sortModel[0].field,
-        order: upperCase(view.sortModel[0].sort!),
+      ...(view.apiSortModel?.[0] && {
+        sort: view.apiSortModel[0].field,
+        order: upperCase(view.apiSortModel[0].sort!),
       }),
       filter: convertMuiFiltersToApi(
-        api,
+        apiRef.current,
         view.filterModel,
         variables.input?.filter,
         initialInputRef.current?.filter
       ),
     }),
-    [api, initialInputRef, variables.input?.filter, view]
+    [
+      apiRef,
+      initialInputRef,
+      view.apiSortModel,
+      view.filterModel,
+      variables.input?.filter,
+    ]
   );
 
   // Grab the first page from cache/network on mount and when view changes
@@ -181,8 +193,14 @@ export const useDataGridSource = <
     ? (get(firstPage, listAt) as List)
     : undefined;
 
-  const list = isCacheComplete ? allPagesList : firstPageList;
+  const rows =
+    (isCacheComplete ? allPagesList : firstPageList)?.items ?? emptyList;
   const total = allPagesList?.total ?? firstPageList?.total ?? 0;
+
+  // Has Grid loaded all the rows for the current (maybe filtered) list?
+  const filteredListIsComplete =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    api.state?.rows.dataRowIds.length === total && total > 0;
 
   // Load additional pages imperatively as needed based on scrolling
   // This is debounced to mostly to reduce the client side load.
@@ -190,6 +208,10 @@ export const useDataGridSource = <
   // and the debouncing would skip those page requests.
   const onFetchRows = useDebounceFn(
     (params: GridFetchRowsParams) => {
+      if (filteredListIsComplete) {
+        return;
+      }
+
       const { firstRowToRender, lastRowToRender } = params;
       const firstPage = Math.ceil((firstRowToRender + 1) / input.count);
       const lastPage = Math.ceil((lastRowToRender + 1) / input.count);
@@ -233,43 +255,66 @@ export const useDataGridSource = <
 
   const onSortModelChange: DataGridProps['onSortModelChange'] & {} =
     useCallback(
-      (sortModel) =>
+      (next) => {
+        const sortModel = next.length === 0 ? initialSort : next;
         setView((prev) => ({
           ...prev,
-          sortModel: sortModel.length === 0 ? initialSort : sortModel,
-        })),
-      [initialSort, setView]
+          sortModel,
+          // API should use the new sorting state if pagination is still required.
+          // Otherwise, if pagination has been exhausted / is not needed,
+          // maintain the previously loaded first page and sort client side.
+          ...(!filteredListIsComplete ? { apiSortModel: sortModel } : {}),
+        }));
+      },
+      [filteredListIsComplete, initialSort, setView]
     );
   const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
     useCallback(
-      (filterModel) => setView((prev) => ({ ...prev, filterModel })),
+      (filterModel) => {
+        setView((prev) => ({
+          ...prev,
+          filterModel,
+          // API should now use the current sorting state
+          apiSortModel: prev.sortModel,
+        }));
+      },
       [setView]
     );
 
+  // DataGrid needs help when `rows` identity changes along with picking up
+  // sorting responsibility ('client').
+  // Help it out by asking it to sort (again?) when we give it a different,
+  // fully cached, unsorted list.
+  useEffect(() => {
+    if (isCacheComplete) {
+      apiRef.current.applySorting();
+    }
+  }, [apiRef, isCacheComplete]);
+
   const dataGridProps = {
     apiRef,
-    rows: list?.items ?? [],
+    rows,
     loading,
     rowCount: total,
-    ...view,
+    sortModel: view.sortModel,
+    filterModel: view.filterModel,
     hideFooterPagination: true,
     onFetchRows: onFetchRows.run,
     onSortModelChange,
     onFilterModelChange,
-    rowsLoadingMode: isCacheComplete ? 'client' : 'server',
-    sortingMode: isCacheComplete ? 'client' : 'server',
+    paginationMode: 'server', // Not used, but prevents row count warning.
+    rowsLoadingMode:
+      filteredListIsComplete || isCacheComplete ? 'client' : 'server',
+    sortingMode:
+      filteredListIsComplete || isCacheComplete ? 'client' : 'server',
     filterMode: isCacheComplete ? 'client' : 'server',
     slotProps: apiSlotProps,
   } satisfies Partial<DataGridProps>;
 
-  const props = {
-    isCacheComplete,
-    total,
-    list,
-  };
-
-  return [dataGridProps, props] as const;
+  return [dataGridProps] as const;
 };
+
+const emptyList = [] as const;
 
 const getFieldPath = (
   x: SelectionSetNode,
