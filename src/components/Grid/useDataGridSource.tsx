@@ -265,8 +265,10 @@ export const useDataGridSource = <
           // maintain the previously loaded first page and sort client side.
           ...(!filteredListIsComplete ? { apiSortModel: sortModel } : {}),
         }));
+
+        apiRef.current.scrollToIndexes({ rowIndex: 0 });
       },
-      [filteredListIsComplete, initialSort, setView]
+      [apiRef, filteredListIsComplete, initialSort, setView]
     );
   const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
     useCallback(
@@ -277,8 +279,10 @@ export const useDataGridSource = <
           // API should now use the current sorting state
           apiSortModel: prev.sortModel,
         }));
+
+        apiRef.current.scrollToIndexes({ rowIndex: 0 });
       },
-      [setView]
+      [apiRef, setView]
     );
 
   // DataGrid needs help when `rows` identity changes along with picking up
