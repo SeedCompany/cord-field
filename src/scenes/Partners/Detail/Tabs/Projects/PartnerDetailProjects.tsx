@@ -1,12 +1,28 @@
-import { DataGridPro as DataGrid, GridLocaleText } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro as DataGrid,
+  DataGridProProps as DataGridProps,
+} from '@mui/x-data-grid-pro';
+import { merge } from 'lodash';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDataGridSource } from '~/components/Grid';
+import {
+  DefaultDataGridStyles,
+  flexLayout,
+  noHeaderFilterButtons,
+  useDataGridSource,
+} from '~/components/Grid';
 import {
   ProjectDataGridRowFragment as Project,
   ProjectColumns,
 } from '~/components/ProjectDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
 import { PartnerProjectsDocument } from './PartnerProjects.graphql';
+
+const initialState = {
+  pinnedColumns: {
+    left: [ProjectColumns[0]!.field],
+  },
+} satisfies DataGridProps['initialState'];
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
@@ -21,20 +37,23 @@ export const PartnerDetailProjects = () => {
     },
   });
 
+  const slotProps = useMemo(
+    () => merge({}, DefaultDataGridStyles.slotProps, props.slotProps),
+    [props.slotProps]
+  );
+
   return (
     <TabPanelContent>
       <DataGrid<Project>
-        density="compact"
-        disableColumnMenu
+        {...DefaultDataGridStyles}
         {...props}
+        slotProps={slotProps}
         columns={ProjectColumns}
+        initialState={initialState}
+        headerFilters
         disableRowSelectionOnClick
-        localeText={localeText}
+        sx={[flexLayout, noHeaderFilterButtons]}
       />
     </TabPanelContent>
   );
-};
-
-const localeText: Partial<GridLocaleText> = {
-  noRowsLabel: 'This partner is not engaged in any projects',
 };

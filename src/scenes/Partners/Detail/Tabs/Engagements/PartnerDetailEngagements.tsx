@@ -1,4 +1,7 @@
-import { DataGridPro as DataGrid } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro as DataGrid,
+  DataGridProProps as DataGridProps,
+} from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
@@ -19,7 +22,7 @@ const initialState = {
   pinnedColumns: {
     left: [EngagementColumns[0]!.field],
   },
-};
+} satisfies DataGridProps['initialState'];
 
 export const PartnerDetailEngagements = () => {
   const { partnerId = '' } = useParams();
@@ -46,9 +49,9 @@ export const PartnerDetailEngagements = () => {
         {...props}
         slotProps={slotProps}
         columns={EngagementColumns}
-        disableRowSelectionOnClick
-        headerFilters
         initialState={initialState}
+        headerFilters
+        disableRowSelectionOnClick
         sx={[flexLayout, noHeaderFilterButtons]}
       />
     </TabPanelContent>
