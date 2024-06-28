@@ -1,75 +1,33 @@
-import { TabList as ActualTabList, TabContext, TabPanel } from '@mui/lab';
-import {
-  type Tabs as __Tabs,
-  Divider,
-  Grid,
-  Skeleton,
-  Tab,
-  Typography,
-} from '@mui/material';
-import { simpleSwitch } from '@seedcompany/common';
-import { omit, pickBy } from 'lodash';
-import { useRef } from 'react';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Grid, Stack, Tab, ToggleButton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
-import { Project } from '~/api/schema.graphql';
-import { FilterButtonDialog } from '../../../components/Filter';
-import { useNumberFormatter } from '../../../components/Formatters';
-import { ContentContainer } from '../../../components/Layout';
-import { List, useListQuery } from '../../../components/List';
-import { ProjectListItemCard as ProjectCard } from '../../../components/ProjectListItemCard';
-import { SortButtonDialog, useSort } from '../../../components/Sort';
+import { ContentContainer } from '~/components/Layout';
+import { TabPanelContent, TabsContainer } from '~/components/Tabs';
 import {
-  ProjectFilterOptions,
-  useProjectFilters,
-} from './ProjectFilterOptions';
-import { ProjectListDocument } from './ProjectList.graphql';
-import { ProjectSortOptions } from './ProjectSortOptions';
+  BooleanParam,
+  EnumParam,
+  makeQueryHandler,
+  withDefault,
+} from '~/hooks';
+import { EngagementsPanel } from './EngagementsPanel';
+import { ProjectsPanel } from './ProjectsPanel';
 
-const TabList = ActualTabList as typeof __Tabs;
-
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
+const useStyles = makeStyles()(({ spacing }) => ({
   options: {
-    margin: spacing(3, 0),
-  },
-  maxWidth: {
-    maxWidth: breakpoints.values.sm,
-    flexWrap: 'nowrap',
-  },
-  tabPanel: {
-    overflowY: 'auto',
-    // allow card shadow to bleed over instead of cutting it off
-    padding: spacing(0, 0, 0, 2),
-    margin: spacing(0, 0, 0, -2),
-  },
-  total: {
-    marginTop: spacing(2),
+    margin: spacing(1, 0),
   },
 }));
 
-export const ProjectList = () => {
-  const sort = useSort<Project>();
-  const [filters, setFilters] = useProjectFilters();
-  const list = useListQuery(ProjectListDocument, {
-    listAt: (data) => data.projects,
-    variables: {
-      input: {
-        ...sort.value,
-        filter: {
-          ...omit(filters, 'tab'),
-          ...simpleSwitch(filters.tab, {
-            mine: { mine: true },
-            pinned: { pinned: true },
-            all: {},
-          }),
-        },
-      },
-    },
-  });
+const useProjectListFilters = makeQueryHandler({
+  pinned: withDefault(BooleanParam(), false),
+  mine: withDefault(BooleanParam(), true),
+  tab: withDefault(EnumParam(['projects', 'engagements']), 'projects'),
+});
 
+export const ProjectList = () => {
   const { classes } = useStyles();
-  const formatNumber = useNumberFormatter();
-  const scrollRef = useRef<HTMLElement>(null);
+  const [filters, setFilters] = useProjectListFilters();
 
   return (
     <ContentContainer>
@@ -77,53 +35,65 @@ export const ProjectList = () => {
       <Typography variant="h2" paragraph>
         Projects
       </Typography>
+
       <Grid container spacing={1} className={classes.options}>
         <Grid item>
-          <SortButtonDialog {...sort}>
-            <ProjectSortOptions />
-          </SortButtonDialog>
-        </Grid>
-        <Grid item>
-          <FilterButtonDialog
-            values={pickBy(omit(filters, 'tab'))}
-            onChange={setFilters}
+          <ToggleButton
+            selected={filters.mine}
+            value="mine"
+            aria-label="mine"
+            onChange={() => {
+              setFilters({ ...filters, mine: !filters.mine });
+            }}
           >
-            <ProjectFilterOptions />
-          </FilterButtonDialog>
+            Mine
+          </ToggleButton>
+          <ToggleButton
+            selected={filters.pinned}
+            value="pinned"
+            aria-label="pinned"
+            onChange={() => {
+              setFilters({ ...filters, pinned: !filters.pinned });
+            }}
+          >
+            Pinned
+          </ToggleButton>
         </Grid>
       </Grid>
-      <TabContext value={filters.tab}>
-        <TabList
-          onChange={(_e, tab) => setFilters({ ...filters, tab })}
-          aria-label="project navigation tabs"
-          className={classes.maxWidth}
-        >
-          <Tab label="Pinned" value="pinned" />
-          <Tab label="Mine" value="mine" />
-          <Tab label="All" value="all" />
-        </TabList>
-        <Divider className={classes.maxWidth} />
-        <TabPanel
-          value={filters.tab}
-          className={classes.tabPanel}
-          ref={scrollRef}
-        >
-          <Typography variant="h3" className={classes.total}>
-            {list.data ? (
-              `${formatNumber(list.data.total)} Projects`
-            ) : (
-              <Skeleton width="12ch" />
-            )}
-          </Typography>
-          <List
-            {...list}
-            classes={{ container: classes.maxWidth }}
-            renderItem={(item) => <ProjectCard project={item} />}
-            renderSkeleton={<ProjectCard />}
-            scrollRef={scrollRef}
-          />
-        </TabPanel>
-      </TabContext>
+
+      <Stack
+        component="main"
+        sx={{
+          flex: 1,
+          p: 1,
+          overflowY: 'auto',
+        }}
+      >
+        <TabsContainer>
+          <TabContext value={filters.tab}>
+            <TabList
+              onChange={(_e, tab) => {
+                setFilters({ ...filters, tab });
+              }}
+              aria-label="navigation tabs"
+              variant="scrollable"
+            >
+              <Tab label="Projects" value="projects" />
+              <Tab label="Engagements" value="engagements" />
+            </TabList>
+            <TabPanel value="projects">
+              <TabPanelContent>
+                <ProjectsPanel filters={filters} />
+              </TabPanelContent>
+            </TabPanel>
+            <TabPanel value="engagements">
+              <TabPanelContent>
+                <EngagementsPanel filters={filters} />
+              </TabPanelContent>
+            </TabPanel>
+          </TabContext>
+        </TabsContainer>
+      </Stack>
     </ContentContainer>
   );
 };
