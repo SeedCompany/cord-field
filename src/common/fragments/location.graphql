@@ -49,3 +49,19 @@ fragment DisplayFieldZone on FieldZone {
     }
   }
 }
+
+fragment SecuredDisplayLocation on SecuredLocation {
+  canRead
+  canEdit
+  value {
+    ...DisplayLocation
+  }
+}
+
+fragment SecuredDisplayFieldRegion on SecuredFieldRegion {
+  canRead
+  canEdit
+  value {
+    ...DisplayFieldRegion
+  }
+}

@@ -39,10 +39,11 @@ export type EditableProjectField = ExtractStrict<
   | 'name'
   | 'mouRange'
   | 'estimatedSubmission'
-  | 'fieldRegionId'
+  | 'fieldRegionOverrideId'
   | 'primaryLocationId'
   | 'sensitivity'
-  | 'marketingLocationId'
+  | 'marketingCountryOverrideId'
+  | 'marketingRegionOverrideId'
 >;
 
 interface ProjectFieldProps {
@@ -60,7 +61,7 @@ const fieldMapping: Record<
   primaryLocationId: ({ props }) => (
     <LocationField {...props} label="Primary Location" />
   ),
-  fieldRegionId: ({ props }) => (
+  fieldRegionOverrideId: ({ props }) => (
     <FieldRegionField {...props} label="Field Region" />
   ),
   mouRange: ({ props }) => (
@@ -75,8 +76,11 @@ const fieldMapping: Record<
   sensitivity: ({ props }) => (
     <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
-  marketingLocationId: ({ props }) => (
-    <LocationField {...props} label="Marketing Location" />
+  marketingCountryOverrideId: ({ props }) => (
+    <LocationField {...props} label="Marketing Country" />
+  ),
+  marketingRegionOverrideId: ({ props }) => (
+    <LocationField {...props} label="Marketing Region" />
   ),
 };
 
@@ -85,8 +89,9 @@ interface UpdateProjectFormValues {
     UpdateProject,
     {
       primaryLocationId?: DisplayLocationFragment | null;
-      fieldRegionId?: DisplayFieldRegionFragment | null;
-      marketingLocationId?: DisplayLocationFragment | null;
+      fieldRegionOverrideId?: DisplayFieldRegionFragment | null;
+      marketingCountryOverrideId?: DisplayLocationFragment | null;
+      marketingRegionOverrideId?: DisplayLocationFragment | null;
     }
   >;
 }
@@ -119,12 +124,13 @@ export const UpdateProjectDialog = ({
     > = {
       name: project.name.value,
       primaryLocationId: project.primaryLocation.value,
-      fieldRegionId: project.fieldRegion.value,
+      fieldRegionOverrideId: project.fieldRegionOverride.value,
       mouStart: project.mouRange.value.start,
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
-      marketingLocationId: project.marketingLocation.value,
+      marketingCountryOverrideId: project.marketingCountryOverride.value,
+      marketingRegionOverrideId: project.marketingRegionOverride.value,
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
@@ -144,12 +150,13 @@ export const UpdateProjectDialog = ({
   }, [
     project.name.value,
     project.primaryLocation.value,
-    project.fieldRegion.value,
+    project.fieldRegionOverride.value,
     project.mouRange.value.start,
     project.mouRange.value.end,
     project.estimatedSubmission.value,
     project.sensitivity,
-    project.marketingLocation.value,
+    project.marketingCountryOverride.value,
+    project.marketingRegionOverride.value,
     project.id,
     editFields,
   ]);
@@ -188,11 +195,20 @@ export const UpdateProjectDialog = ({
                 primaryLocationId: dirtyFields['project.primaryLocationId']
                   ? data.primaryLocationId?.id ?? null
                   : undefined,
-                fieldRegionId: dirtyFields['project.fieldRegionId']
-                  ? data.fieldRegionId?.id ?? null
+                fieldRegionOverrideId: dirtyFields[
+                  'project.fieldRegionOverrideId'
+                ]
+                  ? data.fieldRegionOverrideId?.id ?? null
                   : undefined,
-                marketingLocationId: dirtyFields['project.marketingLocationId']
-                  ? data.marketingLocationId?.id ?? null
+                marketingCountryOverrideId: dirtyFields[
+                  'project.marketingCountryOverrideId'
+                ]
+                  ? data.marketingCountryOverrideId?.id ?? null
+                  : undefined,
+                marketingRegionOverrideId: dirtyFields[
+                  'project.marketingRegionOverrideId'
+                ]
+                  ? data.marketingRegionOverrideId?.id ?? null
                   : undefined,
               },
               changeset: project.changeset?.id,
