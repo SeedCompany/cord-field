@@ -131,15 +131,16 @@ export const useTable = <
   };
 
   // State for current sorting & filtering
+  const [initialSort] = useState(() => [
+    {
+      field: initialInput?.sort ?? defaultInitialInput.sort,
+      sort: lowerCase(initialInput?.order ?? defaultInitialInput.order),
+    },
+  ]);
   const [view, setView] = useState(
     (): Pick<DataGridProps, 'sortModel' | 'filterModel'> => ({
       filterModel: { items: [] },
-      sortModel: [
-        {
-          field: initialInput?.sort ?? defaultInitialInput.sort,
-          sort: lowerCase(initialInput?.order ?? defaultInitialInput.order),
-        },
-      ],
+      sortModel: initialSort,
     })
   );
   const viewRef = useLatest(view);
@@ -223,8 +224,12 @@ export const useTable = <
 
   const onSortModelChange: DataGridProps['onSortModelChange'] & {} =
     useCallback(
-      (sortModel) => setView((prev) => ({ ...prev, sortModel })),
-      [setView]
+      (sortModel) =>
+        setView((prev) => ({
+          ...prev,
+          sortModel: sortModel.length === 0 ? initialSort : sortModel,
+        })),
+      [initialSort, setView]
     );
   const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
     useCallback(
