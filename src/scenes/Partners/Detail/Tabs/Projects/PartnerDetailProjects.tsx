@@ -5,7 +5,7 @@ import {
   ProjectDataGridRowFragment as Project,
   ProjectColumns,
 } from '~/components/ProjectDataGrid';
-import { PartnerTabContainer } from '../PartnerTabContainer';
+import { TabPanelContent } from '~/components/Tabs';
 import { PartnerProjectsDocument } from './PartnerProjects.graphql';
 
 export const PartnerDetailProjects = () => {
@@ -22,16 +22,7 @@ export const PartnerDetailProjects = () => {
   });
 
   return (
-    <PartnerTabContainer
-      sx={{
-        flex: 1,
-        p: 0,
-        maxWidth: '100cqw',
-        width: 'min-content',
-        // idk why -50, MUI pushes down past container
-        maxHeight: 'calc(100cqh - 50px)',
-      }}
-    >
+    <TabPanelContent>
       <DataGrid<Project>
         density="compact"
         disableColumnMenu
@@ -40,7 +31,7 @@ export const PartnerDetailProjects = () => {
         disableRowSelectionOnClick
         localeText={localeText}
       />
-    </PartnerTabContainer>
+    </TabPanelContent>
   );
 };
 

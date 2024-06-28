@@ -1,9 +1,9 @@
 import { Unstable_Grid2 as Grid } from '@mui/material';
 import { Many } from 'lodash';
 import { BooleanProperty } from '~/components/BooleanProperty';
+import { TabPanelContent } from '~/components/Tabs';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
-import { PartnerTabContainer } from '../PartnerTabContainer';
 import { PartnerContactSection } from './PartnerContactSection';
 import { PartnerTypesSection } from './PartnerTypesSection';
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => (
-  <PartnerTabContainer>
+  <TabPanelContent>
     <BooleanProperty
       label="Global Innovations Client"
       redacted="You do not have permission to view whether this is a Global Innovations Client"
@@ -36,5 +36,5 @@ export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => (
         />
       </Grid>
     </Grid>
-  </PartnerTabContainer>
+  </TabPanelContent>
 );

@@ -12,7 +12,7 @@ import {
   noHeaderFilterButtons,
   useDataGridSource,
 } from '~/components/Grid';
-import { PartnerTabContainer } from '../PartnerTabContainer';
+import { TabPanelContent } from '~/components/Tabs';
 import { PartnerDetailEngagementsDocument } from './PartnerDetailEngagements.graphql';
 
 const initialState = {
@@ -40,16 +40,7 @@ export const PartnerDetailEngagements = () => {
   );
 
   return (
-    <PartnerTabContainer
-      sx={{
-        flex: 1,
-        p: 0,
-        maxWidth: '100cqw',
-        width: 'min-content',
-        // idk why -50, MUI pushes down past container
-        maxHeight: 'calc(100cqh - 50px)',
-      }}
-    >
+    <TabPanelContent>
       <DataGrid<Engagement>
         {...DefaultDataGridStyles}
         {...props}
@@ -60,6 +51,6 @@ export const PartnerDetailEngagements = () => {
         initialState={initialState}
         sx={[flexLayout, noHeaderFilterButtons]}
       />
-    </PartnerTabContainer>
+    </TabPanelContent>
   );
 };
