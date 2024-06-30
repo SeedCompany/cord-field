@@ -7,7 +7,12 @@ import {
 import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { DecodedValueMap } from 'serialize-query-params';
 import { makeStyles } from 'tss-react/mui';
+import {
+  EngagementDataGridRowFragment as Engagement,
+  EngagementColumns,
+} from '~/components/EngagementDataGrid';
 import {
   DefaultDataGridStyles,
   flexLayout,
@@ -24,8 +29,10 @@ import {
   BooleanParam,
   EnumParam,
   makeQueryHandler,
+  QueryParamConfig,
   withDefault,
 } from '~/hooks';
+import { EngagementListDocument } from './EngagementList.graphql';
 import { ProjectListDocument } from './ProjectList.graphql';
 
 const useStyles = makeStyles()(({ spacing }) => ({
@@ -37,31 +44,12 @@ const useStyles = makeStyles()(({ spacing }) => ({
 const useProjectListFilters = makeQueryHandler({
   pinned: withDefault(BooleanParam(), false),
   mine: withDefault(BooleanParam(), true),
-  tab: withDefault(EnumParam(['projects']), 'projects'),
+  tab: withDefault(EnumParam(['projects', 'engagements']), 'projects'),
 });
 
 export const ProjectLayout = () => {
   const { classes } = useStyles();
   const [filters, setFilters] = useProjectListFilters();
-
-  const [props] = useDataGridSource({
-    query: ProjectListDocument,
-    variables: {
-      input: {
-        filter: {
-          ...(filters.mine ? { mine: true } : {}),
-          ...(filters.pinned ? { pinned: true } : {}),
-        },
-      },
-    },
-    listAt: 'projects',
-    initialInput: {},
-  });
-
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, props.slotProps),
-    [props.slotProps]
-  );
 
   return (
     <ContentContainer>
@@ -77,8 +65,7 @@ export const ProjectLayout = () => {
               selected={filters.mine}
               value="mine"
               aria-label="mine"
-              onChange={(_e, val) => {
-                console.log(val);
+              onChange={() => {
                 setFilters({ ...filters, mine: !filters.mine });
               }}
             >
@@ -88,8 +75,7 @@ export const ProjectLayout = () => {
               selected={filters.pinned}
               value="pinned"
               aria-label="pinned"
-              onChange={(_e, val) => {
-                console.log(val);
+              onChange={() => {
                 setFilters({ ...filters, pinned: !filters.pinned });
               }}
             >
@@ -110,23 +96,23 @@ export const ProjectLayout = () => {
         <TabsContainer>
           <TabContext value={filters.tab}>
             <TabList
-              onChange={(_e, tab) => setFilters({ ...filters, tab })}
+              onChange={(_e, tab) => {
+                setFilters({ ...filters, tab });
+              }}
               aria-label="navigation tabs"
               variant="scrollable"
             >
               <Tab label="Projects" value="projects" />
+              <Tab label="Engagements" value="engagements" />
             </TabList>
             <TabPanel value="projects">
               <TabPanelContent>
-                <DataGrid<Project>
-                  {...DefaultDataGridStyles}
-                  {...props}
-                  slotProps={slotProps}
-                  columns={ProjectColumns}
-                  initialState={initialState}
-                  headerFilters
-                  sx={[flexLayout, noHeaderFilterButtons]}
-                />
+                <ProjectsPanel filters={filters} />
+              </TabPanelContent>
+            </TabPanel>
+            <TabPanel value="engagements">
+              <TabPanelContent>
+                <EngagementsPanel filters={filters} />
               </TabPanelContent>
             </TabPanel>
           </TabContext>
@@ -136,8 +122,91 @@ export const ProjectLayout = () => {
   );
 };
 
-const initialState = {
+interface PanelProps {
+  filters: DecodedValueMap<{
+    pinned: QueryParamConfig<boolean, boolean>;
+    mine: QueryParamConfig<boolean, boolean>;
+    tab: QueryParamConfig<
+      NonNullable<'projects' | 'engagements'>,
+      NonNullable<'projects' | 'engagements'>
+    >;
+  }>;
+}
+
+const ProjectsPanel = ({ filters }: PanelProps) => {
+  const [dataGridProps] = useDataGridSource({
+    query: ProjectListDocument,
+    variables: {
+      input: {
+        filter: {
+          ...(filters.mine ? { mine: true } : {}),
+          ...(filters.pinned ? { pinned: true } : {}),
+        },
+      },
+    },
+    listAt: 'projects',
+    initialInput: {},
+  });
+
+  const slotProps = useMemo(
+    () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
+    [dataGridProps.slotProps]
+  );
+
+  return (
+    <DataGrid<Project>
+      {...DefaultDataGridStyles}
+      {...dataGridProps}
+      slotProps={slotProps}
+      columns={ProjectColumns}
+      initialState={projectInitialState}
+      headerFilters
+      sx={[flexLayout, noHeaderFilterButtons]}
+    />
+  );
+};
+
+const EngagementsPanel = ({ filters }: PanelProps) => {
+  const [dataGridProps] = useDataGridSource({
+    query: EngagementListDocument,
+    variables: {
+      input: {
+        filter: {
+          ...(filters.mine ? { mine: true } : {}),
+          ...(filters.pinned ? { pinned: true } : {}),
+        },
+      },
+    },
+    listAt: 'engagements',
+    initialInput: {},
+  });
+
+  const slotProps = useMemo(
+    () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
+    [dataGridProps.slotProps]
+  );
+
+  return (
+    <DataGrid<Engagement>
+      {...DefaultDataGridStyles}
+      {...dataGridProps}
+      slotProps={slotProps}
+      columns={EngagementColumns}
+      initialState={engagementInitialState}
+      headerFilters
+      sx={[flexLayout, noHeaderFilterButtons]}
+    />
+  );
+};
+
+const projectInitialState = {
   pinnedColumns: {
     left: [ProjectColumns[0]!.field],
+  },
+} satisfies DataGridProps['initialState'];
+
+const engagementInitialState = {
+  pinnedColumns: {
+    left: [EngagementColumns[0]!.field],
   },
 } satisfies DataGridProps['initialState'];
