@@ -401,7 +401,7 @@ const convertMuiFiltersToApi = (
       ? col.serverFilter(item)
       : set({}, item.field, item.value);
   });
-  const filter = merge({}, ...parts, external);
+  const filter = merge({}, ...parts, ...external);
   return Object.keys(filter).length > 0 ? filter : undefined;
 };
 
