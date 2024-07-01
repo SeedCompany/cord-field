@@ -36,6 +36,10 @@ export const PartnerDetailEngagements = () => {
     },
   });
 
+  const slots = useMemo(
+    () => merge({}, DefaultDataGridStyles.slots, props.slots),
+    [props.slots]
+  );
   const slotProps = useMemo(
     () => merge({}, DefaultDataGridStyles.slotProps, props.slotProps),
     [props.slotProps]
@@ -46,6 +50,7 @@ export const PartnerDetailEngagements = () => {
       <DataGrid<Engagement>
         {...DefaultDataGridStyles}
         {...props}
+        slots={slots}
         slotProps={slotProps}
         columns={EngagementColumns}
         initialState={initialState}

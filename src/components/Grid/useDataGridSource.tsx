@@ -7,6 +7,7 @@ import {
   GetColumnForNewFilterArgs,
   GridFilterItem,
   GridLogicOperator,
+  GridSlotProps,
 } from '@mui/x-data-grid';
 import {
   DataGridProProps as DataGridProps,
@@ -14,8 +15,9 @@ import {
   GridFetchRowsParams,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import { GridNoResultsOverlay } from '@mui/x-data-grid/components/GridNoResultsOverlay';
 import { Nil } from '@seedcompany/common';
-import { useDebounceFn, useLatest, useMemoizedFn } from 'ahooks';
+import { useDebounceFn, useLatest, useMemoizedFn, useTimeout } from 'ahooks';
 import {
   type FieldNode,
   getOperationAST,
@@ -349,6 +351,7 @@ export const useDataGridSource = <
     rowsLoadingMode: isCacheComplete ? 'client' : 'server',
     sortingMode: isCacheComplete ? 'client' : 'server',
     filterMode: isCacheComplete ? 'client' : 'server',
+    slots: apiSlots,
     slotProps: apiSlotProps,
   } satisfies Partial<DataGridProps>;
 
@@ -432,6 +435,23 @@ const getColumnForNewFilter = ({
     .find((colDef) => colDef.filterOperators?.length);
   return columnForNewFilter?.field ?? null;
 };
+
+/**
+ * Slightly delay showing no results.
+ * Which prevents the flash of text when swapping between cached filters.
+ * Since Apollo doesn't give loading=true when cached, so this is rendered
+ * while "visible rows" is zero.
+ * Which only happens for a few ms.
+ */
+const DelayNoResultsOverlay = (props: GridSlotProps['noResultsOverlay']) => {
+  const [show, setShow] = useState(false);
+  useTimeout(() => setShow(true), 10);
+  return !show ? null : <GridNoResultsOverlay {...props} />;
+};
+
+const apiSlots = {
+  noResultsOverlay: DelayNoResultsOverlay,
+} satisfies DataGridProps['slots'];
 
 const apiSlotProps = {
   filterPanel: {
