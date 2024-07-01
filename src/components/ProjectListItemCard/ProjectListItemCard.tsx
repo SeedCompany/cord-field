@@ -11,7 +11,7 @@ import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
-import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
+import { ProjectsQueryVariables } from '../../scenes/Projects/List/projects.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
@@ -209,7 +209,7 @@ export const ProjectListItemCard = ({
         object={project}
         label="Project"
         listId="projects"
-        listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
+        listFilter={(args: PartialDeep<ProjectsQueryVariables>) =>
           args.input?.filter?.pinned ?? false
         }
         className={classes.pin}

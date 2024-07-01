@@ -1,39 +1,17 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Grid, Stack, Tab, ToggleButton, Typography } from '@mui/material';
-import {
-  DataGridPro as DataGrid,
-  DataGridProProps as DataGridProps,
-} from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
-import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { DecodedValueMap } from 'serialize-query-params';
 import { makeStyles } from 'tss-react/mui';
-import {
-  EngagementDataGridRowFragment as Engagement,
-  EngagementColumns,
-} from '~/components/EngagementDataGrid';
-import {
-  DefaultDataGridStyles,
-  flexLayout,
-  noHeaderFilterButtons,
-  useDataGridSource,
-} from '~/components/Grid';
 import { ContentContainer } from '~/components/Layout';
-import {
-  ProjectDataGridRowFragment as Project,
-  ProjectColumns,
-} from '~/components/ProjectDataGrid';
 import { TabPanelContent, TabsContainer } from '~/components/Tabs';
 import {
   BooleanParam,
   EnumParam,
   makeQueryHandler,
-  QueryParamConfig,
   withDefault,
 } from '~/hooks';
-import { EngagementListDocument } from './EngagementList.graphql';
-import { ProjectListDocument } from './ProjectList.graphql';
+import { EngagementsPanel } from './EngagementsPanel';
+import { ProjectsPanel } from './ProjectsPanel';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   options: {
@@ -47,7 +25,7 @@ const useProjectListFilters = makeQueryHandler({
   tab: withDefault(EnumParam(['projects', 'engagements']), 'projects'),
 });
 
-export const ProjectLayout = () => {
+export const ProjectList = () => {
   const { classes } = useStyles();
   const [filters, setFilters] = useProjectListFilters();
 
@@ -60,28 +38,26 @@ export const ProjectLayout = () => {
 
       <Grid container spacing={1} className={classes.options}>
         <Grid item>
-          <form>
-            <ToggleButton
-              selected={filters.mine}
-              value="mine"
-              aria-label="mine"
-              onChange={() => {
-                setFilters({ ...filters, mine: !filters.mine });
-              }}
-            >
-              Mine
-            </ToggleButton>
-            <ToggleButton
-              selected={filters.pinned}
-              value="pinned"
-              aria-label="pinned"
-              onChange={() => {
-                setFilters({ ...filters, pinned: !filters.pinned });
-              }}
-            >
-              Pinned
-            </ToggleButton>
-          </form>
+          <ToggleButton
+            selected={filters.mine}
+            value="mine"
+            aria-label="mine"
+            onChange={() => {
+              setFilters({ ...filters, mine: !filters.mine });
+            }}
+          >
+            Mine
+          </ToggleButton>
+          <ToggleButton
+            selected={filters.pinned}
+            value="pinned"
+            aria-label="pinned"
+            onChange={() => {
+              setFilters({ ...filters, pinned: !filters.pinned });
+            }}
+          >
+            Pinned
+          </ToggleButton>
         </Grid>
       </Grid>
 
@@ -121,92 +97,3 @@ export const ProjectLayout = () => {
     </ContentContainer>
   );
 };
-
-interface PanelProps {
-  filters: DecodedValueMap<{
-    pinned: QueryParamConfig<boolean, boolean>;
-    mine: QueryParamConfig<boolean, boolean>;
-    tab: QueryParamConfig<
-      NonNullable<'projects' | 'engagements'>,
-      NonNullable<'projects' | 'engagements'>
-    >;
-  }>;
-}
-
-const ProjectsPanel = ({ filters }: PanelProps) => {
-  const [dataGridProps] = useDataGridSource({
-    query: ProjectListDocument,
-    variables: {
-      input: {
-        filter: {
-          ...(filters.mine ? { mine: true } : {}),
-          ...(filters.pinned ? { pinned: true } : {}),
-        },
-      },
-    },
-    listAt: 'projects',
-    initialInput: {},
-  });
-
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
-    [dataGridProps.slotProps]
-  );
-
-  return (
-    <DataGrid<Project>
-      {...DefaultDataGridStyles}
-      {...dataGridProps}
-      slotProps={slotProps}
-      columns={ProjectColumns}
-      initialState={projectInitialState}
-      headerFilters
-      sx={[flexLayout, noHeaderFilterButtons]}
-    />
-  );
-};
-
-const EngagementsPanel = ({ filters }: PanelProps) => {
-  const [dataGridProps] = useDataGridSource({
-    query: EngagementListDocument,
-    variables: {
-      input: {
-        filter: {
-          ...(filters.mine ? { mine: true } : {}),
-          ...(filters.pinned ? { pinned: true } : {}),
-        },
-      },
-    },
-    listAt: 'engagements',
-    initialInput: {},
-  });
-
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
-    [dataGridProps.slotProps]
-  );
-
-  return (
-    <DataGrid<Engagement>
-      {...DefaultDataGridStyles}
-      {...dataGridProps}
-      slotProps={slotProps}
-      columns={EngagementColumns}
-      initialState={engagementInitialState}
-      headerFilters
-      sx={[flexLayout, noHeaderFilterButtons]}
-    />
-  );
-};
-
-const projectInitialState = {
-  pinnedColumns: {
-    left: [ProjectColumns[0]!.field],
-  },
-} satisfies DataGridProps['initialState'];
-
-const engagementInitialState = {
-  pinnedColumns: {
-    left: [EngagementColumns[0]!.field],
-  },
-} satisfies DataGridProps['initialState'];
