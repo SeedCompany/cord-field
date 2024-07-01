@@ -35,6 +35,11 @@ export const ProjectsPanel = ({ filters }: PanelProps) => {
     initialInput: {},
   });
 
+  const slots = useMemo(
+    () => merge({}, DefaultDataGridStyles.slots, dataGridProps.slots),
+    [dataGridProps.slots]
+  );
+
   const slotProps = useMemo(
     () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
     [dataGridProps.slotProps]
@@ -44,6 +49,7 @@ export const ProjectsPanel = ({ filters }: PanelProps) => {
     <DataGrid<Project>
       {...DefaultDataGridStyles}
       {...dataGridProps}
+      slots={slots}
       slotProps={slotProps}
       columns={ProjectColumns}
       initialState={projectInitialState}

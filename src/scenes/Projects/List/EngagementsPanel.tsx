@@ -23,14 +23,19 @@ export const EngagementsPanel = ({ filters }: PanelProps) => {
     variables: {
       input: {
         filter: {
-          ...(filters.mine ? { mine: true } : {}),
-          ...(filters.pinned ? { pinned: true } : {}),
+          ...(filters.mine ? { project: { mine: true } } : {}),
+          ...(filters.pinned ? { project: { pinned: true } } : {}),
         },
       },
     },
     listAt: 'engagements',
     initialInput: {},
   });
+
+  const slots = useMemo(
+    () => merge({}, DefaultDataGridStyles.slots, dataGridProps.slots),
+    [dataGridProps.slots]
+  );
 
   const slotProps = useMemo(
     () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
@@ -41,6 +46,7 @@ export const EngagementsPanel = ({ filters }: PanelProps) => {
     <DataGrid<Engagement>
       {...DefaultDataGridStyles}
       {...dataGridProps}
+      slots={slots}
       slotProps={slotProps}
       columns={EngagementColumns}
       initialState={engagementInitialState}
