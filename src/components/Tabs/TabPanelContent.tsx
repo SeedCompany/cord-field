@@ -14,7 +14,6 @@ export const TabPanelContent = styled((props: TabPanelContentProps) => (
     padding: 0,
     maxWidth: '100cqw',
     width: 'min-content',
-    // idk why -50, MUI pushes down past container
-    maxHeight: 'calc(100cqh - 50px)',
+    maxHeight: '100cqh',
   },
 }));

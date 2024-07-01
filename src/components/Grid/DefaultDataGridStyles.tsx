@@ -81,6 +81,10 @@ export const EmptyEnumFilterValue = (
 
 // The DataGrid has flex dimensions
 export const flexLayout = {
+  // Avoid no intrinsic dimensions warning.
+  minWidth: '1px',
+  minHeight: '1px',
+
   // MUI-X filler is flaky with flex layouts.
   // It sometimes causes pinned rows to not show, based on some JS calc race condition.
   // This block works around that, by avoiding their JS calc layout
