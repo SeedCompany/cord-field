@@ -14,6 +14,7 @@ import {
   GridFetchRowsParams,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import { Nil } from '@seedcompany/common';
 import { useDebounceFn, useLatest, useMemoizedFn } from 'ahooks';
 import {
   type FieldNode,
@@ -78,7 +79,6 @@ export const useDataGridSource = <
 }) => {
   const initialInputRef = useLatest(initialInput);
   const apiRef = useGridApiRef();
-  const api: GridApiPro = apiRef.current;
 
   const queryForItemRef = useMemo(() => {
     const queryForItemRef = structuredClone(query);
@@ -94,28 +94,46 @@ export const useDataGridSource = <
     // eslint-disable-next-line react-hooks/exhaustive-deps -- these deps should not be changing between renders
   }, []);
 
+  function listFrom(data: Output): List;
+  function listFrom(data: Output | Nil): List | undefined;
+  function listFrom(data: Output | Nil) {
+    return data ? (get(data, listAt) as List) : undefined;
+  }
+  function cacheInfo(data: Output | Nil) {
+    if (!data) {
+      return undefined;
+    }
+    const list = listFrom(data);
+    return {
+      ...list,
+      isComplete: list.total === list.items.length,
+    };
+  }
+
   // Try to pull the complete list from the cache
   // This exists after all pages have been queried with the useQuery hook below.
   // This allows us to do client-side filtering & sorting once we have the complete list.
-  const { data: allPages, client } = useQuery(query, {
+  const { data: allPagesData, client } = useQuery(query, {
     variables,
     fetchPolicy: 'cache-only',
   });
-  const allPagesList = allPages ? (get(allPages, listAt) as List) : undefined;
-  const isCacheComplete =
-    !!allPagesList && allPagesList.total === allPagesList.items.length;
+  const allPages = cacheInfo(allPagesData);
 
   // Add a page to the "all pages" cache entry
   // This is read back in the first useQuery hook, above.
-  const addToAllPagesCache = (next: Output) => {
+  const updateAllPagesQuery = (
+    variables: Vars,
+    next: Output,
+    updateTotal: boolean
+  ) => {
     client.cache.updateQuery(
       {
         query: queryForItemRef,
         variables,
       },
       (prev) => {
-        const prevList = prev ? (get(prev, listAt) as List) : undefined;
-        const nextList = get(next, listAt) as List;
+        const prevList = listFrom(prev);
+        const nextList = listFrom(next);
         if (prevList && prevList.items.length === nextList.total) {
           return undefined; // no change
         }
@@ -127,7 +145,11 @@ export const useDataGridSource = <
           (item) => client.cache.identify(item)
         );
         const nextCached = structuredClone(next);
-        set(nextCached, listAt, { ...nextList, items: mergedList });
+        set(nextCached, listAt, {
+          ...nextList,
+          items: mergedList,
+          total: ((updateTotal ? nextList : prevList) ?? nextList).total,
+        });
         return nextCached;
       }
     );
@@ -153,6 +175,7 @@ export const useDataGridSource = <
     })
   );
   const viewRef = useLatest(view);
+  const hasFilter = !!view.filterModel && view.filterModel.items.length > 0;
 
   // Convert the view state to the input for the GQL query
   const input = useMemo(
@@ -179,6 +202,30 @@ export const useDataGridSource = <
       variables.input?.filter,
     ]
   );
+  const variablesWithFilter = useMemo(() => {
+    const { count, sort, order, ...rest } = input;
+    return {
+      ...variables,
+      input: rest,
+    };
+  }, [variables, input]);
+
+  const addToAllPagesCache = (next: Output) => {
+    updateAllPagesQuery(variables, next, !hasFilter);
+    if (hasFilter) {
+      updateAllPagesQuery(variablesWithFilter, next, true);
+    }
+  };
+
+  const { data: allFilteredPagesData } = useQuery(query, {
+    variables: variablesWithFilter,
+    fetchPolicy: 'cache-only',
+    skip: !hasFilter,
+  });
+  const allFilteredPages = cacheInfo(allFilteredPagesData);
+
+  const isCacheComplete =
+    allPages?.isComplete || allFilteredPages?.isComplete || false;
 
   // Grab the first page from cache/network on mount and when view changes
   const { data: firstPage, loading } = useQuery(query, {
@@ -189,18 +236,16 @@ export const useDataGridSource = <
     ),
     onCompleted: addToAllPagesCache,
   });
-  const firstPageList = firstPage
-    ? (get(firstPage, listAt) as List)
-    : undefined;
 
-  const rows =
-    (isCacheComplete ? allPagesList : firstPageList)?.items ?? emptyList;
-  const total = allPagesList?.total ?? firstPageList?.total ?? 0;
-
-  // Has Grid loaded all the rows for the current (maybe filtered) list?
-  const filteredListIsComplete =
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    api.state?.rows.dataRowIds.length === total && total > 0;
+  const list = loading
+    ? { items: emptyList, total: undefined }
+    : allPages?.isComplete
+    ? allPages
+    : allFilteredPages?.isComplete
+    ? allFilteredPages
+    : listFrom(firstPage);
+  const rows = list?.items ?? emptyList;
+  const total = list?.total;
 
   // Load additional pages imperatively as needed based on scrolling
   // This is debounced to mostly to reduce the client side load.
@@ -208,7 +253,7 @@ export const useDataGridSource = <
   // and the debouncing would skip those page requests.
   const onFetchRows = useDebounceFn(
     (params: GridFetchRowsParams) => {
-      if (filteredListIsComplete) {
+      if (isCacheComplete) {
         return;
       }
 
@@ -239,8 +284,8 @@ export const useDataGridSource = <
             if (isCurrent) {
               // Swap in real rows via the recommended process.
               const firstRowToReplace = (page - 1) * input.count;
-              const list = (get(res.data, listAt) as List).items.slice();
-              api.unstable_replaceRows(firstRowToReplace, list);
+              const list = listFrom(res.data).items.slice();
+              apiRef.current.unstable_replaceRows(firstRowToReplace, list);
             }
 
             // Always try to complete the list in cache.
@@ -262,7 +307,7 @@ export const useDataGridSource = <
         // API should use the new sorting state if pagination is still required.
         // Otherwise, if pagination has been exhausted / is not needed,
         // maintain the previously loaded first page and sort client side.
-        ...(!filteredListIsComplete ? { apiSortModel: sortModel } : {}),
+        ...(!isCacheComplete ? { apiSortModel: sortModel } : {}),
       }));
 
       apiRef.current.scrollToIndexes({ rowIndex: 0 });
@@ -300,11 +345,9 @@ export const useDataGridSource = <
     onFetchRows: onFetchRows.run,
     onSortModelChange,
     onFilterModelChange,
-    paginationMode: 'server', // Not used, but prevents row count warning.
-    rowsLoadingMode:
-      filteredListIsComplete || isCacheComplete ? 'client' : 'server',
-    sortingMode:
-      filteredListIsComplete || isCacheComplete ? 'client' : 'server',
+    paginationMode: total != null ? 'server' : 'client', // Not used, but prevents row count warning.
+    rowsLoadingMode: isCacheComplete ? 'client' : 'server',
+    sortingMode: isCacheComplete ? 'client' : 'server',
     filterMode: isCacheComplete ? 'client' : 'server',
     slotProps: apiSlotProps,
   } satisfies Partial<DataGridProps>;
