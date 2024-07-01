@@ -13,9 +13,10 @@ import {
   DataGridProProps as DataGridProps,
   GridApiPro,
   GridFetchRowsParams,
+  GridOverlay,
+  useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { GridNoResultsOverlay } from '@mui/x-data-grid/components/GridNoResultsOverlay';
 import { Nil } from '@seedcompany/common';
 import { useDebounceFn, useLatest, useMemoizedFn, useTimeout } from 'ahooks';
 import {
@@ -446,7 +447,12 @@ const getColumnForNewFilter = ({
 const DelayNoResultsOverlay = (props: GridSlotProps['noResultsOverlay']) => {
   const [show, setShow] = useState(false);
   useTimeout(() => setShow(true), 10);
-  return !show ? null : <GridNoResultsOverlay {...props} />;
+  const apiRef = useGridApiContext();
+  return !show ? null : (
+    <GridOverlay {...props}>
+      {apiRef.current.getLocaleText('noResultsOverlayLabel')}
+    </GridOverlay>
+  );
 };
 
 const apiSlots = {
