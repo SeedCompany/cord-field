@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { ProjectListQueryVariables } from '../List/projects.graphql';
+import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
 import { getProjectUrl } from '../useProjectId';
 import { CreateProjectDocument } from './CreateProject.graphql';
 import {
