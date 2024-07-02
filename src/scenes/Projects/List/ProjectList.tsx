@@ -28,7 +28,7 @@ export const ProjectList = () => {
 
   return (
     <ContentContainer sx={{ p: 4 }}>
-      <Helmet title="Projects" />
+      <Helmet title={pathname === '/projects' ? 'Projects' : 'Engagements'} />
       <Typography variant="h2" paragraph>
         Projects
       </Typography>
