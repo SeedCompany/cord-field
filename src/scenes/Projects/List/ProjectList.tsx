@@ -27,7 +27,7 @@ export const ProjectList = () => {
   const [filters, setFilters] = useProjectListFilters();
 
   return (
-    <ContentContainer>
+    <ContentContainer sx={{ p: 4 }}>
       <Helmet title="Projects" />
       <Typography variant="h2" paragraph>
         Projects
