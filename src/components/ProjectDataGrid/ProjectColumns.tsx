@@ -41,7 +41,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     ),
   },
   {
-    field: 'primaryLocation',
+    field: 'primaryLocation.name',
     valueGetter: (_, { primaryLocation }) => primaryLocation.value?.name.value,
     headerName: 'Country',
     minWidth: 300,
