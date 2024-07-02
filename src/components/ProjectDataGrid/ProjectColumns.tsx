@@ -47,7 +47,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     minWidth: 300,
   },
   {
-    field: 'project.step',
+    field: 'step',
     ...enumColumn(ProjectStepList, ProjectStepLabels, {
       orderByIndex: true,
     }),
