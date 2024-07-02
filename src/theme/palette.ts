@@ -8,9 +8,6 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
   const roleLuminance = dark ? 32 : 84;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
-    background: {
-      default: dark ? '#303030' : grey[50], // MUI v4 default
-    },
     primary: {
       main: mainGreen,
       contrastText: '#ffffff',
@@ -32,8 +29,11 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       main: '#f2994a',
     },
     text: {
-      primary: dark ? '#f3f4f6' : '#3c444e',
-      secondary: '#8f928b',
+      // Close to #3c444e while still using alpha
+      ...(!dark ? { primary: 'rgba(0, 0, 0, 0.75)' } : {}),
+      // Close to #8f928b while still using alpha
+      // Still it looks so contrast-less for form labels
+      // secondary: 'rgba(0, 0, 0, 0.45)',
     },
 
     // TODO theme.palette.augmentColor()

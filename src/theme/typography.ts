@@ -1,9 +1,8 @@
-import type { Palette } from '@mui/material';
 import type { TypographyOptions } from '@mui/material/styles/createTypography';
 import { pickBy } from 'lodash';
 import type { CSSProperties } from 'react';
 
-export const typography = (palette: Palette): TypographyOptions => {
+export const typography = (): TypographyOptions => {
   const weight: FontWeights = {
     light: 300, // default
     regular: 400, // default
@@ -21,7 +20,6 @@ export const typography = (palette: Palette): TypographyOptions => {
 
     allVariants: {
       fontWeight: weight.medium,
-      color: palette.text.primary,
     },
 
     // Header 1
