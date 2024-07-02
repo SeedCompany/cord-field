@@ -12,16 +12,12 @@ export const CreateItemContext = createContext<OpenCreateFn>(noop);
 export const CreateDialogProviders = (props: ChildrenProp) => {
   const [state, create, openedItem] = useDialog<Power>();
 
+  const Dialog = openedItem && creates.get(openedItem)?.[0];
+
   return (
     <CreateItemContext.Provider value={create}>
       {props.children}
-      {creates.map(([power, Dialog]) => (
-        <Dialog
-          {...state}
-          key={power}
-          open={state.open && openedItem === power}
-        />
-      ))}
+      {Dialog && <Dialog {...state} open={state.open} />}
     </CreateItemContext.Provider>
   );
 };

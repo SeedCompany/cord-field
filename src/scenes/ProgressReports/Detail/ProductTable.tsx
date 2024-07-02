@@ -1,5 +1,9 @@
 import { Box, Card } from '@mui/material';
-import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
+import {
+  DataGridPro as DataGrid,
+  DataGridProProps as DataGridProps,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 import { mapEntries, sortBy } from '@seedcompany/common';
 import { uniq } from 'lodash';
 import { useMemo } from 'react';

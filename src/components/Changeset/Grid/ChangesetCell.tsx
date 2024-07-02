@@ -4,10 +4,9 @@ import {
   getDataGridUtilityClass,
   GridCell,
   GridCellProps,
-  GridValidRowModel,
   useGridApiContext,
   useGridRootProps,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { DataGridProcessedProps } from '@mui/x-data-grid/models/props/DataGridProps';
 import { Fragment } from 'react';
 import { useDetermineChangesetDiffItem } from '../ChangesetDiffContext';
@@ -120,9 +119,8 @@ export const ChangesetCell = (props: GridCellProps) => {
   return <GridCell {...props}>{merged}</GridCell>;
 };
 
-declare module '@mui/x-data-grid/models/colDef/gridColDef' {
-  // eslint-disable-next-line @seedcompany/no-unused-vars,prettier/prettier
-  interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> {
+declare module '@mui/x-data-grid/internals' {
+  interface GridBaseColDef {
     changesetAware?: boolean;
   }
 }

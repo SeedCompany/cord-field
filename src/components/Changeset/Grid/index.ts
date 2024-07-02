@@ -1,4 +1,4 @@
-import { GridSlotsComponent } from '@mui/x-data-grid';
+import { GridSlotsComponent } from '@mui/x-data-grid-pro';
 import { ChangesetCell } from './ChangesetCell';
 import { ChangesetRow } from './ChangesetRow';
 

@@ -1,5 +1,5 @@
 import { darken, lighten } from '@mui/material/styles';
-import { GridRow, GridRowProps } from '@mui/x-data-grid';
+import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 import { Entity } from '~/api';
 import { useDetermineChangesetDiffItem } from '../ChangesetDiffContext';
 import { modeToPalette } from '../theme';

@@ -2,7 +2,7 @@ import type { Components, Theme } from '@mui/material';
 import { alpha as fade } from '@mui/material/styles';
 
 import type {} from '@mui/x-date-pickers/themeAugmentation';
-import type {} from '@mui/x-data-grid/themeAugmentation';
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 
 export const appComponents = ({
   spacing,
@@ -174,27 +174,36 @@ export const appComponents = ({
     },
     MuiDataGrid: {
       styleOverrides: {
-        root: ({ theme }) => ({
+        root: {
           // Don't wrap table in border if directly in a card, since the
           // elevated card is a good enough distinction.
           '.MuiPaper-root > &, .MuiPaper-root > .MuiTabPanel-root > &': {
             border: 'none',
           },
           // '--DataGrid-containerBackground': theme.palette.background.paper,
-          '& .MuiDataGrid-columnHeaders > *': {
-            paddingTop: theme.spacing(1),
-          },
-        }),
+        },
         columnHeaderTitle: {
           fontWeight: typography.weight.bold,
         },
         columnHeader: {
-          // Don't show last column separator
-          // TODO what if last column needs to be resizeable?
-          '&.MuiDataGrid-columnHeader--last .MuiDataGrid-columnSeparator--sideRight':
-            {
-              display: 'none',
-            },
+          '&:focus-within': {
+            outline: 'none',
+          },
+        },
+        filterForm: {
+          // Undo MuiFormControl.defaultProps.fullWidth: true
+          '.MuiFormControl-root': {
+            '&.MuiDataGrid-filterFormDeleteIcon, &.MuiDataGrid-filterFormLogicOperatorInput':
+              {
+                width: 'initial',
+              },
+          },
+        },
+        filterFormValueInput: {
+          // Undo MuiTextField.defaultProps.margin: 'dense'
+          '.MuiFormControl-root': {
+            margin: 0,
+          },
         },
       },
     },

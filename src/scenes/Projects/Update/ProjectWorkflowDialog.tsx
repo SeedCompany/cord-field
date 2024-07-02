@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { Grid, Tooltip, Typography } from '@mui/material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
@@ -19,8 +20,9 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import { Link } from '../../../components/Routing';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
-import { UpdateProjectDocument } from './UpdateProject.graphql';
+import { TransitionProjectDocument } from './TransitionProject.graphql';
 
 type UpdateProjectDialogProps = Except<
   DialogFormProps<SubmitAction & { project?: { step?: ProjectStep } }>,
@@ -39,35 +41,54 @@ export const ProjectWorkflowDialog = ({
   project,
   ...props
 }: UpdateProjectDialogProps) => {
-  const [updateProject] = useMutation(UpdateProjectDocument);
+  const [transitionProject] = useMutation(TransitionProjectDocument);
   const { classes } = useStyles();
   const { canBypassTransitions, transitions } = project.step;
 
+  const step = project.step.value;
   return (
     <DialogForm
-      title="Update Project"
+      title={
+        <Stack
+          direction="row"
+          gap={1}
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ mr: -1 }}
+        >
+          <span>Update Project</span>
+          <Tooltip title="View Workflow">
+            <IconButton
+              component={Link}
+              to={`/projects/workflow${step ? `?state=${step}` : ''}`}
+            >
+              <InfoIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      }
       closeLabel="Close"
       {...props}
       submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
       changesetAware
-      onSubmit={async ({ submitAction, project: submittedProjectFields }) => {
+      onSubmit={async ({
+        submitAction: transitionKey,
+        project: submittedProjectFields,
+      }) => {
         const step = submittedProjectFields?.step;
         // If clicking save for step override, but there is no step, do nothing.
-        if (!submitAction && !step) {
+        if (!transitionKey && !step) {
           return;
         }
 
-        await updateProject({
+        await transitionProject({
           variables: {
             input: {
-              project: {
-                id: project.id,
-                // remove index suffix used to make submit action unique
-                step:
-                  (submitAction?.split(':')[0] as ProjectStep | null) ?? step,
-              },
-              changeset: project.changeset?.id,
+              project: project.id,
+              ...(transitionKey
+                ? { transition: transitionKey }
+                : { bypassTo: step }),
             },
           },
         });
@@ -79,7 +100,7 @@ export const ProjectWorkflowDialog = ({
     >
       <SubmitError />
       <Grid container direction="column" spacing={1}>
-        {transitions.map((transition, i) => (
+        {transitions.map((transition) => (
           <Tooltip
             title={
               transition.disabledReason ??
@@ -87,14 +108,12 @@ export const ProjectWorkflowDialog = ({
                 ProjectStepLabels[transition.to]
               }`
             }
-            key={i}
+            key={transition.key}
           >
             <Grid item>
               <SubmitButton
                 {...transitionTypeStyles[transition.type]}
-                // Ensure submit action/step is unique by appending index. This prevents
-                // multiple spinners for the same next step with different labels.
-                action={`${transition.to}:${i}`}
+                action={transition.key}
                 disabled={transition.disabled}
               >
                 {transition.label}

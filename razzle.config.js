@@ -23,7 +23,10 @@ const modifyWebpackOptions = ({
   options.babelRule.include.push(
     require.resolve('@seedcompany/common').replace('.cjs', '.js'),
     require.resolve('@editorjs/editorjs').replace('.umd.js', '.mjs'),
-    (path) => path.includes('/@mui-')
+    (path) =>
+      path.includes('/@mui-') ||
+      path.includes('reactflow') ||
+      path.includes('dagrejs')
   );
 
   return options;
@@ -49,6 +52,11 @@ const modifyWebpackConfig = (opts) => {
     // SSR html provides based on app env config.
     define('process.env', 'window.env');
   }
+
+  define(
+    'process.env.MUI_X_LICENSE_KEY',
+    JSON.stringify(process.env.MUI_X_LICENSE_KEY)
+  );
 
   if (isClient) {
     const filename = path.resolve(__dirname, 'build');

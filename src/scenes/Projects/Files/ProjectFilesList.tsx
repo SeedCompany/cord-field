@@ -9,12 +9,12 @@ import {
   Typography,
 } from '@mui/material';
 import {
-  DataGrid,
+  DataGridPro as DataGrid,
   GridColDef,
   GridRowParams,
   GridToolbarContainer,
   GridToolbarProps,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid-pro';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';

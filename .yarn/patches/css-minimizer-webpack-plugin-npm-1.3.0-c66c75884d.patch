@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index f50f242ce99f8894457dfe573cb5d525b8cbb800..8aa3b6da76d413834a60c7947e351c994e0a585b 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -278,7 +278,7 @@ class CssMinimizerPlugin {
+               cssMinimizer: _package.default.version,
+               'css-minimizer-webpack-plugin-options': this.options,
+               name,
+-              contentHash: _crypto.default.createHash('md4').update(input).digest('hex')
++              contentHash: _crypto.default.createHash('md5').update(input).digest('hex')
+             }, name);
+           }
+         }

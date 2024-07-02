@@ -38,9 +38,14 @@ const ChangeRequestList = loadable(() => import('./ChangeRequest/List'), {
   resolveComponent: (m) => m.ProjectChangeRequestList,
 });
 
+const ProjectFlowchart = loadable(() => import('./Workflow/ProjectFlowchart'), {
+  resolveComponent: (m) => m.ProjectFlowchart,
+});
+
 export const Projects = () => (
   <Routes>
     <Route path="" element={<ProjectList />} />
+    <Route path="workflow" element={<ProjectFlowchart />} />
     <Route path=":projectId/*" element={<ProjectDetails />} />
     {NotFoundRoute}
   </Routes>

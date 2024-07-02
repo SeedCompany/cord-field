@@ -7,9 +7,9 @@ import { CreatePost } from '~/components/posts/CreatePost';
 import { PostableIdFragment } from '~/components/posts/PostableId.graphql';
 import { PostListItem } from '~/components/posts/PostListItemCard';
 import { ProgressButton } from '~/components/ProgressButton';
+import { TabPanelContent } from '~/components/Tabs';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerPostListDocument as PostListQuery } from '../../PartnerPostList.graphql';
-import { PartnerTabContainer } from '../PartnerTabContainer';
 
 interface Props {
   partner?: PostableIdFragment;
@@ -28,7 +28,7 @@ export const PartnerDetailNotes = ({ partner }: Props) => {
   });
 
   return (
-    <PartnerTabContainer>
+    <TabPanelContent>
       <ActionableSection
         loading={!partner}
         title="Notes"
@@ -59,6 +59,6 @@ export const PartnerDetailNotes = ({ partner }: Props) => {
 
         {partner && <CreatePost {...createPostState} parent={partner} />}
       </ActionableSection>
-    </PartnerTabContainer>
+    </TabPanelContent>
   );
 };

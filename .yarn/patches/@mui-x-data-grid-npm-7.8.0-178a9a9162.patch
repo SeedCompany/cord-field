@@ -1,0 +1,26 @@
+diff --git a/hooks/features/sorting/gridSortingUtils.js b/hooks/features/sorting/gridSortingUtils.js
+index fc8ca6c37ddc503485381f1d363d0f1ff1672bc1..b05056095d97f2db4bc5e5e42f82fcaef0797e23 100644
+--- a/hooks/features/sorting/gridSortingUtils.js
++++ b/hooks/features/sorting/gridSortingUtils.js
+@@ -81,10 +81,17 @@ export const buildAggregatedSortingApplier = (sortModel, apiRef) => {
+   if (comparatorList.length === 0) {
+     return null;
+   }
+-  return rowList => rowList.map(node => ({
+-    node,
+-    params: comparatorList.map(el => el.getSortCellParams(node.id))
+-  })).sort((a, b) => compareRows(comparatorList, a, b)).map(row => row.node.id);
++  return rowList => {
++    // If we have skeleton rows, we should not sort the rows
++    // https://github.com/mui/mui-x/issues/13691
++    if (rowList.some(node => !node || node.type === 'skeletonRow')) {
++      return rowList.map(row => row.id);
++    }
++    return rowList.map(node => ({
++      node,
++      params: comparatorList.map(el => el.getSortCellParams(node.id))
++    })).sort((a, b) => compareRows(comparatorList, a, b)).map(row => row.node.id);
++  };
+ };
+ export const getNextGridSortDirection = (sortingOrder, current) => {
+   const currentIdx = sortingOrder.indexOf(current);
