@@ -1,15 +1,12 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Grid, Stack, Tab, ToggleButton, Typography } from '@mui/material';
+import { Grid, Stack, ToggleButton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { ContentContainer } from '~/components/Layout';
 import { TabPanelContent, TabsContainer } from '~/components/Tabs';
-import {
-  BooleanParam,
-  EnumParam,
-  makeQueryHandler,
-  withDefault,
-} from '~/hooks';
+import { BooleanParam, makeQueryHandler, withDefault } from '~/hooks';
+import { TabLink } from '../../../components/Routing/TabLink';
 import { EngagementsPanel } from './EngagementsPanel';
 import { ProjectsPanel } from './ProjectsPanel';
 
@@ -22,10 +19,10 @@ const useStyles = makeStyles()(({ spacing }) => ({
 const useProjectListFilters = makeQueryHandler({
   pinned: withDefault(BooleanParam(), false),
   mine: withDefault(BooleanParam(), true),
-  tab: withDefault(EnumParam(['projects', 'engagements']), 'projects'),
 });
 
 export const ProjectList = () => {
+  const { pathname } = useLocation();
   const { classes } = useStyles();
   const [filters, setFilters] = useProjectListFilters();
 
@@ -70,23 +67,21 @@ export const ProjectList = () => {
         }}
       >
         <TabsContainer>
-          <TabContext value={filters.tab}>
-            <TabList
-              onChange={(_e, tab) => {
-                setFilters({ ...filters, tab });
-              }}
-              aria-label="navigation tabs"
-              variant="scrollable"
-            >
-              <Tab label="Projects" value="projects" />
-              <Tab label="Engagements" value="engagements" />
+          <TabContext value={pathname}>
+            <TabList>
+              <TabLink to="/projects" value="/projects" label="Projects" />
+              <TabLink
+                to="/engagements"
+                value="/engagements"
+                label="Engagements"
+              />
             </TabList>
-            <TabPanel value="projects">
+            <TabPanel value="/projects">
               <TabPanelContent>
                 <ProjectsPanel filters={filters} />
               </TabPanelContent>
             </TabPanel>
-            <TabPanel value="engagements">
+            <TabPanel value="/engagements">
               <TabPanelContent>
                 <EngagementsPanel filters={filters} />
               </TabPanelContent>
