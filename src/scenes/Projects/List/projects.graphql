@@ -1,8 +1,0 @@
-query Projects($input: ProjectListInput!) {
-  projects(input: $input) {
-    items {
-      ...ProjectListItem
-    }
-    ...Pagination
-  }
-}

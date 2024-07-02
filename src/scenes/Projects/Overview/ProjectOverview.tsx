@@ -51,7 +51,7 @@ import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagemen
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { DeleteProject } from '../Delete';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
-import { ProjectsQueryVariables } from '../List/projects.graphql';
+import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
@@ -238,7 +238,7 @@ export const ProjectOverview = () => {
               object={project}
               label="Project"
               listId="projects"
-              listFilter={(args: PartialDeep<ProjectsQueryVariables>) =>
+              listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
                 args.input?.filter?.pinned ?? false
               }
             />

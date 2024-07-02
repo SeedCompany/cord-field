@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { ProjectsQueryVariables } from '../List/projects.graphql';
+import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
 import { getProjectUrl } from '../useProjectId';
 import { CreateProjectDocument } from './CreateProject.graphql';
 import {
@@ -16,7 +16,7 @@ export const CreateProject = (props: Except<Props, 'onSubmit'>) => {
     update: addItemToList({
       listId: 'projects',
       outputToItem: (data) => data.createProject.project,
-      filter: (args: Partial<ProjectsQueryVariables>) =>
+      filter: (args: Partial<ProjectListQueryVariables>) =>
         !args.input?.filter?.pinned,
     }),
   });
