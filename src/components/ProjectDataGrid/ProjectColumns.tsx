@@ -41,13 +41,13 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     ),
   },
   {
-    field: 'primaryLocation.name',
+    field: 'primaryLocation',
     valueGetter: (_, { primaryLocation }) => primaryLocation.value?.name.value,
     headerName: 'Country',
     minWidth: 300,
   },
   {
-    field: 'project.step',
+    field: 'step',
     ...enumColumn(ProjectStepList, ProjectStepLabels, {
       orderByIndex: true,
     }),
