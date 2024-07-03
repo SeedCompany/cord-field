@@ -61,7 +61,7 @@ export const useIdentifyInLogRocket = () => {
       return;
     }
     const LogRocket = await import('logrocket');
-    LogRocket.identify(
+    LogRocket.default.identify(
       user.id,
       pickBy({
         name: user.fullName,
