@@ -17,7 +17,7 @@ import {
   useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { Nil } from '@seedcompany/common';
+import { groupBy, Nil } from '@seedcompany/common';
 import { useDebounceFn, useLatest, useMemoizedFn, useTimeout } from 'ahooks';
 import {
   type FieldNode,
@@ -317,9 +317,17 @@ export const useDataGridSource = <
     });
   const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
     useMemoizedFn((filterModel) => {
+      const next = {
+        ...filterModel,
+        // Take the last filter for each column
+        items: groupBy(filterModel.items, (item) => item.field).map(
+          (items) => items.at(-1)!
+        ),
+      };
+
       setView((prev) => ({
         ...prev,
-        filterModel,
+        filterModel: next,
         // API should now use the current sorting state
         apiSortModel: prev.sortModel,
       }));
