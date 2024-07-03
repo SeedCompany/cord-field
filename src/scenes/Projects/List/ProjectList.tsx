@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { ContentContainer } from '~/components/Layout';
@@ -12,20 +12,9 @@ export const ProjectList = () => {
   const { pathname } = useLocation();
 
   return (
-    <ContentContainer sx={{ p: 4 }}>
+    <ContentContainer sx={{ p: 4, pt: 2, overflow: 'initial' }}>
       <Helmet title={pathname === '/projects' ? 'Projects' : 'Engagements'} />
-      <Typography variant="h2" paragraph>
-        Projects
-      </Typography>
-
-      <Stack
-        component="main"
-        sx={{
-          flex: 1,
-          p: 1,
-          overflowY: 'auto',
-        }}
-      >
+      <Stack component="main" sx={{ flex: 1 }}>
         <TabsContainer>
           <TabContext value={pathname}>
             <TabList>
