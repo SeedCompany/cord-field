@@ -16,4 +16,7 @@ export const TabPanelContent = styled((props: TabPanelContentProps) => (
     width: 'min-content',
     maxHeight: '100cqh',
   },
+  '&:empty': {
+    padding: 0,
+  },
 }));

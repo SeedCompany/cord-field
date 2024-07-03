@@ -1,16 +1,31 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import {
+  DataGridProProps as DataGridProps,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 import { cleanJoin } from '@seedcompany/common';
 import {
   EngagementStatusLabels,
   EngagementStatusList,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
+  ProjectStatusLabels,
+  ProjectStatusList,
   ProjectStepLabels,
   ProjectStepList,
   ProjectTypeLabels,
   ProjectTypeList,
 } from '../../api/schema/enumLists';
-import { enumColumn, textColumn } from '../Grid';
+import {
+  enumColumn,
+  getInitialVisibility,
+  QuickFilterButton,
+  QuickFilterResetButton,
+  QuickFilters,
+  textColumn,
+  Toolbar,
+  useEnumListFilterToggle,
+  useFilterToggle,
+} from '../Grid';
 import { SensitivityColumn } from '../ProjectDataGrid';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
@@ -20,7 +35,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     headerName: 'Name',
     field: 'nameProjectFirst',
     ...textColumn(),
-    minWidth: 200,
+    width: 200,
     valueGetter: (_, row) =>
       cleanJoin(' - ', [
         row.project.name.value,
@@ -41,6 +56,15 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     ...enumColumn(ProjectTypeList, ProjectTypeLabels),
     width: 130,
     valueGetter: (_, row) => row.project.type,
+  },
+  {
+    field: 'project.status',
+    ...enumColumn(ProjectStatusList, ProjectStatusLabels, {
+      orderByIndex: true,
+    }),
+    valueGetter: (_, row) => row.project.status,
+    headerName: 'Project Status',
+    width: 160,
   },
   {
     headerName: 'Project Step',
@@ -140,4 +164,52 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       <Link to={`/projects/${row.project.id}/files`}>View Files</Link>
     ),
   },
+  {
+    field: 'project.isMember',
+    type: 'boolean',
+    valueGetter: (_, row) => row.project.isMember,
+    hidden: true,
+  },
+  {
+    field: 'project.pinned',
+    type: 'boolean',
+    valueGetter: (_, row) => row.project.pinned,
+    hidden: true,
+  },
 ];
+
+export const EngagementInitialState = {
+  pinnedColumns: {
+    left: EngagementColumns.slice(0, 1).map((column) => column.field),
+  },
+  columns: {
+    columnVisibilityModel: {
+      ...getInitialVisibility(EngagementColumns),
+      'project.status': false,
+    },
+  },
+} satisfies DataGridProps['initialState'];
+
+export const EngagementToolbar = () => (
+  <Toolbar>
+    <QuickFilters>
+      <QuickFilterResetButton />
+      <QuickFilterButton {...useFilterToggle('project.isMember')}>
+        Mine
+      </QuickFilterButton>
+      <QuickFilterButton {...useFilterToggle('project.pinned')}>
+        Pinned
+      </QuickFilterButton>
+      <QuickFilterButton
+        {...useEnumListFilterToggle('project.status', 'Active')}
+      >
+        Active
+      </QuickFilterButton>
+      <QuickFilterButton
+        {...useEnumListFilterToggle('project.status', 'InDevelopment')}
+      >
+        In Development
+      </QuickFilterButton>
+    </QuickFilters>
+  </Toolbar>
+);

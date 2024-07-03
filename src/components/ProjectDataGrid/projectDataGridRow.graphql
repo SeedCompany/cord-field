@@ -20,4 +20,6 @@ fragment projectDataGridRow on Project {
       }
     }
   }
+  isMember
+  pinned
 }
