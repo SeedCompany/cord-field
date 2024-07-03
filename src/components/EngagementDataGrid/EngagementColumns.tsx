@@ -8,6 +8,8 @@ import {
   EngagementStatusList,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
+  ProjectStatusLabels,
+  ProjectStatusList,
   ProjectStepLabels,
   ProjectStepList,
   ProjectTypeLabels,
@@ -23,7 +25,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     headerName: 'Name',
     field: 'nameProjectFirst',
     ...textColumn(),
-    minWidth: 200,
+    width: 200,
     valueGetter: (_, row) =>
       cleanJoin(' - ', [
         row.project.name.value,
@@ -44,6 +46,15 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     ...enumColumn(ProjectTypeList, ProjectTypeLabels),
     width: 130,
     valueGetter: (_, row) => row.project.type,
+  },
+  {
+    field: 'project.status',
+    ...enumColumn(ProjectStatusList, ProjectStatusLabels, {
+      orderByIndex: true,
+    }),
+    valueGetter: (_, row) => row.project.status,
+    headerName: 'Project Status',
+    width: 160,
   },
   {
     headerName: 'Project Step',
@@ -150,6 +161,9 @@ export const EngagementInitialState = {
     left: EngagementColumns.slice(0, 1).map((column) => column.field),
   },
   columns: {
-    columnVisibilityModel: getInitialVisibility(EngagementColumns),
+    columnVisibilityModel: {
+      ...getInitialVisibility(EngagementColumns),
+      'project.status': false,
+    },
   },
 } satisfies DataGridProps['initialState'];

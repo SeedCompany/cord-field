@@ -20,6 +20,7 @@ fragment engagementDataGridRow on Engagement {
     step {
       value
     }
+    status
     primaryLocation {
       value {
         id
