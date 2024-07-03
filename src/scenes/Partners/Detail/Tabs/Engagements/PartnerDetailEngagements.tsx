@@ -1,6 +1,7 @@
 import {
   DataGridPro as DataGrid,
   DataGridProProps as DataGridProps,
+  GridFooter,
 } from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
@@ -12,6 +13,7 @@ import {
 import {
   DefaultDataGridStyles,
   flexLayout,
+  noFooter,
   noHeaderFilterButtons,
   useDataGridSource,
 } from '~/components/Grid';
@@ -37,7 +39,10 @@ export const PartnerDetailEngagements = () => {
   });
 
   const slots = useMemo(
-    () => merge({}, DefaultDataGridStyles.slots, props.slots),
+    () =>
+      merge({}, DefaultDataGridStyles.slots, props.slots, {
+        toolbar: GridFooter,
+      } satisfies DataGridProps['slots']),
     [props.slots]
   );
   const slotProps = useMemo(
@@ -55,7 +60,8 @@ export const PartnerDetailEngagements = () => {
         columns={EngagementColumns}
         initialState={initialState}
         headerFilters
-        sx={[flexLayout, noHeaderFilterButtons]}
+        hideFooter
+        sx={[flexLayout, noHeaderFilterButtons, noFooter]}
       />
     </TabPanelContent>
   );

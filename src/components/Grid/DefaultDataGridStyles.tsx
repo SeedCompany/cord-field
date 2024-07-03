@@ -133,6 +133,13 @@ export const noHeaderFilterButtons = {
   },
 } satisfies Sx;
 
+export const noFooter = {
+  '.MuiDataGrid-main': {
+    borderBottomLeftRadius: 'inherit',
+    borderBottomRightRadius: 'inherit',
+  },
+} satisfies Sx;
+
 export const getInitialVisibility = (columns: GridColDef[]) =>
   mapEntries(columns, (column) => [column.field, !column.hidden]).asRecord;
 
