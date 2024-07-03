@@ -1,7 +1,15 @@
 import { ListItemButton, ListItemButtonProps } from '@mui/material';
-import { forwardRef } from 'react';
-// eslint-disable-next-line @seedcompany/no-restricted-imports
-import { Link, LinkProps, useMatch } from 'react-router-dom';
+import { many, Many } from '@seedcompany/common';
+import { forwardRef, useMemo } from 'react';
+import {
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
+  Link,
+  // eslint-disable-next-line @seedcompany/no-restricted-imports
+  LinkProps,
+  matchPath,
+  PathPattern,
+  useLocation,
+} from 'react-router-dom';
 import { Merge } from 'type-fest';
 
 export type ListItemLinkProps = InternalProps | ExternalProps;
@@ -11,7 +19,11 @@ type BaseProps = Omit<ListItemButtonProps<'a'>, 'component'> & {
    * Whether the active styles should ONLY be applied for paths
    * that exactly match the given one
    */
-  exact?: boolean;
+  // exact?: boolean;
+  /**
+   * Whether the active styles should be applied.
+   */
+  active?: Many<string | PathPattern>;
 };
 
 interface InternalProps extends Merge<BaseProps, LinkProps> {
@@ -34,14 +46,22 @@ interface ExternalProps extends BaseProps {
  */
 export const ListItemLink = forwardRef<HTMLAnchorElement, ListItemLinkProps>(
   function ListItemLink(
-    { external, to, children, exact = false, ...props },
+    { external, to, children, active: activePatterns, ...props },
     ref
   ) {
     const path = typeof to === 'string' ? to : to.pathname!;
-    const active = useMatch({ path, end: exact });
+    const { pathname } = useLocation();
+    const active = useMemo(
+      () =>
+        many(activePatterns ?? { path, end: false }).some((pattern) =>
+          matchPath<any, string>(pattern, pathname)
+        ),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [pathname]
+    );
     return (
       <ListItemButton
-        selected={Boolean(active)}
+        selected={active}
         {...props}
         ref={ref}
         {...(external ? { href: to } : { to })}
