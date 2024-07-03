@@ -19,6 +19,7 @@ import {
   QuickFilterButton,
   QuickFilterResetButton,
   QuickFilters,
+  textColumn,
   Toolbar,
   useEnumListFilterToggle,
   useFilterToggle,
@@ -45,9 +46,10 @@ export const SensitivityColumn = {
 export const ProjectColumns: Array<GridColDef<Project>> = [
   {
     field: 'name',
+    ...textColumn(),
     valueGetter: (_, { name }) => name.value,
     headerName: 'Name',
-    minWidth: 300,
+    width: 300,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.id}`}>{value}</Link>
     ),
@@ -56,7 +58,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     field: 'primaryLocation.name',
     valueGetter: (_, { primaryLocation }) => primaryLocation.value?.name.value,
     headerName: 'Country',
-    minWidth: 300,
+    width: 300,
   },
   {
     field: 'step',
@@ -75,7 +77,9 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
   },
   {
     field: 'status',
-    ...enumColumn(ProjectStatusList, ProjectStatusLabels),
+    ...enumColumn(ProjectStatusList, ProjectStatusLabels, {
+      orderByIndex: true,
+    }),
     headerName: 'Status',
     width: 160,
   },
