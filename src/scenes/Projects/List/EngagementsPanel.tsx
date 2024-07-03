@@ -1,7 +1,6 @@
 import {
   DataGridPro as DataGrid,
   DataGridProProps as DataGridProps,
-  GridFooter,
 } from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
@@ -9,6 +8,7 @@ import {
   EngagementDataGridRowFragment as Engagement,
   EngagementColumns,
   EngagementInitialState,
+  EngagementToolbar,
 } from '~/components/EngagementDataGrid';
 import {
   DefaultDataGridStyles,
@@ -38,7 +38,7 @@ export const EngagementsPanel = ({ filters }: PanelProps) => {
   const slots = useMemo(
     () =>
       merge({}, DefaultDataGridStyles.slots, dataGridProps.slots, {
-        toolbar: GridFooter,
+        toolbar: EngagementToolbar,
       } satisfies DataGridProps['slots']),
     [dataGridProps.slots]
   );

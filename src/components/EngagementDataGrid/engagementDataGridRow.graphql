@@ -35,6 +35,8 @@ fragment engagementDataGridRow on Engagement {
     mouEnd {
       value
     }
+    pinned
+    isMember
   }
 
   ... on LanguageEngagement {
