@@ -5,6 +5,7 @@ import {
 import {
   FilterColumnsArgs,
   GetColumnForNewFilterArgs,
+  GridColType,
   GridFilterItem,
   GridLogicOperator,
   GridSlotProps,
@@ -17,12 +18,19 @@ import {
   useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { groupBy, Nil } from '@seedcompany/common';
-import { useDebounceFn, useLatest, useMemoizedFn, useTimeout } from 'ahooks';
+import { groupBy, Nil, setOf } from '@seedcompany/common';
+import {
+  useDebounceFn,
+  useLatest,
+  useLocalStorageState,
+  useMemoizedFn,
+  useTimeout,
+} from 'ahooks';
 import {
   type FieldNode,
   getOperationAST,
   Kind,
+  OperationDefinitionNode,
   type SelectionSetNode,
 } from 'graphql';
 import { get, merge, pick, set, uniqBy } from 'lodash';
@@ -57,6 +65,18 @@ const defaultInitialInput = {
 };
 const defaultKeyArgs = ['__typename', 'id'];
 
+const persistColumnTypes = setOf<GridColType>(['singleSelect', 'boolean']);
+
+type StoredViewState = Pick<DataGridProps, 'sortModel' | 'filterModel'> & {
+  apiFilterModel: Record<string, any>;
+};
+type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
+  // The sorting state for the first page API query.
+  // It could be the live sorting state, or a stale one,
+  // based on pagination needs.
+  apiSortModel: DataGridProps['sortModel'];
+};
+
 export const useDataGridSource = <
   Output extends Record<string, any>,
   Vars,
@@ -83,6 +103,13 @@ export const useDataGridSource = <
   const initialInputRef = useLatest(initialInput);
   const apiRef = useGridApiRef();
 
+  const opName = useMemo(
+    () =>
+      query.definitions.find(
+        (d): d is OperationDefinitionNode => d.kind === 'OperationDefinition'
+      )!.name!.value,
+    [query]
+  );
   const queryForItemRef = useMemo(() => {
     const queryForItemRef = structuredClone(query);
     const listNode = getFieldPath(
@@ -165,18 +192,47 @@ export const useDataGridSource = <
       sort: lowerCase(initialInput?.order ?? defaultInitialInput.order),
     },
   ]);
-  const [view, setView] = useState(
-    (): Pick<DataGridProps, 'sortModel' | 'filterModel'> & {
-      // The sorting state for the first page API query.
-      // It could be the live sorting state, or a stale one,
-      // based on pagination needs.
-      apiSortModel: DataGridProps['sortModel'];
-    } => ({
-      filterModel: { items: [] },
-      sortModel: initialSort,
-      apiSortModel: initialSort,
+  const [storedView, setStoredView] = useLocalStorageState<StoredViewState>(
+    `${opName}-data-grid-view`,
+    {
+      defaultValue: () => ({
+        filterModel: { items: [] },
+        apiFilterModel: {},
+        sortModel: initialSort,
+      }),
+    }
+  );
+  const persist = useDebounceFn((next: ViewState) => {
+    setStoredView({
+      sortModel: next.sortModel,
+      filterModel: {
+        items:
+          next.filterModel?.items.filter((item) =>
+            persistColumnTypes.has(apiRef.current.getColumn(item.field).type!)
+          ) ?? [],
+      },
+      apiFilterModel: convertMuiFiltersToApi(
+        apiRef.current,
+        view.filterModel,
+        variables.input?.filter,
+        initialInputRef.current?.filter
+      ),
+    });
+  });
+  const [view, reallySetView] = useState(
+    (): ViewState => ({
+      ...storedView,
+      apiSortModel: storedView!.sortModel,
     })
   );
+  const setView = (setter: (prev: ViewState) => ViewState) => {
+    reallySetView((prev) => {
+      const next = setter(prev);
+      persist.run(next);
+      return next;
+    });
+  };
+
   const viewRef = useLatest(view);
   const hasFilter = !!view.filterModel && view.filterModel.items.length > 0;
 
@@ -190,13 +246,17 @@ export const useDataGridSource = <
         sort: view.apiSortModel[0].field,
         order: upperCase(view.apiSortModel[0].sort!),
       }),
-      filter: convertMuiFiltersToApi(
-        apiRef.current,
-        view.filterModel,
-        variables.input?.filter,
-        initialInputRef.current?.filter
-      ),
+      // eslint-disable-next-line no-extra-boolean-cast
+      filter: Boolean(apiRef.current.instanceId)
+        ? convertMuiFiltersToApi(
+            apiRef.current,
+            view.filterModel,
+            variables.input?.filter,
+            initialInputRef.current?.filter
+          )
+        : storedView?.apiFilterModel,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       apiRef,
       initialInputRef,
