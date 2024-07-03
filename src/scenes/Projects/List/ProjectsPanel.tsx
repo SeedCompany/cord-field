@@ -24,6 +24,9 @@ export const ProjectsPanel = () => {
     query: ProjectListDocument,
     variables: {},
     listAt: 'projects',
+    initialInput: {
+      sort: 'name',
+    },
   });
 
   const slots = useMemo(

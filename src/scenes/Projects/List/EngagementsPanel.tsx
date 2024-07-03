@@ -24,6 +24,9 @@ export const EngagementsPanel = () => {
     query: EngagementListDocument,
     variables: {},
     listAt: 'engagements',
+    initialInput: {
+      sort: 'nameProjectFirst',
+    },
   });
 
   const slots = useMemo(
