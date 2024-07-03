@@ -10,7 +10,15 @@ import {
   SensitivityLabels,
   SensitivityList,
 } from '~/api/schema.graphql';
-import { enumColumn } from '../Grid';
+import {
+  enumColumn,
+  QuickFilterButton,
+  QuickFilterResetButton,
+  QuickFilters,
+  Toolbar,
+  useEnumListFilterToggle,
+  useFilterToggle,
+} from '../Grid';
 import { Link } from '../Routing';
 import { SensitivityIcon } from '../Sensitivity';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
@@ -87,3 +95,25 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     hidden: true,
   },
 ];
+
+export const ProjectToolbar = () => (
+  <Toolbar>
+    <QuickFilters>
+      <QuickFilterResetButton />
+      <QuickFilterButton {...useFilterToggle('isMember')}>
+        Mine
+      </QuickFilterButton>
+      <QuickFilterButton {...useFilterToggle('pinned')}>
+        Pinned
+      </QuickFilterButton>
+      <QuickFilterButton {...useEnumListFilterToggle('status', 'Active')}>
+        Active
+      </QuickFilterButton>
+      <QuickFilterButton
+        {...useEnumListFilterToggle('status', 'InDevelopment')}
+      >
+        In Development
+      </QuickFilterButton>
+    </QuickFilters>
+  </Toolbar>
+);

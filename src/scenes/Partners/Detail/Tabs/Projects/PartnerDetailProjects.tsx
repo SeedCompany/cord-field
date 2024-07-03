@@ -1,7 +1,6 @@
 import {
   DataGridPro as DataGrid,
   DataGridProProps as DataGridProps,
-  GridFooter,
 } from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
@@ -17,6 +16,7 @@ import {
 import {
   ProjectDataGridRowFragment as Project,
   ProjectColumns,
+  ProjectToolbar,
 } from '~/components/ProjectDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
 import { PartnerProjectsDocument } from './PartnerProjects.graphql';
@@ -45,7 +45,7 @@ export const PartnerDetailProjects = () => {
   const slots = useMemo(
     () =>
       merge({}, DefaultDataGridStyles.slots, props.slots, {
-        toolbar: GridFooter,
+        toolbar: ProjectToolbar,
       } satisfies DataGridProps['slots']),
     [props.slots]
   );
