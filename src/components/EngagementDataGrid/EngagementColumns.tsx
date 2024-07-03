@@ -65,7 +65,6 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     field: 'project.primaryLocation.name',
     ...textColumn(),
     valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
-    filterable: false,
   },
   {
     headerName: 'ISO',
