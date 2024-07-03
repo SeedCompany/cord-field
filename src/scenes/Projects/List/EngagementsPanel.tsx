@@ -18,21 +18,12 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { EngagementListDocument } from './EngagementList.graphql';
-import { PanelProps } from './ProjectsPanel';
 
-export const EngagementsPanel = ({ filters }: PanelProps) => {
+export const EngagementsPanel = () => {
   const [dataGridProps] = useDataGridSource({
     query: EngagementListDocument,
-    variables: {
-      input: {
-        filter: {
-          ...(filters.mine ? { project: { mine: true } } : {}),
-          ...(filters.pinned ? { project: { pinned: true } } : {}),
-        },
-      },
-    },
+    variables: {},
     listAt: 'engagements',
-    initialInput: {},
   });
 
   const slots = useMemo(

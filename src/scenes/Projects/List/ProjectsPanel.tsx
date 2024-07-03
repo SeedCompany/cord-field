@@ -19,23 +19,11 @@ import {
 } from '~/components/ProjectDataGrid';
 import { ProjectListDocument } from './ProjectList.graphql';
 
-export interface PanelProps {
-  filters: { mine?: boolean; pinned?: boolean };
-}
-
-export const ProjectsPanel = ({ filters }: PanelProps) => {
+export const ProjectsPanel = () => {
   const [dataGridProps] = useDataGridSource({
     query: ProjectListDocument,
-    variables: {
-      input: {
-        filter: {
-          ...(filters.mine ? { mine: true } : {}),
-          ...(filters.pinned ? { pinned: true } : {}),
-        },
-      },
-    },
+    variables: {},
     listAt: 'projects',
-    initialInput: {},
   });
 
   const slots = useMemo(
