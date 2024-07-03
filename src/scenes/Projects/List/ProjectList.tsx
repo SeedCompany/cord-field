@@ -23,7 +23,7 @@ import {
   ProjectFilterOptions,
   useProjectFilters,
 } from './ProjectFilterOptions';
-import { ProjectListDocument } from './projects.graphql';
+import { ProjectListDocument } from './ProjectList.graphql';
 import { ProjectSortOptions } from './ProjectSortOptions';
 
 const TabList = ActualTabList as typeof __Tabs;

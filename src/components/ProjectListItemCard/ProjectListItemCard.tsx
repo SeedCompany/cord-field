@@ -11,7 +11,7 @@ import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
-import { ProjectListQueryVariables } from '../../scenes/Projects/List/projects.graphql';
+import { ProjectListQueryVariables } from '../../scenes/Projects/List/ProjectList.graphql';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
