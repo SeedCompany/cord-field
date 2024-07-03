@@ -145,7 +145,7 @@ export const useEnumListFilterToggle = (
         return {
           field: columnFieldName,
           operator: 'is',
-          value: value,
+          value: [...items][0]!,
         };
       }
       return {
