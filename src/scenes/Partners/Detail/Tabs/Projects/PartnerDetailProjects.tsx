@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import {
   DefaultDataGridStyles,
   flexLayout,
-  getInitialVisibility,
   noFooter,
   noHeaderFilterButtons,
   useDataGridSource,
@@ -16,19 +15,11 @@ import {
 import {
   ProjectDataGridRowFragment as Project,
   ProjectColumns,
+  ProjectInitialState,
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
 import { PartnerProjectsDocument } from './PartnerProjects.graphql';
-
-const initialState = {
-  pinnedColumns: {
-    left: [ProjectColumns[0]!.field],
-  },
-  columns: {
-    columnVisibilityModel: getInitialVisibility(ProjectColumns),
-  },
-} satisfies DataGridProps['initialState'];
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
@@ -62,7 +53,7 @@ export const PartnerDetailProjects = () => {
         slots={slots}
         slotProps={slotProps}
         columns={ProjectColumns}
-        initialState={initialState}
+        initialState={ProjectInitialState}
         headerFilters
         hideFooter
         sx={[flexLayout, noHeaderFilterButtons, noFooter]}

@@ -1,5 +1,8 @@
 import { Box } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid-pro';
+import {
+  DataGridProProps as DataGridProps,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 import {
   ProjectStatusLabels,
   ProjectStatusList,
@@ -12,6 +15,7 @@ import {
 } from '~/api/schema.graphql';
 import {
   enumColumn,
+  getInitialVisibility,
   QuickFilterButton,
   QuickFilterResetButton,
   QuickFilters,
@@ -95,6 +99,15 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     hidden: true,
   },
 ];
+
+export const ProjectInitialState = {
+  pinnedColumns: {
+    left: ProjectColumns.slice(0, 1).map((column) => column.field),
+  },
+  columns: {
+    columnVisibilityModel: getInitialVisibility(ProjectColumns),
+  },
+} satisfies DataGridProps['initialState'];
 
 export const ProjectToolbar = () => (
   <Toolbar>

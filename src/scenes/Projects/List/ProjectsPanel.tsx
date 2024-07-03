@@ -7,7 +7,6 @@ import { useMemo } from 'react';
 import {
   DefaultDataGridStyles,
   flexLayout,
-  getInitialVisibility,
   noFooter,
   noHeaderFilterButtons,
   useDataGridSource,
@@ -15,6 +14,7 @@ import {
 import {
   ProjectDataGridRowFragment as Project,
   ProjectColumns,
+  ProjectInitialState,
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
 import { ProjectListDocument } from './ProjectList.graphql';
@@ -58,19 +58,10 @@ export const ProjectsPanel = ({ filters }: PanelProps) => {
       slots={slots}
       slotProps={slotProps}
       columns={ProjectColumns}
-      initialState={projectInitialState}
+      initialState={ProjectInitialState}
       headerFilters
       hideFooter
       sx={[flexLayout, noHeaderFilterButtons, noFooter]}
     />
   );
 };
-
-const projectInitialState = {
-  pinnedColumns: {
-    left: [ProjectColumns[0]!.field],
-  },
-  columns: {
-    columnVisibilityModel: getInitialVisibility(ProjectColumns),
-  },
-} satisfies DataGridProps['initialState'];

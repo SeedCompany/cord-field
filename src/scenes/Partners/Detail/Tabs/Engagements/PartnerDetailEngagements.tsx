@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import {
   EngagementDataGridRowFragment as Engagement,
   EngagementColumns,
+  EngagementInitialState,
 } from '~/components/EngagementDataGrid';
 import {
   DefaultDataGridStyles,
@@ -19,12 +20,6 @@ import {
 } from '~/components/Grid';
 import { TabPanelContent } from '~/components/Tabs';
 import { PartnerDetailEngagementsDocument } from './PartnerDetailEngagements.graphql';
-
-const initialState = {
-  pinnedColumns: {
-    left: [EngagementColumns[0]!.field],
-  },
-} satisfies DataGridProps['initialState'];
 
 export const PartnerDetailEngagements = () => {
   const { partnerId = '' } = useParams();
@@ -58,7 +53,7 @@ export const PartnerDetailEngagements = () => {
         slots={slots}
         slotProps={slotProps}
         columns={EngagementColumns}
-        initialState={initialState}
+        initialState={EngagementInitialState}
         headerFilters
         hideFooter
         sx={[flexLayout, noHeaderFilterButtons, noFooter]}

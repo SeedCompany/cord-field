@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 import {
   EngagementDataGridRowFragment as Engagement,
   EngagementColumns,
+  EngagementInitialState,
 } from '~/components/EngagementDataGrid';
 import {
   DefaultDataGridStyles,
@@ -54,16 +55,10 @@ export const EngagementsPanel = ({ filters }: PanelProps) => {
       slots={slots}
       slotProps={slotProps}
       columns={EngagementColumns}
-      initialState={engagementInitialState}
+      initialState={EngagementInitialState}
       headerFilters
       hideFooter
       sx={[flexLayout, noHeaderFilterButtons, noFooter]}
     />
   );
 };
-
-const engagementInitialState = {
-  pinnedColumns: {
-    left: [EngagementColumns[0]!.field],
-  },
-} satisfies DataGridProps['initialState'];

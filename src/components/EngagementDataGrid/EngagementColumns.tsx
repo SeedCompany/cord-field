@@ -1,4 +1,7 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import {
+  DataGridProProps as DataGridProps,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 import { cleanJoin } from '@seedcompany/common';
 import {
   EngagementStatusLabels,
@@ -10,7 +13,7 @@ import {
   ProjectTypeLabels,
   ProjectTypeList,
 } from '../../api/schema/enumLists';
-import { enumColumn, textColumn } from '../Grid';
+import { enumColumn, getInitialVisibility, textColumn } from '../Grid';
 import { SensitivityColumn } from '../ProjectDataGrid';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
@@ -141,3 +144,12 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     ),
   },
 ];
+
+export const EngagementInitialState = {
+  pinnedColumns: {
+    left: EngagementColumns.slice(0, 1).map((column) => column.field),
+  },
+  columns: {
+    columnVisibilityModel: getInitialVisibility(EngagementColumns),
+  },
+} satisfies DataGridProps['initialState'];
