@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import {
   DefaultDataGridStyles,
   flexLayout,
+  getInitialVisibility,
   noHeaderFilterButtons,
   useDataGridSource,
 } from '~/components/Grid';
@@ -62,5 +63,8 @@ export const ProjectsPanel = ({ filters }: PanelProps) => {
 const projectInitialState = {
   pinnedColumns: {
     left: [ProjectColumns[0]!.field],
+  },
+  columns: {
+    columnVisibilityModel: getInitialVisibility(ProjectColumns),
   },
 } satisfies DataGridProps['initialState'];

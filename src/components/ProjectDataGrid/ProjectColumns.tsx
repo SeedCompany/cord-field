@@ -76,4 +76,14 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     width: 130,
   },
   SensitivityColumn,
+  {
+    field: 'isMember',
+    type: 'boolean',
+    hidden: true,
+  },
+  {
+    field: 'pinned',
+    type: 'boolean',
+    hidden: true,
+  },
 ];

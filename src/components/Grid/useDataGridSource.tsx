@@ -426,6 +426,7 @@ const filterColumns = ({
     .filter(
       (colDef) =>
         colDef.filterable &&
+        !colDef.hidden &&
         (colDef.field === field || !filteredFields.includes(colDef.field))
     )
     .map((column) => column.field);

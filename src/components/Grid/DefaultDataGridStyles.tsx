@@ -1,5 +1,10 @@
 import { Box, FormControl, TextFieldProps } from '@mui/material';
-import type { DataGridProProps as DataGridProps } from '@mui/x-data-grid-pro';
+import { GridFilterItem } from '@mui/x-data-grid';
+import type {
+  DataGridProProps as DataGridProps,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
+import { mapEntries } from '@seedcompany/common';
 import { Sx } from '../../common';
 
 const scrollIntoView: DataGridProps['onMenuOpen'] = ({ target }) => {
@@ -33,6 +38,12 @@ export const DefaultDataGridStyles = {
     baseFormControl: MyFormControl,
   },
   slotProps: {
+    columnsManagement: {
+      getTogglableColumns: (columns) =>
+        columns
+          .filter((column) => !column.hidden)
+          .map((column) => column.field),
+    },
     filterPanel: {
       filterFormProps: {
         valueInputProps: {
@@ -121,3 +132,18 @@ export const noHeaderFilterButtons = {
     display: 'none',
   },
 } satisfies Sx;
+
+export const getInitialVisibility = (columns: GridColDef[]) =>
+  mapEntries(columns, (column) => [column.field, !column.hidden]).asRecord;
+
+declare module '@mui/x-data-grid/internals' {
+  interface GridBaseColDef {
+    /**
+     * Customize how GridFilterItem converts to the filter object for API.
+     * By default, the field name becomes the path key of the object.
+     */
+    serverFilter?: (item: GridFilterItem) => Record<string, any>;
+
+    hidden?: boolean;
+  }
+}

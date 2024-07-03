@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import {
   DefaultDataGridStyles,
   flexLayout,
+  getInitialVisibility,
   noHeaderFilterButtons,
   useDataGridSource,
 } from '~/components/Grid';
@@ -21,6 +22,9 @@ import { PartnerProjectsDocument } from './PartnerProjects.graphql';
 const initialState = {
   pinnedColumns: {
     left: [ProjectColumns[0]!.field],
+  },
+  columns: {
+    columnVisibilityModel: getInitialVisibility(ProjectColumns),
   },
 } satisfies DataGridProps['initialState'];
 
