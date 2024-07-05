@@ -3,6 +3,6 @@ query ProjectList($input: ProjectListInput) {
     items {
       ...projectDataGridRow
     }
-    ...Pagination
+    total
   }
 }

@@ -3,6 +3,6 @@ query EngagementList($input: EngagementListInput) {
     items {
       ...engagementDataGridRow
     }
-    ...Pagination
+    total
   }
 }
