@@ -219,12 +219,13 @@ export const useDataGridSource = <
       ),
     });
   });
-  const [view, reallySetView] = useState(
-    (): ViewState => ({
-      ...storedView,
+  const [view, reallySetView] = useState((): ViewState => {
+    const { apiFilterModel: _, ...rest } = storedView ?? {};
+    return {
+      ...rest,
       apiSortModel: storedView!.sortModel,
-    })
-  );
+    };
+  });
   const setView = (setter: (prev: ViewState) => ViewState) => {
     reallySetView((prev) => {
       const next = setter(prev);
