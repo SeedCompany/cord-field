@@ -178,7 +178,7 @@ export const useDataGridSource = <
         set(nextCached, listAt, {
           ...nextList,
           items: mergedList,
-          total: ((updateTotal ? nextList : prevList) ?? nextList).total,
+          total: (updateTotal ? nextList : prevList)?.total ?? -1,
         });
         return nextCached;
       }
@@ -219,12 +219,13 @@ export const useDataGridSource = <
       ),
     });
   });
-  const [view, reallySetView] = useState(
-    (): ViewState => ({
-      ...storedView,
+  const [view, reallySetView] = useState((): ViewState => {
+    const { apiFilterModel: _, ...rest } = storedView ?? {};
+    return {
+      ...rest,
       apiSortModel: storedView!.sortModel,
-    })
-  );
+    };
+  });
   const setView = (setter: (prev: ViewState) => ViewState) => {
     reallySetView((prev) => {
       const next = setter(prev);
@@ -308,7 +309,7 @@ export const useDataGridSource = <
     ? allFilteredPages
     : listFrom(firstPage);
   const rows = list?.items ?? emptyList;
-  const total = list?.total;
+  const total = list?.total && list.total >= 0 ? list.total : undefined;
 
   // Load additional pages imperatively as needed based on scrolling
   // This is debounced to mostly to reduce the client side load.

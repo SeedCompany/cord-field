@@ -95,6 +95,7 @@ export const useFilterToggle = (
       : currentValue
       ? undefined
       : ({
+          id: columnFieldName,
           field: columnFieldName,
           value: true,
           operator: 'is',
@@ -137,18 +138,20 @@ export const useEnumListFilterToggle = (
     onToggle: (prev) => {
       const items = new Set(many(prev?.value ?? []));
       const next = !items.has(value);
-      if (items.size === 0 && !next) {
+      items[next ? 'add' : 'delete'](value);
+      if (items.size === 0) {
         return undefined;
       }
-      items[next ? 'add' : 'delete'](value);
       if (items.size === 1) {
         return {
+          id: columnFieldName,
           field: columnFieldName,
           operator: 'is',
           value: [...items][0]!,
         };
       }
       return {
+        id: columnFieldName,
         field: columnFieldName,
         operator: 'isAnyOf',
         value: [...items],
