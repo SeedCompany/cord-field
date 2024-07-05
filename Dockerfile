@@ -48,6 +48,8 @@ COPY --from=builder /app/.yarn ./.yarn
 COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
 COPY --from=builder /app/build ./build
 
+RUN corepack install
+
 LABEL org.opencontainers.image.title="CORD UI"
 LABEL org.opencontainers.image.vendor="Seed Company"
 LABEL org.opencontainers.image.source=https://github.com/SeedCompany/cord-field
