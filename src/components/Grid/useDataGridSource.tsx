@@ -178,7 +178,7 @@ export const useDataGridSource = <
         set(nextCached, listAt, {
           ...nextList,
           items: mergedList,
-          total: (updateTotal ? nextList : prevList)?.total,
+          total: (updateTotal ? nextList : prevList)?.total ?? -1,
         });
         return nextCached;
       }
@@ -309,7 +309,7 @@ export const useDataGridSource = <
     ? allFilteredPages
     : listFrom(firstPage);
   const rows = list?.items ?? emptyList;
-  const total = list?.total;
+  const total = list?.total && list.total >= 0 ? list.total : undefined;
 
   // Load additional pages imperatively as needed based on scrolling
   // This is debounced to mostly to reduce the client side load.
