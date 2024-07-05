@@ -178,7 +178,7 @@ export const useDataGridSource = <
         set(nextCached, listAt, {
           ...nextList,
           items: mergedList,
-          total: ((updateTotal ? nextList : prevList) ?? nextList).total,
+          total: (updateTotal ? nextList : prevList)?.total,
         });
         return nextCached;
       }
