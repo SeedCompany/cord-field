@@ -36,11 +36,7 @@ import {
 import { get, merge, pick, set, uniqBy } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
-import {
-  type PaginatedListInput,
-  type PaginatedListOutput,
-  type SortableListInput,
-} from '~/api';
+import { type PaginatedListInput, type SortableListInput } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
 
@@ -49,6 +45,11 @@ type ListInput = SetNonNullable<
     SortableListInput & PaginatedListInput & { filter?: Record<string, any> }
   >
 >;
+
+interface PaginatedListOutput<T> {
+  items: readonly T[];
+  total: number;
+}
 
 type PathsMatching<T, List> = {
   [K in Paths<T>]: K extends string
