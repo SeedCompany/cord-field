@@ -203,17 +203,19 @@ export const useDataGridSource = <
     }
   );
   const persist = useDebounceFn((next: ViewState) => {
+    const filterModel = {
+      // Strip out filters for columns that shouldn't be persisted
+      items:
+        next.filterModel?.items.filter((item) =>
+          persistColumnTypes.has(apiRef.current.getColumn(item.field).type!)
+        ) ?? [],
+    };
     setStoredView({
       sortModel: next.sortModel,
-      filterModel: {
-        items:
-          next.filterModel?.items.filter((item) =>
-            persistColumnTypes.has(apiRef.current.getColumn(item.field).type!)
-          ) ?? [],
-      },
+      filterModel,
       apiFilterModel: convertMuiFiltersToApi(
         apiRef.current,
-        view.filterModel,
+        filterModel,
         variables.input?.filter,
         initialInputRef.current?.filter
       ),
