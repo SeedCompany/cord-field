@@ -97,7 +97,9 @@ export function TransitionNode({ data, selected }: NodeProps<Transition>) {
           }}
         >
           <div>{data.devName}</div>
-          <div>“{data.label}”</div>
+          {data.devName.toLowerCase() !== data.label.toLowerCase() && (
+            <div>“{data.label}”</div>
+          )}
         </NodeCard>
       </TransitionNodeExtra>
       <Handle type="source" position={back ? Position.Left : Position.Bottom} />
