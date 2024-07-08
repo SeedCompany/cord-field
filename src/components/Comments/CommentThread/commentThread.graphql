@@ -1,0 +1,13 @@
+fragment commentThread on CommentThread {
+  id
+  createdAt
+  firstComment {
+    ...comment
+  }
+  comments(input: { order: ASC }) {
+    total
+    items {
+      ...comment
+    }
+  }
+}

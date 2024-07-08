@@ -18,6 +18,7 @@ import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { ProjectStepLabels, ProjectTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
+import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
@@ -244,6 +245,7 @@ export const ProjectOverview = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
+            <ToggleCommentsButton loading={!project} />
             {project && <DeleteProject project={project} />}
             {project && (
               <WorkflowEventsIcon
