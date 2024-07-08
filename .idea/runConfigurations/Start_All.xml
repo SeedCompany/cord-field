@@ -1,8 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Start All" type="CompoundRunConfigurationType">
-    <toRun name="start:storybook" type="js.build_tools.npm" />
-    <toRun name="start:server" type="js.build_tools.npm" />
     <toRun name="start:gql-gen" type="js.build_tools.npm" />
+    <toRun name="start:server" type="js.build_tools.npm" />
     <method v="2" />
   </configuration>
 </component>
