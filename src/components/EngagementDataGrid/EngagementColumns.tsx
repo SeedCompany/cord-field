@@ -1,6 +1,7 @@
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
+  GridToolbarColumnsButton,
 } from '@mui/x-data-grid-pro';
 import { cleanJoin } from '@seedcompany/common';
 import {
@@ -48,6 +49,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.project.id}`}>{value}</Link>
     ),
+    hideable: false,
     serverFilter: ({ value }) => ({ name: value }),
   },
   {
@@ -191,8 +193,9 @@ export const EngagementInitialState = {
 } satisfies DataGridProps['initialState'];
 
 export const EngagementToolbar = () => (
-  <Toolbar>
-    <QuickFilters>
+  <Toolbar sx={{ justifyContent: 'flex-start', gap: 2 }}>
+    <GridToolbarColumnsButton />
+    <QuickFilters sx={{ flex: 1 }}>
       <QuickFilterResetButton />
       <QuickFilterButton {...useFilterToggle('project.isMember')}>
         Mine
