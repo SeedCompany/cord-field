@@ -102,8 +102,8 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
         : '',
   },
   {
-    headerName: 'ROD',
-    description: 'Registry of Dialects',
+    headerName: 'ROLV',
+    description: 'Registry of language and variants',
     field: 'language.registryOfDialectsCode',
     ...textColumn(),
     width: 95,
