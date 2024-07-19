@@ -31,7 +31,20 @@ export const QuickFilters = (props: ChildrenProp & StyleProps) => (
 );
 
 export const QuickFilterButton = (props: ToggleButtonProps) => (
-  <ToggleButton color="primary" size="small" {...props} />
+  <ToggleButton
+    color="primary"
+    size="small"
+    sx={(theme) => ({
+      '&.Mui-selected': {
+        background: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        '&:hover': {
+          background: theme.palette.grey[500],
+        },
+      },
+    })}
+    {...props}
+  />
 );
 
 export const QuickFilterResetButton = () => {
