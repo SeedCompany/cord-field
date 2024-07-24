@@ -31,7 +31,7 @@ export const QuickFilters = (props: ChildrenProp & StyleProps) => (
 );
 
 export const QuickFilterButton = (props: ToggleButtonProps) => (
-  <ToggleButton color="primary" size="small" {...props} />
+  <ToggleButton color="info" size="small" {...props} />
 );
 
 export const QuickFilterResetButton = () => {

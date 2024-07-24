@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
+  GridToolbarColumnsButton,
 } from '@mui/x-data-grid-pro';
 import {
   ProjectStatusLabels,
@@ -50,6 +51,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     valueGetter: (_, { name }) => name.value,
     headerName: 'Name',
     width: 300,
+    hideable: false,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.id}`}>{value}</Link>
     ),
@@ -114,8 +116,9 @@ export const ProjectInitialState = {
 } satisfies DataGridProps['initialState'];
 
 export const ProjectToolbar = () => (
-  <Toolbar>
-    <QuickFilters>
+  <Toolbar sx={{ justifyContent: 'flex-start', gap: 2 }}>
+    <GridToolbarColumnsButton />
+    <QuickFilters sx={{ flex: 1 }}>
       <QuickFilterResetButton />
       <QuickFilterButton {...useFilterToggle('isMember')}>
         Mine
