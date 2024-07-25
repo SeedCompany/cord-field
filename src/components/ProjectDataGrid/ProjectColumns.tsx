@@ -16,6 +16,7 @@ import {
   SensitivityList,
 } from '~/api/schema.graphql';
 import {
+  booleanColumn,
   enumColumn,
   getInitialVisibility,
   QuickFilterButton,
@@ -97,12 +98,12 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
   SensitivityColumn,
   {
     field: 'isMember',
-    type: 'boolean',
+    ...booleanColumn(),
     hidden: true,
   },
   {
     field: 'pinned',
-    type: 'boolean',
+    ...booleanColumn(),
     hidden: true,
   },
 ];

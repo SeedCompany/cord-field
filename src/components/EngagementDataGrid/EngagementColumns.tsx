@@ -18,6 +18,7 @@ import {
   ProjectTypeList,
 } from '../../api/schema/enumLists';
 import {
+  booleanColumn,
   enumColumn,
   getInitialVisibility,
   QuickFilterButton,
@@ -169,13 +170,13 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
   },
   {
     field: 'project.isMember',
-    type: 'boolean',
+    ...booleanColumn(),
     valueGetter: (_, row) => row.project.isMember,
     hidden: true,
   },
   {
     field: 'project.pinned',
-    type: 'boolean',
+    ...booleanColumn(),
     valueGetter: (_, row) => row.project.pinned,
     hidden: true,
   },
