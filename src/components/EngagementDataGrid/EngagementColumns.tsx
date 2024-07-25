@@ -172,13 +172,13 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     field: 'project.isMember',
     ...booleanColumn(),
     valueGetter: (_, row) => row.project.isMember,
-    hidden: true,
+    headerName: 'Member',
   },
   {
     field: 'project.pinned',
     ...booleanColumn(),
     valueGetter: (_, row) => row.project.pinned,
-    hidden: true,
+    headerName: 'Pinned',
   },
 ];
 
@@ -190,6 +190,8 @@ export const EngagementInitialState = {
     columnVisibilityModel: {
       ...getInitialVisibility(EngagementColumns),
       'project.status': false,
+      'project.isMember': false,
+      'project.pinned': false,
     },
   },
 } satisfies DataGridProps['initialState'];
