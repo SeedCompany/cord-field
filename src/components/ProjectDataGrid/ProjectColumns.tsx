@@ -16,6 +16,7 @@ import {
   SensitivityList,
 } from '~/api/schema.graphql';
 import {
+  booleanColumn,
   enumColumn,
   getInitialVisibility,
   QuickFilterButton,
@@ -97,13 +98,13 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
   SensitivityColumn,
   {
     field: 'isMember',
-    type: 'boolean',
-    hidden: true,
+    ...booleanColumn(),
+    headerName: 'Member',
   },
   {
     field: 'pinned',
-    type: 'boolean',
-    hidden: true,
+    ...booleanColumn(),
+    headerName: 'Pinned',
   },
 ];
 
@@ -112,7 +113,11 @@ export const ProjectInitialState = {
     left: ProjectColumns.slice(0, 1).map((column) => column.field),
   },
   columns: {
-    columnVisibilityModel: getInitialVisibility(ProjectColumns),
+    columnVisibilityModel: {
+      ...getInitialVisibility(ProjectColumns),
+      isMember: false,
+      pinned: false,
+    },
   },
 } satisfies DataGridProps['initialState'];
 

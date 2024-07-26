@@ -18,6 +18,7 @@ import {
   ProjectTypeList,
 } from '../../api/schema/enumLists';
 import {
+  booleanColumn,
   enumColumn,
   getInitialVisibility,
   QuickFilterButton,
@@ -169,15 +170,15 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
   },
   {
     field: 'project.isMember',
-    type: 'boolean',
+    ...booleanColumn(),
     valueGetter: (_, row) => row.project.isMember,
-    hidden: true,
+    headerName: 'Member',
   },
   {
     field: 'project.pinned',
-    type: 'boolean',
+    ...booleanColumn(),
     valueGetter: (_, row) => row.project.pinned,
-    hidden: true,
+    headerName: 'Pinned',
   },
 ];
 
@@ -189,6 +190,8 @@ export const EngagementInitialState = {
     columnVisibilityModel: {
       ...getInitialVisibility(EngagementColumns),
       'project.status': false,
+      'project.isMember': false,
+      'project.pinned': false,
     },
   },
 } satisfies DataGridProps['initialState'];
