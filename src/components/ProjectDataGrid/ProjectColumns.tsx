@@ -3,6 +3,7 @@ import {
   DataGridProProps as DataGridProps,
   GridColDef,
   GridToolbarColumnsButton,
+  GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
 import {
   ProjectStatusLabels,
@@ -118,6 +119,7 @@ export const ProjectInitialState = {
 export const ProjectToolbar = () => (
   <Toolbar sx={{ justifyContent: 'flex-start', gap: 2 }}>
     <GridToolbarColumnsButton />
+    <GridToolbarFilterButton />
     <QuickFilters sx={{ flex: 1 }}>
       <QuickFilterResetButton />
       <QuickFilterButton {...useFilterToggle('isMember')}>
