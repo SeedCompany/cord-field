@@ -11,7 +11,7 @@ fragment LanguageListItem on Language {
       value
     }
   }
-  registryOfDialectsCode {
+  registryOfLanguageVarietiesCode {
     value
   }
   population {

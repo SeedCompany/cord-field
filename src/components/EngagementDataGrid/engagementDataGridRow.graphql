@@ -59,7 +59,7 @@ fragment engagementDataGridRow on Engagement {
             value
           }
         }
-        registryOfDialectsCode {
+        registryOfLanguageVarietiesCode {
           value
         }
       }
