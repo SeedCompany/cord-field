@@ -48,7 +48,7 @@ export const StatusHistoryDrawer = ({
       }}
       PaperProps={{
         sx: {
-          width: 'min(800px, 100dvw)',
+          width: 'min(600px, 100dvw)',
           top: 65,
           height: 'calc(100vh - 65px)',
           p: 2,
@@ -81,12 +81,18 @@ export const StatusHistoryDrawer = ({
                 <Stack direction="row" width={1} gap={2}>
                   <div>
                     <ListItemText>
-                      {event.who.value &&
-                        (isUser(event.who.value)
-                          ? event.who.value.fullName
-                          : event.who.value.name)}
+                      <Typography variant="body1">
+                        {event.who.value &&
+                          (isUser(event.who.value)
+                            ? event.who.value.fullName
+                            : event.who.value.name)}
+                      </Typography>
                     </ListItemText>
-                    <Typography variant="subtitle2" noWrap>
+                    <Typography
+                      variant="subtitle2"
+                      color="textSecondary"
+                      noWrap
+                    >
                       <FormattedDateTime date={event.at} />
                     </Typography>
                   </div>
