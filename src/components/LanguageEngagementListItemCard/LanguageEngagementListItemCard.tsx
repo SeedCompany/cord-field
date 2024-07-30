@@ -57,7 +57,8 @@ export const LanguageEngagementListItemCard = (
   const language = securedLanguage.value;
   const name = language?.name.value ?? language?.displayName.value;
   const population = language?.population.value;
-  const registryOfDialectsCode = language?.registryOfDialectsCode.value;
+  const registryOfLanguageVarietiesCode =
+    language?.registryOfLanguageVarietiesCode.value;
   const ethnologueCode = language?.ethnologue.code.value;
 
   return (
@@ -78,8 +79,8 @@ export const LanguageEngagementListItemCard = (
               <Typography variant="h4">{name}</Typography>
             </Grid>
             <DisplaySimpleProperty
-              label="Registry Of Dialects Code"
-              value={registryOfDialectsCode}
+              label="Registry Of Language Varieties Code"
+              value={registryOfLanguageVarietiesCode}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
             <DisplaySimpleProperty

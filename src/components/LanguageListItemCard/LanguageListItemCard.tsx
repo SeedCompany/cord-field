@@ -87,8 +87,8 @@ export const LanguageListItemCard = ({
               />
               <DisplaySimpleProperty
                 LabelProps={{ color: 'textSecondary' }}
-                label="Registry of Dialects Code"
-                value={language?.registryOfDialectsCode.value}
+                label="Registry of Language Varieties Code"
+                value={language?.registryOfLanguageVarietiesCode.value}
                 loading={!language}
                 loadingWidth="25%"
               />

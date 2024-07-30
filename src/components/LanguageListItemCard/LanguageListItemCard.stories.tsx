@@ -16,8 +16,8 @@ export const WithData = () => {
     ethnologue: {
       code: { value: text('Ethnologue Code', 'cnk') },
     },
-    registryOfDialectsCode: {
-      value: text('Registry Of Dialects Code', '05182'),
+    registryOfLanguageVarietiesCode: {
+      value: text('Registry Of Language Varieties Code', '05182'),
     },
     population: {
       value: number('Population', 10000),

@@ -85,7 +85,7 @@ export const LanguageDetail = () => {
     sensitivity,
     isDialect,
     displayNamePronunciation,
-    registryOfDialectsCode,
+    registryOfLanguageVarietiesCode,
     population,
     sponsorStartDate,
     sponsorEstimatedEndDate,
@@ -189,7 +189,7 @@ export const LanguageDetail = () => {
           />
           <DisplayProperty
             label="Registry of Dialects Code"
-            value={registryOfDialectsCode?.value}
+            value={registryOfLanguageVarietiesCode?.value}
             loading={!language}
           />
           <DisplayProperty
