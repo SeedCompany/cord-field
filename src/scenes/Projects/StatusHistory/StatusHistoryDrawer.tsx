@@ -72,7 +72,7 @@ export const StatusHistoryDrawer = ({
       <Divider sx={{ pt: 1 }} />
       <List>
         {workflowEvents.map((event: WorkflowEvent, index, array) => {
-          const prev = index > 1 ? array[index - 1] : null;
+          const prev = index >= 1 ? array[index - 1] : null;
           const prevStatus = prev ? prev.to : ProjectStepList[0]!;
 
           return (
