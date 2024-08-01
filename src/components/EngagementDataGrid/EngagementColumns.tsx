@@ -1,5 +1,5 @@
 import { Link as LinkIcon } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
@@ -37,25 +37,25 @@ import { EngagementDataGridRowFragment as Engagement } from './engagementDataGri
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
   {
     headerName: '',
-    field: 'id',
-    width: 60,
+    field: 'Engagement',
+    width: 54,
     display: 'flex',
     renderCell: ({ row }) => (
-      <IconButton
-        title="View Engagement"
-        size="small"
-        sx={{
-          color: 'primary.main',
-        }}
-        component={Link}
-        to={`/engagements/${row.id}`}
-      >
-        <LinkIcon />
-      </IconButton>
+      <Tooltip title="View Engagement">
+        <IconButton
+          size="small"
+          color="primary"
+          component={Link}
+          to={`/engagements/${row.id}`}
+        >
+          <LinkIcon />
+        </IconButton>
+      </Tooltip>
     ),
     filterable: false,
     sortable: false,
     hideable: false,
+    resizable: false,
   },
   {
     headerName: 'Project',
