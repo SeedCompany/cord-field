@@ -1,10 +1,12 @@
+import { Link as LinkIcon } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
-import { cleanJoin } from '@seedcompany/common';
+import { EngagementFilters } from '~/api/schema.graphql';
 import {
   EngagementStatusLabels,
   EngagementStatusList,
@@ -35,24 +37,60 @@ import { EngagementDataGridRowFragment as Engagement } from './engagementDataGri
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
   {
-    headerName: 'Name',
-    field: 'nameProjectFirst',
+    headerName: '',
+    field: 'Engagement',
+    width: 54,
+    display: 'flex',
+    renderCell: ({ row }) => (
+      <Tooltip title="View Engagement">
+        <IconButton
+          size="small"
+          color="primary"
+          component={Link}
+          to={`/engagements/${row.id}`}
+        >
+          <LinkIcon />
+        </IconButton>
+      </Tooltip>
+    ),
+    filterable: false,
+    sortable: false,
+    hideable: false,
+    resizable: false,
+  },
+  {
+    headerName: 'Project',
+    field: 'project.name',
     ...textColumn(),
     width: 200,
-    valueGetter: (_, row) =>
-      cleanJoin(' - ', [
-        row.project.name.value,
-        row.__typename === 'LanguageEngagement'
-          ? row.language.value?.name.value
-          : row.__typename === 'InternshipEngagement'
-          ? row.intern.value?.fullName
-          : null,
-      ]),
+    valueGetter: (_, row) => row.project.name.value,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.project.id}`}>{value}</Link>
     ),
     hideable: false,
-    serverFilter: ({ value }) => ({ name: value }),
+  },
+  {
+    headerName: 'Language / Intern',
+    field: 'nameProjectLast',
+    ...textColumn(),
+    width: 200,
+    valueGetter: (_, row) => {
+      return row.__typename === 'LanguageEngagement'
+        ? row.language.value?.name.value
+        : row.__typename === 'InternshipEngagement'
+        ? row.intern.value?.fullName
+        : null;
+    },
+    renderCell: ({ value, row }) => {
+      return row.__typename === 'LanguageEngagement' ? (
+        <Link to={`/languages/${row.language.value!.id}`}>{value}</Link>
+      ) : row.__typename === 'InternshipEngagement' ? (
+        <Link to={`/users/${row.intern.value!.id}`}>{value}</Link>
+      ) : null;
+    },
+    hideable: false,
+    serverFilter: ({ value }) =>
+      ({ engagedName: value } satisfies EngagementFilters),
   },
   {
     headerName: 'Type',
@@ -184,7 +222,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
 
 export const EngagementInitialState = {
   pinnedColumns: {
-    left: EngagementColumns.slice(0, 1).map((column) => column.field),
+    left: EngagementColumns.slice(0, 3).map((column) => column.field),
   },
   columns: {
     columnVisibilityModel: {
