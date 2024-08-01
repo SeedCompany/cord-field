@@ -1,4 +1,3 @@
-export * from './AssignmentIcon';
 export * from './ChatBubbleIcon';
 export * from './CordIcon';
 export * from './HugeIcon';

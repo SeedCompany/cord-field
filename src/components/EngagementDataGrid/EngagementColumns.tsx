@@ -1,3 +1,5 @@
+import { Link as LinkIcon } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
@@ -28,27 +30,46 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
-import { AssignmentIcon } from '../Icons';
 import { SensitivityColumn } from '../ProjectDataGrid';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
   {
+    headerName: '',
+    field: 'id',
+    width: 60,
+    display: 'flex',
+    renderCell: ({ row }) => (
+      <IconButton
+        title="View Engagement"
+        size="small"
+        sx={{
+          color: 'primary.main',
+        }}
+        component={Link}
+        to={`/engagements/${row.id}`}
+      >
+        <LinkIcon />
+      </IconButton>
+    ),
+    filterable: false,
+    sortable: false,
+    hideable: false,
+  },
+  {
     headerName: 'Project',
     field: 'project.name',
     ...textColumn(),
     width: 200,
-    valueGetter: (_, row) => {
-      return row.project.name.value;
-    },
+    valueGetter: (_, row) => row.project.name.value,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.project.id}`}>{value}</Link>
     ),
     hideable: false,
   },
   {
-    headerName: 'Language',
+    headerName: 'Language / Intern',
     field: 'nameProjectLast',
     ...textColumn(),
     width: 200,
@@ -63,32 +84,11 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       return row.__typename === 'LanguageEngagement' ? (
         <Link to={`/languages/${row.language.value!.id}`}>{value}</Link>
       ) : row.__typename === 'InternshipEngagement' ? (
-        <Link to={`/languages/${row.intern.value!.id}`}>{value}</Link>
+        <Link to={`/users/${row.intern.value!.id}`}>{value}</Link>
       ) : null;
     },
     hideable: false,
     serverFilter: ({ value }) => ({ name: value }),
-  },
-  {
-    headerName: 'Engagement',
-    field: 'id',
-    width: 110,
-    renderCell: ({ row }) => (
-      <Link
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-        }}
-        to={`/engagements/${row.id}`}
-      >
-        <AssignmentIcon />
-      </Link>
-    ),
-    filterable: false,
-    sortable: false,
-    hideable: false,
   },
   {
     headerName: 'Type',
