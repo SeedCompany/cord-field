@@ -6,6 +6,7 @@ import {
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
+import { EngagementFilters } from '~/api/schema.graphql';
 import {
   EngagementStatusLabels,
   EngagementStatusList,
@@ -88,7 +89,8 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       ) : null;
     },
     hideable: false,
-    serverFilter: ({ value }) => ({ name: value }),
+    serverFilter: ({ value }) =>
+      ({ engagedName: value } satisfies EngagementFilters),
   },
   {
     headerName: 'Type',
