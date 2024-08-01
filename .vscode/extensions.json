@@ -1,6 +1,9 @@
 {
   "recommendations": [
     "arcanis.vscode-zipfs",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "graphql.vscode-graphql",
+    "graphql.vscode-graphql-syntax",
+    "graphql.vscode-graphql-execution"
   ]
 }
