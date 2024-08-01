@@ -71,7 +71,7 @@ const fieldMapping = {
     <UserField {...props} label="Point of Contact" />
   ),
   'partner.globalInnovationsClient': ({ props }) => (
-    <CheckboxField {...props} label="Growth Partners Client" />
+    <CheckboxField {...props} label="Growth Partners' Client" />
   ),
   'partner.active': ({ props }) => <CheckboxField {...props} label="Active" />,
   'partner.pmcEntityCode': ({ props }) => (

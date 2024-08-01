@@ -15,8 +15,8 @@ interface Props {
 export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => (
   <TabPanelContent>
     <BooleanProperty
-      label="Growth Partners Client"
-      redacted="You do not have permission to view whether this is a Growth Partners Client"
+      label="Growth Partners' Client"
+      redacted="You do not have permission to view whether this is a Growth Partners' Client"
       data={partner?.globalInnovationsClient}
       sx={{ mb: 1 }}
     />
