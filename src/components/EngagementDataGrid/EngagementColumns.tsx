@@ -37,6 +37,17 @@ import { EngagementDataGridRowFragment as Engagement } from './engagementDataGri
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
   {
+    headerName: 'Project',
+    field: 'project.name',
+    ...textColumn(),
+    width: 200,
+    valueGetter: (_, row) => row.project.name.value,
+    renderCell: ({ value, row }) => (
+      <Link to={`/projects/${row.project.id}`}>{value}</Link>
+    ),
+    hideable: false,
+  },
+  {
     headerName: '',
     field: 'Engagement',
     width: 54,
@@ -57,17 +68,6 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     sortable: false,
     hideable: false,
     resizable: false,
-  },
-  {
-    headerName: 'Project',
-    field: 'project.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.project.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.project.id}`}>{value}</Link>
-    ),
-    hideable: false,
   },
   {
     headerName: 'Language / Intern',
