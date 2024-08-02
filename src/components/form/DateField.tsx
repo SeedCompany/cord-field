@@ -123,6 +123,16 @@ export const DateField = ({
           ],
         },
       }}
+      PopperProps={{
+        modifiers: [
+          {
+            name: 'preventOverflow',
+            options: {
+              altAxis: true,
+            },
+          },
+        ],
+      }}
       showDaysOutsideCurrentMonth
       {...rest}
       ref={ref}
