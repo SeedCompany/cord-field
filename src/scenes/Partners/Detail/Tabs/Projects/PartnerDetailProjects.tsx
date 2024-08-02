@@ -14,8 +14,8 @@ import {
 } from '~/components/Grid';
 import {
   ProjectDataGridRowFragment as Project,
-  ProjectColumns,
   ProjectInitialState,
+  ProjectPartnerColumns,
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
@@ -52,7 +52,7 @@ export const PartnerDetailProjects = () => {
         {...props}
         slots={slots}
         slotProps={slotProps}
-        columns={ProjectColumns}
+        columns={ProjectPartnerColumns}
         initialState={ProjectInitialState}
         headerFilters
         hideFooter
