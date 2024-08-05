@@ -119,11 +119,12 @@ const getStatusColumnIndex = (field: string, defaultIndex?: number) => {
 export const ProjectPartnerColumns: GridColDef[] = [
   ...ProjectColumns.slice(0, getStatusColumnIndex('status', 5)),
   {
-    field: 'partnership',
+    field: 'partnerships.types',
     ...enumColumn(PartnerTypeList, PartnerTypeLabels),
     headerName: 'Partnership Type',
     width: 160,
     sortable: false,
+    // serverFilter: ({ value }) => ({ name: value }),
     valueGetter: (_, { partnership }) =>
       cleanJoin(', ', partnership.types.value),
   },
