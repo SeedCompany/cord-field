@@ -25,7 +25,7 @@ export const EngagementsPanel = () => {
     variables: {},
     listAt: 'engagements',
     initialInput: {
-      sort: 'nameProjectFirst',
+      sort: EngagementColumns[0]!.field,
     },
   });
 
