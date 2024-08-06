@@ -30,6 +30,7 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
+import { multiSelectColumn } from '../Grid/multiSelectColumn';
 import { Link } from '../Routing';
 import { SensitivityIcon } from '../Sensitivity';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
@@ -120,7 +121,7 @@ export const ProjectPartnerColumns: GridColDef[] = [
   ...ProjectColumns.slice(0, getStatusColumnIndex('status', 5)),
   {
     field: 'partnerships.types',
-    ...enumColumn(PartnerTypeList, PartnerTypeLabels),
+    ...multiSelectColumn(PartnerTypeList, PartnerTypeLabels),
     headerName: 'Partnership Type',
     width: 160,
     sortable: false,
