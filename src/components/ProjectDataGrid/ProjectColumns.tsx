@@ -27,6 +27,7 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
+import { dateColumn } from '../Grid/dateColumn';
 import { Link } from '../Routing';
 import { SensitivityIcon } from '../Sensitivity';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
@@ -94,6 +95,26 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     filterable: false,
     headerName: 'Engagements',
     width: 130,
+  },
+  {
+    headerName: 'MOU Start',
+    field: 'mouStart',
+    valueGetter: (_, { mouStart }) => mouStart.value?.toJSDate(),
+    ...dateColumn(),
+    serverFilter: ({ operator, value }) => ({
+      mouStart:
+        operator === 'isNull' ? { isNull: !value } : { [operator]: value },
+    }),
+  },
+  {
+    headerName: 'MOU End',
+    field: 'mouEnd',
+    valueGetter: (_, { mouEnd }) => mouEnd.value?.toJSDate(),
+    ...dateColumn(),
+    serverFilter: ({ operator, value }) => ({
+      mouEnd:
+        operator === 'isNull' ? { isNull: !value } : { [operator]: value },
+    }),
   },
   SensitivityColumn,
   {
