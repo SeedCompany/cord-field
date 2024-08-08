@@ -6,8 +6,18 @@ query PartnerProjects($id: ID!, $input: ProjectListInput) {
       hasMore
       total
       items {
-        ...projectDataGridRow
+        ...partnerProjectDataGridRow
       }
     }
   }
+}
+
+fragment partnerProjectDataGridRow on Project {
+  partnership(partner: $id) {
+    id
+    types {
+      value
+    }
+  }
+  ...projectDataGridRow
 }
