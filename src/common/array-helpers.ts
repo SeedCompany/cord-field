@@ -1,5 +1,5 @@
 import { Nil } from '@seedcompany/common';
-import { fill, times } from 'lodash';
+import { fill, keys, times } from 'lodash';
 
 export const isListNotEmpty = <T>(
   list: readonly T[] | Nil
@@ -30,3 +30,12 @@ export const splice = <T>(
   newList.splice(...args);
   return newList;
 };
+
+/**
+ * Helper for object to get the first value (treating it as an array)
+ * @param obj - The object to get the first value from
+ * @returns The first value or undefined if the object is empty
+ * @example
+ * const first = firstValue({ a: 1, b: 2 }) // 1
+ */
+export const firstValue = <V>(obj: Record<string, V>) => obj[keys(obj)[0]!];

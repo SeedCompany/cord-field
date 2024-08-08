@@ -10,6 +10,7 @@ import { Many, Nil } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
+import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { DataButton } from '~/components/DataButton';
 import { useDialog } from '~/components/Dialog';
 import { Error } from '~/components/Error';
@@ -128,6 +129,7 @@ const PartnerHeader = ({
             args.input?.filter?.pinned ?? false
           }
         />
+        <ToggleCommentsButton loading={!partner} />
       </Stack>
       {acronym && (
         <Typography variant="h4" gutterBottom>

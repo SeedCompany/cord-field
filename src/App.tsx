@@ -1,6 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
+import { CommentsBarProvider } from '~/components/Comments/CommentsBarContext';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { ConfettiProvider } from './components/Confetti';
@@ -52,6 +53,7 @@ export const appProviders = [
   <ApolloProvider key="apollo" />,
   <FileUploadProvider key="files" />,
   <ConfettiProvider key="confetti" />,
+  <CommentsBarProvider key="comments" />,
 ];
 
 export const App = () => (

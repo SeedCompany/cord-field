@@ -56,13 +56,16 @@ export const pageLimitPagination = <
 ): FieldPolicy<List> => ({
   // The list is unique for all args except page & count
   keyArgs: (args: InputArg<PaginatedListInput> | null) => {
+    const { input, ...restArgs } = args ?? {};
     // This function is called a lot and most of the time there are no args.
     // Optimization for this case.
-    if (!args?.input) {
-      return false;
+    if (!input) {
+      return Object.keys(restArgs).length === 0
+        ? false
+        : objectToKeyArgs(args ?? {});
     }
-    const { count, page, ...rest } = args.input;
-    return objectToKeyArgs({ input: rest });
+    const { count, page, ...rest } = input;
+    return objectToKeyArgs({ ...restArgs, input: rest });
   },
   merge(existing, incoming, options: FieldFunctionOptions<PaginatedListArgs>) {
     if (!incoming) {
@@ -221,7 +224,7 @@ const reverse = <T>(list: readonly T[]): readonly T[] => list.slice().reverse();
 // Converts an object to a list of Apollo key specifiers
 // Empty objects are assumed to be the same as omission and therefore
 // left out of the key specifier
-const objectToKeyArgs = (obj: Record<string, any>): KeyArgs => {
+export const objectToKeyArgs = (obj: Record<string, any>): KeyArgs => {
   const keys = objectToKeyArgsRecurse(cleanEmptyObjects(obj));
   return keys.length > 1 ? keys : false;
 };

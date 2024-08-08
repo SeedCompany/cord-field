@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
+import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { DataButton } from '../../../../components/DataButton';
 import { useDialog } from '../../../../components/Dialog';
@@ -106,6 +107,9 @@ export const LanguageEngagementHeader = ({
               </Tooltip>
             </Grid>
           )}
+          <Grid item>
+            <ToggleCommentsButton loading={!engagement} />
+          </Grid>
           <Grid item>
             <DeleteEngagement
               project={engagement.project}

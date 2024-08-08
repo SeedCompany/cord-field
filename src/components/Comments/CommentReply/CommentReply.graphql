@@ -1,0 +1,11 @@
+mutation CreateOrReplyComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    comment {
+      ...CommentProps
+    }
+    commentThread {
+      id
+      ...CommentThreadProps
+    }
+  }
+}
