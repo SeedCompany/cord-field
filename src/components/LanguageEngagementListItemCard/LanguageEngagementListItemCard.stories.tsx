@@ -16,8 +16,8 @@ export const LanguageEngagementListItemCard = () => (
       value: {
         id: '123',
         name: { value: text('name', 'English') },
-        registryOfDialectsCode: {
-          value: text('Registry Of Dialects Code', '01234'),
+        registryOfLanguageVarietiesCode: {
+          value: text('Registry Of Language Varieties Code', '01234'),
         },
         ethnologue: {
           code: {

@@ -43,7 +43,8 @@ export const EditLanguage = (props: EditLanguageProps) => {
                 population: language.ethnologue.population.value,
               },
               populationOverride: language.populationOverride.value,
-              registryOfDialectsCode: language.registryOfDialectsCode.value,
+              registryOfLanguageVarietiesCode:
+                language.registryOfLanguageVarietiesCode.value,
               leastOfThese: language.leastOfThese.value,
               leastOfTheseReason: language.leastOfTheseReason.value,
               isSignLanguage: language.isSignLanguage.value,

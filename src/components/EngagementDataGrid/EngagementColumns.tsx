@@ -145,13 +145,13 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
   },
   {
     headerName: 'ROLV',
-    description: 'Registry of language and variants',
-    field: 'language.registryOfDialectsCode',
+    description: 'Registry of Language Varieties Code',
+    field: 'language.registryOfLanguageVarietiesCode',
     ...textColumn(),
     width: 95,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
-        ? row.language.value?.registryOfDialectsCode.value
+        ? row.language.value?.registryOfLanguageVarietiesCode.value
         : '',
   },
   {

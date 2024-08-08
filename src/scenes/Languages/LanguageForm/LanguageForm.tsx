@@ -104,7 +104,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
               'name',
               'displayName',
               'displayNamePronunciation',
-              'registryOfDialectsCode',
+              'registryOfLanguageVarietiesCode',
               'populationOverride',
               'isDialect'
             ) && (
@@ -153,11 +153,14 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                       </Grid>
                     )}
                   </SecuredField>
-                  <SecuredField obj={language} name="registryOfDialectsCode">
+                  <SecuredField
+                    obj={language}
+                    name="registryOfLanguageVarietiesCode"
+                  >
                     {(props) => (
                       <Grid item xs={12} sm={6}>
                         <FormattedTextField
-                          label="Registry Of Dialects Code"
+                          label="Registry Of Language Varieties Code"
                           placeholder="#####"
                           accept={/\d/g}
                           formatInput={(value) =>
