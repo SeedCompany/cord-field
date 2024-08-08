@@ -60,7 +60,7 @@ export const CommentItem = ({
   return (
     <Box
       sx={[
-        { padding: 2 },
+        { padding: 2, position: 'relative' },
         Boolean(isChild) &&
           ((theme) => ({
             pl: 6,
