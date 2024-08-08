@@ -123,6 +123,8 @@ export const DateField = ({
           ],
         },
       }}
+      // By default, MUI/Popper.js calculates calendar pop up directly below date input which causes an overflow issue on zoom.
+      // This free's the popper from that constraint so it will always be completely visible, but sacrifices the visibility of input.
       PopperProps={{
         modifiers: [
           {
