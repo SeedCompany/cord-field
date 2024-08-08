@@ -1,0 +1,29 @@
+fragment StatusWorkflowEvent on ProjectWorkflowEvent {
+  id
+  at
+  notes {
+    canRead
+    value
+  }
+  to
+  who {
+    canRead
+    value {
+      ...basicUser
+      ...systemUser
+    }
+  }
+  transition {
+    to
+  }
+}
+
+fragment basicUser on User {
+  id
+  fullName
+}
+
+fragment systemUser on SystemAgent {
+  id
+  name
+}
