@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 import { RichTextJson, StyleProps } from '~/common';
 import { Form, SubmitButton } from '../../form';
@@ -9,7 +9,7 @@ import { UpdateCommentDocument } from './CommentEdit.graphql';
 
 export interface CommentEditProps extends StyleProps {
   placeholder?: string;
-  onSubmit?: () => void;
+  onFinish?: () => void;
   onClose?: () => void;
   comment?: CommentPropsFragment;
 }
@@ -19,7 +19,7 @@ interface FormShape {
 }
 export const CommentEdit = ({
   placeholder = 'Write a comment...',
-  onSubmit,
+  onFinish,
   comment,
   sx,
 }: CommentEditProps) => {
@@ -49,7 +49,7 @@ export const CommentEdit = ({
           });
 
           form.reset({ body: null });
-          onSubmit?.();
+          onFinish?.();
         }}
         initialValues={initialValues}
       >
@@ -61,7 +61,10 @@ export const CommentEdit = ({
               tools={['paragraph', 'delimiter', 'marker', 'list']}
               placeholder={placeholder}
             />
-            <Box display="flex" justifyContent="end">
+            <Box display="flex" justifyContent="end" gap={2}>
+              <Button color="secondary" onClick={onFinish}>
+                Cancel
+              </Button>
               <SubmitButton
                 variant="contained"
                 size="small"

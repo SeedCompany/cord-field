@@ -79,7 +79,7 @@ export const CommentItem = ({
       </Box>
 
       {isEditing ? (
-        <CommentEdit comment={comment} onSubmit={() => setIsEditing(false)} />
+        <CommentEdit comment={comment} onFinish={() => setIsEditing(false)} />
       ) : (
         comment.body.value && <RichTextView data={comment.body.value} />
       )}
