@@ -27,6 +27,7 @@ fragment CommentProps on Comment {
 
 fragment CommentThreadProps on CommentThread {
   id
+  createdAt
   firstComment {
     ...CommentProps
   }
