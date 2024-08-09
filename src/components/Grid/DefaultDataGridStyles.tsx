@@ -131,6 +131,10 @@ export const noHeaderFilterButtons = {
   '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader button': {
     display: 'none',
   },
+  '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader .MuiStack-root button':
+    {
+      display: 'inherit',
+    },
 } satisfies Sx;
 
 export const noFooter = {
