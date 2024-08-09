@@ -1,14 +1,20 @@
 import {
   getGridDefaultColumnTypes,
   GridApiCommon as GridApi,
+  GridSortCellParams,
+  GridValidRowModel,
 } from '@mui/x-data-grid';
 import { cmpBy } from '@seedcompany/common';
 
 // Apply this to all column types
 Object.values(getGridDefaultColumnTypes()).forEach((col) => {
-  col.getSortComparator = (dir) => (a, b, aParams, bParams) => {
+  col.getSortComparator = (dir) => (maybeA, maybeB, aParams, bParams) => {
     const api = aParams.api as GridApi;
     const column = api.getColumn(aParams.field);
+
+    // Call column's sortBy to get the value to compare.
+    const a = column.sortBy ? column.sortBy(maybeA, aParams) : maybeA;
+    const b = column.sortBy ? column.sortBy(maybeB, bParams) : maybeB;
 
     // Sort nulls last, always
     if (a == null && b != null) {
@@ -33,3 +39,20 @@ Object.values(getGridDefaultColumnTypes()).forEach((col) => {
     );
   };
 });
+
+declare module '@mui/x-data-grid/internals' {
+  interface GridBaseColDef<
+    // eslint-disable-next-line @seedcompany/no-unused-vars
+    R extends GridValidRowModel = GridValidRowModel,
+    V = any,
+    // eslint-disable-next-line @seedcompany/no-unused-vars
+    F = V
+  > {
+    /**
+     * Customize the value to use for sorting.
+     * This will be called before calling {@link sortComparator}.
+     * {@link getSortComparator} still takes precedence over this.
+     */
+    sortBy?: (value: V, cellParams: GridSortCellParams<V>) => any;
+  }
+}
