@@ -5,10 +5,7 @@ import {
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
-import { cleanJoin } from '@seedcompany/common';
 import {
-  PartnerTypeLabels,
-  PartnerTypeList,
   ProjectStatusLabels,
   ProjectStatusList,
   ProjectStepLabels,
@@ -30,7 +27,6 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
-import { multiSelectColumn } from '../Grid/multiSelectColumn';
 import { Link } from '../Routing';
 import { SensitivityIcon } from '../Sensitivity';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
@@ -110,26 +106,6 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     ...booleanColumn(),
     headerName: 'Pinned',
   },
-];
-
-const getStatusColumnIndex = (field: string, defaultIndex?: number) => {
-  const index = ProjectColumns.findIndex((column) => column.field === field);
-  return index === -1 ? defaultIndex : index + 1;
-};
-
-export const ProjectPartnerColumns: GridColDef[] = [
-  ...ProjectColumns.slice(0, getStatusColumnIndex('status', 5)),
-  {
-    field: 'partnerships.types',
-    ...multiSelectColumn(PartnerTypeList, PartnerTypeLabels),
-    headerName: 'Partnership Type',
-    width: 160,
-    sortable: false,
-    // serverFilter: ({ value }) => ({ name: value }),
-    valueGetter: (_, { partnership }) =>
-      cleanJoin(', ', partnership.types.value),
-  },
-  ...ProjectColumns.slice(getStatusColumnIndex('status', 0)),
 ];
 
 export const ProjectInitialState = {

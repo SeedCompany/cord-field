@@ -1,5 +1,5 @@
-query PartnerProjects($id: ID!, $input: ProjectListInput) {
-  partner(id: $id) {
+query PartnerProjects($partnerId: ID!, $input: ProjectListInput) {
+  partner(id: $partnerId) {
     id
     projects(input: $input) {
       canRead
@@ -13,7 +13,7 @@ query PartnerProjects($id: ID!, $input: ProjectListInput) {
 }
 
 fragment partnerProjectDataGridRow on Project {
-  partnership(partner: $id) {
+  partnership(partner: $partnerId) {
     id
     types {
       value
