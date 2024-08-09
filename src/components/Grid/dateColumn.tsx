@@ -8,6 +8,7 @@ import {
 import { Nil } from '@seedcompany/common';
 import { DateFilter } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';
+import { GridHeaderAddFilterButton } from './GridHeaderAddFilterButton';
 
 type DateInput = Date | CalendarDate | Nil;
 type DateValue = Date | null;
@@ -19,6 +20,7 @@ export const dateColumn = () =>
     type: 'date',
     valueGetter: dateColumn.valueGetter(defaultValueGetter),
     filterOperators,
+    renderHeaderFilter: GridHeaderAddFilterButton,
   } satisfies Partial<DateColDef>);
 
 type DateValueGetterInput<R extends RowModel = any> = ValueGetter<
