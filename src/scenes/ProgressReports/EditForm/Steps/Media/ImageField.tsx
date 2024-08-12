@@ -6,24 +6,26 @@ import {
 } from '@mui/icons-material';
 import {
   Box,
+  Card,
   Fab,
   FabProps,
   ListItemIcon,
   Menu,
   MenuItem,
+  Typography,
 } from '@mui/material';
 import { useId, useState } from 'react';
 import { Sensitivity } from '~/api/schema.graphql';
 import { extendSx, square, StyleProps } from '~/common';
 import { DropzoneField, useSubmitButton } from '~/components/form';
 import { SensitivityIcon } from '../../../../../components/Sensitivity';
-import { ImageFragment } from './progressReportMedia.graphql';
+import { VisualMediaFragment as VisualMedia } from './progressReportMedia.graphql';
 
 export interface ImageFieldProps extends StyleProps {
   name: string;
   disabled?: boolean;
   sensitivity?: Sensitivity;
-  current?: ImageFragment;
+  current?: VisualMedia;
   canDelete: boolean;
   instructionMessage?: string;
 }
@@ -43,6 +45,7 @@ export const ImageField = ({
       disabled={disabled}
       disableFileList
       {...props}
+      accept={{ 'image/*': [] }}
       sx={[
         {
           m: 0,
@@ -88,15 +91,31 @@ export const ImageField = ({
         ...extendSx(props.sx),
       ]}
     >
-      <Box
-        component="img"
-        src={current.url}
-        crossOrigin="use-credentials"
-        sx={{
-          maxWidth: 1,
-          borderRadius: 1,
-        }}
-      />
+      {current.__typename === 'Image' ? (
+        <Box
+          component="img"
+          src={current.url}
+          crossOrigin="use-credentials"
+          sx={{
+            maxWidth: 1,
+            borderRadius: 1,
+          }}
+        />
+      ) : (
+        <Card
+          elevation={5}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            maxWidth: 1,
+            borderRadius: 1,
+            aspectRatio: current.dimensions.aspectRatio,
+          }}
+        >
+          <Typography variant="button">Not an image</Typography>
+        </Card>
+      )}
       {sensitivity && (
         <SensitivityIcon
           value={sensitivity}
