@@ -103,7 +103,7 @@ export const ImageField = ({
         />
       ) : (
         <Card
-          elevation={5}
+          variant="outlined"
           sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -113,7 +113,7 @@ export const ImageField = ({
             aspectRatio: current.dimensions.aspectRatio,
           }}
         >
-          <Typography variant="button">Not an image</Typography>
+          <Typography variant="body1">Not an image</Typography>
         </Card>
       )}
       {sensitivity && (
