@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ReactNode } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { Accept, useDropzone } from 'react-dropzone';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { extendSx, StyleProps } from '~/common';
@@ -45,6 +45,7 @@ export type DropzoneFieldProps = Except<FieldConfig<File, true>, 'multiple'> &
     label?: ReactNode;
     multiple?: boolean;
     disableFileList?: boolean;
+    accept?: Accept;
   };
 
 export function DropzoneField({
@@ -54,6 +55,7 @@ export function DropzoneField({
   className,
   sx,
   disableFileList,
+  accept,
 }: DropzoneFieldProps) {
   const { classes, cx } = useStyles();
 
@@ -89,6 +91,7 @@ export function DropzoneField({
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     multiple,
     onDrop,
+    accept: accept,
   });
 
   return (

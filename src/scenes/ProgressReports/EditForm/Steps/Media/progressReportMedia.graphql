@@ -7,13 +7,13 @@ fragment progressReportMedia on ProgressReportMedia {
   category
   media {
     id
-    ...image
+    ...visualMedia
   }
   canEdit
   canDelete
 }
 
-fragment image on Image {
+fragment visualMedia on VisualMedia {
   id
   caption
   url
