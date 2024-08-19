@@ -20,10 +20,7 @@ export const multiSelectColumn = <T extends string>(
             return null;
           }
 
-          return (value) =>
-            Array.isArray(value)
-              ? value.includes(filterItem.value)
-              : value === filterItem.value;
+          return (value) => value.includes(filterItem.value);
         },
         InputComponent: GridFilterInputSingleSelect,
       },
@@ -34,9 +31,7 @@ export const multiSelectColumn = <T extends string>(
             return null;
           }
 
-          const filterItemValues: string[] = filterItem.value.map(
-            (item: string) => item
-          );
+          const filterItemValues: string[] = filterItem.value;
 
           return (value): boolean =>
             filterItemValues.some((item) => value.includes(item));
@@ -45,6 +40,7 @@ export const multiSelectColumn = <T extends string>(
       },
     ],
     valueOptions: list.slice(),
+    sortable: false,
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     getOptionLabel: (v) => labels[v as T] ?? EmptyEnumFilterValue,
     valueFormatter: (value) => cleanJoin(', ', value),

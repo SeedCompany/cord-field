@@ -7,6 +7,7 @@ import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { PartnerTypeLabels, PartnerTypeList } from '~/api/schema.graphql';
+import { findIndexOrThrow } from '~/common/findIndexOrThrow';
 import {
   DefaultDataGridStyles,
   flexLayout,
@@ -22,7 +23,10 @@ import {
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
-import { PartnerProjectsDocument } from './PartnerProjects.graphql';
+import {
+  PartnerProjectsDocument,
+  // PartnerProjectDataGridRowFragment as PartnerProject,
+} from './PartnerProjects.graphql';
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
@@ -48,31 +52,6 @@ export const PartnerDetailProjects = () => {
     [props.slotProps]
   );
 
-  const PartnershipColumn: GridColDef[] = [
-    {
-      field: 'partnerships.types',
-      ...multiSelectColumn(PartnerTypeList, PartnerTypeLabels),
-      headerName: 'Partnership Type',
-      width: 160,
-      sortable: false,
-      serverFilter: ({ value }) => ({
-        partnerships: { types: typeof value === 'string' ? [value] : value },
-      }),
-      valueGetter: (_, { partnership }) => partnership.types.value,
-    },
-  ];
-
-  const statusIndex =
-    ProjectColumns.findIndex((column) => column.field === 'status') === -1
-      ? 5
-      : ProjectColumns.findIndex((column) => column.field === 'status') + 1;
-
-  const mergedProjectPartnerColumns = ProjectColumns.toSpliced(
-    statusIndex,
-    0,
-    ...PartnershipColumn
-  );
-
   return (
     <TabPanelContent>
       <DataGrid<Project>
@@ -89,3 +68,22 @@ export const PartnerDetailProjects = () => {
     </TabPanelContent>
   );
 };
+
+const PartnershipColumns: GridColDef[] = [
+  {
+    field: 'partnerships.types',
+    ...multiSelectColumn(PartnerTypeList, PartnerTypeLabels),
+    headerName: 'Partnership Type',
+    width: 160,
+    serverFilter: ({ value }) => ({
+      partnerships: { types: value },
+    }),
+    valueGetter: (_, { partnership }) => partnership.types.value,
+  },
+];
+
+const mergedProjectPartnerColumns = ProjectColumns.toSpliced(
+  findIndexOrThrow('status', ProjectColumns) + 1,
+  0,
+  ...PartnershipColumns
+);
