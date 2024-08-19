@@ -48,12 +48,7 @@ export const PartnerDetailProjects = () => {
     [props.slotProps]
   );
 
-  const getStatusColumnIndex = (field: string, defaultIndex: number) => {
-    const index = ProjectColumns.findIndex((column) => column.field === field);
-    return index === -1 ? defaultIndex : index + 1;
-  };
-
-  const ProjectPartnerColumns: GridColDef[] = [
+  const PartnershipColumn: GridColDef[] = [
     {
       field: 'partnerships.types',
       ...multiSelectColumn(PartnerTypeList, PartnerTypeLabels),
@@ -66,27 +61,17 @@ export const PartnerDetailProjects = () => {
       valueGetter: (_, { partnership }) => partnership.types.value,
     },
   ];
-  const mergedColumns = ProjectColumns.toSpliced(
-    getStatusColumnIndex('status', 5),
-    0,
-    ...ProjectPartnerColumns
-  );
 
-  // const ProjectPartnerColumns: GridColDef[] = [
-  //   ...ProjectColumns.slice(0, getStatusColumnIndex('status', 5)),
-  //   {
-  //     field: 'partnerships.types',
-  //     ...multiSelectColumn(PartnerTypeList, PartnerTypeLabels),
-  //     headerName: 'Partnership Type',
-  //     width: 160,
-  //     sortable: false,
-  //     serverFilter: ({ value }) => ({
-  //       partnerships: { types: typeof value === 'string' ? [value] : value },
-  //     }),
-  //     valueGetter: (_, { partnership }) => partnership.types.value,
-  //   },
-  //   ...ProjectColumns.slice(getStatusColumnIndex('status', 0)),
-  // ];
+  const statusIndex =
+    ProjectColumns.findIndex((column) => column.field === 'status') === -1
+      ? 5
+      : ProjectColumns.findIndex((column) => column.field === 'status') + 1;
+
+  const mergedProjectPartnerColumns = ProjectColumns.toSpliced(
+    statusIndex,
+    0,
+    ...PartnershipColumn
+  );
 
   return (
     <TabPanelContent>
@@ -95,7 +80,7 @@ export const PartnerDetailProjects = () => {
         {...props}
         slots={slots}
         slotProps={slotProps}
-        columns={mergedColumns}
+        columns={mergedProjectPartnerColumns}
         initialState={ProjectInitialState}
         headerFilters
         hideFooter
