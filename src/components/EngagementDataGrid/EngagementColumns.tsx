@@ -89,8 +89,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       ) : null;
     },
     hideable: false,
-    serverFilter: ({ value }) =>
-      ({ engagedName: value } satisfies EngagementFilters),
+    serverFilter: (value): EngagementFilters => ({ engagedName: value }),
   },
   {
     headerName: 'Type',
