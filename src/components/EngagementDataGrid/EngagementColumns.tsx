@@ -141,7 +141,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.ethnologue.code.value?.toUpperCase()
-        : '',
+        : null,
   },
   {
     headerName: 'ROLV',
@@ -152,7 +152,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.registryOfLanguageVarietiesCode.value
-        : '',
+        : null,
   },
   {
     headerName: 'MOU Start',

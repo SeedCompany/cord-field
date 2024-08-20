@@ -60,6 +60,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
   },
   {
     field: 'primaryLocation.name',
+    ...textColumn(),
     valueGetter: (_, { primaryLocation }) => primaryLocation.value?.name.value,
     headerName: 'Country',
     width: 300,
