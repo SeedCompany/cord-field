@@ -7,11 +7,11 @@ import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { PartnerTypeLabels, PartnerTypeList } from '~/api/schema.graphql';
-import { findIndexOrThrow } from '~/common/findIndexOrThrow';
+import { unmatchedIndexThrow } from '~/common';
 import {
   DefaultDataGridStyles,
   flexLayout,
-  multiSelectColumn,
+  multiEnumColumn,
   noFooter,
   noHeaderFilterButtons,
   useDataGridSource,
@@ -24,8 +24,8 @@ import {
 } from '~/components/ProjectDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
 import {
+  PartnerProjectDataGridRowFragment as PartnerProject,
   PartnerProjectsDocument,
-  // PartnerProjectDataGridRowFragment as PartnerProject,
 } from './PartnerProjects.graphql';
 
 export const PartnerDetailProjects = () => {
@@ -33,7 +33,7 @@ export const PartnerDetailProjects = () => {
 
   const [props] = useDataGridSource({
     query: PartnerProjectsDocument,
-    variables: { partnerId: partnerId },
+    variables: { partnerId },
     listAt: 'partner.projects',
     initialInput: {
       sort: 'name',
@@ -54,12 +54,12 @@ export const PartnerDetailProjects = () => {
 
   return (
     <TabPanelContent>
-      <DataGrid<Project>
+      <DataGrid<PartnerProject>
         {...DefaultDataGridStyles}
         {...props}
         slots={slots}
         slotProps={slotProps}
-        columns={mergedProjectPartnerColumns}
+        columns={PartnerProjectColumns}
         initialState={ProjectInitialState}
         headerFilters
         hideFooter
@@ -69,21 +69,27 @@ export const PartnerDetailProjects = () => {
   );
 };
 
-const PartnershipColumns: GridColDef[] = [
-  {
-    field: 'partnerships.types',
-    ...multiSelectColumn(PartnerTypeList, PartnerTypeLabels),
-    headerName: 'Partnership Type',
-    width: 160,
-    serverFilter: ({ value }) => ({
-      partnerships: { types: value },
-    }),
-    valueGetter: (_, { partnership }) => partnership.types.value,
-  },
-];
+const PartnershipTypesColumn: GridColDef<PartnerProject> = {
+  field: 'partnerships.types',
+  ...multiEnumColumn(PartnerTypeList, PartnerTypeLabels),
+  headerName: 'Partnership Roles',
+  width: 160,
+  valueGetter: (_, { partnership }) => partnership.types.value,
+};
 
-const mergedProjectPartnerColumns = ProjectColumns.toSpliced(
-  findIndexOrThrow('status', ProjectColumns) + 1,
-  0,
-  ...PartnershipColumns
-);
+const indexAfterStatus =
+  unmatchedIndexThrow(ProjectColumns.findIndex((c) => c.field === 'status')) +
+  1;
+
+const PartnerProjectColumns =
+  // Avoid contravariance constraint on `row` parameter of `valueGetter`.
+  // This function is called for us, and we just want to enforce that
+  // the `row` is _at least_ a `Project`.
+  // The actual enforcement below.
+  (ProjectColumns as Array<GridColDef<PartnerProject>>)
+    // Add types' column after status
+    .toSpliced(indexAfterStatus, 0, PartnershipTypesColumn);
+
+// Actually enforce superset constraint here, since we're ignoring above.
+const _EnforcePartnerProjectIsSupersetOfProject: Project =
+  undefined as unknown as PartnerProject;

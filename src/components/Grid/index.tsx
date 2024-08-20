@@ -7,4 +7,4 @@ export * from './textColumn';
 export * from './useDataGridSource';
 export * from './Toolbar';
 export * from './QuickFilters';
-export * from './multiSelectColumn';
+export * from './multiEnumColumn';
