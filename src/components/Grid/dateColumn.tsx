@@ -1,9 +1,12 @@
 import {
   GridColDef as ColDef,
+  GridFilterItem as FilterItem,
+  getGridDateOperators,
   GridValidRowModel as RowModel,
   GridValueGetter as ValueGetter,
 } from '@mui/x-data-grid';
 import { Nil } from '@seedcompany/common';
+import { DateFilter } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';
 
 type DateInput = Date | CalendarDate | Nil;
@@ -15,6 +18,7 @@ export const dateColumn = () =>
   ({
     type: 'date',
     valueGetter: dateColumn.valueGetter(defaultValueGetter),
+    filterOperators,
   } satisfies Partial<DateColDef>);
 
 type DateValueGetterInput<R extends RowModel = any> = ValueGetter<
@@ -44,3 +48,31 @@ dateColumn.valueGetter =
   };
 const defaultValueGetter: DateValueGetterInput = (_, row, column) =>
   row[column.field];
+
+const filterOpNameMap: Record<string, keyof DateFilter> = {
+  after: 'after',
+  onOrAfter: 'afterInclusive',
+  before: 'before',
+  onOrBefore: 'beforeInclusive',
+  isEmpty: 'isNull',
+  isNotEmpty: 'isNull',
+};
+const filterOperators =
+  // The MUI column doesn't add null in the value, but we do.
+  (getGridDateOperators() as DateColDef['filterOperators'] & {})
+    // filter out operators that don't have an API operation
+    .flatMap((operator) => {
+      const apiOp = filterOpNameMap[operator.value];
+      if (!apiOp) {
+        return [];
+      }
+      return {
+        ...operator,
+        getAsApiInput: (item: FilterItem) => ({
+          [apiOp]:
+            apiOp === 'isNull'
+              ? item.operator === 'isEmpty'
+              : CalendarDate.fromJSDate(item.value).toISO(),
+        }),
+      };
+    });
