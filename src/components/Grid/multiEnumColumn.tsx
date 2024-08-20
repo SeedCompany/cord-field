@@ -47,6 +47,6 @@ export const multiEnumColumn = <T extends string>(
     ],
     valueFormatter: valuesFormatter,
     sortable: false,
-    sortComparator: undefined,
+    sortBy: undefined,
   } satisfies Partial<GridColDef<any, readonly T[], string>>;
 };
