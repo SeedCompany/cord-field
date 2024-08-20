@@ -6,13 +6,11 @@ import {
   FilterColumnsArgs,
   GetColumnForNewFilterArgs,
   GridColType,
-  GridFilterItem,
   GridLogicOperator,
   GridSlotProps,
 } from '@mui/x-data-grid';
 import {
   DataGridProProps as DataGridProps,
-  GridApiPro,
   GridFetchRowsParams,
   GridOverlay,
   useGridApiContext,
@@ -33,12 +31,13 @@ import {
   OperationDefinitionNode,
   type SelectionSetNode,
 } from 'graphql';
-import { get, merge, pick, set, uniqBy } from 'lodash';
+import { get, pick, set, uniqBy } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import { type PaginatedListInput, type SortableListInput } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
+import { convertMuiFiltersToApi, FilterShape } from './convertMuiFiltersToApi';
 
 type ListInput = SetNonNullable<
   Required<
@@ -69,7 +68,7 @@ const defaultKeyArgs = ['__typename', 'id'];
 const persistColumnTypes = setOf<GridColType>(['singleSelect', 'boolean']);
 
 type StoredViewState = Pick<DataGridProps, 'sortModel' | 'filterModel'> & {
-  apiFilterModel: Record<string, any>;
+  apiFilterModel?: FilterShape;
 };
 type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
   // The sorting state for the first page API query.
@@ -458,26 +457,6 @@ const getFieldPath = (
   return current;
 };
 
-const convertMuiFiltersToApi = (
-  api: GridApiPro,
-  next: DataGridProps['filterModel'],
-  ...external: Array<Record<string, any> | undefined>
-) => {
-  if (!next) {
-    return undefined;
-  }
-  const parts = next.items.map((item) => {
-    const col = api.getColumn(item.field);
-    return item.value == null
-      ? null
-      : col.serverFilter
-      ? col.serverFilter(item)
-      : set({}, item.field, item.value);
-  });
-  const filter = merge({}, ...parts, ...external);
-  return Object.keys(filter).length > 0 ? filter : undefined;
-};
-
 // Copied from MUI docs
 const filterColumns = ({
   field,
@@ -541,13 +520,3 @@ const apiSlotProps = {
     getColumnForNewFilter,
   },
 } satisfies DataGridProps['slotProps'];
-
-declare module '@mui/x-data-grid/internals' {
-  interface GridBaseColDef {
-    /**
-     * Customize how GridFilterItem converts to the filter object for API.
-     * By default, the field name becomes the path key of the object.
-     */
-    serverFilter?: (item: GridFilterItem) => Record<string, any>;
-  }
-}

@@ -1,5 +1,4 @@
 import { Box, FormControl, TextFieldProps } from '@mui/material';
-import { GridFilterItem } from '@mui/x-data-grid';
 import type {
   DataGridProProps as DataGridProps,
   GridColDef,
@@ -145,12 +144,6 @@ export const getInitialVisibility = (columns: GridColDef[]) =>
 
 declare module '@mui/x-data-grid/internals' {
   interface GridBaseColDef {
-    /**
-     * Customize how GridFilterItem converts to the filter object for API.
-     * By default, the field name becomes the path key of the object.
-     */
-    serverFilter?: (item: GridFilterItem) => Record<string, any>;
-
     hidden?: boolean;
   }
 }
