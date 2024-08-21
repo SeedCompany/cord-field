@@ -114,6 +114,13 @@ export const flexLayout = {
     '.MuiDataGrid-virtualScrollerRenderZone': {
       zIndex: 1,
     },
+    // The MUI filler also accounts for bottom horizontal scrollbar height.
+    // Since our change above pulls the filler out of the layout (position: absolute),
+    // we need to account for that space ourselves.
+    '.MuiDataGrid-virtualScrollerContent': {
+      marginBottom:
+        'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+    },
     // Since the fillers' top border is now hidden behind rows,
     // we need to recreate the bottom border of the last row.
     // Only if the filler is present, which MUI-X removes when not needed,
