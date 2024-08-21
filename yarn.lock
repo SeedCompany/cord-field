@@ -7987,7 +7987,7 @@ __metadata:
     final-form: "patch:final-form@npm:4.20.9#.yarn/patches/final-form.patch"
     final-form-calculate: "patch:final-form-calculate@1.3.2#.yarn/patches/final-form-calculate.patch"
     graphql: "npm:^16.8.1"
-    helmet: "npm:^6.2.0"
+    helmet: "npm:^7.1.0"
     history: "npm:^5.3.0"
     html-react-parser: "npm:^3.0.16"
     html-webpack-plugin: "npm:^4.0.0"
@@ -8006,6 +8006,7 @@ __metadata:
     notistack: "npm:^2.0.8"
     npm-run-all: "npm:^4.1.5"
     papaparse: "npm:^5.4.1"
+    posthog-js: "npm:^1.157.2"
     prettier: "npm:^2.8.8"
     query-string: "npm:^7.1.3"
     razzle: "patch:razzle@npm%3A4.2.18#~/.yarn/patches/razzle-npm-4.2.18-e0a2c6fe0c.patch"
@@ -10302,6 +10303,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fflate@npm:^0.4.8":
+  version: 0.4.8
+  resolution: "fflate@npm:0.4.8"
+  checksum: 10c0/29d1eddaaa5deab61b1c6b0d21282adacadbc4d2c01e94d8b1ee784398151673b9c563e53f97a801bc410a1ae55e8de5378114a743430e643e7a0644ba8e5a42
+  languageName: node
+  linkType: hard
+
 "figgy-pudding@npm:^3.5.1":
   version: 3.5.2
   resolution: "figgy-pudding@npm:3.5.2"
@@ -11287,10 +11295,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"helmet@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "helmet@npm:6.2.0"
-  checksum: 10c0/52d97adfdb151ebdc08e5d78eb93eebfb7e8e3e0563e68664828138dc6ab2d9d512b4ae71e1f8c6fcf8ddc38f87908325971d95dcabaafd4fde1f5b0faabeb8c
+"helmet@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "helmet@npm:7.1.0"
+  checksum: 10c0/8c3370d07487be11ac918577c68952e05d779a1a2c037023c1ba763034c381a025899bc52f8acfab5209304a1dc618a3764dbfd26386a0d1173befe4fb932e84
   languageName: node
   linkType: hard
 
@@ -16328,6 +16336,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"posthog-js@npm:^1.157.2":
+  version: 1.157.2
+  resolution: "posthog-js@npm:1.157.2"
+  dependencies:
+    fflate: "npm:^0.4.8"
+    preact: "npm:^10.19.3"
+    web-vitals: "npm:^4.0.1"
+  checksum: 10c0/62e6b908442e978fadb76643ca664f63d10f9feefb65b47d949a32c91a9c9181d1210097811eb3b7fd3f68112e4d58175e15162fbbc72bb253fb1f4f27df29da
+  languageName: node
+  linkType: hard
+
+"preact@npm:^10.19.3":
+  version: 10.23.2
+  resolution: "preact@npm:10.23.2"
+  checksum: 10c0/6e0dc1b38ead7554c99ddec9a32162b456e8f622229413b136042a777445a12d115633cd49d6df83c30b64d721a0ad4d3c71bb468edc759c15799896e96fd9f2
+  languageName: node
+  linkType: hard
+
 "prelude-ls@npm:^1.2.1":
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
@@ -20470,6 +20496,13 @@ __metadata:
   version: 3.2.1
   resolution: "web-streams-polyfill@npm:3.2.1"
   checksum: 10c0/70ed6b5708e14afa2ab699221ea197d7c68ec0c8274bbe0181aecc5ba636ca27cbd383d2049f0eb9d529e738f5c088825502b317f3df24d18a278e4cc9a10e8b
+  languageName: node
+  linkType: hard
+
+"web-vitals@npm:^4.0.1":
+  version: 4.2.3
+  resolution: "web-vitals@npm:4.2.3"
+  checksum: 10c0/905bdb9434f365435c3c00e5f473ce088980fcd61068906e20a575bae9590e1cc28dab0f90958c66717591e2f4c9b809ec8025cef5796fa4bc1304d50332f125
   languageName: node
   linkType: hard
 

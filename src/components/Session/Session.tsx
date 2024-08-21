@@ -1,6 +1,8 @@
 import { ApolloCache, useQuery } from '@apollo/client';
 import { useAsyncEffect } from 'ahooks';
 import { pickBy } from 'lodash';
+import { PostHog } from 'posthog-js';
+import { usePostHog } from 'posthog-js/react';
 import { SessionOutput } from '~/api/schema.graphql';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
 import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
@@ -56,19 +58,30 @@ export const useBetaFeatures = (): ReadonlySet<keyof BetaFeatures> =>
 export const useIdentifyInLogRocket = () => {
   const { session, impersonator } = useSession();
   const user = impersonator ?? session;
+
+  const postHog = usePostHog() as PostHog | null;
+
   useAsyncEffect(async () => {
-    if (!user || !process.env.RAZZLE_LOG_ROCKET_APP_ID) {
+    if (!user) {
       return;
     }
-    const LogRocket = await import('logrocket');
-    LogRocket.default.identify(
-      user.id,
-      pickBy({
-        name: user.fullName,
-        email: user.email.value,
-        roles: user.roles.value.join(','),
-        timezone: user.timezone.value?.name,
-      }) as Record<string, string>
-    );
+    postHog?.identify(user.id, {
+      Name: user.fullName,
+      Email: user.email.value,
+      Roles: user.roles.value,
+    });
+
+    if (process.env.RAZZLE_LOG_ROCKET_APP_ID) {
+      const LogRocket = await import('logrocket');
+      LogRocket.default.identify(
+        user.id,
+        pickBy({
+          name: user.fullName,
+          email: user.email.value,
+          roles: user.roles.value.join(','),
+          timezone: user.timezone.value?.name,
+        }) as Record<string, string>
+      );
+    }
   }, [user]);
 };
