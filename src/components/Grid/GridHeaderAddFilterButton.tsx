@@ -21,7 +21,7 @@ import {
  * @see https://mui.com/x/react-data-grid/filtering/header-filters/#headerfiltercell-slot
  */
 export function GridHeaderAddFilterButton(props: GridHeaderFilterCellProps) {
-  const { colDef, width, height, hasFocus, colIndex, tabIndex } = props;
+  const { colDef, width, height, hasFocus, colIndex } = props;
   const apiRef = useGridApiContext();
   const cellRef = useRef<HTMLDivElement>(null);
 
@@ -79,7 +79,7 @@ export function GridHeaderAddFilterButton(props: GridHeaderFilterCellProps) {
 
   return (
     <Stack
-      tabIndex={tabIndex}
+      tabIndex={-1}
       ref={cellRef}
       data-field={colDef.field}
       width={width}
@@ -99,17 +99,21 @@ export function GridHeaderAddFilterButton(props: GridHeaderFilterCellProps) {
         }
       >
         <Button
-          centerRipple={false}
           onClick={() => apiRef.current.showFilterPanel(colDef.field)}
+          // Deviate from MUI example here for our own overall consistency
+          tabIndex={-1}
           variant="outlined"
+          color="inherit"
+          fullWidth
           sx={(theme) => ({
-            color: theme.palette.grey[400],
-            borderColor: theme.palette.grey[400],
+            // Match OutlinedSelect filter
             height: 40,
-            '&:hover': {
-              borderColor: theme.palette.grey[800],
-              color: theme.palette.grey[800],
-              backgroundColor: 'inherit',
+            backgroundColor: 'transparent',
+            '&:not(:hover)': {
+              borderColor:
+                theme.palette.mode === 'light'
+                  ? 'rgba(0, 0, 0, 0.23)'
+                  : 'rgba(255, 255, 255, 0.23)',
             },
           })}
         >
