@@ -10,3 +10,4 @@ export * from './useDataGridSource';
 export * from './Toolbar';
 export * from './QuickFilters';
 export * from './multiEnumColumn';
+export * from './dateColumn';
