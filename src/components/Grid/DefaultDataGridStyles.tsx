@@ -127,8 +127,16 @@ export const flexLayout = {
 
 // Hide filter operator button - useful when there is only one operator
 export const noHeaderFilterButtons = {
-  '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader button': {
-    display: 'none',
+  '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader': {
+    [[
+      // Hide the operator button
+      'button[title="Operator"]',
+      // Hide the clear icon button for select inputs
+      // It seems cluttered, and it is only a couple clicks to clear it.
+      '.MuiFormControl-root:has(.MuiSelect-select) + button:has([data-testid="ClearIcon"])',
+    ].join()]: {
+      display: 'none',
+    },
   },
 } satisfies Sx;
 
