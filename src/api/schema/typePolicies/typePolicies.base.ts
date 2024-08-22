@@ -85,4 +85,10 @@ export const typePolicies: TypePolicies = {
       engagements: {},
     },
   },
+  Query: {
+    fields: {
+      projects: {},
+      engagements: {},
+    },
+  },
 };

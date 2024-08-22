@@ -20,4 +20,12 @@ fragment projectDataGridRow on Project {
       }
     }
   }
+  mouStart {
+    value
+  }
+  mouEnd {
+    value
+  }
+  isMember
+  pinned
 }

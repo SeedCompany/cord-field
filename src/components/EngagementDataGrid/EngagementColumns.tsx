@@ -1,39 +1,95 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
-import { cleanJoin } from '@seedcompany/common';
+import { Link as LinkIcon } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
+import {
+  DataGridProProps as DataGridProps,
+  GridColDef,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+} from '@mui/x-data-grid-pro';
+import { EngagementFilters } from '~/api/schema.graphql';
 import {
   EngagementStatusLabels,
   EngagementStatusList,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
+  ProjectStatusLabels,
+  ProjectStatusList,
   ProjectStepLabels,
   ProjectStepList,
   ProjectTypeLabels,
   ProjectTypeList,
 } from '../../api/schema/enumLists';
-import { enumColumn, textColumn } from '../Grid';
+import {
+  booleanColumn,
+  enumColumn,
+  getInitialVisibility,
+  QuickFilterButton,
+  QuickFilterResetButton,
+  QuickFilters,
+  textColumn,
+  Toolbar,
+  useEnumListFilterToggle,
+  useFilterToggle,
+} from '../Grid';
 import { SensitivityColumn } from '../ProjectDataGrid';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
   {
-    headerName: 'Name',
-    field: 'nameProjectFirst',
+    headerName: 'Project',
+    field: 'project.name',
     ...textColumn(),
-    minWidth: 200,
-    valueGetter: (_, row) =>
-      cleanJoin(' - ', [
-        row.project.name.value,
-        row.__typename === 'LanguageEngagement'
-          ? row.language.value?.name.value
-          : row.__typename === 'InternshipEngagement'
-          ? row.intern.value?.fullName
-          : null,
-      ]),
+    width: 200,
+    valueGetter: (_, row) => row.project.name.value,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.project.id}`}>{value}</Link>
     ),
-    serverFilter: ({ value }) => ({ name: value }),
+    hideable: false,
+  },
+  {
+    headerName: '',
+    field: 'Engagement',
+    width: 54,
+    display: 'flex',
+    renderCell: ({ row }) => (
+      <Tooltip title="View Engagement">
+        <IconButton
+          size="small"
+          color="primary"
+          component={Link}
+          to={`/engagements/${row.id}`}
+        >
+          <LinkIcon />
+        </IconButton>
+      </Tooltip>
+    ),
+    filterable: false,
+    sortable: false,
+    hideable: false,
+    resizable: false,
+  },
+  {
+    headerName: 'Language / Intern',
+    field: 'nameProjectLast',
+    ...textColumn(),
+    width: 200,
+    valueGetter: (_, row) => {
+      return row.__typename === 'LanguageEngagement'
+        ? row.language.value?.name.value
+        : row.__typename === 'InternshipEngagement'
+        ? row.intern.value?.fullName
+        : null;
+    },
+    renderCell: ({ value, row }) => {
+      return row.__typename === 'LanguageEngagement' ? (
+        <Link to={`/languages/${row.language.value!.id}`}>{value}</Link>
+      ) : row.__typename === 'InternshipEngagement' ? (
+        <Link to={`/users/${row.intern.value!.id}`}>{value}</Link>
+      ) : null;
+    },
+    hideable: false,
+    serverFilter: (value): EngagementFilters => ({ engagedName: value }),
   },
   {
     headerName: 'Type',
@@ -41,6 +97,15 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     ...enumColumn(ProjectTypeList, ProjectTypeLabels),
     width: 130,
     valueGetter: (_, row) => row.project.type,
+  },
+  {
+    field: 'project.status',
+    ...enumColumn(ProjectStatusList, ProjectStatusLabels, {
+      orderByIndex: true,
+    }),
+    valueGetter: (_, row) => row.project.status,
+    headerName: 'Project Status',
+    width: 160,
   },
   {
     headerName: 'Project Step',
@@ -75,18 +140,18 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.language.value?.ethnologue.code.value?.toUpperCase()
-        : '',
+        : null,
   },
   {
-    headerName: 'ROD',
-    description: 'Registry of Dialects',
-    field: 'language.registryOfDialectsCode',
+    headerName: 'ROLV',
+    description: 'Registry of Language Varieties Code',
+    field: 'language.registryOfLanguageVarietiesCode',
     ...textColumn(),
     width: 95,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
-        ? row.language.value?.registryOfDialectsCode.value
-        : '',
+        ? row.language.value?.registryOfLanguageVarietiesCode.value
+        : null,
   },
   {
     headerName: 'MOU Start',
@@ -140,4 +205,56 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       <Link to={`/projects/${row.project.id}/files`}>View Files</Link>
     ),
   },
+  {
+    field: 'project.isMember',
+    ...booleanColumn(),
+    valueGetter: (_, row) => row.project.isMember,
+    headerName: 'Member',
+  },
+  {
+    field: 'project.pinned',
+    ...booleanColumn(),
+    valueGetter: (_, row) => row.project.pinned,
+    headerName: 'Pinned',
+  },
 ];
+
+export const EngagementInitialState = {
+  pinnedColumns: {
+    left: EngagementColumns.slice(0, 3).map((column) => column.field),
+  },
+  columns: {
+    columnVisibilityModel: {
+      ...getInitialVisibility(EngagementColumns),
+      'project.status': false,
+      'project.isMember': false,
+      'project.pinned': false,
+    },
+  },
+} satisfies DataGridProps['initialState'];
+
+export const EngagementToolbar = () => (
+  <Toolbar sx={{ justifyContent: 'flex-start', gap: 2 }}>
+    <GridToolbarColumnsButton />
+    <GridToolbarFilterButton />
+    <QuickFilters sx={{ flex: 1 }}>
+      <QuickFilterResetButton />
+      <QuickFilterButton {...useFilterToggle('project.isMember')}>
+        Mine
+      </QuickFilterButton>
+      <QuickFilterButton {...useFilterToggle('project.pinned')}>
+        Pinned
+      </QuickFilterButton>
+      <QuickFilterButton
+        {...useEnumListFilterToggle('project.status', 'Active')}
+      >
+        Active
+      </QuickFilterButton>
+      <QuickFilterButton
+        {...useEnumListFilterToggle('project.status', 'InDevelopment')}
+      >
+        In Development
+      </QuickFilterButton>
+    </QuickFilters>
+  </Toolbar>
+);

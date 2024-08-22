@@ -1,0 +1,8 @@
+query EngagementList($input: EngagementListInput) {
+  engagements(input: $input) {
+    items {
+      ...engagementDataGridRow
+    }
+    total
+  }
+}

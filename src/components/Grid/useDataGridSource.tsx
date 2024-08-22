@@ -5,42 +5,50 @@ import {
 import {
   FilterColumnsArgs,
   GetColumnForNewFilterArgs,
-  GridFilterItem,
+  GridColType,
   GridLogicOperator,
   GridSlotProps,
 } from '@mui/x-data-grid';
 import {
   DataGridProProps as DataGridProps,
-  GridApiPro,
   GridFetchRowsParams,
   GridOverlay,
   useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { Nil } from '@seedcompany/common';
-import { useDebounceFn, useLatest, useMemoizedFn, useTimeout } from 'ahooks';
+import { groupBy, Nil, setOf } from '@seedcompany/common';
+import {
+  useDebounceFn,
+  useLatest,
+  useLocalStorageState,
+  useMemoizedFn,
+  useTimeout,
+} from 'ahooks';
 import {
   type FieldNode,
   getOperationAST,
   Kind,
+  OperationDefinitionNode,
   type SelectionSetNode,
 } from 'graphql';
-import { get, merge, pick, set, uniqBy } from 'lodash';
+import { get, pick, set, uniqBy } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
-import {
-  type PaginatedListInput,
-  type PaginatedListOutput,
-  type SortableListInput,
-} from '~/api';
+import { type PaginatedListInput, type SortableListInput } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
+import { convertMuiFiltersToApi, FilterShape } from './convertMuiFiltersToApi';
 
 type ListInput = SetNonNullable<
   Required<
     SortableListInput & PaginatedListInput & { filter?: Record<string, any> }
   >
 >;
+
+interface PaginatedListOutput<T> {
+  items: readonly T[];
+  total: number;
+}
 
 type PathsMatching<T, List> = {
   [K in Paths<T>]: K extends string
@@ -56,6 +64,18 @@ const defaultInitialInput = {
   order: 'ASC' as Order,
 };
 const defaultKeyArgs = ['__typename', 'id'];
+
+const persistColumnTypes = setOf<GridColType>(['singleSelect', 'boolean']);
+
+type StoredViewState = Pick<DataGridProps, 'sortModel' | 'filterModel'> & {
+  apiFilterModel?: FilterShape;
+};
+type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
+  // The sorting state for the first page API query.
+  // It could be the live sorting state, or a stale one,
+  // based on pagination needs.
+  apiSortModel: DataGridProps['sortModel'];
+};
 
 export const useDataGridSource = <
   Output extends Record<string, any>,
@@ -83,6 +103,13 @@ export const useDataGridSource = <
   const initialInputRef = useLatest(initialInput);
   const apiRef = useGridApiRef();
 
+  const opName = useMemo(
+    () =>
+      query.definitions.find(
+        (d): d is OperationDefinitionNode => d.kind === 'OperationDefinition'
+      )!.name!.value,
+    [query]
+  );
   const queryForItemRef = useMemo(() => {
     const queryForItemRef = structuredClone(query);
     const listNode = getFieldPath(
@@ -151,7 +178,7 @@ export const useDataGridSource = <
         set(nextCached, listAt, {
           ...nextList,
           items: mergedList,
-          total: ((updateTotal ? nextList : prevList) ?? nextList).total,
+          total: (updateTotal ? nextList : prevList)?.total ?? -1,
         });
         return nextCached;
       }
@@ -165,18 +192,50 @@ export const useDataGridSource = <
       sort: lowerCase(initialInput?.order ?? defaultInitialInput.order),
     },
   ]);
-  const [view, setView] = useState(
-    (): Pick<DataGridProps, 'sortModel' | 'filterModel'> & {
-      // The sorting state for the first page API query.
-      // It could be the live sorting state, or a stale one,
-      // based on pagination needs.
-      apiSortModel: DataGridProps['sortModel'];
-    } => ({
-      filterModel: { items: [] },
-      sortModel: initialSort,
-      apiSortModel: initialSort,
-    })
+  const [storedView, setStoredView] = useLocalStorageState<StoredViewState>(
+    `${opName}-data-grid-view`,
+    {
+      defaultValue: () => ({
+        filterModel: { items: [] },
+        apiFilterModel: {},
+        sortModel: initialSort,
+      }),
+    }
   );
+  const persist = useDebounceFn((next: ViewState) => {
+    const filterModel = {
+      // Strip out filters for columns that shouldn't be persisted
+      items:
+        next.filterModel?.items.filter((item) =>
+          persistColumnTypes.has(apiRef.current.getColumn(item.field).type!)
+        ) ?? [],
+    };
+    setStoredView({
+      sortModel: next.sortModel,
+      filterModel,
+      apiFilterModel: convertMuiFiltersToApi(
+        apiRef.current,
+        filterModel,
+        variables.input?.filter,
+        initialInputRef.current?.filter
+      ),
+    });
+  });
+  const [view, reallySetView] = useState((): ViewState => {
+    const { apiFilterModel: _, ...rest } = storedView ?? {};
+    return {
+      ...rest,
+      apiSortModel: storedView!.sortModel,
+    };
+  });
+  const setView = (setter: (prev: ViewState) => ViewState) => {
+    reallySetView((prev) => {
+      const next = setter(prev);
+      persist.run(next);
+      return next;
+    });
+  };
+
   const viewRef = useLatest(view);
   const hasFilter = !!view.filterModel && view.filterModel.items.length > 0;
 
@@ -190,13 +249,17 @@ export const useDataGridSource = <
         sort: view.apiSortModel[0].field,
         order: upperCase(view.apiSortModel[0].sort!),
       }),
-      filter: convertMuiFiltersToApi(
-        apiRef.current,
-        view.filterModel,
-        variables.input?.filter,
-        initialInputRef.current?.filter
-      ),
+      // eslint-disable-next-line no-extra-boolean-cast
+      filter: Boolean(apiRef.current.instanceId)
+        ? convertMuiFiltersToApi(
+            apiRef.current,
+            view.filterModel,
+            variables.input?.filter,
+            initialInputRef.current?.filter
+          )
+        : storedView?.apiFilterModel,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       apiRef,
       initialInputRef,
@@ -248,7 +311,7 @@ export const useDataGridSource = <
     ? allFilteredPages
     : listFrom(firstPage);
   const rows = list?.items ?? emptyList;
-  const total = list?.total;
+  const total = list?.total && list.total >= 0 ? list.total : undefined;
 
   // Load additional pages imperatively as needed based on scrolling
   // This is debounced to mostly to reduce the client side load.
@@ -317,9 +380,17 @@ export const useDataGridSource = <
     });
   const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
     useMemoizedFn((filterModel) => {
+      const next = {
+        ...filterModel,
+        // Take the last filter for each column
+        items: groupBy(filterModel.items, (item) => item.field).map(
+          (items) => items.at(-1)!
+        ),
+      };
+
       setView((prev) => ({
         ...prev,
-        filterModel,
+        filterModel: next,
         // API should now use the current sorting state
         apiSortModel: prev.sortModel,
       }));
@@ -386,26 +457,6 @@ const getFieldPath = (
   return current;
 };
 
-const convertMuiFiltersToApi = (
-  api: GridApiPro,
-  next: DataGridProps['filterModel'],
-  ...external: Array<Record<string, any> | undefined>
-) => {
-  if (!next) {
-    return undefined;
-  }
-  const parts = next.items.map((item) => {
-    const col = api.getColumn(item.field);
-    return item.value == null
-      ? null
-      : col.serverFilter
-      ? col.serverFilter(item)
-      : set({}, item.field, item.value);
-  });
-  const filter = merge({}, ...parts, ...external);
-  return Object.keys(filter).length > 0 ? filter : undefined;
-};
-
 // Copied from MUI docs
 const filterColumns = ({
   field,
@@ -418,6 +469,7 @@ const filterColumns = ({
     .filter(
       (colDef) =>
         colDef.filterable &&
+        !colDef.hidden &&
         (colDef.field === field || !filteredFields.includes(colDef.field))
     )
     .map((column) => column.field);
@@ -468,13 +520,3 @@ const apiSlotProps = {
     getColumnForNewFilter,
   },
 } satisfies DataGridProps['slotProps'];
-
-declare module '@mui/x-data-grid/internals' {
-  interface GridBaseColDef {
-    /**
-     * Customize how GridFilterItem converts to the filter object for API.
-     * By default, the field name becomes the path key of the object.
-     */
-    serverFilter?: (item: GridFilterItem) => Record<string, any>;
-  }
-}

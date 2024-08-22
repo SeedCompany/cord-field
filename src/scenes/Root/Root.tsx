@@ -22,6 +22,9 @@ import { useOldChromeWarning } from './useOldChromeWarning';
 const Partners = loadable(() => import('../Partners'), {
   resolveComponent: (m) => m.Partners,
 });
+const ProjectList = loadable(() => import('../Projects/List'), {
+  resolveComponent: (m) => m.ProjectList,
+});
 const Projects = loadable(() => import('../Projects'), {
   resolveComponent: (m) => m.Projects,
 });
@@ -62,7 +65,9 @@ export const Root = () => {
       <Route key="main" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="partners/*" element={<Partners />} />
+        <Route path="projects" element={<ProjectList />} />
         <Route path="projects/*" element={<Projects />} />
+        <Route path="engagements" element={<ProjectList />} />
         <Route path="engagements/*" element={<Engagements />} />
         <Route path="products/*" element={<Products />} />
         <Route path="progress-reports/*" element={<ProgressReports />} />

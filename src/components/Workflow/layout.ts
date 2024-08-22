@@ -48,7 +48,7 @@ export const determinePositions = (nodes: Node[], edges: Edge[]) => {
 
   return nodes.map((node) => {
     // node position was persisted keep user placement.
-    if (node.position.x > 0 || node.position.y > 0) {
+    if (node.position.x !== 0 || node.position.y !== 0) {
       return node;
     }
 

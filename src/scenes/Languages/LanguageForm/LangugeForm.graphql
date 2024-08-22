@@ -57,7 +57,7 @@ fragment LanguageForm on Language {
     canEdit
     value
   }
-  registryOfDialectsCode {
+  registryOfLanguageVarietiesCode {
     canRead
     canEdit
     value

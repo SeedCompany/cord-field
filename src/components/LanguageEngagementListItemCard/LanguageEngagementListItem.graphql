@@ -16,7 +16,7 @@ fragment LanguageEngagementListItem on LanguageEngagement {
       population {
         value
       }
-      registryOfDialectsCode {
+      registryOfLanguageVarietiesCode {
         value
       }
       ethnologue {

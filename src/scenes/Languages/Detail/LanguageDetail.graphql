@@ -46,7 +46,7 @@ fragment LanguageDetail on Language {
       value
     }
   }
-  registryOfDialectsCode {
+  registryOfLanguageVarietiesCode {
     canRead
     canEdit
     value

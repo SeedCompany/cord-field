@@ -8,21 +8,18 @@ import { useParams } from 'react-router-dom';
 import {
   EngagementDataGridRowFragment as Engagement,
   EngagementColumns,
+  EngagementInitialState,
+  EngagementToolbar,
 } from '~/components/EngagementDataGrid';
 import {
   DefaultDataGridStyles,
   flexLayout,
+  noFooter,
   noHeaderFilterButtons,
   useDataGridSource,
 } from '~/components/Grid';
 import { TabPanelContent } from '~/components/Tabs';
 import { PartnerDetailEngagementsDocument } from './PartnerDetailEngagements.graphql';
-
-const initialState = {
-  pinnedColumns: {
-    left: [EngagementColumns[0]!.field],
-  },
-} satisfies DataGridProps['initialState'];
 
 export const PartnerDetailEngagements = () => {
   const { partnerId = '' } = useParams();
@@ -32,12 +29,15 @@ export const PartnerDetailEngagements = () => {
     variables: { id: partnerId },
     listAt: 'partner.engagements',
     initialInput: {
-      sort: 'nameProjectFirst',
+      sort: EngagementColumns[0]!.field,
     },
   });
 
   const slots = useMemo(
-    () => merge({}, DefaultDataGridStyles.slots, props.slots),
+    () =>
+      merge({}, DefaultDataGridStyles.slots, props.slots, {
+        toolbar: EngagementToolbar,
+      } satisfies DataGridProps['slots']),
     [props.slots]
   );
   const slotProps = useMemo(
@@ -53,9 +53,10 @@ export const PartnerDetailEngagements = () => {
         slots={slots}
         slotProps={slotProps}
         columns={EngagementColumns}
-        initialState={initialState}
+        initialState={EngagementInitialState}
         headerFilters
-        sx={[flexLayout, noHeaderFilterButtons]}
+        hideFooter
+        sx={[flexLayout, noHeaderFilterButtons, noFooter]}
       />
     </TabPanelContent>
   );

@@ -39,7 +39,15 @@ export const Sidebar = () => {
       aria-label="sidebar"
       subheader={<ListSubheader component="div">MENU</ListSubheader>}
     >
-      <NavItem to="/projects" label="Projects" icon={FolderOpen} />
+      <NavItem
+        to="/projects"
+        label="Projects"
+        icon={FolderOpen}
+        active={[
+          { path: '/projects', end: false },
+          { path: '/engagements', end: false },
+        ]}
+      />
       <NavItem to="/languages" label="Languages" icon={Language} />
       <NavItem to="/users" label="People" icon={Person} />
       <NavItem to="/partners" label="Partners" icon={PeopleJoinedIcon} />

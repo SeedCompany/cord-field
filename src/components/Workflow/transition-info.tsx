@@ -58,7 +58,9 @@ const TransitionNodeExtraMenu = forwardRef<any, any>(
   function TransitionNodeExtraMenu({ ownerState, transition, ...props }, ref) {
     return (
       <Stack direction="row" gap={1} {...props} ref={ref}>
-        <NotifiersInfo transition={transition} />
+        {transition.notifiers.length > 0 && (
+          <NotifiersInfo transition={transition} />
+        )}
         <PermissionInfo transition={transition} />
       </Stack>
     );

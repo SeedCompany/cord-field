@@ -1,5 +1,9 @@
 import { Box, FormControl, TextFieldProps } from '@mui/material';
-import type { DataGridProProps as DataGridProps } from '@mui/x-data-grid-pro';
+import type {
+  DataGridProProps as DataGridProps,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
+import { mapEntries } from '@seedcompany/common';
 import { Sx } from '../../common';
 
 const scrollIntoView: DataGridProps['onMenuOpen'] = ({ target }) => {
@@ -33,6 +37,12 @@ export const DefaultDataGridStyles = {
     baseFormControl: MyFormControl,
   },
   slotProps: {
+    columnsManagement: {
+      getTogglableColumns: (columns) =>
+        columns
+          .filter((column) => !column.hidden)
+          .map((column) => column.field),
+    },
     filterPanel: {
       filterFormProps: {
         valueInputProps: {
@@ -104,6 +114,13 @@ export const flexLayout = {
     '.MuiDataGrid-virtualScrollerRenderZone': {
       zIndex: 1,
     },
+    // The MUI filler also accounts for bottom horizontal scrollbar height.
+    // Since our change above pulls the filler out of the layout (position: absolute),
+    // we need to account for that space ourselves.
+    '.MuiDataGrid-virtualScrollerContent': {
+      marginBottom:
+        'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+    },
     // Since the fillers' top border is now hidden behind rows,
     // we need to recreate the bottom border of the last row.
     // Only if the filler is present, which MUI-X removes when not needed,
@@ -117,7 +134,31 @@ export const flexLayout = {
 
 // Hide filter operator button - useful when there is only one operator
 export const noHeaderFilterButtons = {
-  '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader button': {
-    display: 'none',
+  '.MuiDataGrid-headerFilterRow .MuiDataGrid-columnHeader': {
+    [[
+      // Hide the operator button
+      'button[title="Operator"]',
+      // Hide the clear icon button for select inputs
+      // It seems cluttered, and it is only a couple clicks to clear it.
+      '.MuiFormControl-root:has(.MuiSelect-select) + button:has([data-testid="ClearIcon"])',
+    ].join()]: {
+      display: 'none',
+    },
   },
 } satisfies Sx;
+
+export const noFooter = {
+  '.MuiDataGrid-main': {
+    borderBottomLeftRadius: 'inherit',
+    borderBottomRightRadius: 'inherit',
+  },
+} satisfies Sx;
+
+export const getInitialVisibility = (columns: GridColDef[]) =>
+  mapEntries(columns, (column) => [column.field, !column.hidden]).asRecord;
+
+declare module '@mui/x-data-grid/internals' {
+  interface GridBaseColDef {
+    hidden?: boolean;
+  }
+}

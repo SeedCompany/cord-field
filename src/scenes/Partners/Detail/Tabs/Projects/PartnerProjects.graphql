@@ -1,13 +1,23 @@
-query PartnerProjects($id: ID!, $input: ProjectListInput) {
-  partner(id: $id) {
+query PartnerProjects($partnerId: ID!, $input: ProjectListInput) {
+  partner(id: $partnerId) {
     id
     projects(input: $input) {
       canRead
       hasMore
       total
       items {
-        ...projectDataGridRow
+        ...partnerProjectDataGridRow
       }
     }
   }
+}
+
+fragment partnerProjectDataGridRow on Project {
+  partnership(partner: $partnerId) {
+    id
+    types {
+      value
+    }
+  }
+  ...projectDataGridRow
 }
