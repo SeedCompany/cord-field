@@ -47,8 +47,10 @@ export const MediaInfoForm = ({
   isFirstUpload,
   ...props
 }: MediaInfoFormProps) => {
-  const existingImage =
+  const existingFile =
     existingMedia?.media.__typename === 'Image'
+      ? existingMedia.media
+      : existingMedia?.media.__typename === 'Video'
       ? existingMedia.media
       : undefined;
 
@@ -57,7 +59,7 @@ export const MediaInfoForm = ({
       variant,
       id: existingMedia?.id,
       category: existingMedia?.category,
-      caption: existingImage?.caption,
+      caption: existingFile?.caption,
       variantGroup: existingMedia?.variantGroup,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,7 +85,7 @@ export const MediaInfoForm = ({
               mb: 1,
             }}
           >
-            {!existingImage && !isFirstUpload && (
+            {!existingFile && !isFirstUpload && (
               <ImageField
                 name="newVersion"
                 sensitivity={sensitivity}
@@ -94,7 +96,7 @@ export const MediaInfoForm = ({
             )}
             <ImageField
               name="newFile"
-              current={existingImage}
+              current={existingFile}
               sensitivity={sensitivity}
               canDelete={existingMedia?.canDelete ?? false}
               sx={{ flex: 1, mt: 1, minWidth: 195 }}
@@ -104,7 +106,7 @@ export const MediaInfoForm = ({
                   : 'Click or drop to add a completely different image, because the previous is not suitable'
               }
             />
-            {existingImage && (
+            {existingFile && (
               <Stack gap="inherit" flex={2} minWidth={270}>
                 <SelectField
                   label="Photo Category"
