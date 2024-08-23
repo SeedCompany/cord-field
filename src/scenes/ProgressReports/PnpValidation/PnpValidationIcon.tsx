@@ -2,9 +2,12 @@ import { Check, Error, Warning } from '@mui/icons-material';
 import { Badge, IconButton, IconButtonProps, Tooltip } from '@mui/material';
 import { groupToMapBy } from '@seedcompany/common';
 import { PnpProblemSeverity as Severity } from '~/api/schema.graphql';
+import { useDialog } from '../../../components/Dialog';
 import { FileNodeInfoFragment } from '../../../components/files';
 import { useNumberFormatter } from '../../../components/Formatters';
+import { PnPExtractionProblems } from './PnPExtractionProblems';
 import { PnpExtractionResultFragment } from './pnpExtractionResult.graphql';
+import { PnPExtractionResultDialog } from './PnpExtractionResultDialog';
 
 export const PnPValidationIcon = ({
   size,
@@ -13,6 +16,8 @@ export const PnPValidationIcon = ({
   file: FileNodeInfoFragment;
   result: PnpExtractionResultFragment;
 } & Pick<IconButtonProps, 'size'>) => {
+  const [dialog, open] = useDialog();
+
   const formatNumber = useNumberFormatter();
   const bySev = groupToMapBy(result.problems, (p) => p.severity);
   const count = (sev: Severity) => formatNumber(bySev.get(sev)!.length);
@@ -39,12 +44,17 @@ export const PnPValidationIcon = ({
       };
 
   return (
-    <Tooltip title={title}>
-      <Badge badgeContent={badge} max={Infinity}>
-        <IconButton color={color} size={size}>
-          <Icon />
-        </IconButton>
-      </Badge>
-    </Tooltip>
+    <>
+      <Tooltip title={title}>
+        <Badge badgeContent={badge} max={Infinity}>
+          <IconButton color={color} size={size} onClick={open}>
+            <Icon />
+          </IconButton>
+        </Badge>
+      </Tooltip>
+      <PnPExtractionResultDialog fullWidth {...dialog}>
+        <PnPExtractionProblems result={result} />
+      </PnPExtractionResultDialog>
+    </>
   );
 };
