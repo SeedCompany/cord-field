@@ -10,6 +10,7 @@ import {
   useFileActions,
 } from '../../../components/files/FileActions';
 import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
+import { PnPValidationIcon } from '../PnpValidation/PnpValidationIcon';
 import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
 
 interface Props
@@ -21,7 +22,10 @@ interface Props
     | 'resourceType'
     | 'securedFile'
   > {
-  progressReport: Pick<ProgressReportDetailFragment, 'id' | 'reportFile'>;
+  progressReport: Pick<
+    ProgressReportDetailFragment,
+    'id' | 'reportFile' | 'pnpExtractionResult'
+  >;
 }
 
 export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
@@ -48,6 +52,13 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
               {file && (
                 <>
                   <Preview file={file} />
+                  {progressReport.pnpExtractionResult && (
+                    <PnPValidationIcon
+                      file={file}
+                      result={progressReport.pnpExtractionResult}
+                      size="small"
+                    />
+                  )}
                 </>
               )}
             </Stack>

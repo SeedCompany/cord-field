@@ -22,6 +22,9 @@ fragment ProgressReportEdit on ProgressReport {
   progressForAllVariants {
     ...ProgressReportProgress
   }
+  pnpExtractionResult {
+    ...pnpExtractionResult
+  }
   ...mediaStep
   status {
     ...ProgressReportStatus

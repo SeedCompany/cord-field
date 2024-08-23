@@ -1,0 +1,11 @@
+fragment pnpExtractionResult on PnpExtractionResult {
+  problems {
+    ...pnpProblem
+  }
+}
+fragment pnpProblem on PnpProblem {
+  id
+  severity
+  message
+  groups
+}
