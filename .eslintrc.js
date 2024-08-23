@@ -108,7 +108,7 @@ const restrictedImports = [
   },
   {
     path: '@mui/system',
-    importNames: 'Box',
+    importNames: ['Box', 'Container', 'Stack'],
     message: "Import from '@mui/material' instead",
     replacement: {
       path: '@mui/material',
