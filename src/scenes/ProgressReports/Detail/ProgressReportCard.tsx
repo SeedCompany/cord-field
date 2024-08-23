@@ -1,5 +1,12 @@
+import { useMutation } from '@apollo/client';
 import { Preview as PreviewIcon } from '@mui/icons-material';
-import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  CircularProgress,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import {
   DefinedFileCard,
   DefinedFileCardProps,
@@ -10,7 +17,9 @@ import {
   useFileActions,
 } from '../../../components/files/FileActions';
 import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
+import { PnPReextractIconButton } from '../PnpValidation/PnPReextractIconButton';
 import { PnPValidationIcon } from '../PnpValidation/PnpValidationIcon';
+import { ReextractPnpProgressDocument } from '../PnpValidation/ReextractProgress.graphql';
 import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
 
 interface Props
@@ -30,6 +39,22 @@ interface Props
 
 export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
   const file = progressReport.reportFile.value;
+
+  const [reextract, { loading: reextracting }] = useMutation(
+    ReextractPnpProgressDocument,
+    {
+      variables: { reportId: progressReport.id },
+      update: (cache, result) => {
+        cache.modify({
+          id: cache.identify(progressReport),
+          fields: {
+            pnpExtractionResult: () => result.data?.reextractPnpProgress,
+          },
+        });
+      },
+    }
+  );
+
   return (
     <FileActionsContextProvider>
       <Tooltip title="This holds the progress report PnP file" placement="top">
@@ -52,7 +77,15 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
               {file && (
                 <>
                   <Preview file={file} />
-                  {progressReport.pnpExtractionResult && (
+                  {reextracting ? (
+                    <CircularProgress size={15} sx={{ ml: 1.1 }} />
+                  ) : (
+                    <PnPReextractIconButton
+                      size="small"
+                      onClick={() => void reextract()}
+                    />
+                  )}
+                  {progressReport.pnpExtractionResult && !reextracting && (
                     <PnPValidationIcon
                       file={file}
                       result={progressReport.pnpExtractionResult}

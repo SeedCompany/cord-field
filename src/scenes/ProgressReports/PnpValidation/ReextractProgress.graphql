@@ -1,0 +1,5 @@
+mutation ReextractPnpProgress($reportId: ID!) {
+  reextractPnpProgress(reportId: $reportId) {
+    ...pnpExtractionResult
+  }
+}
