@@ -32,7 +32,8 @@ import { Redacted } from '../Redacted';
 import { DropOverlay } from '../Upload/DropOverlay';
 
 export interface DefinedFileCardProps extends StyleProps {
-  label: ReactNode;
+  label: string;
+  header?: ReactNode;
   resourceType: string;
   securedFile: SecuredProp<FileNode>;
   uploadMutationDocument: DocumentNode<
@@ -45,6 +46,7 @@ export interface DefinedFileCardProps extends StyleProps {
     files: File[];
     submit: (next: HandleUploadCompletedFunction) => void;
   }) => void;
+  disablePreview?: boolean;
 }
 
 interface FileCardMetaProps {
@@ -84,11 +86,13 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
   function DefinedFileCard(props, ref) {
     const {
       label,
+      header,
       resourceType,
       securedFile,
       uploadMutationDocument,
       parentId,
       disableIcon,
+      disablePreview,
       onUpload,
       className,
       sx,
@@ -159,6 +163,10 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
 
     const Icon = !file && canEdit ? AddIcon : NotPermittedIcon;
 
+    const ActionArea = disablePreview
+      ? (Box as typeof CardActionArea)
+      : CardActionArea;
+
     return (
       <Card
         {...getRootProps()}
@@ -169,7 +177,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
         <DropOverlay isDragActive={isDragActive}>
           {!file ? `Add ${label} file` : 'Drop new version to upload'}
         </DropOverlay>
-        <CardActionArea
+        <ActionArea
           {...rest}
           ref={ref}
           sx={[
@@ -181,6 +189,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
             },
             !file
               ? {
+                  alignItems: 'center',
                   flexDirection: 'column',
                   gap: 1,
                 }
@@ -189,8 +198,10 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                   position: 'relative',
                 },
           ]}
-          disabled={isCardDisabled}
-          onClick={() => file && openFilePreview(file)}
+          {...(!disablePreview && {
+            disabled: isCardDisabled,
+            onClick: () => file && openFilePreview(file),
+          })}
         >
           {!file ? (
             <>
@@ -207,13 +218,12 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                 <HugeIcon icon={ReportIcon} loading={!file} sx={{ mr: 4 }} />
               )}
               <Stack sx={{ flex: 1, gap: 1 }}>
-                <Typography
-                  variant="h4"
+                <Box
                   // so it doesn't collide with abs pos context menu
                   mr={4}
                 >
-                  {label}
-                </Typography>
+                  {header ?? <Typography variant="h4">{label}</Typography>}
+                </Box>
                 <Stack sx={{ flex: 1, justifyContent: 'center' }}>
                   <FileCardMeta
                     canRead={canRead}
@@ -236,7 +246,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
               </Stack>
             </>
           )}
-        </CardActionArea>
+        </ActionArea>
         {file && canRead && (
           <Box sx={{ position: 'absolute', top: 0, right: 0, m: 1 }}>
             <ActionsMenu
