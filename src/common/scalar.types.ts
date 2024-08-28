@@ -1,4 +1,6 @@
 import type { OutputData as RichTextData } from '@editorjs/editorjs';
-import type { Opaque } from 'type-fest';
+import type { Tagged } from 'type-fest';
 
-export type RichTextJson = Opaque<RichTextData, 'EditorJS'>;
+export type RichTextJson = Tagged<RichTextData, 'EditorJS'>;
+
+export type InlineMarkdownString = Tagged<string, 'InlineMarkdown'>;
