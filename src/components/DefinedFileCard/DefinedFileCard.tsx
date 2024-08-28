@@ -6,17 +6,18 @@ import {
 } from '@mui/icons-material';
 import {
   Avatar,
+  Box,
   Card,
   CardActionArea,
   Skeleton,
+  Stack,
   Typography,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { makeStyles } from 'tss-react/mui';
 import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
-import { SecuredProp, StyleProps } from '~/common';
+import { extendSx, SecuredProp, StyleProps } from '~/common';
 import {
   FileActionsPopup as ActionsMenu,
   FileAction,
@@ -30,67 +31,9 @@ import { HugeIcon, ReportIcon } from '../Icons';
 import { Redacted } from '../Redacted';
 import { DropOverlay } from '../Upload/DropOverlay';
 
-const useStyles = makeStyles()(({ palette, spacing }) => ({
-  root: {
-    flex: 1,
-    position: 'relative',
-  },
-  addActionArea: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    padding: spacing(3, 4),
-  },
-  editActionArea: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    padding: spacing(3, 4),
-    position: 'relative',
-  },
-  avatar: {
-    width: 58,
-    height: 58,
-  },
-  addIcon: {
-    color: 'white',
-  },
-  icon: {
-    marginRight: spacing(4),
-  },
-  info: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  fileInfo: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  fileName: {
-    marginBottom: spacing(1),
-    marginRight: spacing(2), // so it doesn't collide with abs pos context menu
-  },
-  fileMeta: {
-    color: palette.text.secondary,
-  },
-  actionsMenu: {
-    margin: spacing(1),
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  text: {
-    marginTop: spacing(1),
-    textTransform: 'none',
-  },
-}));
-
 export interface DefinedFileCardProps extends StyleProps {
-  label: ReactNode;
+  label: string;
+  header?: ReactNode;
   resourceType: string;
   securedFile: SecuredProp<FileNode>;
   uploadMutationDocument: DocumentNode<
@@ -103,6 +46,7 @@ export interface DefinedFileCardProps extends StyleProps {
     files: File[];
     submit: (next: HandleUploadCompletedFunction) => void;
   }) => void;
+  disablePreview?: boolean;
 }
 
 interface FileCardMetaProps {
@@ -118,12 +62,11 @@ const FileCardMeta = ({
   resourceType,
   text,
 }: FileCardMetaProps) => {
-  const { classes } = useStyles();
   return (
     <Typography
-      className={classes.fileMeta}
       variant="caption"
       component="p"
+      color="text.secondary"
       gutterBottom
     >
       {loading ? (
@@ -141,14 +84,15 @@ const FileCardMeta = ({
 
 export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
   function DefinedFileCard(props, ref) {
-    const { classes, cx } = useStyles();
     const {
       label,
+      header,
       resourceType,
       securedFile,
       uploadMutationDocument,
       parentId,
       disableIcon,
+      disablePreview,
       onUpload,
       className,
       sx,
@@ -219,46 +163,68 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
 
     const Icon = !file && canEdit ? AddIcon : NotPermittedIcon;
 
-    const card = (
-      <Card {...getRootProps()} className={cx(classes.root, className)} sx={sx}>
+    const ActionArea = disablePreview
+      ? (Box as typeof CardActionArea)
+      : CardActionArea;
+
+    return (
+      <Card
+        {...getRootProps()}
+        sx={[{ position: 'relative', flex: 1 }, ...extendSx(sx)]}
+        className={className}
+      >
         <input {...getInputProps()} name="defined_file_version_uploader" />
         <DropOverlay isDragActive={isDragActive}>
           {!file ? `Add ${label} file` : 'Drop new version to upload'}
         </DropOverlay>
-        <CardActionArea
+        <ActionArea
           {...rest}
           ref={ref}
-          className={!file ? classes.addActionArea : classes.editActionArea}
-          disabled={isCardDisabled}
-          onClick={() => file && openFilePreview(file)}
+          sx={[
+            {
+              height: 1,
+              py: 3,
+              px: 4,
+              display: 'flex',
+            },
+            !file
+              ? {
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  gap: 1,
+                }
+              : {
+                  flex: 1,
+                  position: 'relative',
+                },
+          ]}
+          {...(!disablePreview && {
+            disabled: isCardDisabled,
+            onClick: () => file && openFilePreview(file),
+          })}
         >
           {!file ? (
             <>
-              <Avatar classes={{ root: classes.avatar }}>
-                <Icon className={classes.addIcon} fontSize="large" />
+              <Avatar sx={{ width: 58, height: 58 }}>
+                <Icon fontSize="large" />
               </Avatar>
-              <Typography
-                variant="button"
-                align="center"
-                className={classes.text}
-              >
+              <Typography variant="body2">
                 {canEdit ? `Add ${label}` : `No ${label} uploaded`}
               </Typography>
             </>
           ) : (
             <>
               {!disableIcon && (
-                <HugeIcon
-                  icon={ReportIcon}
-                  loading={!file}
-                  className={classes.icon}
-                />
+                <HugeIcon icon={ReportIcon} loading={!file} sx={{ mr: 4 }} />
               )}
-              <div className={classes.info}>
-                <Typography className={classes.fileName} variant="h4">
-                  {label}
-                </Typography>
-                <div className={classes.fileInfo}>
+              <Stack sx={{ flex: 1, gap: 1 }}>
+                <Box
+                  // so it doesn't collide with abs pos context menu
+                  mr={4}
+                >
+                  {header ?? <Typography variant="h4">{label}</Typography>}
+                </Box>
+                <Stack sx={{ flex: 1, justifyContent: 'center' }}>
                   <FileCardMeta
                     canRead={canRead}
                     loading={!file}
@@ -276,23 +242,21 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
                       </>
                     }
                   />
-                </div>
-              </div>
+                </Stack>
+              </Stack>
             </>
           )}
-        </CardActionArea>
+        </ActionArea>
         {file && canRead && (
-          <div className={classes.actionsMenu}>
+          <Box sx={{ position: 'absolute', top: 0, right: 0, m: 1 }}>
             <ActionsMenu
               actions={permittedFileActions}
               item={file}
               onVersionUpload={onVersionUpload}
             />
-          </div>
+          </Box>
         )}
       </Card>
     );
-
-    return card;
   }
 );
