@@ -41,7 +41,6 @@ export const PnpFileAndSummary = ({
           )}
           <ProgressReportCard
             progressReport={report}
-            disableIcon
             onUpload={({ files }) => setUploading(files)}
           />
           <UpdatePeriodicReportDialog

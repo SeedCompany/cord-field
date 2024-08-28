@@ -1,3 +1,4 @@
+import { styled } from '@mui/material/styles';
 import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 
@@ -22,3 +23,9 @@ export const Code = ({
     </pre>
   );
 };
+
+export const InlineCode = styled('code')(({ theme }) => ({
+  padding: theme.spacing(0.5),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.grey[300],
+}));
