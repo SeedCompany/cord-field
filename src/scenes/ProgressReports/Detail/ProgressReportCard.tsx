@@ -11,6 +11,7 @@ import {
   DefinedFileCard,
   DefinedFileCardProps,
 } from '../../../components/DefinedFileCard';
+import { Feature } from '../../../components/Feature';
 import {
   NonDirectoryActionItem as File,
   FileActionsContextProvider,
@@ -79,21 +80,31 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
               {file && (
                 <>
                   <Preview file={file} />
-                  {reextracting ? (
-                    <CircularProgress size={15} sx={{ ml: 1.1 }} />
-                  ) : (
-                    <PnPReextractIconButton
-                      size="small"
-                      onClick={() => void reextract()}
-                    />
-                  )}
-                  {progressReport.pnpExtractionResult && !reextracting && (
-                    <PnPValidationIcon
-                      file={file}
-                      result={progressReport.pnpExtractionResult}
-                      size="small"
-                    />
-                  )}
+                  <Feature
+                    flag="pnp-validation"
+                    match={true}
+                    sx={{
+                      display: 'inherit',
+                      flexDirection: 'inherit',
+                      gap: 'inherit',
+                    }}
+                  >
+                    {reextracting ? (
+                      <CircularProgress size={15} sx={{ ml: 1.1 }} />
+                    ) : (
+                      <PnPReextractIconButton
+                        size="small"
+                        onClick={() => void reextract()}
+                      />
+                    )}
+                    {progressReport.pnpExtractionResult && !reextracting && (
+                      <PnPValidationIcon
+                        file={file}
+                        result={progressReport.pnpExtractionResult}
+                        size="small"
+                      />
+                    )}
+                  </Feature>
                 </>
               )}
             </Stack>
