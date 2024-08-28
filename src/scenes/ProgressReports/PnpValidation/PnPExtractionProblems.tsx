@@ -81,7 +81,12 @@ export const ProblemList = memo(function ProblemList({
           <TreeItem
             key={problem.id}
             itemId={problem.id}
-            label={<Markdown options={mdOptions}>{problem.message}</Markdown>}
+            label={
+              <Stack direction="row" gap={1} alignItems="center">
+                {groupIndex === 1 && <SeverityIcon severity={severity} />}
+                <Markdown options={mdOptions}>{problem.message}</Markdown>
+              </Stack>
+            }
           />
         ));
       }
