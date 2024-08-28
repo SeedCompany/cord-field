@@ -57,7 +57,9 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
 
   return (
     <FileActionsContextProvider>
-      <Tooltip title="This holds the progress report PnP file" placement="top">
+      {/*<Tooltip title="This holds the progress report PnP file" placement="top">*/}
+      {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+      <>
         <DefinedFileCard
           label="PnP File"
           uploadMutationDocument={UploadPeriodicReportFileDocument}
@@ -103,7 +105,7 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
           }}
           {...rest}
         />
-      </Tooltip>
+      </>
     </FileActionsContextProvider>
   );
 };
