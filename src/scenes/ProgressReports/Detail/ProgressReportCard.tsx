@@ -35,7 +35,7 @@ interface Props
   progressReport: Pick<
     ProgressReportDetailFragment,
     'id' | 'reportFile' | 'pnpExtractionResult'
-  >;
+  > & { parent: { id: string } };
 }
 
 export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
@@ -101,6 +101,7 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
                       <PnPValidationIcon
                         file={file}
                         result={progressReport.pnpExtractionResult}
+                        engagement={progressReport.parent}
                         size="small"
                       />
                     )}

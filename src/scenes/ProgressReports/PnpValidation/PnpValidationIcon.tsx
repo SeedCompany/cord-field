@@ -12,9 +12,11 @@ import { PnPExtractionResultDialog } from './PnpExtractionResultDialog';
 export const PnPValidationIcon = ({
   size,
   result,
+  engagement,
 }: {
   file: FileNodeInfoFragment;
   result: PnpExtractionResultFragment;
+  engagement: { id: string };
 } & Pick<IconButtonProps, 'size'>) => {
   const [dialog, open] = useDialog();
 
@@ -53,7 +55,7 @@ export const PnPValidationIcon = ({
         </Badge>
       </Tooltip>
       <PnPExtractionResultDialog fullWidth {...dialog}>
-        <PnPExtractionProblems result={result} />
+        <PnPExtractionProblems result={result} engagement={engagement} />
       </PnPExtractionResultDialog>
     </>
   );

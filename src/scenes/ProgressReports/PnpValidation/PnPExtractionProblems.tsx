@@ -1,6 +1,6 @@
 import { Error, Feedback, Warning } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Stack, Tab } from '@mui/material';
+import { Alert, Box, Stack, Tab } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem2 as TreeItem } from '@mui/x-tree-view/TreeItem2';
 import { cmpBy, groupToMapBy } from '@seedcompany/common';
@@ -9,6 +9,7 @@ import { memo, useState } from 'react';
 import { PnpProblemSeverity as Severity } from '~/api/schema.graphql';
 import { InlineCode } from '../../../components/Debug';
 import { FormattedNumber } from '../../../components/Formatters';
+import { Link } from '../../../components/Routing';
 import {
   PnpProblemFragment as Problem,
   PnpExtractionResultFragment as Result,
@@ -18,8 +19,10 @@ const priority = ['Error', 'Warning', 'Notice'] satisfies Severity[];
 
 export const PnPExtractionProblems = memo(function PnPExtractionProblems({
   result,
+  engagement,
 }: {
   result: Result;
+  engagement: { id: string };
 }) {
   const bySheet = groupToMapBy(
     result.problems.toSorted(
@@ -40,6 +43,24 @@ export const PnPExtractionProblems = memo(function PnPExtractionProblems({
       </Box>
       {[...bySheet].map(([sheet, problems]) => (
         <TabPanel key={sheet} value={sheet} sx={{ p: 1 }}>
+          {sheet === 'Planning' && (
+            <Alert severity="info" sx={{ mb: 1 }}>
+              Once these problems are fixed, the updated file needs to be
+              uploaded on the{' '}
+              <Link
+                to={`/engagements/${engagement.id}`}
+                color="inherit"
+                underline="always"
+              >
+                Planning Spreadsheet
+              </Link>{' '}
+              to synchronize the changes for the planned goals.
+              <br />
+              And then uploaded on the <em>PnP File</em> for{' '}
+              <strong>this</strong> report, to synchronize the progress of these
+              planned goals.
+            </Alert>
+          )}
           <SimpleTreeView>
             <ProblemList groupIndex={1} problems={problems} />
           </SimpleTreeView>
