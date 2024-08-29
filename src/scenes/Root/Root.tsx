@@ -14,6 +14,7 @@ import {
   ResetPassword,
 } from '../Authentication';
 import { Home } from '../Home';
+import { MyDashboard } from '../MyDashboard';
 import { AppMetadata } from './AppMetadata';
 import { MainLayout } from './MainLayout';
 import { useNonProdWarning } from './useNonProdWarning';
@@ -64,6 +65,7 @@ export const Root = () => {
     <Routes>
       <Route key="main" element={<MainLayout />}>
         <Route index element={<Home />} />
+        <Route path="dashboard" element={<MyDashboard />} />
         <Route path="partners/*" element={<Partners />} />
         <Route path="projects" element={<ProjectList />} />
         <Route path="projects/*" element={<Projects />} />
