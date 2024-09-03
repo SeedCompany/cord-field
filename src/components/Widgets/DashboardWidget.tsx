@@ -25,7 +25,7 @@ export interface DashboardWidgetProps extends ChildrenProp, BoxProps {
   rowSpan?: number;
   colsAuto?: boolean;
   rowsAuto?: boolean;
-  cardProps?: CardProps;
+  CardProps?: CardProps;
 }
 export const DashboardWidget = ({
   title,
@@ -36,6 +36,7 @@ export const DashboardWidget = ({
   colSpan,
   rowSpan,
   sx,
+  CardProps = {},
   ...props
 }: DashboardWidgetProps) => {
   return (
@@ -54,7 +55,7 @@ export const DashboardWidget = ({
       <Card
         elevation={0}
         variant="outlined"
-        {...props.cardProps}
+        {...CardProps}
         sx={[
           {
             display: 'flex',
@@ -62,7 +63,7 @@ export const DashboardWidget = ({
             height: 1,
             p: 2,
           },
-          ...extendSx(props.cardProps?.sx),
+          ...extendSx(CardProps.sx),
         ]}
       >
         <CardHeader

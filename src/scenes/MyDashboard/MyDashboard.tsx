@@ -1,6 +1,8 @@
 import { Box, Card, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { DashboardLayout, DashboardWidget } from '~/components/DashboardLayout';
+import { DashboardLayout } from '~/components/DashboardLayout';
+import { TableWidget } from '~/components/Widgets/TableWidget';
+import { widgetConfigs } from '~/components/Widgets/widgetConfig';
 
 export const MyDashboard = () => {
   return (
@@ -15,24 +17,12 @@ export const MyDashboard = () => {
       </Card>
 
       <DashboardLayout gap={2}>
-        <DashboardWidget
-          colSpan={8}
-          rowSpan={6}
-          title="Test partner detail table"
-          to="partners"
-          key="table"
-        >
-          <Box
-            sx={{
-              '.MuiDataGrid-virtualScrollerContent': {
-                height: '100cqh !important',
-              },
-            }}
-          >
-            Partner table
-          </Box>
-        </DashboardWidget>
-        <DashboardWidget
+        {widgetConfigs.map((config) => {
+          const WidgetComponent =
+            config.type === 'TableWidget' ? TableWidget : null;
+          return WidgetComponent && <WidgetComponent {...config} />;
+        })}
+        {/* <DashboardWidget
           title="Something"
           colSpan={4}
           rowSpan={12}
@@ -70,7 +60,7 @@ export const MyDashboard = () => {
             and more recently with desktop publishing software like Aldus
             PageMaker including versions of Lorem Ipsum.
           </Typography>
-        </DashboardWidget>
+        </DashboardWidget> */}
       </DashboardLayout>
     </Box>
   );

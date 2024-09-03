@@ -40,18 +40,18 @@ import { type PaginatedListInput, type SortableListInput } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
 
-type ListInput = SetNonNullable<
+export type ListInput = SetNonNullable<
   Required<
     SortableListInput & PaginatedListInput & { filter?: Record<string, any> }
   >
 >;
 
-interface PaginatedListOutput<T> {
+export interface PaginatedListOutput<T> {
   items: readonly T[];
   total: number;
 }
 
-type PathsMatching<T, List> = {
+export type PathsMatching<T, List> = {
   [K in Paths<T>]: K extends string
     ? Get<T, K> extends List
       ? K
@@ -78,6 +78,24 @@ type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
   apiSortModel: DataGridProps['sortModel'];
 };
 
+export interface UseDataGridSourceParams<
+  Output extends Record<string, any>,
+  Vars,
+  Input extends Partial<ListInput>,
+  Path extends PathsMatching<Output, PaginatedListOutput<any>> & string,
+  _List extends PaginatedListOutput<any> = Get<Output, Path> extends infer U
+    ? U extends PaginatedListOutput<any>
+      ? U
+      : never
+    : never
+> {
+  query: DocumentNode<Output, Vars>;
+  variables: Vars & { input?: Input };
+  listAt: Path;
+  initialInput?: Partial<Omit<Input, 'page'>>;
+  keyArgs?: string[];
+}
+
 export const useDataGridSource = <
   Output extends Record<string, any>,
   Vars,
@@ -94,13 +112,7 @@ export const useDataGridSource = <
   listAt,
   initialInput,
   keyArgs = defaultKeyArgs,
-}: {
-  query: DocumentNode<Output, Vars>;
-  variables: Vars & { input?: Input };
-  listAt: Path;
-  initialInput?: Partial<Omit<Input, 'page'>>;
-  keyArgs?: string[];
-}) => {
+}: UseDataGridSourceParams<Output, Vars, Input, Path, List>) => {
   const initialInputRef = useLatest(initialInput);
   const apiRef = useGridApiRef();
 
