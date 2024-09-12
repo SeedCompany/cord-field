@@ -4,9 +4,10 @@ import { ProjectStepLabels, ProjectStepList } from '~/api/schema.graphql';
 import { EngagementListDocument } from '~/scenes/Projects/List/EngagementList.graphql';
 import { EngagementDataGridRowFragment } from '../../EngagementDataGrid';
 import { Form, SelectField } from '../../form';
-import { enumColumn, textColumn } from '../../Grid';
+import { enumColumn, textColumn, useDataGridSource } from '../../Grid';
 import { Link } from '../../Routing';
-import { WidgetConfig } from '../../Widgets/widgetConfig';
+import { TableWidget } from '../TableWidget';
+import { WidgetConfigProps } from '../widgetConfig';
 
 export const MOUStartColumns: Array<GridColDef<EngagementDataGridRowFragment>> =
   [
@@ -40,42 +41,52 @@ export const MOUStartColumns: Array<GridColDef<EngagementDataGridRowFragment>> =
     },
   ];
 
-export const MOUStartWidgetConfig = {
-  type: 'TableWidget',
-  columns: MOUStartColumns,
-  dataGridSourceConfig: {
+export const MOUStartWidget = () => {
+  const [dataGridProps] = useDataGridSource({
     query: EngagementListDocument,
     variables: {},
     listAt: 'engagements',
     initialInput: {
       sort: MOUStartColumns[0]!.field,
     },
-  },
-  colSpan: 8,
-  rowSpan: 6,
-  key: 'table1',
-  CardProps: { sx: { p: 0 } },
-  to: '/projects',
-  slots: {
-    title: 'Projects Starting Soon',
-    subTitle: 'Projects in development starting in the next 30, 60, or 90 days',
-    headerExtension: () => (
-      <Box
-        justifyContent="flex-end"
-        marginRight={2}
-        sx={{ height: 50, display: 'flex' }}
-      >
-        <Form onSubmit={() => null}>
-          <SelectField
-            label="Days"
-            name="days"
-            options={['30', '60', '90']}
-            defaultValue="30"
-            variant="outlined"
-            size="small"
-          />
-        </Form>
-      </Box>
-    ),
-  },
-} satisfies WidgetConfig;
+  });
+
+  const config = {
+    type: 'TableWidget',
+    columns: MOUStartColumns,
+    dataGridProps,
+    colSpan: 8,
+    rowSpan: 6,
+    key: 'table1',
+    CardProps: { sx: { p: 0 } },
+    to: '/projects',
+    slots: {
+      title: 'Projects Starting Soon',
+      subTitle:
+        'Projects in development starting in the next 30, 60, or 90 days',
+      headerExtension: () => (
+        <Box
+          justifyContent="flex-end"
+          marginRight={2}
+          sx={{ height: 50, display: 'flex' }}
+        >
+          <Form
+            onSubmit={(event) => {
+              console.log('Form submitted', event);
+            }}
+          >
+            <SelectField
+              label="Days"
+              name="days"
+              options={['30', '60', '90']}
+              defaultValue="30"
+              variant="outlined"
+              size="small"
+            />
+          </Form>
+        </Box>
+      ),
+    },
+  } satisfies WidgetConfigProps;
+  return <TableWidget {...config} />;
+};

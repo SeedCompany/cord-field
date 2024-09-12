@@ -21,7 +21,7 @@ export interface WidgetSlots {
   headerExtension?: ElementType;
 }
 
-export interface DashboardWidgetProps extends ChildrenProp, BoxProps {
+export interface GenericWidgetProps extends ChildrenProp, BoxProps {
   to?: string;
   cols?: number;
   rows?: number;
@@ -44,7 +44,7 @@ const GenericWidgetComponent = forwardRef<HTMLDivElement, any>(
       CardProps = {},
       slots,
       ...props
-    }: DashboardWidgetProps,
+    }: GenericWidgetProps,
     ref
   ) => {
     return (

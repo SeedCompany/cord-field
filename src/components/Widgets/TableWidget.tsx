@@ -1,27 +1,14 @@
 import { Box } from '@mui/material';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useRef } from 'react';
-import {
-  ListInput,
-  PaginatedListOutput,
-  PathsMatching,
-  useDataGridSource,
-} from '../Grid';
 import { GenericWidget } from './GenericWidget';
 import { TableWidgetProps } from './widgetConfig';
 
-export const TableWidget = <
-  Output extends Record<string, any>,
-  Vars,
-  Input extends Partial<ListInput>,
-  Path extends PathsMatching<Output, PaginatedListOutput<any>> & string
->({
+export const TableWidget = ({
   columns,
-  dataGridSourceConfig,
+  dataGridProps,
   ...props
-}: TableWidgetProps<Output, Vars, Input, Path>) => {
-  const [dataGridProps] = useDataGridSource(dataGridSourceConfig);
-
+}: TableWidgetProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const maxHeight = containerRef.current?.clientHeight ?? 300;
 
@@ -37,6 +24,7 @@ export const TableWidget = <
         })}
       >
         <DataGridPro
+          {...dataGridProps}
           density="compact"
           columns={columns}
           sx={{
@@ -44,7 +32,6 @@ export const TableWidget = <
             border: 'none',
             maxHeight,
           }}
-          {...dataGridProps}
         />
       </Box>
     </GenericWidget>

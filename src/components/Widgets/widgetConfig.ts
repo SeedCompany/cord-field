@@ -1,57 +1,18 @@
-import {
-  ListInput,
-  PaginatedListOutput,
-  PathsMatching,
-  UseDataGridSourceParams,
-} from '../Grid';
-import { DashboardWidgetProps } from './GenericWidget';
-import { MOUEndWidgetConfig } from './MOUEnd/MOUEndWidget';
-import { MOUStartWidgetConfig } from './MOUStart/MOUStartWidget';
-import { SideWidgetConfig } from './SidePanel/SidePanel';
+import { DataGridProProps as DataGridProps } from '@mui/x-data-grid-pro';
+import { ElementType } from 'react';
+import { GenericWidgetProps } from './GenericWidget';
+import { MOUStartWidget } from './MOUStart/MOUStartWidget';
 
-export type TableWidgetProps<
-  Output extends Record<string, any>,
-  Vars,
-  Input extends Partial<ListInput>,
-  Path extends PathsMatching<Output, PaginatedListOutput<any>> & string
-> = DashboardWidgetProps & {
+export type TableWidgetProps = GenericWidgetProps & {
   type: 'TableWidget';
   columns: any[];
-  dataGridSourceConfig: UseDataGridSourceParams<Output, Vars, Input, Path>;
+  dataGridProps: Partial<DataGridProps>;
 };
 
-export type BaseWidgetProps = DashboardWidgetProps & {
+export type BaseWidgetProps = GenericWidgetProps & {
   type: 'BaseWidget';
 };
 
-export type WidgetConfigProps<
-  Output extends Record<string, any>,
-  Vars,
-  Input extends Partial<ListInput>,
-  Path extends PathsMatching<Output, PaginatedListOutput<any>> & string
-> = BaseWidgetProps | TableWidgetProps<Output, Vars, Input, Path>;
+export type WidgetConfigProps = BaseWidgetProps | TableWidgetProps;
 
-interface OutputType {
-  engagements: any;
-}
-
-interface VarsType {
-  [k: string]: any;
-}
-
-type InputType = Partial<ListInput>;
-
-type PathType = 'engagements';
-
-export type WidgetConfig = WidgetConfigProps<
-  OutputType,
-  VarsType,
-  InputType,
-  PathType
->;
-
-export const widgetConfigs: WidgetConfig[] = [
-  MOUStartWidgetConfig,
-  SideWidgetConfig,
-  MOUEndWidgetConfig,
-];
+export const widgetConfigs: ElementType[] = [MOUStartWidget];
