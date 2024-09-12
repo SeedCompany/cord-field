@@ -1,7 +1,6 @@
 import { DataGridProProps as DataGridProps } from '@mui/x-data-grid-pro';
 import { ElementType } from 'react';
 import { GenericWidgetProps } from './GenericWidget';
-import { MOUStartWidget } from './MOUStart/MOUStartWidget';
 
 export type TableWidgetProps = GenericWidgetProps & {
   type: 'TableWidget';
@@ -15,4 +14,4 @@ export type BaseWidgetProps = GenericWidgetProps & {
 
 export type WidgetConfigProps = BaseWidgetProps | TableWidgetProps;
 
-export const widgetConfigs: ElementType[] = [MOUStartWidget];
+export const widgetConfigs: ElementType[] = [];
