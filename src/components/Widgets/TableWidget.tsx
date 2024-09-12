@@ -24,14 +24,15 @@ export const TableWidget = ({
         })}
       >
         <DataGridPro
-          {...dataGridProps}
           density="compact"
+          {...dataGridProps}
           columns={columns}
           sx={{
             '--unstable_DataGrid-radius': '0px',
             border: 'none',
             maxHeight,
           }}
+          hideFooter
         />
       </Box>
     </GenericWidget>

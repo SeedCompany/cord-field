@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { ChildrenProp, extendSx, StyleProps } from '~/common';
+import { widgetConfigs } from '../Widgets/widgetConfig';
 
 export type DashboardLayoutProps = ChildrenProp & {
   gap?: number;
@@ -31,7 +32,9 @@ export const DashboardLayout = ({
         ...extendSx(sx),
       ]}
     >
-      {children}
+      {widgetConfigs.map((Widget, i) => {
+        return <Widget key={i} />;
+      })}
     </Box>
   );
 };
