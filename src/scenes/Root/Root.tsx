@@ -49,6 +49,9 @@ const Locations = loadable(() => import('../Locations/Locations'), {
 const SearchResults = loadable(() => import('../SearchResults'), {
   resolveComponent: (m) => m.SearchResults,
 });
+const Dashboard = loadable(() => import('../Dashboard'), {
+  resolveComponent: (m) => m.DashboardRoutes,
+});
 
 export const Root = () => {
   useNonProdWarning();
@@ -64,6 +67,7 @@ export const Root = () => {
     <Routes>
       <Route key="main" element={<MainLayout />}>
         <Route index element={<Home />} />
+        <Route path="dashboard/*" element={<Dashboard />} />
         <Route path="partners/*" element={<Partners />} />
         <Route path="projects" element={<ProjectList />} />
         <Route path="projects/*" element={<Projects />} />

@@ -1,4 +1,4 @@
-import { FolderOpen, Language, Person } from '@mui/icons-material';
+import { Dashboard, FolderOpen, Language, Person } from '@mui/icons-material';
 import {
   List,
   ListItemIcon,
@@ -39,6 +39,7 @@ export const Sidebar = () => {
       aria-label="sidebar"
       subheader={<ListSubheader component="div">MENU</ListSubheader>}
     >
+      <NavItem to="/dashboard" label="My Dashboard" icon={Dashboard} />
       <NavItem
         to="/projects"
         label="Projects"
