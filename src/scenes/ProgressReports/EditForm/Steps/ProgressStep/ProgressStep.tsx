@@ -77,8 +77,10 @@ export const ProgressStep: StepComponent = ({ report }) => {
 ProgressStep.enableWhen = ({ report }) =>
   report.progressForAllVariants.length > 0 || report.reportFile.canRead;
 
-ProgressStep.isIncomplete = ({ report }) =>
-  !report.reportFile.value && report.reportFile.canEdit;
+ProgressStep.isIncomplete = ({ report }) => ({
+  isIncomplete: !report.reportFile.value && report.reportFile.canEdit,
+  severity: 'suggested',
+});
 
 const useUpdateSteps = () => {
   const [update] = useMutation(UpdateStepProgressDocument);

@@ -7,10 +7,23 @@ export type StepComponent = ComponentType<ReportProp> & {
   isIncomplete?: IsIncompleteFn;
 };
 
+export type IncompleteSeverity = 'suggested';
+
 export type IsIncompleteFn = (
   report: ReportProp & { currentUserRoles: ReadonlySet<Role> }
-) => boolean;
+) => {
+  isIncomplete: boolean;
+  severity: IncompleteSeverity;
+};
 
 export type GroupedStepMapShape = {
   [Section in string]: ReadonlyArray<[label: string, component: StepComponent]>;
+};
+
+export type GroupedIncompleteSteps = {
+  [Section in string]: ReadonlyArray<{
+    label: string;
+    step: StepComponent;
+    severity: IncompleteSeverity;
+  }>;
 };

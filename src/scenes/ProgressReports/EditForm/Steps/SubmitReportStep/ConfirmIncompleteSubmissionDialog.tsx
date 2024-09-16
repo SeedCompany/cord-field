@@ -1,8 +1,10 @@
+import { Warning } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { kebabCase } from 'lodash';
 import { DialogForm, DialogFormProps } from '~/components/Dialog/DialogForm';
 import { Link } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
+import { IncompleteSeverity } from '../step.types';
 
 export const ConfirmIncompleteSubmissionDialog = (
   props: DialogFormProps<void>
@@ -17,9 +19,7 @@ export const ConfirmIncompleteSubmissionDialog = (
     sendIfClean
     {...props}
   >
-    <Typography paragraph>
-      The following was not updated or left blank:
-    </Typography>
+    <Typography paragraph>The following was left blank:</Typography>
     <IncompleteSteps />
   </DialogForm>
 );
@@ -32,14 +32,40 @@ const IncompleteSteps = () => {
         <li key={groupName}>
           <Typography
             variant="body2"
-            component="span"
+            component="div"
             textTransform="uppercase"
+            sx={{ mb: 1 }}
           >
             {groupName}
           </Typography>
-          <Box component="ul" sx={{ listStyle: 'disc', pl: 4, mb: 1 }}>
-            {steps.map(([stepName]) => (
-              <Typography component="li" key={stepName}>
+          <Box
+            component="ul"
+            sx={{
+              listStyle: 'none',
+              pl: 0,
+              mb: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+            }}
+          >
+            {steps.map(({ label: stepName, severity }) => (
+              <Typography
+                component="li"
+                key={stepName}
+                sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+              >
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mr: 1,
+                    ml: 2,
+                  }}
+                >
+                  <IncompleteSeverityIcon severity={severity} />
+                </Box>
                 <Link
                   color="inherit"
                   // Carson doesn't love this logic being duplicated here,
@@ -54,5 +80,15 @@ const IncompleteSteps = () => {
         </li>
       ))}
     </Box>
+  );
+};
+
+const IncompleteSeverityIcon = ({
+  severity,
+}: {
+  severity: IncompleteSeverity;
+}) => {
+  return (
+    <Warning color="warning" />
   );
 };
