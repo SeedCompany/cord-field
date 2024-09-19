@@ -1,40 +1,40 @@
 import { Box } from '@mui/material';
-import { ChildrenProp, extendSx, StyleProps } from '~/common';
-import { widgetConfigs } from '../Widgets/widgetConfig';
+import { ElementType, ReactElement } from 'react';
+import { extendSx, StyleProps } from '~/common';
 
-export type DashboardLayoutProps = ChildrenProp & {
+export type DashboardLayoutProps = {
   gap?: number;
   cols?: number;
   rows?: number;
+  children: ReactElement[];
 } & StyleProps;
 
+export const widgets: ElementType[] = [];
+
 export const DashboardLayout = ({
-  children,
   gap = 1,
   cols = 12,
   rows = 12,
+  children,
   sx,
 }: DashboardLayoutProps) => {
-  const panels = Array.isArray(children) ? children.length : 1;
   return (
     <Box
-      m={0}
-      height={1}
       sx={[
         {
           display: 'grid',
           gridGap: gap * 8,
           gridAutoRows: 'auto',
           gridAutoFlow: 'row',
-          gridTemplateRows: `repeat(${rows * panels}, minmax(8%, 1fr));`,
+          gridTemplateRows: `repeat(${
+            rows * children.length
+          }, minmax(${Math.floor((1 / rows) * 100)}%, 1fr));`,
           gridTemplateColumns: `repeat(${cols}, 1fr);`,
         },
         ...extendSx(sx),
       ]}
     >
-      {widgetConfigs.map((Widget, i) => {
-        return <Widget key={i} />;
-      })}
+      {children}
     </Box>
   );
 };

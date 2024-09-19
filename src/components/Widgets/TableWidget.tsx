@@ -1,40 +1,18 @@
 import { Box } from '@mui/material';
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { useRef } from 'react';
-import { GenericWidget } from './GenericWidget';
-import { TableWidgetProps } from './widgetConfig';
+import { ChildrenProp } from '~/common';
 
-export const TableWidget = ({
-  columns,
-  dataGridProps,
-  ...props
-}: TableWidgetProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const maxHeight = containerRef.current?.clientHeight ?? 300;
-
+export const TableWidget = ({ children }: ChildrenProp) => {
   return (
-    <GenericWidget {...props} ref={containerRef}>
-      <Box
-        sx={({ spacing }) => ({
-          height: '100%',
-          width: `calc(100% - ${spacing(4)})`,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        })}
-      >
-        <DataGridPro
-          density="compact"
-          {...dataGridProps}
-          columns={columns}
-          sx={{
-            '--unstable_DataGrid-radius': '0px',
-            border: 'none',
-            maxHeight,
-          }}
-          hideFooter
-        />
-      </Box>
-    </GenericWidget>
+    <Box
+      sx={({ spacing }) => ({
+        height: '100%',
+        width: `calc(100% - ${spacing(4)})`,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      })}
+    >
+      {children}
+    </Box>
   );
 };
