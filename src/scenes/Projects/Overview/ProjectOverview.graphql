@@ -95,7 +95,7 @@ fragment ProjectOverview on Project {
   }
 
   workflowEvents {
-    ...StatusWorkflowEvent
+    ...projectWorkflowEvent
   }
 
   # We're including this in order to update the engagement status

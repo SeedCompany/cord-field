@@ -1,4 +1,4 @@
-fragment StatusWorkflowEvent on ProjectWorkflowEvent {
+fragment projectWorkflowEvent on ProjectWorkflowEvent {
   id
   at
   notes {
