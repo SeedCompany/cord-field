@@ -1,0 +1,66 @@
+query ProgressReports($input: ProgressReportListInput) {
+  progressReports(input: $input) {
+    items {
+      ...progressReportsDataGridRow
+    }
+    total
+  }
+}
+
+fragment progressReportsDataGridRow on ProgressReport {
+  id
+  parent {
+    id
+    language {
+      value {
+        id
+        name {
+          value
+        }
+      }
+    }
+    project {
+      id
+      name {
+        value
+      }
+      isMember
+      pinned
+    }
+  }
+  status {
+    value
+  }
+  varianceExplanation {
+    scheduleStatus
+    comments {
+      value
+    }
+  }
+  teamNews {
+    items {
+      id
+      responses {
+        response {
+          value
+        }
+        variant {
+          responsibleRole
+        }
+      }
+    }
+  }
+  communityStories {
+    items {
+      id
+      responses {
+        response {
+          value
+        }
+        variant {
+          responsibleRole
+        }
+      }
+    }
+  }
+}
