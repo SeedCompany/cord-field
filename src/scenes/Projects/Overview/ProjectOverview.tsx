@@ -6,14 +6,12 @@ import {
   Event as EventIcon,
   TravelExplore as GlobalSearchIcon,
   Public as GlobeIcon,
-  History as HistoryIcon,
   Place as MapPinIcon,
   Publish,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { Chip, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Many } from '@seedcompany/common';
-import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
@@ -54,10 +52,14 @@ import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Cr
 import { DeleteProject } from '../Delete';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
-import { StatusHistoryDrawer } from '../StatusHistory/StatusHistoryDrawer';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
+import {
+  WorkflowEventsDrawer,
+  WorkflowEventsIcon,
+  WorkflowEventsList,
+} from '../WorkflowEvents';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
@@ -120,7 +122,7 @@ export const ProjectOverview = () => {
   const { projectId, changesetId } = useProjectId();
   const beta = useBetaFeatures();
   const formatNumber = useNumberFormatter();
-  const [openHistory, setOpenHistory] = useState(false);
+  const [workflowDrawerState, openWorkflowEvents] = useDialog();
 
   const [editState, editField, fieldsBeingEdited] =
     useDialog<Many<EditableProjectField>>();
@@ -248,15 +250,10 @@ export const ProjectOverview = () => {
             />
             {project && <DeleteProject project={project} />}
             {project && (
-              <Tooltip title="View Status History Log">
-                <IconButton
-                  aria-label="view status history log"
-                  onClick={() => setOpenHistory(true)}
-                  loading={!project}
-                >
-                  <HistoryIcon />
-                </IconButton>
-              </Tooltip>
+              <WorkflowEventsIcon
+                onClick={openWorkflowEvents}
+                loading={!project}
+              />
             )}
           </header>
 
@@ -589,11 +586,9 @@ export const ProjectOverview = () => {
         <CreateEngagement project={project} {...createEngagementState} />
       )}
       {project && (
-        <StatusHistoryDrawer
-          workflowEvents={project.workflowEvents}
-          open={openHistory}
-          setOpen={setOpenHistory}
-        />
+        <WorkflowEventsDrawer {...workflowDrawerState}>
+          <WorkflowEventsList events={project.workflowEvents} />
+        </WorkflowEventsDrawer>
       )}
     </main>
   );
