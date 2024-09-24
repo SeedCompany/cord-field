@@ -55,11 +55,7 @@ import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
-import {
-  WorkflowEventsDrawer,
-  WorkflowEventsIcon,
-  WorkflowEventsList,
-} from '../WorkflowEvents';
+import { WorkflowEventsDrawer, WorkflowEventsIcon } from '../WorkflowEvents';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
@@ -586,9 +582,10 @@ export const ProjectOverview = () => {
         <CreateEngagement project={project} {...createEngagementState} />
       )}
       {project && (
-        <WorkflowEventsDrawer {...workflowDrawerState}>
-          <WorkflowEventsList events={project.workflowEvents} />
-        </WorkflowEventsDrawer>
+        <WorkflowEventsDrawer
+          {...workflowDrawerState}
+          events={project.workflowEvents}
+        />
       )}
     </main>
   );
