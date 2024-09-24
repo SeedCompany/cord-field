@@ -15,7 +15,7 @@ export const WorkflowEventsDrawer = ({
       {
         '.MuiPaper-root': {
           p: 2,
-          left: { sm: 'unset', md: 248, lg: 'unset' },
+          maxWidth: '100vw',
         },
       },
       ...extendSx(props.sx),
