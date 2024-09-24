@@ -22,7 +22,7 @@ export const WorkflowEventsList = ({
         '[at] min-content [from] min-content [arrow] min-content [to] min-content',
     }}
   >
-    {events.map((event, index, array) => {
+    {events.toReversed().map((event, index, array) => {
       const prev = index >= 1 ? array[index - 1] : null;
       const prevStatus = prev ? prev.to : ProjectStepList[0]!;
 
