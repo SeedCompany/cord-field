@@ -10,6 +10,7 @@ export const TableWidget = ({ children }: ChildrenProp) => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        containerType: 'size',
       })}
     >
       {children}

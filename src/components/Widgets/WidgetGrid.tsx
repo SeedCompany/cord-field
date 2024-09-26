@@ -1,27 +1,26 @@
 import { Box } from '@mui/material';
-import { ElementType, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { extendSx, StyleProps } from '~/common';
 
-export type DashboardLayoutProps = {
+export type WidgetGridProps = {
   gap?: number;
   cols?: number;
   rows?: number;
   children: ReactElement[];
 } & StyleProps;
 
-export const widgets: ElementType[] = [];
-
-export const DashboardLayout = ({
+export const WidgetGrid = ({
   gap = 1,
   cols = 12,
   rows = 12,
   children,
   sx,
-}: DashboardLayoutProps) => {
+}: WidgetGridProps) => {
   return (
     <Box
       sx={[
         {
+          flex: 1,
           display: 'grid',
           gridGap: gap * 8,
           gridAutoRows: 'auto',

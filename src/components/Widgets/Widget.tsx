@@ -14,8 +14,6 @@ export const Widget = ({ colSpan, rowSpan, sx, ...props }: WidgetProps) => {
       variant="outlined"
       sx={[
         {
-          display: 'grid',
-          flexDirection: 'column',
           gridColumn: `span ${colSpan}`,
           gridRow: `span ${rowSpan}`,
         },

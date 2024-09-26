@@ -1,13 +1,8 @@
 import { Box, Card, Typography } from '@mui/material';
-import { ReactElement } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Route, Routes } from 'react-router-dom';
-import { DashboardLayout } from '~/components/DashboardLayout';
-import { NotFoundRoute } from '~/components/Error';
+import { ChildrenProp } from '~/common';
 
-const widgets: ReactElement[] = [];
-
-export const MyDashboard = () => (
+export const DashboardLayout = ({ children }: ChildrenProp) => (
   <Box
     component="main"
     sx={{
@@ -27,9 +22,6 @@ export const MyDashboard = () => (
     >
       <Typography variant="h3">My Dashboard</Typography>
     </Card>
-    <Routes>
-      <Route path="" element={<DashboardLayout>{widgets}</DashboardLayout>} />
-      {NotFoundRoute}
-    </Routes>
+    {children}
   </Box>
 );
