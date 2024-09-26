@@ -55,6 +55,7 @@ import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
 import { EditableProjectField, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
+import { WorkflowEventsDrawer, WorkflowEventsIcon } from '../WorkflowEvents';
 import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
@@ -117,6 +118,7 @@ export const ProjectOverview = () => {
   const { projectId, changesetId } = useProjectId();
   const beta = useBetaFeatures();
   const formatNumber = useNumberFormatter();
+  const [workflowDrawerState, openWorkflowEvents] = useDialog();
 
   const [editState, editField, fieldsBeingEdited] =
     useDialog<Many<EditableProjectField>>();
@@ -243,6 +245,12 @@ export const ProjectOverview = () => {
               }
             />
             {project && <DeleteProject project={project} />}
+            {project && (
+              <WorkflowEventsIcon
+                onClick={openWorkflowEvents}
+                loading={!project}
+              />
+            )}
           </header>
 
           <div className={classes.subheader}>
@@ -572,6 +580,12 @@ export const ProjectOverview = () => {
       ) : null}
       {project && (
         <CreateEngagement project={project} {...createEngagementState} />
+      )}
+      {project && (
+        <WorkflowEventsDrawer
+          {...workflowDrawerState}
+          events={project.workflowEvents}
+        />
       )}
     </main>
   );

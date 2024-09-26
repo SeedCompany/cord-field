@@ -1,0 +1,16 @@
+fragment projectWorkflowEvent on ProjectWorkflowEvent {
+  id
+  at
+  to
+  who {
+    value {
+      ... on User {
+        id
+        fullName
+      }
+    }
+  }
+  transition {
+    to
+  }
+}
