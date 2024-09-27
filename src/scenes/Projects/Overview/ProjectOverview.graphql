@@ -94,7 +94,11 @@ fragment ProjectOverview on Project {
     ...ProjectChangeRequestSummary
   }
 
-  # We're including this in order to update the engagament status
+  workflowEvents {
+    ...projectWorkflowEvent
+  }
+
+  # We're including this in order to update the engagement status
   # when the project step changes.
   engagements {
     items {
