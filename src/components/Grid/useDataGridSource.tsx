@@ -11,6 +11,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   DataGridProProps as DataGridProps,
+  GridApiPro,
   GridFetchRowsParams,
   GridOverlay,
   useGridApiContext,
@@ -32,7 +33,7 @@ import {
   type SelectionSetNode,
 } from 'graphql';
 import { get, pick, set, uniqBy } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { MutableRefObject, useEffect, useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import { type PaginatedListInput, type SortableListInput } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
@@ -95,15 +96,18 @@ export const useDataGridSource = <
   listAt,
   initialInput,
   keyArgs = defaultKeyArgs,
+  apiRef: apiRefInput,
 }: {
   query: DocumentNode<Output, Vars>;
   variables: NoInfer<Vars & { input?: Input }>;
   listAt: Path;
   initialInput?: Partial<Omit<NoInfer<Input>, 'page'>>;
   keyArgs?: string[];
+  apiRef?: MutableRefObject<GridApiPro>;
 }) => {
   const initialInputRef = useLatest(initialInput);
-  const apiRef = useGridApiRef();
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- we'll assume this doesn't change between renders
+  const apiRef = apiRefInput ?? useGridApiRef();
 
   const opName = useMemo(
     () =>
