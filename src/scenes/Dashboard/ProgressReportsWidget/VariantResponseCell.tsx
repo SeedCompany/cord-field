@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
   GridState,
@@ -6,7 +6,11 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import { VariantResponseFragment as VariantResponse } from '~/common/fragments';
-import { RichTextView } from '../../../components/RichText';
+import {
+  RenderFn,
+  RichTextRenderers,
+  RichTextView,
+} from '../../../components/RichText';
 import { RoleIcon as BaseRoleIcon } from '../../../components/RoleIcon';
 import { ProgressReportsDataGridRowFragment as ProgressReport } from './progressReportsDataGridRow.graphql';
 
@@ -42,9 +46,43 @@ export const VariantResponseCell = ({ value, ...props }: CellParams) => {
         variantRole={variant.responsibleRole}
         sx={{ fontSize: 36, float: 'left', mr: 1 }}
       />
-      <RichTextView data={response} />
+      <RichTextView data={response} renderers={renderers} />
     </Box>
   );
+};
+
+const List: RenderFn<{ style: 'unordered' | 'ordered'; items: string[] }> = ({
+  data,
+}) => {
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  if (!data) return <></>;
+  const { style, items } = data;
+  return (
+    <Box
+      component={style === 'unordered' ? 'ul' : 'ol'}
+      sx={{ display: 'contents' }}
+    >
+      {items.map((item, index) => (
+        <Typography
+          key={index}
+          component="li"
+          gutterBottom
+          sx={{
+            display: 'block',
+            '&::before': {
+              content: style === 'unordered' ? `"• "` : `"${index + 1}. "`,
+            },
+            '&:last-of-type': { mb: 0 },
+          }}
+        >
+          {item}
+        </Typography>
+      ))}
+    </Box>
+  );
+};
+const renderers: RichTextRenderers = {
+  list: List,
 };
 
 export const VariantResponseIconCell = ({ value }: CellParams) => {
