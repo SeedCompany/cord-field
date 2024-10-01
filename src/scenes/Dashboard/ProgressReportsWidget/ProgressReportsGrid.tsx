@@ -3,162 +3,181 @@ import {
   DataGridPro,
   DataGridProProps as DataGridProps,
   GridColDef,
-  GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
+import { merge } from 'lodash';
+import { useMemo, useState } from 'react';
+import { SetOptional } from 'type-fest';
 import {
-  EngagementFilters,
-  ProgressReportFilters,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
   ScheduleStatusLabels,
   ScheduleStatusList,
 } from '~/api/schema.graphql';
-import { CalendarDate } from '~/common';
-import { VariantResponseFragment } from '~/common/fragments';
-import { enumColumn, textColumn, useDataGridSource } from '~/components/Grid';
-import { RoleIcon } from '~/components/RoleIcon';
+import { CalendarDate, extendSx } from '~/common';
+import {
+  booleanColumn,
+  DefaultDataGridStyles,
+  enumColumn,
+  noHeaderFilterButtons,
+  textColumn,
+  useDataGridSource,
+} from '~/components/Grid';
+import { RichTextView } from '~/components/RichText';
 import { Link } from '~/components/Routing';
 import {
-  ProgressReportsDataGridRowFragment,
+  ProgressReportsDataGridRowFragment as ProgressReport,
   ProgressReportsDocument,
 } from './progressReportsDataGridRow.graphql';
+import { VariantResponseCell } from './VariantResponseCell';
 
-const ProgressReportsColumns: Array<
-  GridColDef<ProgressReportsDataGridRowFragment>
-> = [
-  {
+export type ProgressReportColumnMapShape = Record<
+  string,
+  SetOptional<GridColDef<ProgressReport>, 'field'>
+>;
+
+export const ExpansionMarker = 'multiline';
+
+export const ProgressReportsColumnMap = {
+  project: {
     headerName: 'Project',
-    field: 'project',
+    field: 'engagement.project.name',
     ...textColumn(),
     width: 200,
-    flex: 1,
     valueGetter: (_, row) => row.parent.project.name.value,
     renderCell: ({ value, row }) => (
       <Link to={`/projects/${row.parent.project.id}`}>{value}</Link>
     ),
     hideable: false,
   },
-  {
+  language: {
     headerName: 'Language',
-    field: 'language',
+    field: 'engagement.language.name',
     ...textColumn(),
     width: 200,
-    valueGetter: (_, row) => {
-      return row.parent.language.value?.name.value;
-    },
-    renderCell: ({ value, row }) => {
-      return (
-        <Link to={`/languages/${row.parent.language.value?.id}`}>{value}</Link>
-      );
-    },
+    valueGetter: (_, row) => row.parent.language.value?.name.value,
+    renderCell: ({ value, row }) => (
+      <Link to={`/languages/${row.parent.language.value?.id}`}>{value}</Link>
+    ),
     hideable: false,
-    serverFilter: ({ value }) =>
-      ({ engagedName: value } satisfies EngagementFilters),
   },
-  {
+  status: {
     headerName: 'Status',
-    field: 'status',
     ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels, {
       orderByIndex: true,
     }),
+    width: 160,
     valueGetter: (_, row) => row.status.value,
-    width: 160,
   },
-  {
+  scheduleStatus: {
     headerName: 'Progress',
-    field: 'scheduleStatus',
-    filterable: false,
+    ...enumColumn(ScheduleStatusList, ScheduleStatusLabels),
     sortable: false,
-    ...enumColumn(ScheduleStatusList, ScheduleStatusLabels, {
-      orderByIndex: true,
-    }),
+    filterable: false,
     valueGetter: (_, row) => row.varianceExplanation.scheduleStatus,
-    width: 160,
   },
-  {
+  teamNews: {
     headerName: 'Team News',
-    field: 'teamNews',
+    width: 400,
     sortable: false,
     filterable: false,
-    valueGetter: (_, { teamNews }) => {
-      return teamNews.items[0]?.responses.findLast((resp) => {
-        return resp.response.value;
-      });
-    },
-    renderCell: ({
-      value,
-    }: GridRenderCellParams<ProgressReportsDataGridRowFragment>) => {
-      if (!value) return null;
-      const latestRole = value.variant.responsibleRole;
-      return (
-        <Box m={1} display="flex" alignItems="center" gap={1}>
-          <RoleIcon
-            variantRole={latestRole}
-            sx={{ height: 36, width: 36, m: 0 }}
-          />
-        </Box>
-      );
-    },
+    valueGetter: (_, { teamNews }) =>
+      teamNews.items[0]?.responses.findLast((resp) => resp.response.value),
+    renderCell: VariantResponseCell,
+    cellClassName: ExpansionMarker,
   },
-  {
+  communityStories: {
     headerName: 'Stories',
-    field: 'communityStories',
+    width: 400,
     sortable: false,
     filterable: false,
-    valueGetter: (_, { communityStories }) => {
-      return communityStories.items[0]?.responses.findLast((resp) => {
-        return resp.response.value;
-      });
-    },
-    renderCell: ({
-      value,
-    }: GridRenderCellParams<
-      ProgressReportsDataGridRowFragment,
-      VariantResponseFragment
-    >) => {
-      if (!value) return null;
-      const latestRole = value.variant.responsibleRole;
-      return (
-        <Box m={1} display="flex" alignItems="center" gap={1}>
-          <RoleIcon
-            variantRole={latestRole}
-            sx={{ height: 36, width: 36, m: 0 }}
-          />
-        </Box>
-      );
-    },
+    valueGetter: (_, { communityStories }) =>
+      communityStories.items[0]?.responses.findLast(
+        (resp) => resp.response.value
+      ),
+    renderCell: VariantResponseCell,
+    cellClassName: ExpansionMarker,
   },
-];
+  'varianceExplanation.comments': {
+    headerName: 'Variance Explanation',
+    width: 250,
+    sortable: false,
+    filterable: false,
+    valueGetter: (_, { varianceExplanation }) =>
+      varianceExplanation.comments.value,
+    renderCell: ({ value }) => (
+      <Box m={1} display="flex" alignItems="center" gap={1}>
+        <RichTextView data={value} />
+      </Box>
+    ),
+    cellClassName: ExpansionMarker,
+  },
+  isMember: {
+    headerName: 'Mine',
+    field: 'engagement.project.isMember',
+    ...booleanColumn(),
+    valueGetter: (_, row) => row.parent.project.isMember,
+  },
+  pinned: {
+    headerName: 'Pinned',
+    field: 'engagement.project.pinned',
+    ...booleanColumn(),
+    valueGetter: (_, row) => row.parent.project.pinned,
+  },
+} satisfies ProgressReportColumnMapShape;
 
-export const ProgressReportsGrid = (props: Omit<DataGridProps, 'columns'>) => {
-  const currentQuarter = CalendarDate.now();
-
-  const currentQuarterRange = {
-    start: {
-      afterInclusive: currentQuarter.startOf('quarter'),
-    },
-    end: {
-      beforeInclusive: currentQuarter.endOf('quarter'),
-    },
-  } satisfies ProgressReportFilters;
-
-  const [dataGridProps] = useDataGridSource({
-    query: ProgressReportsDocument,
-    variables: {},
-    listAt: 'progressReports',
-    initialInput: {
-      sort: 'status',
-      filter: {
-        ...currentQuarterRange,
+export const ProgressReportsGrid = (props: DataGridProps) => {
+  const [source] = useState(() => {
+    const currentDue = CalendarDate.now().minus({ quarter: 1 });
+    return {
+      query: ProgressReportsDocument,
+      variables: {
+        input: {
+          filter: {
+            start: {
+              afterInclusive: currentDue.startOf('quarter'),
+            },
+            end: {
+              beforeInclusive: currentDue.endOf('quarter'),
+            },
+          },
+        },
       },
-    },
+      listAt: 'progressReports',
+      initialInput: {
+        sort: 'status',
+      },
+    } as const;
   });
+  const [dataGridProps] = useDataGridSource({
+    ...source,
+    apiRef: props.apiRef,
+  });
+
+  const slots = useMemo(
+    () =>
+      merge({}, DefaultDataGridStyles.slots, dataGridProps.slots, props.slots),
+    [dataGridProps.slots, props.slots]
+  );
+
+  const slotProps = useMemo(
+    () =>
+      merge(
+        {},
+        DefaultDataGridStyles.slotProps,
+        dataGridProps.slotProps,
+        props.slotProps
+      ),
+    [dataGridProps.slotProps, props.slotProps]
+  );
 
   return (
     <DataGridPro
-      {...props}
+      {...DefaultDataGridStyles}
       {...dataGridProps}
-      columns={ProgressReportsColumns}
+      slots={slots}
+      slotProps={slotProps}
+      {...props}
+      sx={[noHeaderFilterButtons, ...extendSx(props.sx)]}
     />
   );
 };

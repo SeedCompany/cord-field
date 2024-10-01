@@ -1,30 +1,39 @@
+import { flexLayout } from '~/components/Grid';
 import {
   TableWidget,
   Widget,
-  WidgetBody,
   WidgetHeader,
+  WidgetProps,
 } from '~/components/Widgets';
-import { ProgressReportsGrid } from './ProgressReportsGrid';
+import { ProgressReportsCollapsedGrid } from './ProgressReportsCollapsedGrid';
+import { ProgressReportsExpandedGrid } from './ProgressReportsExpandedGrid';
 
-export const ProgressReportsWidget = () => {
+export const ProgressReportsWidget = ({
+  expanded,
+  ...props
+}: WidgetProps & { expanded: boolean }) => {
+  const Grid = expanded
+    ? ProgressReportsExpandedGrid
+    : ProgressReportsCollapsedGrid;
   return (
-    <Widget colSpan={8} rowSpan={6}>
+    <Widget {...props}>
       <WidgetHeader
         title="Quarterly Reports"
-        to="/dashboard/progress-reports"
+        to={expanded ? '/dashboard' : '/dashboard/progress-reports'}
+        expanded={expanded}
       />
-      <WidgetBody>
-        <TableWidget>
-          <ProgressReportsGrid
-            sx={{
-              '--unstable_DataGrid-radius': '0px',
+      <TableWidget>
+        <Grid
+          hideFooter
+          sx={[
+            {
               border: 'none',
-              height: '100cqh',
-            }}
-            hideFooter
-          />
-        </TableWidget>
-      </WidgetBody>
+              '--unstable_DataGrid-radius': 0,
+            },
+            flexLayout,
+          ]}
+        />
+      </TableWidget>
     </Widget>
   );
 };

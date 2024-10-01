@@ -1,6 +1,8 @@
 query ProgressReports($input: ProgressReportListInput) {
   progressReports(input: $input) {
     items {
+      start
+      end
       ...progressReportsDataGridRow
     }
     total
