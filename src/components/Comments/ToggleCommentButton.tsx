@@ -1,6 +1,7 @@
 import { Comment } from '@mui/icons-material';
 import { Badge } from '@mui/material';
 import { Except } from 'type-fest';
+import { Feature } from '../Feature';
 import { IconButton, IconButtonProps } from '../IconButton';
 import { useCommentsContext } from './CommentsContext';
 
@@ -12,10 +13,12 @@ export const ToggleCommentsButton = ({
   const { toggleCommentsBar, resourceCommentsTotal } = useCommentsContext();
 
   return (
-    <IconButton onClick={() => toggleCommentsBar()} {...rest}>
-      <Badge badgeContent={resourceCommentsTotal} color="error">
-        <Comment />
-      </Badge>
-    </IconButton>
+    <Feature flag="comments" match={true}>
+      <IconButton onClick={() => toggleCommentsBar()} {...rest}>
+        <Badge badgeContent={resourceCommentsTotal} color="error">
+          <Comment />
+        </Badge>
+      </IconButton>
+    </Feature>
   );
 };
