@@ -28,25 +28,25 @@ export const VariantResponseCell = ({ value, ...props }: CellParams) => {
   const { variant } = value;
   const response = value.response.value!;
   return (
-    <Box
-      sx={{
-        my: 1,
-
-        overflow: 'hidden',
-        textWrap: 'wrap',
-        display: isExpanded ? undefined : '-webkit-box',
-        WebkitLineClamp: '2',
-        WebkitBoxOrient: 'vertical',
-
-        // No trailing spacing on response
-        '& > *:last-child': { mb: 0 },
-      }}
-    >
+    <Box my={1}>
       <RoleIcon
         variantRole={variant.responsibleRole}
         sx={{ fontSize: 36, float: 'left', mr: 1 }}
       />
-      <RichTextView data={response} renderers={renderers} />
+      <Box
+        sx={{
+          overflow: 'hidden',
+          textWrap: 'wrap',
+          display: isExpanded ? 'contents' : '-webkit-box',
+          WebkitLineClamp: '2',
+          WebkitBoxOrient: 'vertical',
+
+          // No trailing spacing on response
+          '& > *:last-child': { mb: 0 },
+        }}
+      >
+        <RichTextView data={response} renderers={renderers} />
+      </Box>
     </Box>
   );
 };
