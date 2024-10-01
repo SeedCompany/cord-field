@@ -22,12 +22,12 @@ import {
   textColumn,
   useDataGridSource,
 } from '~/components/Grid';
-import { RichTextView } from '~/components/RichText';
 import { Link } from '~/components/Routing';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
   ProgressReportsDocument,
 } from './progressReportsDataGridRow.graphql';
+import { RichTextCell } from './RichTextCell';
 import { VariantResponseCell } from './VariantResponseCell';
 
 export type ProgressReportColumnMapShape = Record<
@@ -99,14 +99,14 @@ export const ProgressReportsColumnMap = {
   },
   'varianceExplanation.comments': {
     headerName: 'Variance Explanation',
-    width: 250,
+    width: 400,
     sortable: false,
     filterable: false,
     valueGetter: (_, { varianceExplanation }) =>
       varianceExplanation.comments.value,
-    renderCell: ({ value }) => (
-      <Box m={1} display="flex" alignItems="center" gap={1}>
-        <RichTextView data={value} />
+    renderCell: (props) => (
+      <Box my={1}>
+        <RichTextCell {...props} />
       </Box>
     ),
     cellClassName: ExpansionMarker,
