@@ -2,7 +2,7 @@ import { Alert, Box, Button, List } from '@mui/material';
 import { useEffect } from 'react';
 import { renderError } from '../Error/error-handling';
 import { useListQuery } from '../List';
-import { CommentForm } from './CommentForm';
+import { CreateComment } from './CommentForm/CreateComment';
 import { useCommentsContext } from './CommentsContext';
 import { CommentThreadsListDocument } from './CommentsThreadList.graphql';
 import { CommentThread } from './CommentThread';
@@ -48,7 +48,7 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
   return (
     <List aria-label="comments-list" sx={{ width: 1 }}>
       <Box sx={{ padding: 2, pt: 0 }}>
-        <CommentForm resourceId={resourceId} />
+        <CreateComment resourceId={resourceId} />
       </Box>
 
       {data?.items.map((thread: CommentThreadFragment) => (

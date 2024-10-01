@@ -12,7 +12,8 @@ import { useState } from 'react';
 import { removeItemFromList } from '~/api';
 import { FormattedDateTime } from '../../Formatters';
 import { RichTextView } from '../../RichText';
-import { CommentForm } from '../CommentForm';
+import { CreateComment } from '../CommentForm/CreateComment';
+import { UpdateComment } from '../CommentForm/UpdateComment';
 import { useCommentsContext } from '../CommentsContext';
 import { CommentThreadFragment } from '../CommentThread/commentThread.graphql';
 import { CommentFragment } from './comment.graphql';
@@ -75,7 +76,7 @@ export const CommentItem = ({
       </Box>
 
       {isEditing ? (
-        <CommentForm comment={comment} onFinish={() => setIsEditing(false)} />
+        <UpdateComment comment={comment} onCancel={() => setIsEditing(false)} />
       ) : (
         comment.body.value && <RichTextView data={comment.body.value} />
       )}
@@ -91,11 +92,11 @@ export const CommentItem = ({
         ]}
       >
         {isReplying && (
-          <CommentForm
+          <CreateComment
             resourceId={resourceId}
             threadId={parent.id}
             sx={{ width: 1 }}
-            onFinish={() => {
+            onCancel={() => {
               setIsReplying(false);
               if (!isExpanded) {
                 expandedThreads.add(parent.id);
