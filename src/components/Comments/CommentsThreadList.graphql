@@ -1,9 +1,8 @@
 query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
   commentThreads(resource: $resourceId, input: $input) {
-    total
-    hasMore
     items {
       ...commentThread
     }
+    ...Pagination
   }
 }
