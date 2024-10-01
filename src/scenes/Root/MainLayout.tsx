@@ -28,7 +28,7 @@ export const MainLayout = () => {
 
   const { classes } = useStyles();
   return (
-    <div className={classes.root} css={{ width: 1 }}>
+    <div className={classes.root}>
       <CreateDialogProviders>
         <Sidebar />
       </CreateDialogProviders>

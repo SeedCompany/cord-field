@@ -2,7 +2,7 @@ import { Box, Button, List } from '@mui/material';
 import { useEffect } from 'react';
 import { useListQuery } from '../List';
 import { CommentForm } from './CommentForm';
-import { useCommentsContext } from './CommentsBarContext';
+import { useCommentsContext } from './CommentsContext';
 import { CommentThreadsListDocument } from './CommentsThreadList.graphql';
 import { CommentThread } from './CommentThread';
 import { CommentThreadFragment } from './CommentThread/commentThread.graphql';

@@ -4,9 +4,9 @@ import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
 import { posthog } from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
-import { CommentsBarProvider } from '~/components/Comments/CommentsBarContext';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
+import { CommentsProvider } from './components/Comments/CommentsContext';
 import { ConfettiProvider } from './components/Confetti';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
@@ -89,7 +89,7 @@ export const appProviders = [
   <ApolloProvider key="apollo" />,
   <FileUploadProvider key="files" />,
   <ConfettiProvider key="confetti" />,
-  <CommentsBarProvider key="comments" />,
+  <CommentsProvider key="comments" />,
 ].filter(isNotFalsy);
 
 export const App = () => (

@@ -2,7 +2,7 @@ import { Comment } from '@mui/icons-material';
 import { Badge } from '@mui/material';
 import { Except } from 'type-fest';
 import { IconButton, IconButtonProps } from '../IconButton';
-import { useCommentsContext } from './CommentsBarContext';
+import { useCommentsContext } from './CommentsContext';
 
 export type ToggleCommentsButtonProps = Except<IconButtonProps, 'children'>;
 

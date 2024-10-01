@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { CommentFragment } from './comment.graphql';
 
-interface CommentItemMenuProps extends Partial<MenuProps> {
+interface CommentItemMenuProps extends MenuProps {
   threadId?: string;
   comment: CommentFragment;
   onDelete: () => void;
@@ -18,8 +18,6 @@ interface CommentItemMenuProps extends Partial<MenuProps> {
 export const CommentItemMenu = ({
   comment,
   threadId,
-  anchorEl,
-  open,
   onDelete,
   onEdit,
   ...rest
@@ -36,10 +34,8 @@ export const CommentItemMenu = ({
   return (
     <Menu
       id={`${comment.id}-options-menu`}
-      open={Boolean(open)}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      anchorEl={anchorEl}
       {...rest}
     >
       {comment.body.canEdit && (

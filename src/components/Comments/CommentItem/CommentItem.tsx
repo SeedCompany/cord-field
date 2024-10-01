@@ -1,12 +1,19 @@
 import { useMutation } from '@apollo/client';
 import { ExpandLess, ExpandMore, MoreVert, Reply } from '@mui/icons-material';
-import { Box, Button, IconButton, MenuProps, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonProps,
+  IconButton,
+  MenuProps,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import { removeItemFromList } from '~/api';
 import { FormattedDateTime } from '../../Formatters';
 import { RichTextView } from '../../RichText';
 import { CommentForm } from '../CommentForm';
-import { useCommentsContext } from '../CommentsBarContext';
+import { useCommentsContext } from '../CommentsContext';
 import { CommentThreadFragment } from '../CommentThread/commentThread.graphql';
 import { CommentFragment } from './comment.graphql';
 import { CommentItemMenu } from './CommentItemMenu';
@@ -16,21 +23,19 @@ export interface CommentProps {
   comment: CommentFragment;
   isChild?: boolean;
   resourceId: string;
-  isExpanded?: boolean;
   parent: CommentThreadFragment;
   onEditComment?: (comment: CommentFragment) => void;
-  handleExpandedChanged?: (expanded?: boolean) => void;
 }
 
 export const CommentItem = ({
   comment,
   isChild,
-  isExpanded,
   parent,
   resourceId,
-  handleExpandedChanged,
 }: CommentProps) => {
-  const { toggleThreadComments } = useCommentsContext();
+  const { expandedThreads } = useCommentsContext();
+  const isExpanded = expandedThreads.has(parent.id);
+
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
   const [isEditing, setIsEditing] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
@@ -93,7 +98,7 @@ export const CommentItem = ({
             onFinish={() => {
               setIsReplying(false);
               if (!isExpanded) {
-                handleExpandedChanged?.(true);
+                expandedThreads.add(parent.id);
               }
             }}
           />
@@ -101,8 +106,7 @@ export const CommentItem = ({
 
         {!isChild && hasChildren && (
           <ExpandThreadLink
-            toggleThreadComments={toggleThreadComments}
-            parentId={parent.id}
+            onClick={() => expandedThreads.toggle(parent.id)}
             isExpanded={isExpanded}
             repliesCount={repliesCount}
           />
@@ -120,7 +124,7 @@ export const CommentItem = ({
         onClose={() => setActionsAnchor(null)}
         open={Boolean(actionsAnchor)}
         onDelete={() => {
-          void deleteComment({ variables: { id: comment.id } });
+          void deleteComment();
         }}
         onEdit={() => {
           setIsEditing(true);
@@ -139,27 +143,17 @@ export const CommentItem = ({
 };
 
 const ExpandThreadLink = ({
-  toggleThreadComments,
-  parentId,
   isExpanded,
   repliesCount,
+  ...rest
 }: {
-  toggleThreadComments: (id: string) => void;
-  parentId: string;
   isExpanded?: boolean;
   repliesCount: number;
-}) => {
+} & ButtonProps) => {
   const Icon = isExpanded ? ExpandLess : ExpandMore;
 
   return (
-    <Button
-      variant="text"
-      color="secondary"
-      startIcon={<Icon />}
-      onClick={() => {
-        toggleThreadComments(parentId);
-      }}
-    >
+    <Button variant="text" color="secondary" startIcon={<Icon />} {...rest}>
       {isExpanded ? 'Hide' : 'Show'} {repliesCount} replies
     </Button>
   );

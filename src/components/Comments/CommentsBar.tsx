@@ -1,7 +1,7 @@
 import { Close as CloseIcon } from '@mui/icons-material';
 import { Box, Drawer, Stack, Typography } from '@mui/material';
 import { IconButton } from '../IconButton';
-import { useCommentsContext } from './CommentsBarContext';
+import { useCommentsContext } from './CommentsContext';
 import { CommentsThreadList } from './CommentsThreadList';
 
 // thinking of possibly exposing this for a resize elsewhere? Might remove it though
@@ -24,6 +24,9 @@ export const CommentsBar = ({ resourceId }: CommentsBarProps) => {
       PaperProps={{
         sx: {
           width: CommentsDrawerWidth,
+          // Artificially position this below the app header
+          // Still up for consideration.
+          // And maybe doable in another way without magic numbers.
           // top: 65,
           // height: 'calc(100vh - 65px)',
         },
