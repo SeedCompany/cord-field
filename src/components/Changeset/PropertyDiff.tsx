@@ -19,7 +19,7 @@ const useStyles = makeStyles()(({ palette, shape, spacing }) => ({
   },
   current: {
     color: palette.primary.dark,
-    background: fade(palette.primary.light, 0.5),
+    background: fade(palette.primary.main, 0.5),
   },
 }));
 

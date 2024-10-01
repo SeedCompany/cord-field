@@ -1,10 +1,10 @@
 import { PaletteColor, PaletteColorOptions } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { lighten, PaletteOptions } from '@mui/material/styles';
+import { PaletteOptions } from '@mui/material/styles';
 import { Role } from '~/api/schema/schema.graphql';
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
-  const mainGreen = '#467f3b';
+  const mainGreen = '#1EA973';
   const roleLuminance = dark ? 32 : 84;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
@@ -14,8 +14,6 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     primary: {
       main: mainGreen,
       contrastText: '#ffffff',
-      // default is lighten main color by 0.2
-      light: lighten(mainGreen, 0.4),
     },
     secondary: {
       main: dark ? grey[50] : '#3c444e',
