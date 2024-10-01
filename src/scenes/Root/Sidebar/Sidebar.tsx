@@ -10,6 +10,7 @@ import {
 import { ThemeProvider } from '@mui/material/styles';
 import { ComponentType } from 'react';
 import { makeStyles } from 'tss-react/mui';
+import { Feature } from '../../../components/Feature';
 import { PeopleJoinedIcon } from '../../../components/Icons';
 import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
 import { CreateButtonMenu } from '../Creates';
@@ -39,7 +40,9 @@ export const Sidebar = () => {
       aria-label="sidebar"
       subheader={<ListSubheader component="div">MENU</ListSubheader>}
     >
-      <NavItem to="/dashboard" label="My Dashboard" icon={Dashboard} />
+      <Feature flag="dashboard" match={true}>
+        <NavItem to="/dashboard" label="My Dashboard" icon={Dashboard} />
+      </Feature>
       <NavItem
         to="/projects"
         label="Projects"
