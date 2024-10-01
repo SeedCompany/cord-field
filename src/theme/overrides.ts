@@ -11,9 +11,6 @@ export const appComponents = ({
   shape,
 }: Theme): Components<Theme> => {
   const dark = palette.mode === 'dark';
-  const primaryColorForText = dark
-    ? palette.primary.light
-    : palette.primary.main;
   return {
     MuiAppBar: {
       defaultProps: {
@@ -81,7 +78,7 @@ export const appComponents = ({
       styleOverrides: {
         root: {
           '&.Mui-focused': {
-            color: primaryColorForText,
+            color: palette.primary.main,
           },
         },
         shrink: {
@@ -144,7 +141,7 @@ export const appComponents = ({
     MuiLink: {
       defaultProps: {
         underline: 'hover',
-        color: dark ? 'primary.light' : 'primary.main',
+        color: 'primary.main',
       },
     },
     MuiToggleButtonGroup: {
