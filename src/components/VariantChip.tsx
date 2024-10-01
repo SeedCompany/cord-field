@@ -8,7 +8,7 @@ export const VariantChip = ({ variant }: { variant: VariantFragment }) => (
     icon={
       <RoleIcon
         variantRole={variant.responsibleRole}
-        sx={{ width: 38, height: 38, bgcolor: 'transparent' }}
+        sx={{ fontSize: 38, bgcolor: 'transparent' }}
       />
     }
     sx={{ bgcolor: `roles.${variant.responsibleRole}.main` }}

@@ -8,8 +8,7 @@ const transparentBgSx = {
 };
 
 const iconSx = {
-  height: 36,
-  width: 36,
+  fontSize: 36,
   mr: 0,
 };
 

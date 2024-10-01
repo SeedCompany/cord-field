@@ -36,8 +36,7 @@ export const RoleIcon = ({ variantRole: role, sx, ...rest }: RoleIconProps) => {
             color: color ? theme.palette.getContrastText(color) : undefined,
             marginRight: 1,
             padding: 1,
-            height: 48,
-            width: 48,
+            fontSize: 48,
             borderRadius: 2,
           };
         },
