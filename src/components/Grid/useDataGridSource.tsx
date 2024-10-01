@@ -77,6 +77,8 @@ type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
   apiSortModel: DataGridProps['sortModel'];
 };
 
+type NoInfer<T> = [T][T extends any ? 0 : never];
+
 export const useDataGridSource = <
   Output extends Record<string, any>,
   Vars,
@@ -95,9 +97,9 @@ export const useDataGridSource = <
   keyArgs = defaultKeyArgs,
 }: {
   query: DocumentNode<Output, Vars>;
-  variables: Vars & { input?: Input };
+  variables: NoInfer<Vars & { input?: Input }>;
   listAt: Path;
-  initialInput?: Partial<Omit<Input, 'page'>>;
+  initialInput?: Partial<Omit<NoInfer<Input>, 'page'>>;
   keyArgs?: string[];
 }) => {
   const initialInputRef = useLatest(initialInput);
@@ -216,7 +218,6 @@ export const useDataGridSource = <
       apiFilterModel: convertMuiFiltersToApi(
         apiRef.current,
         filterModel,
-        variables.input?.filter,
         initialInputRef.current?.filter
       ),
     });
@@ -254,25 +255,25 @@ export const useDataGridSource = <
         ? convertMuiFiltersToApi(
             apiRef.current,
             view.filterModel,
-            variables.input?.filter,
             initialInputRef.current?.filter
           )
         : storedView?.apiFilterModel,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      apiRef,
-      initialInputRef,
-      view.apiSortModel,
-      view.filterModel,
-      variables.input?.filter,
-    ]
+    [apiRef, initialInputRef, view.apiSortModel, view.filterModel]
   );
   const variablesWithFilter = useMemo(() => {
     const { count, sort, order, ...rest } = input;
     return {
       ...variables,
-      input: rest,
+      input: {
+        ...rest,
+        ...variables.input,
+        filter: {
+          ...rest.filter,
+          ...variables.input?.filter,
+        },
+      },
     };
   }, [variables, input]);
 
@@ -297,7 +298,18 @@ export const useDataGridSource = <
   const { data: firstPage, loading } = useQuery(query, {
     skip: isCacheComplete,
     variables: useMemo(
-      () => ({ ...variables, input: { ...input, page: 1 } }),
+      () => ({
+        ...variables,
+        input: {
+          ...input,
+          page: 1,
+          ...variables.input,
+          filter: {
+            ...input.filter,
+            ...variables.input?.filter,
+          },
+        },
+      }),
       [variables, input]
     ),
     onCompleted: addToAllPagesCache,
