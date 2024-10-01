@@ -14,10 +14,10 @@ const Spacer = () => <Box sx={{ display: 'flex', flexGrow: 1 }} />;
 
 export interface WidgetHeaderProps {
   title: ReactNode;
-  subTitle?: string;
+  subTitle?: ReactNode;
   headerExtension?: ElementType;
   to?: string;
-  expand?: boolean;
+  expanded?: boolean;
 }
 
 export const WidgetHeader = ({
@@ -25,31 +25,29 @@ export const WidgetHeader = ({
   subTitle,
   headerExtension,
   to,
-  expand,
-}: WidgetHeaderProps) => {
-  return (
-    <CardHeader
-      sx={{ px: 2 }}
-      title={
-        <Stack direction="row" justifyContent="end" alignItems="center">
-          <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <Typography variant="h4">{title}</Typography>
-            {subTitle && (
-              <Typography variant="caption" sx={{ color: 'grey.500' }}>
-                {subTitle}
-              </Typography>
-            )}
-          </Box>
-          {headerExtension ? <Box component={headerExtension} /> : <Spacer />}
-          {to && (
-            <Tooltip title={expand ? 'Minimize Widget' : 'Expand Widget'}>
-              <IconButton color="primary" component={Link} to={to}>
-                {expand ? <CloseFullscreen /> : <OpenInFull />}
-              </IconButton>
-            </Tooltip>
+  expanded,
+}: WidgetHeaderProps) => (
+  <CardHeader
+    sx={{ p: 1, pl: 2 }}
+    title={
+      <Stack direction="row" justifyContent="end" alignItems="center">
+        <Stack sx={{ flex: 1 }}>
+          <Typography variant="h4">{title}</Typography>
+          {subTitle && (
+            <Typography variant="caption" sx={{ color: 'grey.500' }}>
+              {subTitle}
+            </Typography>
           )}
         </Stack>
-      }
-    />
-  );
-};
+        {headerExtension ? <Box component={headerExtension} /> : <Spacer />}
+        {to && (
+          <Tooltip title={expanded ? 'Collapse Widget' : 'Expand Widget'}>
+            <IconButton color="primary" component={Link} to={to}>
+              {expanded ? <CloseFullscreen /> : <OpenInFull />}
+            </IconButton>
+          </Tooltip>
+        )}
+      </Stack>
+    }
+  />
+);

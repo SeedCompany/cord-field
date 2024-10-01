@@ -7,17 +7,15 @@ import { DashboardLayout } from './DashboardLayout';
 export const DashboardRoutes = () => (
   <DashboardLayout>
     <Routes>
-      <Route path="" element={<MainDashboard />} />
+      <Route index element={<MainDashboard />} />
       {NotFoundRoute}
     </Routes>
   </DashboardLayout>
 );
 
-const MainDashboard = () => {
-  return (
-    <WidgetGrid>
-      <Box />
-      <Box />
-    </WidgetGrid>
-  );
-};
+const MainDashboard = () => (
+  <WidgetGrid>
+    <Box />
+    <Box />
+  </WidgetGrid>
+);
