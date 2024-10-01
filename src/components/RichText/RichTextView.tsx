@@ -27,9 +27,15 @@ export const RichTextView = memo(function RichTextView({
   return <Blocks data={data1} renderers={renderers} />;
 });
 
-const ParagraphBlock: RenderFn<{ text: string }> = ({ data }) => {
+const ParagraphBlock: RenderFn<{ text: string }> = ({ data }) => (
+  <Typography paragraph>
+    <Text data={data} />
+  </Typography>
+);
+
+export const Text: RenderFn<{ text: string }> = ({ data }) => {
   const { text } = data ?? {};
-  return <Typography paragraph>{text && HTMLReactParser(text)}</Typography>;
+  return <>{text && HTMLReactParser(text)}</>;
 };
 
 const HeaderBlock: RenderFn<{ text: string; level: 1 | 2 | 3 | 4 | 5 | 6 }> = ({

@@ -10,6 +10,7 @@ import {
   RenderFn,
   RichTextRenderers,
   RichTextView,
+  Text,
 } from '../../../components/RichText';
 import { RoleIcon as BaseRoleIcon } from '../../../components/RoleIcon';
 import { ProgressReportsDataGridRowFragment as ProgressReport } from './progressReportsDataGridRow.graphql';
@@ -51,6 +52,12 @@ export const VariantResponseCell = ({ value, ...props }: CellParams) => {
   );
 };
 
+const ParagraphBlock: RenderFn<{ text: string }> = ({ data }) => (
+  <Typography variant="body2" paragraph>
+    <Text data={data} />
+  </Typography>
+);
+
 const List: RenderFn<{ style: 'unordered' | 'ordered'; items: string[] }> = ({
   data,
 }) => {
@@ -62,9 +69,10 @@ const List: RenderFn<{ style: 'unordered' | 'ordered'; items: string[] }> = ({
       component={style === 'unordered' ? 'ul' : 'ol'}
       sx={{ display: 'contents' }}
     >
-      {items.map((item, index) => (
+      {items.map((text, index) => (
         <Typography
           key={index}
+          variant="body2"
           component="li"
           gutterBottom
           sx={{
@@ -75,13 +83,15 @@ const List: RenderFn<{ style: 'unordered' | 'ordered'; items: string[] }> = ({
             '&:last-of-type': { mb: 0 },
           }}
         >
-          {item}
+          <Text data={{ text }} />
         </Typography>
       ))}
     </Box>
   );
 };
+
 const renderers: RichTextRenderers = {
+  paragraph: ParagraphBlock,
   list: List,
 };
 
