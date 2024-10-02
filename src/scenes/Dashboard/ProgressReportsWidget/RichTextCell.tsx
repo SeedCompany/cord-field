@@ -26,7 +26,7 @@ export const RichTextCell = ({
     { current: api },
     (state: GridState) => state.rowSelection
   );
-  const isExpanded = selectedRows[0] === id;
+  const isExpanded = selectedRows.includes(id);
 
   if (!value) return null;
 
