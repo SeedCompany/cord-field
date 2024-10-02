@@ -2,31 +2,54 @@ import type { OutputData as RichTextData } from '@editorjs/editorjs';
 import { Divider, Typography } from '@mui/material';
 import Blocks from 'editorjs-blocks-react-renderer';
 import HTMLReactParser from 'html-react-parser';
-import { memo } from 'react';
-import { ToolKey } from './editorJsTools';
+import { ComponentType, memo, useMemo } from 'react';
+import { BlockDataMap, ToolKey } from './editorJsTools';
+
+export type Renderers = {
+  [K in ToolKey]?: ComponentType<BlockProps<K>>;
+};
+
+export interface BlockProps<K extends ToolKey> {
+  data?: K extends keyof BlockDataMap ? BlockDataMap[K] : never;
+  className?: string;
+}
 
 export const RichTextView = memo(function RichTextView({
   data,
+  renderers: renderersInput,
 }: {
   data?: RichTextData | null;
+  renderers?: Renderers;
 }) {
+  const renderers = useMemo(
+    () => ({ ...defaultRenderers, ...renderersInput }),
+    [renderersInput]
+  );
   if (!data) {
     return null;
   }
   const data1 = { version: '0', time: 0, ...data };
-  return <Blocks data={data1} renderers={renderers} />;
+  return (
+    <Blocks
+      data={data1}
+      // @ts-expect-error our types are stricter
+      renderers={renderers}
+    />
+  );
 });
 
-type RenderFn<T = undefined> = (_: { data?: T }) => JSX.Element;
+const ParagraphBlock = ({ data }: BlockProps<'paragraph'>) => (
+  <Typography paragraph>
+    <Text data={data} />
+  </Typography>
+);
 
-const ParagraphBlock: RenderFn<{ text: string }> = ({ data }) => {
+export const Text = ({ data }: BlockProps<'paragraph'>) => {
   const { text } = data ?? {};
-  return <Typography paragraph>{text && HTMLReactParser(text)}</Typography>;
+  return <>{text && HTMLReactParser(text)}</>;
 };
 
-const HeaderBlock: RenderFn<{ text: string; level: 1 | 2 | 3 | 4 | 5 | 6 }> = ({
-  data,
-}) => {
+const HeaderBlock = ({ data }: BlockProps<'header'>) => {
   const { text, level = 1 } = data ?? {};
   return (
     <Typography variant={`h${level}`} gutterBottom>
@@ -35,9 +58,9 @@ const HeaderBlock: RenderFn<{ text: string; level: 1 | 2 | 3 | 4 | 5 | 6 }> = ({
   );
 };
 
-const DelimiterBlock: RenderFn = () => <Divider sx={{ my: 2 }} />;
+const DelimiterBlock = () => <Divider sx={{ my: 2 }} />;
 
-const renderers: { [K in ToolKey]?: RenderFn<any> } = {
+const defaultRenderers: Renderers = {
   paragraph: ParagraphBlock,
   header: HeaderBlock,
   delimiter: DelimiterBlock,

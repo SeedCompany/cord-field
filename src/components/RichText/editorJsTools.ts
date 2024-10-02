@@ -47,3 +47,9 @@ export type ToolKey = keyof typeof EDITOR_JS_TOOLS;
 
 export const customTools = (toolsNames: ToolKey[]) =>
   pick(EDITOR_JS_TOOLS, toolsNames);
+
+export interface BlockDataMap {
+  paragraph: { text: string };
+  header: { text: string; level: 1 | 2 | 3 | 4 | 5 | 6 };
+  list: { style: 'unordered' | 'ordered'; items: string[] };
+}
