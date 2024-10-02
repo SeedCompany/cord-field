@@ -42,7 +42,7 @@ const initialState = {
   columns: {
     columnVisibilityModel: {
       ...getInitialVisibility(columns),
-      'varianceExplanation.comments': false,
+      'varianceExplanation.reasons': false,
       'engagement.project.isMember': false,
       'engagement.project.pinned': false,
     },

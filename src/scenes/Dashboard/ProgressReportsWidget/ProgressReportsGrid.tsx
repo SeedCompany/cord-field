@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -23,11 +23,11 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
+import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
   ProgressReportsDocument,
 } from './progressReportsDataGridRow.graphql';
-import { RichTextCell } from './RichTextCell';
 import { VariantResponseCell } from './VariantResponseCell';
 
 export type ProgressReportColumnMapShape = Record<
@@ -97,16 +97,19 @@ export const ProgressReportsColumnMap = {
     renderCell: VariantResponseCell,
     cellClassName: ExpansionMarker,
   },
-  'varianceExplanation.comments': {
-    headerName: 'Variance Explanation',
+  varianceExplanation: {
+    headerName: 'Explanation of Progress',
+    field: 'varianceExplanation.reasons',
     width: 400,
     sortable: false,
     filterable: false,
     valueGetter: (_, { varianceExplanation }) =>
-      varianceExplanation.comments.value,
+      varianceExplanation.reasons.value[0],
     renderCell: (props) => (
       <Box my={1}>
-        <RichTextCell {...props} />
+        <ExpansionCell {...props}>
+          <Typography variant="body2">{props.value}</Typography>
+        </ExpansionCell>
       </Box>
     ),
     cellClassName: ExpansionMarker,

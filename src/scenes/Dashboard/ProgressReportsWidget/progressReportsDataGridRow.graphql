@@ -35,7 +35,7 @@ fragment progressReportsDataGridRow on ProgressReport {
   }
   varianceExplanation {
     scheduleStatus
-    comments {
+    reasons {
       value
     }
   }
