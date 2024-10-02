@@ -1,5 +1,7 @@
+import { Box } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
+  GridRenderCellParams,
   GridRowId,
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
@@ -24,9 +26,34 @@ import {
 
 const COLLAPSED_ROW_HEIGHT = 54;
 
+// Position cell text consistently regardless of expansion
+const NonExpansionCell = ({ formattedValue }: GridRenderCellParams) => (
+  <Box
+    sx={{
+      '--height': `${COLLAPSED_ROW_HEIGHT}px`,
+      // Causes row to grow by 1px on row height auto
+      // Shift the 1px to padding to prevent.
+      height: 'calc(var(--height) - 1px)',
+      pt: '1px',
+      // This is exactly what MUI does when not auto height
+      lineHeight: 'calc(var(--height) - 1px)',
+
+      display: 'flex',
+      alignItems: 'center',
+    }}
+  >
+    {formattedValue}
+  </Box>
+);
+
 const columns = entries(ProgressReportsColumnMap).map(([name, col]) => ({
   field: name,
   ...col,
+  ...(!(
+    'cellClassName' in col && col.cellClassName.includes(ExpansionMarker)
+  ) && {
+    renderCell: NonExpansionCell,
+  }),
 }));
 
 const initialState = {
@@ -93,11 +120,6 @@ export const ProgressReportsExpandedGrid = (props: Partial<DataGridProps>) => {
           '.MuiDataGrid-cell': {
             minHeight: COLLAPSED_ROW_HEIGHT,
           },
-          [`.MuiDataGrid-row--dynamicHeight .MuiDataGrid-cell:not(.${ExpansionMarker})`]:
-            {
-              // Magic number to keep text vertically unchanged when the row is expanded
-              pt: '17.5px',
-            },
         },
         ...extendSx(props.sx),
       ]}
