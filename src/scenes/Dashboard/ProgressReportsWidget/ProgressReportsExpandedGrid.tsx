@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
+  GridColDef,
   GridRenderCellParams,
   GridRowId,
   GridToolbarColumnsButton,
@@ -26,25 +27,27 @@ import {
 
 const COLLAPSED_ROW_HEIGHT = 54;
 
-// Position cell text consistently regardless of expansion
-const NonExpansionCell = ({ formattedValue }: GridRenderCellParams) => (
-  <Box
-    sx={{
-      '--height': `${COLLAPSED_ROW_HEIGHT}px`,
-      // Causes row to grow by 1px on row height auto
-      // Shift the 1px to padding to prevent.
-      height: 'calc(var(--height) - 1px)',
-      pt: '1px',
-      // This is exactly what MUI does when not auto height
-      lineHeight: 'calc(var(--height) - 1px)',
+const wrapForNonExpansion = (renderCell?: GridColDef['renderCell']) => {
+  // Position cell text consistently regardless of expansion
+  const NonExpansionCell = (props: GridRenderCellParams) => (
+    <Box
+      sx={{
+        // Causes row to grow by 1px on row height auto
+        // Shift the 1px to padding to prevent.
+        height: COLLAPSED_ROW_HEIGHT - 1,
+        pt: '1px',
+        // Text shifts by a pixel without this - any value works
+        lineHeight: 1,
 
-      display: 'flex',
-      alignItems: 'center',
-    }}
-  >
-    {formattedValue}
-  </Box>
-);
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      {renderCell ? renderCell(props) : props.formattedValue ?? props.value}
+    </Box>
+  );
+  return NonExpansionCell;
+};
 
 const columns = entries(ProgressReportsColumnMap).map(([name, col]) => ({
   field: name,
@@ -52,7 +55,9 @@ const columns = entries(ProgressReportsColumnMap).map(([name, col]) => ({
   ...(!(
     'cellClassName' in col && col.cellClassName.includes(ExpansionMarker)
   ) && {
-    renderCell: NonExpansionCell,
+    renderCell: wrapForNonExpansion(
+      'renderCell' in col ? col.renderCell : undefined
+    ),
   }),
 }));
 
