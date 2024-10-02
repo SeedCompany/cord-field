@@ -35,7 +35,7 @@ export type ProgressReportColumnMapShape = Record<
   SetOptional<GridColDef<ProgressReport>, 'field'>
 >;
 
-export const ExpansionMarker = 'multiline';
+export const ExpansionMarker = 'expandable';
 
 export const ProgressReportsColumnMap = {
   project: {
