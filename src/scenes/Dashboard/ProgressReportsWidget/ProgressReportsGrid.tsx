@@ -1,4 +1,5 @@
-import { Box, Typography } from '@mui/material';
+import { Link as LinkIcon } from '@mui/icons-material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -59,6 +60,28 @@ export const ProgressReportsColumnMap = {
       <Link to={`/languages/${row.parent.language.value?.id}`}>{value}</Link>
     ),
     hideable: false,
+  },
+  viewReport: {
+    headerName: 'View',
+    field: 'id',
+    width: 54,
+    display: 'flex',
+    renderCell: ({ row }) => (
+      <Tooltip title="View Report">
+        <IconButton
+          size="small"
+          color="primary"
+          component={Link}
+          to={`/progress-reports/${row.id}`}
+        >
+          <LinkIcon />
+        </IconButton>
+      </Tooltip>
+    ),
+    filterable: false,
+    sortable: false,
+    hideable: false,
+    resizable: false,
   },
   status: {
     headerName: 'Status',

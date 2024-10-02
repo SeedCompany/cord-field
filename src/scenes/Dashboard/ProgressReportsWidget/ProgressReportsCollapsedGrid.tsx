@@ -44,6 +44,7 @@ const initialState = {
   columns: {
     columnVisibilityModel: {
       ...getInitialVisibility(columns),
+      viewReport: false,
       'varianceExplanation.reasons': false,
       'engagement.project.isMember': false,
       'engagement.project.pinned': false,
