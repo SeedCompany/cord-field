@@ -6,8 +6,8 @@ import {
 } from '@mui/x-data-grid';
 import { extendSx, RichTextJson, StyleProps } from '~/common';
 import {
-  RenderFn,
-  RichTextRenderers,
+  BlockProps,
+  Renderers,
   RichTextView,
   Text,
 } from '../../../components/RichText';
@@ -52,15 +52,13 @@ export const RichTextCell = ({
   );
 };
 
-const ParagraphBlock: RenderFn<{ text: string }> = ({ data }) => (
+const ParagraphBlock = ({ data }: BlockProps<'paragraph'>) => (
   <Typography variant="body2" paragraph>
     <Text data={data} />
   </Typography>
 );
 
-const List: RenderFn<{ style: 'unordered' | 'ordered'; items: string[] }> = ({
-  data,
-}) => {
+const List = ({ data }: BlockProps<'list'>) => {
   // eslint-disable-next-line react/jsx-no-useless-fragment
   if (!data) return <></>;
   const { style, items } = data;
@@ -90,7 +88,7 @@ const List: RenderFn<{ style: 'unordered' | 'ordered'; items: string[] }> = ({
   );
 };
 
-const renderers: RichTextRenderers = {
+const renderers: Renderers = {
   paragraph: ParagraphBlock,
   list: List,
 };
