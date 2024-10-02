@@ -24,12 +24,14 @@ const columns = entries({
   teamNews: {
     ...ProgressReportsColumnMap.teamNews,
     renderCell: VariantResponseIconCell,
+    align: 'center',
     headerAlign: 'center',
     width: 95,
   },
   communityStories: {
     ...ProgressReportsColumnMap.communityStories,
     renderCell: VariantResponseIconCell,
+    align: 'center',
     headerAlign: 'center',
     width: 80,
   },
