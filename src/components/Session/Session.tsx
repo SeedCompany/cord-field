@@ -83,5 +83,5 @@ export const useIdentifyInLogRocket = () => {
         }) as Record<string, string>
       );
     }
-  }, [user]);
+  }, [user, postHog]);
 };
