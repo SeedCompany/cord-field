@@ -30,13 +30,12 @@ const COLLAPSED_ROW_HEIGHT = 54;
 const NonExpansionCell = ({ formattedValue }: GridRenderCellParams) => (
   <Box
     sx={{
-      '--height': `${COLLAPSED_ROW_HEIGHT}px`,
       // Causes row to grow by 1px on row height auto
       // Shift the 1px to padding to prevent.
-      height: 'calc(var(--height) - 1px)',
+      height: COLLAPSED_ROW_HEIGHT - 1,
       pt: '1px',
-      // This is exactly what MUI does when not auto height
-      lineHeight: 'calc(var(--height) - 1px)',
+      // Text shifts by a pixel without this - any value works
+      lineHeight: 1,
 
       display: 'flex',
       alignItems: 'center',
