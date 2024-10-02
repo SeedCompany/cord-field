@@ -1,6 +1,7 @@
 import { Close as CloseIcon } from '@mui/icons-material';
-import { Box, Drawer, Stack, Typography } from '@mui/material';
+import { Drawer, Stack, Typography } from '@mui/material';
 import { IconButton } from '../IconButton';
+import { CreateComment } from './CommentForm/CreateComment';
 import { useCommentsContext } from './CommentsContext';
 import { CommentsThreadList } from './CommentsThreadList';
 
@@ -34,18 +35,20 @@ export const CommentsBar = () => {
         open && { width: CommentsDrawerWidth, flexShrink: 0 },
       ]}
     >
-      <Stack alignItems="start" spacing={1}>
-        <IconButton onClick={() => toggleCommentsBar(false)}>
+      <Stack p={2} spacing={1}>
+        <IconButton
+          onClick={() => toggleCommentsBar(false)}
+          sx={{ alignSelf: 'start' }}
+        >
           <CloseIcon />
         </IconButton>
+
+        <CreateComment />
+
         {resourceId ? (
           <CommentsThreadList resourceId={resourceId} />
         ) : (
-          <Box height={1} width={1} pt={1} px={2}>
-            <Typography variant="h6" pt={1} px={2}>
-              Comments not available here
-            </Typography>
-          </Box>
+          <Typography variant="h6">Comments not available here</Typography>
         )}
       </Stack>
     </Drawer>

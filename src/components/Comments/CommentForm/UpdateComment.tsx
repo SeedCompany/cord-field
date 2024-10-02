@@ -25,7 +25,12 @@ export const UpdateComment = ({
   return (
     <CommentForm
       {...rest}
-      onSubmit={async (values) => {
+      onSubmit={async (values, form) => {
+        if (!form.getState().dirty) {
+          onFinish?.();
+          return;
+        }
+
         if (!values.body) return;
 
         await updateComment({
@@ -40,8 +45,8 @@ export const UpdateComment = ({
         onFinish?.();
       }}
       initialValues={initialValues}
+      sendIfClean
       submitLabel="Update"
-      onCancel={onFinish}
     />
   );
 };

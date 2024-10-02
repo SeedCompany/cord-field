@@ -1,20 +1,13 @@
 import { useMutation } from '@apollo/client';
-import { ExpandLess, ExpandMore, MoreVert, Reply } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  ButtonProps,
-  IconButton,
-  MenuProps,
-  Typography,
-} from '@mui/material';
+import { MoreVert } from '@mui/icons-material';
+import { Box, IconButton, MenuProps, Stack, Typography } from '@mui/material';
+import { useControllableValue } from 'ahooks';
 import { useState } from 'react';
 import { removeItemFromList } from '~/api';
-import { FormattedDateTime } from '../../Formatters';
+import { RelativeDateTime } from '../../Formatters';
 import { RichTextView } from '../../RichText';
-import { CreateComment } from '../CommentForm/CreateComment';
+import { Link } from '../../Routing';
 import { UpdateComment } from '../CommentForm/UpdateComment';
-import { useCommentsContext } from '../CommentsContext';
 import { CommentThreadFragment } from '../CommentThread/commentThread.graphql';
 import { CommentFragment } from './comment.graphql';
 import { CommentItemMenu } from './CommentItemMenu';
@@ -22,103 +15,64 @@ import { DeleteCommentDocument } from './DeleteComment.graphql';
 
 export interface CommentProps {
   comment: CommentFragment;
-  isChild?: boolean;
-  resourceId: string;
-  parent: CommentThreadFragment;
-  onEditComment?: (comment: CommentFragment) => void;
+  thread: CommentThreadFragment;
+  isEditing?: boolean;
+  onEditChange?: (state: boolean) => void;
 }
 
-export const CommentItem = ({
-  comment,
-  isChild,
-  parent,
-  resourceId,
-}: CommentProps) => {
-  const { expandedThreads } = useCommentsContext();
-  const isExpanded = expandedThreads.has(parent.id);
-
+export const CommentItem = ({ comment, thread, ...props }: CommentProps) => {
   const [actionsAnchor, setActionsAnchor] = useState<MenuProps['anchorEl']>();
-  const [isEditing, setIsEditing] = useState(false);
-  const [isReplying, setIsReplying] = useState(false);
+  const [isEditing, onEditChange] = useControllableValue<boolean>({
+    ...(props.isEditing != null && { value: props.isEditing }),
+    onChange: props.onEditChange,
+  });
 
   const [deleteComment] = useMutation(DeleteCommentDocument, {
     variables: {
       id: comment.id,
     },
     update: removeItemFromList({
-      listId: [parent, 'comments'],
+      listId: [thread, 'comments'],
       item: comment,
     }),
   });
 
-  const repliesCount = parent.comments.total - 1;
-  const hasChildren = repliesCount > 0;
-
   return (
-    <Box
-      sx={[
-        { padding: 2, position: 'relative' },
-        Boolean(isChild) &&
-          ((theme) => ({
-            pl: 6,
-            borderBottom: `1px solid ${theme.palette.divider}`,
-          })),
-        hasChildren && { pb: 1 },
-      ]}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, gap: 1 }}>
-        <Typography variant="body1" color="text.primary">
-          {comment.creator.fullName}
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          <FormattedDateTime date={comment.modifiedAt} />
-        </Typography>
-      </Box>
+    <Stack gap={1} role="listitem">
+      <Stack
+        direction="row"
+        spacing={2}
+        justifyContent="space-between"
+        alignItems="start"
+      >
+        <Box>
+          <Link to={`/users/${comment.creator.id}`}>
+            {comment.creator.fullName}
+          </Link>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <RelativeDateTime date={comment.modifiedAt} />
+          </Typography>
+        </Box>
+        <IconButton
+          size="small"
+          onClick={(e) => setActionsAnchor(e.currentTarget)}
+        >
+          <MoreVert fontSize="inherit" />
+        </IconButton>
+      </Stack>
 
       {isEditing ? (
-        <UpdateComment comment={comment} onCancel={() => setIsEditing(false)} />
+        <UpdateComment
+          comment={comment}
+          onFinish={() => onEditChange(false)}
+          onCancel={() => onEditChange(false)}
+        />
       ) : (
-        comment.body.value && <RichTextView data={comment.body.value} />
+        <Box sx={{ '> :last-child': { mb: 0 } }}>
+          <RichTextView data={comment.body.value} />
+        </Box>
       )}
-      <Box
-        sx={[
-          {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          },
-          isReplying && { flexDirection: 'column', alignItems: 'flex-start' },
-          !repliesCount && { justifyContent: 'flex-end' },
-        ]}
-      >
-        {isReplying && (
-          <CreateComment
-            resourceId={resourceId}
-            threadId={parent.id}
-            sx={{ width: 1 }}
-            onCancel={() => {
-              setIsReplying(false);
-              if (!isExpanded) {
-                expandedThreads.add(parent.id);
-              }
-            }}
-          />
-        )}
 
-        {!isChild && hasChildren && (
-          <ExpandThreadLink
-            onClick={() => expandedThreads.toggle(parent.id)}
-            isExpanded={isExpanded}
-            repliesCount={repliesCount}
-          />
-        )}
-
-        {!isEditing && !isReplying && !isChild && (
-          <Button onClick={() => setIsReplying(true)} startIcon={<Reply />}>
-            Reply
-          </Button>
-        )}
-      </Box>
       <CommentItemMenu
         comment={comment}
         anchorEl={actionsAnchor}
@@ -128,34 +82,10 @@ export const CommentItem = ({
           void deleteComment();
         }}
         onEdit={() => {
-          setIsEditing(true);
+          onEditChange(true);
           setActionsAnchor(null);
         }}
       />
-      <IconButton
-        onClick={(e) => setActionsAnchor(e.currentTarget)}
-        sx={{ margin: 1, position: 'absolute', right: 0, top: 0 }}
-        data-testid="comment-menu-button"
-      >
-        <MoreVert fontSize="small" />
-      </IconButton>
-    </Box>
-  );
-};
-
-const ExpandThreadLink = ({
-  isExpanded,
-  repliesCount,
-  ...rest
-}: {
-  isExpanded?: boolean;
-  repliesCount: number;
-} & ButtonProps) => {
-  const Icon = isExpanded ? ExpandLess : ExpandMore;
-
-  return (
-    <Button variant="text" color="secondary" startIcon={<Icon />} {...rest}>
-      {isExpanded ? 'Hide' : 'Show'} {repliesCount} replies
-    </Button>
+    </Stack>
   );
 };

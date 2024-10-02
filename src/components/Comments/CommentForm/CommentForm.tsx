@@ -35,8 +35,9 @@ export const CommentForm = ({
           label="Comment"
           tools={['paragraph', 'delimiter', 'marker', 'list']}
           placeholder={placeholder}
+          helperText={false}
         />
-        <Box display="flex" justifyContent="end" gap={2}>
+        <Box display="flex" justifyContent="end" gap={1}>
           {!!onCancel && (
             <Button color="secondary" onClick={onCancel}>
               Cancel
@@ -46,6 +47,7 @@ export const CommentForm = ({
             variant="contained"
             size="small"
             color="secondary"
+            disableElevation
             fullWidth={false}
           >
             {submitLabel}
