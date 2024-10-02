@@ -148,6 +148,7 @@ export const ProgressReportsGrid = (props: DataGridProps) => {
       listAt: 'progressReports',
       initialInput: {
         sort: 'status',
+        order: 'DESC',
       },
     } as const;
   });
