@@ -18,7 +18,7 @@ export const DashboardLayout = ({ children }: ChildrenProp) => (
     <Typography
       component="h1"
       variant="h3"
-      sx={{ backgroundColor: '#A6DBC7', p: 4, borderRadius: 1 }}
+      sx={{ backgroundColor: '#E3F0F4', p: 4, borderRadius: 1 }}
     >
       My Dashboard
     </Typography>
