@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+import { Link as LinkIcon } from '@mui/icons-material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -23,11 +24,11 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
+import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
   ProgressReportsDocument,
 } from './progressReportsDataGridRow.graphql';
-import { RichTextCell } from './RichTextCell';
 import { VariantResponseCell } from './VariantResponseCell';
 
 export type ProgressReportColumnMapShape = Record<
@@ -59,6 +60,28 @@ export const ProgressReportsColumnMap = {
       <Link to={`/languages/${row.parent.language.value?.id}`}>{value}</Link>
     ),
     hideable: false,
+  },
+  viewReport: {
+    headerName: 'View',
+    field: 'id',
+    width: 54,
+    display: 'flex',
+    renderCell: ({ row }) => (
+      <Tooltip title="View Report">
+        <IconButton
+          size="small"
+          color="primary"
+          component={Link}
+          to={`/progress-reports/${row.id}`}
+        >
+          <LinkIcon />
+        </IconButton>
+      </Tooltip>
+    ),
+    filterable: false,
+    sortable: false,
+    hideable: false,
+    resizable: false,
   },
   status: {
     headerName: 'Status',
@@ -97,16 +120,19 @@ export const ProgressReportsColumnMap = {
     renderCell: VariantResponseCell,
     cellClassName: ExpansionMarker,
   },
-  'varianceExplanation.comments': {
-    headerName: 'Variance Explanation',
+  varianceExplanation: {
+    headerName: 'Explanation of Progress',
+    field: 'varianceExplanation.reasons',
     width: 400,
     sortable: false,
     filterable: false,
     valueGetter: (_, { varianceExplanation }) =>
-      varianceExplanation.comments.value,
+      varianceExplanation.reasons.value[0],
     renderCell: (props) => (
       <Box my={1}>
-        <RichTextCell {...props} />
+        <ExpansionCell {...props}>
+          <Typography variant="body2">{props.value}</Typography>
+        </ExpansionCell>
       </Box>
     ),
     cellClassName: ExpansionMarker,
@@ -145,6 +171,7 @@ export const ProgressReportsGrid = (props: DataGridProps) => {
       listAt: 'progressReports',
       initialInput: {
         sort: 'status',
+        order: 'DESC',
       },
     } as const;
   });

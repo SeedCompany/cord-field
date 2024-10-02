@@ -24,12 +24,14 @@ const columns = entries({
   teamNews: {
     ...ProgressReportsColumnMap.teamNews,
     renderCell: VariantResponseIconCell,
+    align: 'center',
     headerAlign: 'center',
     width: 95,
   },
   communityStories: {
     ...ProgressReportsColumnMap.communityStories,
     renderCell: VariantResponseIconCell,
+    align: 'center',
     headerAlign: 'center',
     width: 80,
   },
@@ -42,7 +44,8 @@ const initialState = {
   columns: {
     columnVisibilityModel: {
       ...getInitialVisibility(columns),
-      'varianceExplanation.comments': false,
+      viewReport: false,
+      'varianceExplanation.reasons': false,
       'engagement.project.isMember': false,
       'engagement.project.pinned': false,
     },

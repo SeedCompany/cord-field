@@ -35,7 +35,7 @@ fragment progressReportsDataGridRow on ProgressReport {
   }
   varianceExplanation {
     scheduleStatus
-    comments {
+    reasons {
       value
     }
   }
@@ -43,12 +43,7 @@ fragment progressReportsDataGridRow on ProgressReport {
     items {
       id
       responses {
-        response {
-          value
-        }
-        variant {
-          responsibleRole
-        }
+        ...variantResponse
       }
     }
   }
@@ -56,12 +51,7 @@ fragment progressReportsDataGridRow on ProgressReport {
     items {
       id
       responses {
-        response {
-          value
-        }
-        variant {
-          responsibleRole
-        }
+        ...variantResponse
       }
     }
   }

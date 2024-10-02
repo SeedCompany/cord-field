@@ -63,7 +63,7 @@ const columns = entries(ProgressReportsColumnMap).map(([name, col]) => ({
 
 const initialState = {
   pinnedColumns: {
-    left: columns.slice(0, 2).map((column) => column.field),
+    left: columns.slice(0, 3).map((column) => column.field),
   },
   columns: {
     columnVisibilityModel: {
