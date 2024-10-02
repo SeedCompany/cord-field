@@ -22,6 +22,7 @@ import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton'
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
 import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
+import { useComments } from '../../../components/Comments/CommentsContext';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
@@ -159,6 +160,7 @@ export const ProjectOverview = () => {
       },
     }
   );
+  useComments(projectId);
 
   const engagements = useListQuery(EngagementList, {
     listAt: (data) => data.project.engagements,

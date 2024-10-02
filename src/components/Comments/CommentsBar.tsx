@@ -7,12 +7,9 @@ import { CommentsThreadList } from './CommentsThreadList';
 // thinking of possibly exposing this for a resize elsewhere? Might remove it though
 export const CommentsDrawerWidth = 300;
 
-interface CommentsBarProps {
-  resourceId?: string;
-}
-
-export const CommentsBar = ({ resourceId }: CommentsBarProps) => {
-  const { isCommentsBarOpen, toggleCommentsBar } = useCommentsContext();
+export const CommentsBar = () => {
+  const { isCommentsBarOpen, toggleCommentsBar, resourceId } =
+    useCommentsContext();
   const open = isCommentsBarOpen && !!resourceId;
 
   return (

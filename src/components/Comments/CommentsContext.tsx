@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -15,11 +16,13 @@ type ExpandedThreads = ReturnType<typeof useSet<string>>[1] & {
 };
 
 const initialCommentsBarContext = {
-  toggleCommentsBar: noop,
+  toggleCommentsBar: noop as (state?: boolean) => void,
   isCommentsBarOpen: false,
   expandedThreads: {} as unknown as ExpandedThreads,
   resourceCommentsTotal: 0,
   setResourceCommentsTotal: noop,
+  resourceId: undefined as string | undefined,
+  setResourceId: noop as (resourceId: string | undefined) => void,
 };
 
 export const CommentsContext = createContext(initialCommentsBarContext);
@@ -27,6 +30,8 @@ export const CommentsContext = createContext(initialCommentsBarContext);
 export const CommentsProvider = ({ children }: ChildrenProp) => {
   const [isCommentsBarOpen = false, setCommentsBarOpen] =
     useLocalStorageState<boolean>('show-comments', { defaultValue: false });
+
+  const [resourceId, setResourceId] = useState<string | undefined>(undefined);
 
   const [resourceCommentsTotal, setResourceCommentsTotal] = useState(0);
 
@@ -57,12 +62,16 @@ export const CommentsProvider = ({ children }: ChildrenProp) => {
       expandedThreads,
       resourceCommentsTotal,
       setResourceCommentsTotal,
+      resourceId,
+      setResourceId,
     }),
     [
       toggleCommentsBar,
       isCommentsBarOpen,
       expandedThreads,
       resourceCommentsTotal,
+      resourceId,
+      setResourceId,
     ]
   );
 
@@ -74,3 +83,11 @@ export const CommentsProvider = ({ children }: ChildrenProp) => {
 };
 
 export const useCommentsContext = () => useContext(CommentsContext);
+
+export const useComments = (resourceId: string | null | undefined) => {
+  const { setResourceId } = useCommentsContext();
+  useEffect(() => {
+    setResourceId(resourceId || undefined);
+    return () => setResourceId(undefined);
+  }, [resourceId, setResourceId]);
+};

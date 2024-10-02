@@ -20,6 +20,7 @@ import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
 import { TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { useComments } from '../../../components/Comments/CommentsContext';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
 import {
@@ -47,6 +48,7 @@ export const PartnerDetail = () => {
       input: partnerId,
     },
   });
+  useComments(partnerId);
 
   const [editPartnerState, editPartner, editField] =
     useDialog<Many<EditablePartnerField>>();

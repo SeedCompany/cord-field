@@ -1,7 +1,6 @@
 import { ErrorBoundary } from 'react-error-boundary';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
-import { firstValue } from '~/common';
 import { CommentsBar } from '~/components/Comments/CommentsBar';
 import { Error } from '../../components/Error';
 import { useAuthRequired } from '../Authentication';
@@ -24,7 +23,6 @@ const useStyles = makeStyles()(() => ({
 
 export const MainLayout = () => {
   useAuthRequired();
-  const resourceId = firstValue(useParams());
 
   const { classes } = useStyles();
   return (
@@ -38,7 +36,7 @@ export const MainLayout = () => {
           <Outlet />
         </ErrorBoundary>
       </div>
-      <CommentsBar resourceId={resourceId} />
+      <CommentsBar />
     </div>
   );
 };
