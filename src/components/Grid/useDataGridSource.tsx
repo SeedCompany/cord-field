@@ -357,7 +357,15 @@ export const useDataGridSource = <
             query,
             variables: {
               ...variables,
-              input: { ...input, page },
+              input: {
+                ...input,
+                page,
+                ...variables.input,
+                filter: {
+                  ...input.filter,
+                  ...variables.input?.filter,
+                },
+              },
             },
           })
           .then((res) => {
