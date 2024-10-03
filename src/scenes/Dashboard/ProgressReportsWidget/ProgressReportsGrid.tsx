@@ -153,7 +153,8 @@ export const ProgressReportsColumnMap = {
 
 export const ProgressReportsGrid = (props: DataGridProps) => {
   const [source] = useState(() => {
-    const currentDue = CalendarDate.now().minus({ quarter: 1 });
+    // Set the current due date to 2 quarters ago for testing purposes
+    const currentDue = CalendarDate.now().minus({ quarter: 2 });
     return {
       query: ProgressReportsDocument,
       variables: {
