@@ -8,6 +8,7 @@ import {
   GridColType,
   GridLogicOperator,
   GridSlotProps,
+  GridSortItem,
 } from '@mui/x-data-grid';
 import {
   DataGridProProps as DataGridProps,
@@ -68,7 +69,8 @@ const defaultKeyArgs = ['__typename', 'id'];
 
 const persistColumnTypes = setOf<GridColType>(['singleSelect', 'boolean']);
 
-type StoredViewState = Pick<DataGridProps, 'sortModel' | 'filterModel'> & {
+type StoredViewState = Pick<DataGridProps, 'filterModel'> & {
+  sortModel: [GridSortItem];
   apiFilterModel?: FilterShape;
 };
 type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
@@ -192,7 +194,7 @@ export const useDataGridSource = <
   };
 
   // State for current sorting & filtering
-  const [initialSort] = useState(() => [
+  const [initialSort] = useState((): ViewState['sortModel'] => [
     {
       field: initialInput?.sort ?? defaultInitialInput.sort,
       sort: lowerCase(initialInput?.order ?? defaultInitialInput.order),
@@ -227,10 +229,10 @@ export const useDataGridSource = <
     });
   });
   const [view, reallySetView] = useState((): ViewState => {
-    const { apiFilterModel: _, ...rest } = storedView ?? {};
+    const { apiFilterModel: _, ...rest } = storedView!; // not null because we give a default value
     return {
       ...rest,
-      apiSortModel: storedView!.sortModel,
+      apiSortModel: rest.sortModel,
     };
   });
   const setView = (setter: (prev: ViewState) => ViewState) => {
@@ -382,7 +384,19 @@ export const useDataGridSource = <
 
   const onSortModelChange: DataGridProps['onSortModelChange'] & {} =
     useMemoizedFn((next) => {
-      const sortModel = next.length === 0 ? initialSort : next;
+      let sortModel: ViewState['sortModel'];
+      if (next.length > 0) {
+        sortModel = [next[0]!];
+      } else {
+        // If "un-sorting" revert to initial sort
+        sortModel = initialSort;
+        // If the prev sort field _is_ the initial sort field, be sure to flip order
+        const prev = view.sortModel[0];
+        if (prev.field === initialSort[0].field) {
+          sortModel[0].sort = prev.sort === 'asc' ? 'desc' : 'asc';
+        }
+      }
+
       setView((prev) => ({
         ...prev,
         sortModel,
