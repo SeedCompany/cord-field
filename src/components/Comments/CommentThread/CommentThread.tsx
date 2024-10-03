@@ -24,7 +24,7 @@ export const CommentThread = ({ thread }: CommentThreadProps) => {
 
   const isExpanded = expandedThreads.has(thread.id);
   return (
-    <Stack role="listitem" gap={1}>
+    <Stack role="listitem" gap="var(--gap)">
       <CommentItem
         comment={thread.firstComment}
         thread={thread}
@@ -36,7 +36,11 @@ export const CommentThread = ({ thread }: CommentThreadProps) => {
         <ThreadActions thread={thread} isEditing={isEditing} />
 
         <Collapse in={isExpanded}>
-          <Stack role="list" divider={<Divider />} sx={{ mt: 1, gap: 1 }}>
+          <Stack
+            role="list"
+            divider={<Divider />}
+            sx={{ mt: 'var(--gap)', gap: 'var(--gap)' }}
+          >
             {thread.comments.items.slice(1).map((comment) => (
               <CommentItem key={comment.id} comment={comment} thread={thread} />
             ))}

@@ -40,7 +40,7 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
       Default: 'Something went wrong',
     });
     return (
-      <Alert color="error" icon={false} sx={{ alignSelf: 'normal' }}>
+      <Alert color="error" icon={false} sx={{ mt: 'var(--gap)' }}>
         {renderedError}
       </Alert>
     );
@@ -48,7 +48,11 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
 
   return (
     <>
-      <Stack role="list" divider={<Divider />} sx={{ gap: 1 }}>
+      <Stack
+        role="list"
+        divider={<Divider sx={{ mx: 'calc(var(--gutter) * -1)' }} />}
+        sx={{ gap: 'var(--gap)' }}
+      >
         {data?.items.map((thread) => (
           <CommentThread thread={thread} key={thread.id} />
         ))}

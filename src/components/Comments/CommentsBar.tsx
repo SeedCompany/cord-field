@@ -1,5 +1,5 @@
-import { Close as CloseIcon } from '@mui/icons-material';
-import { Drawer, Stack, Typography } from '@mui/material';
+import { ChevronRight as CloseIcon } from '@mui/icons-material';
+import { Divider, Drawer, Stack, Tooltip, Typography } from '@mui/material';
 import { IconButton } from '../IconButton';
 import { CreateComment } from './CommentForm/CreateComment';
 import { useCommentsContext } from './CommentsContext';
@@ -20,14 +20,19 @@ export const CommentsBar = () => {
       anchor="right"
       elevation={0}
       PaperProps={{
-        sx: {
+        sx: (theme) => ({
           width: CommentsDrawerWidth,
           // Artificially position this below the app header
           // Still up for consideration.
           // And maybe doable in another way without magic numbers.
           // top: 65,
           // height: 'calc(100vh - 65px)',
-        },
+
+          '--gutter': theme.spacing(2),
+          padding: 'var(--gutter)',
+          '--gap': theme.spacing(1),
+          gap: 'var(--gap)',
+        }),
       }}
       sx={[
         !open && { display: 'none' },
@@ -35,22 +40,28 @@ export const CommentsBar = () => {
         open && { width: CommentsDrawerWidth, flexShrink: 0 },
       ]}
     >
-      <Stack p={2} spacing={1}>
-        <IconButton
-          onClick={() => toggleCommentsBar(false)}
-          sx={{ alignSelf: 'start' }}
-        >
-          <CloseIcon />
-        </IconButton>
-
-        <CreateComment />
-
-        {resourceId ? (
-          <CommentsThreadList resourceId={resourceId} />
-        ) : (
-          <Typography variant="h6">Comments not available here</Typography>
-        )}
+      <Stack
+        direction="row"
+        gap={2}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Typography variant="h3">Comments</Typography>
+        <Tooltip title="Hide Comments">
+          <IconButton onClick={() => toggleCommentsBar()}>
+            <CloseIcon />
+          </IconButton>
+        </Tooltip>
       </Stack>
+
+      <CreateComment />
+      <Divider sx={{ mx: 'calc(var(--gutter) * -1)', mt: 'var(--gap)' }} />
+
+      {resourceId ? (
+        <CommentsThreadList resourceId={resourceId} />
+      ) : (
+        <Typography variant="h6">Comments not available here</Typography>
+      )}
     </Drawer>
   );
 };

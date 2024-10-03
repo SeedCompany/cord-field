@@ -38,7 +38,7 @@ export const CommentItem = ({ comment, thread, ...props }: CommentProps) => {
   });
 
   return (
-    <Stack gap={1} role="listitem">
+    <Stack gap="var(--gap)" role="listitem">
       <Stack
         direction="row"
         spacing={2}
