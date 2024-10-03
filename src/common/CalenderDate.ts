@@ -123,6 +123,10 @@ export class CalendarDate<IsValid extends boolean = DefaultValidity>
     ) as CalendarDate<Invalid>;
   }
 
+  static now() {
+    return CalendarDate.local();
+  }
+
   static local(
     year: number,
     month: number,
