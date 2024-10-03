@@ -14,7 +14,8 @@ export const ProgressReportsWidget = ({
   expanded,
   ...props
 }: WidgetProps & { expanded: boolean }) => {
-  const [currentDue] = useState(() => CalendarDate.now().minus({ quarter: 1 }));
+  // Set the current due date to 2 quarters ago for testing purposes
+  const [currentDue] = useState(() => CalendarDate.now().minus({ quarter: 2 }));
 
   const Grid = expanded
     ? ProgressReportsExpandedGrid
