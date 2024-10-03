@@ -384,7 +384,19 @@ export const useDataGridSource = <
 
   const onSortModelChange: DataGridProps['onSortModelChange'] & {} =
     useMemoizedFn((next) => {
-      const sortModel = next.length === 0 ? initialSort : next;
+      let sortModel: ViewState['sortModel'];
+      if (next.length > 0) {
+        sortModel = [next[0]!];
+      } else {
+        // If "un-sorting" revert to initial sort
+        sortModel = initialSort;
+        // If the prev sort field _is_ the initial sort field, be sure to flip order
+        const prev = view.sortModel[0];
+        if (prev.field === initialSort[0].field) {
+          sortModel[0].sort = prev.sort === 'asc' ? 'desc' : 'asc';
+        }
+      }
+
       setView((prev) => ({
         ...prev,
         sortModel,
