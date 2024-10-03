@@ -29,6 +29,12 @@ export const ExpansionCell = ({
           WebkitLineClamp: '2',
           WebkitBoxOrient: 'vertical',
 
+          // Only show the first child when collapsed.
+          // This prevents the clamp from happening (half) below the shown cell.
+          '& > :not(:first-child)': {
+            display: isExpanded ? undefined : 'none',
+          },
+
           // No trailing spacing on response
           '& > *:last-child': { mb: 0 },
         },
