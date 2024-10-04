@@ -6,6 +6,7 @@ import {
   ProgressReportColumnMapShape,
   ProgressReportsColumnMap,
   ProgressReportsGrid,
+  ProgressReportsGridProps,
 } from './ProgressReportsGrid';
 import { VariantResponseIconCell } from './VariantResponseCell';
 
@@ -52,7 +53,9 @@ const initialState = {
   },
 } satisfies DataGridProps['initialState'];
 
-export const ProgressReportsCollapsedGrid = (props: Partial<DataGridProps>) => {
+export const ProgressReportsCollapsedGrid = (
+  props: Omit<ProgressReportsGridProps, 'columns'>
+) => {
   return (
     <ProgressReportsGrid
       {...props}

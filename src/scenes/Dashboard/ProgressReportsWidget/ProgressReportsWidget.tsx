@@ -29,6 +29,7 @@ export const ProgressReportsWidget = ({
       />
       <TableWidget>
         <Grid
+          quarter={currentDue}
           hideFooter
           sx={[
             {
