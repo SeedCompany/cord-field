@@ -1,6 +1,7 @@
 import { Autocomplete, TextField } from '@mui/material';
+import { Nil } from '@seedcompany/common';
 import { DateTime } from 'luxon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CalendarDate } from '~/common';
 import { flexLayout } from '~/components/Grid';
 import {
@@ -10,8 +11,22 @@ import {
   WidgetHeader,
   WidgetProps,
 } from '~/components/Widgets';
+import { makeQueryHandler } from '~/hooks';
 import { ProgressReportsCollapsedGrid } from './ProgressReportsCollapsedGrid';
 import { ProgressReportsExpandedGrid } from './ProgressReportsExpandedGrid';
+
+const useQueryParams = makeQueryHandler({
+  quarter: {
+    encode: (q: CalendarDate | Nil) =>
+      q ? q.plus({ quarter: 1 }).toFormat('yy-q') : undefined,
+    decode: (input) => {
+      const q = Array.isArray(input) ? input[0] : input;
+      return q
+        ? CalendarDate.fromFormat(q, 'yy-q').minus({ quarter: 1 })
+        : undefined;
+    },
+  },
+});
 
 export const ProgressReportsWidget = ({
   expanded,
@@ -26,9 +41,21 @@ export const ProgressReportsWidget = ({
       .map((i) => CalendarDate.fromDateTime(i.start!) as CalendarDate<true>)
       .reverse();
   });
-  const [currentQuarter, setCurrentQuarter] = useState(
-    () => availableQuarters[0]!
-  );
+  const [params, setParams] = useQueryParams();
+
+  // Remove query param if invalid / out of range
+  useEffect(() => {
+    const { quarter } = params;
+    if (!quarter) {
+      return;
+    }
+    if (!quarter.isValid || !availableQuarters.some((q) => q.equals(quarter))) {
+      setParams({ quarter: undefined });
+    }
+  }, [params, setParams, availableQuarters]);
+
+  const currentQuarter =
+    (params.quarter?.isValid ? params.quarter : null) ?? availableQuarters[0]!;
 
   const Grid = expanded
     ? ProgressReportsExpandedGrid
@@ -49,7 +76,11 @@ export const ProgressReportsWidget = ({
           options={availableQuarters}
           getOptionLabel={(q) => `Q${q.fiscalQuarter} FY${q.fiscalYear}`}
           value={currentQuarter}
-          onChange={(_, q) => setCurrentQuarter(q)}
+          onChange={(_, q) =>
+            setParams({
+              quarter: q === availableQuarters[0]! ? undefined : q,
+            })
+          }
           disableClearable
           size="small"
           renderInput={(params) => (
