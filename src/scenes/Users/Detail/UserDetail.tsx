@@ -10,6 +10,8 @@ import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { RoleLabels } from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
+import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
+import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -56,6 +58,7 @@ export const UserDetail = () => {
   const { data, error } = useQuery(UserDocument, {
     variables: { userId },
   });
+  useComments(userId);
 
   const [editUserState, editUser] = useDialog();
 
@@ -98,6 +101,7 @@ export const UserDetail = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
+            <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
           </div>
           <DisplayProperty

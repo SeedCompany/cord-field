@@ -1,0 +1,16 @@
+fragment comment on Comment {
+  id
+  body {
+    value
+    canEdit
+    canRead
+  }
+  creator {
+    id
+    fullName
+    avatarLetters
+  }
+  createdAt
+  modifiedAt
+  canDelete
+}

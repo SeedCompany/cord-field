@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { ApolloError, useQuery } from '@apollo/client';
 import { NetworkStatus } from '@apollo/client/core';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
@@ -17,6 +17,7 @@ export interface ListQueryResult<
 > {
   loading: boolean;
   data?: List;
+  error?: ApolloError;
   // The root object of the query result.
   root?: Data;
   loadMore: () => void;
@@ -50,6 +51,7 @@ export const useListQuery = <
   const {
     loading,
     data: res,
+    error,
     fetchMore,
     networkStatus,
   } = useQuery(doc, {
@@ -83,5 +85,5 @@ export const useListQuery = <
     });
   };
 
-  return { loading, data, loadMore, networkStatus, root: res };
+  return { loading, data, error, loadMore, networkStatus, root: res };
 };

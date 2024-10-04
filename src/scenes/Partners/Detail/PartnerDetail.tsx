@@ -10,6 +10,7 @@ import { Many, Nil } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
+import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { DataButton } from '~/components/DataButton';
 import { useDialog } from '~/components/Dialog';
 import { Error } from '~/components/Error';
@@ -19,6 +20,7 @@ import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
 import { TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { useComments } from '../../../components/Comments/CommentsContext';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
 import {
@@ -46,6 +48,7 @@ export const PartnerDetail = () => {
       input: partnerId,
     },
   });
+  useComments(partnerId);
 
   const [editPartnerState, editPartner, editField] =
     useDialog<Many<EditablePartnerField>>();
@@ -128,6 +131,7 @@ const PartnerHeader = ({
             args.input?.filter?.pinned ?? false
           }
         />
+        <ToggleCommentsButton loading={!partner} />
       </Stack>
       {acronym && (
         <Typography variant="h4" gutterBottom>

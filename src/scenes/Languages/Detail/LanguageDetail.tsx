@@ -7,7 +7,9 @@ import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { removeItemFromList } from '~/api';
 import { canEditAny, listOrPlaceholders } from '~/common';
+import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { BooleanProperty } from '../../../components/BooleanProperty';
+import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
 import {
   DisplaySimpleProperty,
@@ -71,6 +73,7 @@ export const LanguageDetail = () => {
   const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },
   });
+  useComments(languageId);
 
   const [editState, edit] = useDialog();
   const [locationFormState, addLocation] = useDialog();
@@ -140,6 +143,7 @@ export const LanguageDetail = () => {
                 args.input?.filter?.pinned ?? false
               }
             />
+            <ToggleCommentsButton loading={!language} />
           </div>
           <Grid container spacing={2} alignItems="center">
             <Grid item>

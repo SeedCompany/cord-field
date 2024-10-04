@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useChangesetAwareIdFromUrl } from '../../components/Changeset';
+import { useComments } from '../../components/Comments/CommentsContext';
 import { NotFoundPage } from '../../components/Error';
 import { EngagementDocument } from './Engagement.graphql';
 import { EngagementDetailLoading } from './EngagementDetailLoading';
@@ -15,6 +16,7 @@ export const Engagement = () => {
       changeset: changesetId,
     },
   });
+  useComments(engagementId);
 
   if (loading) {
     return <EngagementDetailLoading />;

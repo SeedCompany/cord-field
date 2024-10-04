@@ -288,14 +288,16 @@ export function RichTextField({
                             justifyContent="space-between"
                             component="span"
                           >
-                            <Grid
-                              item
-                              component="span"
-                              // Maintain line height even when empty
-                              sx={{ '&:before': { content: `"\\200b"` } }}
-                            >
-                              {helperText}
-                            </Grid>
+                            {helperText !== false && (
+                              <Grid
+                                item
+                                component="span"
+                                // Maintain line height even when empty
+                                sx={{ '&:before': { content: `"\\200b"` } }}
+                              >
+                                {helperText}
+                              </Grid>
+                            )}
                             {showCharacterCount && !isDataEmpty(val) && val && (
                               <Grid
                                 item

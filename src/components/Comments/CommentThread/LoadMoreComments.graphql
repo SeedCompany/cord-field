@@ -1,0 +1,11 @@
+query LoadMoreComments($thread: ID!, $input: CommentListInput) {
+  commentThread(id: $thread) {
+    id
+    comments(input: $input) {
+      ...Pagination
+      items {
+        ...comment
+      }
+    }
+  }
+}
