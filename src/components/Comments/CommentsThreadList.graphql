@@ -1,0 +1,8 @@
+query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
+  commentThreads(resource: $resourceId, input: $input) {
+    items {
+      ...commentThread
+    }
+    ...Pagination
+  }
+}

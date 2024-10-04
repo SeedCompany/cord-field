@@ -19,8 +19,9 @@ import { SidebarHeader } from './SidebarHeader';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {
-    maxWidth: 248,
+    width: 248,
     overflowY: 'auto',
+    flexShrink: 0,
   },
   content: {
     padding: spacing(0, 2),

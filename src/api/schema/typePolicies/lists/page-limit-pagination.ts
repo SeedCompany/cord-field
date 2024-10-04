@@ -56,13 +56,16 @@ export const pageLimitPagination = <
 ): FieldPolicy<List> => ({
   // The list is unique for all args except page & count
   keyArgs: (args: InputArg<PaginatedListInput> | null) => {
+    const { input, ...restArgs } = args ?? {};
     // This function is called a lot and most of the time there are no args.
     // Optimization for this case.
-    if (!args?.input) {
-      return false;
+    if (!input) {
+      return Object.keys(restArgs).length === 0
+        ? false
+        : objectToKeyArgs(args ?? {});
     }
-    const { count, page, ...rest } = args.input;
-    return objectToKeyArgs({ input: rest });
+    const { count, page, ...rest } = input;
+    return objectToKeyArgs({ ...restArgs, input: rest });
   },
   merge(existing, incoming, options: FieldFunctionOptions<PaginatedListArgs>) {
     if (!incoming) {

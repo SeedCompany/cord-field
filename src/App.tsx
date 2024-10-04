@@ -6,6 +6,7 @@ import { posthog } from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
+import { CommentsProvider } from './components/Comments/CommentsContext';
 import { ConfettiProvider } from './components/Confetti';
 import { Nest } from './components/Nest';
 import { SnackbarProvider } from './components/Snackbar';
@@ -88,6 +89,7 @@ export const appProviders = [
   <ApolloProvider key="apollo" />,
   <FileUploadProvider key="files" />,
   <ConfettiProvider key="confetti" />,
+  <CommentsProvider key="comments" />,
 ].filter(isNotFalsy);
 
 export const App = () => (
