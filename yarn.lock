@@ -16389,13 +16389,13 @@ __metadata:
   linkType: hard
 
 "posthog-js@npm:^1.157.2":
-  version: 1.157.2
-  resolution: "posthog-js@npm:1.157.2"
+  version: 1.166.1
+  resolution: "posthog-js@npm:1.166.1"
   dependencies:
     fflate: "npm:^0.4.8"
     preact: "npm:^10.19.3"
     web-vitals: "npm:^4.0.1"
-  checksum: 10c0/62e6b908442e978fadb76643ca664f63d10f9feefb65b47d949a32c91a9c9181d1210097811eb3b7fd3f68112e4d58175e15162fbbc72bb253fb1f4f27df29da
+  checksum: 10c0/7a7e3195472956f1192352d62a2a663e535f63734cf532edd32fae4e130afa2c84ac32c86c84dd9adb7cbf7f94617641ffe4fd2a888294dfbb56dbebd3eef2f2
   languageName: node
   linkType: hard
 
