@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { CalendarDate } from '~/common';
+import { Autocomplete, TextField } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import { flexLayout } from '~/components/Grid';
 import {
+  ExpanderButton,
   TableWidget,
   Widget,
   WidgetHeader,
@@ -9,13 +10,14 @@ import {
 } from '~/components/Widgets';
 import { ProgressReportsCollapsedGrid } from './ProgressReportsCollapsedGrid';
 import { ProgressReportsExpandedGrid } from './ProgressReportsExpandedGrid';
+import { useQuarterState } from './useQuarterState';
 
 export const ProgressReportsWidget = ({
   expanded,
   ...props
 }: WidgetProps & { expanded: boolean }) => {
-  // Set the current due date to 2 quarters ago for testing purposes
-  const [currentDue] = useState(() => CalendarDate.now().minus({ quarter: 2 }));
+  const quarter = useQuarterState();
+  const location = useLocation();
 
   const Grid = expanded
     ? ProgressReportsExpandedGrid
@@ -23,12 +25,34 @@ export const ProgressReportsWidget = ({
   return (
     <Widget {...props}>
       <WidgetHeader
-        title={`Quarterly Reports - Q${currentDue.fiscalQuarter} FY${currentDue.fiscalYear}`}
-        to={expanded ? '/dashboard' : '/dashboard/progress-reports'}
-        expanded={expanded}
-      />
+        title="Quarterly Reports"
+        expandAction={
+          <ExpanderButton
+            expanded={expanded}
+            to={{
+              pathname: expanded ? '..' : 'progress-reports',
+              search: location.search,
+            }}
+          />
+        }
+      >
+        <Autocomplete
+          disablePortal
+          options={quarter.available}
+          getOptionLabel={(q) => `Q${q.fiscalQuarter} FY${q.fiscalYear}`}
+          value={quarter.current}
+          onChange={(_, q) => quarter.set(q)}
+          disableClearable
+          size="small"
+          renderInput={(params) => (
+            <TextField variant="outlined" margin="none" {...params} />
+          )}
+          sx={{ width: 137 }}
+        />
+      </WidgetHeader>
       <TableWidget>
         <Grid
+          quarter={quarter.current}
           hideFooter
           sx={[
             {

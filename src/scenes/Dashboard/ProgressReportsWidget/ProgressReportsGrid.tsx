@@ -6,7 +6,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
 import {
   ProgressReportStatusLabels,
@@ -151,20 +151,25 @@ export const ProgressReportsColumnMap = {
   },
 } satisfies ProgressReportColumnMapShape;
 
-export const ProgressReportsGrid = (props: DataGridProps) => {
-  const [source] = useState(() => {
-    // Set the current due date to 2 quarters ago for testing purposes
-    const currentDue = CalendarDate.now().minus({ quarter: 2 });
+export interface ProgressReportsGridProps extends DataGridProps {
+  quarter: CalendarDate;
+}
+
+export const ProgressReportsGrid = ({
+  quarter,
+  ...props
+}: ProgressReportsGridProps) => {
+  const source = useMemo(() => {
     return {
       query: ProgressReportsDocument,
       variables: {
         input: {
           filter: {
             start: {
-              afterInclusive: currentDue.startOf('quarter'),
+              afterInclusive: quarter.startOf('quarter'),
             },
             end: {
-              beforeInclusive: currentDue.endOf('quarter'),
+              beforeInclusive: quarter.endOf('quarter'),
             },
           },
         },
@@ -175,7 +180,7 @@ export const ProgressReportsGrid = (props: DataGridProps) => {
         order: 'DESC',
       },
     } as const;
-  });
+  }, [quarter]);
   const [dataGridProps] = useDataGridSource({
     ...source,
     apiRef: props.apiRef,
