@@ -1,3 +1,4 @@
+import { useLazyQuery } from '@apollo/client';
 import { ExpandLess, ExpandMore, Reply } from '@mui/icons-material';
 import {
   Box,
@@ -8,11 +9,14 @@ import {
   Stack,
 } from '@mui/material';
 import { useState } from 'react';
+import { isNetworkRequestInFlight } from '~/api';
 import { extendSx, StyleProps } from '~/common';
+import { ProgressButton } from '../../ProgressButton';
 import { CreateComment } from '../CommentForm/CreateComment';
 import { CommentItem } from '../CommentItem';
 import { useCommentsContext } from '../CommentsContext';
 import { CommentThreadFragment } from './commentThread.graphql';
+import { LoadMoreCommentsDocument } from './LoadMoreComments.graphql';
 
 interface CommentThreadProps {
   thread: CommentThreadFragment;
@@ -20,9 +24,20 @@ interface CommentThreadProps {
 
 export const CommentThread = ({ thread }: CommentThreadProps) => {
   const { expandedThreads } = useCommentsContext();
+  const isExpanded = expandedThreads.has(thread.id);
+
+  const [loadMore, { networkStatus }] = useLazyQuery(LoadMoreCommentsDocument, {
+    fetchPolicy: 'network-only',
+    variables: {
+      thread: thread.id,
+      input: {
+        page: thread.comments.nextPage,
+      },
+    },
+  });
+
   const [isEditing, setIsEditing] = useState(false);
 
-  const isExpanded = expandedThreads.has(thread.id);
   return (
     <Stack role="listitem" gap="var(--gap)">
       <CommentItem
@@ -41,9 +56,24 @@ export const CommentThread = ({ thread }: CommentThreadProps) => {
             divider={<Divider />}
             sx={{ mt: 'var(--gap)', gap: 'var(--gap)' }}
           >
-            {thread.comments.items.slice(1).map((comment) => (
-              <CommentItem key={comment.id} comment={comment} thread={thread} />
-            ))}
+            {thread.comments.hasMore && (
+              <ProgressButton
+                onClick={() => void loadMore()}
+                progress={isNetworkRequestInFlight(networkStatus)}
+              >
+                Load More
+              </ProgressButton>
+            )}
+            {thread.comments.items
+              .toReversed()
+              .slice(1)
+              .map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  thread={thread}
+                />
+              ))}
           </Stack>
         </Collapse>
       </Box>

@@ -4,8 +4,8 @@ fragment commentThread on CommentThread {
   firstComment {
     ...comment
   }
-  comments(input: { order: ASC }) {
-    total
+  comments {
+    ...Pagination
     items {
       ...comment
     }
