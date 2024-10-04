@@ -23,6 +23,7 @@ import {
   ExpansionMarker,
   ProgressReportsColumnMap,
   ProgressReportsGrid,
+  ProgressReportsGridProps,
 } from './ProgressReportsGrid';
 
 const COLLAPSED_ROW_HEIGHT = 54;
@@ -101,7 +102,9 @@ const slots = {
   toolbar: ProgressReportsToolbar,
 } satisfies DataGridProps['slots'];
 
-export const ProgressReportsExpandedGrid = (props: Partial<DataGridProps>) => {
+export const ProgressReportsExpandedGrid = (
+  props: Omit<ProgressReportsGridProps, 'columns'>
+) => {
   const apiRef = useGridApiRef();
 
   const [selected, setSelected] = useState<GridRowId[]>([]);
