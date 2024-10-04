@@ -2,6 +2,7 @@ import { Autocomplete, TextField } from '@mui/material';
 import { Nil } from '@seedcompany/common';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { CalendarDate } from '~/common';
 import { flexLayout } from '~/components/Grid';
 import {
@@ -42,6 +43,7 @@ export const ProgressReportsWidget = ({
       .reverse();
   });
   const [params, setParams] = useQueryParams();
+  const location = useLocation();
 
   // Remove query param if invalid / out of range
   useEffect(() => {
@@ -67,7 +69,10 @@ export const ProgressReportsWidget = ({
         expandAction={
           <ExpanderButton
             expanded={expanded}
-            to={expanded ? '/dashboard' : '/dashboard/progress-reports'}
+            to={{
+              pathname: expanded ? '..' : 'progress-reports',
+              search: location.search,
+            }}
           />
         }
       >
