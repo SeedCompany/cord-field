@@ -26,7 +26,7 @@ export const CreateComment = ({
   return (
     <CommentForm
       {...rest}
-      onSubmit={async (values) => {
+      onSubmit={async (values, form) => {
         if (!values.body || !resourceId) return;
 
         await createOrReplyComment({
@@ -39,6 +39,7 @@ export const CreateComment = ({
           },
         });
 
+        form.reset();
         onFinish?.();
       }}
       submitLabel={threadId ? 'Reply' : 'Comment'}
