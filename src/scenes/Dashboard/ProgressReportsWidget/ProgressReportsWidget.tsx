@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CalendarDate } from '~/common';
 import { flexLayout } from '~/components/Grid';
 import {
+  ExpanderButton,
   TableWidget,
   Widget,
   WidgetHeader,
@@ -24,8 +25,12 @@ export const ProgressReportsWidget = ({
     <Widget {...props}>
       <WidgetHeader
         title={`Quarterly Reports - Q${currentDue.fiscalQuarter} FY${currentDue.fiscalYear}`}
-        to={expanded ? '/dashboard' : '/dashboard/progress-reports'}
-        expanded={expanded}
+        expandAction={
+          <ExpanderButton
+            expanded={expanded}
+            to={expanded ? '/dashboard' : '/dashboard/progress-reports'}
+          />
+        }
       />
       <TableWidget>
         <Grid

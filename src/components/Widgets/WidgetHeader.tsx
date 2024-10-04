@@ -1,53 +1,35 @@
-import { CloseFullscreen, OpenInFull } from '@mui/icons-material';
-import {
-  Box,
-  CardHeader,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-} from '@mui/material';
-import { ElementType, ReactNode } from 'react';
-import { Link } from '../Routing';
+import { Box, Stack, Typography } from '@mui/material';
+import { ReactNode } from 'react';
+import { StyleProps } from '~/common';
 
-const Spacer = () => <Box sx={{ display: 'flex', flexGrow: 1 }} />;
-
-export interface WidgetHeaderProps {
+export interface WidgetHeaderProps extends StyleProps {
   title: ReactNode;
   subTitle?: ReactNode;
-  headerExtension?: ElementType;
-  to?: string;
-  expanded?: boolean;
+  children?: ReactNode;
+  expandAction?: ReactNode;
 }
 
 export const WidgetHeader = ({
   title,
   subTitle,
-  headerExtension,
-  to,
-  expanded,
+  children,
+  expandAction,
+  ...rest
 }: WidgetHeaderProps) => (
-  <CardHeader
-    sx={{ p: 1, pl: 2 }}
-    title={
-      <Stack direction="row" justifyContent="end" alignItems="center">
-        <Stack sx={{ flex: 1 }}>
-          <Typography variant="h4">{title}</Typography>
-          {subTitle && (
-            <Typography variant="caption" sx={{ color: 'grey.500' }}>
-              {subTitle}
-            </Typography>
-          )}
-        </Stack>
-        {headerExtension ? <Box component={headerExtension} /> : <Spacer />}
-        {to && (
-          <Tooltip title={expanded ? 'Collapse Widget' : 'Expand Widget'}>
-            <IconButton color="primary" component={Link} to={to}>
-              {expanded ? <CloseFullscreen /> : <OpenInFull />}
-            </IconButton>
-          </Tooltip>
-        )}
-      </Stack>
-    }
-  />
+  <Box display="flex" alignItems="center" p={2} gap={2} {...rest}>
+    <Stack>
+      <Typography variant="h4">{title}</Typography>
+      {subTitle && (
+        <Typography variant="caption" color="text.secondary">
+          {subTitle}
+        </Typography>
+      )}
+    </Stack>
+    {children}
+    {expandAction && (
+      <Box flex={1} m={-1} display="flex" flexDirection="row-reverse">
+        {expandAction}
+      </Box>
+    )}
+  </Box>
 );
