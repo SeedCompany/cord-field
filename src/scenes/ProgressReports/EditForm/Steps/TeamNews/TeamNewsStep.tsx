@@ -40,15 +40,18 @@ export const TeamNewsStep: StepComponent = ({ report }) => {
 };
 TeamNewsStep.enableWhen = ({ report }) => report.teamNews.canRead;
 
-TeamNewsStep.isIncomplete = ({ report, currentUserRoles }) =>
-  report.teamNews.items[0]?.responses.some(
-    ({ variant: { responsibleRole }, response }) =>
-      // responsible
-      (responsibleRole ? currentUserRoles.has(responsibleRole) : false) &&
-      // empty and editable
-      !response.value &&
-      response.canEdit
-  ) ?? true;
+TeamNewsStep.isIncomplete = ({ report, currentUserRoles }) => ({
+  isIncomplete:
+    report.teamNews.items[0]?.responses.some(
+      ({ variant: { responsibleRole }, response }) =>
+        // responsible
+        (responsibleRole ? currentUserRoles.has(responsibleRole) : false) &&
+        // empty and editable
+        !response.value &&
+        response.canEdit
+    ) ?? true,
+  severity: 'suggested',
+});
 
 const CreateFromFirstPrompt = ({ report }: ReportProp) => {
   const news = report.teamNews.items[0];

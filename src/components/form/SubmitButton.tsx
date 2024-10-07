@@ -92,9 +92,11 @@ export const useSubmitButton = ({ action }: { action?: string }) => {
     [submitErrors]
   );
 
-  const allFieldsTouched = touched
-    ? Object.values(touched).every((field) => field)
-    : false;
+  const touchedList = touched ? Object.values(touched) : undefined;
+  const allFieldsTouched =
+    touchedList &&
+    touchedList.length > 0 &&
+    touchedList.every((field) => field);
 
   const allFieldsWithSubmitErrorsAreDirty = useMemo(() => {
     if (!submitErrors || Object.keys(fieldSubmitErrors).length === 0) {
