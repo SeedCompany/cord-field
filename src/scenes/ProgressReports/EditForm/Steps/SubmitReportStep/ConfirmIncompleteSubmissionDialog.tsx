@@ -6,39 +6,50 @@ import { Alert, Stack, SvgIconProps, Tooltip, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { FORM_ERROR } from 'final-form';
 import { kebabCase } from 'lodash';
+import { useFeatureFlagVariantKey } from 'posthog-js/react';
 import { DialogForm, DialogFormProps } from '~/components/Dialog/DialogForm';
+import { VisibilityAndClickTracker } from '~/components/Feature';
 import { Link } from '~/components/Routing';
 import { useProgressReportContext } from '../../ProgressReportContext';
 import { IncompleteSeverity } from '../step.types';
+
+const blockRequireFlag = 'progress-report-block-submit-on-required-error';
 
 export const ConfirmIncompleteSubmissionDialog = (
   props: DialogFormProps<void>
 ) => {
   const { incompleteSeverities } = useProgressReportContext();
+  const blockRequired = useFeatureFlagVariantKey(blockRequireFlag);
   return (
-    <DialogForm
-      title={
-        <>
-          Submit <em>incomplete</em> report?
-        </>
-      }
-      SubmitProps={{ color: 'primary' }}
-      sendIfClean
-      {...props}
-      validate={() =>
-        incompleteSeverities.has('required')
-          ? { [FORM_ERROR]: 'Fill out the required steps first' }
-          : undefined
-      }
+    <VisibilityAndClickTracker
+      flag={blockRequireFlag}
+      trackView={props.open}
+      trackInteraction={props.open}
     >
-      {({ error, submitFailed }) => (
-        <Stack gap={2}>
-          <Typography>The following was left blank:</Typography>
-          <IncompleteSteps />
-          {error && submitFailed && <Alert severity="error">{error}</Alert>}
-        </Stack>
-      )}
-    </DialogForm>
+      <DialogForm
+        title={
+          <>
+            Submit <em>incomplete</em> report?
+          </>
+        }
+        SubmitProps={{ color: 'primary' }}
+        sendIfClean
+        {...props}
+        validate={() =>
+          incompleteSeverities.has('required') && blockRequired
+            ? { [FORM_ERROR]: 'Fill out the required steps first' }
+            : undefined
+        }
+      >
+        {({ error, submitFailed }) => (
+          <Stack gap={2}>
+            <Typography>The following was left blank:</Typography>
+            <IncompleteSteps />
+            {error && submitFailed && <Alert severity="error">{error}</Alert>}
+          </Stack>
+        )}
+      </DialogForm>
+    </VisibilityAndClickTracker>
   );
 };
 
