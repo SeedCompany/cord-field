@@ -2,7 +2,8 @@ import {
   Error as ErrorIcon,
   Warning as WarningIcon,
 } from '@mui/icons-material';
-import { Alert, Box, Typography } from '@mui/material';
+import { Alert, Stack, SvgIconProps, Tooltip, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { FORM_ERROR } from 'final-form';
 import { kebabCase } from 'lodash';
 import { DialogForm, DialogFormProps } from '~/components/Dialog/DialogForm';
@@ -44,70 +45,52 @@ export const ConfirmIncompleteSubmissionDialog = (
 const IncompleteSteps = () => {
   const { incompleteSteps } = useProgressReportContext();
   return (
-    <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0 }}>
+    <Stack component={UL} sx={{ gap: 1 }}>
       {Object.entries(incompleteSteps).map(([groupName, steps]) => (
         <li key={groupName}>
-          <Typography
-            variant="body2"
-            component="div"
-            textTransform="uppercase"
-            sx={{ mb: 1 }}
-          >
+          <Typography variant="body2" textTransform="uppercase" gutterBottom>
             {groupName}
           </Typography>
-          <Box
-            component="ul"
-            sx={{
-              listStyle: 'none',
-              pl: 0,
-              mb: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-            }}
-          >
+          <Stack component={UL} sx={{ gap: 1, ml: 2 }}>
             {steps.map(({ label: stepName, severity }) => (
-              <Typography
-                component="li"
-                key={stepName}
-                sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
-              >
-                <Box
-                  component="span"
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    mr: 1,
-                    ml: 2,
-                  }}
-                >
-                  <IncompleteSeverityIcon severity={severity} />
-                </Box>
+              <Typography component="li" key={stepName}>
                 <Link
-                  color="inherit"
+                  underline="always"
                   // Carson doesn't love this logic being duplicated here,
                   // but values semantic markup more
                   to={{ search: `?step=${kebabCase(stepName)}` }}
+                  sx={{ display: 'flex', alignItems: 'center' }}
                 >
+                  <SeverityIcon severity={severity} sx={{ mr: 1 }} />
                   {stepName}
                 </Link>
               </Typography>
             ))}
-          </Box>
+          </Stack>
         </li>
       ))}
-    </Box>
+    </Stack>
   );
 };
 
-const IncompleteSeverityIcon = ({
+const UL = styled('ul')({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+
+const SeverityIcon = ({
   severity,
+  ...rest
 }: {
   severity: IncompleteSeverity;
-}) => {
-  return severity === 'required' ? (
-    <ErrorIcon color="error" />
+} & SvgIconProps) =>
+  severity === 'required' ? (
+    <Tooltip title="Required">
+      <ErrorIcon color="error" {...rest} />
+    </Tooltip>
   ) : (
-    <WarningIcon color="warning" />
+    <Tooltip title="Recommended">
+      <WarningIcon color="warning" {...rest} />
+    </Tooltip>
   );
-};
