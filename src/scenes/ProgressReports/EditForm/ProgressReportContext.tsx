@@ -4,11 +4,17 @@ import { ChildrenProp } from '~/common';
 import { useSession } from '~/components/Session';
 import { makeQueryHandler, StringParam } from '~/hooks';
 import { ReportProp } from './ReportProp';
-import { GroupedStepMapShape, StepComponent } from './Steps';
+import {
+  GroupedIncompleteSteps,
+  GroupedStepMapShape,
+  IncompleteSeverity,
+  StepComponent,
+} from './Steps';
 
 interface ProgressReportContext {
   groupedStepMap: GroupedStepMapShape;
-  incompleteSteps: GroupedStepMapShape;
+  incompleteSteps: GroupedIncompleteSteps;
+  incompleteSeverities: ReadonlySet<IncompleteSeverity>;
   CurrentStep: StepComponent;
   isLast: boolean;
   isFirst: boolean;
@@ -50,17 +56,25 @@ export const ProgressReportContextProvider = ({
     [session]
   );
 
-  const incompleteSteps = useMemo(() => {
-    return Object.fromEntries(
+  const { incompleteSteps, incompleteSeverities } = useMemo(() => {
+    const incompleteSeverities = new Set<IncompleteSeverity>();
+    const incompleteSteps = Object.fromEntries(
       Object.entries(groupedStepMap).flatMap(([title, steps]) => {
-        const incompleteSteps = steps.filter(([_, { isIncomplete }]) =>
-          report == null
-            ? true
-            : isIncomplete?.({ report, currentUserRoles }) ?? false
-        );
+        const incompleteSteps = steps.flatMap(([label, step]) => {
+          if (!report || !step.isIncomplete) {
+            return [];
+          }
+          const { isIncomplete, severity } = step.isIncomplete({
+            report,
+            currentUserRoles,
+          });
+          incompleteSeverities.add(severity);
+          return isIncomplete ? { label, step, severity } : [];
+        });
         return incompleteSteps.length > 0 ? [[title, incompleteSteps]] : [];
       })
     );
+    return { incompleteSteps, incompleteSeverities };
   }, [currentUserRoles, groupedStepMap, report]);
 
   const context = useMemo(() => {
@@ -82,6 +96,7 @@ export const ProgressReportContextProvider = ({
       CurrentStep: stepMap[stepName] ?? Noop,
       groupedStepMap,
       incompleteSteps,
+      incompleteSeverities,
       isFirst: stepIndex <= 0,
       isLast: stepIndex >= flatSteps.length - 1,
       setProgressReportStep: setStep,

@@ -169,8 +169,7 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
             {optionsByGroup[group].length > 0 && (
               <EnumField
                 name="reasons"
-                label="Select a reason"
-                required
+                label="Required: Select a reason below"
                 layout="column"
                 disabled={!explanation.reasons.canEdit}
               >
@@ -213,3 +212,14 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
     </>
   );
 };
+
+ExplanationOfProgress.enableWhen = ({ report }) =>
+  report.varianceExplanation.reasons.canRead;
+
+ExplanationOfProgress.isIncomplete = ({ report }) => ({
+  isIncomplete:
+    report.varianceExplanation.scheduleStatus !== 'OnTime' &&
+    !report.varianceExplanation.reasons.value[0] &&
+    report.varianceExplanation.reasons.canEdit,
+  severity: 'required',
+});

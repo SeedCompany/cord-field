@@ -1,4 +1,10 @@
-import { Alert, Divider, Stack } from '@mui/material';
+import {
+  Alert,
+  CircularProgress,
+  Divider,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useEffect } from 'react';
 import { isNetworkRequestInFlight } from '../../api';
 import { renderError } from '../Error/error-handling';
@@ -57,6 +63,19 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
           <CommentThread thread={thread} key={thread.id} />
         ))}
       </Stack>
+      {!data && (
+        <Stack flex={1} justifyContent="space-evenly">
+          <Stack alignItems="center">
+            <CircularProgress />
+          </Stack>
+          <div />
+        </Stack>
+      )}
+      {data && data.items.length === 0 && (
+        <Typography color="text.secondary" align="center">
+          None yet
+        </Typography>
+      )}
       {data?.hasMore && (
         <ProgressButton
           onClick={loadMore}

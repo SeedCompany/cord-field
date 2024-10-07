@@ -51,12 +51,15 @@ export const CommunityStoryStep: StepComponent = ({ report }) => {
 };
 CommunityStoryStep.enableWhen = ({ report }) => report.communityStories.canRead;
 
-CommunityStoryStep.isIncomplete = ({ report, currentUserRoles }) =>
-  report.communityStories.items[0]?.responses.some(
-    ({ variant: { responsibleRole }, response }) =>
-      // responsible
-      (responsibleRole ? currentUserRoles.has(responsibleRole) : false) &&
-      // empty and editable
-      !response.value &&
-      response.canEdit
-  ) ?? true;
+CommunityStoryStep.isIncomplete = ({ report, currentUserRoles }) => ({
+  isIncomplete:
+    report.communityStories.items[0]?.responses.some(
+      ({ variant: { responsibleRole }, response }) =>
+        // responsible
+        (responsibleRole ? currentUserRoles.has(responsibleRole) : false) &&
+        // empty and editable
+        !response.value &&
+        response.canEdit
+    ) ?? true,
+  severity: 'suggested',
+});
