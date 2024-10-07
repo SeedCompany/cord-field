@@ -7,7 +7,7 @@ export type StepComponent = ComponentType<ReportProp> & {
   isIncomplete?: IsIncompleteFn;
 };
 
-export type IncompleteSeverity = 'suggested';
+export type IncompleteSeverity = 'required' | 'suggested';
 
 export type IsIncompleteFn = (
   report: ReportProp & { currentUserRoles: ReadonlySet<Role> }

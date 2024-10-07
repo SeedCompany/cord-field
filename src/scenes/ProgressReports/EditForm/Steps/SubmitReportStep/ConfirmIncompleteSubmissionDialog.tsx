@@ -1,5 +1,9 @@
-import { Warning } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
+import {
+  Error as ErrorIcon,
+  Warning as WarningIcon,
+} from '@mui/icons-material';
+import { Alert, Box, Typography } from '@mui/material';
+import { FORM_ERROR } from 'final-form';
 import { kebabCase } from 'lodash';
 import { DialogForm, DialogFormProps } from '~/components/Dialog/DialogForm';
 import { Link } from '~/components/Routing';
@@ -8,21 +12,34 @@ import { IncompleteSeverity } from '../step.types';
 
 export const ConfirmIncompleteSubmissionDialog = (
   props: DialogFormProps<void>
-) => (
-  <DialogForm
-    title={
-      <>
-        Submit <em>incomplete</em> report?
-      </>
-    }
-    SubmitProps={{ color: 'primary' }}
-    sendIfClean
-    {...props}
-  >
-    <Typography paragraph>The following was left blank:</Typography>
-    <IncompleteSteps />
-  </DialogForm>
-);
+) => {
+  const { incompleteSeverities } = useProgressReportContext();
+  return (
+    <DialogForm
+      title={
+        <>
+          Submit <em>incomplete</em> report?
+        </>
+      }
+      SubmitProps={{ color: 'primary' }}
+      sendIfClean
+      {...props}
+      validate={() =>
+        incompleteSeverities.has('required')
+          ? { [FORM_ERROR]: 'Fill out the required steps first' }
+          : undefined
+      }
+    >
+      {({ error, submitFailed }) => (
+        <Stack gap={2}>
+          <Typography>The following was left blank:</Typography>
+          <IncompleteSteps />
+          {error && submitFailed && <Alert severity="error">{error}</Alert>}
+        </Stack>
+      )}
+    </DialogForm>
+  );
+};
 
 const IncompleteSteps = () => {
   const { incompleteSteps } = useProgressReportContext();
@@ -88,7 +105,9 @@ const IncompleteSeverityIcon = ({
 }: {
   severity: IncompleteSeverity;
 }) => {
-  return (
-    <Warning color="warning" />
+  return severity === 'required' ? (
+    <ErrorIcon color="error" />
+  ) : (
+    <WarningIcon color="warning" />
   );
 };
