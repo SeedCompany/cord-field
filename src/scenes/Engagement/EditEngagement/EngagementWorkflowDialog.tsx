@@ -1,5 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { Grid, Tooltip, Typography } from '@mui/material';
+import { InfoOutlined as InfoIcon } from '@mui/icons-material';
+import { Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
@@ -20,6 +21,7 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import { Link } from '../../../components/Routing';
 import { Engagement } from './EditEngagementDialog';
 import {
   UpdateInternshipEngagementDocument,
@@ -68,9 +70,28 @@ export const EngagementWorkflowDialog = ({
 
   const { canBypassTransitions, transitions } = engagement.status;
 
+  const status = engagement.status.value;
   return (
     <DialogForm
-      title="Update Engagement"
+      title={
+        <Stack
+          direction="row"
+          gap={1}
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ mr: -1 }}
+        >
+          <span>Update Engagement</span>
+          <Tooltip title="View Workflow">
+            <IconButton
+              component={Link}
+              to={`/engagements/workflow${status ? `?state=${status}` : ''}`}
+            >
+              <InfoIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      }
       closeLabel="Close"
       {...props}
       submitLabel={canBypassTransitions ? undefined : false}
