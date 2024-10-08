@@ -5,6 +5,7 @@ fragment commentThread on CommentThread {
     ...comment
   }
   comments {
+    canCreate
     ...Pagination
     items {
       ...comment
