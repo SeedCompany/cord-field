@@ -24,6 +24,7 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
+import { ProgressSummaryFragment } from '../../ProgressReports/Detail/ProgressReportDetail.graphql';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -96,6 +97,13 @@ export const ProgressReportsColumnMap = {
     sortable: false,
     filterable: false,
     valueGetter: (_, row) => row.varianceExplanation.scheduleStatus,
+  },
+  cumulativeSummary: {
+    headerName: 'Cumulative Progress',
+    minWidth: 200,
+    sortable: false,
+    filterable: false,
+    renderCell: ({ value }) => <CumulativeProgressColumn value={value} />,
   },
   teamNews: {
     headerName: 'Team News',
@@ -211,5 +219,44 @@ export const ProgressReportsGrid = ({
       {...props}
       sx={[noHeaderFilterButtons, ...extendSx(props.sx)]}
     />
+  );
+};
+
+const CumulativeProgressColumn = ({
+  value,
+}: {
+  value: ProgressSummaryFragment | null;
+}) => {
+  const progressData = {
+    Planned: value?.planned,
+    Actual: value?.actual,
+    Variance: value?.variance,
+  };
+
+  return (
+    <Box
+      sx={{
+        my: 1,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'left',
+        gap: 2,
+      }}
+    >
+      {Object.entries(progressData).map(([label, data]) =>
+        cumulativeProgressData(label, data)
+      )}
+    </Box>
+  );
+};
+
+const cumulativeProgressData = (label: string, data: number | undefined) => {
+  const displayValue = data === undefined ? '—' : `${(data * 100).toFixed(1)}%`;
+
+  return (
+    <Box sx={{ textAlign: 'left' }}>
+      <Typography variant="body2">{displayValue}</Typography>
+      <Typography variant="body2">{label}</Typography>
+    </Box>
   );
 };
