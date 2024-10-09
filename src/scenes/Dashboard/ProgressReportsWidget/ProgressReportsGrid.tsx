@@ -65,7 +65,6 @@ export const ProgressReportsColumnMap = {
     headerName: 'View',
     field: 'id',
     width: 54,
-    display: 'flex',
     renderCell: ({ row }) => (
       <Tooltip title="View Report">
         <IconButton
