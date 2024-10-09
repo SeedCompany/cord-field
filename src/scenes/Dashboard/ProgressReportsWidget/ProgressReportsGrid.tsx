@@ -24,6 +24,7 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
+import { ProgressSummaryStats } from '../../ProgressReports/Detail/ProgressSummaryStats';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -100,19 +101,16 @@ export const ProgressReportsColumnMap = {
   },
   cumulativeSummary: {
     headerName: 'Cumulative Progress',
-    minWidth: 200,
+    minWidth: 250,
     sortable: false,
     filterable: false,
-    valueGetter: (_, row) => {
-      const planned =
-        Math.floor((row.cumulativeSummary?.planned ?? 0) * 10) / 10;
-      const actual = Math.floor((row.cumulativeSummary?.actual ?? 0) * 10) / 10;
-      const variance =
-        Math.floor((row.cumulativeSummary?.variance ?? 0) * 10) / 10;
-
-      return { planned, actual, variance };
-    },
-    renderCell: ({ value }) => <CumulativeProgressColumn value={value} />,
+    renderCell: ({ value }) => (
+      <ProgressSummaryStats
+        loading={false}
+        summary={value}
+        isForDashboardTable={true}
+      />
+    ),
   },
   teamNews: {
     headerName: 'Team News',
@@ -231,33 +229,31 @@ export const ProgressReportsGrid = ({
   );
 };
 
-interface CumulativeProgress {
-  planned: number;
-  actual: number;
-  variance: number;
-}
-
-const CumulativeProgressColumn = ({ value }: { value: CumulativeProgress }) => (
-  <Box
-    my={1}
-    sx={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'left',
-      gap: 2,
-    }}
-  >
-    <Box sx={{ textAlign: 'left' }}>
-      <Typography variant="body2">{value.planned}%</Typography>
-      <Typography variant="body2">Planned</Typography>
-    </Box>
-    <Box sx={{ textAlign: 'left' }}>
-      <Typography variant="body2">{value.actual}%</Typography>
-      <Typography variant="body2">Actual</Typography>
-    </Box>
-    <Box sx={{ textAlign: 'left' }}>
-      <Typography variant="body2">{value.variance}%</Typography>
-      <Typography variant="body2">Variance</Typography>
-    </Box>
-  </Box>
-);
+// const CumulativeProgressColumn = ({
+//   value,
+// }: {
+//   value: ProgressSummaryFragment;
+// }) => (
+//   <Box
+//     my={1}
+//     sx={{
+//       display: 'flex',
+//       justifyContent: 'space-between',
+//       alignItems: 'left',
+//       gap: 2,
+//     }}
+//   >
+//     <Box sx={{ textAlign: 'left' }}>
+//       <Typography variant="body2">{value.planned}%</Typography>
+//       <Typography variant="body2">Planned</Typography>
+//     </Box>
+//     <Box sx={{ textAlign: 'left' }}>
+//       <Typography variant="body2">{value.actual}%</Typography>
+//       <Typography variant="body2">Actual</Typography>
+//     </Box>
+//     <Box sx={{ textAlign: 'left' }}>
+//       <Typography variant="body2">{value.variance}%</Typography>
+//       <Typography variant="body2">Variance</Typography>
+//     </Box>
+//   </Box>
+// );
