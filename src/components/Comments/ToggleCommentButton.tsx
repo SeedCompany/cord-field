@@ -18,7 +18,7 @@ export const ToggleCommentsButton = ({
     variables: { id: resourceId! },
     skip: !resourceId,
   });
-  const total = data?.commentThreads.total ?? 0;
+  const total = data?.commentable.commentThreads.total ?? 0;
 
   return (
     <Feature flag="comments" match={true}>

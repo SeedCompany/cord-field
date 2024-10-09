@@ -1,5 +1,8 @@
 query ThreadCount($id: ID!) {
-  commentThreads(resource: $id) {
-    total
+  commentable(resource: $id) {
+    id
+    commentThreads {
+      total
+    }
   }
 }
