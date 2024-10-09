@@ -47,11 +47,7 @@ export const PnPExtractionProblems = memo(function PnPExtractionProblems({
             <Alert severity="info" sx={{ mb: 1 }}>
               Once these problems are fixed, the updated file needs to be
               uploaded on the{' '}
-              <Link
-                to={`/engagements/${engagement.id}`}
-                color="inherit"
-                underline="always"
-              >
+              <Link to={`/engagements/${engagement.id}`} color="inherit">
                 Planning Spreadsheet
               </Link>{' '}
               to synchronize the changes for the planned goals.
