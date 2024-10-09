@@ -34,11 +34,7 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
   const { data, error, loadMore, networkStatus } = list;
 
   useEffect(() => {
-    const totalComments = (data?.items ?? [])
-      .flatMap((thread) => thread.comments.total)
-      .reduce((prev, total) => prev + total, 0);
-
-    setResourceCommentsTotal(totalComments);
+    setResourceCommentsTotal(data?.total ?? 0);
   }, [data, setResourceCommentsTotal]);
 
   if (error) {
