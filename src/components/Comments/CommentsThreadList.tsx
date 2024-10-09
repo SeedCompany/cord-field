@@ -22,9 +22,6 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
     listAt: (data) => data.commentThreads,
     variables: {
       resourceId,
-      input: {
-        order: 'ASC',
-      },
     },
   });
   const { data, error, loadMore, networkStatus } = list;
