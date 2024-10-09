@@ -12,11 +12,13 @@ export type ToggleCommentsButtonProps = Except<IconButtonProps, 'children'>;
 export const ToggleCommentsButton = ({
   ...rest
 }: ToggleCommentsButtonProps) => {
-  const { resourceId, toggleCommentsBar } = useCommentsContext();
+  const { resourceId, isCommentsBarOpen, toggleCommentsBar } =
+    useCommentsContext();
 
   const { data } = useQuery(ThreadCountDocument, {
     variables: { id: resourceId! },
     skip: !resourceId,
+    fetchPolicy: isCommentsBarOpen ? 'cache-only' : 'cache-first',
   });
   const total = data?.commentable.commentThreads.total ?? 0;
 
