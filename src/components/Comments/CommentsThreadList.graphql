@@ -1,5 +1,6 @@
 query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
   commentThreads(resource: $resourceId, input: $input) {
+    canCreate
     items {
       ...commentThread
     }

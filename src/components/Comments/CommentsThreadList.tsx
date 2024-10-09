@@ -10,6 +10,7 @@ import { isNetworkRequestInFlight } from '../../api';
 import { renderError } from '../Error/error-handling';
 import { useListQuery } from '../List';
 import { ProgressButton } from '../ProgressButton';
+import { CreateComment } from './CommentForm/CreateComment';
 import { useCommentsContext } from './CommentsContext';
 import { CommentThreadsListDocument } from './CommentsThreadList.graphql';
 import { CommentThread } from './CommentThread';
@@ -54,6 +55,13 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
 
   return (
     <>
+      {data?.canCreate && (
+        <>
+          <CreateComment />
+          <Divider sx={{ mx: 'calc(var(--gutter) * -1)', mt: 'var(--gap)' }} />
+        </>
+      )}
+
       <Stack
         role="list"
         divider={<Divider sx={{ mx: 'calc(var(--gutter) * -1)' }} />}

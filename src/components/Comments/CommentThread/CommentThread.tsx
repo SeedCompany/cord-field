@@ -130,7 +130,7 @@ const ThreadActions = ({
         />
       )}
 
-      {!isEditing && !isReplying && (
+      {!isEditing && !isReplying && thread.comments.canCreate && (
         <Button onClick={() => setIsReplying(true)} startIcon={<Reply />}>
           Reply
         </Button>
