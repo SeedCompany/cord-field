@@ -5,13 +5,11 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useEffect } from 'react';
 import { isNetworkRequestInFlight } from '../../api';
 import { renderError } from '../Error/error-handling';
 import { useListQuery } from '../List';
 import { ProgressButton } from '../ProgressButton';
 import { CreateComment } from './CommentForm/CreateComment';
-import { useCommentsContext } from './CommentsContext';
 import { CommentThreadsListDocument } from './CommentsThreadList.graphql';
 import { CommentThread } from './CommentThread';
 
@@ -20,8 +18,6 @@ interface CommentThreadListProps {
 }
 
 export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
-  const { setResourceCommentsTotal } = useCommentsContext();
-
   const list = useListQuery(CommentThreadsListDocument, {
     listAt: (data) => data.commentThreads,
     variables: {
@@ -32,10 +28,6 @@ export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
     },
   });
   const { data, error, loadMore, networkStatus } = list;
-
-  useEffect(() => {
-    setResourceCommentsTotal(data?.total ?? 0);
-  }, [data, setResourceCommentsTotal]);
 
   if (error) {
     const renderedError = renderError(error, {
