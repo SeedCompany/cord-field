@@ -15,7 +15,7 @@ export const ToggleCommentsButton = ({
   return (
     <Feature flag="comments" match={true}>
       <IconButton onClick={() => toggleCommentsBar()} {...rest}>
-        <Badge badgeContent={resourceCommentsTotal} color="error">
+        <Badge badgeContent={resourceCommentsTotal} color="primary">
           <Comment />
         </Badge>
       </IconButton>
