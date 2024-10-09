@@ -15,7 +15,7 @@ const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
 }));
 
 interface Props {
-  changesetId: string | null;
+  changesetId: string | undefined;
   onEdit?: () => void;
   onClose?: () => void;
 }

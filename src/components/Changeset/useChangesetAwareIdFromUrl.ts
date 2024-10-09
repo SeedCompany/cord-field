@@ -9,10 +9,10 @@ export const useChangesetAwareIdFromUrl = (paramName: string) => {
   const navigate = useNavigate();
   let { [paramName]: objAndChangesetId = '' } = useParams();
   // eslint-disable-next-line prefer-const -- false positive
-  let [id = '', changesetId = null] = objAndChangesetId.split('~');
+  let [id = '', changesetId] = objAndChangesetId.split('~');
   if (!useBetaFeatures().has('projectChangeRequests')) {
     objAndChangesetId = id;
-    changesetId = null;
+    changesetId = undefined;
   }
   return {
     mergedId: objAndChangesetId,
