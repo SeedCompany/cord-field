@@ -10,6 +10,7 @@ import { renderError } from '../Error/error-handling';
 import { useListQuery } from '../List';
 import { ProgressButton } from '../ProgressButton';
 import { CreateComment } from './CommentForm/CreateComment';
+import { useCommentsContext } from './CommentsContext';
 import { CommentThreadsListDocument } from './CommentsThreadList.graphql';
 import { CommentThread } from './CommentThread';
 
@@ -18,11 +19,14 @@ interface CommentThreadListProps {
 }
 
 export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
+  const { isCommentsBarOpen } = useCommentsContext();
+
   const list = useListQuery(CommentThreadsListDocument, {
     listAt: (data) => data.commentable.commentThreads,
     variables: {
       resourceId,
     },
+    skip: !isCommentsBarOpen,
   });
   const { data, error, loadMore, networkStatus } = list;
 
