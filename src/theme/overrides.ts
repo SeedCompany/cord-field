@@ -140,7 +140,7 @@ export const appComponents = ({
     },
     MuiLink: {
       defaultProps: {
-        underline: 'hover',
+        underline: 'always',
         color: 'primary.main',
       },
     },
