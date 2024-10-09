@@ -10,8 +10,6 @@ export interface WidgetProps extends ChildrenProp {
 export const Widget = ({ colSpan, rowSpan, sx, ...props }: WidgetProps) => (
   <Card
     component={Stack}
-    elevation={0}
-    variant="outlined"
     sx={[
       {
         gridColumn: `span ${colSpan}`,
