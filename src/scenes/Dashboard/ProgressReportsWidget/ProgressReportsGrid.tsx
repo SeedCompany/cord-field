@@ -228,3 +228,32 @@ export const ProgressReportsGrid = ({
     />
   );
 };
+
+// const CumulativeProgressColumn = ({
+//   value,
+// }: {
+//   value: ProgressSummaryFragment;
+// }) => (
+//   <Box
+//     my={1}
+//     sx={{
+//       display: 'flex',
+//       justifyContent: 'space-between',
+//       alignItems: 'left',
+//       gap: 2,
+//     }}
+//   >
+//     <Box sx={{ textAlign: 'left' }}>
+//       <Typography variant="body2">{value.planned}%</Typography>
+//       <Typography variant="body2">Planned</Typography>
+//     </Box>
+//     <Box sx={{ textAlign: 'left' }}>
+//       <Typography variant="body2">{value.actual}%</Typography>
+//       <Typography variant="body2">Actual</Typography>
+//     </Box>
+//     <Box sx={{ textAlign: 'left' }}>
+//       <Typography variant="body2">{value.variance}%</Typography>
+//       <Typography variant="body2">Variance</Typography>
+//     </Box>
+//   </Box>
+// );
