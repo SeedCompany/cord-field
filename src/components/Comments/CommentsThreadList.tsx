@@ -5,7 +5,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { useEffect } from 'react';
 import { isNetworkRequestInFlight } from '../../api';
 import { renderError } from '../Error/error-handling';
 import { useListQuery } from '../List';
@@ -20,26 +19,16 @@ interface CommentThreadListProps {
 }
 
 export const CommentsThreadList = ({ resourceId }: CommentThreadListProps) => {
-  const { setResourceCommentsTotal } = useCommentsContext();
+  const { isCommentsBarOpen } = useCommentsContext();
 
   const list = useListQuery(CommentThreadsListDocument, {
-    listAt: (data) => data.commentThreads,
+    listAt: (data) => data.commentable.commentThreads,
     variables: {
       resourceId,
-      input: {
-        order: 'ASC',
-      },
     },
+    skip: !isCommentsBarOpen,
   });
   const { data, error, loadMore, networkStatus } = list;
-
-  useEffect(() => {
-    const totalComments = (data?.items ?? [])
-      .flatMap((thread) => thread.comments.total)
-      .reduce((prev, total) => prev + total, 0);
-
-    setResourceCommentsTotal(totalComments);
-  }, [data, setResourceCommentsTotal]);
 
   if (error) {
     const renderedError = renderError(error, {

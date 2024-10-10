@@ -1,9 +1,12 @@
 query CommentThreadsList($resourceId: ID!, $input: CommentThreadListInput) {
-  commentThreads(resource: $resourceId, input: $input) {
-    canCreate
-    items {
-      ...commentThread
+  commentable(resource: $resourceId) {
+    id
+    commentThreads(input: $input) {
+      canCreate
+      items {
+        ...commentThread
+      }
+      ...Pagination
     }
-    ...Pagination
   }
 }
