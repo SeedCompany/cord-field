@@ -35,6 +35,7 @@ type ListQueryOptions<
   listAt: (data: Data) => List;
   /** Filter to the changeset removed items list to ones to include here */
   changesetRemovedItems?: ChangesetItemFilterFn<RemovedItem>;
+  pollInterval?: number;
 };
 
 export const useListQuery = <
