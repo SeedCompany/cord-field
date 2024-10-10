@@ -3,12 +3,12 @@ import {
   DataGridProProps as DataGridProps,
   GridColDef,
   GridRenderCellParams,
-  GridRowId,
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { entries } from '@seedcompany/common';
+import { useMemo } from 'react';
 import { extendSx } from '~/common';
 import {
   getInitialVisibility,
@@ -18,11 +18,11 @@ import {
   Toolbar,
   useFilterToggle,
 } from '~/components/Grid';
-import { useSet } from '~/hooks';
 import {
   CollapseAllButton,
   ExpandAllButton,
   ExpansionContext,
+  useExpandedSetup,
 } from './expansionState';
 import {
   ExpansionMarker,
@@ -114,7 +114,16 @@ export const ProgressReportsExpandedGrid = (
 ) => {
   const apiRef = useGridApiRef();
 
-  const expanded = useSet<GridRowId>();
+  const { expanded, onMouseDown, onRowClick } = useExpandedSetup();
+
+  const slotProps = useMemo(
+    (): DataGridProps['slotProps'] => ({
+      row: {
+        onMouseDown,
+      },
+    }),
+    [onMouseDown]
+  );
 
   return (
     <ExpansionContext.Provider value={expanded}>
@@ -125,7 +134,8 @@ export const ProgressReportsExpandedGrid = (
         apiRef={apiRef}
         columns={columns}
         initialState={initialState}
-        onRowClick={({ id }) => expanded.toggle(id)}
+        slotProps={slotProps}
+        onRowClick={onRowClick}
         getRowHeight={(params) =>
           expanded.has(params.id) ? 'auto' : COLLAPSED_ROW_HEIGHT
         }
