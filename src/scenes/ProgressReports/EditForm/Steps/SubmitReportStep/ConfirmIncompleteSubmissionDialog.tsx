@@ -66,7 +66,6 @@ const IncompleteSteps = () => {
             {steps.map(({ label: stepName, severity }) => (
               <Typography component="li" key={stepName}>
                 <Link
-                  underline="always"
                   // Carson doesn't love this logic being duplicated here,
                   // but values semantic markup more
                   to={{ search: `?step=${kebabCase(stepName)}` }}

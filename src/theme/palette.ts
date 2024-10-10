@@ -1,10 +1,10 @@
 import { PaletteColor, PaletteColorOptions } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { lighten, PaletteOptions } from '@mui/material/styles';
+import { PaletteOptions } from '@mui/material/styles';
 import { Role } from '~/api/schema/schema.graphql';
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
-  const mainGreen = '#467f3b';
+  const mainGreen = '#1EA973';
   const roleLuminance = dark ? 32 : 84;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
@@ -14,8 +14,6 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     primary: {
       main: mainGreen,
       contrastText: '#ffffff',
-      // default is lighten main color by 0.2
-      light: lighten(mainGreen, 0.4),
     },
     secondary: {
       main: dark ? grey[50] : '#3c444e',
@@ -32,8 +30,11 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       main: '#f2994a',
     },
     text: {
-      primary: dark ? '#f3f4f6' : '#3c444e',
-      secondary: '#8f928b',
+      // Close to #3c444e while still using alpha
+      ...(!dark ? { primary: 'rgba(0, 0, 0, 0.75)' } : {}),
+      // Close to #8f928b while still using alpha
+      // Still it looks so contrast-less for form labels
+      // secondary: 'rgba(0, 0, 0, 0.45)',
     },
 
     // TODO theme.palette.augmentColor()
