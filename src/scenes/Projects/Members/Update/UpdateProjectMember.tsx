@@ -59,10 +59,6 @@ export const UpdateProjectMember = ({
 
   const [deleteProjectMember] = useMutation(DeleteProjectMemberDocument, {
     update: callAll(
-      removeItemFromList({
-        listId: 'projectMembers',
-        item: { id: projectMemberId },
-      }),
       session?.id === userId
         ? // Invalidate whole project if removing self as that can have major authorization implications
           onUpdateInvalidateObject(project)
