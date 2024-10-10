@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Comment } from '@mui/icons-material';
-import { Badge } from '@mui/material';
+import { Badge, Tooltip } from '@mui/material';
 import { Except } from 'type-fest';
 import { Feature } from '../Feature';
 import { IconButton, IconButtonProps } from '../IconButton';
@@ -24,11 +24,13 @@ export const ToggleCommentsButton = ({
 
   return (
     <Feature flag="comments" match={true}>
-      <IconButton onClick={() => toggleCommentsBar()} {...rest}>
-        <Badge badgeContent={total} color="primary">
-          <Comment />
-        </Badge>
-      </IconButton>
+      <Tooltip title={`${isCommentsBarOpen ? 'Hide' : 'Show'} Comments`}>
+        <IconButton onClick={() => toggleCommentsBar()} {...rest}>
+          <Badge badgeContent={total} color="primary">
+            <Comment />
+          </Badge>
+        </IconButton>
+      </Tooltip>
     </Feature>
   );
 };
