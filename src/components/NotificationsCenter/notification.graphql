@@ -1,0 +1,8 @@
+fragment notification on Notification {
+  id
+  createdAt
+  unread
+  ... on SimpleTextNotification {
+    content
+  }
+}
