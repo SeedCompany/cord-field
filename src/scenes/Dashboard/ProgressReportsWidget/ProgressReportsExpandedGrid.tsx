@@ -9,7 +9,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { entries } from '@seedcompany/common';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { extendSx } from '~/common';
 import {
   getInitialVisibility,
@@ -19,6 +19,7 @@ import {
   Toolbar,
   useFilterToggle,
 } from '~/components/Grid';
+import { useSet } from '~/hooks';
 import {
   ExpansionMarker,
   ProgressReportsColumnMap,
@@ -107,7 +108,7 @@ export const ProgressReportsExpandedGrid = (
 ) => {
   const apiRef = useGridApiRef();
 
-  const [selected, setSelected] = useState<GridRowId[]>([]);
+  const selected = useSet<GridRowId>();
 
   return (
     <ProgressReportsGrid
@@ -117,8 +118,8 @@ export const ProgressReportsExpandedGrid = (
       apiRef={apiRef}
       columns={columns}
       initialState={initialState}
-      onRowClick={({ id }) => setSelected(selected.length > 0 ? [] : [id])}
-      rowSelectionModel={selected}
+      onRowClick={({ id }) => selected.toggle(id)}
+      rowSelectionModel={useMemo(() => [...selected], [selected])}
       getRowHeight={(params) =>
         apiRef.current.isRowSelected(params.id) ? 'auto' : COLLAPSED_ROW_HEIGHT
       }
