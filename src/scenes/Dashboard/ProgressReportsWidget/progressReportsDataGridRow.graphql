@@ -40,7 +40,9 @@ fragment progressReportsDataGridRow on ProgressReport {
     }
   }
   cumulativeSummary {
-    ...ProgressSummary
+    planned(format: Percent)
+    actual(format: Percent)
+    variance(format: Percent)
   }
   teamNews {
     items {
