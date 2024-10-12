@@ -1,4 +1,5 @@
 import { InMemoryCache, PossibleTypesMap, TypePolicies } from '@apollo/client';
+import { Cache } from '@apollo/client/cache';
 import { possibleTypes } from '../schema/fragmentMatcher';
 import { typePolicies } from '../schema/typePolicies';
 
@@ -24,6 +25,17 @@ export const createCache = () => {
     if (process.env.NODE_ENV === 'production') {
       console.log('Initializing Apollo cache from server', data);
     }
+  }
+
+  if (typeof BroadcastChannel !== 'undefined') {
+    const writeChannel = new BroadcastChannel('apollo::write');
+    const orig = cache.write.bind(cache);
+    const ourWrite = (options: Cache.WriteOptions, sendToOthers = true) => {
+      sendToOthers && writeChannel.postMessage(options);
+      return orig(options);
+    };
+    writeChannel.onmessage = (event) => ourWrite(event.data, false);
+    cache.write = ourWrite;
   }
 
   return cache;
