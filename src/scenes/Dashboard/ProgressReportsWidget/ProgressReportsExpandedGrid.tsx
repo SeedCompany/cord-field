@@ -9,7 +9,6 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { entries } from '@seedcompany/common';
-import { useMemo } from 'react';
 import { extendSx } from '~/common';
 import {
   getInitialVisibility,
@@ -20,6 +19,7 @@ import {
   useFilterToggle,
 } from '~/components/Grid';
 import { useSet } from '~/hooks';
+import { ExpansionContext } from './expansionState';
 import {
   ExpansionMarker,
   ProgressReportsColumnMap,
@@ -108,30 +108,31 @@ export const ProgressReportsExpandedGrid = (
 ) => {
   const apiRef = useGridApiRef();
 
-  const selected = useSet<GridRowId>();
+  const expanded = useSet<GridRowId>();
 
   return (
-    <ProgressReportsGrid
-      {...props}
-      density="standard"
-      slots={slots}
-      apiRef={apiRef}
-      columns={columns}
-      initialState={initialState}
-      onRowClick={({ id }) => selected.toggle(id)}
-      rowSelectionModel={useMemo(() => [...selected], [selected])}
-      getRowHeight={(params) =>
-        apiRef.current.isRowSelected(params.id) ? 'auto' : COLLAPSED_ROW_HEIGHT
-      }
-      sx={[
-        {
-          // Don't want 'auto' to shrink below this when the cell is empty
-          '.MuiDataGrid-cell': {
-            minHeight: COLLAPSED_ROW_HEIGHT,
+    <ExpansionContext.Provider value={expanded}>
+      <ProgressReportsGrid
+        {...props}
+        density="standard"
+        slots={slots}
+        apiRef={apiRef}
+        columns={columns}
+        initialState={initialState}
+        onRowClick={({ id }) => expanded.toggle(id)}
+        getRowHeight={(params) =>
+          expanded.has(params.id) ? 'auto' : COLLAPSED_ROW_HEIGHT
+        }
+        sx={[
+          {
+            // Don't want 'auto' to shrink below this when the cell is empty
+            '.MuiDataGrid-cell': {
+              minHeight: COLLAPSED_ROW_HEIGHT,
+            },
           },
-        },
-        ...extendSx(props.sx),
-      ]}
-    />
+          ...extendSx(props.sx),
+        ]}
+      />
+    </ExpansionContext.Provider>
   );
 };

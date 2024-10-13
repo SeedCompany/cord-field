@@ -1,23 +1,15 @@
 import { Box } from '@mui/material';
-import {
-  GridState,
-  GridRenderCellParams as RenderCellParams,
-  useGridSelector,
-} from '@mui/x-data-grid';
+import { GridRenderCellParams as RenderCellParams } from '@mui/x-data-grid';
 import { ChildrenProp, extendSx, StyleProps } from '~/common';
+import { useExpanded } from './expansionState';
 
 export const ExpansionCell = ({
   id,
-  api,
   sx,
   className,
   children,
 }: Pick<RenderCellParams, 'id' | 'api'> & StyleProps & ChildrenProp) => {
-  const selectedRows = useGridSelector(
-    { current: api },
-    (state: GridState) => state.rowSelection
-  );
-  const isExpanded = selectedRows.includes(id);
+  const isExpanded = useExpanded().has(id);
 
   return (
     <Box
