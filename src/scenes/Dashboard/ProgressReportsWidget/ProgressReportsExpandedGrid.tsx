@@ -19,7 +19,11 @@ import {
   useFilterToggle,
 } from '~/components/Grid';
 import { useSet } from '~/hooks';
-import { ExpansionContext } from './expansionState';
+import {
+  CollapseAllButton,
+  ExpandAllButton,
+  ExpansionContext,
+} from './expansionState';
 import {
   ExpansionMarker,
   ProgressReportsColumnMap,
@@ -96,6 +100,8 @@ const ProgressReportsToolbar = () => (
         Pinned
       </QuickFilterButton>
     </QuickFilters>
+    <CollapseAllButton />
+    <ExpandAllButton />
   </Toolbar>
 );
 
