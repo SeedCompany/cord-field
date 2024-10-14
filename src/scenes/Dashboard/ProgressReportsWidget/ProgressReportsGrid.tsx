@@ -4,6 +4,7 @@ import {
   DataGridPro,
   DataGridProProps as DataGridProps,
   GridColDef,
+  GridRenderCellParams as RenderCellParams,
 } from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
@@ -24,7 +25,6 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
-import { ProgressSummaryFragment } from '../../ProgressReports/Detail/ProgressReportDetail.graphql';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -103,7 +103,18 @@ export const ProgressReportsColumnMap = {
     minWidth: 200,
     sortable: false,
     filterable: false,
-    renderCell: ({ value }) => <CumulativeProgressColumn value={value} />,
+    renderCell: ({
+      value,
+    }: RenderCellParams<
+      ProgressReport,
+      ProgressReport['cumulativeSummary']
+    >) => (
+      <Box sx={{ my: 1, display: 'flex', gap: 2 }}>
+        <Metric label="Planned" value={value?.planned} />
+        <Metric label="Actual" value={value?.actual} />
+        <Metric label="Variance" value={value?.variance} />
+      </Box>
+    ),
   },
   teamNews: {
     headerName: 'Team News',
@@ -222,41 +233,11 @@ export const ProgressReportsGrid = ({
   );
 };
 
-const CumulativeProgressColumn = ({
-  value,
-}: {
-  value: ProgressSummaryFragment | null;
-}) => {
-  const progressData = {
-    Planned: value?.planned,
-    Actual: value?.actual,
-    Variance: value?.variance,
-  };
-
-  return (
-    <Box
-      sx={{
-        my: 1,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'left',
-        gap: 2,
-      }}
-    >
-      {Object.entries(progressData).map(([label, data]) =>
-        cumulativeProgressData(label, data)
-      )}
+const Metric = ({ label, value }: { label: string; value?: number }) => (
+  <Typography variant="body2">
+    <Box color={value ? undefined : 'text.disabled'}>
+      {value === undefined ? '—' : `${(value * 100).toFixed(1)}%`}
     </Box>
-  );
-};
-
-const cumulativeProgressData = (label: string, data: number | undefined) => {
-  const displayValue = data === undefined ? '—' : `${(data * 100).toFixed(1)}%`;
-
-  return (
-    <Box sx={{ textAlign: 'left' }}>
-      <Typography variant="body2">{displayValue}</Typography>
-      <Typography variant="body2">{label}</Typography>
-    </Box>
-  );
-};
+    <div>{label}</div>
+  </Typography>
+);
