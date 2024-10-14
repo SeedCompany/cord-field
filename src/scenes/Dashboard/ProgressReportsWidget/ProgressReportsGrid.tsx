@@ -4,6 +4,7 @@ import {
   DataGridPro,
   DataGridProProps as DataGridProps,
   GridColDef,
+  GridRenderCellParams as RenderCellParams,
 } from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
@@ -96,6 +97,24 @@ export const ProgressReportsColumnMap = {
     sortable: false,
     filterable: false,
     valueGetter: (_, row) => row.varianceExplanation.scheduleStatus,
+  },
+  cumulativeSummary: {
+    headerName: 'Cumulative Progress',
+    minWidth: 200,
+    sortable: false,
+    filterable: false,
+    renderCell: ({
+      value,
+    }: RenderCellParams<
+      ProgressReport,
+      ProgressReport['cumulativeSummary']
+    >) => (
+      <Box sx={{ my: 1, display: 'flex', gap: 2 }}>
+        <Metric label="Planned" value={value?.planned} />
+        <Metric label="Actual" value={value?.actual} />
+        <Metric label="Variance" value={value?.variance} />
+      </Box>
+    ),
   },
   teamNews: {
     headerName: 'Team News',
@@ -213,3 +232,12 @@ export const ProgressReportsGrid = ({
     />
   );
 };
+
+const Metric = ({ label, value }: { label: string; value?: number }) => (
+  <Typography variant="body2">
+    <Box color={value ? undefined : 'text.disabled'}>
+      {value === undefined ? '—' : `${(value * 100).toFixed(1)}%`}
+    </Box>
+    <div>{label}</div>
+  </Typography>
+);
