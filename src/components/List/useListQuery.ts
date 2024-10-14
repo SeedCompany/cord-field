@@ -1,4 +1,4 @@
-import { ApolloError, useQuery } from '@apollo/client';
+import { ApolloError, ApolloQueryResult, useQuery } from '@apollo/client';
 import { NetworkStatus } from '@apollo/client/core';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
@@ -13,7 +13,8 @@ import {
 export interface ListQueryResult<
   Item,
   List extends PaginatedListOutput<Item>,
-  Data
+  Data,
+  Variables
 > {
   loading: boolean;
   data?: List;
@@ -22,6 +23,9 @@ export interface ListQueryResult<
   root?: Data;
   loadMore: () => void;
   networkStatus: NetworkStatus;
+  refetch: (
+    variables?: Partial<Variables> | undefined
+  ) => Promise<ApolloQueryResult<Data>>;
 }
 
 type ListQueryOptions<
@@ -47,7 +51,7 @@ export const useListQuery = <
 >(
   doc: TypedDocumentNode<Data, Variables>,
   options: ListQueryOptions<Data, Variables, List, Item, RemovedItem>
-): ListQueryResult<Item, List, Data> => {
+): ListQueryResult<Item, List, Data, Variables> => {
   const { listAt, changesetRemovedItems, ...opts } = options;
   const {
     loading,
@@ -55,6 +59,7 @@ export const useListQuery = <
     error,
     fetchMore,
     networkStatus,
+    refetch,
   } = useQuery(doc, {
     ...opts,
     notifyOnNetworkStatusChange: true,
@@ -86,5 +91,5 @@ export const useListQuery = <
     });
   };
 
-  return { loading, data, error, loadMore, networkStatus, root: res };
+  return { loading, data, error, loadMore, networkStatus, root: res, refetch };
 };
