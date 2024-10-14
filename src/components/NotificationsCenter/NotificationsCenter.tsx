@@ -55,7 +55,8 @@ export const NotificationCenter = () => {
         <Stack
           divider={<Divider />}
           sx={{
-            height: { xs: 0.9, md: 450 },
+            height: 1,
+            maxHeight: { xs: 0.9, md: 400 },
             overflowY: 'scroll',
             gap: 0.25,
           }}

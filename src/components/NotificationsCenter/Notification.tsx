@@ -20,6 +20,7 @@ export function Notification({ notification }: NotificationProps) {
         '&:hover': { backgroundColor: 'grey.300' },
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'space-between',
         width: 1,
         gap: 1,
         p: 1,
