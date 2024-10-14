@@ -1,9 +1,13 @@
 query NotificationList($input: NotificationListInput) {
   notifications(input: $input) {
-    ...Pagination
-    totalUnread
-    items {
-      ...notification
-    }
+    ...notificationList
+  }
+}
+
+fragment notificationList on NotificationList {
+  ...Pagination
+  totalUnread
+  items {
+    ...notification
   }
 }

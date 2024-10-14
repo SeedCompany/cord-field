@@ -17,10 +17,13 @@ export const NotificationCenter = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isPopoverOpen = Boolean(anchorEl);
 
-  const { data, loadMore, loading } = useListQuery(NotificationListDocument, {
-    pollInterval: 60_000,
-    listAt: (data) => data.notifications,
-  });
+  const { data, loadMore, loading, refetch } = useListQuery(
+    NotificationListDocument,
+    {
+      pollInterval: 60_000,
+      listAt: (data) => data.notifications,
+    }
+  );
 
   const notifications = useMemo(() => (data ? data.items : []), [data]);
 
@@ -62,7 +65,11 @@ export const NotificationCenter = () => {
           }}
         >
           {notifications.map((notification) => (
-            <Notification key={notification.id} notification={notification} />
+            <Notification
+              key={notification.id}
+              notification={notification}
+              onReadComplete={() => void refetch()}
+            />
           ))}
           {data?.hasMore && (
             <ProgressButton progress={loading} onClick={() => loadMore()}>

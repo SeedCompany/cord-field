@@ -7,11 +7,30 @@ import { ReadNotificationDocument } from './ReadNotification.graphql';
 
 interface NotificationProps {
   notification: NotificationFragment;
+  onReadComplete?: () => void;
 }
 
-export function Notification({ notification }: NotificationProps) {
-  const [markAsRead] = useMutation(ReadNotificationDocument);
-  const { id, unread, content, createdAt } = notification;
+export function Notification({
+  notification,
+  onReadComplete,
+}: NotificationProps) {
+  const [markAsRead] = useMutation(ReadNotificationDocument, {
+    onCompleted: () => {
+      onReadComplete?.();
+    },
+    // update: onUpdateChangeFragment({
+    //   id: 'notifications',
+    //   fragment: NotificationListFragmentDoc,
+    //   updater: (cached) => {
+    //     return {
+    //       ...cached,
+    //       totalUnread: 11,
+    //     };
+    //   },
+    // }),
+  });
+
+  const { id, unread, createdAt } = notification;
 
   return (
     <Box
@@ -27,7 +46,10 @@ export function Notification({ notification }: NotificationProps) {
       }}
     >
       <Stack sx={{ alignItems: 'flex-start', gap: 1 }}>
-        <Typography variant="body2">{content}</Typography>
+        <Typography variant="body2">
+          {notification.__typename === 'SimpleTextNotification' &&
+            notification.content}
+        </Typography>
         <Typography variant="caption" color="textSecondary">
           <RelativeDateTime date={createdAt} />
         </Typography>
