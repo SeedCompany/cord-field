@@ -226,7 +226,7 @@ const reverse = <T>(list: readonly T[]): readonly T[] => list.slice().reverse();
 // left out of the key specifier
 const objectToKeyArgs = (obj: Record<string, any>): KeyArgs => {
   const keys = objectToKeyArgsRecurse(cleanEmptyObjects(obj));
-  return keys.length > 1 ? keys : false;
+  return keys.length > 0 ? keys : false;
 };
 const objectToKeyArgsRecurse = (obj: Record<string, any>): KeySpecifier =>
   Object.entries(obj).reduce(

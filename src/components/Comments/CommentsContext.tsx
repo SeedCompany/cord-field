@@ -19,8 +19,6 @@ const initialCommentsBarContext = {
   toggleCommentsBar: noop as (state?: boolean) => void,
   isCommentsBarOpen: false,
   expandedThreads: {} as unknown as ExpandedThreads,
-  resourceCommentsTotal: 0,
-  setResourceCommentsTotal: noop,
   resourceId: undefined as string | undefined,
   setResourceId: noop as (resourceId: string | undefined) => void,
 };
@@ -32,8 +30,6 @@ export const CommentsProvider = ({ children }: ChildrenProp) => {
     useLocalStorageState<boolean>('show-comments', { defaultValue: false });
 
   const [resourceId, setResourceId] = useState<string | undefined>(undefined);
-
-  const [resourceCommentsTotal, setResourceCommentsTotal] = useState(0);
 
   const [currentExpandedThreads, setExpandedThreads] = useSet<string>();
   const expandedThreads = useMemo(
@@ -60,8 +56,6 @@ export const CommentsProvider = ({ children }: ChildrenProp) => {
       toggleCommentsBar,
       isCommentsBarOpen,
       expandedThreads,
-      resourceCommentsTotal,
-      setResourceCommentsTotal,
       resourceId,
       setResourceId,
     }),
@@ -69,7 +63,6 @@ export const CommentsProvider = ({ children }: ChildrenProp) => {
       toggleCommentsBar,
       isCommentsBarOpen,
       expandedThreads,
-      resourceCommentsTotal,
       resourceId,
       setResourceId,
     ]
