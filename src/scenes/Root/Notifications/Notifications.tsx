@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client';
 import { NotificationsNone } from '@mui/icons-material';
 import {
   Badge,
@@ -15,7 +16,9 @@ import {
 import { useListQuery } from '~/components/List';
 import { ProgressButton } from '~/components/ProgressButton';
 import { Notification } from './Notification';
+import { NotificationFragment } from './notification.graphql';
 import { NotificationListDocument } from './NotificationList.graphql';
+import { ReadNotificationDocument } from './ReadNotification.graphql';
 
 export const Notifications = () => {
   const enabled = useFeatureEnabled('notifications');
@@ -24,10 +27,37 @@ export const Notifications = () => {
   const isPopoverOpen = Boolean(anchorEl);
 
   const { data, loadMore, loading } = useListQuery(NotificationListDocument, {
-    pollInterval: 60_000,
     listAt: (data) => data.notifications,
     skip: !enabled,
+    pollInterval: 60_000,
   });
+
+  const [markAsRead] = useMutation(ReadNotificationDocument, {
+    update: (cache, { data: updated }) => {
+      cache.updateQuery(
+        {
+          query: NotificationListDocument,
+        },
+        (prev) => ({
+          notifications: {
+            ...prev!.notifications,
+            totalUnread:
+              prev!.notifications.totalUnread +
+              (updated!.readNotification.unread ? 1 : -1),
+          },
+        })
+      );
+    },
+  });
+  const onReadToggle = (notification: NotificationFragment) => () => {
+    const next = !notification.unread;
+    void markAsRead({
+      variables: { id: notification.id, unread: next },
+      optimisticResponse: {
+        readNotification: { ...notification, unread: next },
+      },
+    });
+  };
 
   const notifications = useMemo(() => (data ? data.items : []), [data]);
 
@@ -75,7 +105,11 @@ export const Notifications = () => {
           }}
         >
           {notifications.map((notification) => (
-            <Notification key={notification.id} notification={notification} />
+            <Notification
+              key={notification.id}
+              notification={notification}
+              onReadToggle={onReadToggle(notification)}
+            />
           ))}
           {data?.hasMore && (
             <ProgressButton progress={loading} onClick={() => loadMore()}>

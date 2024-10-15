@@ -1,4 +1,4 @@
-mutation ReadNotification($id: ID!, $unread: Boolean = false) {
+mutation ReadNotification($id: ID!, $unread: Boolean!) {
   readNotification(id: $id, unread: $unread) {
     ...notification
   }

@@ -1,17 +1,18 @@
-import { useMutation } from '@apollo/client';
 import { CheckCircleOutlined, Circle } from '@mui/icons-material';
 import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { RelativeDateTime } from '../Formatters';
 import { NotificationFragment } from './notification.graphql';
-import { ReadNotificationDocument } from './ReadNotification.graphql';
 
 interface NotificationProps {
   notification: NotificationFragment;
+  onReadToggle?: () => void;
 }
 
-export function Notification({ notification }: NotificationProps) {
-  const [markAsRead] = useMutation(ReadNotificationDocument);
-  const { id, unread, createdAt } = notification;
+export function Notification({
+  notification,
+  onReadToggle,
+}: NotificationProps) {
+  const { unread } = notification;
 
   return (
     <Box
@@ -32,16 +33,14 @@ export function Notification({ notification }: NotificationProps) {
             notification.content}
         </Typography>
         <Typography variant="caption" color="textSecondary">
-          <RelativeDateTime date={createdAt} />
+          <RelativeDateTime date={notification.createdAt} />
         </Typography>
       </Stack>
       <Tooltip title={unread ? 'Mark as read' : 'Mark as unread'}>
         <IconButton
           sx={{ cursor: 'pointer', p: 0.5 }}
           color="primary"
-          onClick={() => {
-            void markAsRead({ variables: { id, unread: !unread } });
-          }}
+          onClick={onReadToggle}
         >
           <Box
             sx={{ height: 20, width: 20 }}
