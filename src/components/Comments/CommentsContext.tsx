@@ -1,4 +1,4 @@
-import { useLocalStorageState, useSet } from 'ahooks';
+import { useLocalStorageState } from 'ahooks';
 import { noop } from 'lodash';
 import {
   createContext,
@@ -9,16 +9,12 @@ import {
   useState,
 } from 'react';
 import { ChildrenProp } from '~/common';
-
-type ExpandedThreads = ReturnType<typeof useSet<string>>[1] & {
-  has: (threadId: string) => boolean;
-  toggle: (threadId: string, next?: boolean) => void;
-};
+import { SetHook, useSet } from '~/hooks';
 
 const initialCommentsBarContext = {
   toggleCommentsBar: noop as (state?: boolean) => void,
   isCommentsBarOpen: false,
-  expandedThreads: {} as unknown as ExpandedThreads,
+  expandedThreads: {} as unknown as SetHook<string>,
   resourceId: undefined as string | undefined,
   setResourceId: noop as (resourceId: string | undefined) => void,
 };
@@ -31,18 +27,7 @@ export const CommentsProvider = ({ children }: ChildrenProp) => {
 
   const [resourceId, setResourceId] = useState<string | undefined>(undefined);
 
-  const [currentExpandedThreads, setExpandedThreads] = useSet<string>();
-  const expandedThreads = useMemo(
-    (): ExpandedThreads => ({
-      ...setExpandedThreads,
-      has: currentExpandedThreads.has.bind(currentExpandedThreads),
-      toggle: (threadId: string, next?: boolean) => {
-        next = next ?? !currentExpandedThreads.has(threadId);
-        setExpandedThreads[next ? 'add' : 'remove'](threadId);
-      },
-    }),
-    [currentExpandedThreads, setExpandedThreads]
-  );
+  const expandedThreads = useSet<string>();
 
   const toggleCommentsBar = useCallback(
     (state?: boolean) => {
