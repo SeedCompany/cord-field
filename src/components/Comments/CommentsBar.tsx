@@ -1,7 +1,6 @@
 import { ChevronRight as CloseIcon } from '@mui/icons-material';
-import { Divider, Drawer, Stack, Tooltip, Typography } from '@mui/material';
+import { Drawer, Stack, Tooltip, Typography } from '@mui/material';
 import { IconButton } from '../IconButton';
-import { CreateComment } from './CommentForm/CreateComment';
 import { useCommentsContext } from './CommentsContext';
 import { CommentsThreadList } from './CommentsThreadList';
 
@@ -53,9 +52,6 @@ export const CommentsBar = () => {
           </IconButton>
         </Tooltip>
       </Stack>
-
-      <CreateComment />
-      <Divider sx={{ mx: 'calc(var(--gutter) * -1)', mt: 'var(--gap)' }} />
 
       {resourceId ? (
         <CommentsThreadList resourceId={resourceId} />
