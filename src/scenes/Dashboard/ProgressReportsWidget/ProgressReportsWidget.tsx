@@ -40,6 +40,7 @@ export const ProgressReportsWidget = ({
           disablePortal
           options={quarter.available}
           getOptionLabel={(q) => `Q${q.fiscalQuarter} FY${q.fiscalYear}`}
+          isOptionEqualToValue={(a, b) => +a === +b}
           value={quarter.current}
           onChange={(_, q) => quarter.set(q)}
           disableClearable
