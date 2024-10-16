@@ -97,7 +97,7 @@ export const ProgressReportsColumnMap = {
     ...enumColumn(ScheduleStatusList, ScheduleStatusLabels, {
       orderByIndex: true,
     }),
-    valueGetter: (_, row) => row.varianceExplanation.scheduleStatus,
+    valueGetter: (_, row) => row.cumulativeSummary?.scheduleStatus,
   },
   cumulativeSummary: {
     headerName: 'Cumulative Progress',
