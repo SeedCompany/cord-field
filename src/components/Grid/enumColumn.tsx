@@ -15,5 +15,5 @@ export const enumColumn = <T extends string>(
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     getOptionLabel: (v) => labels[v as T] ?? EmptyEnumFilterValue,
     valueFormatter: (value: T) => labels[value],
-    ...(orderByIndex ? { sortBy: (v) => list.indexOf(v) } : {}),
+    ...(orderByIndex ? { sortBy: (v) => (v ? list.indexOf(v) : null) } : {}),
   } satisfies Partial<GridColDef<any, T, string>>);
