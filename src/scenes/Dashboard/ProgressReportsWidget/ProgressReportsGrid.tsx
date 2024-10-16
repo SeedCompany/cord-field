@@ -1,5 +1,5 @@
 import { Link as LinkIcon } from '@mui/icons-material';
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -235,10 +235,10 @@ export const ProgressReportsGrid = ({
 };
 
 const Metric = ({ label, value }: { label: string; value?: number }) => (
-  <Typography variant="body2">
-    <Box color={value ? undefined : 'text.disabled'}>
+  <Stack component={Typography} variant="body2">
+    <Box component="span" color={value ? undefined : 'text.disabled'}>
       {value === undefined ? '—' : `${(value * 100).toFixed(1)}%`}
     </Box>
-    <div>{label}</div>
-  </Typography>
+    <span>{label}</span>
+  </Stack>
 );
