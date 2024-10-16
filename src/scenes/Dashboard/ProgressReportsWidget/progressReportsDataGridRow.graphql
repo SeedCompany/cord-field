@@ -34,7 +34,6 @@ fragment progressReportsDataGridRow on ProgressReport {
     value
   }
   varianceExplanation {
-    scheduleStatus
     reasons {
       value
     }
@@ -43,6 +42,7 @@ fragment progressReportsDataGridRow on ProgressReport {
     planned
     actual
     variance
+    scheduleStatus
   }
   teamNews {
     items {
