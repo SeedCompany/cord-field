@@ -172,7 +172,12 @@ export const useDataGridSource = <
       (prev) => {
         const prevList = listFrom(prev);
         const nextList = listFrom(next);
-        if (prevList && prevList.items.length === nextList.total) {
+        if (
+          prevList &&
+          prevList.items.length === nextList.total &&
+          updateTotal &&
+          prevList.total === nextList.total
+        ) {
           return undefined; // no change
         }
         const mergedList = uniqBy(

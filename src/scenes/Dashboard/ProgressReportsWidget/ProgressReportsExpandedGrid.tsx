@@ -47,6 +47,9 @@ const wrapForNonExpansion = (renderCell?: GridColDef['renderCell']) => {
 
         display: 'flex',
         alignItems: 'center',
+        '.MuiDataGrid-cell--textCenter &': {
+          justifyContent: 'center',
+        },
       }}
     >
       {renderCell ? renderCell(props) : props.formattedValue ?? props.value}

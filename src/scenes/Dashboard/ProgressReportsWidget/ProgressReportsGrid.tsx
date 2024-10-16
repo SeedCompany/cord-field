@@ -1,5 +1,5 @@
 import { Link as LinkIcon } from '@mui/icons-material';
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -63,9 +63,10 @@ export const ProgressReportsColumnMap = {
     hideable: false,
   },
   viewReport: {
-    headerName: 'View',
+    headerName: 'Report',
     field: 'id',
-    width: 54,
+    width: 65,
+    align: 'center',
     renderCell: ({ row }) => (
       <Tooltip title="View Report">
         <IconButton
@@ -92,11 +93,12 @@ export const ProgressReportsColumnMap = {
     valueGetter: (_, row) => row.status.value,
   },
   scheduleStatus: {
+    field: 'cumulativeSummary.scheduleStatus',
     headerName: 'Progress',
-    ...enumColumn(ScheduleStatusList, ScheduleStatusLabels),
-    sortable: false,
-    filterable: false,
-    valueGetter: (_, row) => row.varianceExplanation.scheduleStatus,
+    ...enumColumn(ScheduleStatusList, ScheduleStatusLabels, {
+      orderByIndex: true,
+    }),
+    valueGetter: (_, row) => row.cumulativeSummary?.scheduleStatus,
   },
   cumulativeSummary: {
     headerName: 'Cumulative Progress',
@@ -234,10 +236,10 @@ export const ProgressReportsGrid = ({
 };
 
 const Metric = ({ label, value }: { label: string; value?: number }) => (
-  <Typography variant="body2">
-    <Box color={value ? undefined : 'text.disabled'}>
+  <Stack component={Typography} variant="body2">
+    <Box component="span" color={value ? undefined : 'text.disabled'}>
       {value === undefined ? '—' : `${(value * 100).toFixed(1)}%`}
     </Box>
-    <div>{label}</div>
-  </Typography>
+    <span>{label}</span>
+  </Stack>
 );
