@@ -94,9 +94,9 @@ export const ProgressReportsColumnMap = {
   scheduleStatus: {
     field: 'cumulativeSummary.scheduleStatus',
     headerName: 'Progress',
-    ...enumColumn(ScheduleStatusList, ScheduleStatusLabels),
-    sortable: true,
-    filterable: true,
+    ...enumColumn(ScheduleStatusList, ScheduleStatusLabels, {
+      orderByIndex: true,
+    }),
     valueGetter: (_, row) => row.varianceExplanation.scheduleStatus,
   },
   cumulativeSummary: {
