@@ -67,12 +67,7 @@ export const ProgressReportStepper = () => {
     useProgressReportContext();
 
   return (
-    <Paper
-      elevation={4}
-      sx={{ p: 2 }}
-      component="nav"
-      aria-label="Quarterly Report Steps"
-    >
+    <Paper sx={{ p: 2 }} component="nav" aria-label="Quarterly Report Steps">
       <Typography component="h3" paragraph aria-hidden>
         Steps:
       </Typography>
