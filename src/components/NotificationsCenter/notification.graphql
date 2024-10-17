@@ -1,0 +1,9 @@
+fragment notification on Notification {
+  id
+  canDelete
+  createdAt
+  unread
+  ... on SimpleTextNotification {
+    content
+  }
+}
