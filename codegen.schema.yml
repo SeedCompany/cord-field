@@ -43,7 +43,7 @@ generates:
           placement: prepend
           content: |
             import { DateTime } from 'luxon';
-            import { CalendarDate, RichTextJson, InlineMarkdownString } from '~/common';
+            import { CalendarDate, RichTextJson, MarkdownString, InlineMarkdownString } from '~/common';
     config:
       scalars:
         Date: CalendarDate
@@ -51,6 +51,7 @@ generates:
         JSONObject: Record<string, any>
         URL: string
         RichText: RichTextJson
+        Markdown: MarkdownString
         InlineMarkdown: InlineMarkdownString
       defaultScalarType: unknown
       skipTypename: false
