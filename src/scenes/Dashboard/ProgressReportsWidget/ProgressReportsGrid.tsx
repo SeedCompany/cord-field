@@ -39,6 +39,40 @@ export type ProgressReportColumnMapShape = Record<
 
 export const ExpansionMarker = 'expandable';
 
+export const useProgressReportsDataGrid = ({
+  quarter,
+  ...props
+}: ProgressReportsGridProps) => {
+  const source = useMemo(() => {
+    return {
+      query: ProgressReportsDocument,
+      variables: {
+        input: {
+          filter: {
+            start: {
+              afterInclusive: quarter.startOf('quarter'),
+            },
+            end: {
+              beforeInclusive: quarter.endOf('quarter'),
+            },
+          },
+        },
+      },
+      listAt: 'progressReports',
+      initialInput: {
+        sort: 'status',
+        order: 'DESC',
+      },
+    } as const;
+  }, [quarter]);
+  const [dataGridProps] = useDataGridSource({
+    ...source,
+    apiRef: props.apiRef,
+  });
+
+  return dataGridProps;
+};
+
 export const ProgressReportsColumnMap = {
   project: {
     headerName: 'Project',
@@ -179,32 +213,7 @@ export const ProgressReportsGrid = ({
   quarter,
   ...props
 }: ProgressReportsGridProps) => {
-  const source = useMemo(() => {
-    return {
-      query: ProgressReportsDocument,
-      variables: {
-        input: {
-          filter: {
-            start: {
-              afterInclusive: quarter.startOf('quarter'),
-            },
-            end: {
-              beforeInclusive: quarter.endOf('quarter'),
-            },
-          },
-        },
-      },
-      listAt: 'progressReports',
-      initialInput: {
-        sort: 'status',
-        order: 'DESC',
-      },
-    } as const;
-  }, [quarter]);
-  const [dataGridProps] = useDataGridSource({
-    ...source,
-    apiRef: props.apiRef,
-  });
+  const dataGridProps = useProgressReportsDataGrid({ quarter, ...props });
 
   const slots = useMemo(
     () =>

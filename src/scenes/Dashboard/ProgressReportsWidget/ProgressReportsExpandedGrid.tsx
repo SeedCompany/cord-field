@@ -8,6 +8,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { entries } from '@seedcompany/common';
+import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { extendSx } from '~/common';
 import {
@@ -29,6 +30,7 @@ import {
   ProgressReportsColumnMap,
   ProgressReportsGrid,
   ProgressReportsGridProps,
+  useProgressReportsDataGrid,
 } from './ProgressReportsGrid';
 
 const COLLAPSED_ROW_HEIGHT = 54;
@@ -116,16 +118,22 @@ export const ProgressReportsExpandedGrid = (
   props: Omit<ProgressReportsGridProps, 'columns'>
 ) => {
   const apiRef = useGridApiRef();
-
   const { expanded, onMouseDown, onRowClick } = useExpandedSetup();
 
-  const slotProps = useMemo(
-    (): DataGridProps['slotProps'] => ({
-      row: {
-        onMouseDown,
-      },
-    }),
+  const dataGridProps = useProgressReportsDataGrid({
+    ...props,
+    apiRef,
+    columns,
+  });
+
+  const mouseSlotProps = useMemo(
+    (): DataGridProps['slotProps'] => ({ row: { onMouseDown } }),
     [onMouseDown]
+  );
+
+  const slotProps = useMemo(
+    () => merge({}, dataGridProps.slotProps, mouseSlotProps),
+    [dataGridProps.slotProps, mouseSlotProps]
   );
 
   return (
