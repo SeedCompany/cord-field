@@ -11,10 +11,12 @@ export const appComponents = ({
   shape,
 }: Theme): Components<Theme> => {
   const dark = palette.mode === 'dark';
-  const primaryColorForText = dark
-    ? palette.primary.light
-    : palette.primary.main;
   return {
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 2,
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: {
         '#root': {
@@ -50,28 +52,21 @@ export const appComponents = ({
       defaultProps: {
         size: 'small',
       },
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-        },
-      },
     },
-    MuiIconButton: {
+    MuiPaper: {
       defaultProps: {
-        size: 'large', // MUI v4 default. Consider removing.
+        elevation: 2,
       },
     },
     MuiCard: {
       defaultProps: {
-        elevation: 8,
+        elevation: 2,
       },
     },
     MuiCardActions: {
       styleOverrides: {
         root: {
           // Add divider between card content & actions
-          // Implementation is following <Divider /> from MUI v5
-          // https://github.com/mui-org/material-ui/pull/18965
           borderTop: `thin solid ${palette.divider}`,
         },
       },
@@ -82,11 +77,12 @@ export const appComponents = ({
       },
       styleOverrides: {
         root: {
-          textTransform: 'uppercase',
-          fontWeight: typography.weight.medium,
           '&.Mui-focused': {
-            color: primaryColorForText,
+            color: palette.primary.main,
           },
+        },
+        shrink: {
+          fontWeight: typography.weight.medium,
         },
       },
     },
@@ -94,11 +90,6 @@ export const appComponents = ({
       defaultProps: {
         // because we always shrink label we always want notch applied
         notched: true,
-      },
-      styleOverrides: {
-        notchedOutline: {
-          textTransform: 'uppercase',
-        },
       },
     },
     MuiFormControl: {
@@ -149,8 +140,8 @@ export const appComponents = ({
     },
     MuiLink: {
       defaultProps: {
-        underline: 'hover',
-        color: dark ? 'primary.light' : 'primary.main',
+        underline: 'always',
+        color: 'primary.main',
       },
     },
     MuiToggleButtonGroup: {

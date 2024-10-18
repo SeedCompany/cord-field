@@ -1,10 +1,13 @@
 import { Box, FormControl, TextFieldProps } from '@mui/material';
-import type {
+import {
   DataGridProProps as DataGridProps,
+  GRID_DEFAULT_LOCALE_TEXT,
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { mapEntries } from '@seedcompany/common';
 import { Sx } from '../../common';
+
+GRID_DEFAULT_LOCALE_TEXT.filterPanelOperator = 'Condition';
 
 const scrollIntoView: DataGridProps['onMenuOpen'] = ({ target }) => {
   target?.closest('.MuiDataGrid-root')?.scrollIntoView({ block: 'center' });

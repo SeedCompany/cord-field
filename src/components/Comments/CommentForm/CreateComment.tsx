@@ -17,10 +17,13 @@ export const CreateComment = ({
   const { resourceId } = useCommentsContext();
 
   const [createOrReplyComment] = useMutation(CreateCommentDocument, {
-    update: addItemToList({
-      listId: 'commentThreads',
-      outputToItem: (data) => data.createComment.commentThread,
-    }),
+    update: (cache, res, options) => {
+      const thread = res.data!.createComment.commentThread;
+      addItemToList({
+        listId: [thread.container, 'commentThreads'],
+        outputToItem: () => thread,
+      })(cache, res, options);
+    },
   });
 
   return (

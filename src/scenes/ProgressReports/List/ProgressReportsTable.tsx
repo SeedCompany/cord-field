@@ -102,6 +102,7 @@ export const RowLink = (props: GridRowProps) => {
       component={Link}
       variant="body2"
       to={`/progress-reports/${idForUrl(report)}`}
+      color="inherit"
       sx={{ textDecoration: 'none' }}
     >
       <GridRow {...props} />

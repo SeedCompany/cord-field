@@ -103,8 +103,8 @@ const ProgressReportsToolbar = () => (
         Pinned
       </QuickFilterButton>
     </QuickFilters>
-    <CollapseAllButton />
     <ExpandAllButton />
+    <CollapseAllButton />
   </Toolbar>
 );
 

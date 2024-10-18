@@ -18,7 +18,7 @@ export const VariantAccordion = ({
   const [expanded, { toggle }] = useToggle(expandedInput ?? false);
 
   return (
-    <Accordion expanded={expanded} elevation={2} square>
+    <Accordion expanded={expanded} square>
       <AccordionSummary
         aria-controls={`${variant.key}-content`}
         expandIcon={<ExpandMore />}
