@@ -44,7 +44,7 @@ export function Feature({
       match === undefined ||
       variant === match ||
       process.env[`RAZZLE_POSTHOG_FLAG_${flag}`] ||
-      process.env[`RAZZLE_POSTHOG_FLAG_*`]
+      process.env.RAZZLE_POSTHOG_ALL_FLAGS
     )
   ) {
     return <>{fallback}</>;
