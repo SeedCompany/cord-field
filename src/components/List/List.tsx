@@ -22,6 +22,7 @@ export interface ListProps<Item extends Entity>
   extends ListQueryResult<
       Item,
       PaginatedListOutput<Item> & { canCreate?: boolean },
+      unknown,
       unknown
     >,
     Pick<GridProps, 'spacing'>,
