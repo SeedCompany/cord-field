@@ -227,9 +227,9 @@ export const ProgressReportsGrid = ({
     <DataGridPro
       {...DefaultDataGridStyles}
       {...dataGridProps}
+      {...props}
       slots={slots}
       slotProps={slotProps}
-      {...props}
       sx={[noHeaderFilterButtons, ...extendSx(props.sx)]}
     />
   );
