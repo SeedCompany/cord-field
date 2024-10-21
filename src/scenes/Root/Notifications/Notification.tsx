@@ -1,17 +1,43 @@
 import { CheckCircleOutlined, Circle } from '@mui/icons-material';
-import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  IconButtonProps,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { RelativeDateTime } from '../Formatters';
 import { NotificationFragment } from './notification.graphql';
 
-interface NotificationProps {
+interface NotificationProp {
   notification: NotificationFragment;
+}
+
+interface NotificationProps extends NotificationProp {
   onReadToggle?: () => void;
 }
 
-export function Notification({
+export const Notification = ({
   notification,
   onReadToggle,
-}: NotificationProps) {
+}: NotificationProps) => (
+  <Box sx={(theme) => ({ position: 'relative', '--p': theme.spacing(1) })}>
+    <DisplayNotification notification={notification} />
+    <Box
+      sx={{
+        position: 'absolute',
+        inset: '50% var(--p) 50% auto',
+        display: 'grid',
+        placeContent: 'center',
+      }}
+    >
+      <ReadIndicator notification={notification} onClick={onReadToggle} />
+    </Box>
+  </Box>
+);
+
+const DisplayNotification = ({ notification }: NotificationProp) => {
   const { unread } = notification;
 
   return (
@@ -24,7 +50,7 @@ export function Notification({
         justifyContent: 'space-between',
         width: 1,
         gap: 1,
-        p: 1,
+        p: 'var(--p)',
       }}
     >
       <Stack sx={{ alignItems: 'flex-start', gap: 1 }}>
@@ -36,18 +62,30 @@ export function Notification({
           <RelativeDateTime date={notification.createdAt} />
         </Typography>
       </Stack>
-      <Tooltip title={unread ? 'Mark as read' : 'Mark as unread'}>
-        <IconButton
-          sx={{ cursor: 'pointer', p: 0.5 }}
-          color="primary"
-          onClick={onReadToggle}
-        >
-          <Box
-            sx={{ height: 20, width: 20 }}
-            component={unread ? Circle : CheckCircleOutlined}
-          />
-        </IconButton>
-      </Tooltip>
+      {/* Just to reserve layout */}
+      <ReadIndicator disabled sx={{ visibility: 'hidden' }} />
     </Box>
   );
-}
+};
+
+const ReadIndicator = ({
+  notification,
+  ...rest
+}: Partial<NotificationProp> & IconButtonProps) => {
+  const unread = notification?.unread;
+  const Icon = unread ? Circle : CheckCircleOutlined;
+
+  const button = (
+    <IconButton size="small" color="primary" {...rest}>
+      <Icon fontSize="inherit" />
+    </IconButton>
+  );
+  if (!notification) {
+    return button;
+  }
+  return (
+    <Tooltip title={unread ? 'Mark as read' : 'Mark as unread'}>
+      {button}
+    </Tooltip>
+  );
+};
