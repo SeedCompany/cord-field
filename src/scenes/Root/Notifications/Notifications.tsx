@@ -8,32 +8,45 @@ import {
   Typography,
 } from '@mui/material';
 import { useMemo, useState } from 'react';
+import {
+  useFeatureEnabled,
+  VisibilityAndClickTracker,
+} from '~/components/Feature';
 import { useListQuery } from '~/components/List';
 import { ProgressButton } from '~/components/ProgressButton';
 import { Notification } from './Notification';
 import { NotificationListDocument } from './NotificationList.graphql';
 
 export const Notifications = () => {
+  const enabled = useFeatureEnabled('notifications');
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isPopoverOpen = Boolean(anchorEl);
 
   const { data, loadMore, loading } = useListQuery(NotificationListDocument, {
     pollInterval: 60_000,
     listAt: (data) => data.notifications,
+    skip: !enabled,
   });
 
   const notifications = useMemo(() => (data ? data.items : []), [data]);
 
+  if (!enabled) {
+    return null;
+  }
+
   return (
     <>
-      <IconButton
-        aria-label="notification"
-        onClick={(event) => setAnchorEl(event.currentTarget)}
-      >
-        <Badge color="primary" badgeContent={data?.totalUnread ?? 0}>
-          <NotificationsNone />
-        </Badge>
-      </IconButton>
+      <VisibilityAndClickTracker flag="notifications" trackInteraction>
+        <IconButton
+          aria-label="notification"
+          onClick={(event) => setAnchorEl(event.currentTarget)}
+        >
+          <Badge color="primary" badgeContent={data?.totalUnread ?? 0}>
+            <NotificationsNone />
+          </Badge>
+        </IconButton>
+      </VisibilityAndClickTracker>
 
       <Popover
         open={isPopoverOpen}

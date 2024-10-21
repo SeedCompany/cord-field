@@ -2,7 +2,6 @@ import { AccountCircle, SupervisedUserCircle } from '@mui/icons-material';
 import { IconButton, MenuProps, Stack, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
-import { Feature } from '~/components/Feature';
 import { useSession } from '~/components/Session';
 import { Notifications } from '../../Notifications';
 import { ProfileMenu } from '../ProfileMenu';
@@ -15,10 +14,7 @@ export const ProfileToolbar = () => {
   return (
     <>
       <Stack direction="row" spacing={1} alignItems="center">
-        {/* Wrapping with FF here to avoid API call */}
-        <Feature flag="notifications" match>
-          <Notifications />
-        </Feature>
+        <Notifications />
         <Typography color="primary" sx={{ fontWeight: 'medium' }}>
           {session?.fullName}
         </Typography>
