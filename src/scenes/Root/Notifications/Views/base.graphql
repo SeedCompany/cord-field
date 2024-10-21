@@ -1,0 +1,6 @@
+fragment notificationBase on Notification {
+  __typename
+  id
+  createdAt
+  unread
+}

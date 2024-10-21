@@ -16,9 +16,9 @@ import {
 import { useListQuery } from '~/components/List';
 import { ProgressButton } from '~/components/ProgressButton';
 import { Notification } from './Notification';
-import { NotificationFragment } from './notification.graphql';
 import { NotificationListDocument } from './NotificationList.graphql';
 import { ReadNotificationDocument } from './ReadNotification.graphql';
+import { NotificationFragment } from './Views';
 
 export const Notifications = () => {
   const enabled = useFeatureEnabled('notifications');
