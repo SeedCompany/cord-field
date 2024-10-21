@@ -1,3 +1,0 @@
-fragment notificationSimpleText on SimpleTextNotification {
-  content
-}

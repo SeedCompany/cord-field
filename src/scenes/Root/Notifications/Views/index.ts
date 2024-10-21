@@ -1,8 +1,8 @@
 import { Views } from './Base';
-import { SimpleText } from './SimpleText';
+import { System } from './System';
 
 export const views: Views = {
-  SimpleText,
+  System,
 };
 
 export type { NotificationProp } from './Base';

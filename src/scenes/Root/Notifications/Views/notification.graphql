@@ -1,4 +1,4 @@
 fragment notification on Notification {
   ...notificationBase
-  ...notificationSimpleText
+  ...notificationSystem
 }
