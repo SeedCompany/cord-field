@@ -1,5 +1,6 @@
 import { CheckCircleOutlined, Circle } from '@mui/icons-material';
-import { IconButton, IconButtonProps, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
+import { IconButton, IconButtonProps } from '~/components/IconButton';
 import { NotificationProp } from './Views';
 
 export const ReadIndicator = ({

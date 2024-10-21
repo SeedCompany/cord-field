@@ -1,4 +1,4 @@
-import { Box, Stack, Theme, Typography } from '@mui/material';
+import { Box, Skeleton, Stack, Theme, Typography } from '@mui/material';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
 import { alpha } from '@mui/material/styles';
@@ -19,15 +19,24 @@ interface NotificationTypeMap<
   AdditionalProps = object,
   RootComponent extends ElementType = typeof Box
 > {
-  props: NotificationProp & ChildrenProp & StyleProps & AdditionalProps;
+  props: (NotificationProp | { notification: 'loading' }) &
+    ChildrenProp &
+    StyleProps &
+    AdditionalProps;
   defaultComponent: RootComponent;
 }
 
 export const BaseView: OverridableComponent<NotificationTypeMap> = (
   props: NotificationTypeMap['props'] & { component?: ElementType }
 ) => {
-  const { component: Root = Box, notification, children, ...rest } = props;
-  const { unread, createdAt } = notification;
+  const {
+    component: Root = Box,
+    notification: notificationIn,
+    children,
+    ...rest
+  } = props;
+  const notification =
+    notificationIn !== 'loading' ? notificationIn : undefined;
   return (
     <Root
       color="primary"
@@ -35,7 +44,7 @@ export const BaseView: OverridableComponent<NotificationTypeMap> = (
       sx={[
         (theme: Theme) => ({
           width: 1,
-          backgroundColor: unread
+          backgroundColor: notification?.unread
             ? alpha(theme.palette.primary.light, 0.1)
             : undefined,
           borderRadius: 1,
@@ -48,13 +57,25 @@ export const BaseView: OverridableComponent<NotificationTypeMap> = (
       ]}
     >
       <Stack sx={{ flex: 1, gap: 1, alignItems: 'flex-start' }}>
-        {children}
+        {notification ? (
+          children
+        ) : (
+          <Skeleton width={`${Math.random() * (100 - 25) + 25}%`} />
+        )}
         <Typography variant="caption" color="textSecondary">
-          <RelativeDateTime date={createdAt} />
+          {notification ? (
+            <RelativeDateTime date={notification.createdAt} />
+          ) : (
+            <Skeleton width="30%" />
+          )}
         </Typography>
       </Stack>
-      {/* Just to reserve layout */}
-      <ReadIndicator disabled sx={{ visibility: 'hidden' }} />
+      {notification ? (
+        // Just to reserve layout
+        <ReadIndicator disabled sx={{ visibility: 'hidden' }} />
+      ) : (
+        <ReadIndicator loading css={{ transform: 'scale(.7)' }} />
+      )}
     </Root>
   );
 };

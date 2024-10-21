@@ -21,6 +21,7 @@ import { Notification } from './Notification';
 import { NotificationListDocument } from './NotificationList.graphql';
 import { ReadNotificationDocument } from './ReadNotification.graphql';
 import { NotificationFragment } from './Views';
+import { BaseView } from './Views/Base';
 
 export const Notifications = () => {
   const enabled = useFeatureEnabled('notifications');
@@ -113,6 +114,11 @@ export const Notifications = () => {
           <Divider sx={{ mx: 1 }} />
         </Box>
         <Stack divider={<Divider />} sx={{ p: 1, pt: 0.5, gap: 0.5 }}>
+          {loading && !data
+            ? Array.from({ length: 5 }).map((_, i) => (
+                <BaseView key={i} notification="loading" />
+              ))
+            : null}
           {data?.items.map((notification) => (
             <Notification
               key={notification.id}
