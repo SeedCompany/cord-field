@@ -126,6 +126,11 @@ export const Notifications = () => {
               onReadToggle={onReadToggle(notification)}
             />
           ))}
+          {data && data.items.length === 0 && (
+            <Typography align="center" color="text.secondary" my={3}>
+              None yet!
+            </Typography>
+          )}
           {data?.hasMore && (
             <ProgressButton progress={loading} onClick={() => loadMore()}>
               Load more
