@@ -3,8 +3,8 @@ import { IconButton, MenuProps, Stack, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { Feature } from '~/components/Feature';
-import { NotificationCenter } from '~/components/NotificationsCenter/NotificationsCenter';
 import { useSession } from '~/components/Session';
+import { Notifications } from '../../Notifications';
 import { ProfileMenu } from '../ProfileMenu';
 
 export const ProfileToolbar = () => {
@@ -17,7 +17,7 @@ export const ProfileToolbar = () => {
       <Stack direction="row" spacing={1} alignItems="center">
         {/* Wrapping with FF here to avoid API call */}
         <Feature flag="notifications" match>
-          <NotificationCenter />
+          <Notifications />
         </Feature>
         <Typography color="primary" sx={{ fontWeight: 'medium' }}>
           {session?.fullName}

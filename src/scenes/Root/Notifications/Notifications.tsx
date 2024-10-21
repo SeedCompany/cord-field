@@ -8,12 +8,12 @@ import {
   Typography,
 } from '@mui/material';
 import { useMemo, useState } from 'react';
-import { useListQuery } from '../List';
-import { ProgressButton } from '../ProgressButton';
+import { useListQuery } from '~/components/List';
+import { ProgressButton } from '~/components/ProgressButton';
 import { Notification } from './Notification';
 import { NotificationListDocument } from './NotificationList.graphql';
 
-export const NotificationCenter = () => {
+export const Notifications = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isPopoverOpen = Boolean(anchorEl);
 
