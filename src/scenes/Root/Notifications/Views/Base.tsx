@@ -1,6 +1,7 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Theme, Typography } from '@mui/material';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import type { OverridableComponent } from '@mui/material/OverridableComponent';
+import { alpha } from '@mui/material/styles';
 import { ElementType } from 'react';
 import { ChildrenProp, extendSx, StyleProps } from '~/common';
 import { RelativeDateTime } from '~/components/Formatters';
@@ -29,22 +30,24 @@ export const BaseView: OverridableComponent<NotificationTypeMap> = (
   const { unread, createdAt } = notification;
   return (
     <Root
+      color="primary"
       {...rest}
       sx={[
-        {
-          backgroundColor: unread ? 'grey.200' : 'inherit',
-          '&:hover': { backgroundColor: 'grey.300' },
+        (theme: Theme) => ({
+          width: 1,
+          backgroundColor: unread
+            ? alpha(theme.palette.primary.light, 0.1)
+            : undefined,
+          borderRadius: 1,
+          padding: 'var(--p)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          width: 1,
           gap: 1,
-          p: 'var(--p)',
-        },
+        }),
         ...extendSx(rest.sx),
       ]}
     >
-      <Stack sx={{ alignItems: 'flex-start', gap: 1 }}>
+      <Stack sx={{ flex: 1, gap: 1, alignItems: 'flex-start' }}>
         {children}
         <Typography variant="caption" color="textSecondary">
           <RelativeDateTime date={createdAt} />

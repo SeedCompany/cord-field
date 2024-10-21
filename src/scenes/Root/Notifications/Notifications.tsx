@@ -2,13 +2,15 @@ import { useMutation } from '@apollo/client';
 import { NotificationsNone } from '@mui/icons-material';
 import {
   Badge,
+  Box,
   Divider,
   IconButton,
   Popover,
   Stack,
   Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useTheme } from '@mui/material/styles';
+import { useState } from 'react';
 import {
   useFeatureEnabled,
   VisibilityAndClickTracker,
@@ -23,8 +25,7 @@ import { NotificationFragment } from './Views';
 export const Notifications = () => {
   const enabled = useFeatureEnabled('notifications');
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isPopoverOpen = Boolean(anchorEl);
+  const { spacing } = useTheme();
 
   const { data, loadMore, loading } = useListQuery(NotificationListDocument, {
     listAt: (data) => data.notifications,
@@ -59,7 +60,7 @@ export const Notifications = () => {
     });
   };
 
-  const notifications = useMemo(() => (data ? data.items : []), [data]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   if (!enabled) {
     return null;
@@ -69,7 +70,7 @@ export const Notifications = () => {
     <>
       <VisibilityAndClickTracker flag="notifications" trackInteraction>
         <IconButton
-          aria-label="notification"
+          aria-label="notifications"
           onClick={(event) => setAnchorEl(event.currentTarget)}
         >
           <Badge color="primary" badgeContent={data?.totalUnread ?? 0}>
@@ -79,32 +80,40 @@ export const Notifications = () => {
       </VisibilityAndClickTracker>
 
       <Popover
-        open={isPopoverOpen}
+        open={Boolean(anchorEl)}
         anchorEl={anchorEl}
         onClose={() => setAnchorEl(null)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{
+          vertical: parseInt(spacing(-2)),
+          horizontal: 'center',
+        }}
         slotProps={{
           paper: {
-            sx: { width: 'min(450px, 100%)', p: 1, mt: 1 },
+            sx: {
+              maxHeight: 400,
+              width: 'min(450px, 100%)',
+              mt: 1,
+            },
             elevation: 4,
-            square: true,
           },
         }}
       >
-        <Typography variant="h6" textAlign="center">
-          Notifications
-        </Typography>
-        <Divider sx={{ mb: 1 }} />
-        <Stack
-          divider={<Divider />}
+        <Box
           sx={{
-            height: 1,
-            maxHeight: { xs: 0.9, md: 400 },
-            overflowY: 'scroll',
-            gap: 0.25,
+            position: 'sticky',
+            top: 0,
+            bgcolor: 'background.paper',
+            zIndex: 1,
           }}
         >
-          {notifications.map((notification) => (
+          <Typography variant="h6" textAlign="center" py={1} lineHeight={1}>
+            Notifications
+          </Typography>
+          <Divider sx={{ mx: 1 }} />
+        </Box>
+        <Stack divider={<Divider />} sx={{ p: 1, pt: 0.5, gap: 0.5 }}>
+          {data?.items.map((notification) => (
             <Notification
               key={notification.id}
               notification={notification}

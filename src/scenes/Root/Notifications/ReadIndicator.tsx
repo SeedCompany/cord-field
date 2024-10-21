@@ -10,7 +10,7 @@ export const ReadIndicator = ({
   const Icon = unread ? Circle : CheckCircleOutlined;
 
   const button = (
-    <IconButton size="small" color="primary" {...rest}>
+    <IconButton size="small" color={unread ? 'primary' : undefined} {...rest}>
       <Icon fontSize="inherit" />
     </IconButton>
   );
