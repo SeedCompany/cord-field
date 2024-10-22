@@ -198,6 +198,17 @@ export const appComponents = ({
         },
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          textTransform: 'none',
+          transition: theme.transitions.create('transform'),
+          '&.Mui-selected': {
+            transform: 'scale(1.43)', // 20px
+          },
+        }),
+      },
+    },
     MuiTabs: {
       defaultProps: {
         indicatorColor: 'primary',
