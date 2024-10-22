@@ -1,12 +1,22 @@
 import { Box } from '@mui/material';
 import type { PostHog } from 'posthog-js';
 import {
+  useFeatureFlagEnabled,
   useFeatureFlagPayload,
   useFeatureFlagVariantKey,
   usePostHog,
 } from 'posthog-js/react';
 import { ReactNode, useCallback, useEffect, useRef } from 'react';
 import { ChildrenProp, StyleProps } from '~/common';
+
+export const useFeatureEnabled = (flag: string) => {
+  const enabled = useFeatureFlagEnabled(flag);
+  return (
+    enabled === true ||
+    process.env[`RAZZLE_POSTHOG_FLAG_${flag}`] ||
+    process.env.RAZZLE_POSTHOG_ALL_FLAGS
+  );
+};
 
 export type FeatureProps = {
   flag: string;
@@ -92,8 +102,8 @@ export function VisibilityAndClickTracker({
 
 export interface UseVisibilityAndClickTrackerProps {
   flag: string;
-  trackInteraction: boolean;
-  trackView: boolean;
+  trackInteraction?: boolean;
+  trackView?: boolean;
   options?: IntersectionObserverInit;
 }
 export const useVisibilityAndClickTracker = ({
