@@ -1,0 +1,12 @@
+fragment notificationCommentViaMention on CommentViaMentionNotification {
+  comment {
+    creator {
+      id
+      fullName
+    }
+    container {
+      __typename
+      id
+    }
+  }
+}

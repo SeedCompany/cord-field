@@ -1,0 +1,5 @@
+fragment notification on Notification {
+  ...notificationBase
+  ...notificationSystem
+  ...notificationCommentViaMention
+}

@@ -18,30 +18,22 @@ export const AppMetadata = () => (
       />
     )}
 
+    {/* https://dev.to/masakudamatsu/favicon-nightmare-how-to-maintain-sanity-3al7 */}
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link
+      rel="icon"
+      href="/images/favicon.svg"
+      sizes="any"
+      type="image/svg+xml"
+    />
     <link
       rel="apple-touch-icon"
+      href="/images/apple-touch-icon.png"
       sizes="180x180"
-      href="images/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="images/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="images/favicon-16x16.png"
     />
     <link rel="manifest" href="site.webmanifest" />
-    <link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#64b145" />
-    <link rel="shortcut icon" href="images/favicon.ico" />
     <meta name="apple-mobile-web-app-title" content="CORD Field" />
     <meta name="application-name" content="CORD Field" />
-    <meta name="msapplication-TileColor" content="#64b145" />
-    <meta name="msapplication-config" content="browserconfig.xml" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#1EA973" />
   </Helmet>
 );
