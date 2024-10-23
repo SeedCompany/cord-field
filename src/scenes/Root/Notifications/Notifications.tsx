@@ -4,12 +4,15 @@ import {
   Badge,
   Box,
   Divider,
+  FormControlLabel,
   IconButton,
   Popover,
   Stack,
+  Switch,
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { uniqBy } from 'lodash';
 import { useState } from 'react';
 import {
   useFeatureEnabled,
@@ -25,6 +28,7 @@ import { BaseView } from './Views/Base';
 
 export const Notifications = () => {
   const enabled = useFeatureEnabled('notifications');
+  const [unreadOnly, setUnreadOnly] = useState(true);
 
   const { spacing } = useTheme();
 
@@ -32,23 +36,51 @@ export const Notifications = () => {
     listAt: (data) => data.notifications,
     skip: !enabled,
     pollInterval: 60_000,
-  });
-
-  const [markAsRead] = useMutation(ReadNotificationDocument, {
-    update: (cache, { data: updated }) => {
-      cache.updateQuery(
-        {
-          query: NotificationListDocument,
+    variables: {
+      input: {
+        filter: {
+          unread: unreadOnly ? true : undefined,
         },
-        (prev) => ({
-          notifications: {
-            ...prev!.notifications,
-            totalUnread:
-              prev!.notifications.totalUnread +
-              (updated!.readNotification.unread ? 1 : -1),
+      },
+    },
+  });
+  const [markAsRead] = useMutation(ReadNotificationDocument, {
+    update: (cache, { data }) => {
+      const updated = data!.readNotification;
+      for (const unreadOnly of [true, undefined]) {
+        cache.updateQuery(
+          {
+            query: NotificationListDocument,
+            variables: {
+              input: {
+                filter: {
+                  unread: unreadOnly,
+                },
+              },
+            },
           },
-        })
-      );
+          (prevData) => {
+            const prev = prevData!.notifications;
+            // const filtered = prev.items.filter(
+            //   (item) => item.id !== updated.id
+            // );
+            const finalItems = !unreadOnly
+              ? prev.items
+              : !updated.unread
+              ? prev.items.filter((item) => item.id !== updated.id)
+              : uniqBy([...prev.items, updated], (item) => item.id).sort(
+                  (a, b) => +b.createdAt - +a.createdAt
+                );
+            return {
+              notifications: {
+                ...prevData!.notifications,
+                items: finalItems,
+                totalUnread: prev.totalUnread + (updated.unread ? 1 : -1),
+              },
+            };
+          }
+        );
+      }
     },
   });
   const onReadToggle = (notification: NotificationFragment) => () => {
@@ -111,6 +143,28 @@ export const Notifications = () => {
           <Typography variant="h6" textAlign="center" py={1} lineHeight={1}>
             Notifications
           </Typography>
+          <Box
+            sx={{
+              mx: 1,
+              display: 'flex',
+              justifyContent: 'end',
+              width: '100%',
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={unreadOnly}
+                  name="planned"
+                  color="primary"
+                  onChange={(_) => {
+                    setUnreadOnly(!unreadOnly);
+                  }}
+                />
+              }
+              label="Unread only"
+            />
+          </Box>
           <Divider sx={{ mx: 1 }} />
         </Box>
         <Stack divider={<Divider />} sx={{ p: 1, pt: 0.5, gap: 0.5 }}>
