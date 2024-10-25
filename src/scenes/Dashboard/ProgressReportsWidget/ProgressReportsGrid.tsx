@@ -6,12 +6,13 @@ import {
   GridColDef,
   GridRenderCellParams as RenderCellParams,
 } from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
+import { merge, without } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
 import {
   ProgressReportStatusLabels,
   ProgressReportStatusList,
+  ProjectStatusList,
   ScheduleStatusLabels,
   ScheduleStatusList,
 } from '~/api/schema.graphql';
@@ -190,6 +191,9 @@ export const ProgressReportsGrid = ({
             },
             end: {
               beforeInclusive: quarter.endOf('quarter'),
+            },
+            project: {
+              status: without(ProjectStatusList, 'InDevelopment'),
             },
           },
         },
