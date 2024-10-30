@@ -191,6 +191,11 @@ export const ProgressReportsGrid = ({
             end: {
               beforeInclusive: quarter.endOf('quarter'),
             },
+            engagement: {
+              project: {
+                status: ['Active', 'Completed'],
+              },
+            },
           },
         },
       },
