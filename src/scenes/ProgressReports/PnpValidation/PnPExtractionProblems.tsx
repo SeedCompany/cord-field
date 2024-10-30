@@ -24,8 +24,13 @@ export const PnPExtractionProblems = memo(function PnPExtractionProblems({
   result: Result;
   engagement: { id: string };
 }) {
+  // Temporarily filter out problems with "Notice" severity
+  const filteredProblems = result.problems.filter(
+    (problem) => problem.severity !== 'Notice'
+  );
+
   const bySheet = groupToMapBy(
-    result.problems.toSorted(
+    filteredProblems.toSorted(
       cmpBy((problem) => priority.indexOf(problem.severity))
     ),
     (p) => p.groups[0]!
