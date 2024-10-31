@@ -33,7 +33,7 @@ import {
   OperationDefinitionNode,
   type SelectionSetNode,
 } from 'graphql';
-import { get, pick, set, uniqBy } from 'lodash';
+import { get, merge, pick, set, uniqBy } from 'lodash';
 import { MutableRefObject, useEffect, useMemo, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import { type PaginatedListInput, type SortableListInput } from '~/api';
@@ -275,17 +275,8 @@ export const useDataGridSource = <
   );
   const variablesWithFilter = useMemo(() => {
     const { count, sort, order, ...rest } = input;
-    return {
-      ...variables,
-      input: {
-        ...rest,
-        ...variables.input,
-        filter: {
-          ...rest.filter,
-          ...variables.input?.filter,
-        },
-      },
-    };
+
+    return merge({}, variables, { input: rest });
   }, [variables, input]);
 
   const addToAllPagesCache = (next: Output) => {
@@ -309,18 +300,7 @@ export const useDataGridSource = <
   const { data: firstPage, loading } = useQuery(query, {
     skip: isCacheComplete,
     variables: useMemo(
-      () => ({
-        ...variables,
-        input: {
-          ...input,
-          page: 1,
-          ...variables.input,
-          filter: {
-            ...input.filter,
-            ...variables.input?.filter,
-          },
-        },
-      }),
+      () => merge({}, variables, { input }, { input: { page: 1 } }),
       [variables, input]
     ),
     onCompleted: addToAllPagesCache,
@@ -361,16 +341,7 @@ export const useDataGridSource = <
           .query({
             query,
             variables: {
-              ...variables,
-              input: {
-                ...input,
-                page,
-                ...variables.input,
-                filter: {
-                  ...input.filter,
-                  ...variables.input?.filter,
-                },
-              },
+              ...merge({}, variables, input, { input: page }),
             },
           })
           .then((res) => {
