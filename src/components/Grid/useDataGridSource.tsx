@@ -300,7 +300,7 @@ export const useDataGridSource = <
   const { data: firstPage, loading } = useQuery(query, {
     skip: isCacheComplete,
     variables: useMemo(
-      () => merge({}, variables, { input }, { input: { page: 1 } }),
+      () => merge({}, variables, { input: { ...input, page: 1 } }),
       [variables, input]
     ),
     onCompleted: addToAllPagesCache,
@@ -341,7 +341,7 @@ export const useDataGridSource = <
           .query({
             query,
             variables: {
-              ...merge({}, variables, input, { input: page }),
+              ...merge({}, variables, { input: { ...input, page } }),
             },
           })
           .then((res) => {
