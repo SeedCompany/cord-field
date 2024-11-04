@@ -187,6 +187,10 @@ export const ProgressReportsGrid = ({
           filter: {
             start: {
               afterInclusive: quarter.startOf('quarter'),
+              // Avoid final reports for projects that end at the end of the quarter.
+              // Their start date is the end date.
+              // So this ensures there is at least one day in between.
+              before: quarter.startOf('quarter').plus({ day: 1 }),
             },
             end: {
               beforeInclusive: quarter.endOf('quarter'),
