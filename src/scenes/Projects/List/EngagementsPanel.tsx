@@ -2,8 +2,10 @@ import {
   DataGridPro as DataGrid,
   DataGridProProps as DataGridProps,
 } from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
-import { useMemo } from 'react';
+import { GridInitialStatePro } from '@mui/x-data-grid-pro/models/gridStatePro';
+import { useDebounceFn } from 'ahooks';
+import { isEqual, merge } from 'lodash';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   EngagementDataGridRowFragment as Engagement,
   EngagementColumns,
@@ -17,9 +19,17 @@ import {
   noHeaderFilterButtons,
   useDataGridSource,
 } from '~/components/Grid';
+import { useSessionStorage } from '~/hooks/useSessionStorage';
 import { EngagementListDocument } from './EngagementList.graphql';
 
 export const EngagementsPanel = () => {
+  const [savedGridState, setSavedGridState] =
+    useSessionStorage<GridInitialStatePro>(
+      'engagements-grid-state',
+      EngagementInitialState
+    );
+  const prevState = useRef<GridInitialStatePro | null>(null);
+
   const [dataGridProps] = useDataGridSource({
     query: EngagementListDocument,
     variables: {},
@@ -42,6 +52,21 @@ export const EngagementsPanel = () => {
     [dataGridProps.slotProps]
   );
 
+  const onStateChange = useDebounceFn(
+    () => {
+      const gridState = dataGridProps.apiRef.current.exportState();
+      if (!isEqual(gridState, prevState.current)) {
+        prevState.current = gridState;
+        setSavedGridState(gridState);
+      }
+    },
+    { wait: 500, maxWait: 500 }
+  );
+
+  useEffect(() => {
+    dataGridProps.apiRef.current.restoreState(savedGridState);
+  }, [savedGridState, dataGridProps.apiRef]);
+
   return (
     <DataGrid<Engagement>
       {...DefaultDataGridStyles}
@@ -49,9 +74,10 @@ export const EngagementsPanel = () => {
       slots={slots}
       slotProps={slotProps}
       columns={EngagementColumns}
-      initialState={EngagementInitialState}
+      initialState={savedGridState}
       headerFilters
       hideFooter
+      onStateChange={onStateChange.run}
       sx={[flexLayout, noHeaderFilterButtons, noFooter]}
     />
   );

@@ -390,7 +390,10 @@ export const useDataGridSource = <
         ...(!isCacheComplete ? { apiSortModel: sortModel } : {}),
       }));
 
-      apiRef.current.scrollToIndexes({ rowIndex: 0 });
+      // ensures datagrid is mounted before scrolling
+      if (apiRef.current.rootElementRef.current) {
+        apiRef.current.scrollToIndexes({ rowIndex: 0 });
+      }
     });
   const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
     useMemoizedFn((filterModel) => {
@@ -409,7 +412,10 @@ export const useDataGridSource = <
         apiSortModel: prev.sortModel,
       }));
 
-      apiRef.current.scrollToIndexes({ rowIndex: 0 });
+      // ensures datagrid is mounted before scrolling
+      if (apiRef.current.rootElementRef.current) {
+        apiRef.current.scrollToIndexes({ rowIndex: 0 });
+      }
     });
 
   // DataGrid needs help when `rows` identity changes along with picking up

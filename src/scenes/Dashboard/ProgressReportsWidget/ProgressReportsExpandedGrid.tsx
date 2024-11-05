@@ -7,8 +7,11 @@ import {
   GridToolbarFilterButton,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import { GridInitialStatePro } from '@mui/x-data-grid-pro/models/gridStatePro';
 import { entries } from '@seedcompany/common';
-import { useMemo } from 'react';
+import { useDebounceFn } from 'ahooks';
+import { isEqual } from 'lodash';
+import { useEffect, useMemo, useRef } from 'react';
 import { extendSx } from '~/common';
 import {
   getInitialVisibility,
@@ -18,6 +21,7 @@ import {
   Toolbar,
   useFilterToggle,
 } from '~/components/Grid';
+import { useSessionStorage } from '~/hooks/useSessionStorage';
 import {
   CollapseAllButton,
   ExpandAllButton,
@@ -116,6 +120,12 @@ export const ProgressReportsExpandedGrid = (
   props: Omit<ProgressReportsGridProps, 'columns'>
 ) => {
   const apiRef = useGridApiRef();
+  const [savedGridState, setSavedGridState] =
+    useSessionStorage<GridInitialStatePro>(
+      `progress-reports-grid-state`,
+      initialState
+    );
+  const prevState = useRef<GridInitialStatePro | null>(null);
 
   const { expanded, onMouseDown, onRowClick } = useExpandedSetup();
 
@@ -128,6 +138,21 @@ export const ProgressReportsExpandedGrid = (
     [onMouseDown]
   );
 
+  const onStateChange = useDebounceFn(
+    () => {
+      const gridState = apiRef.current.exportState();
+      if (!isEqual(gridState, prevState.current)) {
+        prevState.current = gridState;
+        setSavedGridState(gridState);
+      }
+    },
+    { wait: 500, maxWait: 500 }
+  );
+
+  useEffect(() => {
+    apiRef.current.restoreState(savedGridState);
+  }, [savedGridState, apiRef]);
+
   return (
     <ExpansionContext.Provider value={expanded}>
       <ProgressReportsGrid
@@ -139,6 +164,7 @@ export const ProgressReportsExpandedGrid = (
         initialState={initialState}
         slotProps={slotProps}
         onRowClick={onRowClick}
+        onStateChange={onStateChange.run}
         getRowHeight={(params) =>
           expanded.has(params.id) ? 'auto' : COLLAPSED_ROW_HEIGHT
         }
