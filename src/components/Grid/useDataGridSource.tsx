@@ -18,6 +18,7 @@ import {
   useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import { GridInitialStatePro } from '@mui/x-data-grid-pro/models/gridStatePro';
 import { groupBy, Nil, setOf } from '@seedcompany/common';
 import {
   useDebounceFn,
@@ -39,6 +40,7 @@ import type { Get, Paths, SetNonNullable } from 'type-fest';
 import { type PaginatedListInput, type SortableListInput } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
+import { usePersistedGridState } from '~/hooks/usePersistedGridState';
 import { convertMuiFiltersToApi, FilterShape } from './convertMuiFiltersToApi';
 
 type ListInput = SetNonNullable<
@@ -99,6 +101,7 @@ export const useDataGridSource = <
   initialInput,
   keyArgs = defaultKeyArgs,
   apiRef: apiRefInput,
+  sessionStorageProps: sessionStateProps,
 }: {
   query: DocumentNode<Output, Vars>;
   variables: NoInfer<Vars & { input?: Input }>;
@@ -106,6 +109,10 @@ export const useDataGridSource = <
   initialInput?: Partial<Omit<NoInfer<Input>, 'page'>>;
   keyArgs?: string[];
   apiRef?: MutableRefObject<GridApiPro>;
+  sessionStorageProps: {
+    key: string;
+    defaultValue: GridInitialStatePro;
+  };
 }) => {
   const initialInputRef = useLatest(initialInput);
   // eslint-disable-next-line react-hooks/rules-of-hooks -- we'll assume this doesn't change between renders
@@ -418,6 +425,12 @@ export const useDataGridSource = <
       }
     });
 
+  const [savedGridState = {}, onStateChange] = usePersistedGridState({
+    key: sessionStateProps.key,
+    apiRef: apiRef,
+    defaultValue: sessionStateProps.defaultValue,
+  });
+
   // DataGrid needs help when `rows` identity changes along with picking up
   // sorting responsibility ('client').
   // Help it out by asking it to sort (again?) when we give it a different,
@@ -433,10 +446,12 @@ export const useDataGridSource = <
     rows,
     loading,
     rowCount: total,
+    initialState: savedGridState,
     sortModel: view.sortModel,
     filterModel: view.filterModel,
     hideFooterPagination: true,
     onFetchRows: onFetchRows.run,
+    onStateChange,
     onSortModelChange,
     onFilterModelChange,
     paginationMode: total != null ? 'server' : 'client', // Not used, but prevents row count warning.

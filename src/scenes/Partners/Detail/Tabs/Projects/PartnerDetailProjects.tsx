@@ -3,10 +3,8 @@ import {
   DataGridProProps as DataGridProps,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-import { GridInitialStatePro } from '@mui/x-data-grid-pro/models/gridStatePro';
-import { useDebounceFn } from 'ahooks';
-import { isEqual, merge } from 'lodash';
-import { useEffect, useMemo, useRef } from 'react';
+import { merge } from 'lodash';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { PartnerTypeLabels, PartnerTypeList } from '~/api/schema.graphql';
 import { unmatchedIndexThrow } from '~/common';
@@ -25,7 +23,6 @@ import {
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
-import { useSessionStorage } from '~/hooks/useSessionStorage';
 import {
   PartnerProjectDataGridRowFragment as PartnerProject,
   PartnerProjectsDocument,
@@ -33,18 +30,16 @@ import {
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
-  const [savedGridState, setSavedGridState] =
-    useSessionStorage<GridInitialStatePro>(
-      `partners-projects-grid-state-${partnerId}`,
-      ProjectInitialState
-    );
-  const prevState = useRef<GridInitialStatePro | null>(null);
   const [props] = useDataGridSource({
     query: PartnerProjectsDocument,
     variables: { partnerId },
     listAt: 'partner.projects',
     initialInput: {
       sort: 'name',
+    },
+    sessionStorageProps: {
+      key: `partners-projects-grid-state-${partnerId}`,
+      defaultValue: ProjectInitialState,
     },
   });
 
@@ -60,21 +55,6 @@ export const PartnerDetailProjects = () => {
     [props.slotProps]
   );
 
-  const onStateChange = useDebounceFn(
-    () => {
-      const gridState = props.apiRef.current.exportState();
-      if (!isEqual(gridState, prevState.current)) {
-        prevState.current = gridState;
-        setSavedGridState(gridState);
-      }
-    },
-    { wait: 500, maxWait: 500 }
-  );
-
-  useEffect(() => {
-    props.apiRef.current.restoreState(savedGridState);
-  }, [savedGridState, props.apiRef]);
-
   return (
     <TabPanelContent>
       <DataGrid<PartnerProject>
@@ -83,10 +63,8 @@ export const PartnerDetailProjects = () => {
         slots={slots}
         slotProps={slotProps}
         columns={PartnerProjectColumns}
-        initialState={ProjectInitialState}
         headerFilters
         hideFooter
-        onStateChange={onStateChange.run}
         sx={[flexLayout, noHeaderFilterButtons, noFooter]}
       />
     </TabPanelContent>
