@@ -1,12 +1,13 @@
-import { GridEventListener } from '@mui/x-data-grid-pro';
+import { GridApiPro, GridEventListener } from '@mui/x-data-grid-pro';
 import { GridInitialStatePro } from '@mui/x-data-grid-pro/models/gridStatePro';
 import { useDebounceFn, usePrevious, useSessionStorageState } from 'ahooks';
 import { isEqual } from 'lodash';
-import { useEffect } from 'react';
+import { MutableRefObject, useEffect, useRef } from 'react';
+import { convertMuiFiltersToApi } from '~/components/Grid/convertMuiFiltersToApi';
 
 interface UsePersistedGridStateOptions {
   key: string;
-  apiRef: any;
+  apiRef: MutableRefObject<GridApiPro>;
   defaultValue: GridInitialStatePro;
 }
 
@@ -15,9 +16,14 @@ export const usePersistedGridState = ({
   apiRef,
   defaultValue,
 }: UsePersistedGridStateOptions) => {
+  const isRestoringState = useRef(true);
+
   const [savedGridState, setSavedGridState] = useSessionStorageState(key, {
     defaultValue,
   });
+
+  const [persistedFilterModel, setPersistedFilterModel] =
+    useSessionStorageState<Record<string, any>>(`${key}-api-filter`, {});
 
   const prevGridState = usePrevious(
     savedGridState,
@@ -26,10 +32,19 @@ export const usePersistedGridState = ({
 
   const { run: handleStateChange } = useDebounceFn(
     () => {
-      const gridState = apiRef.current?.exportState();
-      setSavedGridState((prev) => {
-        return isEqual(prev, gridState) ? prev : gridState;
-      });
+      const gridState = apiRef.current.exportState();
+
+      setPersistedFilterModel((prev) =>
+        isEqual(prev, gridState)
+          ? prev
+          : convertMuiFiltersToApi(
+              apiRef.current,
+              gridState.filter?.filterModel
+            )
+      );
+      setSavedGridState((prev) =>
+        isEqual(prev, gridState) ? prev || defaultValue : gridState
+      );
     },
     { wait: 500, maxWait: 500 }
   );
@@ -39,10 +54,12 @@ export const usePersistedGridState = ({
   };
 
   useEffect(() => {
-    if (savedGridState && !isEqual(savedGridState, prevGridState)) {
-      apiRef.current?.restoreState(savedGridState);
+    if (isRestoringState.current) {
+      isRestoringState.current = false;
+    } else if (savedGridState && !isEqual(savedGridState, prevGridState)) {
+      apiRef.current.restoreState(savedGridState);
     }
   }, [savedGridState, apiRef, prevGridState]);
 
-  return [savedGridState, onStateChange] as const;
+  return [savedGridState, onStateChange, persistedFilterModel] as const;
 };
