@@ -9,11 +9,9 @@ import {
 } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { DataButton } from '../../../components/DataButton';
-import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { useDialog } from '../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { FieldOverviewCard } from '../../../components/FieldOverviewCard';
-import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import {
   FormattedDate,
   FormattedDateRange,
@@ -33,7 +31,6 @@ import {
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.graphql';
-import { UploadInternshipEngagementGrowthPlanDocument } from '../Files';
 import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
@@ -207,21 +204,6 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                   <Grid item xs={6}>
                     <Typography variant="h4">Growth Plan</Typography>
                   </Grid>
-                </Grid>
-                <Grid item container spacing={3} alignItems="center">
-                  <FileActionsContextProvider>
-                    <Grid item xs={6}>
-                      <DefinedFileCard
-                        label="Growth Plan"
-                        parentId={engagement.id}
-                        uploadMutationDocument={
-                          UploadInternshipEngagementGrowthPlanDocument
-                        }
-                        resourceType="engagement"
-                        securedFile={engagement.growthPlan}
-                      />
-                    </Grid>
-                  </FileActionsContextProvider>
                 </Grid>
                 <Grid item xs={6}>
                   <MethodologiesCard
