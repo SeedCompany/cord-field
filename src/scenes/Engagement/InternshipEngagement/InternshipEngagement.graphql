@@ -31,13 +31,6 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     canRead
     canEdit
   }
-  growthPlan {
-    canRead
-    canEdit
-    value {
-      ...FileNodeInfo
-    }
-  }
   countryOfOrigin {
     canRead
     canEdit
