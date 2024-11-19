@@ -25,12 +25,12 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
-import { ExpansionCell } from './ExpansionCell';
+import { VariantResponseCell } from '../../../components/Grid/VariantResponseCell';
+import { ExpansionCell } from '../../../components/Widgets/ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
   ProgressReportsDocument,
 } from './progressReportsDataGridRow.graphql';
-import { VariantResponseCell } from './VariantResponseCell';
 
 export type ProgressReportColumnMapShape = Record<
   string,

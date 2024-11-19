@@ -23,7 +23,7 @@ import {
   ExpandAllButton,
   ExpansionContext,
   useExpandedSetup,
-} from './expansionState';
+} from '../../../components/Widgets/expansionState';
 import {
   ExpansionMarker,
   ProgressReportsColumnMap,

@@ -8,9 +8,9 @@ import {
   WidgetHeader,
   WidgetProps,
 } from '~/components/Widgets';
+import { useQuarterState } from '../../../hooks/useQuarterState';
 import { ProgressReportsCollapsedGrid } from './ProgressReportsCollapsedGrid';
 import { ProgressReportsExpandedGrid } from './ProgressReportsExpandedGrid';
-import { useQuarterState } from './useQuarterState';
 
 export const ProgressReportsWidget = ({
   expanded,
