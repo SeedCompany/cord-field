@@ -17,6 +17,7 @@ import SimpleImage from '@editorjs/simple-image';
 import Table from '@editorjs/table';
 import Warning from '@editorjs/warning';
 import { pick } from 'lodash';
+import MentionsTool from './MentionsTool';
 
 const defineTools = <T extends EditorConfig['tools']>(tools: T) => tools;
 
@@ -39,6 +40,7 @@ export const EDITOR_JS_TOOLS = defineTools({
   marker: Marker,
   // checkList: CheckList,
   delimiter: Delimiter,
+  mentions: MentionsTool,
   // inlineCode: InlineCode,
   // simpleImage: SimpleImage,
 });
@@ -52,4 +54,5 @@ export interface BlockDataMap {
   paragraph: { text: string };
   header: { text: string; level: 1 | 2 | 3 | 4 | 5 | 6 };
   list: { style: 'unordered' | 'ordered'; items: string[] };
+  mentions: { text: string };
 }

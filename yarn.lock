@@ -1844,6 +1844,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@editorjs/link-autocomplete@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@editorjs/link-autocomplete@npm:0.1.0"
+  dependencies:
+    "@codexteam/icons": "npm:^0.0.5"
+  checksum: 10c0/db55fc9ad6a2055f4bb664380c2fef5b2d17298f98fc3c7cbd3b4c7cc184f1247f840db0ed9ba89e81501ea5215c590a29759baa542a7be018f8f01cba1fbbdb
+  languageName: node
+  linkType: hard
+
 "@editorjs/link@npm:^2.5.0":
   version: 2.5.0
   resolution: "@editorjs/link@npm:2.5.0"
@@ -7915,6 +7924,7 @@ __metadata:
     "@editorjs/image": "npm:^2.8.2"
     "@editorjs/inline-code": "npm:^1.4.0"
     "@editorjs/link": "npm:^2.5.0"
+    "@editorjs/link-autocomplete": "npm:^0.1.0"
     "@editorjs/list": "npm:^1.8.0"
     "@editorjs/marker": "npm:^1.3.0"
     "@editorjs/paragraph": "npm:^2.11.3"
