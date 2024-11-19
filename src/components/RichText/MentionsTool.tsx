@@ -1,11 +1,27 @@
-import { API } from '@editorjs/editorjs';
+import {
+  API,
+  BlockTool,
+  BlockToolConstructable,
+  BlockToolConstructorOptions,
+  BlockToolData,
+} from '@editorjs/editorjs';
 
-class MentionsTool {
+export class MentionsTool implements BlockTool {
   private readonly api: API;
   private element: HTMLDivElement | null;
-  constructor({ api }: { api: API }) {
+  constructor({ api }: BlockToolConstructorOptions) {
     this.api = api;
     this.element = null;
+  }
+
+  static get toolbox(): BlockToolConstructable['toolbox'] {
+    return {
+      title: 'Mentions',
+    };
+  }
+
+  save(_block: HTMLElement): BlockToolData {
+    return { foo: 'bar' };
   }
 
   render() {
@@ -16,5 +32,3 @@ class MentionsTool {
     return this.element;
   }
 }
-
-export default MentionsTool;

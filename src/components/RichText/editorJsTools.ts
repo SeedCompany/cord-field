@@ -17,7 +17,7 @@ import SimpleImage from '@editorjs/simple-image';
 import Table from '@editorjs/table';
 import Warning from '@editorjs/warning';
 import { pick } from 'lodash';
-import MentionsTool from './MentionsTool';
+import { MentionsTool } from './MentionsTool';
 
 const defineTools = <T extends EditorConfig['tools']>(tools: T) => tools;
 
