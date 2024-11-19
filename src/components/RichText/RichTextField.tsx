@@ -204,6 +204,7 @@ export function RichTextField({
               const tools = toolNames
                 ? (pick(EDITOR_JS_TOOLS, toolNames) as EditorConfig['tools'])
                 : EDITOR_JS_TOOLS;
+              console.log('tools', tools);
               return (
                 <EditorJS
                   tools={tools}

@@ -25,7 +25,7 @@ export const EDITOR_JS_TOOLS = defineTools({
   // NOTE: EditorJS expects keys to be camelCase.
   paragraph: {
     class: Paragraph,
-    inlineToolbar: ['bold', 'italic', 'marker'],
+    inlineToolbar: ['bold', 'italic', 'marker', 'mentions'],
   },
   // embed: Embed,
   // table: Table,
@@ -47,8 +47,8 @@ export const EDITOR_JS_TOOLS = defineTools({
 
 export type ToolKey = keyof typeof EDITOR_JS_TOOLS;
 
-export const customTools = (toolsNames: ToolKey[]) =>
-  pick(EDITOR_JS_TOOLS, toolsNames);
+// export const customTools = (toolsNames: ToolKey[]) =>
+//   pick(EDITOR_JS_TOOLS, toolsNames);
 
 export interface BlockDataMap {
   paragraph: { text: string };
