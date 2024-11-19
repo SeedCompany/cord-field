@@ -29,7 +29,7 @@ export class MentionsTool implements InlineTool {
     console.log('MentionsInlineTool render called');
     this.button = document.createElement('button');
     this.button.type = 'button';
-    this.button.textContent = 'M'; // The button's label
+    this.button.textContent = '@'; // The button's label
     this.button.classList.add(this.api.styles.inlineToolButton);
 
     return this.button;
