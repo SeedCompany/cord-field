@@ -1,0 +1,39 @@
+query PnpErrors($input: ProgressReportListInput) {
+  progressReports(input: $input) {
+    items {
+      start
+      end
+      ...pnpErrorsDataGridRow
+    }
+    total
+  }
+}
+
+fragment pnpErrorsDataGridRow on ProgressReport {
+  id
+  pnpExtractionResult {
+    countError
+    problems {
+      ...pnpProblem
+    }
+  }
+  parent {
+    id
+    language {
+      value {
+        id
+        name {
+          value
+        }
+      }
+    }
+    project {
+      id
+      name {
+        value
+      }
+      isMember
+      pinned
+    }
+  }
+}
