@@ -1,7 +1,14 @@
-import { API, InlineTool } from '@editorjs/editorjs';
+import { ApolloClient } from '@apollo/client';
+import {
+  API,
+  InlineTool,
+  InlineToolConstructorOptions,
+} from '@editorjs/editorjs';
 
 export class MentionsTool implements InlineTool {
   private readonly api: API;
+  private readonly apollo: ApolloClient<unknown>;
+
   private button: HTMLButtonElement | null;
   // apparently this has to be here for checkState to work???
   private readonly state: boolean;
@@ -16,11 +23,12 @@ export class MentionsTool implements InlineTool {
     };
   }
 
-  constructor({ api }: { api: API }) {
+  constructor({ api, config }: InlineToolConstructorOptions) {
     console.log('MentionsInlineTool initialized');
     this.api = api;
     this.state = false;
     this.button = null;
+    this.apollo = config.apollo;
 
     this.addInputListener();
   }
