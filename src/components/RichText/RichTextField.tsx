@@ -28,6 +28,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -68,7 +69,13 @@ export function RichTextField({
   showCharacterCount,
   ...props
 }: RichTextFieldProps) {
-  const apollo = useApolloClient();
+  const apolloClient = useApolloClient();
+  const apollo = useMemo(() => {
+    // Client with no enumerable properties to avoid deep merging by Editor
+    return new Proxy(apolloClient, {
+      ownKeys: () => [],
+    });
+  }, [apolloClient]);
 
   const instanceRef = useRef<EditorJS>();
   const [isReady, setReady] = useState(false);
