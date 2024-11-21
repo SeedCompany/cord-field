@@ -1,22 +1,12 @@
 import { useMutation } from '@apollo/client';
-import { Preview as PreviewIcon } from '@mui/icons-material';
-import {
-  CircularProgress,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
+import { Preview } from '~/components/Preview';
 import {
   DefinedFileCard,
   DefinedFileCardProps,
 } from '../../../components/DefinedFileCard';
 import { Feature } from '../../../components/Feature';
-import {
-  NonDirectoryActionItem as File,
-  FileActionsContextProvider,
-  useFileActions,
-} from '../../../components/files/FileActions';
+import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
 import { PnPReextractIconButton } from '../PnpValidation/PnPReextractIconButton';
 import { PnPValidationIcon } from '../PnpValidation/PnpValidationIcon';
@@ -119,16 +109,5 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
         />
       </>
     </FileActionsContextProvider>
-  );
-};
-
-const Preview = ({ file }: { file: File }) => {
-  const { openFilePreview } = useFileActions();
-  return (
-    <Tooltip title="Preview">
-      <IconButton onClick={() => openFilePreview(file)} size="small">
-        <PreviewIcon />
-      </IconButton>
-    </Tooltip>
   );
 };

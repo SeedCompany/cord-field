@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Preview as PreviewIcon } from '@mui/icons-material';
-import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { entries } from '@seedcompany/common';
 import { pick } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
@@ -14,14 +13,11 @@ import {
   StyleProps,
 } from '~/common';
 import { Feature } from '~/components/Feature';
+import { Preview } from '~/components/Preview';
 import { DefinedFileCard } from '../../../../components/DefinedFileCard';
 import { useDialog } from '../../../../components/Dialog';
 import { DialogForm } from '../../../../components/Dialog/DialogForm';
-import {
-  NonDirectoryActionItem as File,
-  FileActionsContextProvider,
-  useFileActions,
-} from '../../../../components/files/FileActions';
+import { FileActionsContextProvider } from '../../../../components/files/FileActions';
 import { HandleUploadCompletedFunction } from '../../../../components/files/hooks';
 import { EnumField, EnumOption } from '../../../../components/form';
 import { PnPValidationIcon } from '../../../ProgressReports/PnpValidation/PnpValidationIcon';
@@ -151,16 +147,5 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
         </DialogForm>
       )}
     </FileActionsContextProvider>
-  );
-};
-
-const Preview = ({ file }: { file: File }) => {
-  const { openFilePreview } = useFileActions();
-  return (
-    <Tooltip title="Preview">
-      <IconButton onClick={() => openFilePreview(file)} size="small">
-        <PreviewIcon />
-      </IconButton>
-    </Tooltip>
   );
 };
