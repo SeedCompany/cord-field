@@ -216,7 +216,6 @@ export function RichTextField({
                     typeof EDITOR_JS_TOOLS
                   >)
                 : EDITOR_JS_TOOLS;
-              console.log('tools', tools);
               return (
                 <EditorJS
                   tools={{
