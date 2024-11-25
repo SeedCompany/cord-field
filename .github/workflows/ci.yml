@@ -37,7 +37,7 @@ jobs:
         if: "contains(github.event.pull_request.body, 'API PR: https://')"
 
       - name: Download API Schema
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           repo: SeedCompany/cord-api-v3
           workflow: lint.yml
