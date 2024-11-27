@@ -56,10 +56,6 @@ export class MentionsTool implements InlineTool {
   }
 
   surround(range: Range) {
-    // console.log('MentionsInlineTool surround called with range:', range);
-    if (!range) {
-      return;
-    }
     this.wrap(range);
   }
 
@@ -71,7 +67,7 @@ export class MentionsTool implements InlineTool {
     this.api.selection.expandToTag(wrapper);
   }
 
-  checkState(selection: Selection) {
+  checkState() {
     return false;
   }
   // Leaving this for now as we should later implement the search on typing vs the button click
