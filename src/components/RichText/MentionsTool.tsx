@@ -57,6 +57,18 @@ export class MentionsTool implements InlineTool {
 
   surround(range: Range) {
     console.log('MentionsInlineTool surround called with range:', range);
+    if (!range) {
+      return;
+    }
+    this.wrap(range);
+  }
+
+  wrap(range: Range) {
+    console.log('wrap', range);
+    const anchor = document.createElement('a');
+    anchor.appendChild(range.extractContents());
+    range.insertNode(anchor);
+    this.api.selection.expandToTag(anchor);
   }
 
   checkState(selection: Selection) {
@@ -113,7 +125,7 @@ export class MentionsTool implements InlineTool {
           Object.assign(user.style, userStyle);
           user.addEventListener('click', () => {
             // @ts-expect-error - this selection shouldn't ever be null because of the context this is being called in
-            selection.focusNode.textContent = item.fullName;
+            selection.focusNode.textContent = `@${item?.fullName}(${item?.id})`;
           });
           user.addEventListener('mouseover', () =>
             applyStyle(user, userHoverChanges)
