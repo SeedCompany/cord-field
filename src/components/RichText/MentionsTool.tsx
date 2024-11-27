@@ -56,7 +56,7 @@ export class MentionsTool implements InlineTool {
   }
 
   surround(range: Range) {
-    console.log('MentionsInlineTool surround called with range:', range);
+    // console.log('MentionsInlineTool surround called with range:', range);
     if (!range) {
       return;
     }
@@ -64,18 +64,14 @@ export class MentionsTool implements InlineTool {
   }
 
   wrap(range: Range) {
-    console.log('wrap', range);
-    const anchor = document.createElement('a');
-    anchor.appendChild(range.extractContents());
-    range.insertNode(anchor);
-    this.api.selection.expandToTag(anchor);
+    const wrapper = document.createElement('span');
+    wrapper.classList.add('user-tag');
+    wrapper.appendChild(range.extractContents());
+    range.insertNode(wrapper);
+    this.api.selection.expandToTag(wrapper);
   }
 
   checkState(selection: Selection) {
-    console.log(
-      'MentionsInlineTool checkState called with selection:',
-      selection
-    );
     return false;
   }
   // Leaving this for now as we should later implement the search on typing vs the button click
@@ -87,10 +83,22 @@ export class MentionsTool implements InlineTool {
   private async replaceTextWithUser(container: HTMLDivElement | null) {
     const selection = window.getSelection();
     if (selection?.focusNode?.textContent) {
+      const selectedText = selection.focusNode.textContent.slice(
+        selection.anchorOffset,
+        selection.focusOffset
+      );
+      // const beforeSearch = selection.focusNode.textContent.slice(
+      //   0,
+      //   selection.anchorOffset
+      // );
+      // const afterSearch = selection.focusNode.textContent.slice(
+      //   selection.focusOffset
+      // );
+      // console.log('beforeAfterSearch', beforeSearch, afterSearch);
       const { data } = await this.apollo.query({
         query: UserLookupDocument,
         variables: {
-          query: selection.focusNode.textContent,
+          query: selectedText,
         },
       });
       if (data.search.items.length > 0) {
