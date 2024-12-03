@@ -36,7 +36,7 @@ export const ExpansionMarker = 'expandable';
 export const PnpErrorsColumnMap = {
   project: {
     headerName: 'Project',
-    field: 'parent.project.name',
+    field: 'engagement.project.name',
     ...textColumn(),
     width: 200,
     valueGetter: (_, row) => row.parent.project.name.value,
@@ -47,7 +47,7 @@ export const PnpErrorsColumnMap = {
   },
   language: {
     headerName: 'Language',
-    field: 'parent.language.name',
+    field: 'engagement.language.name',
     ...textColumn(),
     width: 200,
     valueGetter: (_, row) => row.parent.language.value?.name.value,
@@ -82,9 +82,9 @@ export const PnpErrorsColumnMap = {
     headerName: 'Errors',
     field: 'pnpExtractionResult.countError',
     type: 'number',
-    align: 'right',
     headerAlign: 'center',
     width: 150,
+    valueGetter: (_, row) => row.pnpExtractionResult!.countError,
     renderCell: ({ row }) => (
       <ErrorCell
         count={row.pnpExtractionResult!.countError}
@@ -93,7 +93,6 @@ export const PnpErrorsColumnMap = {
       />
     ),
     filterable: false,
-    sortable: false,
   },
   isMember: {
     headerName: 'Mine',
@@ -138,8 +137,8 @@ export const PnpErrorsGrid = ({ quarter, ...props }: PnpErrorsGridProps) => {
       },
       listAt: 'progressReports',
       initialInput: {
-        sort: 'status',
-        order: 'DESC',
+        sort: 'engagement.project.name',
+        order: 'ASC',
       },
     } as const;
   }, [quarter]);
