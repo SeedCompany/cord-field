@@ -15,8 +15,6 @@ import {
   useFilterToggle,
 } from '~/components/Grid';
 import {
-  CollapseAllButton,
-  ExpandAllButton,
   ExpansionContext,
   useExpandedSetup,
 } from '../../../components/Widgets/expansionState';
@@ -61,8 +59,6 @@ const PnpErrorsToolbar = () => (
         Pinned
       </QuickFilterButton>
     </QuickFilters>
-    <ExpandAllButton />
-    <CollapseAllButton />
   </Toolbar>
 );
 
