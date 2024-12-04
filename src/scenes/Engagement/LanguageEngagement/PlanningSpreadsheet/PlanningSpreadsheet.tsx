@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { entries } from '@seedcompany/common';
 import { pick } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
@@ -12,17 +12,15 @@ import {
   displayMethodology,
   StyleProps,
 } from '~/common';
-import { Feature } from '~/components/Feature';
-import { Preview } from '~/components/Preview';
 import { DefinedFileCard } from '../../../../components/DefinedFileCard';
 import { useDialog } from '../../../../components/Dialog';
 import { DialogForm } from '../../../../components/Dialog/DialogForm';
 import { FileActionsContextProvider } from '../../../../components/files/FileActions';
 import { HandleUploadCompletedFunction } from '../../../../components/files/hooks';
 import { EnumField, EnumOption } from '../../../../components/form';
-import { PnPValidationIcon } from '../../../ProgressReports/PnpValidation/PnpValidationIcon';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
 import { EngagementPlanningSpreadsheetFragment } from './PlanningSpreadsheet.graphql';
+import { PlanningSpreadsheetHeader } from './PlanningSpreadsheetHeader';
 
 const useStyles = makeStyles()(({ spacing, typography }) => ({
   section: {
@@ -59,41 +57,7 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
         disableIcon
         disablePreview={true}
         onUpload={setUploading}
-        header={
-          <Stack
-            sx={{
-              mt: -1,
-              flexDirection: 'row',
-              gap: 1,
-              alignItems: 'center',
-            }}
-          >
-            <Typography variant="h4">Planning Spreadsheet</Typography>
-            {engagement.pnp.value && (
-              <>
-                <Preview file={engagement.pnp.value} />
-                <Feature
-                  flag="pnp-validation"
-                  match={true}
-                  sx={{
-                    display: 'inherit',
-                    flexDirection: 'inherit',
-                    gap: 'inherit',
-                  }}
-                >
-                  {engagement.pnpExtractionResult && (
-                    <PnPValidationIcon
-                      file={engagement.pnp.value}
-                      result={engagement.pnpExtractionResult}
-                      engagement={engagement}
-                      size="small"
-                    />
-                  )}
-                </Feature>
-              </>
-            )}
-          </Stack>
-        }
+        header={<PlanningSpreadsheetHeader engagement={engagement} />}
       />
       {upload && (
         <DialogForm<{ methodology?: Methodology }>
