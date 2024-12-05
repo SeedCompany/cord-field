@@ -177,6 +177,7 @@ export interface ProgressReportsGridProps extends DataGridProps {
 
 export const ProgressReportsGrid = ({
   quarter,
+  initialState = {},
   ...props
 }: ProgressReportsGridProps) => {
   const source = useMemo(() => {
@@ -210,9 +211,14 @@ export const ProgressReportsGrid = ({
       },
     } as const;
   }, [quarter]);
+
   const [dataGridProps] = useDataGridSource({
     ...source,
     apiRef: props.apiRef,
+    sessionStorageProps: {
+      key: 'progress-reports-grid',
+      defaultValue: initialState,
+    },
   });
 
   const slots = useMemo(

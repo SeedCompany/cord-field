@@ -127,7 +127,6 @@ export const ProgressReportsExpandedGrid = (
     }),
     [onMouseDown]
   );
-
   return (
     <ExpansionContext.Provider value={expanded}>
       <ProgressReportsGrid
