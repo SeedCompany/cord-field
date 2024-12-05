@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Tooltip, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { entries } from '@seedcompany/common';
 import { pick } from 'lodash';
 import { makeStyles } from 'tss-react/mui';
@@ -20,6 +20,7 @@ import { HandleUploadCompletedFunction } from '../../../../components/files/hook
 import { EnumField, EnumOption } from '../../../../components/form';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
 import { EngagementPlanningSpreadsheetFragment } from './PlanningSpreadsheet.graphql';
+import { PlanningSpreadsheetHeader } from './PlanningSpreadsheetHeader';
 
 const useStyles = makeStyles()(({ spacing, typography }) => ({
   section: {
@@ -45,21 +46,19 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
 
   return (
     <FileActionsContextProvider>
-      <Tooltip
-        title="This holds the planning info of PnP files"
-        placement="top"
-      >
-        <DefinedFileCard
-          {...rest}
-          label="Planning Spreadsheet"
-          uploadMutationDocument={UploadPnp}
-          parentId={engagement.id}
-          resourceType="engagement"
-          securedFile={engagement.pnp}
-          disableIcon
-          onUpload={setUploading}
-        />
-      </Tooltip>
+      {/* <Tooltip title="This holds the planning info of PnP files" placement="top"> */}
+      <DefinedFileCard
+        {...rest}
+        label="Planning Spreadsheet"
+        uploadMutationDocument={UploadPnp}
+        parentId={engagement.id}
+        resourceType="engagement"
+        securedFile={engagement.pnp}
+        disableIcon
+        disablePreview={true}
+        onUpload={setUploading}
+        header={<PlanningSpreadsheetHeader engagement={engagement} />}
+      />
       {upload && (
         <DialogForm<{ methodology?: Methodology }>
           {...dialogState}

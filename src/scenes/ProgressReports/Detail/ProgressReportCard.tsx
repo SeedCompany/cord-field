@@ -122,7 +122,7 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
   );
 };
 
-const Preview = ({ file }: { file: File }) => {
+export const Preview = ({ file }: { file: File }) => {
   const { openFilePreview } = useFileActions();
   return (
     <Tooltip title="Preview">
