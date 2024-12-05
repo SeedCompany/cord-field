@@ -8,29 +8,27 @@ import {
   WidgetHeader,
   WidgetProps,
 } from '~/components/Widgets';
-import { useQuarterState } from '../../../hooks/useQuarterState';
-import { ProgressReportsCollapsedGrid } from './ProgressReportsCollapsedGrid';
-import { ProgressReportsExpandedGrid } from './ProgressReportsExpandedGrid';
+import { useQuarterState } from '~/hooks/useQuarterState';
+import { PnpErrorsCollapsedGrid } from './PnpErrorsCollapsedGrid';
+import { PnpErrorsExpandedGrid } from './PnpErrorsExpandedGrid';
 
-export const ProgressReportsWidget = ({
+export const PnpErrorsWidget = ({
   expanded,
   ...props
 }: WidgetProps & { expanded: boolean }) => {
   const quarter = useQuarterState();
   const location = useLocation();
 
-  const Grid = expanded
-    ? ProgressReportsExpandedGrid
-    : ProgressReportsCollapsedGrid;
+  const Grid = expanded ? PnpErrorsExpandedGrid : PnpErrorsCollapsedGrid;
   return (
     <Widget {...props}>
       <WidgetHeader
-        title="Quarterly Reports"
+        title="PnP Problems"
         expandAction={
           <ExpanderButton
             expanded={expanded}
             to={{
-              pathname: expanded ? '..' : 'progress-reports',
+              pathname: expanded ? '..' : 'pnp-errors',
               search: location.search,
             }}
           />

@@ -2,13 +2,13 @@ import { DataGridProProps as DataGridProps } from '@mui/x-data-grid-pro';
 import { entries } from '@seedcompany/common';
 import { extendSx } from '~/common';
 import { getInitialVisibility } from '~/components/Grid';
+import { VariantResponseIconCell } from '~/components/Grid/VariantResponseCell';
 import {
   ProgressReportColumnMapShape,
   ProgressReportsColumnMap,
   ProgressReportsGrid,
   ProgressReportsGridProps,
 } from './ProgressReportsGrid';
-import { VariantResponseIconCell } from './VariantResponseCell';
 
 const columns = entries({
   ...ProgressReportsColumnMap,

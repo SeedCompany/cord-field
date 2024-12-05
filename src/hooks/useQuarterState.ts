@@ -19,7 +19,7 @@ const useQueryParams = makeQueryHandler({
 
 export const useQuarterState = () => {
   const [available] = useState(() => {
-    const start = DateTime.local(2023, 7) as DateTime<true>;
+    const start = DateTime.local(2021, 10) as DateTime<true>;
     const end = DateTime.now().minus({ quarter: 1 });
     return start
       .until(end)
