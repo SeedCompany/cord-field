@@ -1,5 +1,5 @@
 import { getGridSingleSelectOperators, GridColDef } from '@mui/x-data-grid-pro';
-import { EmptyEnumFilterValue } from './DefaultDataGridStyles';
+import { EmptyEnumFilterValue } from '../DefaultDataGridStyles';
 
 export const enumColumn = <T extends string>(
   list: readonly T[],

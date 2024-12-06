@@ -1,5 +1,5 @@
 import { GridColDef } from '@mui/x-data-grid';
-import { GridFilterInputBoolean } from './GridFilterInputBoolean';
+import { GridFilterInputBoolean } from '../GridFilterInputBoolean';
 
 export const booleanColumn = () =>
   ({

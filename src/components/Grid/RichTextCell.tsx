@@ -1,14 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import { GridRenderCellParams as RenderCellParams } from '@mui/x-data-grid';
 import { RichTextJson, StyleProps } from '~/common';
-import {
-  BlockProps,
-  Renderers,
-  RichTextView,
-  Text,
-} from '../../../components/RichText';
-import { ExpansionCell } from './ExpansionCell';
-import { ProgressReportsDataGridRowFragment as ProgressReport } from './progressReportsDataGridRow.graphql';
+import { ExpansionCell } from '../../scenes/Dashboard/ProgressReportsWidget/ExpansionCell';
+import { ProgressReportsDataGridRowFragment as ProgressReport } from '../../scenes/Dashboard/ProgressReportsWidget/progressReportsDataGridRow.graphql';
+import { BlockProps, Renderers, RichTextView, Text } from '../RichText';
 
 type CellParams = RenderCellParams<ProgressReport, RichTextJson>;
 
