@@ -1,6 +1,6 @@
 import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material';
 import { GridColDef } from '@mui/x-data-grid';
-import { GridFilterInputBoolean } from './GridFilterInputBoolean';
+import { GridFilterInputBoolean } from '../GridFilterInputBoolean';
 
 export const booleanColumn = () =>
   ({
