@@ -9,27 +9,25 @@ query ProgressReports($input: ProgressReportListInput) {
   }
 }
 
-fragment progressReportsDataGridRow on ProgressReport {
+fragment progressReportGridIDColumns on ProgressReport {
   id
   parent {
     id
     language {
       value {
-        id
-        name {
-          value
-        }
+        ...LanguageLookupItem
       }
     }
     project {
-      id
-      name {
-        value
-      }
+      ...ProjectLookupItem
       isMember
       pinned
     }
   }
+}
+
+fragment progressReportsDataGridRow on ProgressReport {
+  ...progressReportGridIDColumns
   status {
     value
   }

@@ -5,9 +5,9 @@ import {
   VariantFragment as Variant,
   VariantResponseFragment as VariantResponse,
 } from '~/common/fragments';
+import { RichTextCell } from '../../../components/Grid/RichTextCell';
 import { RoleIcon as BaseRoleIcon } from '../../../components/RoleIcon';
 import { ProgressReportsDataGridRowFragment as ProgressReport } from './progressReportsDataGridRow.graphql';
-import { RichTextCell } from './RichTextCell';
 
 type CellParams = RenderCellParams<ProgressReport, VariantResponse>;
 
