@@ -1,15 +1,16 @@
-import { Link as LinkIcon } from '@mui/icons-material';
-import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
   GridColDef,
   GridRenderCellParams as RenderCellParams,
 } from '@mui/x-data-grid-pro';
+import type { GridValidRowModel } from '@mui/x-data-grid/models/gridRows';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
-import { SetOptional } from 'type-fest';
+import { SetOptional, SetRequired } from 'type-fest';
 import {
+  ProgressReportFilters,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
   ScheduleStatusLabels,
@@ -25,6 +26,7 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
+import { ProjectLookupItem } from '../../../components/form/Lookup';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -39,51 +41,68 @@ export type ProgressReportColumnMapShape = Record<
 
 export const ExpansionMarker = 'expandable';
 
-export const ProgressReportsColumnMap = {
-  project: {
+export const ProjectNameColumn = <R extends GridValidRowModel>({
+  valueGetter,
+  ...rest
+}: SetRequired<GridColDef<R, ProjectLookupItem>, 'valueGetter'>) =>
+  ({
+    ...textColumn(),
     headerName: 'Project',
+    width: 200,
+    valueGetter: (...args) => valueGetter(...args).name.value,
+    renderCell: ({ value, row, colDef, api }) => {
+      const project = valueGetter(null as never, row, colDef, { current: api });
+      return <Link to={`/projects/${project.id}`}>{value}</Link>;
+    },
+    hideable: false,
+    ...rest,
+  } satisfies Partial<GridColDef<R>>);
+
+export const LanguageNameColumn = <R extends GridValidRowModel>({
+  valueGetter,
+  ...rest
+}: SetRequired<GridColDef<R, ProjectLookupItem>, 'valueGetter'>) =>
+  ({
+    ...textColumn(),
+    headerName: 'Project',
+    width: 200,
+    valueGetter: (...args) => valueGetter(...args).name.value,
+    renderCell: ({ value, row, colDef, api }) => {
+      const project = valueGetter(null as never, row, colDef, { current: api });
+      return <Link to={`/projects/${project.id}`}>{value}</Link>;
+    },
+    hideable: false,
+    ...rest,
+  } satisfies Partial<GridColDef<R>>);
+
+export const ProgressReportIDColumn = <R extends GridValidRowModel>({
+  valueGetter,
+  ...rest
+}: SetRequired<GridColDef<R, ProjectLookupItem>, 'valueGetter'>) =>
+  ({
+    ...textColumn(),
+    headerName: 'Project',
+    width: 200,
+    valueGetter: (...args) => valueGetter(...args).name.value,
+    renderCell: ({ value, row, colDef, api }) => {
+      const project = valueGetter(null as never, row, colDef, { current: api });
+      return <Link to={`/projects/${project.id}`}>{value}</Link>;
+    },
+    hideable: false,
+    ...rest,
+  } satisfies Partial<GridColDef<R>>);
+
+export const ProgressReportIdsColumnMap = {
+  project: ProjectNameColumn({
     field: 'engagement.project.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.parent.project.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.parent.project.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
-  language: {
-    headerName: 'Language',
-    field: 'engagement.language.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.parent.language.value?.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/languages/${row.parent.language.value?.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
-  viewReport: {
-    headerName: 'Report',
-    field: 'id',
-    width: 65,
-    align: 'center',
-    renderCell: ({ row }) => (
-      <Tooltip title="View Report">
-        <IconButton
-          size="small"
-          color="primary"
-          component={Link}
-          to={`/progress-reports/${row.id}`}
-        >
-          <LinkIcon />
-        </IconButton>
-      </Tooltip>
-    ),
-    filterable: false,
-    sortable: false,
-    hideable: false,
-    resizable: false,
-  },
+    valueGetter: (_, p) => p.parent.project,
+  }),
+  language: LanguageNameColumn({}),
+  viewReport: ProgressReportIDColumn({}),
+};
+
+export const ProgressReportsColumnMap = {
+  ...ProgressReportIdsColumnMap,
   status: {
     headerName: 'Status',
     ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels, {
@@ -175,6 +194,21 @@ export interface ProgressReportsGridProps extends DataGridProps {
   quarter: CalendarDate;
 }
 
+function filterForQuarter(quarter: CalendarDate) {
+  return {
+    start: {
+      afterInclusive: quarter.startOf('quarter'),
+      // Avoid final reports for projects that end at the end of the quarter.
+      // Their start date is the end date.
+      // So this ensures there is at least one day in between.
+      before: quarter.startOf('quarter').plus({ day: 1 }),
+    },
+    end: {
+      beforeInclusive: quarter.endOf('quarter'),
+    },
+  } satisfies ProgressReportFilters;
+}
+
 export const ProgressReportsGrid = ({
   quarter,
   ...props
@@ -185,16 +219,7 @@ export const ProgressReportsGrid = ({
       variables: {
         input: {
           filter: {
-            start: {
-              afterInclusive: quarter.startOf('quarter'),
-              // Avoid final reports for projects that end at the end of the quarter.
-              // Their start date is the end date.
-              // So this ensures there is at least one day in between.
-              before: quarter.startOf('quarter').plus({ day: 1 }),
-            },
-            end: {
-              beforeInclusive: quarter.endOf('quarter'),
-            },
+            ...filterForQuarter(quarter),
             engagement: {
               project: {
                 status: ['Active', 'Completed'],
