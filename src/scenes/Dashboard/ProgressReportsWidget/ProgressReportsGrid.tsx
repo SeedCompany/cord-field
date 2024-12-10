@@ -5,10 +5,9 @@ import {
   GridColDef,
   GridRenderCellParams as RenderCellParams,
 } from '@mui/x-data-grid-pro';
-import type { GridValidRowModel } from '@mui/x-data-grid/models/gridRows';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
-import { SetOptional, SetRequired } from 'type-fest';
+import { SetOptional } from 'type-fest';
 import {
   ProgressReportFilters,
   ProgressReportStatusLabels,
@@ -22,11 +21,11 @@ import {
   DefaultDataGridStyles,
   enumColumn,
   noHeaderFilterButtons,
-  textColumn,
   useDataGridSource,
 } from '~/components/Grid';
-import { Link } from '~/components/Routing';
-import { ProjectLookupItem } from '../../../components/form/Lookup';
+import { IDColumn } from '~/components/Grid/Columns/IdColumn';
+import { LanguageNameColumn } from '~/components/Grid/Columns/LanguageNameColumn';
+import { ProjectNameColumn } from '../../../components/Grid/Columns/ProjectNameColumn';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -41,64 +40,21 @@ export type ProgressReportColumnMapShape = Record<
 
 export const ExpansionMarker = 'expandable';
 
-export const ProjectNameColumn = <R extends GridValidRowModel>({
-  valueGetter,
-  ...rest
-}: SetRequired<GridColDef<R, ProjectLookupItem>, 'valueGetter'>) =>
-  ({
-    ...textColumn(),
-    headerName: 'Project',
-    width: 200,
-    valueGetter: (...args) => valueGetter(...args).name.value,
-    renderCell: ({ value, row, colDef, api }) => {
-      const project = valueGetter(null as never, row, colDef, { current: api });
-      return <Link to={`/projects/${project.id}`}>{value}</Link>;
-    },
-    hideable: false,
-    ...rest,
-  } satisfies Partial<GridColDef<R>>);
-
-export const LanguageNameColumn = <R extends GridValidRowModel>({
-  valueGetter,
-  ...rest
-}: SetRequired<GridColDef<R, ProjectLookupItem>, 'valueGetter'>) =>
-  ({
-    ...textColumn(),
-    headerName: 'Project',
-    width: 200,
-    valueGetter: (...args) => valueGetter(...args).name.value,
-    renderCell: ({ value, row, colDef, api }) => {
-      const project = valueGetter(null as never, row, colDef, { current: api });
-      return <Link to={`/projects/${project.id}`}>{value}</Link>;
-    },
-    hideable: false,
-    ...rest,
-  } satisfies Partial<GridColDef<R>>);
-
-export const ProgressReportIDColumn = <R extends GridValidRowModel>({
-  valueGetter,
-  ...rest
-}: SetRequired<GridColDef<R, ProjectLookupItem>, 'valueGetter'>) =>
-  ({
-    ...textColumn(),
-    headerName: 'Project',
-    width: 200,
-    valueGetter: (...args) => valueGetter(...args).name.value,
-    renderCell: ({ value, row, colDef, api }) => {
-      const project = valueGetter(null as never, row, colDef, { current: api });
-      return <Link to={`/projects/${project.id}`}>{value}</Link>;
-    },
-    hideable: false,
-    ...rest,
-  } satisfies Partial<GridColDef<R>>);
-
 export const ProgressReportIdsColumnMap = {
-  project: ProjectNameColumn({
+  project: ProjectNameColumn<ProgressReport>({
     field: 'engagement.project.name',
     valueGetter: (_, p) => p.parent.project,
   }),
-  language: LanguageNameColumn({}),
-  viewReport: ProgressReportIDColumn({}),
+  language: LanguageNameColumn<ProgressReport>({
+    field: 'engagement.language.name',
+    valueGetter: (_, p) => p.parent.language.value!,
+  }),
+  viewReport: IDColumn<ProgressReport>({
+    field: 'id',
+    valueGetter: (_, p) => p,
+    title: 'Report',
+    destination: (id) => `/progress-reports/${id}`,
+  }),
 };
 
 export const ProgressReportsColumnMap = {
