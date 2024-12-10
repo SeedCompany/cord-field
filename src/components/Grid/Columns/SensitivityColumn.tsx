@@ -1,14 +1,14 @@
 import { Box } from '@mui/material';
 import { GridColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { SetRequired } from 'type-fest';
-import { Project } from '~/api/schema.graphql';
+import { ProjectDataGridBaseRowFragment } from '../../../components/ProjectDataGrid';
 import { SensitivityIcon } from '../../../components/Sensitivity';
 import { textColumn } from '../ColumnTypes/textColumn';
 
 export const SensitivityColumn = <R extends GridValidRowModel>({
   valueGetter,
   ...rest
-}: SetRequired<GridColDef<R, Project>, 'valueGetter'>) =>
+}: SetRequired<GridColDef<R, ProjectDataGridBaseRowFragment>, 'valueGetter'>) =>
   ({
     ...textColumn(),
     headerName: 'Sensitivity',

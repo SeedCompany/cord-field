@@ -1,16 +1,17 @@
 fragment projectDataGridRow on Project {
-  id
-  type
-  name {
-    value
+  ...projectDataGridBaseRow
+  engagements {
+    total
   }
+}
+
+fragment projectDataGridBaseRow on Project {
+  ...ProjectLookupItem
+  type
   sensitivity
   status
   step {
     value
-  }
-  engagements {
-    total
   }
   primaryLocation {
     value {
