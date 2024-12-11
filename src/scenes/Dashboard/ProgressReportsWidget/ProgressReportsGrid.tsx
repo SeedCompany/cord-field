@@ -150,7 +150,7 @@ export interface ProgressReportsGridProps extends DataGridProps {
   quarter: CalendarDate;
 }
 
-function filterForQuarter(quarter: CalendarDate) {
+export function filterForQuarter(quarter: CalendarDate) {
   return {
     start: {
       afterInclusive: quarter.startOf('quarter'),

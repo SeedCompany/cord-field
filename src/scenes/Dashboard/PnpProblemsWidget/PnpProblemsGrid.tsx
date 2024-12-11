@@ -1,8 +1,10 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Toolbar } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
   GridColDef,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
@@ -12,8 +14,13 @@ import { useDialog } from '~/components/Dialog';
 import {
   booleanColumn,
   DefaultDataGridStyles,
+  getInitialVisibility,
   noHeaderFilterButtons,
+  QuickFilterButton,
+  QuickFilterResetButton,
+  QuickFilters,
   useDataGridSource,
+  useFilterToggle,
 } from '~/components/Grid';
 import { IDColumn } from '~/components/Grid/Columns/IdColumn';
 import { LanguageNameColumn } from '~/components/Grid/Columns/LanguageNameColumn';
@@ -27,14 +34,14 @@ import {
   PnpProblemsDocument,
 } from './pnpProblemsDataGridRow.graphql';
 
-export type PnpErrorsColumnMapShape = Record<
+export type PnpProblemsColumnMapShape = Record<
   string,
   SetOptional<GridColDef<PnpProblem>, 'field'>
 >;
 
 export const ExpansionMarker = 'expandable';
 
-export const PnpErrorsColumnMap = {
+export const PnpProblemsColumnMap = {
   project: ProjectNameColumn<PnpProblem>({
     field: 'engagement.project.name',
     valueGetter: (_, p) => p.parent.project,
@@ -79,13 +86,20 @@ export const PnpErrorsColumnMap = {
     ...booleanColumn(),
     valueGetter: (_, row) => row.parent.project.pinned,
   },
-} satisfies PnpErrorsColumnMapShape;
+} satisfies PnpProblemsColumnMapShape;
 
-export interface PnpErrorsGridProps extends DataGridProps {
+const columns = Object.values(PnpProblemsColumnMap);
+
+export interface PnpProblemsGridProps extends DataGridProps {
   quarter: CalendarDate;
+  expanded: boolean;
 }
 
-export const PnpErrorsGrid = ({ quarter, ...props }: PnpErrorsGridProps) => {
+export const PnpProblemsGrid = ({
+  quarter,
+  expanded,
+  ...props
+}: Omit<PnpProblemsGridProps, 'columns'>) => {
   const source = useMemo(() => {
     return {
       query: PnpProblemsDocument,
@@ -111,10 +125,34 @@ export const PnpErrorsGrid = ({ quarter, ...props }: PnpErrorsGridProps) => {
     apiRef: props.apiRef,
   });
 
+  const initialState = {
+    pinnedColumns: {
+      left: columns.slice(0, 3).map((column) => column.field),
+    },
+    columns: {
+      columnVisibilityModel: {
+        ...getInitialVisibility(columns),
+        viewReport: expanded,
+        'engagement.project.isMember': false,
+        'engagement.project.pinned': false,
+      },
+    },
+  } satisfies DataGridProps['initialState'];
+
+  const toolbarSlot = {
+    toolbar: PnpProblemsToolbar,
+  } satisfies DataGridProps['slots'];
+
   const slots = useMemo(
     () =>
-      merge({}, DefaultDataGridStyles.slots, dataGridProps.slots, props.slots),
-    [dataGridProps.slots, props.slots]
+      merge(
+        {},
+        DefaultDataGridStyles.slots,
+        dataGridProps.slots,
+        props.slots,
+        expanded && toolbarSlot
+      ),
+    [dataGridProps.slots, props.slots, toolbarSlot, expanded]
   );
 
   const slotProps = useMemo(
@@ -133,6 +171,8 @@ export const PnpErrorsGrid = ({ quarter, ...props }: PnpErrorsGridProps) => {
       {...DefaultDataGridStyles}
       {...dataGridProps}
       {...props}
+      columns={columns}
+      initialState={initialState}
       slots={slots}
       slotProps={slotProps}
       sx={[noHeaderFilterButtons, ...extendSx(props.sx)]}
@@ -161,3 +201,26 @@ const ErrorCell = ({
     </Box>
   );
 };
+
+const PnpProblemsToolbar = () => (
+  <Toolbar
+    sx={{
+      px: 2,
+      justifyContent: 'flex-start',
+      gap: 2,
+      backgroundColor: 'inherit',
+    }}
+  >
+    <GridToolbarColumnsButton />
+    <GridToolbarFilterButton />
+    <QuickFilters sx={{ flex: 1 }}>
+      <QuickFilterResetButton />
+      <QuickFilterButton {...useFilterToggle('engagement.project.isMember')}>
+        Mine
+      </QuickFilterButton>
+      <QuickFilterButton {...useFilterToggle('engagement.project.pinned')}>
+        Pinned
+      </QuickFilterButton>
+    </QuickFilters>
+  </Toolbar>
+);
