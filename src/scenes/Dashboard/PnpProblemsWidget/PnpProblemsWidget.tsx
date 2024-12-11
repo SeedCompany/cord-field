@@ -1,5 +1,6 @@
 import { Autocomplete, TextField } from '@mui/material';
 import { useLocation } from 'react-router-dom';
+import { flexLayout } from '~/components/Grid';
 import {
   ExpanderButton,
   TableWidget,
@@ -8,15 +9,15 @@ import {
   WidgetProps,
 } from '~/components/Widgets';
 import { useQuarterState } from '../ProgressReportsWidget/useQuarterState';
+import { PnpProblemsGrid } from './PnpProblemsGrid';
 
-export const PnpErrorsWidget = ({
+export const PnpProblemsWidget = ({
   expanded,
   ...props
 }: WidgetProps & { expanded: boolean }) => {
   const quarter = useQuarterState();
   const location = useLocation();
 
-  //   const Grid = expanded ? PnpProblemsGrid;
   return (
     <Widget {...props}>
       <WidgetHeader
@@ -47,9 +48,10 @@ export const PnpErrorsWidget = ({
         />
       </WidgetHeader>
       <TableWidget>
-        {/* <Grid
+        <PnpProblemsGrid
           quarter={quarter.current}
           hideFooter
+          expanded={expanded}
           sx={[
             {
               border: 'none',
@@ -57,7 +59,7 @@ export const PnpErrorsWidget = ({
             },
             flexLayout,
           ]}
-        /> */}
+        />
       </TableWidget>
     </Widget>
   );
