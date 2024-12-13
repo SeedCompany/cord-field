@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import { GridColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { SetRequired } from 'type-fest';
-import { ProjectDataGridBaseRowFragment } from '../../../components/ProjectDataGrid';
-import { SensitivityIcon } from '../../../components/Sensitivity';
+import { ProjectDataGridBaseRowFragment } from '../../ProjectDataGrid';
+import { SensitivityIcon } from '../../Sensitivity';
 import { textColumn } from '../ColumnTypes/textColumn';
 
 export const SensitivityColumn = <R extends GridValidRowModel>({

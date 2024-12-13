@@ -1,7 +1,7 @@
 import { GridColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { SetRequired } from 'type-fest';
-import { LanguageLookupItem } from '../../../components/form/Lookup';
-import { Link } from '../../../components/Routing';
+import { LanguageLookupItem } from '../../form/Lookup';
+import { Link } from '../../Routing';
 import { textColumn } from '../ColumnTypes/textColumn';
 
 export const LanguageNameColumn = <R extends GridValidRowModel>({

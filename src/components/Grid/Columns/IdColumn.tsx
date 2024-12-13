@@ -2,7 +2,7 @@ import { Link as LinkIcon } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { GridColDef, GridValidRowModel } from '@mui/x-data-grid-pro';
 import { SetRequired } from 'type-fest';
-import { Link } from '../../../components/Routing';
+import { Link } from '../../Routing';
 
 export const IDColumn = <R extends GridValidRowModel>({
   valueGetter,
