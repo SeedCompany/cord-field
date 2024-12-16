@@ -86,10 +86,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     ...dateColumn(),
     valueGetter: dateColumn.valueGetter((_, { mouEnd }) => mouEnd.value),
   },
-  SensitivityColumn<Project>({
-    field: 'sensitivity',
-    valueGetter: (_, p) => p,
-  }),
+  SensitivityColumn({}),
   {
     field: 'isMember',
     ...booleanColumn(),

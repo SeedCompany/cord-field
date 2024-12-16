@@ -41,12 +41,12 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     valueGetter: (_, p) => p.project,
   }),
   IDColumn<Engagement>({
+    headerName: '',
     field: 'Engagement',
     valueGetter: (_, p) => p,
     title: 'Engagement',
     destination: (id) => `/engagements/${id}`,
     width: 54,
-    headerName: '',
   }),
   {
     headerName: 'Language / Intern',
@@ -170,9 +170,9 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     filterable: false,
   },
-  SensitivityColumn<Engagement>({
+  SensitivityColumn({
     field: 'project.sensitivity',
-    valueGetter: (_, p) => p.project,
+    valueGetter: (_, row) => row.project,
   }),
   {
     headerName: 'Files',
