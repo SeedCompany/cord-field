@@ -1,6 +1,6 @@
 import { Error, Feedback, Warning } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Alert, Box, Stack, Tab } from '@mui/material';
+import { Alert, Box, Stack, Tab, Typography } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem2 as TreeItem } from '@mui/x-tree-view/TreeItem2';
 import { cmpBy, groupToMapBy } from '@seedcompany/common';
@@ -86,8 +86,11 @@ export const ProblemList = memo(function ProblemList({
           groupIndex === 1 ? (
             <Stack direction="row" gap={1} alignItems="center">
               <SeverityIcon severity={severity} />
-              <Markdown options={mdOptions}>{group}</Markdown>
-              (<FormattedNumber value={problems.length} />)
+              <div>
+                (<FormattedNumber value={problems.length} />){' '}
+                <Markdown options={mdOptions}>{group}</Markdown>
+                <Doc problem={problems[0]} />
+              </div>
             </Stack>
           ) : (
             <Markdown options={mdOptions}>{group}</Markdown>
@@ -106,7 +109,10 @@ export const ProblemList = memo(function ProblemList({
             label={
               <Stack direction="row" gap={1} alignItems="center">
                 {groupIndex === 1 && <SeverityIcon severity={severity} />}
-                <Markdown options={mdOptions}>{problem.message}</Markdown>
+                <div>
+                  <Markdown options={mdOptions}>{problem.message}</Markdown>
+                  {groupIndex === 1 && <Doc problem={problem} />}
+                </div>
               </Stack>
             }
           />
@@ -122,6 +128,20 @@ const mdOptions: MarkdownToJSX.Options = {
     code: InlineCode,
   },
 };
+
+function Doc({ problem }: { problem: Problem }) {
+  if (!problem.documentation) {
+    return null;
+  }
+  return (
+    <Typography color="text.secondary" sx={{ mt: 1 }}>
+      For more information see the PnP Troubleshooting{' '}
+      <Link external to={problem.documentation} target="_blank">
+        Guide
+      </Link>
+    </Typography>
+  );
+}
 
 const SeverityIcon = ({ severity }: { severity: Severity }) => {
   if (severity === 'Error') {
