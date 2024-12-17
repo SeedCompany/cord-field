@@ -80,7 +80,7 @@ export const ProblemList = memo(function ProblemList({
 }) {
   return [...groupToMapBy(problems, (p) => p.groups[groupIndex])].map(
     ([group, problems]) => {
-      const { severity } = problems[0]!;
+      const { severity } = problems[0];
       if (group && (groupIndex === 1 || problems.length > 1)) {
         const currentNode =
           groupIndex === 1 ? (
