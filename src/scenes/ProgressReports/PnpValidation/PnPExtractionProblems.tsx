@@ -62,7 +62,7 @@ export const PnPExtractionProblems = memo(function PnPExtractionProblems({
               planned goals.
             </Alert>
           )}
-          <SimpleTreeView>
+          <SimpleTreeView itemChildrenIndentation={6 * 8}>
             <ProblemList groupIndex={1} problems={problems} />
           </SimpleTreeView>
         </TabPanel>
