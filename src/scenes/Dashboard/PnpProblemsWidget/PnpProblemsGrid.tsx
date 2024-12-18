@@ -108,7 +108,7 @@ export const PnpProblemsGrid = ({
           filter: {
             ...filterForQuarter(quarter),
             pnpExtractionResult: {
-              errors: true,
+              hasError: true,
             },
           },
         },
