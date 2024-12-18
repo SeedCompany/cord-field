@@ -5,6 +5,7 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   ...EngagementPlanningSpreadsheet
   ...LanguageEngagementDatesForm
   ...EngagementDescription
+  ...engagementMilestoneReached
   ceremony {
     ...CeremonyCard
   }
