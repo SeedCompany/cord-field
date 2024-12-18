@@ -10,6 +10,7 @@ import { CeremonyForm } from './Ceremony';
 import { DatesForm } from './DatesForm';
 import { LanguageEngagementDescription } from './Description';
 import { LanguageEngagementHeader } from './Header';
+import { LanguageEngagementMilestone } from './Milestone/Milestone';
 import { PlanningSpreadsheet } from './PlanningSpreadsheet';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
@@ -98,6 +99,9 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
             direction="column"
             spacing={2}
           >
+            <Grid item>
+              <LanguageEngagementMilestone engagement={engagement} />
+            </Grid>
             <Grid item>
               <LanguageEngagementDescription engagement={engagement} />
             </Grid>
