@@ -32,7 +32,7 @@ export const PnpFileAndSummary = ({
         </Grid>
       ) : null}
       <Grid container item md={report.cumulativeSummary ? 6 : 12} spacing={2}>
-        <Grid item md={6} justifyItems="end">
+        <Grid item justifyItems="end">
           {!report.reportFile.value && report.reportFile.canEdit && (
             <Typography variant="body2" paragraph>
               Please upload the PnP for this reporting period. The progress data
