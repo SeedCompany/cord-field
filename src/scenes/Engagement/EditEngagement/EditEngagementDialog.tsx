@@ -6,6 +6,8 @@ import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
 import {
+  AIAssistList,
+  AIAssistTypeLabels,
   InternshipDomainLabels,
   InternshipPositionLabels,
   InternshipProgramLabels,
@@ -62,6 +64,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'lukePartnership'
   | 'paratextRegistryId'
   | 'openToInvestorVisit'
+  | 'usingAIAssistedTranslation'
 >;
 
 interface EngagementFieldProps {
@@ -153,14 +156,41 @@ const fieldMapping: Record<
   paratextRegistryId: ({ props }) => (
     <TextField {...props} label="Paratext Registry ID" />
   ),
+  usingAIAssistedTranslation: ({ props }) => (
+    <EnumField
+      {...props}
+      label="AI Assisted Translation"
+      options={AIAssistList.map((item) =>
+        item === null ? 'null' : item.toString()
+      )}
+      getLabel={(value: string): string =>
+        AIAssistTypeLabels[value] ?? 'Unknown'
+      }
+      variant="toggle-grouped"
+    />
+  ),
 };
+
+// interface EngagementFormValues {
+//   engagement: Merge<
+//     UpdateLanguageEngagement & UpdateInternshipEngagement,
+//     {
+//       mentorId?: UserLookupItemFragment | null;
+//       countryOfOriginId?: DisplayLocationFragment | null;
+//     }
+//   >;
+// }
 
 interface EngagementFormValues {
   engagement: Merge<
-    UpdateLanguageEngagement & UpdateInternshipEngagement,
+    Omit<
+      UpdateLanguageEngagement & UpdateInternshipEngagement,
+      'usingAIAssistedTranslation'
+    >,
     {
       mentorId?: UserLookupItemFragment | null;
       countryOfOriginId?: DisplayLocationFragment | null;
+      usingAIAssistedTranslation?: string;
     }
   >;
 }
@@ -207,10 +237,13 @@ export const EditEngagementDialog = ({
       : UpdateLanguageEngagementDocument
   );
 
+  type OverrideUsingAIAssistedTranslation<T> = {
+    [K in keyof T]: K extends 'usingAIAssistedTranslation' ? string : T[K];
+  };
+
   const initialValues = useMemo(() => {
-    const fullInitialValuesFields: Except<
-      EngagementFormValues['engagement'],
-      'id'
+    const fullInitialValuesFields: OverrideUsingAIAssistedTranslation<
+      Except<EngagementFormValues['engagement'], 'id'>
     > = {
       startDateOverride: engagement.dateRangeOverride.value.start,
       endDateOverride: engagement.dateRangeOverride.value.end,
@@ -222,6 +255,10 @@ export const EditEngagementDialog = ({
             firstScripture: engagement.firstScripture.value,
             paratextRegistryId: engagement.paratextRegistryId.value,
             openToInvestorVisit: engagement.openToInvestorVisit.value,
+            usingAIAssistedTranslation:
+              engagement.usingAIAssistedTranslation.value === null
+                ? 'null'
+                : engagement.usingAIAssistedTranslation.value!.toString(),
           }
         : {
             methodologies: engagement.methodologies.value,
@@ -301,11 +338,21 @@ export const EditEngagementDialog = ({
         }
       }}
       onSubmit={async ({ engagement: values }, form) => {
+        const { usingAIAssistedTranslation } = values;
+
+        const convertedAIAssist: boolean | null =
+          String(usingAIAssistedTranslation) === 'true'
+            ? true
+            : String(usingAIAssistedTranslation) === 'false'
+            ? false
+            : null;
+
         const input = {
           engagement: {
             ...values,
             mentorId: getLookupId(values.mentorId),
             countryOfOriginId: getLookupId(values.countryOfOriginId),
+            usingAIAssistedTranslation: convertedAIAssist,
           },
           changeset: engagement.changeset?.id,
         };
