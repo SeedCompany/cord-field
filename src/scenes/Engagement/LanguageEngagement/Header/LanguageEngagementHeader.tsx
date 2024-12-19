@@ -99,6 +99,7 @@ export const LanguageEngagementHeader = ({
                       'firstScripture',
                       'lukePartnership',
                       'openToInvestorVisit',
+                      'usingAIAssistedTranslation',
                     ])
                   }
                 >
