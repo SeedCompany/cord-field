@@ -8,6 +8,8 @@ import {
 } from '@mui/x-data-grid-pro';
 import { EngagementFilters } from '~/api/schema.graphql';
 import {
+  AIAssistList,
+  AIAssistTypeLabels,
   EngagementStatusLabels,
   EngagementStatusList,
   ProgressReportStatusLabels,
@@ -90,6 +92,18 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     hideable: false,
     serverFilter: (value): EngagementFilters => ({ engagedName: value }),
+  },
+  {
+    headerName: 'AI',
+    field: 'usingAIAssistedTranslation',
+    ...enumColumn(
+      AIAssistList.map((item) => (item === null ? 'null' : item.toString())),
+      AIAssistTypeLabels
+    ),
+    valueGetter: (_, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? row.usingAIAssistedTranslation.value
+        : null,
   },
   {
     headerName: 'Type',
