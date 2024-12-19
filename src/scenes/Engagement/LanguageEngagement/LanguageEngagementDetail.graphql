@@ -6,6 +6,7 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   ...LanguageEngagementDatesForm
   ...EngagementDescription
   ...engagementMilestoneReached
+  ...aiAssistedTranslation
   ceremony {
     ...CeremonyCard
   }
