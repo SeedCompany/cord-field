@@ -108,7 +108,7 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
             )}
           </Stack>
           <Typography variant="body2" color="textSecondary">
-            Milestone product achieved upon successful completion of this
+            Cumulative scripture translated upon successful completion of this
             engagement
           </Typography>
           {isEditing ? (
