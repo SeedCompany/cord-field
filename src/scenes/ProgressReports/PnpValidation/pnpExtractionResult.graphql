@@ -8,4 +8,5 @@ fragment pnpProblem on PnpProblem {
   severity
   message
   groups
+  documentation
 }
