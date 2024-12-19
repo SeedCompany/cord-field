@@ -10,6 +10,8 @@ import { EngagementFilters } from '~/api/schema.graphql';
 import {
   EngagementStatusLabels,
   EngagementStatusList,
+  LanguageMilestoneLabels,
+  LanguageMilestoneList,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
   ProjectStatusLabels,
@@ -90,6 +92,19 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     hideable: false,
     serverFilter: (value): EngagementFilters => ({ engagedName: value }),
+  },
+  {
+    headerName: 'Milestone',
+    field: 'milestoneReached',
+    ...enumColumn(LanguageMilestoneList, LanguageMilestoneLabels),
+    width: 130,
+    valueGetter: (_, row) => {
+      if (row.__typename !== 'LanguageEngagement') {
+        return null;
+      }
+
+      return row.milestoneReached.value;
+    },
   },
   {
     headerName: 'Type',

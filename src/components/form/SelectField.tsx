@@ -25,7 +25,7 @@ export type SelectFieldProps<T, Multiple extends boolean | undefined> = Except<
   helperText?: ReactNode;
 } & Pick<
     FormControlProps,
-    'color' | 'fullWidth' | 'margin' | 'size' | 'variant'
+    'color' | 'fullWidth' | 'margin' | 'size' | 'variant' | 'sx'
   > &
   Pick<SelectProps, 'displayEmpty'>;
 

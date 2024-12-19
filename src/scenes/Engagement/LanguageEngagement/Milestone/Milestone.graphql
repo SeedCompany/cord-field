@@ -1,0 +1,8 @@
+fragment engagementMilestoneReached on LanguageEngagement {
+  ...Id
+  milestoneReached {
+    canRead
+    canEdit
+    value
+  }
+}
