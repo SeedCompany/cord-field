@@ -69,7 +69,7 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
           onSubmit={handleSubmit}
         >
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography variant="h3">Milestone</Typography>
+            <Typography variant="h3">Milestone Achieved</Typography>
             {!isEditing ? (
               milestoneReached.canEdit ? (
                 <Tooltip title="Edit">
@@ -107,6 +107,10 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
               </>
             )}
           </Stack>
+          <Typography variant="body2" color="textSecondary">
+            Milestone product achieved upon successful completion of this
+            engagement
+          </Typography>
           {isEditing ? (
             <SelectField
               name="milestoneReached"
@@ -115,13 +119,14 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
               getOptionLabel={(option) => LanguageMilestoneLabels[option]}
               defaultValue={milestoneReached.value}
               required
+              sx={{ width: 'fit-content' }}
             />
           ) : milestoneReached.value ? (
-            <Typography color="textSecondary">
+            <Typography>
               {LanguageMilestoneLabels[milestoneReached.value]}
             </Typography>
           ) : (
-            <Typography color="textSecondary">
+            <Typography>
               Unknown{' '}
               {milestoneReached.canEdit && '— click the edit pencil to add'}
             </Typography>
