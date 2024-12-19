@@ -7,9 +7,9 @@ import { cmpBy, groupToMapBy } from '@seedcompany/common';
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx';
 import { memo, useState } from 'react';
 import { PnpProblemSeverity as Severity } from '~/api/schema.graphql';
-import { InlineCode } from '../../../components/Debug';
-import { FormattedNumber } from '../../../components/Formatters';
-import { Link } from '../../../components/Routing';
+import { InlineCode } from '../Debug';
+import { FormattedNumber } from '../Formatters';
+import { Link } from '../Routing';
 import {
   PnpProblemFragment as Problem,
   PnpExtractionResultFragment as Result,
