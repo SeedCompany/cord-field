@@ -121,14 +121,14 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
               required
               sx={{ width: 'fit-content' }}
             />
-          ) : milestoneReached.value ? (
+          ) : milestoneReached.value && milestoneReached.value !== 'Unknown' ? (
             <Typography>
               {LanguageMilestoneLabels[milestoneReached.value]}
             </Typography>
           ) : (
             <Typography>
               Unknown{' '}
-              {milestoneReached.canEdit && '— click the edit pencil to add'}
+              {milestoneReached.canEdit && '— click the edit pencil to declare'}
             </Typography>
           )}
         </Stack>
