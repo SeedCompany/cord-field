@@ -51,6 +51,7 @@ fragment engagementDataGridRow on Engagement {
     milestoneReached {
       value
     }
+    ...aiAssistedTranslation
     language {
       value {
         id
