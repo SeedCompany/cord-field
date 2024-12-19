@@ -48,6 +48,9 @@ fragment engagementDataGridRow on Engagement {
         }
       }
     }
+    usingAIAssistedTranslation {
+      value
+    }
     language {
       value {
         id
