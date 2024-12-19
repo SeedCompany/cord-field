@@ -31,6 +31,10 @@ export const PartnerDetailEngagements = () => {
     initialInput: {
       sort: EngagementColumns[0]!.field,
     },
+    sessionStorageProps: {
+      key: `partners-engagements-grid-state-${partnerId}`,
+      defaultValue: EngagementInitialState,
+    },
   });
 
   const slots = useMemo(
@@ -53,7 +57,6 @@ export const PartnerDetailEngagements = () => {
         slots={slots}
         slotProps={slotProps}
         columns={EngagementColumns}
-        initialState={EngagementInitialState}
         headerFilters
         hideFooter
         sx={[flexLayout, noHeaderFilterButtons, noFooter]}
