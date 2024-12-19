@@ -1,5 +1,4 @@
-import { Link as LinkIcon } from '@mui/icons-material';
-import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -10,6 +9,7 @@ import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
 import {
+  ProgressReportFilters,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
   ScheduleStatusLabels,
@@ -21,10 +21,11 @@ import {
   DefaultDataGridStyles,
   enumColumn,
   noHeaderFilterButtons,
-  textColumn,
   useDataGridSource,
 } from '~/components/Grid';
-import { Link } from '~/components/Routing';
+import { IDColumn } from '~/components/Grid/Columns/IdColumn';
+import { LanguageNameColumn } from '~/components/Grid/Columns/LanguageNameColumn';
+import { ProjectNameColumn } from '../../../components/Grid/Columns/ProjectNameColumn';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -39,51 +40,25 @@ export type ProgressReportColumnMapShape = Record<
 
 export const ExpansionMarker = 'expandable';
 
-export const ProgressReportsColumnMap = {
-  project: {
-    headerName: 'Project',
+export const ProgressReportIdsColumnMap = {
+  project: ProjectNameColumn<ProgressReport>({
     field: 'engagement.project.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.parent.project.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.parent.project.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
-  language: {
-    headerName: 'Language',
+    valueGetter: (_, p) => p.parent.project,
+  }),
+  language: LanguageNameColumn<ProgressReport>({
     field: 'engagement.language.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.parent.language.value?.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/languages/${row.parent.language.value?.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
-  viewReport: {
-    headerName: 'Report',
+    valueGetter: (_, p) => p.parent.language.value!,
+  }),
+  viewReport: IDColumn<ProgressReport>({
     field: 'id',
-    width: 65,
-    align: 'center',
-    renderCell: ({ row }) => (
-      <Tooltip title="View Report">
-        <IconButton
-          size="small"
-          color="primary"
-          component={Link}
-          to={`/progress-reports/${row.id}`}
-        >
-          <LinkIcon />
-        </IconButton>
-      </Tooltip>
-    ),
-    filterable: false,
-    sortable: false,
-    hideable: false,
-    resizable: false,
-  },
+    valueGetter: (_, p) => p,
+    title: 'Report',
+    destination: (id) => `/progress-reports/${id}`,
+  }),
+};
+
+export const ProgressReportsColumnMap = {
+  ...ProgressReportIdsColumnMap,
   status: {
     headerName: 'Status',
     ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels, {
@@ -175,6 +150,21 @@ export interface ProgressReportsGridProps extends DataGridProps {
   quarter: CalendarDate;
 }
 
+export function filterForQuarter(quarter: CalendarDate) {
+  return {
+    start: {
+      afterInclusive: quarter.startOf('quarter'),
+      // Avoid final reports for projects that end at the end of the quarter.
+      // Their start date is the end date.
+      // So this ensures there is at least one day in between.
+      before: quarter.startOf('quarter').plus({ day: 1 }),
+    },
+    end: {
+      beforeInclusive: quarter.endOf('quarter'),
+    },
+  } satisfies ProgressReportFilters;
+}
+
 export const ProgressReportsGrid = ({
   quarter,
   ...props
@@ -185,16 +175,7 @@ export const ProgressReportsGrid = ({
       variables: {
         input: {
           filter: {
-            start: {
-              afterInclusive: quarter.startOf('quarter'),
-              // Avoid final reports for projects that end at the end of the quarter.
-              // Their start date is the end date.
-              // So this ensures there is at least one day in between.
-              before: quarter.startOf('quarter').plus({ day: 1 }),
-            },
-            end: {
-              beforeInclusive: quarter.endOf('quarter'),
-            },
+            ...filterForQuarter(quarter),
             engagement: {
               project: {
                 status: ['Active', 'Completed'],

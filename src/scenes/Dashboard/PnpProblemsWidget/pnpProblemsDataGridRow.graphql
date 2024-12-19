@@ -1,0 +1,19 @@
+query PnpProblems($input: ProgressReportListInput) {
+  progressReports(input: $input) {
+    items {
+      start
+      end
+      ...pnpProblemDataGridRow
+    }
+    total
+  }
+}
+
+fragment pnpProblemDataGridRow on ProgressReport {
+  ...progressReportGridIDColumns
+  pnpExtractionResult {
+    problems {
+      ...pnpProblem
+    }
+  }
+}
