@@ -37,14 +37,6 @@ import { SensitivityColumn } from '../ProjectDataGrid';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
-export const AIAssistList: ReadonlyArray<boolean | null> = [true, false, null];
-
-export const AIAssistTypeLabels: Readonly<Record<string, string>> = {
-  true: `true`,
-  false: `false`,
-  null: `null`,
-};
-
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'Project',
@@ -110,6 +102,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       row.__typename === 'LanguageEngagement'
         ? row.milestoneReached.value
         : null,
+    filterable: false,
   },
   {
     headerName: 'AI',
@@ -117,12 +110,9 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     ...booleanColumn(),
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
-        ? row.usingAIAssistedTranslation.value === null
-          ? 'Unknown'
-          : row.usingAIAssistedTranslation.value
-          ? 'Yes'
-          : 'No'
+        ? row.usingAIAssistedTranslation.value
         : null,
+    filterable: false,
   },
   {
     headerName: 'Type',

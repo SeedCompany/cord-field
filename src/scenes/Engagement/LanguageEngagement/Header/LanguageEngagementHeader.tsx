@@ -168,7 +168,7 @@ export const LanguageEngagementHeader = ({
           redacted="You do not have permission to view whether this engagement is using AI assistance"
           data={engagement.usingAIAssistedTranslation}
           wrap={(node) => <Grid item>{node}</Grid>}
-          sx={{ backgroundColor: '#FF9800' }}
+          sx={{ backgroundColor: 'warning.main' }}
         />
         <BooleanProperty
           label="First Scripture"
