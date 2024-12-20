@@ -22,6 +22,9 @@ mutation UploadLanguageEngagementPnp(
       products {
         ...ProductList
       }
+      pnpExtractionResult {
+        ...pnpExtractionResult
+      }
     }
   }
 }
