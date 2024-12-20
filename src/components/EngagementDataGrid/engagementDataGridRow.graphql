@@ -11,32 +11,7 @@ fragment engagementDataGridRow on Engagement {
   }
 
   project {
-    id
-    type
-    name {
-      value
-    }
-    sensitivity
-    step {
-      value
-    }
-    status
-    primaryLocation {
-      value {
-        id
-        name {
-          value
-        }
-      }
-    }
-    mouStart {
-      value
-    }
-    mouEnd {
-      value
-    }
-    pinned
-    isMember
+    ...projectDataGridBaseRow
   }
 
   ... on LanguageEngagement {

@@ -8,7 +8,7 @@ import {
 import { Nil } from '@seedcompany/common';
 import { DateFilter } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';
-import { GridHeaderAddFilterButton } from './GridHeaderAddFilterButton';
+import { GridHeaderAddFilterButton } from '../GridHeaderAddFilterButton';
 
 type DateInput = Date | CalendarDate | Nil;
 type DateValue = Date | null;
