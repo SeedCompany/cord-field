@@ -1,3 +1,4 @@
+import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material';
 import { GridColDef } from '@mui/x-data-grid';
 import { GridFilterInputBoolean } from './GridFilterInputBoolean';
 
@@ -21,4 +22,10 @@ export const booleanColumn = () =>
         InputComponent: GridFilterInputBoolean,
       },
     ],
+    renderCell: ({ value }) =>
+      value ? (
+        <CheckIcon color="success" />
+      ) : value === false ? (
+        <CloseIcon color="error" />
+      ) : null,
   } satisfies Partial<GridColDef>);

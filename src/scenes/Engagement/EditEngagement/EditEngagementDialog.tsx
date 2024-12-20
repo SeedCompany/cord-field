@@ -18,6 +18,7 @@ import {
   labelFrom,
   MethodologyToApproach,
 } from '~/common';
+import { TriStateBooleanField } from '~/components/form/TriStateBooleanField';
 import {
   DialogForm,
   DialogFormProps,
@@ -62,6 +63,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'lukePartnership'
   | 'paratextRegistryId'
   | 'openToInvestorVisit'
+  | 'usingAIAssistedTranslation'
 >;
 
 interface EngagementFieldProps {
@@ -153,6 +155,9 @@ const fieldMapping: Record<
   paratextRegistryId: ({ props }) => (
     <TextField {...props} label="Paratext Registry ID" />
   ),
+  usingAIAssistedTranslation: ({ props }) => (
+    <TriStateBooleanField {...props} label="AI Assisted Translation" />
+  ),
 };
 
 interface EngagementFormValues {
@@ -222,6 +227,8 @@ export const EditEngagementDialog = ({
             firstScripture: engagement.firstScripture.value,
             paratextRegistryId: engagement.paratextRegistryId.value,
             openToInvestorVisit: engagement.openToInvestorVisit.value,
+            usingAIAssistedTranslation:
+              engagement.usingAIAssistedTranslation.value,
           }
         : {
             methodologies: engagement.methodologies.value,
