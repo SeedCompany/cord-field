@@ -1,25 +1,14 @@
 import { useMutation } from '@apollo/client';
-import { Preview as PreviewIcon } from '@mui/icons-material';
-import {
-  CircularProgress,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { CircularProgress, Stack, Typography } from '@mui/material';
 import {
   DefinedFileCard,
   DefinedFileCardProps,
 } from '../../../components/DefinedFileCard';
-import { Feature } from '../../../components/Feature';
-import {
-  NonDirectoryActionItem as File,
-  FileActionsContextProvider,
-  useFileActions,
-} from '../../../components/files/FileActions';
+import { FileActionsContextProvider } from '../../../components/files/FileActions';
+import { PreviewIconButton } from '../../../components/files/FileActions/PreviewIconButton';
 import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
-import { PnPReextractIconButton } from '../PnpValidation/PnPReextractIconButton';
-import { PnPValidationIcon } from '../PnpValidation/PnpValidationIcon';
+import { PnPReextractIconButton } from '../../../components/PnpValidation/PnPReextractIconButton';
+import { PnpProgressValidation } from '../PnpValidation/PnpProgressValidation';
 import { ReextractPnpProgressDocument } from '../PnpValidation/ReextractProgress.graphql';
 import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
 
@@ -79,33 +68,18 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
               <Typography variant="h3">PnP File</Typography>
               {file && (
                 <>
-                  <Preview file={file} />
-                  <Feature
-                    flag="pnp-validation"
-                    match={true}
-                    sx={{
-                      display: 'inherit',
-                      flexDirection: 'inherit',
-                      gap: 'inherit',
-                    }}
-                  >
-                    {reextracting ? (
-                      <CircularProgress size={15} sx={{ ml: 1.1 }} />
-                    ) : (
-                      <PnPReextractIconButton
-                        size="small"
-                        onClick={() => void reextract()}
-                      />
-                    )}
-                    {progressReport.pnpExtractionResult && !reextracting && (
-                      <PnPValidationIcon
-                        file={file}
-                        result={progressReport.pnpExtractionResult}
-                        engagement={progressReport.parent}
-                        size="small"
-                      />
-                    )}
-                  </Feature>
+                  <PreviewIconButton file={file} />
+                  {reextracting ? (
+                    <CircularProgress size={15} sx={{ ml: 1.1 }} />
+                  ) : (
+                    <PnPReextractIconButton
+                      size="small"
+                      onClick={() => void reextract()}
+                    />
+                  )}
+                  {!reextracting && (
+                    <PnpProgressValidation report={progressReport} />
+                  )}
                 </>
               )}
             </Stack>
@@ -119,16 +93,5 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
         />
       </>
     </FileActionsContextProvider>
-  );
-};
-
-const Preview = ({ file }: { file: File }) => {
-  const { openFilePreview } = useFileActions();
-  return (
-    <Tooltip title="Preview">
-      <IconButton onClick={() => openFilePreview(file)} size="small">
-        <PreviewIcon />
-      </IconButton>
-    </Tooltip>
   );
 };

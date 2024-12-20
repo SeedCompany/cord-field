@@ -1,0 +1,9 @@
+fragment pnpProgressValidation on ProgressReport {
+  id
+  parent {
+    id
+  }
+  pnpExtractionResult {
+    ...pnpExtractionResult
+  }
+}
