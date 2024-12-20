@@ -98,13 +98,11 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     field: 'milestoneReached',
     ...enumColumn(LanguageMilestoneList, LanguageMilestoneLabels),
     width: 130,
-    valueGetter: (_, row) => {
-      if (row.__typename !== 'LanguageEngagement') {
-        return null;
-      }
-
-      return row.milestoneReached.value;
-    },
+    valueGetter: (_, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? row.milestoneReached.value
+        : null,
+    filterable: false,
   },
   {
     headerName: 'Type',
