@@ -1,81 +1,33 @@
 import { Error, Feedback, Warning } from '@mui/icons-material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Alert, Box, Stack, Tab, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem2 as TreeItem } from '@mui/x-tree-view/TreeItem2';
-import { cmpBy, groupToMapBy } from '@seedcompany/common';
+import { groupToMapBy } from '@seedcompany/common';
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { PnpProblemSeverity as Severity } from '~/api/schema.graphql';
 import { InlineCode } from '../Debug';
 import { FormattedNumber } from '../Formatters';
 import { Link } from '../Routing';
-import {
-  PnpProblemFragment as Problem,
-  PnpExtractionResultFragment as Result,
-} from './pnpExtractionResult.graphql';
+import { PnpProblemFragment as Problem } from './pnpExtractionResult.graphql';
 
-const priority = ['Error', 'Warning', 'Notice'] satisfies Severity[];
-
-export const PnPExtractionProblems = memo(function PnPExtractionProblems({
-  result,
-  engagement,
-}: {
-  result: Result;
-  engagement: { id: string };
-}) {
-  // Temporarily filter out problems with "Notice" severity
-  const filteredProblems = result.problems.filter(
-    (problem) => problem.severity !== 'Notice'
-  );
-
-  const bySheet = groupToMapBy(
-    filteredProblems.toSorted(
-      cmpBy((problem) => priority.indexOf(problem.severity))
-    ),
-    (p) => p.groups[0]!
-  );
-  const [tab, setTab] = useState(bySheet.keys().next().value);
-
+export interface ProblemTreeProps {
+  problems: readonly Problem[];
+}
+export const ProblemTree = memo(function ProblemTree({
+  problems,
+}: ProblemTreeProps) {
   return (
-    <TabContext value={tab}>
-      <Box sx={{ pl: 1, borderBottom: 1, borderColor: 'divider' }}>
-        <TabList onChange={(_, next) => setTab(next)}>
-          {[...bySheet.keys()].toSorted().map((sheet) => (
-            <Tab key={sheet} value={sheet} label={sheet} />
-          ))}
-        </TabList>
-      </Box>
-      {[...bySheet].map(([sheet, problems]) => (
-        <TabPanel key={sheet} value={sheet} sx={{ p: 1 }}>
-          {sheet === 'Planning' && (
-            <Alert severity="info" sx={{ mb: 1 }}>
-              Once these problems are fixed, the updated file needs to be
-              uploaded on the{' '}
-              <Link to={`/engagements/${engagement.id}`} color="inherit">
-                Planning Spreadsheet
-              </Link>{' '}
-              to synchronize the changes for the planned goals.
-              <br />
-              And then uploaded on the <em>PnP File</em> for{' '}
-              <strong>this</strong> report, to synchronize the progress of these
-              planned goals.
-            </Alert>
-          )}
-          <SimpleTreeView itemChildrenIndentation={6 * 8}>
-            <ProblemList groupIndex={1} problems={problems} />
-          </SimpleTreeView>
-        </TabPanel>
-      ))}
-    </TabContext>
+    <SimpleTreeView itemChildrenIndentation={6 * 8}>
+      <ProblemList groupIndex={1} problems={problems} />
+    </SimpleTreeView>
   );
 });
 
 export const ProblemList = memo(function ProblemList({
   problems,
   groupIndex,
-}: {
-  problems: readonly Problem[];
+}: ProblemTreeProps & {
   groupIndex: number;
 }) {
   return [...groupToMapBy(problems, (p) => p.groups[groupIndex])].map(

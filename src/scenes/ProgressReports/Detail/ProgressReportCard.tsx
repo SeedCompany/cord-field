@@ -8,7 +8,7 @@ import { FileActionsContextProvider } from '../../../components/files/FileAction
 import { PreviewIconButton } from '../../../components/files/FileActions/PreviewIconButton';
 import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
 import { PnPReextractIconButton } from '../../../components/PnpValidation/PnPReextractIconButton';
-import { PnPValidationIcon } from '../../../components/PnpValidation/PnpValidationIcon';
+import { PnpProgressValidation } from '../PnpValidation/PnpProgressValidation';
 import { ReextractPnpProgressDocument } from '../PnpValidation/ReextractProgress.graphql';
 import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
 
@@ -77,13 +77,8 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
                       onClick={() => void reextract()}
                     />
                   )}
-                  {progressReport.pnpExtractionResult && !reextracting && (
-                    <PnPValidationIcon
-                      file={file}
-                      result={progressReport.pnpExtractionResult}
-                      engagement={progressReport.parent}
-                      size="small"
-                    />
+                  {!reextracting && (
+                    <PnpProgressValidation report={progressReport} />
                   )}
                 </>
               )}
