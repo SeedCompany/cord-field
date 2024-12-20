@@ -6,8 +6,6 @@ import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
 import {
-  AIAssistList,
-  AIAssistTypeLabels,
   InternshipDomainLabels,
   InternshipPositionLabels,
   InternshipProgramLabels,
@@ -20,6 +18,10 @@ import {
   labelFrom,
   MethodologyToApproach,
 } from '~/common';
+import {
+  AIAssistList,
+  AIAssistTypeLabels,
+} from '~/components/EngagementDataGrid';
 import {
   DialogForm,
   DialogFormProps,
