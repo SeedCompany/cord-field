@@ -158,9 +158,9 @@ export const EnumField = <
     (): Set<T> | T | null =>
       multiple
         ? new Set(input.value as readonly T[])
-        : ((input.value || defaultValue) as T | null),
+        : ((input.value ?? defaultValue) as T | null),
     // eslint-disable-next-line react-hooks/exhaustive-deps,@typescript-eslint/no-unnecessary-condition
-    [input.value ? sortBy(many(input.value ?? '')).join('') : undefined]
+    [input.value != null ? sortBy(many(input.value ?? '')).join('') : undefined]
   );
 
   const isChecked = useCallback(
@@ -169,7 +169,7 @@ export const EnumField = <
         const current = value as Set<T>;
         return optionVal ? current.has(optionVal) : current.size === 0;
       }
-      if (!optionVal || optionVal === (defaultValue as T | null)) {
+      if (optionVal == null || optionVal === (defaultValue as T | null)) {
         return value === defaultValue;
       }
       return value === optionVal;
@@ -179,7 +179,7 @@ export const EnumField = <
 
   const onOptionChange = useCallback(
     (optionVal: T | undefined, checked: boolean) => {
-      if (!optionVal) {
+      if (optionVal == null) {
         onChange(defaultValue);
         return;
       }
