@@ -313,14 +313,20 @@ export const EditEngagementDialog = ({
         await updateEngagement({
           variables: { input },
           update: (cache) => {
-            // Invalidate progress reports if engagement date range changes
             if (engagement.__typename === 'LanguageEngagement') {
               const dirty = form.getState().dirtyFields;
+
+              // Invalidate progress reports if engagement date range changes
               if (
                 'engagement.startDateOverride' in dirty ||
                 'engagement.endDateOverride' in dirty
               ) {
                 invalidateProps(cache, engagement, 'progressReports');
+              }
+
+              const language = engagement.language.value;
+              if (language && 'engagement.firstScripture' in dirty) {
+                invalidateProps(cache, language, 'firstScripture');
               }
             }
           },
