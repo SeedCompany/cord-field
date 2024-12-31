@@ -1,4 +1,4 @@
-import { Box, Button, Toolbar } from '@mui/material';
+import { Toolbar } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -10,7 +10,6 @@ import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
 import { CalendarDate, extendSx } from '~/common';
-import { useDialog } from '~/components/Dialog';
 import {
   booleanColumn,
   DefaultDataGridStyles,
@@ -25,9 +24,7 @@ import {
 import { IDColumn } from '~/components/Grid/Columns/IdColumn';
 import { LanguageNameColumn } from '~/components/Grid/Columns/LanguageNameColumn';
 import { ProjectNameColumn } from '~/components/Grid/Columns/ProjectNameColumn';
-import { PnPExtractionProblems } from '../../ProgressReports/PnpValidation/PnPExtractionProblems';
-import { PnpExtractionResultFragment as Result } from '../../ProgressReports/PnpValidation/pnpExtractionResult.graphql';
-import { PnPExtractionResultDialog } from '../../ProgressReports/PnpValidation/PnpExtractionResultDialog';
+import { PnPValidation } from '~/components/PnpValidation/PnpValidation';
 import { filterForQuarter } from '../ProgressReportsWidget/ProgressReportsGrid';
 import {
   PnpProblemDataGridRowFragment as PnpProblem,
@@ -42,15 +39,15 @@ export type PnpProblemsColumnMapShape = Record<
 export const ExpansionMarker = 'expandable';
 
 export const PnpProblemsColumnMap = {
-  project: ProjectNameColumn<PnpProblem>({
+  project: ProjectNameColumn({
     field: 'engagement.project.name',
     valueGetter: (_, p) => p.parent.project,
   }),
-  language: LanguageNameColumn<PnpProblem>({
+  language: LanguageNameColumn({
     field: 'engagement.language.name',
     valueGetter: (_, p) => p.parent.language.value!,
   }),
-  viewReport: IDColumn<PnpProblem>({
+  viewReport: IDColumn({
     field: 'id',
     valueGetter: (_, p) => p,
     title: 'Report',
@@ -65,12 +62,8 @@ export const PnpProblemsColumnMap = {
     valueGetter: (_, row) =>
       row.pnpExtractionResult?.problems.filter((p) => p.severity === 'Error')
         .length,
-    renderCell: ({ value, row }) => (
-      <ErrorCell
-        count={value}
-        result={row.pnpExtractionResult!}
-        engagement={{ id: row.parent.language.value!.id }}
-      />
+    renderCell: ({ row }) => (
+      <PnPValidation result={row.pnpExtractionResult!} />
     ),
     filterable: false,
   },
@@ -175,30 +168,9 @@ export const PnpProblemsGrid = ({
       initialState={initialState}
       slots={slots}
       slotProps={slotProps}
+      density="standard"
       sx={[noHeaderFilterButtons, ...extendSx(props.sx)]}
     />
-  );
-};
-
-const ErrorCell = ({
-  result,
-  engagement,
-  count,
-}: {
-  result: Result;
-  engagement: { id: string };
-  count: number;
-}) => {
-  const [dialog, open] = useDialog();
-  return (
-    <Box>
-      <Button size="small" onClick={open}>
-        {count}
-      </Button>
-      <PnPExtractionResultDialog fullWidth {...dialog}>
-        <PnPExtractionProblems result={result} engagement={engagement} />
-      </PnPExtractionResultDialog>
-    </Box>
   );
 };
 
