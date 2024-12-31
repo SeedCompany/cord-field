@@ -38,11 +38,11 @@ import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
-  ProjectNameColumn<Engagement>({
+  ProjectNameColumn({
     field: 'project.name',
     valueGetter: (_, p) => p.project,
   }),
-  IDColumn<Engagement>({
+  IDColumn({
     field: 'Engagement',
     valueGetter: (_, p) => p,
     title: 'Engagement',
@@ -185,7 +185,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     filterable: false,
   },
-  SensitivityColumn<Engagement>({
+  SensitivityColumn({
     field: 'project.sensitivity',
     valueGetter: (_, p) => p.project,
   }),

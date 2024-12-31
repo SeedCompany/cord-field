@@ -30,7 +30,7 @@ import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
 
 export const ProjectColumns: Array<GridColDef<Project>> = [
-  ProjectNameColumn<Project>({
+  ProjectNameColumn({
     field: 'name',
     headerName: 'Name',
     valueGetter: (_, p) => p,
@@ -86,7 +86,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     ...dateColumn(),
     valueGetter: dateColumn.valueGetter((_, { mouEnd }) => mouEnd.value),
   },
-  SensitivityColumn<Project>({
+  SensitivityColumn({
     field: 'sensitivity',
     valueGetter: (_, p) => p,
   }),

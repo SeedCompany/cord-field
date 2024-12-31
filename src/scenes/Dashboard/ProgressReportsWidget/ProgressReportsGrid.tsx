@@ -42,11 +42,11 @@ export const ExpansionMarker = 'expandable';
 
 export const ProgressReportIdsColumnMap = {
   project: ProjectNameColumn<ProgressReport>({
-    field: 'engagement.project.name',
+    field: 'parent.engagement.project.name',
     valueGetter: (_, p) => p.parent.project,
   }),
   language: LanguageNameColumn<ProgressReport>({
-    field: 'engagement.language.name',
+    field: 'parent.engagement.language.name',
     valueGetter: (_, p) => p.parent.language.value!,
   }),
   viewReport: IDColumn<ProgressReport>({
