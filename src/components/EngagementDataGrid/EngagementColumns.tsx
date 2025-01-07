@@ -105,7 +105,8 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     filterable: false,
   },
   {
-    headerName: 'AI',
+    headerName: 'AI Assist',
+    description: 'Is using AI assistance in translation?',
     field: 'usingAIAssistedTranslation',
     ...booleanColumn(),
     valueGetter: (_, row) =>
