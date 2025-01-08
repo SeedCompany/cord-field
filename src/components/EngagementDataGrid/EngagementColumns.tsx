@@ -105,6 +105,17 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     filterable: false,
   },
   {
+    headerName: 'AI Assist',
+    description: 'Is using AI assistance in translation?',
+    field: 'usingAIAssistedTranslation',
+    ...booleanColumn(),
+    valueGetter: (_, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? row.usingAIAssistedTranslation.value
+        : null,
+    filterable: false,
+  },
+  {
     headerName: 'Type',
     field: 'project.type',
     ...enumColumn(ProjectTypeList, ProjectTypeLabels),

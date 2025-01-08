@@ -1,6 +1,6 @@
 import { Chip, ChipProps, Skeleton } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { ReactElement } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Except, SetRequired } from 'type-fest';
 import { SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
@@ -11,13 +11,11 @@ export interface BooleanPropertyProps extends SetRequired<ChipProps, 'label'> {
   wrap?: (node: ReactElement) => ReactElement;
 }
 
-const useStyles = makeStyles()(({ palette, shape }) => ({
-  root: {
-    background: palette.info.main,
-    color: palette.info.contrastText,
-    borderRadius: shape.borderRadius,
-    height: 26,
-  },
+const StyledChip = styled(Chip)(({ theme }) => ({
+  background: theme.palette.info.main,
+  color: theme.palette.info.contrastText,
+  borderRadius: theme.shape.borderRadius,
+  height: 26,
 }));
 
 export const BooleanProperty = ({
@@ -26,9 +24,7 @@ export const BooleanProperty = ({
   wrap,
   ...rest
 }: BooleanPropertyProps) => {
-  const { classes } = useStyles();
-
-  const chip = <Chip {...rest} className={classes.root} />;
+  const chip = <StyledChip {...rest} />;
 
   const out = !data ? (
     <Skeleton>{chip}</Skeleton>
