@@ -1,5 +1,9 @@
-import { Link as LinkIcon } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
+import {
+  Check as CheckIcon,
+  Close as CloseIcon,
+  Link as LinkIcon,
+} from '@mui/icons-material';
+import { IconButton, MenuItem, Select, Tooltip } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
@@ -102,7 +106,53 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       row.__typename === 'LanguageEngagement'
         ? row.milestoneReached.value
         : null,
+    valueSetter: (value, row) => {
+      if (row.__typename !== 'LanguageEngagement') {
+        return row;
+      }
+      return {
+        ...row,
+        milestoneReached: {
+          ...row.milestoneReached,
+          value,
+        },
+      };
+    },
     filterable: false,
+    editable: true,
+    renderEditCell: (params) => {
+      const { value, api, row } = params;
+      if (row.__typename !== 'LanguageEngagement') {
+        api.stopCellEditMode({ id: row.id, field: 'milestoneReached' });
+        return null;
+      }
+      return (
+        <Select
+          onChange={(param) => {
+            void api.setEditCellValue({
+              id: row.id,
+              field: 'milestoneReached',
+              value: param.target.value,
+            });
+          }}
+          onClose={() => {
+            api.stopCellEditMode({
+              id: row.id,
+              field: 'milestoneReached',
+            });
+          }}
+          value={value ?? null}
+          fullWidth
+          open
+        >
+          {LanguageMilestoneList.map((milestone) => (
+            <MenuItem key={milestone} value={milestone}>
+              {LanguageMilestoneLabels[milestone]}
+            </MenuItem>
+          ))}
+        </Select>
+      );
+    },
   },
   {
     headerName: 'AI Assist',
@@ -114,6 +164,59 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
         ? row.usingAIAssistedTranslation.value
         : null,
     filterable: false,
+    editable: true,
+    valueSetter: (value, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? {
+            ...row,
+            usingAIAssistedTranslation: {
+              ...row.usingAIAssistedTranslation,
+              value,
+            },
+          }
+        : row,
+    renderEditCell: ({ value, api, row }) => {
+      if (row.__typename !== 'LanguageEngagement') {
+        api.stopCellEditMode({
+          id: row.id,
+          field: 'usingAIAssistedTranslation',
+        });
+        return null;
+      }
+      return (
+        <Select
+          onChange={(param) =>
+            void api.setEditCellValue({
+              id: row.id,
+              field: 'usingAIAssistedTranslation',
+              value: param.target.value,
+            })
+          }
+          onClose={() =>
+            api.stopCellEditMode({
+              id: row.id,
+              field: 'usingAIAssistedTranslation',
+            })
+          }
+          SelectDisplayProps={{
+            style: {
+              padding: '4px 0 0 0',
+            },
+          }}
+          value={value ?? null}
+          fullWidth
+          open
+        >
+          <MenuItem value={null as any}>Unknown</MenuItem>
+          <MenuItem value={true as any}>
+            <CheckIcon color="success" />
+          </MenuItem>
+          <MenuItem value={false as any}>
+            <CloseIcon color="error" />
+          </MenuItem>
+        </Select>
+      );
+    },
   },
   {
     headerName: 'Type',
