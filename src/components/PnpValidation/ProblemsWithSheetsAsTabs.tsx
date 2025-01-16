@@ -11,7 +11,7 @@ export const ProblemsWithSheetsAsTabs = memo(function ProblemsWithSheetsAsTabs({
   children: (props: ProblemTreeProps & { sheet: string }) => ReactNode;
 }) {
   const bySheet = groupToMapBy(problems, (p) => p.groups[0]!);
-  const [tab, setTab] = useState(bySheet.keys().next().value);
+  const [tab, setTab] = useState(bySheet.keys().next().value!);
 
   return (
     <TabContext value={tab}>
