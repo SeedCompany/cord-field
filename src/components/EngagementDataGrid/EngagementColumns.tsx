@@ -1,5 +1,3 @@
-import { Link as LinkIcon } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
@@ -33,6 +31,7 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
+import { LinkColumn } from '../Grid/Columns/LinkColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
@@ -49,28 +48,12 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     ),
     hideable: false,
   },
-  {
-    headerName: '',
+  LinkColumn({
     field: 'Engagement',
-    width: 54,
-    display: 'flex',
-    renderCell: ({ row }) => (
-      <Tooltip title="View Engagement">
-        <IconButton
-          size="small"
-          color="primary"
-          component={Link}
-          to={`/engagements/${row.id}`}
-        >
-          <LinkIcon />
-        </IconButton>
-      </Tooltip>
-    ),
-    filterable: false,
-    sortable: false,
-    hideable: false,
-    resizable: false,
-  },
+    headerName: '',
+    valueGetter: (_, engagement) => engagement,
+    destination: (id) => `/engagements/${id}`,
+  }),
   {
     headerName: 'Language / Intern',
     field: 'nameProjectLast',

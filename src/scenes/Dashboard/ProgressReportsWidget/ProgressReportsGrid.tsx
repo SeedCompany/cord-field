@@ -1,5 +1,4 @@
-import { Link as LinkIcon } from '@mui/icons-material';
-import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -25,6 +24,7 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
+import { LinkColumn } from '../../../components/Grid/Columns/LinkColumn';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -62,28 +62,11 @@ export const ProgressReportsColumnMap = {
     ),
     hideable: false,
   },
-  viewReport: {
-    headerName: 'Report',
-    field: 'id',
+  viewReport: LinkColumn({
+    field: 'Report',
+    destination: (id) => `/progress-reports/${id}`,
     width: 65,
-    align: 'center',
-    renderCell: ({ row }) => (
-      <Tooltip title="View Report">
-        <IconButton
-          size="small"
-          color="primary"
-          component={Link}
-          to={`/progress-reports/${row.id}`}
-        >
-          <LinkIcon />
-        </IconButton>
-      </Tooltip>
-    ),
-    filterable: false,
-    sortable: false,
-    hideable: false,
-    resizable: false,
-  },
+  }),
   status: {
     headerName: 'Status',
     ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels, {
