@@ -1,9 +1,7 @@
 fragment projectDataGridRow on Project {
   id
   type
-  name {
-    value
-  }
+  ...ProjectLookupItem
   sensitivity
   status
   step {

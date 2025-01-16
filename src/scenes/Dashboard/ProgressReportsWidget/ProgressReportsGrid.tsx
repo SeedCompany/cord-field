@@ -25,6 +25,7 @@ import {
 } from '~/components/Grid';
 import { Link } from '~/components/Routing';
 import { LinkColumn } from '../../../components/Grid/Columns/LinkColumn';
+import { ProjectNameColumn } from '../../../components/Grid/Columns/ProjectNameColumn';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -40,17 +41,10 @@ export type ProgressReportColumnMapShape = Record<
 export const ExpansionMarker = 'expandable';
 
 export const ProgressReportsColumnMap = {
-  project: {
-    headerName: 'Project',
+  project: ProjectNameColumn({
     field: 'engagement.project.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.parent.project.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.parent.project.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
+    valueGetter: (_, report) => report.parent.project,
+  }),
   language: {
     headerName: 'Language',
     field: 'engagement.language.name',

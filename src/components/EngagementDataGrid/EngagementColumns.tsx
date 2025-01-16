@@ -32,22 +32,16 @@ import {
   useFilterToggle,
 } from '../Grid';
 import { LinkColumn } from '../Grid/Columns/LinkColumn';
+import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
-  {
-    headerName: 'Project',
+  ProjectNameColumn({
     field: 'project.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.project.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.project.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
+    valueGetter: (_, engagement) => engagement.project,
+  }),
   LinkColumn({
     field: 'Engagement',
     headerName: '',

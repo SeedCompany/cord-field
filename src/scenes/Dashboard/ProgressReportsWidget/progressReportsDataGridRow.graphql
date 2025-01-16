@@ -23,9 +23,7 @@ fragment progressReportsDataGridRow on ProgressReport {
     }
     project {
       id
-      name {
-        value
-      }
+      ...ProjectLookupItem
       isMember
       pinned
     }

@@ -25,22 +25,17 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
+import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
-import { Link } from '../Routing';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
 
 export const ProjectColumns: Array<GridColDef<Project>> = [
-  {
+  ProjectNameColumn({
     field: 'name',
-    ...textColumn(),
-    valueGetter: (_, { name }) => name.value,
     headerName: 'Name',
+    valueGetter: (_, project) => project,
     width: 300,
-    hideable: false,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.id}`}>{value}</Link>
-    ),
-  },
+  }),
   {
     field: 'primaryLocation.name',
     ...textColumn(),
