@@ -1,10 +1,10 @@
 import { Check as CheckIcon, Close as CloseIcon } from '@mui/icons-material';
-import { GridColDef } from '@mui/x-data-grid';
 import { GridFilterInputBoolean } from '../GridFilterInputBoolean';
+import { column, RowLike } from './definition.types';
 
-export const booleanColumn = () =>
-  ({
-    type: 'boolean' as const,
+export const booleanColumn = <Row extends RowLike>() =>
+  column<Row>()({
+    type: 'boolean',
     filterOperators: [
       {
         value: 'is',
@@ -28,4 +28,4 @@ export const booleanColumn = () =>
       ) : value === false ? (
         <CloseIcon color="error" />
       ) : null,
-  } satisfies Partial<GridColDef>);
+  });

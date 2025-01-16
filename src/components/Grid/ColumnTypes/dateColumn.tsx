@@ -9,19 +9,20 @@ import { Nil } from '@seedcompany/common';
 import { DateFilter } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';
 import { GridHeaderAddFilterButton } from '../GridHeaderAddFilterButton';
+import { column, RowLike } from './definition.types';
 
 type DateInput = Date | CalendarDate | Nil;
 type DateValue = Date | null;
 
 type DateColDef<R extends RowModel = any> = ColDef<R, DateValue, string>;
 
-export const dateColumn = () =>
-  ({
+export const dateColumn = <Row extends RowLike>() =>
+  column<Row>()({
     type: 'date',
     valueGetter: dateColumn.valueGetter(defaultValueGetter),
     filterOperators,
     renderHeaderFilter: GridHeaderAddFilterButton,
-  } satisfies Partial<DateColDef>);
+  });
 
 type DateValueGetterInput<R extends RowModel = any> = ValueGetter<
   R,
