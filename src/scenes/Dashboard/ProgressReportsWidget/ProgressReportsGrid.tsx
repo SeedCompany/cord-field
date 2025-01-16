@@ -20,10 +20,9 @@ import {
   DefaultDataGridStyles,
   enumColumn,
   noHeaderFilterButtons,
-  textColumn,
   useDataGridSource,
 } from '~/components/Grid';
-import { Link } from '~/components/Routing';
+import { LanguageNameColumn } from '../../../components/Grid/Columns/LanguageNameColumn';
 import { LinkColumn } from '../../../components/Grid/Columns/LinkColumn';
 import { ProjectNameColumn } from '../../../components/Grid/Columns/ProjectNameColumn';
 import { ExpansionCell } from './ExpansionCell';
@@ -45,17 +44,10 @@ export const ProgressReportsColumnMap = {
     field: 'engagement.project.name',
     valueGetter: (_, report) => report.parent.project,
   }),
-  language: {
-    headerName: 'Language',
+  language: LanguageNameColumn({
     field: 'engagement.language.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.parent.language.value?.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/languages/${row.parent.language.value?.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
+    valueGetter: (_, report) => report.parent.language.value!,
+  }),
   viewReport: LinkColumn({
     field: 'Report',
     destination: (id) => `/progress-reports/${id}`,

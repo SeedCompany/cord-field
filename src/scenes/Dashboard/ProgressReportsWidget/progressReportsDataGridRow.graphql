@@ -15,10 +15,7 @@ fragment progressReportsDataGridRow on ProgressReport {
     id
     language {
       value {
-        id
-        name {
-          value
-        }
+        ...LanguageLookupItem
       }
     }
     project {
