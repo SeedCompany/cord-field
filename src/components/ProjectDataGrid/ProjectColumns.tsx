@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
@@ -12,8 +11,6 @@ import {
   ProjectStepList,
   ProjectTypeLabels,
   ProjectTypeList,
-  SensitivityLabels,
-  SensitivityList,
 } from '~/api/schema.graphql';
 import {
   booleanColumn,
@@ -28,24 +25,9 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
+import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
-import { SensitivityIcon } from '../Sensitivity';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
-
-export const SensitivityColumn = {
-  field: 'sensitivity',
-  ...enumColumn(SensitivityList, SensitivityLabels, {
-    orderByIndex: true,
-  }),
-  headerName: 'Sensitivity',
-  width: 110,
-  renderCell: ({ value }) => (
-    <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
-      <SensitivityIcon value={value} disableTooltip />
-      {value}
-    </Box>
-  ),
-} satisfies GridColDef;
 
 export const ProjectColumns: Array<GridColDef<Project>> = [
   {
@@ -109,7 +91,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     ...dateColumn(),
     valueGetter: dateColumn.valueGetter((_, { mouEnd }) => mouEnd.value),
   },
-  SensitivityColumn,
+  SensitivityColumn({}),
   {
     field: 'isMember',
     ...booleanColumn(),

@@ -33,7 +33,7 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
-import { SensitivityColumn } from '../ProjectDataGrid';
+import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
@@ -215,11 +215,10 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     filterable: false,
   },
-  {
-    ...SensitivityColumn,
+  SensitivityColumn({
     field: 'project.sensitivity',
-    valueGetter: (_, row) => row.project.sensitivity,
-  },
+    valueGetter: (_, engagement) => engagement.project,
+  }),
   {
     headerName: 'Files',
     field: 'files',
