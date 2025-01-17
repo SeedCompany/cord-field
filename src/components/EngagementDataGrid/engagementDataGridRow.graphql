@@ -13,9 +13,7 @@ fragment engagementDataGridRow on Engagement {
   project {
     id
     type
-    name {
-      value
-    }
+    ...ProjectLookupItem
     sensitivity
     step {
       value

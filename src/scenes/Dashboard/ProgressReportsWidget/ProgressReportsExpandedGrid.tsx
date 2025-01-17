@@ -62,7 +62,9 @@ const columns = entries(ProgressReportsColumnMap).map(([name, col]) => ({
   field: name,
   ...col,
   ...(!(
-    'cellClassName' in col && col.cellClassName.includes(ExpansionMarker)
+    'cellClassName' in col &&
+    typeof col.cellClassName === 'string' &&
+    col.cellClassName.includes(ExpansionMarker)
   ) && {
     renderCell: wrapForNonExpansion(
       'renderCell' in col ? col.renderCell : undefined

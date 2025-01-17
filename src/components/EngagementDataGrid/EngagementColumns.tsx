@@ -1,5 +1,3 @@
-import { Link as LinkIcon } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
@@ -33,44 +31,23 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
-import { SensitivityColumn } from '../ProjectDataGrid';
+import { LinkColumn } from '../Grid/Columns/LinkColumn';
+import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
+import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
-  {
-    headerName: 'Project',
+  ProjectNameColumn({
     field: 'project.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.project.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.project.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
-  {
-    headerName: '',
+    valueGetter: (_, engagement) => engagement.project,
+  }),
+  LinkColumn({
     field: 'Engagement',
-    width: 54,
-    display: 'flex',
-    renderCell: ({ row }) => (
-      <Tooltip title="View Engagement">
-        <IconButton
-          size="small"
-          color="primary"
-          component={Link}
-          to={`/engagements/${row.id}`}
-        >
-          <LinkIcon />
-        </IconButton>
-      </Tooltip>
-    ),
-    filterable: false,
-    sortable: false,
-    hideable: false,
-    resizable: false,
-  },
+    headerName: '',
+    valueGetter: (_, engagement) => engagement,
+    destination: (id) => `/engagements/${id}`,
+  }),
   {
     headerName: 'Language / Intern',
     field: 'nameProjectLast',
@@ -215,11 +192,10 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     filterable: false,
   },
-  {
-    ...SensitivityColumn,
+  SensitivityColumn({
     field: 'project.sensitivity',
-    valueGetter: (_, row) => row.project.sensitivity,
-  },
+    valueGetter: (_, engagement) => engagement.project,
+  }),
   {
     headerName: 'Files',
     field: 'files',

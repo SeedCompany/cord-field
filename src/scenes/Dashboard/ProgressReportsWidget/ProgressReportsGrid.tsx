@@ -1,5 +1,4 @@
-import { Link as LinkIcon } from '@mui/icons-material';
-import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -21,10 +20,11 @@ import {
   DefaultDataGridStyles,
   enumColumn,
   noHeaderFilterButtons,
-  textColumn,
   useDataGridSource,
 } from '~/components/Grid';
-import { Link } from '~/components/Routing';
+import { LanguageNameColumn } from '../../../components/Grid/Columns/LanguageNameColumn';
+import { LinkColumn } from '../../../components/Grid/Columns/LinkColumn';
+import { ProjectNameColumn } from '../../../components/Grid/Columns/ProjectNameColumn';
 import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
@@ -40,50 +40,19 @@ export type ProgressReportColumnMapShape = Record<
 export const ExpansionMarker = 'expandable';
 
 export const ProgressReportsColumnMap = {
-  project: {
-    headerName: 'Project',
+  project: ProjectNameColumn({
     field: 'engagement.project.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.parent.project.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.parent.project.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
-  language: {
-    headerName: 'Language',
+    valueGetter: (_, report) => report.parent.project,
+  }),
+  language: LanguageNameColumn({
     field: 'engagement.language.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.parent.language.value?.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/languages/${row.parent.language.value?.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
-  viewReport: {
-    headerName: 'Report',
-    field: 'id',
+    valueGetter: (_, report) => report.parent.language.value!,
+  }),
+  viewReport: LinkColumn({
+    field: 'Report',
+    destination: (id) => `/progress-reports/${id}`,
     width: 65,
-    align: 'center',
-    renderCell: ({ row }) => (
-      <Tooltip title="View Report">
-        <IconButton
-          size="small"
-          color="primary"
-          component={Link}
-          to={`/progress-reports/${row.id}`}
-        >
-          <LinkIcon />
-        </IconButton>
-      </Tooltip>
-    ),
-    filterable: false,
-    sortable: false,
-    hideable: false,
-    resizable: false,
-  },
+  }),
   status: {
     headerName: 'Status',
     ...enumColumn(ProgressReportStatusList, ProgressReportStatusLabels, {
