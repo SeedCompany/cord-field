@@ -6,7 +6,10 @@ import {
   LocationTypeList,
   UpdateLocation,
 } from '~/api/schema.graphql';
-import { labelFrom } from '~/common';
+import {
+  DisplayFieldRegionFragment as FieldRegionLookupItem,
+  labelFrom,
+} from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -19,6 +22,7 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
+import { FieldRegionField } from '../../../components/form/Lookup/FieldRegion';
 import {
   FundingAccountField,
   FundingAccountLookupItem,
@@ -31,6 +35,7 @@ export interface LocationFormValues<
   location: Merge<
     CreateOrUpdateType,
     {
+      defaultFieldRegionId?: FieldRegionLookupItem | null;
       fundingAccountId?: FundingAccountLookupItem | null;
       mapImage?: File[];
     }
@@ -101,6 +106,17 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
       <Grid item xs={12}>
         <SecuredField obj={location} name="fundingAccountId">
           {(props) => <FundingAccountField margin="none" {...props} />}
+        </SecuredField>
+      </Grid>
+      <Grid item xs={12}>
+        <SecuredField obj={location} name="defaultFieldRegionId">
+          {(props) => (
+            <FieldRegionField
+              margin="none"
+              label="Default Field Region"
+              {...props}
+            />
+          )}
         </SecuredField>
       </Grid>
       <Grid item xs={12}>
