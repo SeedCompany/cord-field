@@ -1,0 +1,7 @@
+query FieldZoneLookup($query: String!) {
+  search(input: { query: $query, type: [FieldZone] }) {
+    items {
+      ...DisplayFieldZone
+    }
+  }
+}

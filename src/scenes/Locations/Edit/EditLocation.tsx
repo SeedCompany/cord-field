@@ -29,6 +29,7 @@ export const EditLocation = (props: EditLocationProps) => {
               type: location.type.value,
               isoAlpha3: location.isoAlpha3.value,
               fundingAccountId: location.fundingAccount.value,
+              defaultFieldRegionId: location.defaultFieldRegion.value,
             },
           }
         : undefined,
@@ -36,7 +37,12 @@ export const EditLocation = (props: EditLocationProps) => {
   );
 
   const onSubmit: FormProps['onSubmit'] = async ({
-    location: { fundingAccountId, mapImage: mapImages, ...rest },
+    location: {
+      fundingAccountId,
+      defaultFieldRegionId,
+      mapImage: mapImages,
+      ...rest
+    },
   }) => {
     const [uploadedImageInfo, finalizeUpload] = await uploadFile(
       mapImages?.[0]
@@ -44,6 +50,7 @@ export const EditLocation = (props: EditLocationProps) => {
 
     const input: UpdateLocation = {
       ...rest,
+      defaultFieldRegionId: defaultFieldRegionId?.id ?? null,
       fundingAccountId: fundingAccountId?.id ?? null,
       mapImage: uploadedImageInfo,
     };

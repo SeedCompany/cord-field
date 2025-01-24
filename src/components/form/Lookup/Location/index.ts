@@ -1,1 +1,1 @@
-export * from './LocationFields';
+export * from './LocationField';
