@@ -1,0 +1,7 @@
+query FieldRegionLookup($query: String!) {
+  search(input: { query: $query, type: [FieldRegion] }) {
+    items {
+      ...DisplayFieldRegion
+    }
+  }
+}
