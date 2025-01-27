@@ -21,6 +21,7 @@ import {
 } from '../../api/schema/enumLists';
 import {
   booleanColumn,
+  booleanNullableColumn,
   enumColumn,
   getInitialVisibility,
   QuickFilterButton,
@@ -92,12 +93,26 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     headerName: 'AI Assist',
     description: 'Is using AI assistance in translation?',
     field: 'usingAIAssistedTranslation',
-    ...booleanColumn(),
+    ...booleanNullableColumn(),
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.usingAIAssistedTranslation.value
         : null,
     filterable: false,
+    editable: true,
+    isEditable: ({ row }) =>
+      row.__typename === 'LanguageEngagement' &&
+      row.usingAIAssistedTranslation.canEdit,
+    valueSetter: (value, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? {
+            ...row,
+            usingAIAssistedTranslation: {
+              ...row.usingAIAssistedTranslation,
+              value,
+            },
+          }
+        : row,
   },
   {
     headerName: 'Type',
