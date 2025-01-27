@@ -80,6 +80,13 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
         ? row.milestoneReached.value
         : null,
     filterable: false,
+    editable: true,
+    isEditable: ({ row }) =>
+      row.__typename === 'LanguageEngagement' && row.milestoneReached.canEdit,
+    valueSetter: (value, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? { ...row, milestoneReached: { ...row.milestoneReached, value } }
+        : row,
   },
   {
     headerName: 'AI Assist',

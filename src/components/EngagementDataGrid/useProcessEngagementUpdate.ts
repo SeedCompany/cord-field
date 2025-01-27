@@ -13,6 +13,7 @@ export const useProcessEngagementUpdate = () => {
 
     const input: UpdateLanguageEngagementInput = {
       id: updated.id,
+      milestoneReached: updated.milestoneReached.value,
     };
     // Don't wait for the mutation to finish/error, which allows
     // the grid to close the editing state immediately.

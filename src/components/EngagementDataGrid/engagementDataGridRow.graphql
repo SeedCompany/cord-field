@@ -47,6 +47,8 @@ fragment engagementDataGridRow on Engagement {
       }
     }
     milestoneReached {
+      canRead
+      canEdit
       value
     }
     ...aiAssistedTranslation
