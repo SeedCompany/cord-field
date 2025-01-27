@@ -6,6 +6,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { mapEntries } from '@seedcompany/common';
 import { Sx } from '../../common';
+import { isCellEditable } from './isCellEditable';
 
 GRID_DEFAULT_LOCALE_TEXT.filterPanelOperator = 'Condition';
 
@@ -75,6 +76,7 @@ export const DefaultDataGridStyles = {
     },
   },
   onMenuOpen: scrollIntoView,
+  isCellEditable,
 } satisfies Partial<DataGridProps>;
 
 export const EmptyEnumFilterValue = (
