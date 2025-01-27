@@ -30,13 +30,16 @@ import {
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();
-
   const [props] = useDataGridSource({
     query: PartnerProjectsDocument,
     variables: { partnerId },
     listAt: 'partner.projects',
     initialInput: {
       sort: 'name',
+    },
+    sessionStorageProps: {
+      key: `partners-projects-grid-state-${partnerId}`,
+      defaultValue: ProjectInitialState,
     },
   });
 
@@ -60,7 +63,6 @@ export const PartnerDetailProjects = () => {
         slots={slots}
         slotProps={slotProps}
         columns={PartnerProjectColumns}
-        initialState={ProjectInitialState}
         headerFilters
         hideFooter
         sx={[flexLayout, noHeaderFilterButtons, noFooter]}

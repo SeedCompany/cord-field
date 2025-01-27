@@ -18,6 +18,7 @@ import {
   useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
+import { GridInitialStatePro } from '@mui/x-data-grid-pro/models/gridStatePro';
 import { groupBy, Nil, setOf } from '@seedcompany/common';
 import {
   useDebounceFn,
@@ -39,6 +40,7 @@ import type { Get, Paths, SetNonNullable } from 'type-fest';
 import { type PaginatedListInput, type SortableListInput } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
+import { usePersistedGridState } from '~/hooks/usePersistedGridState';
 import { convertMuiFiltersToApi, FilterShape } from './convertMuiFiltersToApi';
 
 type ListInput = SetNonNullable<
@@ -50,6 +52,11 @@ type ListInput = SetNonNullable<
 interface PaginatedListOutput<T> {
   items: readonly T[];
   total: number;
+}
+
+interface SessionStorageProps {
+  key: string;
+  defaultValue: GridInitialStatePro;
 }
 
 type PathsMatching<T, List> = {
@@ -99,6 +106,7 @@ export const useDataGridSource = <
   initialInput,
   keyArgs = defaultKeyArgs,
   apiRef: apiRefInput,
+  sessionStorageProps: sessionStateProps,
 }: {
   query: DocumentNode<Output, Vars>;
   variables: NoInfer<Vars & { input?: Input }>;
@@ -106,6 +114,7 @@ export const useDataGridSource = <
   initialInput?: Partial<Omit<NoInfer<Input>, 'page'>>;
   keyArgs?: string[];
   apiRef?: MutableRefObject<GridApiPro>;
+  sessionStorageProps: SessionStorageProps;
 }) => {
   const initialInputRef = useLatest(initialInput);
   // eslint-disable-next-line react-hooks/rules-of-hooks -- we'll assume this doesn't change between renders
@@ -198,6 +207,13 @@ export const useDataGridSource = <
     );
   };
 
+  const [savedGridState = {}, onStateChange, persistedFilterModel] =
+    usePersistedGridState({
+      key: sessionStateProps.key,
+      apiRef: apiRef,
+      defaultValue: sessionStateProps.defaultValue,
+    });
+
   // State for current sorting & filtering
   const [initialSort] = useState((): ViewState['sortModel'] => [
     {
@@ -215,6 +231,7 @@ export const useDataGridSource = <
       }),
     }
   );
+
   const persist = useDebounceFn((next: ViewState) => {
     const filterModel = {
       // Strip out filters for columns that shouldn't be persisted
@@ -234,9 +251,14 @@ export const useDataGridSource = <
     });
   });
   const [view, reallySetView] = useState((): ViewState => {
-    const { apiFilterModel: _, ...rest } = storedView!; // not null because we give a default value
+    const { apiFilterModel, ...rest } = storedView!; // not null because we give a default value
     return {
       ...rest,
+      filterModel: merge(
+        {},
+        rest.filterModel,
+        savedGridState.filter?.filterModel
+      ),
       apiSortModel: rest.sortModel,
     };
   });
@@ -253,23 +275,29 @@ export const useDataGridSource = <
 
   // Convert the view state to the input for the GQL query
   const input = useMemo(
-    () => ({
-      ...defaultInitialInput,
-      ...initialInputRef.current,
-      count: initialInputRef.current?.count ?? defaultInitialInput.count,
-      ...(view.apiSortModel?.[0] && {
-        sort: view.apiSortModel[0].field,
-        order: upperCase(view.apiSortModel[0].sort!),
-      }),
-      // eslint-disable-next-line no-extra-boolean-cast
-      filter: Boolean(apiRef.current.instanceId)
-        ? convertMuiFiltersToApi(
-            apiRef.current,
-            view.filterModel,
-            initialInputRef.current?.filter
-          )
-        : storedView?.apiFilterModel,
-    }),
+    () => {
+      const initialFilterModel = {
+        ...storedView?.apiFilterModel,
+        ...persistedFilterModel,
+      };
+      return {
+        ...defaultInitialInput,
+        ...initialInputRef.current,
+        count: initialInputRef.current?.count ?? defaultInitialInput.count,
+        ...(view.apiSortModel?.[0] && {
+          sort: view.apiSortModel[0].field,
+          order: upperCase(view.apiSortModel[0].sort!),
+        }),
+        // eslint-disable-next-line no-extra-boolean-cast
+        filter: Boolean(apiRef.current.instanceId)
+          ? convertMuiFiltersToApi(
+              apiRef.current,
+              view.filterModel,
+              initialInputRef.current?.filter
+            )
+          : initialFilterModel,
+      };
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [apiRef, initialInputRef, view.apiSortModel, view.filterModel]
   );
@@ -427,10 +455,12 @@ export const useDataGridSource = <
     rows,
     loading,
     rowCount: total,
+    initialState: savedGridState,
     sortModel: view.sortModel,
     filterModel: view.filterModel,
     hideFooterPagination: true,
     onFetchRows: onFetchRows.run,
+    onStateChange,
     onSortModelChange,
     onFilterModelChange,
     paginationMode: total != null ? 'server' : 'client', // Not used, but prevents row count warning.

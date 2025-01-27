@@ -27,6 +27,10 @@ export const EngagementsPanel = () => {
     initialInput: {
       sort: EngagementColumns[0]!.field,
     },
+    sessionStorageProps: {
+      key: 'engagements-grid',
+      defaultValue: EngagementInitialState,
+    },
   });
 
   const slots = useMemo(
@@ -49,7 +53,6 @@ export const EngagementsPanel = () => {
       slots={slots}
       slotProps={slotProps}
       columns={EngagementColumns}
-      initialState={EngagementInitialState}
       headerFilters
       hideFooter
       sx={[flexLayout, noHeaderFilterButtons, noFooter]}

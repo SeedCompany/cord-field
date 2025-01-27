@@ -27,6 +27,10 @@ export const ProjectsPanel = () => {
     initialInput: {
       sort: 'name',
     },
+    sessionStorageProps: {
+      key: 'projects-grid',
+      defaultValue: ProjectInitialState,
+    },
   });
 
   const slots = useMemo(
@@ -49,7 +53,6 @@ export const ProjectsPanel = () => {
       slots={slots}
       slotProps={slotProps}
       columns={ProjectColumns}
-      initialState={ProjectInitialState}
       headerFilters
       hideFooter
       sx={[flexLayout, noHeaderFilterButtons, noFooter]}
