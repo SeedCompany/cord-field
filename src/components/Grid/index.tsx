@@ -4,6 +4,7 @@ export * from './DefaultDataGridStyles';
 export * from './EditNumberCell';
 export * from './useCurrencyColumn';
 export * from './ColumnTypes/booleanColumn';
+export * from './ColumnTypes/booleanNullableColumn';
 export * from './ColumnTypes/enumColumn';
 export * from './ColumnTypes/textColumn';
 export * from './useDataGridSource';
