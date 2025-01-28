@@ -9,6 +9,7 @@ import {
 import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
+import { ProgressReportListInput } from '~/api/schema.graphql';
 import { CalendarDate, extendSx } from '~/common';
 import {
   booleanColumn,
@@ -113,7 +114,7 @@ export const PnpProblemsGrid = ({
               hasError: true,
             },
           },
-        },
+        } satisfies ProgressReportListInput,
       },
       listAt: 'progressReports',
       initialInput: {
