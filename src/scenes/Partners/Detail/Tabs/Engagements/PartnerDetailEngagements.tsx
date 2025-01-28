@@ -10,6 +10,7 @@ import {
   EngagementColumns,
   EngagementInitialState,
   EngagementToolbar,
+  useProcessEngagementUpdate,
 } from '~/components/EngagementDataGrid';
 import {
   DefaultDataGridStyles,
@@ -45,6 +46,8 @@ export const PartnerDetailEngagements = () => {
     [props.slotProps]
   );
 
+  const processEngagementUpdate = useProcessEngagementUpdate();
+
   return (
     <TabPanelContent>
       <DataGrid<Engagement>
@@ -54,6 +57,7 @@ export const PartnerDetailEngagements = () => {
         slotProps={slotProps}
         columns={EngagementColumns}
         initialState={EngagementInitialState}
+        processRowUpdate={processEngagementUpdate}
         headerFilters
         hideFooter
         sx={[flexLayout, noHeaderFilterButtons, noFooter]}

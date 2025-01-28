@@ -10,7 +10,7 @@ export const multiEnumColumn = <Row extends RowLike, T extends string>(
   list: readonly T[],
   labels: Record<T, string>
 ) => {
-  const base = enumColumn(list, labels);
+  const { renderEditCell: _, ...base } = enumColumn(list, labels);
   const valuesFormatter = (values: T[]) =>
     values.map(base.valueFormatter).join(', ');
   return column<Row, readonly T[], string>()({
