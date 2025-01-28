@@ -1,4 +1,3 @@
-import { Toolbar } from '@mui/material';
 import {
   DataGridPro,
   DataGridProProps as DataGridProps,
@@ -19,13 +18,14 @@ import {
   QuickFilterButton,
   QuickFilterResetButton,
   QuickFilters,
+  Toolbar,
   useDataGridSource,
   useFilterToggle,
 } from '~/components/Grid';
 import { LanguageNameColumn } from '~/components/Grid/Columns/LanguageNameColumn';
 import { LinkColumn } from '~/components/Grid/Columns/LinkColumn';
 import { ProjectNameColumn } from '~/components/Grid/Columns/ProjectNameColumn';
-import { PnPValidation } from '~/components/PnpValidation/PnpValidation';
+import { PnpProgressValidation } from '../../ProgressReports/PnpValidation/PnpProgressValidation';
 import {
   PnpProblemDataGridRowFragment as PnpProblem,
   PnpProblemsDocument,
@@ -35,8 +35,6 @@ export type PnpProblemsColumnMapShape = Record<
   string,
   SetOptional<GridColDef<PnpProblem>, 'field'>
 >;
-
-export const ExpansionMarker = 'expandable';
 
 export const PnpProblemsColumnMap = {
   project: ProjectNameColumn({
@@ -56,14 +54,13 @@ export const PnpProblemsColumnMap = {
     headerName: 'Errors',
     field: 'pnpExtractionResult',
     type: 'number',
+    align: 'center',
     headerAlign: 'center',
-    width: 150,
+    width: 100,
     valueGetter: (_, row) =>
       row.pnpExtractionResult?.problems.filter((p) => p.severity === 'Error')
         .length,
-    renderCell: ({ row }) => (
-      <PnPValidation result={row.pnpExtractionResult!} />
-    ),
+    renderCell: ({ row }) => <PnpProgressValidation report={row} />,
     filterable: false,
   },
   isMember: {
@@ -129,9 +126,6 @@ export const PnpProblemsGrid = ({
   });
 
   const initialState = {
-    pinnedColumns: {
-      left: columns.slice(0, 3).map((column) => column.field),
-    },
     columns: {
       columnVisibilityModel: {
         ...getInitialVisibility(columns),
@@ -179,7 +173,17 @@ export const PnpProblemsGrid = ({
       slots={slots}
       slotProps={slotProps}
       density="standard"
-      sx={[noHeaderFilterButtons, ...extendSx(props.sx)]}
+      disableColumnMenu={!expanded}
+      sx={[
+        noHeaderFilterButtons,
+        !expanded &&
+          ((theme) => ({
+            '.MuiDataGrid-main': {
+              borderTop: `thin solid ${theme.palette.divider}`,
+            },
+          })),
+        ...extendSx(props.sx),
+      ]}
     />
   );
 };

@@ -10,10 +10,20 @@ query PnpProblems($input: ProgressReportListInput) {
 }
 
 fragment pnpProblemDataGridRow on ProgressReport {
-  ...progressReportsDataGridRow
-  pnpExtractionResult {
-    problems {
-      ...pnpProblem
+  id
+  parent {
+    id
+    language {
+      value {
+        ...LanguageLookupItem
+      }
+    }
+    project {
+      id
+      ...ProjectLookupItem
+      isMember
+      pinned
     }
   }
+  ...pnpProgressValidation
 }
