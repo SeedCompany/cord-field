@@ -40,7 +40,7 @@ export const SensitivityColumn = <
     renderCell: ({ value }) => (
       <Box display="flex" alignItems="center" gap={1} textTransform="uppercase">
         <SensitivityIcon value={value} disableTooltip />
-        {value}
+        <span>{value}</span>
       </Box>
     ),
   });
