@@ -33,6 +33,7 @@ export const booleanNullableColumn = <Row extends RowLike>() =>
     valueFormatter: (value: boolean | null) => valueToLabel.get(value),
     getOptionLabel: (value: Formatted) => icons[value],
     display: 'flex',
+    align: 'center',
     renderCell: ({ formattedValue }) => {
       const v = formattedValue as Formatted;
       return v !== 'Unknown' ? icons[v] : null;
@@ -57,14 +58,14 @@ export const booleanNullableColumn = <Row extends RowLike>() =>
             api.stopCellEditMode({ id, field });
           }}
           sx={{
+            // adjust to render outline within the cell & center icon
+            // and ignore arrow padding to center horizontally
             '.MuiSelect-select': {
-              // center icon
-              display: 'flex',
-              justifyContent: 'center',
-              // adjust to render outline within the cell
-              // and ignore arrow padding to center horizontally
               px: '4px !important',
+              py: 0,
+              mt: '3px',
             },
+            mt: '1px',
             '[data-testid="ArrowDropDownIcon"]': { display: 'none' },
           }}
         />
