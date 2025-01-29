@@ -7,6 +7,9 @@ import { SubmitError, TextField } from '../form';
 import { UserField } from '../form/Lookup/User/UserField';
 import { CreateFieldZoneDocument } from './CreateFieldZone.graphql';
 
+/*
+  CreateFieldZoneInput doesn't properly reflect the input from the fields, therefore the need for FieldZoneInput
+*/
 export interface FieldZoneInput {
   fieldZone: { name: string };
   director: Partial<User>;

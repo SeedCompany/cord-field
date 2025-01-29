@@ -8,6 +8,9 @@ import { FieldZoneField } from '../form/Lookup/FieldZone';
 import { UserField } from '../form/Lookup/User/UserField';
 import { CreateFieldRegionDocument } from './CreateFieldRegion.graphql';
 
+/*
+  CreateFieldRegionInput doesn't properly reflect the input from the fields, therefore the need for FieldRegionInput
+*/
 export interface FieldRegionInput {
   fieldRegion: { name: string };
   fieldZone: Partial<FieldZone>;
