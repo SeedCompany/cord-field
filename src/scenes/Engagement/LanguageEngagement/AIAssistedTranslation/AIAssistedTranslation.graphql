@@ -1,0 +1,8 @@
+fragment aiAssistedTranslation on LanguageEngagement {
+  ...Id
+  usingAIAssistedTranslation {
+    canRead
+    canEdit
+    value
+  }
+}

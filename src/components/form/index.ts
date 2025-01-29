@@ -9,6 +9,7 @@ export * from './DateField';
 export * from './Dropzone';
 export * from './EmailField';
 export * from './EnumField';
+export * from './TriStateBooleanField';
 export * from './FieldGroup';
 export * from './FormattedTextField';
 export * from './NumberField';

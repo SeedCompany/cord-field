@@ -29,6 +29,13 @@ fragment LocationDetail on Location {
       ...FundingAccountCard
     }
   }
+  defaultFieldRegion {
+    canRead
+    canEdit
+    value {
+      ...DisplayFieldRegion
+    }
+  }
   mapImage {
     canRead
     canEdit

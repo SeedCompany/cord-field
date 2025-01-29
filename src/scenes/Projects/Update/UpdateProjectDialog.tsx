@@ -22,10 +22,8 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import {
-  FieldRegionField,
-  LocationField,
-} from '../../../components/form/Lookup';
+import { LocationField } from '../../../components/form/Lookup';
+import { FieldRegionField } from '../../../components/form/Lookup/FieldRegion';
 import {
   updateEngagementDateRanges,
   updatePartnershipsDateRanges,

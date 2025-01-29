@@ -15,17 +15,12 @@ fragment progressReportsDataGridRow on ProgressReport {
     id
     language {
       value {
-        id
-        name {
-          value
-        }
+        ...LanguageLookupItem
       }
     }
     project {
       id
-      name {
-        value
-      }
+      ...ProjectLookupItem
       isMember
       pinned
     }

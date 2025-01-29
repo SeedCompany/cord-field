@@ -7,7 +7,7 @@ import {
   FieldRegionField,
   FieldZoneField,
   LocationField,
-} from './LocationFields';
+} from './FieldZoneField';
 
 export default { title: 'Components/Forms/Fields/Lookup/Location' };
 

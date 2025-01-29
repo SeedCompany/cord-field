@@ -13,9 +13,7 @@ fragment engagementDataGridRow on Engagement {
   project {
     id
     type
-    name {
-      value
-    }
+    ...ProjectLookupItem
     sensitivity
     step {
       value
@@ -48,6 +46,12 @@ fragment engagementDataGridRow on Engagement {
         }
       }
     }
+    milestoneReached {
+      canRead
+      canEdit
+      value
+    }
+    ...aiAssistedTranslation
     language {
       value {
         id

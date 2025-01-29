@@ -1,5 +1,3 @@
-import { Link as LinkIcon } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
 import {
   DataGridProProps as DataGridProps,
   GridColDef,
@@ -10,6 +8,8 @@ import { EngagementFilters } from '~/api/schema.graphql';
 import {
   EngagementStatusLabels,
   EngagementStatusList,
+  LanguageMilestoneLabels,
+  LanguageMilestoneList,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
   ProjectStatusLabels,
@@ -21,6 +21,7 @@ import {
 } from '../../api/schema/enumLists';
 import {
   booleanColumn,
+  booleanNullableColumn,
   enumColumn,
   getInitialVisibility,
   QuickFilterButton,
@@ -31,44 +32,23 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
-import { SensitivityColumn } from '../ProjectDataGrid';
+import { LinkColumn } from '../Grid/Columns/LinkColumn';
+import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
+import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
-  {
-    headerName: 'Project',
+  ProjectNameColumn({
     field: 'project.name',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => row.project.name.value,
-    renderCell: ({ value, row }) => (
-      <Link to={`/projects/${row.project.id}`}>{value}</Link>
-    ),
-    hideable: false,
-  },
-  {
-    headerName: '',
+    valueGetter: (_, engagement) => engagement.project,
+  }),
+  LinkColumn({
     field: 'Engagement',
-    width: 54,
-    display: 'flex',
-    renderCell: ({ row }) => (
-      <Tooltip title="View Engagement">
-        <IconButton
-          size="small"
-          color="primary"
-          component={Link}
-          to={`/engagements/${row.id}`}
-        >
-          <LinkIcon />
-        </IconButton>
-      </Tooltip>
-    ),
-    filterable: false,
-    sortable: false,
-    hideable: false,
-    resizable: false,
-  },
+    headerName: '',
+    valueGetter: (_, engagement) => engagement,
+    destination: (id) => `/engagements/${id}`,
+  }),
   {
     headerName: 'Language / Intern',
     field: 'nameProjectLast',
@@ -90,6 +70,49 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     hideable: false,
     serverFilter: (value): EngagementFilters => ({ engagedName: value }),
+  },
+  {
+    headerName: 'Milestone',
+    field: 'milestoneReached',
+    ...enumColumn(LanguageMilestoneList, LanguageMilestoneLabels),
+    width: 130,
+    valueGetter: (_, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? row.milestoneReached.value
+        : null,
+    filterable: false,
+    editable: true,
+    isEditable: ({ row }) =>
+      row.__typename === 'LanguageEngagement' && row.milestoneReached.canEdit,
+    valueSetter: (value, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? { ...row, milestoneReached: { ...row.milestoneReached, value } }
+        : row,
+  },
+  {
+    headerName: 'AI Assist',
+    description: 'Is using AI assistance in translation?',
+    field: 'usingAIAssistedTranslation',
+    ...booleanNullableColumn(),
+    valueGetter: (_, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? row.usingAIAssistedTranslation.value
+        : null,
+    filterable: false,
+    editable: true,
+    isEditable: ({ row }) =>
+      row.__typename === 'LanguageEngagement' &&
+      row.usingAIAssistedTranslation.canEdit,
+    valueSetter: (value, row) =>
+      row.__typename === 'LanguageEngagement'
+        ? {
+            ...row,
+            usingAIAssistedTranslation: {
+              ...row.usingAIAssistedTranslation,
+              value,
+            },
+          }
+        : row,
   },
   {
     headerName: 'Type',
@@ -191,11 +214,10 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     filterable: false,
   },
-  {
-    ...SensitivityColumn,
+  SensitivityColumn({
     field: 'project.sensitivity',
-    valueGetter: (_, row) => row.project.sensitivity,
-  },
+    valueGetter: (_, engagement) => engagement.project,
+  }),
   {
     headerName: 'Files',
     field: 'files',

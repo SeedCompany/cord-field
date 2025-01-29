@@ -61,11 +61,11 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
                             &nbsp;via&nbsp;
                           </Typography>
                           <Link
-                            to={`/partners/${ppm[medium]!.partner.value!.id}`}
+                            to={`/partners/${ppm[medium]!.partner.value.id}`}
                           >
                             {
-                              ppm[medium]!.partner.value!.organization.value!
-                                .name.value
+                              ppm[medium]!.partner.value.organization.value.name
+                                .value
                             }
                           </Link>
                         </>

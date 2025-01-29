@@ -171,6 +171,11 @@ export const appComponents = ({
           '.MuiPaper-root > &, .MuiPaper-root > .MuiTabPanel-root > &': {
             border: 'none',
           },
+          // Prevent browser from selecting text in the cell to the right
+          // when double-clicking cells that only have an icon or button (no text)
+          '.MuiDataGrid-cell:has(svg:only-child, .MuiButtonBase-root:only-child)':
+            { userSelect: 'all' },
+
           // '--DataGrid-containerBackground': theme.palette.background.paper,
         },
         columnHeaderTitle: {

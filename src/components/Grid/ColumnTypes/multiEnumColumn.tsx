@@ -1,19 +1,19 @@
 import {
-  GridColDef,
   GridFilterInputMultipleSingleSelect,
   GridFilterInputSingleSelect,
 } from '@mui/x-data-grid-pro';
 import { setOf } from '@seedcompany/common';
+import { column, RowLike } from './definition.types';
 import { enumColumn } from './enumColumn';
 
-export const multiEnumColumn = <T extends string>(
+export const multiEnumColumn = <Row extends RowLike, T extends string>(
   list: readonly T[],
   labels: Record<T, string>
 ) => {
-  const base = enumColumn(list, labels);
+  const { renderEditCell: _, ...base } = enumColumn(list, labels);
   const valuesFormatter = (values: T[]) =>
     values.map(base.valueFormatter).join(', ');
-  return {
+  return column<Row, readonly T[], string>()({
     ...base,
     filterOperators: [
       {
@@ -48,5 +48,5 @@ export const multiEnumColumn = <T extends string>(
     valueFormatter: valuesFormatter,
     sortable: false,
     sortBy: undefined,
-  } satisfies Partial<GridColDef<any, readonly T[], string>>;
+  });
 };
