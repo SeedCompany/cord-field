@@ -8,7 +8,7 @@ import { SecuredProp, StyleProps } from '~/common';
 import { Due, SkippedText } from '../PeriodicReports/OverviewCard/ReportInfo';
 import { ReportInfoContainer } from '../PeriodicReports/OverviewCard/ReportInfoContainer';
 import { ReportLabel } from '../PeriodicReports/ReportLabel';
-import { ButtonLink } from '../Routing';
+import { ButtonLink, Link } from '../Routing';
 import { ProgressReportOverviewItemFragment as Report } from './ProgressReportOverview.graphql';
 
 const LastStatus = Statuses[Statuses.length - 1];
@@ -78,9 +78,9 @@ const ReportInfo = ({
       <Typography variant="body2" color="text.secondary">
         {title}
       </Typography>
-      <Typography variant="h4" sx={{ my: 1 }}>
+      <Link to={`/progress-reports/${report.id}`} variant="h4" sx={{ my: 1 }}>
         <ReportLabel report={report} />
-      </Typography>
+      </Link>
       <Typography variant="body2" color="text.secondary">
         {skipped && <SkippedText />}
         {extra && (
