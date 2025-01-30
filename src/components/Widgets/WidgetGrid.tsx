@@ -24,9 +24,9 @@ export const WidgetGrid = ({
           flex: 1,
           display: 'grid',
           gridGap: gap * 8,
-          gridTemplateRows: `repeat(${
-            rows * many(children).length
-          }, minmax(${Math.floor((1 / rows) * 100)}%, 1fr));`,
+          gridTemplateRows: `repeat(${rows * many(children).length}, minmax(${
+            Math.floor((1 / rows) * 100) - 0.6 // 0.6 fixes height, punting on the permenant fix for now
+          }%, 1fr));`,
           gridTemplateColumns: `repeat(${cols}, 1fr);`,
         },
         ...extendSx(sx),
