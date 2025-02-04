@@ -7,30 +7,26 @@ import {
   WidgetHeader,
   WidgetProps,
 } from '~/components/Widgets';
-import { ProgressReportsCollapsedGrid } from './ProgressReportsCollapsedGrid';
-import { ProgressReportsExpandedGrid } from './ProgressReportsExpandedGrid';
-import { QuarterSelect } from './QuarterSelect';
-import { useQuarterState } from './useQuarterState';
+import { QuarterSelect } from '../ProgressReportsWidget/QuarterSelect';
+import { useQuarterState } from '../ProgressReportsWidget/useQuarterState';
+import { PnpProblemsGrid } from './PnpProblemsGrid';
 
-export const ProgressReportsWidget = ({
+export const PnpProblemsWidget = ({
   expanded,
   ...props
 }: WidgetProps & { expanded: boolean }) => {
   const quarter = useQuarterState();
   const location = useLocation();
 
-  const Grid = expanded
-    ? ProgressReportsExpandedGrid
-    : ProgressReportsCollapsedGrid;
   return (
     <Widget {...props}>
       <WidgetHeader
-        title="Quarterly Reports"
+        title="PnP Problems"
         expandAction={
           <ExpanderButton
             expanded={expanded}
             to={{
-              pathname: expanded ? '..' : 'progress-reports',
+              pathname: expanded ? '..' : 'pnp-errors',
               search: location.search,
             }}
           />
@@ -39,9 +35,10 @@ export const ProgressReportsWidget = ({
         <QuarterSelect {...quarter} />
       </WidgetHeader>
       <TableWidget>
-        <Grid
+        <PnpProblemsGrid
           quarter={quarter.current}
           hideFooter
+          expanded={expanded}
           sx={[
             {
               border: 'none',

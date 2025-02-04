@@ -9,6 +9,7 @@ import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
 import {
+  ProgressReportListInput,
   ProgressReportStatusLabels,
   ProgressReportStatusList,
   ScheduleStatusLabels,
@@ -170,7 +171,7 @@ export const ProgressReportsGrid = ({
               },
             },
           },
-        },
+        } satisfies ProgressReportListInput,
       },
       listAt: 'progressReports',
       initialInput: {
