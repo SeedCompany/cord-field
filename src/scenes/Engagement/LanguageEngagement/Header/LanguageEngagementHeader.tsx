@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { EngagementStatusLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
+import { AIAssistanceChip } from '~/components/AIAssistanceChip/AIAssistanceChip';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { DataButton } from '../../../../components/DataButton';
@@ -163,13 +164,11 @@ export const LanguageEngagementHeader = ({
             empty="Enter Paratext Registry ID"
           />
         </Grid>
-        <BooleanProperty
-          label="AI Assisted Translation"
-          redacted="You do not have permission to view whether this engagement is using AI assistance"
-          data={engagement.usingAIAssistedTranslation}
-          wrap={(node) => <Grid item>{node}</Grid>}
-          sx={{ backgroundColor: 'warning.main' }}
-        />
+        <Grid item>
+          <AIAssistanceChip
+            aiAssistance={engagement.usingAIAssistedTranslation}
+          />
+        </Grid>
         <BooleanProperty
           label="First Scripture"
           redacted="You do not have permission to view whether this engagement is the first scripture for this language"
