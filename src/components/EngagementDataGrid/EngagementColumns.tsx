@@ -4,8 +4,10 @@ import {
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
-import { EngagementFilters } from '~/api/schema.graphql';
 import {
+  AiAssistedTranslationLabels,
+  AiAssistedTranslationList,
+  EngagementFilters,
   EngagementStatusLabels,
   EngagementStatusList,
   LanguageMilestoneLabels,
@@ -18,10 +20,9 @@ import {
   ProjectStepList,
   ProjectTypeLabels,
   ProjectTypeList,
-} from '../../api/schema/enumLists';
+} from '~/api/schema.graphql';
 import {
   booleanColumn,
-  booleanNullableColumn,
   enumColumn,
   getInitialVisibility,
   QuickFilterButton,
@@ -80,7 +81,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       row.__typename === 'LanguageEngagement'
         ? row.milestoneReached.value
         : null,
-    filterable: false,
+    filterable: true,
     editable: true,
     isEditable: ({ row }) =>
       row.__typename === 'LanguageEngagement' && row.milestoneReached.canEdit,
@@ -90,15 +91,16 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
         : row,
   },
   {
-    headerName: 'AI Assist',
+    headerName: 'AI Assistance',
     description: 'Is using AI assistance in translation?',
     field: 'usingAIAssistedTranslation',
-    ...booleanNullableColumn(),
+    width: 130,
+    ...enumColumn(AiAssistedTranslationList, AiAssistedTranslationLabels),
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
         ? row.usingAIAssistedTranslation.value
         : null,
-    filterable: false,
+    filterable: true,
     editable: true,
     isEditable: ({ row }) =>
       row.__typename === 'LanguageEngagement' &&
