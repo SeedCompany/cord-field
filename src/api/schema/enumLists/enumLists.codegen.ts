@@ -1,4 +1,5 @@
 import { sortBy } from '@seedcompany/common';
+import { pascalCase } from 'change-case-all';
 import { GraphQLEnumType, GraphQLEnumValue } from 'graphql';
 import { lowerCase } from 'lodash';
 import { titleCase } from 'title-case';
@@ -20,11 +21,14 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
       continue;
     }
 
+    // Same function that gql code gen uses
+    const typeName = pascalCase(type.name);
+
     const values = type.getValues();
 
     addExportedConst(file, {
-      name: `${type.name}List`,
-      type: `readonly Types.${type.name}[]`,
+      name: `${typeName}List`,
+      type: `readonly Types.${typeName}[]`,
       initializer: writeStringArray(
         sortBy(
           values.filter((val) => !val.deprecationReason),
@@ -37,8 +41,8 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
     });
 
     addExportedConst(file, {
-      name: `${type.name}Labels`,
-      type: `Readonly<Record<Types.${type.name}, string>>`,
+      name: `${typeName}Labels`,
+      type: `Readonly<Record<Types.${typeName}, string>>`,
       initializer: (writer) =>
         writer.block(() => {
           for (const val of values) {

@@ -192,6 +192,7 @@
     "babel-plugin-transform-imports": "^2.0.0",
     "babel-plugin-transform-rename-import": "^2.3.0",
     "babel-preset-razzle": "^4.2.18",
+    "change-case-all": "^1",
     "circular-dependency-plugin": "^5.2.2",
     "dotenv": "8.6.0",
     "dotenv-expand": "5.1.0",
@@ -227,6 +228,7 @@
     "webpack-dynamic-public-path": "^1.0.8"
   },
   "resolutions": {
+    "change-case-all": "^1",
     "@iarna/rtf-to-html/rtf-parser": "patch:rtf-parser@npm:1.3.3#.yarn/patches/rtf-parser-npm-1.3.3-c57888a546.patch",
     "@mui/x-data-grid@npm:7.8.0": "patch:@mui/x-data-grid@npm%3A7.8.0#~/.yarn/patches/@mui-x-data-grid-npm-7.8.0-178a9a9162.patch",
     "css-minimizer-webpack-plugin@npm:^1.2.0": "patch:css-minimizer-webpack-plugin@npm%3A1.3.0#~/.yarn/patches/css-minimizer-webpack-plugin-npm-1.3.0-c66c75884d.patch",

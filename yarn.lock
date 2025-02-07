@@ -7215,25 +7215,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"change-case-all@npm:1.0.14":
-  version: 1.0.14
-  resolution: "change-case-all@npm:1.0.14"
-  dependencies:
-    change-case: "npm:^4.1.2"
-    is-lower-case: "npm:^2.0.2"
-    is-upper-case: "npm:^2.0.2"
-    lower-case: "npm:^2.0.2"
-    lower-case-first: "npm:^2.0.2"
-    sponge-case: "npm:^1.0.1"
-    swap-case: "npm:^2.0.2"
-    title-case: "npm:^3.0.3"
-    upper-case: "npm:^2.0.2"
-    upper-case-first: "npm:^2.0.2"
-  checksum: 10c0/c2d5fda011b2430f9e503afdca5d8ed48b0e8ee96e38f5530193f8a503317c4a82e6b721c5ea8ef852a2534bdd3d1af25d76e0604b820cd3bc136cf9c179803e
-  languageName: node
-  linkType: hard
-
-"change-case-all@npm:1.0.15":
+"change-case-all@npm:^1":
   version: 1.0.15
   resolution: "change-case-all@npm:1.0.15"
   dependencies:
@@ -8008,6 +7990,7 @@ __metadata:
     babel-plugin-transform-rename-import: "npm:^2.3.0"
     babel-preset-razzle: "npm:^4.2.18"
     body-parser: "npm:^1.20.2"
+    change-case-all: "npm:^1"
     circular-dependency-plugin: "npm:^5.2.2"
     compression: "npm:^1.7.4"
     cookie-parser: "npm:^1.4.6"
