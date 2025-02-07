@@ -81,7 +81,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       row.__typename === 'LanguageEngagement'
         ? row.milestoneReached.value
         : null,
-    filterable: false,
+    filterable: true,
     editable: true,
     isEditable: ({ row }) =>
       row.__typename === 'LanguageEngagement' && row.milestoneReached.canEdit,
@@ -100,7 +100,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       row.__typename === 'LanguageEngagement'
         ? row.usingAIAssistedTranslation.value
         : null,
-    filterable: false,
+    filterable: true,
     editable: true,
     isEditable: ({ row }) =>
       row.__typename === 'LanguageEngagement' &&
