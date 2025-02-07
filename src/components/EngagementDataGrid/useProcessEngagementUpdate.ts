@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client';
+import { isEqual } from 'lodash';
 import { UpdateLanguageEngagement as UpdateLanguageEngagementInput } from '~/api/schema.graphql';
 import { EngagementDataGridRowFragment } from './engagementDataGridRow.graphql';
 import { UpdateLanguageEngagementGridDocument as UpdateLanguageEngagement } from './UpdateLanguageEngagementGrid.graphql';
@@ -6,8 +7,15 @@ import { UpdateLanguageEngagementGridDocument as UpdateLanguageEngagement } from
 export const useProcessEngagementUpdate = () => {
   const [updateLanguageEngagement] = useMutation(UpdateLanguageEngagement);
 
-  return (updated: EngagementDataGridRowFragment) => {
+  return (
+    updated: EngagementDataGridRowFragment,
+    prev: EngagementDataGridRowFragment
+  ) => {
     if (updated.__typename !== 'LanguageEngagement') {
+      return updated;
+    }
+
+    if (isEqual(updated, prev)) {
       return updated;
     }
 
