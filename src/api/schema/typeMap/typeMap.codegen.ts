@@ -1,4 +1,5 @@
 import { sortBy } from '@seedcompany/common';
+import { pascalCase } from 'change-case-all';
 import { GraphQLNamedType, isAbstractType, isObjectType } from 'graphql';
 import { difference } from 'lodash';
 import { OptionalKind, PropertySignatureStructure } from 'ts-morph';
@@ -27,7 +28,7 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
       name: abstractType.name,
       type: schema
         .getPossibleTypes(abstractType)
-        .map((possible) => `Types.${possible.name}`)
+        .map((possible) => `Types.${pascalCase(possible.name)}`)
         .join(' | '),
       isExported: true,
     });
@@ -65,6 +66,6 @@ const getProperties = (types: readonly GraphQLNamedType[]) =>
   sortBy(types, (type) => type.name).map(
     (type): OptionalKind<PropertySignatureStructure> => ({
       name: type.name,
-      type: `Types.${type.name}`,
+      type: `Types.${pascalCase(type.name)}`,
     })
   );

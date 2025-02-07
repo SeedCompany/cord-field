@@ -6,6 +6,8 @@ import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
 import {
+  AiAssistedTranslationLabels,
+  AiAssistedTranslationList,
   InternshipDomainLabels,
   InternshipPositionLabels,
   InternshipProgramLabels,
@@ -30,7 +32,6 @@ import {
   SecuredField,
   SubmitError,
   TextField,
-  TriStateBooleanField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import {
@@ -156,7 +157,13 @@ const fieldMapping: Record<
     <TextField {...props} label="Paratext Registry ID" />
   ),
   usingAIAssistedTranslation: ({ props }) => (
-    <TriStateBooleanField {...props} label="AI Assisted Translation" />
+    <EnumField
+      label="AI Assisted Translation"
+      options={AiAssistedTranslationList}
+      getLabel={(value) => AiAssistedTranslationLabels[value]!}
+      layout="two-column"
+      {...props}
+    />
   ),
 };
 
