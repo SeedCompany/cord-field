@@ -72,6 +72,7 @@ export const MediaInfoForm = ({
       {...props}
       initialValues={initialValues}
       sendIfClean="delete"
+      keepDirtyOnReinitialize
     >
       {({ handleSubmit }) => (
         <>
