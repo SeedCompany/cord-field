@@ -10,5 +10,7 @@ export * from './Story';
 export * from './User';
 export * from './Partner';
 export * from './FundingAccount';
+export * from './FieldRegion';
+export * from './FieldZone';
 
 export const getLookupId = (ref: { id: string } | Nil) => (ref ? ref.id : ref);
