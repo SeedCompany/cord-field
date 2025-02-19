@@ -1,0 +1,14 @@
+fragment userDataGridRow on User {
+  id
+  fullName
+  roles {
+    value
+  }
+  title {
+    value
+  }
+  email {
+    value
+  }
+  ...TogglePin
+}

@@ -1,0 +1,91 @@
+import {
+  DataGridProProps as DataGridProps,
+  GridColDef,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+} from '@mui/x-data-grid-pro';
+import { RoleLabels, RoleList } from '~/api/schema.graphql';
+import {
+  booleanColumn,
+  getInitialVisibility,
+  multiEnumColumn,
+  QuickFilterButton,
+  QuickFilterResetButton,
+  QuickFilters,
+  textColumn,
+  Toolbar,
+  useFilterToggle,
+} from '../Grid';
+import { LinkColumn } from '../Grid/Columns/LinkColumn';
+import { UserDataGridRowFragment as User } from './userDataGridRow.graphql';
+
+export const UserColumns: Array<GridColDef<User>> = [
+  {
+    headerName: 'Full Name',
+    field: 'fullName',
+    ...textColumn(),
+    width: 350,
+    hideable: false,
+    valueGetter: (_, row) => row.fullName,
+    serverFilter: (value) => ({ name: value }),
+  },
+  LinkColumn({
+    field: 'User',
+    headerName: '',
+    valueGetter: (_, user) => user,
+    destination: (id) => `/users/${id}`,
+    width: 60,
+  }),
+  {
+    headerName: 'Title',
+    field: 'title',
+    width: 350,
+    ...textColumn(),
+    valueGetter: (_, row) => row.title.value,
+  },
+  {
+    headerName: 'Roles',
+    description: 'Roles',
+    field: 'roles',
+    minWidth: 200,
+    flex: 1,
+    ...multiEnumColumn(RoleList, RoleLabels),
+    sortable: false,
+    valueFormatter: (_, { roles }) =>
+      roles.value.map((role) => RoleLabels[role]).join(', '),
+    valueGetter: (_, { roles }) => {
+      return roles.value;
+    },
+  },
+  {
+    headerName: 'Pinned',
+    field: 'pinned',
+    ...booleanColumn(),
+    valueGetter: (_, row) => row.pinned,
+  },
+];
+
+export const UserInitialState = {
+  pinnedColumns: {
+    left: UserColumns.slice(0, 2).map((column) => column.field),
+  },
+  columns: {
+    columnVisibilityModel: {
+      ...getInitialVisibility(UserColumns),
+      pinned: false,
+    },
+  },
+} satisfies DataGridProps['initialState'];
+
+export const UserToolbar = () => (
+  <Toolbar sx={{ justifyContent: 'flex-start', gap: 2 }}>
+    <GridToolbarColumnsButton />
+    <GridToolbarFilterButton />
+    <QuickFilters sx={{ flex: 1 }}>
+      <QuickFilterResetButton />
+      <QuickFilterButton {...useFilterToggle('pinned')}>
+        Pinned
+      </QuickFilterButton>
+    </QuickFilters>
+  </Toolbar>
+);
