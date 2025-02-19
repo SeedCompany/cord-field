@@ -2,6 +2,7 @@ query Users($input: UserListInput) {
   users(input: $input) {
     items {
       ...UserListItem
+      ...userDataGridRow
     }
     ...Pagination
   }
