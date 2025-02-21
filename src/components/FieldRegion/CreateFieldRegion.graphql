@@ -1,0 +1,7 @@
+mutation CreateFieldRegion($input: CreateFieldRegionInput!) {
+  createFieldRegion(input: $input) {
+    fieldRegion {
+      ...DisplayFieldRegion
+    }
+  }
+}
