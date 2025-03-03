@@ -90,6 +90,7 @@ export const typePolicies: TypePolicies = {
       projects: {},
       engagements: {},
       progressReports: {},
+      users: {},
     },
   },
 };

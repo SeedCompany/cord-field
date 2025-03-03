@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { UserGrid } from './UserGrid';
 
@@ -14,6 +14,7 @@ export const UserList = () => {
           People
         </Typography>
         <Box
+          component={Paper}
           sx={{
             containerType: 'size',
             flexDirection: 'column',
