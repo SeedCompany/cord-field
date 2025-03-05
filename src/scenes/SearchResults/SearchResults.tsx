@@ -48,6 +48,7 @@ export const SearchResults = () => {
           'Location',
           'Film',
           'Story',
+          'EthnologueLanguage',
         ],
       },
     },
