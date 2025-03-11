@@ -68,7 +68,7 @@ export const ProductFormFields = ({
   const product = productProp as Product | undefined;
 
   const [openedSection, onOpen] = useState<ProductKey | undefined>(
-    product ? undefined : 'produces'
+    product ? undefined : 'producesId'
   );
 
   return (
