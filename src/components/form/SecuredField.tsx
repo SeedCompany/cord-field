@@ -7,15 +7,17 @@ export interface SecuredFieldRenderProps<Name extends string = string> {
   disabled?: boolean;
 }
 
-export type ChangesOf<T extends GqlObject> = {
-  [K in keyof GqlTypeOf<T> &
-    keyof T &
-    string as GqlTypeOf<T>[K] extends SecuredRelation
-    ? `${K}Id`
-    : GqlTypeOf<T>[K] extends SecuredProp<any>
-    ? K
-    : never]?: Unsecure<GqlTypeOf<T>[K]>;
-};
+export type ChangesOf<T extends GqlObject> = T extends unknown
+  ? {
+      [K in keyof GqlTypeOf<T> &
+        keyof T &
+        string as GqlTypeOf<T>[K] extends SecuredRelation
+        ? `${K}Id`
+        : GqlTypeOf<T>[K] extends SecuredProp<any>
+        ? K
+        : never]?: Unsecure<GqlTypeOf<T>[K]>;
+    }
+  : never;
 
 type Unsecure<T> = T extends SecuredProp<infer U>
   ? U extends { id: string }
@@ -24,11 +26,11 @@ type Unsecure<T> = T extends SecuredProp<infer U>
   : T;
 type SecuredRelation = SecuredProp<{ id: string }>;
 
-export type SecuredEditableKeys<T extends GqlObject> = [
-  keyof ChangesOf<T>
-] extends [never]
-  ? string
-  : keyof ChangesOf<T> & string;
+type DistributedKeyOf<T> = T extends unknown ? keyof T & string : never;
+
+export type SecuredEditableKeys<T extends GqlObject> = DistributedKeyOf<
+  ChangesOf<T>
+>;
 
 /**
  * An experimental way to render a form field of a secured property.
