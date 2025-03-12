@@ -104,7 +104,7 @@ export const CreateProduct = () => {
     const createProduct = async () => {
       const {
         productType,
-        produces,
+        producesId,
         scriptureReferences,
         unspecifiedScripture,
         book,
@@ -158,7 +158,7 @@ export const CreateProduct = () => {
             input: {
               engagementId,
               ...inputs,
-              produces: produces!.id,
+              produces: producesId!.id,
               scriptureReferencesOverride: parsedScriptureReferences,
             },
           },

@@ -143,7 +143,7 @@ export const EditProduct = () => {
               product.produces.value?.__typename === 'Story' ||
               product.produces.value?.__typename === 'EthnoArt')
           ? {
-              produces: {
+              producesId: {
                 id: product.produces.value.id,
                 name: product.produces.value.name,
               },
@@ -195,7 +195,7 @@ export const EditProduct = () => {
 
       const {
         productType,
-        produces,
+        producesId,
         scriptureReferences,
         book,
         title,
@@ -248,7 +248,7 @@ export const EditProduct = () => {
             input: {
               id: product.id,
               ...input,
-              produces: produces!.id,
+              produces: producesId!.id,
               scriptureReferencesOverride: parsedScriptureReferences,
             },
           },

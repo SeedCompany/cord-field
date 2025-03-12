@@ -3,7 +3,7 @@ import { Many, many } from '@seedcompany/common';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { ComponentType, useMemo } from 'react';
-import { Except, Merge, Paths } from 'type-fest';
+import { Except, Merge, Paths, Split } from 'type-fest';
 import {
   CoerceNonPrimitives,
   FinancialReportingTypeLabels,
@@ -179,7 +179,7 @@ export const EditPartner = ({
           {many(editFields ?? []).map((name) => {
             const Field = fieldMapping[name];
 
-            const [prefix, suffix] = name.split('.');
+            const [prefix, suffix] = name.split('.') as Split<typeof name, '.'>;
             let obj: typeof partner | (typeof partner.organization.value & {}) =
               partner;
             if (prefix === 'organization') {
@@ -192,7 +192,7 @@ export const EditPartner = ({
               obj = partner.organization.value;
             }
             return (
-              <SecuredField obj={obj} name={suffix!} key={name}>
+              <SecuredField obj={obj} name={suffix} key={name}>
                 {(props) => (
                   <Field
                     props={{ ...props, name }}

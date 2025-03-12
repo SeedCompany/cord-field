@@ -1,6 +1,6 @@
 import { FormApi, FormState } from 'final-form';
 import { ComponentType, useState } from 'react';
-import { Except, Merge, UnionToIntersection } from 'type-fest';
+import { Except, Merge } from 'type-fest';
 import { FieldGroup, SecuredEditableKeys } from '../../../components/form';
 import { CompletionSection } from './CompletionSection';
 import { GoalsSection } from './GoalsSection';
@@ -10,26 +10,16 @@ import { OtherProductSection } from './OtherProductSection';
 import { PartnershipProducingMediumsSection } from './PartnershipProducingMediumsSection';
 import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.graphql';
 import { ProductFormValues } from './ProductForm';
-import {
-  ProductForm_DerivativeScriptureProduct_Fragment as DerivativeScriptureProduct,
-  ProductForm_DirectScriptureProduct_Fragment as DirectScriptureProduct,
-  ProductFormFragment,
-} from './ProductForm.graphql';
+import { ProductFormFragment } from './ProductForm.graphql';
 import { ProductSection } from './ProductSection';
 import { ProgressMeasurementSection } from './ProgressMeasurementSection';
 import { ProgressTargetSection } from './ProgressTargetSection';
 import { ScriptureReferencesSection } from './ScriptureReferencesSection';
 import { StepsSection } from './StepsSection';
 
-export type Product = UnionToIntersection<ProductFormFragment>;
+export type Product = ProductFormFragment;
 
-export type ProductKey = string &
-  (
-    | SecuredEditableKeys<DirectScriptureProduct>
-    | Omit<SecuredEditableKeys<DerivativeScriptureProduct>, 'producesId'>
-    | 'produces'
-    | 'otherProduct'
-  );
+export type ProductKey = SecuredEditableKeys<Product>;
 
 type FormProps<T> = FormState<T> & { form: FormApi<T> };
 
@@ -58,17 +48,15 @@ const sections: ReadonlyArray<ComponentType<SectionProps>> = [
 ];
 
 export const ProductFormFields = ({
-  product: productProp,
+  product,
   engagement,
   ...props
 }: Merge<
   Except<SectionProps, 'accordionState'>,
   { product?: ProductFormFragment }
 >) => {
-  const product = productProp as Product | undefined;
-
   const [openedSection, onOpen] = useState<ProductKey | undefined>(
-    product ? undefined : 'produces'
+    product ? undefined : 'producesId'
   );
 
   return (
