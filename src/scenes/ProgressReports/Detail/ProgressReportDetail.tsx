@@ -20,7 +20,6 @@ import { Error } from '../../../components/Error';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink, FabLink, Navigate } from '../../../components/Routing';
-import { SkipReportButton } from '../../Projects/Reports/SkipReportButton';
 import { ProgressReportDrawer } from '../EditForm';
 import {
   ProgressReportDetailDocument,
@@ -118,9 +117,6 @@ export const ProgressReportDetail = () => {
                 <Edit />
               </FabLink>
             </Tooltip>
-          </Grid>
-          <Grid item>
-            <SkipReportButton report={report} />
           </Grid>
         </Grid>
 
