@@ -153,7 +153,7 @@ const fieldMapping: Record<
     <CheckboxField {...props} label="Open to Investor Visitor" />
   ),
   paratextRegistryId: ({ props }) => (
-    <TextField {...props} label="Paratext Registry ID" />
+    <TextField {...props} label="Paratext ID" />
   ),
   usingAIAssistedTranslation: ({ props }) => (
     <EnumField

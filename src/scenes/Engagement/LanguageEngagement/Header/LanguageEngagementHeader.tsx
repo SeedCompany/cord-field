@@ -156,12 +156,11 @@ export const LanguageEngagementHeader = ({
           <DataButton
             onClick={() => show(['paratextRegistryId'])}
             secured={ptRegistryId}
-            redacted="You do not have permission to view Paratext Registry ID"
+            redacted="You do not have permission to view Paratext ID"
             children={
-              ptRegistryId.value &&
-              `Paratext Registry ID: ${ptRegistryId.value}`
+              ptRegistryId.value && `Paratext ID: ${ptRegistryId.value}`
             }
-            empty="Enter Paratext Registry ID"
+            empty="Enter Paratext ID"
           />
         </Grid>
         <Grid item>
