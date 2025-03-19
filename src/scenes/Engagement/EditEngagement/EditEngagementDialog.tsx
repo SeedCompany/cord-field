@@ -50,8 +50,7 @@ import {
 export type Engagement = InternshipEngagement | LanguageEngagement;
 
 export type EditableEngagementField = ExtractStrict<
-  | SecuredEditableKeys<LanguageEngagement>
-  | SecuredEditableKeys<InternshipEngagement>,
+  SecuredEditableKeys<Engagement>,
   // Add more fields here as needed
   | 'dateRangeOverride'
   | 'completeDate'
@@ -154,7 +153,7 @@ const fieldMapping: Record<
     <CheckboxField {...props} label="Open to Investor Visitor" />
   ),
   paratextRegistryId: ({ props }) => (
-    <TextField {...props} label="Paratext Registry ID" />
+    <TextField {...props} label="Paratext ID" />
   ),
   usingAIAssistedTranslation: ({ props }) => (
     <EnumField
@@ -198,16 +197,7 @@ export const EditEngagementDialog = ({
   const fields = editFields.map((name) => {
     const Field = fieldMapping[name];
     return (
-      <SecuredField
-        obj={engagement}
-        // @ts-expect-error this error comes from the fact that we are trying to
-        // handle the union of both engagement type's fields. TS correctly
-        // takes the intersection of keys instead of a union, which would be unsafe.
-        // In this case, we verified that the keys are safe with EditableEngagementField
-        // type and SecuredField also gracefully handles bad keys at runtime.
-        name={name}
-        key={name}
-      >
+      <SecuredField obj={engagement} name={name} key={name}>
         {(props) => <Field props={props} engagement={engagement} />}
       </SecuredField>
     );
