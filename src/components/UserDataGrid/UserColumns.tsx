@@ -50,9 +50,6 @@ export const UserColumns: Array<GridColDef<User>> = [
     minWidth: 200,
     flex: 1,
     ...multiEnumColumn(RoleList, RoleLabels),
-    sortable: false,
-    valueFormatter: (_, { roles }) =>
-      roles.value.map((role) => RoleLabels[role]).join(', '),
     valueGetter: (_, { roles }) => {
       return roles.value;
     },
@@ -67,7 +64,7 @@ export const UserColumns: Array<GridColDef<User>> = [
 
 export const UserInitialState = {
   pinnedColumns: {
-    left: UserColumns.slice(0, 2).map((column) => column.field),
+    left: UserColumns.slice(0, 1).map((column) => column.field),
   },
   columns: {
     columnVisibilityModel: {
