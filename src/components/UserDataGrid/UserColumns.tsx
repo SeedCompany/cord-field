@@ -16,25 +16,15 @@ import {
   Toolbar,
   useFilterToggle,
 } from '../Grid';
-import { LinkColumn } from '../Grid/Columns/LinkColumn';
+import { UserNameColumn } from '../Grid/Columns/UserNameColumn';
 import { UserDataGridRowFragment as User } from './userDataGridRow.graphql';
 
 export const UserColumns: Array<GridColDef<User>> = [
-  {
-    headerName: 'Full Name',
+  UserNameColumn({
     field: 'fullName',
-    ...textColumn(),
-    width: 350,
-    hideable: false,
-    valueGetter: (_, row) => row.fullName,
-    serverFilter: (value) => ({ name: value }),
-  },
-  LinkColumn({
-    field: 'User',
-    headerName: '',
+    headerName: 'Name',
     valueGetter: (_, user) => user,
-    destination: (id) => `/users/${id}`,
-    width: 60,
+    serverFilter: (value) => ({ name: value }),
   }),
   {
     headerName: 'Title',
