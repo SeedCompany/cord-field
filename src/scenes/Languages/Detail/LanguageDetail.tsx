@@ -80,6 +80,7 @@ export const LanguageDetail = () => {
 
   const language = data?.language;
   const {
+    id,
     ethnologue,
     locations,
     projects,
@@ -163,6 +164,7 @@ export const LanguageDetail = () => {
               wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>
+          <DisplayProperty label="Id" value={id} loading={!language} />
           <DisplayProperty
             label="Pronunciation Guide"
             value={displayNamePronunciation?.value}
