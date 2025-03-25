@@ -2,6 +2,7 @@ query Partners($input: PartnerListInput!) {
   partners(input: $input) {
     items {
       ...PartnerListItem
+      ...partnerDataGridRow
     }
     ...Pagination
   }
