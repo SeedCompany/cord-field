@@ -1,0 +1,14 @@
+fragment userDataGridRow on User {
+  id
+  ...UserLookupItem
+  roles {
+    value
+  }
+  title {
+    value
+  }
+  email {
+    value
+  }
+  ...TogglePin
+}
