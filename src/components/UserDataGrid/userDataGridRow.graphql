@@ -1,6 +1,6 @@
 fragment userDataGridRow on User {
   id
-  fullName
+  ...UserLookupItem
   roles {
     value
   }

@@ -1,7 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { Merge } from 'type-fest';
+import { UserLookupItem } from '../../form/Lookup';
 import { Link } from '../../Routing';
-import { UserDataGridRowFragment as User } from '../../UserDataGrid/userDataGridRow.graphql';
 import {
   columnWithDefaults,
   RowLike,
@@ -12,7 +12,7 @@ import { textColumn } from '../ColumnTypes/textColumn';
 export const UserNameColumn = <
   const Input extends Merge<
     GridColDef<Row>,
-    WithValueGetterReturning<User, Row>
+    WithValueGetterReturning<UserLookupItem, Row>
   >,
   Row extends RowLike
 >({
