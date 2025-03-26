@@ -194,7 +194,7 @@ export const LanguageDetail = () => {
             loading={!language}
           />
           <DisplayProperty
-            label="Registry of Dialects Code"
+            label="Registry of Language Varieties (ROLV) Code"
             value={registryOfLanguageVarietiesCode?.value}
             loading={!language}
           />
