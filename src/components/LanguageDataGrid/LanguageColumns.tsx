@@ -51,6 +51,12 @@ export const LanguageColumns: Array<GridColDef<Language>> = [
   },
   SensitivityColumn({}),
   {
+    field: 'id',
+    headerName: 'ID',
+    valueGetter: (_, language) => language.id,
+    width: 150,
+  },
+  {
     field: 'pinned',
     headerName: 'Pinned',
     ...booleanColumn(),
