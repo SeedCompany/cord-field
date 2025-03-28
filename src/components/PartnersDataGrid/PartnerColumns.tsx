@@ -33,7 +33,7 @@ export const PartnerColumns: Array<GridColDef<Partner>> = [
   {
     field: 'globalInnovationsClient',
     headerName: 'GPC',
-    description: 'Global Partners Client',
+    description: 'Growth Partners Client',
     ...booleanColumn(),
     valueGetter: (_, { globalInnovationsClient }) =>
       globalInnovationsClient.value,
