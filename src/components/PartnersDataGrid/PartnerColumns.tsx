@@ -25,7 +25,7 @@ import { PartnerDataGridRowFragment as Partner } from './partnerDataGridRow.grap
 
 export const PartnerColumns: Array<GridColDef<Partner>> = [
   PartnerNameColumn({
-    field: 'name',
+    field: 'organization.name',
     headerName: 'Name',
     valueGetter: (_, partner) => partner,
     width: 300,
