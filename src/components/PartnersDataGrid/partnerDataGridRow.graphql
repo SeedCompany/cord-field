@@ -1,10 +1,8 @@
 fragment partnerDataGridRow on Partner {
   id
+  ...PartnerLookupItem
   organization {
     value {
-      name {
-        value
-      }
       acronym {
         value
       }

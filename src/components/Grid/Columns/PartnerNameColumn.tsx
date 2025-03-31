@@ -1,6 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { Merge } from 'type-fest';
-import { PartnerDataGridRowFragment as Partner } from '../../PartnersDataGrid/partnerDataGridRow.graphql';
+import { PartnerLookupItem } from '../../form/Lookup';
 import { Link } from '../../Routing';
 import {
   columnWithDefaults,
@@ -12,7 +12,7 @@ import { textColumn } from '../ColumnTypes/textColumn';
 export const PartnerNameColumn = <
   const Input extends Merge<
     GridColDef<Row>,
-    WithValueGetterReturning<Partner, Row>
+    WithValueGetterReturning<PartnerLookupItem, Row>
   >,
   Row extends RowLike
 >({
