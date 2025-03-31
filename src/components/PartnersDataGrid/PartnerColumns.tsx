@@ -31,6 +31,12 @@ export const PartnerColumns: Array<GridColDef<Partner>> = [
     width: 300,
   }),
   {
+    field: 'organization.acronym',
+    headerName: 'Acronym',
+    valueGetter: (_, { organization }) => organization.value?.acronym.value,
+    width: 100,
+  },
+  {
     field: 'globalInnovationsClient',
     headerName: 'GPC',
     description: 'Growth Partners Client',
@@ -64,12 +70,6 @@ export const PartnerColumns: Array<GridColDef<Partner>> = [
       return financialReportingTypes.value;
     },
     width: 300,
-  },
-  {
-    field: 'organization.acronym',
-    headerName: 'Acronym',
-    valueGetter: (_, { organization }) => organization.value?.acronym.value,
-    flex: 1,
   },
   {
     field: 'pinned',
