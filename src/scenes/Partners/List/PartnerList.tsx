@@ -1,4 +1,4 @@
-import { type Tabs as __Tabs, Paper, Stack, Typography } from '@mui/material';
+import { Paper, Stack, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { PartnerGrid } from './PartnerGrid';
 
