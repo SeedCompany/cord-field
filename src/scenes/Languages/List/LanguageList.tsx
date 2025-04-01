@@ -10,16 +10,19 @@ export const LanguageList = () => {
         <Typography variant="h2" paragraph>
           Languages
         </Typography>
-        <Paper
-          sx={(theme) => ({
-            containerType: 'size',
-            flex: 1,
-            minHeight: 375,
-            maxWidth: `${theme.breakpoints.values.lg}px`,
-          })}
-        >
-          <LanguageGrid />
-        </Paper>
+        <Stack sx={{ flex: 1, containerType: 'size' }}>
+          <Paper
+            sx={{
+              flex: 1,
+              minHeight: 375,
+              maxHeight: '100cqh',
+              width: 'min-content',
+              maxWidth: '100cqw',
+            }}
+          >
+            <LanguageGrid />
+          </Paper>
+        </Stack>
       </Stack>
     </Stack>
   );
