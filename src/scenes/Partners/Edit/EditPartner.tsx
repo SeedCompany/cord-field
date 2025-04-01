@@ -26,7 +26,12 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { UserField, UserLookupItem } from '../../../components/form/Lookup';
+import {
+  FieldRegionField,
+  LocationField,
+  UserField,
+  UserLookupItem,
+} from '../../../components/form/Lookup';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
@@ -36,6 +41,8 @@ type PartnerFormValues = {
     UpdatePartner,
     {
       pointOfContactId: UserLookupItem | null;
+      fieldRegions: PartnerDetailsFragment['fieldRegions']['value'];
+      countries: PartnerDetailsFragment['countries']['value'];
     }
   >;
   organization: UpdateOrganization;
@@ -102,6 +109,12 @@ const fieldMapping = {
   'partner.startDate': ({ props }) => (
     <DateField {...props} label="Start Date" />
   ),
+  'partner.fieldRegions': ({ props }) => {
+    return <FieldRegionField {...props} label="Field Regions" multiple />;
+  },
+  'partner.countries': ({ props }) => (
+    <LocationField {...props} label="Countries" multiple />
+  ),
   'organization.name': ({ props }) => (
     <TextField {...props} required label="Name" />
   ),
@@ -146,6 +159,8 @@ export const EditPartner = ({
         address: partner.address.value,
         startDate: partner.startDate.value,
         pointOfContactId: partner.pointOfContact.value ?? null,
+        fieldRegions: partner.fieldRegions.value,
+        countries: partner.countries.value,
       },
       organization: {
         id: organization.id,
@@ -167,6 +182,8 @@ export const EditPartner = ({
             partner: {
               ...partner,
               pointOfContactId: partner.pointOfContactId?.id ?? null,
+              fieldRegions: partner.fieldRegions.map((region) => region.id),
+              countries: partner.countries.map((country) => country.id),
             },
             organization,
           },
