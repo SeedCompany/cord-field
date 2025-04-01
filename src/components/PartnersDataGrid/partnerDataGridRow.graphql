@@ -1,0 +1,21 @@
+fragment partnerDataGridRow on Partner {
+  id
+  ...PartnerLookupItem
+  organization {
+    value {
+      acronym {
+        value
+      }
+    }
+  }
+  globalInnovationsClient {
+    value
+  }
+  types {
+    value
+  }
+  financialReportingTypes {
+    value
+  }
+  ...TogglePin
+}

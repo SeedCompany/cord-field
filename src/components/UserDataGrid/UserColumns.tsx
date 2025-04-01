@@ -37,8 +37,7 @@ export const UserColumns: Array<GridColDef<User>> = [
     headerName: 'Roles',
     description: 'Roles',
     field: 'roles',
-    minWidth: 200,
-    flex: 1,
+    width: 200,
     ...multiEnumColumn(RoleList, RoleLabels),
     valueGetter: (_, { roles }) => {
       return roles.value;
