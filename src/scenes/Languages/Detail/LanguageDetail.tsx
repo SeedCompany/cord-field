@@ -164,6 +164,20 @@ export const LanguageDetail = () => {
               wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>
+          <Grid direction="row" container spacing={2} alignItems="center">
+            <BooleanProperty
+              label="Reporting Language"
+              redacted="You do not have permission to view whether the language is a reporting language"
+              data={language?.isLanguageOfReporting}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <BooleanProperty
+              label="Wider Communication Language"
+              redacted="You do not have permission to view whether the language is a wider communication language"
+              data={language?.isLanguageOfWiderCommunication}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+          </Grid>
           <DisplayProperty label="ID" value={id} loading={!language} />
           <DisplayProperty
             label="Pronunciation Guide"
@@ -218,11 +232,9 @@ export const LanguageDetail = () => {
             value={sponsorEstimatedEndDate?.value?.fiscalYear}
             loading={!language}
           />
-
           <Grid item>
             <FirstScripture data={data?.language} />
           </Grid>
-
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Grid
