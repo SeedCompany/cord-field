@@ -55,6 +55,7 @@ export type LookupFieldProps<
     >;
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
     getOptionLabel: (option: T) => string | null | undefined;
+    disabledOption?: (option: T) => boolean;
     createPower?: Power;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, false>,
@@ -93,6 +94,7 @@ export function LookupField<
   variant,
   createPower,
   margin,
+  disabledOption,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const { powers } = useSession();
@@ -179,7 +181,6 @@ export function LookupField<
     }
 
     const resultsWithCurrent = [...data.search.items, ...selected];
-
     // Filter out duplicates caused by selected items also appearing in search results.
     return uniqBy(resultsWithCurrent, compareBy);
   }, [data?.search.items, field.value, compareBy, multiple]);
@@ -187,6 +188,7 @@ export function LookupField<
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
       isOptionEqualToValue={(a, b) => compareBy(a) === compareBy(b)}
+      getOptionDisabled={disabledOption}
       loadingText={<CircularProgress size={16} />}
       // Otherwise it looks like an item is selected when it's just a search value
       clearOnBlur

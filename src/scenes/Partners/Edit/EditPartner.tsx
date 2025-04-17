@@ -26,7 +26,12 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { UserField, UserLookupItem } from '../../../components/form/Lookup';
+import {
+  LanguageField,
+  LanguageLookupItem,
+  UserField,
+  UserLookupItem,
+} from '../../../components/form/Lookup';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
@@ -36,6 +41,9 @@ type PartnerFormValues = {
     UpdatePartner,
     {
       pointOfContactId: UserLookupItem | null;
+      languageOfReportingId: LanguageLookupItem | null;
+      languageOfWiderCommunicationId: LanguageLookupItem | null;
+      languagesOfConsulting: PartnerDetailsFragment['languagesOfConsulting']['value'];
     }
   >;
   organization: UpdateOrganization;
@@ -108,6 +116,25 @@ const fieldMapping = {
   'organization.acronym': ({ props }) => (
     <TextField {...props} label="Acronym" />
   ),
+  'partner.languageOfReportingId': ({ props }) => (
+    <LanguageField
+      {...props}
+      label="Language of Reporting"
+      CreateDialogForm={undefined}
+      disabledOption={(option) => !option.isLanguageOfReporting.value}
+    />
+  ),
+  'partner.languageOfWiderCommunicationId': ({ props }) => (
+    <LanguageField
+      {...props}
+      label="Language of Wider Communication"
+      CreateDialogForm={undefined}
+      disabledOption={(option) => !option.isLanguageOfWiderCommunication.value}
+    />
+  ),
+  'partner.languagesOfConsulting': ({ props }) => (
+    <LanguageField {...props} multiple label="Languages of Consulting" />
+  ),
 } satisfies PossibleFields;
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
@@ -146,6 +173,10 @@ export const EditPartner = ({
         address: partner.address.value,
         startDate: partner.startDate.value,
         pointOfContactId: partner.pointOfContact.value ?? null,
+        languageOfReportingId: partner.languageOfReporting.value ?? null,
+        languageOfWiderCommunicationId:
+          partner.languageOfWiderCommunication.value ?? null,
+        languagesOfConsulting: partner.languagesOfConsulting.value,
       },
       organization: {
         id: organization.id,
@@ -167,6 +198,12 @@ export const EditPartner = ({
             partner: {
               ...partner,
               pointOfContactId: partner.pointOfContactId?.id ?? null,
+              languageOfWiderCommunicationId:
+                partner.languageOfWiderCommunicationId?.id ?? null,
+              languageOfReportingId: partner.languageOfReportingId?.id ?? null,
+              languagesOfConsulting: partner.languagesOfConsulting.map(
+                (lang) => lang.id
+              ),
             },
             organization,
           },

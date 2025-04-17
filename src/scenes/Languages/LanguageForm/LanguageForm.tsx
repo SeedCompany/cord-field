@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@mui/material';
 import { setIn } from 'final-form';
 import { useMemo } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { defaultHandlers } from '~/api';
 import {
@@ -47,12 +46,6 @@ export type LanguageFormProps<Mutation extends LanguageMutation> =
     language?: LanguageFormFragment;
   };
 
-const useStyles = makeStyles()(() => ({
-  content: {
-    overflow: 'hidden', // prevent scroll bars from negative margins of Grid
-  },
-}));
-
 const decorators = [
   ...DialogForm.defaultDecorators,
   matchFieldIfSame(`language.name`, `language.displayName`),
@@ -62,7 +55,6 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
   language,
   ...rest
 }: LanguageFormProps<Mutation>) => {
-  const { classes } = useStyles();
   const formatNumber = useNumberFormatter();
   const maxPopulation = useMemo(
     () =>
@@ -94,7 +86,13 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
     >
       {({ values }: { values: Partial<LanguageFormValues<Mutation>> }) => {
         return (
-          <Grid container spacing={3} className={classes.content}>
+          <Grid
+            container
+            spacing={3}
+            sx={{
+              overflow: 'hidden', // prevent scroll bars from negative margins of Grid
+            }}
+          >
             <Grid item xs={12}>
               <SubmitError align="left" />
             </Grid>
@@ -330,36 +328,65 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                     </SecuredField>
                   </Grid>
                 </FieldGroup>
-              </Grid>
-            )}
-            {canReadAny(
-              language,
-              true,
-              'leastOfThese',
-              'leastOfTheseReason'
-            ) && (
-              <Grid item>
-                <Typography variant="h4">Least of These</Typography>
-                <SecuredField obj={language} name="leastOfThese">
-                  {(props) => (
-                    <CheckboxField
-                      label="Is this a Least of These partnership?"
-                      {...props}
-                    />
-                  )}
-                </SecuredField>
-                <SecuredField obj={language} name="leastOfTheseReason">
-                  {(props) => (
-                    <TextField
-                      label="Reasoning"
-                      multiline
-                      placeholder="Enter Reasoning"
-                      helperText="Why is this language a Least of These partnership?"
-                      minRows={2}
-                      {...props}
-                    />
-                  )}
-                </SecuredField>
+                {canReadAny(
+                  language,
+                  true,
+                  'isLanguageOfReporting',
+                  'isLanguageOfWiderCommunication'
+                ) && (
+                  <Grid item xs={12} sx={{ marginTop: 2 }}>
+                    <Typography variant="h4">Communication</Typography>
+                    <SecuredField obj={language} name="isLanguageOfReporting">
+                      {(props) => (
+                        <CheckboxField
+                          label="Is this a reporting language?"
+                          {...props}
+                        />
+                      )}
+                    </SecuredField>
+                    <SecuredField
+                      obj={language}
+                      name="isLanguageOfWiderCommunication"
+                    >
+                      {(props) => (
+                        <CheckboxField
+                          label="Is this a wider communication language?"
+                          {...props}
+                        />
+                      )}
+                    </SecuredField>
+                  </Grid>
+                )}
+                {canReadAny(
+                  language,
+                  true,
+                  'leastOfThese',
+                  'leastOfTheseReason'
+                ) && (
+                  <Grid item xs={12} sx={{ marginTop: 2 }}>
+                    <Typography variant="h4">Least of These</Typography>
+                    <SecuredField obj={language} name="leastOfThese">
+                      {(props) => (
+                        <CheckboxField
+                          label="Is this a Least of These partnership?"
+                          {...props}
+                        />
+                      )}
+                    </SecuredField>
+                    <SecuredField obj={language} name="leastOfTheseReason">
+                      {(props) => (
+                        <TextField
+                          label="Reasoning"
+                          multiline
+                          placeholder="Enter Reasoning"
+                          helperText="Why is this language a Least of These partnership?"
+                          minRows={2}
+                          {...props}
+                        />
+                      )}
+                    </SecuredField>
+                  </Grid>
+                )}
               </Grid>
             )}
           </Grid>
