@@ -1,5 +1,6 @@
 import { isNotFalsy, mapValues } from '@seedcompany/common';
 import { FORM_ERROR, FormApi, setIn, SubmissionErrors } from 'final-form';
+import { isValidElement, ReactElement } from 'react';
 import { Promisable } from 'type-fest';
 import { ErrorMap, getErrorInfo, ValidationError } from './error.types';
 
@@ -53,7 +54,11 @@ export type ErrorHandler<E> =
     ) => Promisable<ErrorHandlerResult>);
 
 type NextHandler<E> = (e: E) => Promisable<ErrorHandlerResult>;
-export type ErrorHandlerResult = string | SubmissionErrors | undefined;
+export type ErrorHandlerResult =
+  | string
+  | ReactElement
+  | SubmissionErrors
+  | undefined;
 
 interface HandlerUtils {
   /** Does the form have this field registered? */
@@ -140,5 +145,7 @@ const resolveHandler =
       typeof handler === 'function'
         ? await handler(error, next, utils)
         : handler;
-    return typeof result === 'string' ? { [FORM_ERROR]: result } : result;
+    return typeof result === 'string' || isValidElement(result)
+      ? { [FORM_ERROR]: result }
+      : result;
   };
