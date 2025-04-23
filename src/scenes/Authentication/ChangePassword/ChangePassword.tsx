@@ -42,7 +42,7 @@ export const ChangePassword = (props: ChangePasswordProps) => {
         });
       }}
     >
-      <SubmitError align="left" />
+      <SubmitError />
       <PasswordField
         name="oldPassword"
         label="Old Password"
