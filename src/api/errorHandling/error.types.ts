@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { assert } from 'ts-essentials';
-import { ProductStep } from '../schema.graphql';
+import { ProductStep, Project } from '../schema.graphql';
 
 interface CordErrorExtensions {
   codes: readonly Code[];
@@ -26,6 +26,7 @@ export interface ErrorMap {
   Duplicate: DuplicateError;
   Unauthorized: InputError;
   StepNotPlanned: StepNotPlannedError;
+  EngagementDateOverrideConflict: EngagementDateOverrideConflictError;
 
   /**
    * This is a special one that allows a default handler for any
@@ -89,6 +90,18 @@ export interface StepNotPlannedError extends InputError {
   productId: string;
   step: ProductStep;
   index: number;
+}
+
+export interface EngagementDateOverrideConflictError extends InputError {
+  readonly project: Pick<Project, 'id' | 'name' | 'mouStart' | 'mouEnd'>;
+  readonly engagements: ReadonlyArray<
+    Readonly<{
+      id: string;
+      label: string;
+      point: 'start' | 'end';
+      date: string;
+    }>
+  >;
 }
 
 export const isErrorCode = <K extends keyof ErrorMap>(
