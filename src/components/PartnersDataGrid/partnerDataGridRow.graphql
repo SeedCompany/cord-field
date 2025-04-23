@@ -17,5 +17,8 @@ fragment partnerDataGridRow on Partner {
   financialReportingTypes {
     value
   }
+  startDate {
+    value
+  }
   ...TogglePin
 }

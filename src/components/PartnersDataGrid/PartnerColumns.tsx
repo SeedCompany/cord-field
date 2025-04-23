@@ -12,6 +12,7 @@ import {
 } from '~/api/schema.graphql';
 import {
   booleanColumn,
+  dateColumn,
   getInitialVisibility,
   multiEnumColumn,
   QuickFilterButton,
@@ -35,6 +36,13 @@ export const PartnerColumns: Array<GridColDef<Partner>> = [
     headerName: 'Acronym',
     valueGetter: (_, { organization }) => organization.value?.acronym.value,
     width: 100,
+  },
+  {
+    headerName: 'Start Date',
+    field: 'startDate',
+    ...dateColumn(),
+    valueGetter: dateColumn.valueGetter((_, { startDate }) => startDate.value),
+    width: 130,
   },
   {
     field: 'globalInnovationsClient',
