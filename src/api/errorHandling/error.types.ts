@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { assert } from 'ts-essentials';
+import { GqlTypeMapMain } from '../schema';
 import { ProductStep, Project } from '../schema.graphql';
 
 interface CordErrorExtensions {
@@ -25,6 +26,7 @@ export interface ErrorMap {
   Input: InputError;
   Duplicate: DuplicateError;
   Unauthorized: InputError;
+  MissingRequiredFields: MissingRequiredFieldsError;
   StepNotPlanned: StepNotPlannedError;
   EngagementDateOverrideConflict: EngagementDateOverrideConflictError;
 
@@ -84,6 +86,17 @@ export interface InputError extends ErrorInfo {
 }
 
 export type DuplicateError = Required<InputError>;
+
+export interface MissingRequiredFieldsError extends InputError {
+  readonly resource: { name: keyof GqlTypeMapMain };
+  readonly object: { id: string };
+  readonly missing: ReadonlyArray<
+    Readonly<{
+      field: string;
+      description: string;
+    }>
+  >;
+}
 
 export interface StepNotPlannedError extends InputError {
   field: string;
