@@ -6,6 +6,7 @@ import {
   GridValueGetter as ValueGetter,
 } from '@mui/x-data-grid';
 import { Nil } from '@seedcompany/common';
+import { DateTime } from 'luxon';
 import { DateFilter } from '~/api/schema.graphql';
 import { CalendarDate } from '~/common';
 import { GridHeaderAddFilterButton } from '../GridHeaderAddFilterButton';
@@ -41,9 +42,15 @@ dateColumn.valueGetter =
     if (!value) {
       return null;
     }
+
     if (CalendarDate.isDate(value)) {
       return value.toJSDate();
     }
+
+    if (DateTime.isDateTime(value)) {
+      return value.toJSDate();
+    }
+
     if (typeof value === 'string') {
       return CalendarDate.fromISO(value).toJSDate();
     }

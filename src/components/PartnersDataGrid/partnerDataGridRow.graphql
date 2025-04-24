@@ -20,5 +20,6 @@ fragment partnerDataGridRow on Partner {
   startDate {
     value
   }
+  createdAt
   ...TogglePin
 }
