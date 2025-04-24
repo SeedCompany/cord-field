@@ -1,4 +1,4 @@
-import { isNotFalsy, mapValues } from '@seedcompany/common';
+import { groupBy, isNotFalsy, mapValues } from '@seedcompany/common';
 import { FORM_ERROR, FormApi, setIn, SubmissionErrors } from 'final-form';
 import { isValidElement, ReactElement } from 'react';
 import { Promisable } from 'type-fest';
@@ -63,6 +63,8 @@ export type ErrorHandlerResult =
 interface HandlerUtils {
   /** Does the form have this field registered? */
   hasField: (field: string) => boolean;
+  /** Finds a registered field matching the given name */
+  findField: (field: string | RegExp) => string | undefined;
 }
 
 const expandDotNotation = (input: Record<string, any>) =>
@@ -87,6 +89,50 @@ export const defaultHandlers = {
     e.field && hasField(e.field) ? setIn({}, e.field, e.message) : next(e),
   Duplicate: (e, next, { hasField }) =>
     hasField(e.field) ? setIn({}, e.field, 'Already in use') : next(e),
+  MissingRequiredFields: (e, next, { findField }) => {
+    const { in: inForm, out: outOfForm } = e.missing.reduce(
+      (res, missing) => {
+        const formFieldName =
+          findField(missing.field) ??
+          // Also find with a path prefix: mouStart -> project.mouStart
+          findField(RegExp(`\\.${missing.field}$`)) ??
+          // Also find with Id suffix: primaryLocation -> primaryLocationId
+          findField(missing.field + 'Id') ??
+          findField(RegExp(`\\.${missing.field}Id$`));
+        if (formFieldName) {
+          res.in.push({
+            ...missing,
+            field: formFieldName,
+          });
+        } else {
+          res.out.push(missing);
+        }
+        return res;
+      },
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      { in: [], out: [] } as Record<
+        'in' | 'out',
+        Array<(typeof e.missing)[number]>
+      >
+    );
+    return {
+      ...inForm.reduce(
+        (res, missing) =>
+          setIn(res, missing.field, 'Required when ' + missing.description),
+        {}
+      ),
+      ...(outOfForm.length > 0 && {
+        [FORM_ERROR]: groupBy(outOfForm, (x) => x.description)
+          .map((fields) =>
+            [
+              `The following fields are required when ${fields[0].description}:`,
+              ...fields.map((x) => `  - ${x.field}`),
+            ].join('\n')
+          )
+          .join('\n\n'),
+      }),
+    };
+  },
 
   // Assume server errors are handled separately
   // Return failure but no error message
@@ -109,6 +155,7 @@ export const handleFormError = async <T, P>(
 
   const utils: HandlerUtils = {
     hasField: (field) => form.getRegisteredFields().includes(field),
+    findField: makeFindField(form.getRegisteredFields()),
   };
 
   const mergedHandlers = { ...defaultHandlers, ...handlers };
@@ -149,3 +196,8 @@ const resolveHandler =
       ? { [FORM_ERROR]: result }
       : result;
   };
+
+const makeFindField = (fields: readonly string[]) => (field: string | RegExp) =>
+  typeof field === 'string' && fields.includes(field)
+    ? field
+    : fields.find((f) => f.match(field));
