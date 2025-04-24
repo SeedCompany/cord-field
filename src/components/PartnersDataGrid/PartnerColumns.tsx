@@ -45,6 +45,12 @@ export const PartnerColumns: Array<GridColDef<Partner>> = [
     width: 130,
   },
   {
+    headerName: 'Created Date',
+    field: 'createdAt',
+    ...dateColumn(),
+    width: 130,
+  },
+  {
     field: 'globalInnovationsClient',
     headerName: 'GPC',
     description: 'Growth Partners Client',
