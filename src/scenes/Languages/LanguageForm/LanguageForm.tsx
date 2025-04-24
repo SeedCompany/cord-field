@@ -96,7 +96,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
         return (
           <Grid container spacing={3} className={classes.content}>
             <Grid item xs={12}>
-              <SubmitError align="left" />
+              <SubmitError />
             </Grid>
             {canReadAny(
               language,

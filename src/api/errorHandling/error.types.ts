@@ -1,6 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import { assert } from 'ts-essentials';
-import { ProductStep } from '../schema.graphql';
+import { GqlTypeMapMain } from '../schema';
+import { ProductStep, Project } from '../schema.graphql';
 
 interface CordErrorExtensions {
   codes: readonly Code[];
@@ -25,7 +26,9 @@ export interface ErrorMap {
   Input: InputError;
   Duplicate: DuplicateError;
   Unauthorized: InputError;
+  MissingRequiredFields: MissingRequiredFieldsError;
   StepNotPlanned: StepNotPlannedError;
+  EngagementDateOverrideConflict: EngagementDateOverrideConflictError;
 
   /**
    * This is a special one that allows a default handler for any
@@ -84,11 +87,34 @@ export interface InputError extends ErrorInfo {
 
 export type DuplicateError = Required<InputError>;
 
+export interface MissingRequiredFieldsError extends InputError {
+  readonly resource: { name: keyof GqlTypeMapMain };
+  readonly object: { id: string };
+  readonly missing: ReadonlyArray<
+    Readonly<{
+      field: string;
+      description: string;
+    }>
+  >;
+}
+
 export interface StepNotPlannedError extends InputError {
   field: string;
   productId: string;
   step: ProductStep;
   index: number;
+}
+
+export interface EngagementDateOverrideConflictError extends InputError {
+  readonly project: Pick<Project, 'id' | 'name' | 'mouStart' | 'mouEnd'>;
+  readonly engagements: ReadonlyArray<
+    Readonly<{
+      id: string;
+      label: string;
+      point: 'start' | 'end';
+      date: string;
+    }>
+  >;
 }
 
 export const isErrorCode = <K extends keyof ErrorMap>(
