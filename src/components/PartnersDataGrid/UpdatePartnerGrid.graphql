@@ -1,0 +1,7 @@
+mutation UpdatePartnerGrid($input: UpdatePartner!) {
+  updatePartner(input: { partner: $input }) {
+    partner {
+      ...partnerDataGridRow
+    }
+  }
+}

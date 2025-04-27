@@ -42,6 +42,7 @@ export const PartnerColumns: Array<GridColDef<Partner>> = [
     field: 'startDate',
     ...dateColumn(),
     width: 130,
+    editable: true,
   },
   {
     headerName: 'Created Date',
