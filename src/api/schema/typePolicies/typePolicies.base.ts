@@ -92,6 +92,7 @@ export const typePolicies: TypePolicies = {
       progressReports: {},
       partners: {},
       users: {},
+      languages: {},
     },
   },
 };
