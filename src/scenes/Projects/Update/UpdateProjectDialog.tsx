@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
-import { Box, Typography } from '@mui/material';
-import { many, Many } from '@seedcompany/common';
+import { Box, Stack, Typography } from '@mui/material';
+import { groupBy, many, Many } from '@seedcompany/common';
 import { FORM_ERROR } from 'final-form';
 import { pick } from 'lodash';
 import { ComponentType, useMemo } from 'react';
@@ -225,28 +225,57 @@ export const UpdateProjectDialog = ({
         });
       }}
       errorHandlers={{
-        EngagementDateOverrideConflict: ({ engagements }) => {
+        DateOverrideConflict: ({ conflicts, object }) => {
           const rendered = (
-            <>
-              <Typography variant="body2" gutterBottom>
-                {engagements.length === 1
-                  ? 'An engagement has a date outside the new range'
-                  : 'Some engagements have dates outside the new range'}
-              </Typography>
-              <Box component="ul" sx={{ m: 0, paddingInlineStart: 4 }}>
-                {engagements.map((eng) => (
-                  <li key={eng.id + eng.point}>
-                    {eng.point === 'start' ? 'Start' : 'End'} date of{' '}
-                    <Link to={`/engagements/${eng.id}`} color="inherit">
-                      {eng.label}
-                    </Link>{' '}
-                    is <FormattedDate date={CalendarDate.fromISO(eng.date)} />
-                  </li>
-                ))}
-              </Box>
-            </>
+            <Stack gap={2}>
+              {groupBy(conflicts, (conflict) => conflict.__typename).map(
+                (conflicts) => {
+                  const type = conflicts[0].__typename;
+                  const labels =
+                    type === 'Partnership'
+                      ? (['A partnership', 'Some partnerships'] as const)
+                      : type.endsWith('Engagement')
+                      ? (['An engagement', 'Some engagements'] as const)
+                      : (['An object', 'Some objects'] as const);
+                  const getUrl =
+                    type === 'Partnership'
+                      ? () => `/projects/${object.id}/partnerships`
+                      : type.endsWith('Engagement')
+                      ? (id: string) => `/engagements/${id}`
+                      : null;
+                  return (
+                    <div key={type}>
+                      <Typography variant="body2" gutterBottom>
+                        {conflicts.length === 1
+                          ? `${labels[0]} has a date outside the new range`
+                          : `${labels[1]} have dates outside the new range`}
+                      </Typography>
+                      <Box component="ul" sx={{ m: 0, paddingInlineStart: 4 }}>
+                        {conflicts.map((conflict) => (
+                          <li key={conflict.id + conflict.point}>
+                            {conflict.point === 'start' ? 'Start' : 'End'} date
+                            of{' '}
+                            {getUrl ? (
+                              <Link to={getUrl(conflict.id)} color="inherit">
+                                {conflict.label}
+                              </Link>
+                            ) : (
+                              conflict.label
+                            )}{' '}
+                            is{' '}
+                            <FormattedDate
+                              date={CalendarDate.fromISO(conflict.date)}
+                            />
+                          </li>
+                        ))}
+                      </Box>
+                    </div>
+                  );
+                }
+              )}
+            </Stack>
           );
-          const points = new Set(engagements.map((eng) => eng.point));
+          const points = new Set(conflicts.map((conflict) => conflict.point));
           return {
             [FORM_ERROR]: rendered,
             // Mark the field(s) as invalid,
