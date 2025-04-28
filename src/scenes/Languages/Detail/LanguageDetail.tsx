@@ -107,7 +107,7 @@ export const LanguageDetail = () => {
 
   return (
     <main className={classes.root}>
-      <Helmet title={displayName?.value || name?.value || undefined} />
+      <Helmet title={name?.value ?? displayName?.value ?? undefined} />
       <Error error={error}>
         {{
           NotFound: 'Could not find language',
@@ -121,7 +121,8 @@ export const LanguageDetail = () => {
               {!language ? (
                 <Skeleton width="16ch" />
               ) : (
-                (displayName?.value || name?.value) ?? (
+                name?.value ??
+                displayName?.value ?? (
                   <Redacted
                     info="You don't have permission to view this language's name"
                     width="16ch"
