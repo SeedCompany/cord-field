@@ -12,11 +12,11 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import {
+  LanguageDataGridRowFragment as Language,
   LanguageColumns,
   LanguageInitialState,
   LanguageToolbar,
-} from '~/components/LanguageDataGrid/LanguageColumns';
-import { LanguageListItemFragment as Language } from '~/components/LanguageListItemCard/LanguageListItem.graphql';
+} from '~/components/LanguageDataGrid';
 import { LanguagesDocument } from './languages.graphql';
 
 export const LanguageGrid = () => {

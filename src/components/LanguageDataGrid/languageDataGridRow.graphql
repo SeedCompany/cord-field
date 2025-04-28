@@ -1,0 +1,22 @@
+fragment languageDataGridRow on Language {
+  id
+  name {
+    value
+  }
+  displayName {
+    value
+  }
+  ethnologue {
+    code {
+      value
+    }
+  }
+  registryOfLanguageVarietiesCode {
+    value
+  }
+  population {
+    value
+  }
+  sensitivity
+  pinned
+}

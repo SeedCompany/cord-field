@@ -16,7 +16,7 @@ import {
 } from '../Grid';
 import { LanguageNameColumn } from '../Grid/Columns/LanguageNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
-import { LanguageListItemFragment as Language } from '../LanguageListItemCard/LanguageListItem.graphql';
+import { LanguageDataGridRowFragment as Language } from './languageDataGridRow.graphql';
 
 export const LanguageColumns: Array<GridColDef<Language>> = [
   LanguageNameColumn({
