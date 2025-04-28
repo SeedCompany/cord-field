@@ -23,33 +23,31 @@ export const LanguageColumns: Array<GridColDef<Language>> = [
     field: 'name',
     headerName: 'Name',
     valueGetter: (_, language) => language,
-    flex: 1,
   }),
   {
     field: 'ethnologue.code',
     headerName: 'Eth Code',
     ...textColumn(),
     valueGetter: (_, { ethnologue }) => ethnologue.code.value,
-    width: 200,
+    width: 90,
   },
   {
     field: 'registryOfLanguageVarietiesCode',
     headerName: 'ROLV',
     ...textColumn(),
-    width: 200,
+    width: 90,
     valueGetter: (_, { registryOfLanguageVarietiesCode }) =>
       registryOfLanguageVarietiesCode.value,
   },
+  SensitivityColumn({}),
   {
     field: 'population',
     headerName: 'Population',
-    headerAlign: 'left',
     type: 'number',
-    width: 160,
+    width: 100,
     valueGetter: (_, { population }) => population.value,
     filterable: false,
   },
-  SensitivityColumn({}),
   {
     field: 'id',
     headerName: 'ID',
@@ -71,6 +69,7 @@ export const LanguageInitialState = {
     columnVisibilityModel: {
       ...getInitialVisibility(LanguageColumns),
       pinned: false,
+      id: false,
     },
   },
 } satisfies DataGridProps['initialState'];
