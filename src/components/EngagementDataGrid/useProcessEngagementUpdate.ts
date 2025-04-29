@@ -47,12 +47,7 @@ export const useProcessEngagementUpdate = () => {
       optimisticResponse: {
         updateLanguageEngagement: {
           __typename: 'UpdateLanguageEngagementOutput',
-          // This is an easy/cheap/hacky way to "unparse" the date scalars
-          // before writing them to the cache.
-          // Our read policies expect them to be ISO strings as we receive
-          // them from the network this way.
-          // Since our temporal objects have a toJSON, this works fine to revert that.
-          engagement: JSON.parse(JSON.stringify(updated)),
+          engagement: updated,
         },
       },
     });
