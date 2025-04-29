@@ -1,11 +1,12 @@
 import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
-import { CalendarDate } from '~/common';
+import { asDate, CalendarDateOrISO } from '~/common';
 
-export const ReportDue = ({ date }: { date: CalendarDate }) => {
+export const ReportDue = ({ date: input }: { date: CalendarDateOrISO }) => {
   const theme = useTheme();
 
+  const date = asDate(input);
   const past = date <= DateTime.now();
 
   return (

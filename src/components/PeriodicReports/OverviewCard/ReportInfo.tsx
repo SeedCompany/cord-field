@@ -3,7 +3,7 @@ import { Box, Grid, Skeleton, Typography } from '@mui/material';
 import { omit } from 'lodash';
 import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
-import { CalendarDate, StyleProps } from '~/common';
+import { asDate, CalendarDateOrISO, StyleProps } from '~/common';
 import { FormattedDate, FormattedDateTime } from '../../Formatters';
 import { PaperTooltip } from '../../PaperTooltip';
 import { Redacted } from '../../Redacted';
@@ -86,13 +86,13 @@ export const SkippedText = () => (
   </Grid>
 );
 
-export const Due = ({ date }: { date: CalendarDate }) => (
+export const Due = ({ date }: { date: CalendarDateOrISO }) => (
   <>
     Due{' '}
     <FormattedDate
       date={date}
       displayOptions={
-        date.diffNow('years').years < 1 // same year
+        asDate(date).diffNow('years').years < 1 // same year
           ? DATE_SHORT_NO_YEAR
           : undefined
       }

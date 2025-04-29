@@ -12,10 +12,11 @@ import {
 } from '@mui/x-date-pickers/internals';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { MuiPickersAdapterContextValue } from '@mui/x-date-pickers/LocalizationProvider/LocalizationProvider';
+import { Nil } from '@seedcompany/common';
 import { DateTime } from 'luxon';
 import { useContext, useRef } from 'react';
 import { Except } from 'type-fest';
-import { CalendarDate, Nullable } from '~/common';
+import { CalendarDate, CalendarDateOrISO, Nullable } from '~/common';
 import { AllowFormCloseContext } from './AllowClose';
 import { FieldConfig, useField } from './useField';
 import { getHelperText, showError } from './util';
@@ -26,7 +27,7 @@ export type DateFieldProps = Except<
   'defaultValue' | 'initialValue' | 'validate'
 > &
   Except<
-    DatePickerProps<string | CalendarDate | null, CalendarDate>,
+    DatePickerProps<CalendarDateOrISO | null, CalendarDate>,
     'value' | 'onChange' | 'renderInput'
   > &
   Pick<
@@ -34,8 +35,8 @@ export type DateFieldProps = Except<
     'label' | 'disabled' | 'helperText' | 'placeholder' | 'fullWidth'
   > & {
     name: string;
-    defaultValue?: string | CalendarDate | null;
-    initialValue?: string | CalendarDate | null;
+    defaultValue?: CalendarDateOrISO | null;
+    initialValue?: CalendarDateOrISO | null;
     errorMessages?: Record<DateError, string>;
     // Disable replacing helper text with format while text input is focused
     disableFormatHelperText?: boolean;
@@ -197,16 +198,16 @@ const defaultMessages: Record<DateError, string> = {
   shouldDisableDate: 'Date is unavailable',
 };
 
-type DateInput = string | CalendarDate | null | undefined;
+type DateInput = CalendarDateOrISO | Nil;
 
 const uninitialized = Symbol('uninitialized');
 
 /**
  * Memoizes date objects to prevent re-renders & parses ISO strings
  */
-const useDate = (valIn: DateInput): CalendarDate | null | undefined => {
+const useDate = (valIn: DateInput): CalendarDate | Nil => {
   const curr = useRef(valIn);
-  const parsed = useRef<CalendarDate | null | undefined | typeof uninitialized>(
+  const parsed = useRef<CalendarDate | Nil | typeof uninitialized>(
     uninitialized
   );
   if (parsed.current !== uninitialized && isDateEqual(curr.current, valIn)) {

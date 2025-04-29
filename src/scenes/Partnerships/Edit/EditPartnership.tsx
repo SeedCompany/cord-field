@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { onUpdateInvalidateProps, removeItemFromList } from '~/api';
 import { PeriodType, UpdatePartnershipInput } from '~/api/schema.graphql';
-import { callAll } from '~/common';
+import { asDate, callAll } from '~/common';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
@@ -119,8 +119,8 @@ export const EditPartnership = (props: EditPartnershipProps) => {
       {...props}
       sendIfClean="delete" // Lets us delete without changing any fields
       validate={(values) => {
-        const start = values.partnership.mouStartOverride;
-        const end = values.partnership.mouEndOverride;
+        const start = asDate(values.partnership.mouStartOverride);
+        const end = asDate(values.partnership.mouEndOverride);
 
         if (start && end) {
           if (start > end) {
@@ -137,7 +137,7 @@ export const EditPartnership = (props: EditPartnershipProps) => {
         if (
           start &&
           partnership.mouRange.value.end &&
-          start > partnership.mouRange.value.end
+          start > asDate(partnership.mouRange.value.end)
         ) {
           return {
             partnership: {
@@ -149,7 +149,7 @@ export const EditPartnership = (props: EditPartnershipProps) => {
         if (
           end &&
           partnership.mouRange.value.start &&
-          end < partnership.mouRange.value.start
+          end < asDate(partnership.mouRange.value.start)
         ) {
           return {
             partnership: {

@@ -4,18 +4,24 @@ import { DateTime, DateTimeFormatOptions } from 'luxon';
 import { memo, useState } from 'react';
 import { MergeExclusive } from 'type-fest';
 import { DateRange } from '~/api/schema.graphql';
-import { CalendarDate, Nullable } from '~/common';
+import {
+  asDate,
+  asDateTime,
+  CalendarDateOrISO,
+  DateTimeOrISO,
+  Nullable,
+} from '~/common';
 import { useLocale } from '../../hooks';
 import { useDateFormatter, useDateTimeFormatter } from './useDateFormatter';
 
 export const FormattedDate = memo(function FormattedDate({
-  date,
+  date: input,
   displayOptions,
 }: {
-  date: Nullable<CalendarDate>;
+  date: Nullable<CalendarDateOrISO>;
   displayOptions?: DateTimeFormatOptions;
 }) {
-  date = asLuxonInstance(date, CalendarDate);
+  const date = asDate(input);
 
   const format = useDateFormatter();
   return date ? (
@@ -33,8 +39,8 @@ export const FormattedDateRange = ({
   range,
 }: MergeExclusive<
   {
-    start: Nullable<CalendarDate>;
-    end: Nullable<CalendarDate>;
+    start: Nullable<CalendarDateOrISO>;
+    end: Nullable<CalendarDateOrISO>;
   },
   { range?: DateRange }
 >) => {
@@ -60,11 +66,11 @@ FormattedDateRange.orNull = (range: Nullable<DateRange>) =>
   );
 
 export const FormattedDateTime = memo(function FormattedDateTime({
-  date,
+  date: input,
 }: {
-  date: Nullable<DateTime>;
+  date: Nullable<DateTimeOrISO>;
 }) {
-  date = asLuxonInstance(date, DateTime);
+  const date = asDateTime(input);
 
   const format = useDateTimeFormatter();
   return date ? (
@@ -75,11 +81,11 @@ export const FormattedDateTime = memo(function FormattedDateTime({
 });
 
 export const RelativeDateTime = memo(function RelativeDateTime({
-  date,
+  date: input,
 }: {
-  date: DateTime;
+  date: DateTimeOrISO;
 }) {
-  date = asLuxonInstance(date, DateTime)!;
+  let date = asDateTime(input);
 
   const locale = useLocale();
   date = locale ? date.setLocale(locale) : date;
@@ -114,18 +120,3 @@ export const RelativeDateTime = memo(function RelativeDateTime({
     </Tooltip>
   );
 });
-
-// Under some circumstances, the Apollo scalar read policy is ignored, causing
-// this date to just be an ISO string.
-// This is just a workaround, to try to prevent errors for users.
-// https://github.com/apollographql/apollo-client/issues/9293
-function asLuxonInstance(
-  date: DateTime | null | undefined,
-  cls: typeof DateTime
-) {
-  return !date
-    ? null
-    : cls.isDateTime(date)
-    ? date
-    : cls.fromISO(date as unknown as string);
-}

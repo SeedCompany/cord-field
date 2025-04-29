@@ -10,9 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 import { To } from 'history';
-import { DateTime } from 'luxon';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
+import { DateTimeOrISO } from '~/common';
 import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
@@ -50,7 +50,7 @@ const useStyles = makeStyles()(({ spacing, palette }) => ({
 
 interface FieldOverviewCardData {
   value?: ReactNode;
-  updatedAt?: DateTime;
+  updatedAt?: DateTimeOrISO;
   to?: To;
 }
 

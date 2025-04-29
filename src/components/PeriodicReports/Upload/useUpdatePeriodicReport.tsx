@@ -3,7 +3,7 @@ import { Edit } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { getErrorInfo, isErrorCode } from '~/api';
 import { ProductStepLabels } from '~/api/schema.graphql';
-import { CalendarDate } from '~/common';
+import { CalendarDateOrISO } from '~/common';
 import { useUploadFiles } from '../../files/hooks';
 import { IconButton } from '../../IconButton';
 import { Link, useNavigate } from '../../Routing';
@@ -21,7 +21,7 @@ export const useUpdatePeriodicReport = () => {
   return async (
     id: string,
     files?: File[],
-    receivedDate?: CalendarDate | null,
+    receivedDate?: CalendarDateOrISO | null,
     skippedReason?: string | null
   ) => {
     const updateReport = async (uploadId?: string, name?: string) => {
