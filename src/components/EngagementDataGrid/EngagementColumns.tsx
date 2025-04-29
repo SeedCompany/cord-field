@@ -183,14 +183,12 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     headerName: 'MOU Start',
     field: 'startDate',
     ...dateColumn(),
-    valueGetter: dateColumn.valueGetter((_, { startDate }) => startDate.value),
     filterable: false,
   },
   {
     headerName: 'MOU End',
     field: 'endDate',
     ...dateColumn(),
-    valueGetter: dateColumn.valueGetter((_, { endDate }) => endDate.value),
     filterable: false,
   },
   {
