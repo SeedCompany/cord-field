@@ -8,11 +8,11 @@ import {
 import { Nil } from '@seedcompany/common';
 import { DateTime } from 'luxon';
 import { DateFilter } from '~/api/schema.graphql';
-import { CalendarDate } from '~/common';
+import { CalendarDate, ISOString } from '~/common';
 import { GridHeaderAddFilterButton } from '../GridHeaderAddFilterButton';
 import { column, RowLike } from './definition.types';
 
-type DateInput = Date | CalendarDate | Nil;
+type DateInput = Date | CalendarDate | ISOString | Nil;
 type DateValue = Date | null;
 
 type DateColDef<R extends RowModel = any> = ColDef<R, DateValue, string>;

@@ -1,6 +1,5 @@
-import { DateTime } from 'luxon';
 import { ReactElement } from 'react';
-import { Nullable } from '../../common';
+import { DateTimeOrISO, Nullable } from '~/common';
 import { RelativeDateTime } from '../Formatters';
 
 export const SavingStatus = ({
@@ -8,7 +7,7 @@ export const SavingStatus = ({
   savedAt,
 }: {
   submitting: boolean;
-  savedAt?: Nullable<DateTime>;
+  savedAt?: Nullable<DateTimeOrISO>;
 }): ReactElement | null =>
   submitting ? (
     <>Saving...</>

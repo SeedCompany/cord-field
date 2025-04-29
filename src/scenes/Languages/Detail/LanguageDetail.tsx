@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { removeItemFromList } from '~/api';
-import { canEditAny, listOrPlaceholders } from '~/common';
+import { asDate, canEditAny, listOrPlaceholders } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useComments } from '../../../components/Comments/CommentsContext';
@@ -216,7 +216,7 @@ export const LanguageDetail = () => {
           />
           <DisplayProperty
             label="Sponsor Estimated End Fiscal Year"
-            value={sponsorEstimatedEndDate?.value?.fiscalYear}
+            value={asDate(sponsorEstimatedEndDate?.value)?.fiscalYear}
             loading={!language}
           />
 

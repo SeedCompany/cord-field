@@ -362,9 +362,7 @@ export const ProjectOverview = () => {
               <ChangesetPropertyBadge
                 current={project}
                 prop="mouRange"
-                identifyBy={(range) =>
-                  `${range.start?.toMillis()}/${range.end?.toMillis()}`
-                }
+                identifyBy={(range) => `${range.start}/${range.end}`}
                 labelBy={({ start, end }) => (
                   <FormattedDateRange start={start} end={end} />
                 )}

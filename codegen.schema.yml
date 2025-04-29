@@ -42,12 +42,15 @@ generates:
       - add:
           placement: prepend
           content: |
-            import { DateTime } from 'luxon';
-            import { CalendarDate, RichTextJson, MarkdownString, InlineMarkdownString } from '~/common';
+            import { RichTextJson, MarkdownString, InlineMarkdownString } from '~/common';
     config:
       scalars:
-        Date: CalendarDate
-        DateTime: DateTime
+        Date:
+          input: ~/common#CalendarDateOrISO
+          output: ~/common#ISOString
+        DateTime:
+          input: ~/common#DateTimeOrISO
+          output: ~/common#ISOString
         JSONObject: Record<string, any>
         URL: string
         RichText: RichTextJson

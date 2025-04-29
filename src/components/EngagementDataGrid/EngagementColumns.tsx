@@ -23,6 +23,7 @@ import {
 } from '~/api/schema.graphql';
 import {
   booleanColumn,
+  dateColumn,
   enumColumn,
   getInitialVisibility,
   QuickFilterButton,
@@ -181,15 +182,15 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
   {
     headerName: 'MOU Start',
     field: 'startDate',
-    type: 'date',
-    valueGetter: (_, { startDate }) => startDate.value?.toJSDate(),
+    ...dateColumn(),
+    valueGetter: dateColumn.valueGetter((_, { startDate }) => startDate.value),
     filterable: false,
   },
   {
     headerName: 'MOU End',
     field: 'endDate',
-    type: 'date',
-    valueGetter: (_, { endDate }) => endDate.value?.toJSDate(),
+    ...dateColumn(),
+    valueGetter: dateColumn.valueGetter((_, { endDate }) => endDate.value),
     filterable: false,
   },
   {

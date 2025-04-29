@@ -14,6 +14,9 @@ export class LuxonCalenderDateUtils extends LuxonUtils {
   }
 
   date = (value?: any) => {
+    if (typeof value === 'string') {
+      return CalendarDate.fromISO(value);
+    }
     const d = this.inner.date(value);
     return d ? CalendarDate.fromDateTime(d) : null;
   };

@@ -15,6 +15,7 @@ import {
   UpdateLanguageEngagement,
 } from '~/api/schema.graphql';
 import {
+  asDate,
   DisplayLocationFragment,
   ExtractStrict,
   labelFrom,
@@ -265,8 +266,8 @@ export const EditEngagementDialog = ({
       {...props}
       initialValues={initialValues}
       validate={(values) => {
-        const start = values.engagement.startDateOverride;
-        const end = values.engagement.endDateOverride;
+        const start = asDate(values.engagement.startDateOverride);
+        const end = asDate(values.engagement.endDateOverride);
 
         if (start && end) {
           if (start > end) {
@@ -283,7 +284,7 @@ export const EditEngagementDialog = ({
         if (
           start &&
           engagement.dateRange.value.end &&
-          start > engagement.dateRange.value.end
+          start > asDate(engagement.dateRange.value.end)
         ) {
           return {
             engagement: {
@@ -295,7 +296,7 @@ export const EditEngagementDialog = ({
         if (
           end &&
           engagement.dateRange.value.start &&
-          end < engagement.dateRange.value.start
+          end < asDate(engagement.dateRange.value.start)
         ) {
           return {
             engagement: {

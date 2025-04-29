@@ -1,4 +1,4 @@
-import { isSecured, Nullable, SecuredProp } from '~/common';
+import { asDate, isSecured, Nullable, SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
 
@@ -26,7 +26,8 @@ export const ReportLabel = ({
 };
 
 export const getReportLabel = (report?: Report) => {
-  const { start, end } = report ?? {};
+  const start = asDate(report?.start);
+  const end = asDate(report?.end);
 
   if (!start || !end) return null;
   return +start === +end
