@@ -12,28 +12,27 @@ import {
   useDataGridSource,
 } from '~/components/Grid';
 import {
-  PartnerColumns,
-  PartnerInitialState,
-  PartnerToolbar,
-} from '~/components/PartnersDataGrid/PartnerColumns';
-import { PartnerDataGridRowFragment as Partner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql';
-import { useProcessPartnerUpdate } from '~/components/PartnersDataGrid/useProcessPartnerUpdate';
-import { PartnersDocument } from './PartnerList.graphql';
+  LanguageDataGridRowFragment as Language,
+  LanguageColumns,
+  LanguageInitialState,
+  LanguageToolbar,
+} from '~/components/LanguageDataGrid';
+import { LanguagesDocument } from './languages.graphql';
 
-export const PartnerGrid = () => {
+export const LanguageGrid = () => {
   const [dataGridProps] = useDataGridSource({
-    query: PartnersDocument,
+    query: LanguagesDocument,
     variables: { input: {} },
-    listAt: 'partners',
+    listAt: 'languages',
     initialInput: {
-      sort: 'organization.name',
+      sort: LanguageColumns[0]!.field,
     },
   });
 
   const slots = useMemo(
     () =>
       merge({}, DefaultDataGridStyles.slots, dataGridProps.slots, {
-        toolbar: PartnerToolbar,
+        toolbar: LanguageToolbar,
       } satisfies DataGridProps['slots']),
     [dataGridProps.slots]
   );
@@ -43,17 +42,14 @@ export const PartnerGrid = () => {
     [dataGridProps.slotProps]
   );
 
-  const processPartnerUpdate = useProcessPartnerUpdate();
-
   return (
-    <DataGrid<Partner>
+    <DataGrid<Language>
       {...DefaultDataGridStyles}
       {...dataGridProps}
       slots={slots}
       slotProps={slotProps}
-      columns={PartnerColumns}
-      initialState={PartnerInitialState}
-      processRowUpdate={processPartnerUpdate}
+      columns={LanguageColumns}
+      initialState={LanguageInitialState}
       headerFilters
       hideFooter
       sx={[flexLayout, noHeaderFilterButtons, noFooter]}

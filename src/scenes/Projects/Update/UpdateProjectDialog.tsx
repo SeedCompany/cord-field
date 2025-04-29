@@ -8,6 +8,7 @@ import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
 import { SensitivityList, UpdateProject } from '~/api/schema.graphql';
 import {
+  asDate,
   CalendarDate,
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
@@ -170,7 +171,7 @@ export const UpdateProjectDialog = ({
         const start = values.project.mouStart;
         const end = values.project.mouEnd;
 
-        if (start && end && start > end) {
+        if (start && end && asDate(start) > asDate(end)) {
           return {
             project: {
               mouStart: 'Start date should come before end date',

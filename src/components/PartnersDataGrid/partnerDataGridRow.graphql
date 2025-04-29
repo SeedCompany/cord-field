@@ -18,6 +18,7 @@ fragment partnerDataGridRow on Partner {
     value
   }
   startDate {
+    canEdit
     value
   }
   createdAt

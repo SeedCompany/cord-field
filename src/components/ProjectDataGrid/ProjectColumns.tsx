@@ -78,13 +78,11 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     headerName: 'MOU Start',
     field: 'mouStart',
     ...dateColumn(),
-    valueGetter: dateColumn.valueGetter((_, { mouStart }) => mouStart.value),
   },
   {
     headerName: 'MOU End',
     field: 'mouEnd',
     ...dateColumn(),
-    valueGetter: dateColumn.valueGetter((_, { mouEnd }) => mouEnd.value),
   },
   SensitivityColumn({}),
   {

@@ -1,7 +1,12 @@
 import { Skeleton, Typography } from '@mui/material';
 import { useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { CalendarDate, Nullable, SecuredProp } from '~/common';
+import {
+  CalendarDate,
+  CalendarDateOrISO,
+  Nullable,
+  SecuredProp,
+} from '~/common';
 import { FormattedDate } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 
@@ -32,7 +37,7 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
 }));
 
 interface LargeDateProps {
-  date?: Nullable<SecuredProp<CalendarDate>>;
+  date?: Nullable<SecuredProp<CalendarDateOrISO>>;
   className?: string;
 }
 

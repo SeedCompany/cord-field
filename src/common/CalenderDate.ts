@@ -1,3 +1,4 @@
+import { Nil } from '@seedcompany/common';
 import {
   DateObjectUnits,
   DateTime,
@@ -11,6 +12,25 @@ import {
   ZoneOptions,
 } from 'luxon';
 import { DefaultValidity, Invalid, Valid } from 'luxon/src/_util';
+import { Tagged } from 'type-fest';
+
+export type ISOString = Tagged<string, 'ISOString'>;
+
+export type CalendarDateOrISO = CalendarDate | ISOString;
+export type DateTimeOrISO = DateTime | ISOString;
+
+export const asDateTime = <T extends DateTimeOrISO | Nil>(date: T) =>
+  asLuxonInstance(date, DateTime) as T extends Nil ? null : DateTime;
+
+export const asDate = <T extends CalendarDateOrISO | Nil>(date: T) =>
+  asLuxonInstance(date, CalendarDate) as T extends Nil ? null : CalendarDate;
+
+function asLuxonInstance(
+  date: ISOString | DateTime | null | undefined,
+  cls: typeof DateTime
+) {
+  return !date ? null : cls.isDateTime(date) ? date : cls.fromISO(date);
+}
 
 declare module 'luxon/src/datetime' {
   interface DateTime {

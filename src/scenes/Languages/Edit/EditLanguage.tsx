@@ -4,7 +4,7 @@ import { pick as lodashPick } from 'lodash';
 import { useMemo } from 'react';
 import { Except, PartialDeep, Paths, PickDeep } from 'type-fest';
 import { UpdateLanguage } from '~/api/schema.graphql';
-import { CalendarDate } from '~/common';
+import { asDate, CalendarDate } from '~/common';
 import {
   LanguageForm,
   LanguageFormProps,
@@ -50,8 +50,9 @@ export const EditLanguage = (props: EditLanguageProps) => {
               isSignLanguage: language.isSignLanguage.value,
               signLanguageCode: language.signLanguageCode.value,
               sensitivity: language.sensitivity,
-              sponsorEstimatedEndFY:
-                language.sponsorEstimatedEndDate.value?.fiscalYear,
+              sponsorEstimatedEndFY: asDate(
+                language.sponsorEstimatedEndDate.value
+              )?.fiscalYear,
               hasExternalFirstScripture:
                 language.hasExternalFirstScripture.value,
             },
