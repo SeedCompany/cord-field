@@ -43,6 +43,7 @@ export const PartnerColumns: Array<GridColDef<Partner>> = [
     ...dateColumn(),
     width: 130,
     editable: true,
+    isEditable: ({ row }) => row.startDate.canEdit,
   },
   {
     headerName: 'Created Date',
