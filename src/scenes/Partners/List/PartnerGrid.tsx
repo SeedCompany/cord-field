@@ -17,6 +17,7 @@ import {
   PartnerToolbar,
 } from '~/components/PartnersDataGrid/PartnerColumns';
 import { PartnerDataGridRowFragment as Partner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql';
+import { useProcessPartnerUpdate } from '~/components/PartnersDataGrid/useProcessPartnerUpdate';
 import { PartnersDocument } from './PartnerList.graphql';
 
 export const PartnerGrid = () => {
@@ -42,6 +43,8 @@ export const PartnerGrid = () => {
     [dataGridProps.slotProps]
   );
 
+  const processPartnerUpdate = useProcessPartnerUpdate();
+
   return (
     <DataGrid<Partner>
       {...DefaultDataGridStyles}
@@ -50,6 +53,7 @@ export const PartnerGrid = () => {
       slotProps={slotProps}
       columns={PartnerColumns}
       initialState={PartnerInitialState}
+      processRowUpdate={processPartnerUpdate}
       headerFilters
       hideFooter
       sx={[flexLayout, noHeaderFilterButtons, noFooter]}
