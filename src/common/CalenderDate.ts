@@ -19,15 +19,11 @@ export type ISOString = Tagged<string, 'ISOString'>;
 export type CalendarDateOrISO = CalendarDate | ISOString;
 export type DateTimeOrISO = DateTime | ISOString;
 
-export const asDateTime = <T extends DateTimeOrISO | Nil>(
-  date: T
-): DateTime | (T extends Nil ? null : never) =>
-  asLuxonInstance(date, DateTime) as any;
+export const asDateTime = <T extends DateTimeOrISO | Nil>(date: T) =>
+  asLuxonInstance(date, DateTime) as T extends Nil ? null : DateTime;
 
-export const asDate = <T extends CalendarDateOrISO | Nil>(
-  date: T
-): CalendarDate | (T extends Nil ? null : never) =>
-  asLuxonInstance(date, CalendarDate) as any;
+export const asDate = <T extends CalendarDateOrISO | Nil>(date: T) =>
+  asLuxonInstance(date, CalendarDate) as T extends Nil ? null : CalendarDate;
 
 function asLuxonInstance(
   date: ISOString | DateTime | null | undefined,
