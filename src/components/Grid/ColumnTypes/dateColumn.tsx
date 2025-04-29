@@ -8,7 +8,7 @@ import {
 import { Nil } from '@seedcompany/common';
 import { DateTime } from 'luxon';
 import { DateFilter } from '~/api/schema.graphql';
-import { CalendarDate, ISOString } from '~/common';
+import { CalendarDate, ISOString, unwrapSecured } from '~/common';
 import { GridHeaderAddFilterButton } from '../GridHeaderAddFilterButton';
 import { column, RowLike } from './definition.types';
 
@@ -57,7 +57,7 @@ dateColumn.valueGetter =
     return value;
   };
 const defaultValueGetter: DateValueGetterInput = (_, row, column) =>
-  row[column.field];
+  unwrapSecured(row[column.field]);
 
 const filterOpNameMap: Record<string, keyof DateFilter> = {
   after: 'after',
