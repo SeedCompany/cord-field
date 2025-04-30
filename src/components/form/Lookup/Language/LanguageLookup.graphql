@@ -16,4 +16,10 @@ fragment LanguageLookupItem on Language {
   displayName {
     value
   }
+  isLanguageOfWiderCommunication {
+    value
+  }
+  isLanguageOfReporting {
+    value
+  }
 }
