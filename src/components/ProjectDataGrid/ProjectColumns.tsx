@@ -67,7 +67,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     width: 160,
   },
   {
-    field: 'engagements',
+    field: 'engagements.total',
     type: 'number',
     valueGetter: (_, { engagements }) => engagements.total,
     filterable: false,

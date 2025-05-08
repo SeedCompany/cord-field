@@ -1,4 +1,4 @@
-import { Nil } from '@seedcompany/common';
+import { isObjectLike, Nil } from '@seedcompany/common';
 import { ConditionalKeys } from 'type-fest';
 
 interface Readable {
@@ -21,15 +21,42 @@ export const isSecured = <T>(value: unknown): value is SecuredProp<T> =>
   'canEdit' in value &&
   'canRead' in value;
 
+/**
+ * @deprecated unsafely assumes canRead/Edit
+ */
 export const unwrapSecured = <T>(value: T) =>
-  (!!value &&
-  typeof value === 'object' &&
-  '__typename' in value &&
-  typeof value.__typename === 'string' &&
+  (isObjectLike(value) &&
+  hasTypename(value) &&
   value.__typename.startsWith('Secured') &&
   'value' in value
     ? value.value
     : value) as T extends SecuredProp<infer U> ? U : T;
+
+export const unwrapSecuredEdge = <T>(
+  value: T
+): T extends { __typename: `Secured${string}` }
+  ? T extends { value: infer U }
+    ? U
+    : T extends { items: infer U }
+    ? U
+    : T
+  : T => {
+  if (
+    isObjectLike(value) &&
+    hasTypename(value) &&
+    value.__typename.startsWith('Secured')
+  ) {
+    return 'value' in value
+      ? value.value
+      : 'items' in value && Array.isArray(value.items)
+      ? value.items
+      : (value as any);
+  }
+  return value as any;
+};
+
+const hasTypename = (value: object): value is { __typename: string } =>
+  '__typename' in value && typeof value.__typename === 'string';
 
 /**
  * Can the user read any of the fields of this object?

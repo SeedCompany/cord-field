@@ -3,9 +3,9 @@ import {
   MutationUpdaterFunction,
   Reference,
 } from '@apollo/client';
-import { sortBy } from '@seedcompany/common';
+import { isObjectLike, sortBy } from '@seedcompany/common';
 import { Except } from 'type-fest';
-import { unwrapSecured } from '~/common';
+import { unwrapSecuredEdge } from '~/common';
 import { modifyChangesetDiff } from '../../changesets';
 import type { Entity } from '../../schema';
 import type { Order } from '../../schema.graphql';
@@ -96,10 +96,19 @@ export const addItemToList =
       if (sort && order) {
         newList = sortBy(newList, [
           (ref) => {
-            const field = readField(sort, ref);
-            const fieldVal = unwrapSecured(field);
+            const fieldVal = sort.split('.').reduce((val, key, i, parts) => {
+              if (!val) {
+                return val;
+              }
+              const raw = readField(key, val);
+              const nextKey = parts[i + 1];
+              if (nextKey && isObjectLike(raw) && nextKey in raw) {
+                return raw;
+              }
+              return unwrapSecuredEdge(raw);
+            }, ref as any);
             // Unsafely assume this value is sortable
-            return fieldVal as any;
+            return fieldVal;
           },
           order.toLowerCase() as Lowercase<Order>,
         ]);
