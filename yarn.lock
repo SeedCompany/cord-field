@@ -4065,8 +4065,8 @@ __metadata:
   linkType: hard
 
 "@seedcompany/common@npm:>=0.14 <1":
-  version: 0.18.1
-  resolution: "@seedcompany/common@npm:0.18.1"
+  version: 0.19.2
+  resolution: "@seedcompany/common@npm:0.19.2"
   dependencies:
     type-fest: "npm:^4.37.0"
   peerDependencies:
@@ -4074,7 +4074,7 @@ __metadata:
   peerDependenciesMeta:
     luxon:
       optional: true
-  checksum: 10c0/54f1cdd5cf5b818ee6a8f1a3ca4e8379e26c2011abe132105cb117f3c207e47e316b8e3dab21e8eec682b56a7a08a20d60b6512b1ab35591a9e708a6703ea472
+  checksum: 10c0/a66e92ba97d3912b7bf77d7f131d3ae1c07d167d19eff8553e60985663faa7ac46fa681e4b4f73587e04277e63ab96239b95789ed4e5a35452f3d7afdb1d6bf1
   languageName: node
   linkType: hard
 
