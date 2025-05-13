@@ -69,7 +69,7 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
           onSubmit={handleSubmit}
         >
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography variant="h3">Milestone Achieved</Typography>
+            <Typography variant="h3">Milestone Planned</Typography>
             {!isEditing ? (
               milestoneReached.canEdit ? (
                 <Tooltip title="Edit">
