@@ -1,8 +1,8 @@
 import { Edit } from '@mui/icons-material';
 import { Stack, Tooltip } from '@mui/material';
 import {
-  FinancialReportingTypeLabels,
-  PartnerTypeLabels,
+  OrganizationReachLabels,
+  OrganizationTypeLabels,
 } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
@@ -16,20 +16,20 @@ interface PartnerTypesSectionProps {
   className?: string;
 }
 
-export const PartnerTypesSection = ({
+export const AdditionalInformationSection = ({
   partner,
   onEdit,
 }: PartnerTypesSectionProps) => {
   const canEdit = canEditAny(
-    partner,
+    partner?.organization.value,
     false,
     'types',
-    'financialReportingTypes'
+    'reach'
   );
 
   return (
     <ActionableSection
-      title="Partner Type"
+      title="Additional Information"
       loading={!partner}
       action={
         <Tooltip title="Edit">
@@ -55,18 +55,18 @@ export const PartnerTypesSection = ({
         maxWidth={350}
       >
         <DisplaySecuredList
-          title="Roles"
-          data={partner?.types}
-          labelBy={labelFrom(PartnerTypeLabels)}
-          redacted={{ fieldDescription: `partner's roles` }}
+          title="Organizational Types"
+          data={partner?.organization.value?.types}
+          labelBy={labelFrom(OrganizationTypeLabels)}
+          redacted={{ fieldDescription: `organizational types` }}
         />
         <DisplaySecuredList
-          title="Financial Reporting Types"
-          data={partner?.financialReportingTypes}
-          labelBy={labelFrom(FinancialReportingTypeLabels)}
+          title="Partner Reach"
+          data={partner?.organization.value?.reach}
+          labelBy={labelFrom(OrganizationReachLabels)}
           redacted={{
-            fieldDescription: `partner's financial reporting types`,
-            width: '75%',
+            fieldDescription: `partner's reach`,
+            width: `75%`,
           }}
         />
       </Stack>

@@ -4,6 +4,7 @@ import { BooleanProperty } from '~/components/BooleanProperty';
 import { TabPanelContent } from '~/components/Tabs';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { AdditionalInformationSection } from './AdditionalInformationSection';
 import { PartnerContactSection } from './PartnerContactSection';
 import { PartnerTypesSection } from './PartnerTypesSection';
 
@@ -33,6 +34,12 @@ export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => (
           onEdit={() =>
             edit(['partner.types', 'partner.financialReportingTypes'])
           }
+        />
+      </Grid>
+      <Grid xs={12} md={6}>
+        <AdditionalInformationSection
+          partner={partner}
+          onEdit={() => edit(['organization.types', 'organization.reach'])}
         />
       </Grid>
     </Grid>
