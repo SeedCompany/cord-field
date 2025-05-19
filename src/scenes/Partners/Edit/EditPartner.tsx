@@ -115,10 +115,21 @@ const fieldMapping = {
   'organization.acronym': ({ props }) => (
     <TextField {...props} label="Acronym" />
   ),
-  'partner.strategicAlliances': ({ props }) => (
-    <PartnerField {...props} label="Strategic Alliances" multiple />
+  'partner.strategicAlliances': ({ props, partner }) => (
+    <PartnerField
+      {...props}
+      label="Strategic Alliances"
+      multiple
+      getOptionDisabled={(option) => option.id === partner.id}
+    />
   ),
-  'partner.parentId': ({ props }) => <PartnerField {...props} label="Parent" />,
+  'partner.parentId': ({ props, partner }) => (
+    <PartnerField
+      {...props}
+      label="Parent"
+      getOptionDisabled={(option) => option.id === partner.id}
+    />
+  ),
 } satisfies PossibleFields;
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
