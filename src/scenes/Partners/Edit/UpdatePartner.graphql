@@ -4,7 +4,7 @@ mutation UpdatePartner(
 ) {
   updatePartner(input: { partner: $partner }) {
     partner {
-      ...partnerDetails
+      ...partnerOwnDetails
     }
   }
   updateOrganization(input: { organization: $organization }) {
