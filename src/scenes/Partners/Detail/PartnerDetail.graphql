@@ -78,4 +78,14 @@ fragment organizationDetails on Organization {
     canEdit
     value
   }
+  types {
+    canRead
+    canEdit
+    value
+  }
+  reach {
+    canRead
+    canEdit
+    value
+  }
 }
