@@ -8,6 +8,8 @@ import {
   CoerceNonPrimitives,
   FinancialReportingTypeLabels,
   FinancialReportingTypeList,
+  OrganizationReachList,
+  OrganizationTypeList,
   PartnerTypeList,
   UpdateOrganization,
   UpdatePartner,
@@ -108,6 +110,24 @@ const fieldMapping = {
   'organization.acronym': ({ props }) => (
     <TextField {...props} label="Acronym" />
   ),
+  'organization.reach': ({ props }) => (
+    <EnumField
+      multiple
+      label="Reach"
+      options={OrganizationReachList}
+      layout="two-column"
+      {...props}
+    />
+  ),
+  'organization.types': ({ props }) => (
+    <EnumField
+      multiple
+      label="Types"
+      options={OrganizationTypeList}
+      layout="two-column"
+      {...props}
+    />
+  ),
 } satisfies PossibleFields;
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
@@ -151,6 +171,8 @@ export const EditPartner = ({
         id: organization.id,
         name: organization.name.value,
         acronym: organization.acronym.value,
+        types: organization.types.value,
+        reach: organization.reach.value,
       },
     } satisfies PartnerFormValues;
   }, [partner]);
