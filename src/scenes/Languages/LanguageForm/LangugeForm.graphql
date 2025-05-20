@@ -88,4 +88,14 @@ fragment LanguageForm on Language {
     canEdit
     value
   }
+  isWiderComm {
+    canEdit
+    canRead
+    value
+  }
+  isAvailableForReporting {
+    canEdit
+    canRead
+    value
+  }
 }
