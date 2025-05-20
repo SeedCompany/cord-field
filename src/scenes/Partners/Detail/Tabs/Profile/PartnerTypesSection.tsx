@@ -53,7 +53,7 @@ export const PartnerTypesSection = ({
         rowGap={3}
         justifyContent="space-between"
         flexWrap="wrap"
-        maxWidth={350}
+        maxWidth={700}
       >
         <DisplaySecuredList
           title="Roles"

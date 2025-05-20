@@ -7,6 +7,7 @@ import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 import { PartnerContactSection } from './PartnerContactSection';
 import { PartnerLocationSection } from './PartnerLocationSection';
 import { PartnerOrgReachAndTypeSection } from './PartnerOrgReachAndTypeSection';
+import { PartnerLanguageSection } from './PartnerLanguageSection';
 import { PartnerTypesSection } from './PartnerTypesSection';
 
 interface Props {
@@ -47,6 +48,18 @@ export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => (
         <PartnerLocationSection
           partner={partner}
           onEdit={() => edit(['partner.fieldRegions', 'partner.countries'])}
+        />
+      </Grid>
+      <Grid xs={12} md={6}>
+        <PartnerLanguageSection
+          partner={partner}
+          onEdit={() =>
+            edit([
+              'partner.languageOfReportingId',
+              'partner.languageOfWiderCommunicationId',
+              'partner.languagesOfConsulting',
+            ])
+          }
         />
       </Grid>
     </Grid>
