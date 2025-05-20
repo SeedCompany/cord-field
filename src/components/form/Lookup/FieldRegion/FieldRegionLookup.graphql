@@ -1,7 +1,14 @@
 query FieldRegionLookup($query: String!) {
   search(input: { query: $query, type: [FieldRegion] }) {
     items {
-      ...DisplayFieldRegion
+      ...FieldRegionLookupItem
     }
+  }
+}
+
+fragment FieldRegionLookupItem on FieldRegion {
+  id
+  name {
+    value
   }
 }
