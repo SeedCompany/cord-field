@@ -63,6 +63,28 @@ fragment partnerOwnDetails on Partner {
     canEdit
     value
   }
+  fieldRegions {
+    canEdit
+    canRead
+    value {
+      id
+      name {
+        value
+      }
+      ...DisplayFieldRegion
+    }
+  }
+  countries {
+    canEdit
+    canRead
+    value {
+      id
+      name {
+        value
+      }
+      ...DisplayLocation
+    }
+  }
   ...TogglePin
 }
 
