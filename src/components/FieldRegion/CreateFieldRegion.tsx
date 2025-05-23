@@ -32,7 +32,7 @@ export const CreateFieldRegion = (props: CreateFieldRegionProps) => {
       onSubmit={async ({ fieldRegion: values }) => {
         const input: CreateFieldRegionInput = {
           fieldRegion: {
-            ...values,
+            name: values.name,
             fieldZoneId: values.fieldZone.id,
             directorId: values.director.id,
           },
