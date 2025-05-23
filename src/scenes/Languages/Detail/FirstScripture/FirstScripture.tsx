@@ -82,11 +82,12 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
     <div className={classes.root}>
       <Check color="primary" className={classes.icon} />
       <Typography className={classes.text}>
-        First Scripture:&nbsp;&nbsp;
+        First Scripture was recorded in the 
         <Link
           to={`/engagements/${scripture.engagement.id}`}
           underline={project.name.canRead ? undefined : 'none'}
         >
+          Project
           {project.name.canRead ? (
             project.name.value
           ) : (
