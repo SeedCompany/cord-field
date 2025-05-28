@@ -26,7 +26,7 @@ export const useSession = () => {
 
 export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
   cache: ApolloCache<T>,
-  sessionData: { user: LoggedInUserFragment; powers: SessionOutput['powers'] }
+  sessionData: { user: LoggedInUserFragment; powers?: SessionOutput['powers'] }
 ) => {
   const { user, powers } = sessionData;
   const currentSession = cache.readQuery({
