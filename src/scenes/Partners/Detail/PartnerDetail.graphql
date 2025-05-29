@@ -57,6 +57,23 @@ fragment partnerDetails on Partner {
     canEdit
     value
   }
+  parent {
+    canEdit
+    canRead
+    value {
+      ...PartnerListItem
+      ...PartnerLookupItem
+    }
+  }
+  strategicAlliances {
+    canEdit
+    canRead
+    value {
+      ...PartnerListItem
+      ...PartnerLookupItem
+    }
+  }
+
   ...TogglePin
 }
 

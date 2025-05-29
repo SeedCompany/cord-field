@@ -26,7 +26,12 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { UserField, UserLookupItem } from '../../../components/form/Lookup';
+import {
+  PartnerField,
+  PartnerLookupItem,
+  UserField,
+  UserLookupItem,
+} from '../../../components/form/Lookup';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
@@ -36,6 +41,8 @@ type PartnerFormValues = {
     UpdatePartner,
     {
       pointOfContactId: UserLookupItem | null;
+      parentId: PartnerLookupItem | null;
+      strategicAlliances: PartnerLookupItem[];
     }
   >;
   organization: UpdateOrganization;
@@ -108,6 +115,21 @@ const fieldMapping = {
   'organization.acronym': ({ props }) => (
     <TextField {...props} label="Acronym" />
   ),
+  'partner.strategicAlliances': ({ props, partner }) => (
+    <PartnerField
+      {...props}
+      label="Strategic Alliances"
+      multiple
+      getOptionDisabled={(option) => option.id === partner.id}
+    />
+  ),
+  'partner.parentId': ({ props, partner }) => (
+    <PartnerField
+      {...props}
+      label="Parent"
+      getOptionDisabled={(option) => option.id === partner.id}
+    />
+  ),
 } satisfies PossibleFields;
 
 const decorators: Array<Decorator<PartnerFormValues>> = [
@@ -146,6 +168,10 @@ export const EditPartner = ({
         address: partner.address.value,
         startDate: partner.startDate.value,
         pointOfContactId: partner.pointOfContact.value ?? null,
+        strategicAlliances: partner.strategicAlliances.value.map(
+          (alliance) => alliance
+        ),
+        parentId: partner.parent.value ?? null,
       },
       organization: {
         id: organization.id,
@@ -167,6 +193,10 @@ export const EditPartner = ({
             partner: {
               ...partner,
               pointOfContactId: partner.pointOfContactId?.id ?? null,
+              parentId: partner.parentId?.id ?? null,
+              strategicAlliances: partner.strategicAlliances.map(
+                (alliance) => alliance.id
+              ),
             },
             organization,
           },
