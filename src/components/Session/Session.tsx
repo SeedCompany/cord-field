@@ -41,6 +41,7 @@ export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
           ...currentSession.session.user,
           ...user,
         },
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         powers: [...(powers ? powers : currentSession.session.powers || [])],
       },
     };
