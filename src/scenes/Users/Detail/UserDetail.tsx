@@ -11,12 +11,9 @@ import { PartialDeep } from 'type-fest';
 import { RoleLabels } from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
+import { DetailProperty } from '~/components/DetailProperty';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
-import {
-  DisplaySimpleProperty,
-  DisplaySimplePropertyProps,
-} from '../../../components/DisplaySimpleProperty';
 import { IconButton } from '../../../components/IconButton';
 import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
 import { Redacted } from '../../../components/Redacted';
@@ -104,22 +101,22 @@ export const UserDetail = () => {
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
           </div>
-          <DisplayProperty
+          <DetailProperty
             label="Email"
             value={user?.email.value}
             loading={!user}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Title"
             value={user?.title.value}
             loading={!user}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Roles"
             value={labelsFrom(RoleLabels)(user?.roles.value)}
             loading={!user}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Local Time"
             value={
               user?.timezone.value?.name ? (
@@ -128,12 +125,12 @@ export const UserDetail = () => {
             }
             loading={!user}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Phone"
             value={user?.phone.value}
             loading={!user}
           />
-          <DisplayProperty
+          <DetailProperty
             label="About"
             value={user?.about.value}
             loading={!user}
@@ -177,33 +174,3 @@ const useNow = (updateInterval = 1_000) => {
   }, updateInterval);
   return now;
 };
-
-const DisplayProperty = (props: DisplaySimplePropertyProps) =>
-  !props.value && !props.loading ? null : (
-    <DisplaySimpleProperty
-      variant="body1"
-      {...{ component: 'div' }}
-      {...props}
-      loading={
-        props.loading ? (
-          <>
-            <Typography variant="body2">
-              <Skeleton width="10%" />
-            </Typography>
-            <Typography variant="body1">
-              <Skeleton width="40%" />
-            </Typography>
-          </>
-        ) : null
-      }
-      LabelProps={{
-        color: 'textSecondary',
-        variant: 'body2',
-        ...props.LabelProps,
-      }}
-      ValueProps={{
-        color: 'textPrimary',
-        ...props.ValueProps,
-      }}
-    />
-  );

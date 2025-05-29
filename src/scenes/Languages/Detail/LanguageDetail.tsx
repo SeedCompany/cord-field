@@ -8,13 +8,10 @@ import { PartialDeep } from 'type-fest';
 import { removeItemFromList } from '~/api';
 import { asDate, canEditAny, listOrPlaceholders } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
+import { DetailProperty } from '~/components/DetailProperty';
 import { BooleanProperty } from '../../../components/BooleanProperty';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
-import {
-  DisplaySimpleProperty,
-  DisplaySimplePropertyProps,
-} from '../../../components/DisplaySimpleProperty';
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import {
@@ -165,56 +162,56 @@ export const LanguageDetail = () => {
               wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>
-          <DisplayProperty label="ID" value={id} loading={!language} />
-          <DisplayProperty
+          <DetailProperty label="ID" value={id} loading={!language} />
+          <DetailProperty
             label="Pronunciation Guide"
             value={displayNamePronunciation?.value}
             loading={!language}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Ethnologue Name"
             value={ethnologue?.name.value}
             loading={!language}
           />
           {isSignLanguage?.value && signLanguageCode?.value ? (
-            <DisplayProperty
+            <DetailProperty
               label="Sign Language Code"
               value={signLanguageCode.value}
               loading={!language}
             />
           ) : (
-            <DisplayProperty
+            <DetailProperty
               label="Ethnologue Code"
               value={ethnologue?.code.value}
               loading={!language}
             />
           )}
-          <DisplayProperty
+          <DetailProperty
             label="Provisional Code"
             value={ethnologue?.provisionalCode.value}
             loading={!language}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Registry of Language Varieties (ROLV) Code"
             value={registryOfLanguageVarietiesCode?.value}
             loading={!language}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Population"
             value={formatNumber(population?.value)}
             loading={!language}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Ethnologue Population"
             value={formatNumber(ethnologue?.population.value)}
             loading={!language}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Sponsor Start Date"
             value={<FormattedDate date={sponsorStartDate?.value} />}
             loading={!language}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Sponsor Estimated End Fiscal Year"
             value={asDate(sponsorEstimatedEndDate?.value)?.fiscalYear}
             loading={!language}
@@ -331,33 +328,3 @@ export const LanguageDetail = () => {
     </main>
   );
 };
-
-const DisplayProperty = (props: DisplaySimplePropertyProps) =>
-  !props.value && !props.loading ? null : (
-    <DisplaySimpleProperty
-      variant="body1"
-      {...{ component: 'div' }}
-      {...props}
-      loading={
-        props.loading ? (
-          <>
-            <Typography variant="body2">
-              <Skeleton width="10%" />
-            </Typography>
-            <Typography variant="body1">
-              <Skeleton width="40%" />
-            </Typography>
-          </>
-        ) : null
-      }
-      LabelProps={{
-        color: 'textSecondary',
-        variant: 'body2',
-        ...props.LabelProps,
-      }}
-      ValueProps={{
-        color: 'textPrimary',
-        ...props.ValueProps,
-      }}
-    />
-  );

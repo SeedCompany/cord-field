@@ -6,11 +6,8 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { LocationTypeLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
+import { DetailProperty } from '~/components/DetailProperty';
 import { useDialog } from '../../../components/Dialog';
-import {
-  DisplaySimpleProperty,
-  DisplaySimplePropertyProps,
-} from '../../../components/DisplaySimpleProperty';
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { FormattedDateTime } from '../../../components/Formatters';
@@ -113,17 +110,17 @@ export const LocationDetail = () => {
               </Typography>
             )}
           </div>
-          <DisplayProperty
+          <DetailProperty
             label="Type"
             value={labelFrom(LocationTypeLabels)(location?.type.value)}
             loading={!location}
           />
-          <DisplayProperty
+          <DetailProperty
             label="ISO Alpha-3 Country Code"
             value={location?.isoAlpha3.value}
             loading={!location}
           />
-          <DisplayProperty
+          <DetailProperty
             label="Funding Account"
             value={`${fundingAccount?.name.value ?? ''}${
               fundingAccount?.accountNumber.value
@@ -155,33 +152,3 @@ export const LocationDetail = () => {
     </main>
   );
 };
-
-const DisplayProperty = (props: DisplaySimplePropertyProps) =>
-  !props.value && !props.loading ? null : (
-    <DisplaySimpleProperty
-      variant="body1"
-      {...{ component: 'div' }}
-      {...props}
-      loading={
-        props.loading ? (
-          <>
-            <Typography variant="body2">
-              <Skeleton width="10%" />
-            </Typography>
-            <Typography variant="body1">
-              <Skeleton width="40%" />
-            </Typography>
-          </>
-        ) : null
-      }
-      LabelProps={{
-        color: 'textSecondary',
-        variant: 'body2',
-        ...props.LabelProps,
-      }}
-      ValueProps={{
-        color: 'textPrimary',
-        ...props.ValueProps,
-      }}
-    />
-  );
