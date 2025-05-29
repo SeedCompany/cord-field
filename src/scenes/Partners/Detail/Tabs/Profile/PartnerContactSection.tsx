@@ -50,7 +50,7 @@ export const PartnerContactSection = ({
         {!partner ? (
           <Skeleton width="75%" />
         ) : !partner.address.canRead ? (
-          <Redacted info="You cannot view this partner's code" width="75%" />
+          <Redacted info="You cannot view this partner's address" width="75%" />
         ) : partner.address.value ? (
           partner.address.value
         ) : (
