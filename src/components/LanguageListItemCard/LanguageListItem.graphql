@@ -17,6 +17,12 @@ fragment LanguageListItem on Language {
   population {
     value
   }
+  isWiderComm {
+    value
+  }
+  isAvailableForReporting {
+    value
+  }
   sensitivity
   ...TogglePin
 }
