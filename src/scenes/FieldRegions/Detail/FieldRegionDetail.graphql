@@ -1,0 +1,5 @@
+query FieldRegion($fieldRegionId: ID!) {
+  fieldRegion(id: $fieldRegionId) {
+    ...DisplayFieldRegion
+  }
+}
