@@ -88,7 +88,7 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
           to={`/engagements/${scripture.engagement.id}`}
           underline={!project.name.canRead ? undefined : 'none'}
         >
-          {!project.name.canRead ? (
+          {project.name.canRead ? (
             project.name.value
           ) : (
             <Redacted info="You cannot view the project's name" width={200} />
