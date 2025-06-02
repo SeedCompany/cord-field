@@ -86,7 +86,7 @@ export const FirstScripture = ({ data }: { data?: FirstScriptureFragment }) => {
         First Scripture was recorded in the&nbsp;
         <Link
           to={`/engagements/${scripture.engagement.id}`}
-          underline={!project.name.canRead ? undefined : 'none'}
+          underline={project.name.canRead ? undefined : 'none'}
         >
           {project.name.canRead ? (
             project.name.value
