@@ -75,7 +75,7 @@ export const PartnerTypesSection = ({
   );
 };
 
-const DisplaySecuredList = <T extends string>({
+export const DisplaySecuredList = <T extends string>({
   title,
   data,
   labelBy,
