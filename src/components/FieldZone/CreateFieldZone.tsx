@@ -27,8 +27,8 @@ export const CreateFieldZone = (props: CreateFieldZoneProps) => {
       onSubmit={async ({ fieldZone: values }) => {
         const input: CreateFieldZoneInput = {
           fieldZone: {
-            ...values,
             directorId: values.director.id,
+            name: values.name,
           },
         };
         const { data } = await createFieldZone({
