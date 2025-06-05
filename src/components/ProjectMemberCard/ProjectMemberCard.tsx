@@ -1,8 +1,10 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
+  Chip,
   Skeleton,
   Typography,
 } from '@mui/material';
@@ -10,7 +12,7 @@ import { makeStyles } from 'tss-react/mui';
 import { RoleLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';
-import { FormattedDateTime } from '../Formatters';
+import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 
 const useStyles = makeStyles()(({ spacing }) => ({
@@ -81,6 +83,26 @@ export const ProjectMemberCard = ({
               labelsFrom(RoleLabels)(projectMember.roles.value)
             )}
           </Typography>
+          {!projectMember ? (
+            <Skeleton variant="text" width="25%" />
+          ) : (
+            !projectMember.active &&
+            projectMember.inactiveAt.canRead && (
+              <Box display="flex" alignItems="center" mt={1}>
+                <Chip
+                  label="Inactive"
+                  sx={{
+                    bgcolor: 'info.main',
+                    color: 'info.contrastText',
+                  }}
+                />
+                <Typography variant="caption" color="textSecondary" ml={1}>
+                  Since&nbsp;
+                  <FormattedDate date={projectMember.inactiveAt.value} />
+                </Typography>
+              </Box>
+            )
+          )}
         </div>
       </CardContent>
       <CardActions className={classes.cardActions}>

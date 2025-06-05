@@ -18,4 +18,9 @@ fragment ProjectMemberCard on ProjectMember {
     value
     canRead
   }
+  active
+  inactiveAt {
+    value
+    canRead
+  }
 }

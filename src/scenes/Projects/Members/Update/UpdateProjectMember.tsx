@@ -13,6 +13,7 @@ import {
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
 import {
+  DateField,
   SubmitAction,
   SubmitButton,
   SubmitError,
@@ -31,9 +32,12 @@ export interface UpdateProjectMemberFormParams {
   projectMemberId: UpdateProjectMemberInput['projectMember']['id'];
   userId: string;
   userRoles: UpdateProjectMemberInput['projectMember']['roles'];
+  inactiveAt: UpdateProjectMemberInput['projectMember']['inactiveAt'];
 }
 
-type FormShape = UpdateProjectMemberInput & SubmitAction<'delete'>;
+type FormShape = {
+  projectMember: UpdateProjectMemberInput['projectMember'];
+} & SubmitAction<'delete'>;
 
 type UpdateProjectMemberProps = Except<
   DialogFormProps<UpdateProjectMemberInput>,
@@ -46,6 +50,7 @@ export const UpdateProjectMember = ({
   projectMemberId,
   userId,
   userRoles,
+  inactiveAt,
   ...props
 }: UpdateProjectMemberProps) => {
   const { session } = useSession();
@@ -72,7 +77,7 @@ export const UpdateProjectMember = ({
   const availableRoles = data?.user.roles.value ?? [];
   return (
     <DialogForm<FormShape>
-      title="Update Team Member Role"
+      title="Update Team Member"
       closeLabel="Close"
       submitLabel="Save"
       sendIfClean="delete"
@@ -81,6 +86,7 @@ export const UpdateProjectMember = ({
         projectMember: {
           id: projectMemberId,
           roles: userRoles,
+          inactiveAt: inactiveAt ?? null,
         },
       }}
       onSubmit={async (input) => {
@@ -92,7 +98,19 @@ export const UpdateProjectMember = ({
           });
           return;
         }
-        await updateProjectMember({ variables: { input } });
+        const { projectMember } = input;
+
+        await updateProjectMember({
+          variables: {
+            input: {
+              projectMember: {
+                id: projectMemberId,
+                roles: projectMember.roles,
+                inactiveAt: projectMember.inactiveAt,
+              },
+            },
+          },
+        });
       }}
       fieldsPrefix="projectMember"
       leftAction={
@@ -123,6 +141,11 @@ export const UpdateProjectMember = ({
             variant="outlined"
           />
         )}
+        <DateField
+          name="inactiveAt"
+          label="Inactivity Date"
+          helperText="Leave blank to signify that the member is active"
+        />
       </Container>
     </DialogForm>
   );
