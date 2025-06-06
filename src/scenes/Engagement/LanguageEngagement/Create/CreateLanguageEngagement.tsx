@@ -1,4 +1,13 @@
 import { useMutation } from '@apollo/client';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
+  Paper,
+  Typography,
+} from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
 import { callAll } from '~/common';
@@ -15,8 +24,6 @@ import {
 import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.graphql';
 import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
-import { Tooltip, Paper, List, ListSubheader, ListItem, ListItemText, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 
 interface CreateLanguageEngagementFormValues {
   engagement: {
@@ -29,6 +36,7 @@ type CreateLanguageEngagementProps = Except<
   'onSubmit'
 > & {
   project: ProjectIdFragment;
+  values?: CreateLanguageEngagementFormValues; // Add explicit type for props.values
 };
 
 const useStyles = makeStyles()(({ spacing }) => ({
@@ -48,13 +56,31 @@ export const CreateLanguageEngagement = ({
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
   const { classes } = useStyles();
   // Get engaged language IDs for this project
-  const engagedIds = (project.engagements?.items ?? [])
-    .filter((e: any) => e.__typename === 'LanguageEngagement')
-    .map((e: any) => e.language.value?.id)
-    .filter(Boolean);
+  interface LanguageEngagement {
+    __typename: string;
+    language: {
+      value?: {
+        id: string;
+      };
+    };
+  }
 
-  // Sort so engaged languages are at the bottom
-  const sortByWhetherAnEngagedId = (a: any, b: any) => {
+  const engagedIds = useMemo(
+    () =>
+      project.engagements
+        .filter(
+          (e: LanguageEngagement) => e.__typename === 'LanguageEngagement'
+        )
+        .map((e: LanguageEngagement) => e.language.value?.id)
+        .filter(Boolean),
+    [project.engagements]
+  );
+
+  // Sort languages by engagement status: engaged languages appear after non-engaged ones.
+  const compareLanguageEngagedStatus = (
+    a: LanguageLookupItem,
+    b: LanguageLookupItem
+  ) => {
     const aEngaged = engagedIds.includes(a.id);
     const bEngaged = engagedIds.includes(b.id);
     if (aEngaged === bEngaged) return 0;
@@ -65,37 +91,45 @@ export const CreateLanguageEngagement = ({
   // (assumes LanguageField passes value as option)
   // You may need to adjust this if LanguageField uses a different value prop
   // For now, we use the value from props.values if available
-  // @ts-ignore
-  const currentLanguage = props.values?.engagement?.languageId;
+  const currentLanguage = props.values?.engagement.languageId || {
+    id: '',
+    ethnologue: { code: { value: '-' } },
+    registryOfLanguageVarietiesCode: { value: '-' },
+  }; // Ensure consistent structure and default values
 
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     const languageRef = {
       __typename: 'Language',
       id: engagement.languageId.id,
     } as const;
-    await createEngagement({
-      variables: {
-        input: {
-          engagement: {
-            projectId: project.id,
-            languageId: engagement.languageId.id,
+
+    try {
+      await createEngagement({
+        variables: {
+          input: {
+            engagement: {
+              projectId: project.id,
+              languageId: engagement.languageId.id,
+            },
+            changeset: project.changeset?.id,
           },
-          changeset: project.changeset?.id,
         },
-      },
-      update: callAll(
-        addItemToList({
-          listId: [project, 'engagements'],
-          outputToItem: (res: any) => res.createLanguageEngagement.engagement,
-        }),
-        addItemToList({
-          listId: [languageRef, 'projects'],
-          outputToItem: () => project,
-        }),
-        invalidatePartnersEngagements(),
-        recalculateSensitivity(project)
-      ),
-    });
+        update: callAll(
+          addItemToList({
+            listId: [project, 'engagements'],
+            outputToItem: (res: any) => res.createLanguageEngagement.engagement,
+          }),
+          addItemToList({
+            listId: [languageRef, 'projects'],
+            outputToItem: () => project,
+          }),
+          invalidatePartnersEngagements(),
+          recalculateSensitivity(project)
+        ),
+      });
+    } catch (error) {
+      console.error('Failed to create language engagement:', error);
+    }
   };
   return (
     <DialogForm
@@ -123,34 +157,24 @@ export const CreateLanguageEngagement = ({
             </List>
           </Paper>
         )}
-        sortOptionComparator={sortByWhetherAnEngagedId}
-        getOptionDisabled={(lang: any) => engagedIds?.includes(lang.id) ?? true}
+        sortOptionComparator={compareLanguageEngagedStatus}
+        getOptionDisabled={(lang: LanguageLookupItem) =>
+          engagedIds.includes(lang.id)
+        }
         helperText={
           currentLanguage ? (
             <>
-              <Typography
-                variant="caption"
-                className={classes.helperTextKey}
-              >
+              <Typography variant="caption" className={classes.helperTextKey}>
                 ETH
               </Typography>
-              <Typography
-                variant="caption"
-                className={classes.helperTextValue}
-              >
+              <Typography variant="caption" className={classes.helperTextValue}>
                 {currentLanguage.ethnologue?.code?.value ?? '-'}
               </Typography>
-              <Typography
-                variant="caption"
-                className={classes.helperTextKey}
-              >
+              <Typography variant="caption" className={classes.helperTextKey}>
                 ROLV
               </Typography>
-              <Typography
-                variant="caption"
-                className={classes.helperTextValue}
-              >
-                {currentLanguage.registryOfDialectsCode?.value ?? '-'}
+              <Typography variant="caption" className={classes.helperTextValue}>
+                {currentLanguage.registryOfLanguageVarietiesCode?.value ?? '-'}
               </Typography>
             </>
           ) : (
@@ -164,7 +188,7 @@ export const CreateLanguageEngagement = ({
             />
             <ListItemText primary={option.ethnologue?.code?.value ?? '-'} />
             <ListItemText
-              primary={option.registryOfDialectsCode?.value ?? '-'}
+              primary={option.registryOfLanguageVarietiesCode?.value ?? '-'}
             />
           </ListItem>
         )}
