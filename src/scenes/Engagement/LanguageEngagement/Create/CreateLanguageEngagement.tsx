@@ -117,7 +117,7 @@ export const CreateLanguageEngagement = ({
         update: callAll(
           addItemToList({
             listId: [project, 'engagements'],
-            outputToItem: (res: any) => res.createLanguageEngagement.engagement,
+            outputToItem: (res: CreateLanguageEngagementResponse) => res.createLanguageEngagement.engagement,
           }),
           addItemToList({
             listId: [languageRef, 'projects'],
