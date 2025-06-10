@@ -18,6 +18,7 @@ export const GridFilterInputBoolean = (props: GridFilterInputBooleanProps) => {
     ...others
   } = props;
 
+  // TODO MUI produces warning with null value, handle somehow?
   const value = item.value ?? null;
 
   const rootProps = useGridRootProps();
