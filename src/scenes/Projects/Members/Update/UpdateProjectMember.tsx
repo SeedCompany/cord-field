@@ -15,6 +15,8 @@ import {
 } from '../../../../components/Dialog/DialogForm';
 import {
   AutocompleteField,
+  DateField,
+  SecuredField,
   SubmitAction,
   SubmitButton,
   SubmitError,
@@ -75,6 +77,7 @@ export const UpdateProjectMember = ({
       projectMember: {
         id: member.id,
         roles: member.roles.value,
+        inactiveAt: member.inactiveAt.value ?? null,
       },
     }),
     [member]
@@ -124,6 +127,19 @@ export const UpdateProjectMember = ({
         getOptionDisabled={(option) => !availableRoles.includes(option)}
         variant="outlined"
       />
+
+      <SecuredField obj={member} name="inactiveAt">
+        {(props) => (
+          <DateField
+            {...props}
+            label="Left On"
+            helperText="When the person left the project or blank for active"
+            variant="outlined"
+            allowNull
+            openTo="day"
+          />
+        )}
+      </SecuredField>
     </DialogForm>
   );
 };
