@@ -11,6 +11,8 @@ import { RoleLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';
 import { FormattedDateTime } from '../Formatters';
+import { Redacted } from '../Redacted';
+import { Link } from '../Routing';
 import { ProjectMemberCardFragment } from './ProjectMember.graphql';
 
 const useStyles = makeStyles()(({ spacing }) => ({
@@ -60,13 +62,7 @@ export const ProjectMemberCard = ({
           {projectMember?.user.value?.avatarLetters}
         </Avatar>
         <div className={classes.memberInfo}>
-          <Typography>
-            {!projectMember ? (
-              <Skeleton variant="text" width="40%" />
-            ) : (
-              projectMember.user.value?.fullName
-            )}
-          </Typography>
+          <UserRef projectMember={projectMember} />
           <Typography variant="body2" color="primary">
             {!projectMember ? (
               <Skeleton variant="text" width="33%" />
@@ -98,5 +94,29 @@ export const ProjectMemberCard = ({
         </Typography>
       </CardActions>
     </Card>
+  );
+};
+
+const UserRef = ({
+  projectMember,
+}: Pick<ProjectMemberCardProps, 'projectMember'>) => {
+  if (!projectMember) {
+    return (
+      <Typography>
+        <Skeleton width="40%" />
+      </Typography>
+    );
+  }
+  if (!projectMember.user.value) {
+    return <Redacted info="You cannot view this person" width="100%" />;
+  }
+  return (
+    <Link
+      color="inherit"
+      to={`/users/${projectMember.user.value.id}`}
+      underline="hover"
+    >
+      {projectMember.user.value.fullName}
+    </Link>
   );
 };
