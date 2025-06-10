@@ -497,7 +497,7 @@ export const ProjectOverview = () => {
           </Grid>
 
           <CardGroup horizontal="mdUp">
-            <ProjectMembersSummary members={project?.team} />
+            <ProjectMembersSummary project={project} />
             <PartnershipSummary partnerships={project?.partnerships} />
           </CardGroup>
 
