@@ -18,4 +18,5 @@ fragment ProjectMemberCard on ProjectMember {
     value
     canRead
   }
+  canDelete
 }

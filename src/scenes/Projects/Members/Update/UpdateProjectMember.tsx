@@ -99,14 +99,16 @@ export const UpdateProjectMember = ({
       }}
       fieldsPrefix="projectMember"
       leftAction={
-        <SubmitButton
-          action="delete"
-          color="error"
-          fullWidth={false}
-          variant="text"
-        >
-          Delete
-        </SubmitButton>
+        member.canDelete && (
+          <SubmitButton
+            action="delete"
+            color="error"
+            fullWidth={false}
+            variant="text"
+          >
+            Delete
+          </SubmitButton>
+        )
       }
     >
       <SubmitError />
