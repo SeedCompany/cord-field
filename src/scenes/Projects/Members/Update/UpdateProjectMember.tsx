@@ -53,7 +53,7 @@ export const UpdateProjectMember = ({
     },
     skip: !member.user.value,
   });
-  const availableRoles = data?.user.roles.value ?? [];
+  const availableRoles = data?.user.roles.availableForProjects ?? [];
 
   const [deleteProjectMember] = useMutation(DeleteProjectMemberDocument, {
     variables: {
