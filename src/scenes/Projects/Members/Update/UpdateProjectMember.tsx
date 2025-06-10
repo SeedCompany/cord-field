@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { onUpdateInvalidateObject, removeItemFromList } from '~/api';
+import { onUpdateInvalidateObject, onUpdateInvalidateProps } from '~/api';
 import {
   RoleLabels,
   RoleList,
@@ -57,6 +57,13 @@ export const UpdateProjectMember = ({
   });
   const availableRoles = data?.user.roles.availableForProjects ?? [];
 
+  const invalidateMemberLists = onUpdateInvalidateProps(
+    project,
+    'team',
+    // @ts-expect-error this is an alias used here:
+    // https://github.com/SeedCompany/cord-field/blob/master/src/components/ProjectMembersSummary/ProjectMembersSummary.graphql#L3
+    'activeMembers'
+  );
   const [deleteProjectMember] = useMutation(DeleteProjectMemberDocument, {
     variables: {
       projectMemberId: member.id,
@@ -65,10 +72,7 @@ export const UpdateProjectMember = ({
       session?.id === member.user.value?.id
         ? // Invalidate the whole project if removing self as that can have major authorization implications
           onUpdateInvalidateObject(project)
-        : removeItemFromList({
-            listId: [project, 'team'],
-            item: { id: member.id },
-          })
+        : invalidateMemberLists
     ),
   });
 
@@ -91,13 +95,16 @@ export const UpdateProjectMember = ({
       sendIfClean="delete"
       {...props}
       initialValues={initialValues}
-      onSubmit={async ({ submitAction, ...input }) => {
+      onSubmit={async ({ submitAction, ...input }, form) => {
+        const dirty = form.getState().dirtyFields;
+        const activeChange = 'projectMember.inactiveAt' in dirty;
         if (submitAction === 'delete') {
           await deleteProjectMember();
           return;
         }
         await updateProjectMember({
           variables: { input },
+          update: activeChange ? invalidateMemberLists : undefined,
         });
       }}
       fieldsPrefix="projectMember"
