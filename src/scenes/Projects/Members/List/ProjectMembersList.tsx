@@ -1,5 +1,6 @@
 import { Add } from '@mui/icons-material';
-import { Breadcrumbs, Tooltip, Typography } from '@mui/material';
+import { Breadcrumbs, Stack, Tooltip, Typography } from '@mui/material';
+import { partition } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
@@ -45,6 +46,11 @@ export const ProjectMembersList = () => {
   const [editMemberState, editMember, editingMember] =
     useDialog<UpdateProjectMemberProps['member']>();
 
+  const [active, historic] = partition(
+    data?.project.team.items,
+    (member) => member.active !== false
+  );
+
   return (
     <div className={classes.root}>
       <Helmet
@@ -81,6 +87,7 @@ export const ProjectMembersList = () => {
       ) : (
         <List
           {...list}
+          data={list.data ? { ...list.data, items: active } : undefined}
           spacing={3}
           renderItem={(member) => (
             <ProjectMemberCard
@@ -90,6 +97,25 @@ export const ProjectMembersList = () => {
           )}
           renderSkeleton={<ProjectMemberCard />}
         />
+      )}
+      {historic.length > 0 && (
+        <>
+          <Typography variant="h3" sx={{ my: 2 }}>
+            Historic
+          </Typography>
+          <Stack
+            // to match the list above
+            sx={{ gap: 3, pr: 2 }}
+          >
+            {historic.map((member) => (
+              <ProjectMemberCard
+                key={member.id}
+                projectMember={member}
+                onEdit={() => editMember(member)}
+              />
+            ))}
+          </Stack>
+        </>
       )}
       {editingMember && (
         <UpdateProjectMember

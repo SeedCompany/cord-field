@@ -10,7 +10,7 @@ import { makeStyles } from 'tss-react/mui';
 import { RoleLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';
-import { FormattedDateTime } from '../Formatters';
+import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { Link } from '../Routing';
 import { ProjectMemberCardFragment } from './ProjectMember.graphql';
@@ -86,9 +86,15 @@ export const ProjectMemberCard = ({
         <Typography variant="subtitle2" color="textSecondary">
           {!projectMember ? (
             <Skeleton variant="text" width="23ch" />
+          ) : projectMember.active === false ? (
+            projectMember.inactiveAt.value ? (
+              <>
+                Left <FormattedDate date={projectMember.inactiveAt.value} />
+              </>
+            ) : null
           ) : (
             <>
-              Member Since <FormattedDateTime date={projectMember.createdAt} />
+              Since <FormattedDateTime date={projectMember.createdAt} />
             </>
           )}
         </Typography>
