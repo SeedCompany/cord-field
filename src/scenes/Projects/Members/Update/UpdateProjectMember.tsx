@@ -139,8 +139,8 @@ export const UpdateProjectMember = ({
         {(props) => (
           <DateField
             {...props}
-            label="Left On"
-            helperText="When the person left the project or blank for active"
+            label="Ended On"
+            helperText="When the person's membership on the project ended"
             variant="outlined"
             allowNull
             openTo="day"

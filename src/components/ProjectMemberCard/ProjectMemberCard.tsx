@@ -89,12 +89,14 @@ export const ProjectMemberCard = ({
           ) : projectMember.active === false ? (
             projectMember.inactiveAt.value ? (
               <>
-                Left <FormattedDate date={projectMember.inactiveAt.value} />
+                Membership ended on{' '}
+                <FormattedDate date={projectMember.inactiveAt.value} />
               </>
             ) : null
           ) : (
             <>
-              Since <FormattedDateTime date={projectMember.createdAt} />
+              Membership started at{' '}
+              <FormattedDateTime date={projectMember.createdAt} />
             </>
           )}
         </Typography>
