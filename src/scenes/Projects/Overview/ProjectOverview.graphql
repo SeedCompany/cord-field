@@ -71,9 +71,7 @@ fragment ProjectOverview on Project {
       ...BudgetOverview
     }
   }
-  team {
-    ...ProjectMemberList
-  }
+  ...projectMembersSummary
   type
   partnerships {
     ...PartnershipSummary

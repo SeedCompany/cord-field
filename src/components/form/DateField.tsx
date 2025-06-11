@@ -32,7 +32,12 @@ export type DateFieldProps = Except<
   > &
   Pick<
     TextFieldProps,
-    'label' | 'disabled' | 'helperText' | 'placeholder' | 'fullWidth'
+    | 'variant'
+    | 'label'
+    | 'disabled'
+    | 'helperText'
+    | 'placeholder'
+    | 'fullWidth'
   > & {
     name: string;
     defaultValue?: CalendarDateOrISO | null;
@@ -49,6 +54,7 @@ export const DateField = ({
   errorMessages,
   disableFormatHelperText,
   placeholder,
+  variant,
   ...props
 }: DateFieldProps) => {
   const i10nCtx = useLocalization();
@@ -154,6 +160,7 @@ export const DateField = ({
       renderInput={(params) => (
         <TextField
           autoComplete="off"
+          variant={variant}
           {...params}
           onFocus={() => {
             if (!open.current) {

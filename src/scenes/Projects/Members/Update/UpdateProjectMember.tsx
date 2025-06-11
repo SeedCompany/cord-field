@@ -1,51 +1,49 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Container, Skeleton } from '@mui/material';
+import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { onUpdateInvalidateObject, removeItemFromList } from '~/api';
+import { onUpdateInvalidateObject, onUpdateInvalidateProps } from '~/api';
 import {
   RoleLabels,
   RoleList,
-  UpdateProjectMemberInput,
+  UpdateProjectMember as UpdateProjectMemberShape,
 } from '~/api/schema.graphql';
 import { callAll, labelFrom } from '~/common';
+import { ProjectIdFragment } from '~/common/fragments';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../components/Dialog/DialogForm';
 import {
+  AutocompleteField,
+  DateField,
+  SecuredField,
   SubmitAction,
   SubmitButton,
   SubmitError,
 } from '../../../../components/form';
-import { AutocompleteField } from '../../../../components/form/AutocompleteField';
+import { ProjectMemberCardFragment } from '../../../../components/ProjectMemberCard/ProjectMember.graphql';
 import { useSession } from '../../../../components/Session';
-import { ProjectMembersQuery } from '../List/ProjectMembers.graphql';
 import {
   DeleteProjectMemberDocument,
   GetUserRolesDocument,
   UpdateProjectMemberDocument,
 } from './UpdateProjectMember.graphql';
 
-export interface UpdateProjectMemberFormParams {
-  project: ProjectMembersQuery['project'];
-  projectMemberId: UpdateProjectMemberInput['projectMember']['id'];
-  userId: string;
-  userRoles: UpdateProjectMemberInput['projectMember']['roles'];
-}
+type FormShape = {
+  projectMember: UpdateProjectMemberShape;
+} & SubmitAction<'delete'>;
 
-type FormShape = UpdateProjectMemberInput & SubmitAction<'delete'>;
-
-type UpdateProjectMemberProps = Except<
-  DialogFormProps<UpdateProjectMemberInput>,
+export type UpdateProjectMemberProps = Except<
+  DialogFormProps<FormShape>,
   'onSubmit' | 'initialValues'
-> &
-  UpdateProjectMemberFormParams;
+> & {
+  member: ProjectMemberCardFragment;
+  project: ProjectIdFragment;
+};
 
 export const UpdateProjectMember = ({
   project,
-  projectMemberId,
-  userId,
-  userRoles,
+  member,
   ...props
 }: UpdateProjectMemberProps) => {
   const { session } = useSession();
@@ -53,77 +51,102 @@ export const UpdateProjectMember = ({
 
   const { data, loading } = useQuery(GetUserRolesDocument, {
     variables: {
-      userId,
+      userId: member.user.value?.id ?? '',
     },
+    skip: !member.user.value,
   });
+  const availableRoles = data?.user.roles.availableForProjects ?? [];
 
+  const invalidateMemberLists = onUpdateInvalidateProps(
+    project,
+    'team',
+    // @ts-expect-error this is an alias used here:
+    // https://github.com/SeedCompany/cord-field/blob/master/src/components/ProjectMembersSummary/ProjectMembersSummary.graphql#L3
+    'activeMembers'
+  );
   const [deleteProjectMember] = useMutation(DeleteProjectMemberDocument, {
+    variables: {
+      projectMemberId: member.id,
+    },
     update: callAll(
-      session?.id === userId
-        ? // Invalidate whole project if removing self as that can have major authorization implications
+      session?.id === member.user.value?.id
+        ? // Invalidate the whole project if removing self as that can have major authorization implications
           onUpdateInvalidateObject(project)
-        : removeItemFromList({
-            listId: [project, 'team'],
-            item: { id: projectMemberId },
-          })
+        : invalidateMemberLists
     ),
   });
 
-  const availableRoles = data?.user.roles.value ?? [];
+  const initialValues = useMemo(
+    (): FormShape => ({
+      projectMember: {
+        id: member.id,
+        roles: member.roles.value,
+        inactiveAt: member.inactiveAt.value ?? null,
+      },
+    }),
+    [member]
+  );
+
   return (
     <DialogForm<FormShape>
-      title="Update Team Member Role"
+      title="Update Team Member"
       closeLabel="Close"
       submitLabel="Save"
       sendIfClean="delete"
       {...props}
-      initialValues={{
-        projectMember: {
-          id: projectMemberId,
-          roles: userRoles,
-        },
-      }}
-      onSubmit={async (input) => {
-        if (input.submitAction === 'delete') {
-          await deleteProjectMember({
-            variables: {
-              projectMemberId,
-            },
-          });
+      initialValues={initialValues}
+      onSubmit={async ({ submitAction, ...input }, form) => {
+        const dirty = form.getState().dirtyFields;
+        const activeChange = 'projectMember.inactiveAt' in dirty;
+        if (submitAction === 'delete') {
+          await deleteProjectMember();
           return;
         }
-        await updateProjectMember({ variables: { input } });
+        await updateProjectMember({
+          variables: { input },
+          update: activeChange ? invalidateMemberLists : undefined,
+        });
       }}
       fieldsPrefix="projectMember"
       leftAction={
-        <SubmitButton
-          action="delete"
-          color="error"
-          fullWidth={false}
-          variant="text"
-        >
-          Delete
-        </SubmitButton>
+        member.canDelete && (
+          <SubmitButton
+            action="delete"
+            color="error"
+            fullWidth={false}
+            variant="text"
+          >
+            Delete
+          </SubmitButton>
+        )
       }
     >
-      <Container>
-        <SubmitError />
+      <SubmitError />
 
-        {loading ? (
-          <Skeleton />
-        ) : (
-          <AutocompleteField
-            fullWidth
-            multiple
-            options={RoleList}
-            getOptionLabel={labelFrom(RoleLabels)}
-            name="roles"
-            label="Roles"
-            getOptionDisabled={(option) => !availableRoles.includes(option)}
+      <AutocompleteField
+        loading={loading}
+        fullWidth
+        multiple
+        options={loading ? [] : RoleList}
+        getOptionLabel={labelFrom(RoleLabels)}
+        name="roles"
+        label="Roles"
+        getOptionDisabled={(option) => !availableRoles.includes(option)}
+        variant="outlined"
+      />
+
+      <SecuredField obj={member} name="inactiveAt">
+        {(props) => (
+          <DateField
+            {...props}
+            label="Ended On"
+            helperText="When the person's membership on the project ended"
             variant="outlined"
+            allowNull
+            openTo="day"
           />
         )}
-      </Container>
+      </SecuredField>
     </DialogForm>
   );
 };

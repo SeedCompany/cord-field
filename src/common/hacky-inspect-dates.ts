@@ -31,6 +31,9 @@ function makeAllPropsLazy(obj: any) {
       get(): any {
         return props[key];
       },
+      set(v: any) {
+        props[key] = v;
+      },
       // somehow properties are getting lost if they cannot be enumerated
       enumerable: true,
     });

@@ -10,8 +10,7 @@ query GetUserRoles($userId: ID!) {
   user(id: $userId) {
     id
     roles {
-      canRead
-      value
+      availableForProjects
     }
   }
 }

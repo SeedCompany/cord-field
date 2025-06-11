@@ -26,7 +26,7 @@ export const useSession = () => {
 
 export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
   cache: ApolloCache<T>,
-  sessionData: { user: LoggedInUserFragment; powers: SessionOutput['powers'] }
+  sessionData: { user: LoggedInUserFragment; powers?: SessionOutput['powers'] }
 ) => {
   const { user, powers } = sessionData;
   const currentSession = cache.readQuery({
@@ -41,6 +41,7 @@ export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
           ...currentSession.session.user,
           ...user,
         },
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         powers: [...(powers ? powers : currentSession.session.powers || [])],
       },
     };
