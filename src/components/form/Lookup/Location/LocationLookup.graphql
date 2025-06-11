@@ -1,7 +1,14 @@
 query LocationLookup($query: String!) {
   search(input: { query: $query, type: [Location] }) {
     items {
-      ...DisplayLocation
+      ...LocationLookupItem
     }
+  }
+}
+
+fragment LocationLookupItem on Location {
+  id
+  name {
+    value
   }
 }
