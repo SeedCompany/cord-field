@@ -1,16 +1,16 @@
 import { Group } from '@mui/icons-material';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
-import { ProjectMemberListFragment } from './ProjectMembersSummary.graphql';
+import { ProjectMembersSummaryFragment as Project } from './ProjectMembersSummary.graphql';
 
 export interface ProjectMembersSummaryProps {
-  members?: ProjectMemberListFragment;
+  project?: Project;
 }
 
 export const ProjectMembersSummary = ({
-  members,
+  project,
 }: ProjectMembersSummaryProps) => {
-  const summarizedMembers = members?.items
-    .filter(({ user }) => user.canRead && user.value)
+  const summarizedMembers = project?.team.items
+    .filter(({ active, user }) => active && user.canRead && user.value)
     .map(({ user }) => user.value!)
     .map(
       (user): MemberSummaryItem => ({
@@ -22,7 +22,7 @@ export const ProjectMembersSummary = ({
 
   return (
     <MemberListSummary
-      total={members?.total}
+      total={project?.activeMembers.total}
       title="Team Members"
       members={summarizedMembers}
       to="members"
