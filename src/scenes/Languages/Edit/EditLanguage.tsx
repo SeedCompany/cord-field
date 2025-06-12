@@ -55,6 +55,8 @@ export const EditLanguage = (props: EditLanguageProps) => {
               )?.fiscalYear,
               hasExternalFirstScripture:
                 language.hasExternalFirstScripture.value,
+              isAvailableForReporting: language.isAvailableForReporting.value,
+              isWiderComm: language.isWiderComm.value,
             },
           }
         : undefined,
