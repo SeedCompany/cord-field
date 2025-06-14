@@ -21,23 +21,38 @@ export const DisplaySimpleProperty = ({
   wrap,
   ...props
 }: DisplaySimplePropertyProps) => {
-  const shouldRenderElement = loading || (label && value);
-  if (!shouldRenderElement) return null;
+  const shouldDisplay = loading || (label && value);
+  if (!shouldDisplay) return null;
+  if (loading === true && !loadingWidth) {
+    return (
+      <div>
+        <Typography variant="body2">
+          <Skeleton width="10%" />
+        </Typography>
+        <Typography variant="body2">
+          <Skeleton width="40%" />
+        </Typography>
+      </div>
+    );
+  }
   const property = (
-    <Typography variant="body2" {...props}>
-      {loading === true ? (
-        <Skeleton width={loadingWidth} />
-      ) : loading ? (
+    <Typography variant="body1" {...props}>
+      {loading ? (
         loading
       ) : label && value ? (
         <>
-          <Typography component="span" variant="inherit" {...LabelProps}>
+          <Typography
+            component="span"
+            variant={LabelProps?.variant || 'body2'}
+            color={LabelProps?.color || 'textSecondary'}
+            {...LabelProps}
+          >
             {label}:&nbsp;
           </Typography>
           <Typography
             component="span"
-            variant="inherit"
-            color="text.secondary"
+            variant={ValueProps?.variant || 'inherit'}
+            color={ValueProps?.color || 'textPrimary'}
             {...ValueProps}
           >
             {value}
