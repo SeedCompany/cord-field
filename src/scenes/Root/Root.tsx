@@ -46,6 +46,9 @@ const Users = loadable(() => import('../Users'), {
 const Locations = loadable(() => import('../Locations/Locations'), {
   resolveComponent: (m) => m.Locations,
 });
+const FieldRegions = loadable(() => import('../FieldRegions/FieldRegions'), {
+  resolveComponent: (m) => m.FieldRegions,
+});
 const SearchResults = loadable(() => import('../SearchResults'), {
   resolveComponent: (m) => m.SearchResults,
 });
@@ -78,6 +81,7 @@ export const Root = () => {
         <Route path="languages/*" element={<Languages />} />
         <Route path="users/*" element={<Users />} />
         <Route path="search" element={<SearchResults />} />
+        <Route path="field-regions/*" element={<FieldRegions />} />
         <Route path="locations/*" element={<Locations />} />
         {NotFoundRoute}
       </Route>
