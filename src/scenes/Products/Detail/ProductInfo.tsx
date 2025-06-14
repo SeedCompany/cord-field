@@ -1,20 +1,10 @@
-import {
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Skeleton,
-  Typography,
-} from '@mui/material';
+import { Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
 import { mapEntries } from '@seedcompany/common';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
 import { displayMethodologyWithLabel } from '~/common';
-import {
-  DisplaySimpleProperty,
-  DisplaySimplePropertyProps,
-} from '../../../components/DisplaySimpleProperty';
+import { DisplaySimpleProperty } from '~/components/DisplaySimpleProperty';
 import { Link } from '../../../components/Routing';
 import { ProductDetailFragment as Product } from './ProductDetail.graphql';
 
@@ -36,7 +26,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
   return (
     <>
       {product?.__typename === 'OtherProduct' && (
-        <DisplayProperty
+        <DisplaySimpleProperty
           label="Description"
           value={product.description.value}
           loading={!product}
@@ -44,7 +34,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         />
       )}
 
-      <DisplayProperty
+      <DisplaySimpleProperty
         label="Distribution Methods"
         value={
           product && product.mediums.value.length > 0 ? (
@@ -82,7 +72,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         wrap={infoWrapper}
       />
 
-      <DisplayProperty
+      <DisplaySimpleProperty
         label="Methodology"
         value={
           product?.methodology.value
@@ -93,7 +83,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         wrap={infoWrapper}
       />
 
-      <DisplayProperty
+      <DisplaySimpleProperty
         label="Completion Description"
         value={product?.describeCompletion.value}
         loading={!product}
@@ -101,7 +91,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         className={classes.completionDescription}
       />
 
-      <DisplayProperty
+      <DisplaySimpleProperty
         label="Scripture"
         value={
           product && product.scriptureReferences.value.length > 0 ? (
@@ -119,7 +109,7 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
       />
 
       {!product?.progressOfCurrentReportDue && (
-        <DisplayProperty
+        <DisplaySimpleProperty
           label="Steps"
           value={
             product && product.steps.value.length > 0 ? (
@@ -148,33 +138,3 @@ const infoWrapper = (node: ReactNode) => (
     {node}
   </Grid>
 );
-
-const DisplayProperty = (props: DisplaySimplePropertyProps) =>
-  !props.value && !props.loading ? null : (
-    <DisplaySimpleProperty
-      variant="body1"
-      {...{ component: 'div' }}
-      {...props}
-      loading={
-        props.loading ? (
-          <>
-            <Typography variant="body2">
-              <Skeleton width="10%" />
-            </Typography>
-            <Typography variant="body1">
-              <Skeleton width="40%" />
-            </Typography>
-          </>
-        ) : null
-      }
-      LabelProps={{
-        color: 'textSecondary',
-        variant: 'body2',
-        ...props.LabelProps,
-      }}
-      ValueProps={{
-        color: 'textPrimary',
-        ...props.ValueProps,
-      }}
-    />
-  );
