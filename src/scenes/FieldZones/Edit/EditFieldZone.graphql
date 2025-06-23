@@ -1,0 +1,7 @@
+mutation UpdateFieldZone($input: UpdateFieldZoneInput!) {
+  updateFieldZone(input: $input) {
+    fieldZone {
+      ...DisplayFieldZone
+    }
+  }
+}

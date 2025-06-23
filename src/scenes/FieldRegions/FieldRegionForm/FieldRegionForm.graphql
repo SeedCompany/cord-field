@@ -1,0 +1,23 @@
+fragment FieldRegionForm on FieldRegion {
+  id
+  name {
+    canRead
+    canEdit
+    value
+  }
+  director {
+    canEdit
+    canRead
+    value {
+      id
+      fullName
+    }
+  }
+  fieldZone {
+    canEdit
+    canRead
+    value {
+      ...DisplayFieldZone
+    }
+  }
+}
