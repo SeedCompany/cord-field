@@ -1,0 +1,5 @@
+query EngagementFlowchart {
+  workflow: engagementWorkflow {
+    ...workflow
+  }
+}
