@@ -1,12 +1,11 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Skeleton, Tooltip, Typography } from '@mui/material';
+import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { RoleLabels } from '~/api/schema.graphql';
 import { canEditAny, labelsFrom } from '~/common';
@@ -26,34 +25,7 @@ import { UsersQueryVariables } from '../List/users.graphql';
 import { ImpersonationToggle } from './ImpersonationToggle';
 import { UserDocument } from './UserDetail.graphql';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    overflowY: 'auto',
-    padding: spacing(4),
-    '& > *:not(:last-child)': {
-      marginBottom: spacing(3),
-    },
-    maxWidth: breakpoints.values.md,
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
-    gap: spacing(1),
-  },
-  name: {
-    marginRight: spacing(2), // a little extra between text and buttons
-    lineHeight: 'inherit', // centers text with buttons better
-  },
-  partnersContainer: {
-    marginTop: spacing(1),
-  },
-  partner: {
-    marginBottom: spacing(2),
-  },
-}));
-
 export const UserDetail = () => {
-  const { classes } = useStyles();
   const { userId = '' } = useParams();
   const { data, error } = useQuery(UserDocument, {
     variables: { userId },
@@ -67,14 +39,36 @@ export const UserDetail = () => {
   const canEditAnyFields = canEditAny(user);
 
   return (
-    <main className={classes.root}>
+    <Box
+      component="main"
+      sx={{
+        overflowY: 'auto',
+        p: 4,
+        '& > *:not(:last-child)': {
+          mb: 3,
+        },
+        maxWidth: (theme) => theme.breakpoints.values.md,
+      }}
+    >
       <Helmet title={user?.fullName ?? undefined} />
       {error ? (
         <Typography variant="h4">Error loading person</Typography>
       ) : (
         <>
-          <div className={classes.header}>
-            <Typography variant="h2" className={classes.name}>
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              gap: 1,
+            }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                mr: 2, // a little extra between text and buttons
+                lineHeight: 'inherit', // centers text with buttons better
+              }}
+            >
               {!user ? (
                 <Skeleton width="20ch" />
               ) : (
@@ -103,7 +97,7 @@ export const UserDetail = () => {
             />
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
-          </div>
+          </Box>
           <DisplayProperty
             label="Email"
             value={user?.email.value}
@@ -143,20 +137,18 @@ export const UserDetail = () => {
           {!!user?.partners.items.length && (
             <>
               <Typography variant="h3">Partners</Typography>
-              <div className={classes.partnersContainer}>
+              <Box sx={{ mt: 1 }}>
                 {user.partners.items.map((item) => (
-                  <PartnerListItemCard
-                    key={item.id}
-                    partner={item}
-                    className={classes.partner}
-                  />
+                  <Box key={item.id} sx={{ mb: 2 }}>
+                    <PartnerListItemCard partner={item} />
+                  </Box>
                 ))}
-              </div>
+              </Box>
             </>
           )}
         </>
       )}
-    </main>
+    </Box>
   );
 };
 

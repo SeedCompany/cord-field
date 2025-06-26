@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { memoize } from 'lodash';
 import { RoleLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
@@ -46,34 +46,34 @@ export const UserForm = <T, R = void>({
     >
       <SubmitError />
       <FieldGroup prefix={prefix}>
-        <Grid container spacing={2}>
-          <Grid item xs>
-            <SecuredField obj={user} name="realFirstName">
-              {(props) => (
-                <TextField
-                  label="First Name"
-                  placeholder="Enter First Name"
-                  required
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-          <Grid item xs>
-            <SecuredField obj={user} name="realLastName">
-              {(props) => (
-                <TextField
-                  label="Last Name"
-                  placeholder="Enter Last Name"
-                  required
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs>
+        <Stack>
+          <Stack direction="row" spacing={2}>
+            <Box flex={1}>
+              <SecuredField obj={user} name="realFirstName">
+                {(props) => (
+                  <TextField
+                    label="First Name"
+                    placeholder="Enter First Name"
+                    required
+                    {...props}
+                  />
+                )}
+              </SecuredField>
+            </Box>
+            <Box flex={1}>
+              <SecuredField obj={user} name="realLastName">
+                {(props) => (
+                  <TextField
+                    label="Last Name"
+                    placeholder="Enter Last Name"
+                    required
+                    {...props}
+                  />
+                )}
+              </SecuredField>
+            </Box>
+          </Stack>
+          <Stack direction="row" spacing={2}>
             <SecuredField obj={user} name="displayFirstName">
               {(props) => (
                 <TextField
@@ -84,8 +84,6 @@ export const UserForm = <T, R = void>({
                 />
               )}
             </SecuredField>
-          </Grid>
-          <Grid item xs>
             <SecuredField obj={user} name="displayLastName">
               {(props) => (
                 <TextField
@@ -96,59 +94,59 @@ export const UserForm = <T, R = void>({
                 />
               )}
             </SecuredField>
-          </Grid>
-        </Grid>
-        <SecuredField obj={user} name="email">
-          {(props) => <EmailField {...props} required={false} />}
-        </SecuredField>
-        <SecuredField obj={user} name="title">
-          {(props) => (
-            <TextField label="Title" placeholder="Enter Title" {...props} />
-          )}
-        </SecuredField>
-        <SecuredField obj={user} name="phone">
-          {(props) => (
-            <TextField
-              label="Phone"
-              placeholder="Enter Phone Number"
-              type="tel"
-              {...props}
-            />
-          )}
-        </SecuredField>
-        {/*TODO: Replace with timezone autocomplete #307 */}
-        {/*<SecuredField obj={user} name="timezone">*/}
-        {/*  {(props) => (*/}
-        {/*    <TextField label="Timezone" placeholder="Enter Timezone" {...props} />*/}
-        {/*  )}*/}
-        {/*</SecuredField>*/}
-        <SecuredField obj={user} name="about">
-          {(props) => (
-            <TextField
-              label="About"
-              multiline
-              placeholder="Enter About"
-              minRows={2}
-              {...props}
-            />
-          )}
-        </SecuredField>
-        <SecuredField obj={user} name="roles">
-          {(props) => (
-            <AutocompleteField
-              multiple
-              options={
-                user?.roles.assignableRoles ??
-                session?.roles.assignableRoles ??
-                []
-              }
-              getOptionLabel={labelFrom(RoleLabels)}
-              label="Roles"
-              variant="outlined"
-              {...props}
-            />
-          )}
-        </SecuredField>
+          </Stack>
+          <SecuredField obj={user} name="email">
+            {(props) => <EmailField {...props} required={false} />}
+          </SecuredField>
+          <SecuredField obj={user} name="title">
+            {(props) => (
+              <TextField label="Title" placeholder="Enter Title" {...props} />
+            )}
+          </SecuredField>
+          <SecuredField obj={user} name="phone">
+            {(props) => (
+              <TextField
+                label="Phone"
+                placeholder="Enter Phone Number"
+                type="tel"
+                {...props}
+              />
+            )}
+          </SecuredField>
+          {/*TODO: Replace with timezone autocomplete #307 */}
+          {/*<SecuredField obj={user} name="timezone">*/}
+          {/*  {(props) => (*/}
+          {/*    <TextField label="Timezone" placeholder="Enter Timezone" {...props} />*/}
+          {/*  )}*/}
+          {/*</SecuredField>*/}
+          <SecuredField obj={user} name="about">
+            {(props) => (
+              <TextField
+                label="About"
+                multiline
+                placeholder="Enter About"
+                minRows={2}
+                {...props}
+              />
+            )}
+          </SecuredField>
+          <SecuredField obj={user} name="roles">
+            {(props) => (
+              <AutocompleteField
+                multiple
+                options={
+                  user?.roles.assignableRoles ??
+                  session?.roles.assignableRoles ??
+                  []
+                }
+                getOptionLabel={labelFrom(RoleLabels)}
+                label="Roles"
+                variant="outlined"
+                {...props}
+              />
+            )}
+          </SecuredField>
+        </Stack>
       </FieldGroup>
     </DialogForm>
   );
