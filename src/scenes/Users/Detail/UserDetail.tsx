@@ -97,6 +97,11 @@ export const UserDetail = () => {
             <ImpersonationToggle user={user} />
           </Box>
           <DisplayProperty
+            label="Status"
+            value={user?.status.value}
+            loading={!user}
+          />
+          <DisplayProperty
             label="Email"
             value={user?.email.value}
             loading={!user}

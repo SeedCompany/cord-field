@@ -1,7 +1,11 @@
 import { Stack } from '@mui/material';
 import { memoize } from 'lodash';
 import { SetRequired } from 'type-fest';
-import { RoleLabels } from '~/api/schema.graphql';
+import {
+  RoleLabels,
+  UserStatusLabels,
+  UserStatusList,
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -9,6 +13,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import {
   EmailField,
+  EnumField,
   matchFieldIfSame,
   SecuredField,
   SubmitError,
@@ -91,6 +96,16 @@ export const UserForm = <T, R = void>({
             )}
           </SecuredField>
         </Stack>
+        <SecuredField obj={user} name="status">
+          {(props) => (
+            <EnumField
+              label="Status"
+              options={UserStatusList}
+              getLabel={(value) => UserStatusLabels[value]}
+              {...props}
+            />
+          )}
+        </SecuredField>
         <SecuredField obj={user} name="email">
           {(props) => <EmailField {...props} required={false} />}
         </SecuredField>

@@ -10,5 +10,8 @@ fragment userDataGridRow on User {
   email {
     value
   }
+  status {
+    value
+  }
   ...TogglePin
 }
