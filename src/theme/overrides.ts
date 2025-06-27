@@ -208,9 +208,20 @@ export const appComponents = ({
         root: ({ theme }) => ({
           textTransform: 'none',
           transition: theme.transitions.create('transform'),
-          '&.Mui-selected': {
-            transform: 'scale(1.43)', // 20px
+          [theme.breakpoints.up('md')]: {
+            fontSize: 18,
           },
+          // scale font size slightly when selected
+          // Doing it this way so it animates nicely and doesn't shift layouts
+          '&.Mui-selected span:not(.MuiTouchRipple-root)': {
+            transform: 'scale(1.1)',
+          },
+          'span:not(.MuiTouchRipple-root)': {
+            transition: theme.transitions.create('transform'),
+          },
+          // Increase px to accommodate the scaling that ignores parent width.
+          paddingLeft: theme.spacing(3),
+          paddingRight: theme.spacing(3),
         }),
       },
     },
