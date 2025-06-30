@@ -1,0 +1,5 @@
+query FieldZoneDetail($fieldZoneId: ID!) {
+  fieldZone(id: $fieldZoneId) {
+    ...DisplayFieldZone
+  }
+}
