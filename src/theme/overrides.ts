@@ -205,20 +205,9 @@ export const appComponents = ({
     },
     MuiTab: {
       styleOverrides: {
-        root: ({ theme }) => ({
+        root: {
           textTransform: 'none',
-          // scale font size slightly when selected
-          // Doing it this way so it animates nicely and doesn't shift layouts
-          '&.Mui-selected span:not(.MuiTouchRipple-root)': {
-            transform: 'scale(1.43)', // 20px
-          },
-          'span:not(.MuiTouchRipple-root)': {
-            transition: theme.transitions.create('transform'),
-          },
-          // Increase px to accommodate the scaling that ignores parent width.
-          paddingLeft: theme.spacing(3),
-          paddingRight: theme.spacing(3),
-        }),
+        },
       },
     },
     MuiTabs: {
