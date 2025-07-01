@@ -207,14 +207,10 @@ export const appComponents = ({
       styleOverrides: {
         root: ({ theme }) => ({
           textTransform: 'none',
-          transition: theme.transitions.create('transform'),
-          [theme.breakpoints.up('md')]: {
-            fontSize: 18,
-          },
           // scale font size slightly when selected
           // Doing it this way so it animates nicely and doesn't shift layouts
           '&.Mui-selected span:not(.MuiTouchRipple-root)': {
-            transform: 'scale(1.1)',
+            transform: 'scale(1.43)', // 20px
           },
           'span:not(.MuiTouchRipple-root)': {
             transition: theme.transitions.create('transform'),
