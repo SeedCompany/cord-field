@@ -1,4 +1,5 @@
-import { Tab as BaseTab, Box, TabProps, TabTypeMap } from '@mui/material';
+import { Tab as BaseTab, TabProps, TabTypeMap } from '@mui/material';
+import { styled } from '@mui/material/styles';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { Link, LinkProps } from 'react-router-dom';
 
@@ -8,45 +9,42 @@ export const Tab: typeof BaseTab = (props: TabTypeMap['props']) => (
     // Wrap string labels in span so we can scale them when selected (CSS in theme)
     label={
       typeof props.label === 'string' ? (
-        <Box
-          component="span"
-          sx={{ position: 'relative', display: 'inline-block' }}
+        <Span
+          sx={{
+            position: 'relative',
+            fontSize: '1.25rem',
+            lineHeight: 1,
+          }}
         >
           {/* Hold invisible layout at an increased, selected scale */}
-          <Box
-            component="span"
-            aira-hidden="true"
-            sx={{
-              visibility: 'hidden',
-              lineHeight: 1,
-              fontSize: 20,
-            }}
-          >
+          <Span aira-hidden="true" sx={{ visibility: 'hidden' }}>
             {props.label}
-          </Box>
+          </Span>
           {/* Show text floating in the larger box */}
-          <Box
-            component="span"
+          <Span
             sx={(theme) => ({
               position: 'absolute',
               inset: 0,
               display: 'grid',
               placeItems: 'center',
               transition: theme.transitions.create('transform'),
+              transform: 'scale(.75)',
               '.Mui-selected &': {
-                transform: 'scale(1.43)', // 20px
+                transform: 'scale(1)',
               },
             })}
           >
             {props.label}
-          </Box>
-        </Box>
+          </Span>
+        </Span>
       ) : (
         props.label
       )
     }
   />
 );
+
+const Span = styled('span')();
 
 export const TabLink = (
   props: Omit<TabProps<'a'>, 'component'> & { selected?: boolean } & LinkProps
