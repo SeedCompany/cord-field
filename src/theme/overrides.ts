@@ -205,9 +205,17 @@ export const appComponents = ({
     },
     MuiTab: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           textTransform: 'none',
-        },
+          fontSize: '1.25rem',
+          'span:not(.MuiTouchRipple-root)': {
+            transition: theme.transitions.create('transform'),
+            transform: 'scale(.75)',
+          },
+          '&.Mui-selected span:not(.MuiTouchRipple-root)': {
+            transform: 'scale(1)',
+          },
+        }),
       },
     },
     MuiTabs: {
