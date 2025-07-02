@@ -13,7 +13,7 @@ import {
 type SubmitResult = CreatePersonMutation['createPerson']['user'];
 export type CreateUserProps = Except<
   UserFormProps<CreatePersonInput, SubmitResult>,
-  'prefix' | 'onSubmit'
+  'fieldsPrefix' | 'onSubmit'
 >;
 
 export const CreateUser = (props: CreateUserProps) => {
@@ -39,7 +39,7 @@ export const CreateUser = (props: CreateUserProps) => {
         });
       }}
       {...props}
-      prefix="person"
+      fieldsPrefix="person"
       onSubmit={async (input) => {
         const { data } = await createPerson({
           variables: { input },
