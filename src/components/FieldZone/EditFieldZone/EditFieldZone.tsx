@@ -25,7 +25,7 @@ export const EditFieldZone = (
       fieldZone: {
         id: fieldZone.id,
         name: fieldZone.name.value,
-        director: fieldZone.director.value ?? undefined,
+        directorId: fieldZone.director.value ?? null,
       },
     }),
     [fieldZone]
@@ -41,7 +41,7 @@ export const EditFieldZone = (
           fieldZone: {
             id: values.id,
             name: values.name,
-            directorId: values.director?.id ?? null,
+            directorId: values.directorId?.id,
           },
         };
 

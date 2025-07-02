@@ -9,8 +9,7 @@ fragment FieldZoneForm on FieldZone {
     canEdit
     canRead
     value {
-      id
-      fullName
+      ...UserLookupItem
     }
   }
 }

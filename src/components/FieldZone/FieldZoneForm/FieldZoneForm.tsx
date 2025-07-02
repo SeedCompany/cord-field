@@ -14,7 +14,7 @@ export interface FieldZoneFormValues<Mutation extends FieldZoneMutation> {
   fieldZone: Merge<
     Mutation,
     {
-      director?: Pick<UserLookupItemFragment, 'id' | 'fullName'>;
+      directorId: UserLookupItemFragment | null;
     }
   >;
 }
@@ -45,9 +45,7 @@ export const FieldZoneForm = <Mutation extends FieldZoneMutation, R>({
           )}
         </SecuredField>
         <SecuredField obj={fieldZone} name="directorId">
-          {(props) => (
-            <UserField {...props} name="director" label="Director" required />
-          )}
+          {(props) => <UserField {...props} label="Director" required />}
         </SecuredField>
       </Stack>
     </FieldGroup>
