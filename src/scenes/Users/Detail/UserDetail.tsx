@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
@@ -39,14 +39,12 @@ export const UserDetail = () => {
   const canEditAnyFields = canEditAny(user);
 
   return (
-    <Box
+    <Stack
       component="main"
       sx={{
         overflowY: 'auto',
         p: 4,
-        '& > *:not(:last-child)': {
-          mb: 3,
-        },
+        gap: 3,
         maxWidth: (theme) => theme.breakpoints.values.md,
       }}
     >
@@ -137,18 +135,16 @@ export const UserDetail = () => {
           {!!user?.partners.items.length && (
             <>
               <Typography variant="h3">Partners</Typography>
-              <Box sx={{ mt: 1 }}>
+              <Stack sx={{ mt: 1, gap: 2 }}>
                 {user.partners.items.map((item) => (
-                  <Box key={item.id} sx={{ mb: 2 }}>
-                    <PartnerListItemCard partner={item} />
-                  </Box>
+                  <PartnerListItemCard key={item.id} partner={item} />
                 ))}
-              </Box>
+              </Stack>
             </>
           )}
         </>
       )}
-    </Box>
+    </Stack>
   );
 };
 
