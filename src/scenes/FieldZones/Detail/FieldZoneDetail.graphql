@@ -1,6 +1,14 @@
 query FieldZoneDetail($fieldZoneId: ID!) {
   fieldZone(id: $fieldZoneId) {
-    ...DisplayFieldZone
+    name {
+      value
+    }
+    director {
+      value {
+        id
+        fullName
+      }
+    }
     ...FieldZoneForm
   }
 }

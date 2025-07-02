@@ -62,7 +62,7 @@ export const FieldZoneDetail = () => {
               variant="h2"
               sx={{
                 mr: 4,
-                width: !fieldZone?.name ? '40%' : undefined,
+                width: !fieldZone?.name.value ? '40%' : undefined,
               }}
             >
               {!fieldZone ? (

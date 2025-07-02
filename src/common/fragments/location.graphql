@@ -34,18 +34,7 @@ fragment DisplayFieldRegion on FieldRegion {
 
 fragment DisplayFieldZone on FieldZone {
   id
-  createdAt
   name {
-    canRead
-    canEdit
     value
-  }
-  director {
-    canRead
-    canEdit
-    value {
-      id
-      fullName
-    }
   }
 }
