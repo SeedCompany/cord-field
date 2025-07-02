@@ -4,7 +4,20 @@ mutation UpdatePartner(
 ) {
   updatePartner(input: { partner: $partner }) {
     partner {
-      ...partnerDetails
+      # Organization data cannot be fetched here as it will be stale.
+      #
+      # The API executes these two mutations in parallel, independently.
+      # `Partner.organization` doesn't know it there's another organization update going on,
+      # and will return the stale data.
+      # Apollo Client would then receive two sets of org data:
+      # - `updateOrganization.organization` result
+      # - `updatePartner.partner.organization` result
+      # They will be conflict, with the former fresh, and the latter stale.
+      # We can avoid this race / nondeterministic behavior by only returning one org data set.
+      #
+      # Also, Apollo Client still has the normalized organization for the partner record,
+      # so it knows how to connect it together when requested for the detail page.
+      ...partnerOwnDetails
     }
   }
   updateOrganization(input: { organization: $organization }) {
