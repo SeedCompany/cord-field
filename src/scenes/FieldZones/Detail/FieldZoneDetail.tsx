@@ -100,9 +100,11 @@ export const FieldZoneDetail = () => {
           <DisplayProperty
             label="Director"
             value={
-              <Link to={`/users/${fieldZone?.director.value?.id}`}>
-                {fieldZone?.director.value?.fullName}
-              </Link>
+              fieldZone?.director.value && (
+                <Link to={`/users/${fieldZone.director.value.id}`}>
+                  {fieldZone.director.value.fullName}
+                </Link>
+              )
             }
             loading={!fieldZone}
           />
