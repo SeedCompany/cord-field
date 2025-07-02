@@ -12,7 +12,10 @@ import { textColumn } from '../ColumnTypes/textColumn';
 export const LanguageNameColumn = <
   const Input extends Merge<
     Partial<GridColDef<Row>>,
-    WithValueGetterReturning<LanguageLookupItem, Row>
+    WithValueGetterReturning<
+      Pick<LanguageLookupItem, 'displayName' | 'name' | 'id'>,
+      Row
+    >
   >,
   Row extends RowLike
 >({
