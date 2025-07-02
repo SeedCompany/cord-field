@@ -3,8 +3,7 @@ import { Stack } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 import { ContentContainer } from '~/components/Layout';
-import { TabPanelContent, TabsContainer } from '~/components/Tabs';
-import { TabLink } from '../../../components/Routing/TabLink';
+import { TabLink, TabPanelContent, TabsContainer } from '~/components/Tabs';
 import { EngagementsPanel } from './EngagementsPanel';
 import { ProjectsPanel } from './ProjectsPanel';
 
