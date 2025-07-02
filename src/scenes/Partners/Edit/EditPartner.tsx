@@ -8,7 +8,9 @@ import {
   CoerceNonPrimitives,
   FinancialReportingTypeLabels,
   FinancialReportingTypeList,
+  OrganizationReachLabels,
   OrganizationReachList,
+  OrganizationTypeLabels,
   OrganizationTypeList,
   PartnerTypeList,
   UpdateOrganization,
@@ -115,6 +117,7 @@ const fieldMapping = {
       multiple
       label="Reach"
       options={OrganizationReachList}
+      getLabel={labelFrom(OrganizationReachLabels)}
       layout="two-column"
       {...props}
     />
@@ -122,8 +125,9 @@ const fieldMapping = {
   'organization.types': ({ props }) => (
     <EnumField
       multiple
-      label="Types"
+      label="Organizational Types"
       options={OrganizationTypeList}
+      getLabel={labelFrom(OrganizationTypeLabels)}
       layout="two-column"
       {...props}
     />

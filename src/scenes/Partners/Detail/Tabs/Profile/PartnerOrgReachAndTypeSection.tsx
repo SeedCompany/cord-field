@@ -61,7 +61,7 @@ export const PartnerOrgReachAndTypeSection = ({
           redacted={{ fieldDescription: `organizational types` }}
         />
         <DisplaySecuredList
-          title="Partner Reach"
+          title="Reach"
           data={partner?.organization.value?.reach}
           labelBy={labelFrom(OrganizationReachLabels)}
           redacted={{
