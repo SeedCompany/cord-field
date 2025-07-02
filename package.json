@@ -152,6 +152,7 @@
     "@jest/types": "^27.5.1",
     "@loadable/babel-plugin": "^5.16.1",
     "@loadable/webpack-plugin": "^5.15.2",
+    "@parcel/watcher": "^2.5.1",
     "@seedcompany/eslint-plugin": "^3.4.1",
     "@testing-library/dom": "^8.20.1",
     "@testing-library/jest-dom": "^5.17.0",
