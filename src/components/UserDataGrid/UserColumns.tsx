@@ -4,9 +4,15 @@ import {
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
-import { RoleLabels, RoleList } from '~/api/schema.graphql';
+import {
+  RoleLabels,
+  RoleList,
+  UserStatusLabels,
+  UserStatusList,
+} from '~/api/schema.graphql';
 import {
   booleanColumn,
+  enumColumn,
   getInitialVisibility,
   multiEnumColumn,
   QuickFilterButton,
@@ -42,6 +48,12 @@ export const UserColumns: Array<GridColDef<User>> = [
     valueGetter: (_, { roles }) => {
       return roles.value;
     },
+  },
+  {
+    headerName: 'Status',
+    field: 'status',
+    ...enumColumn(UserStatusList, UserStatusLabels),
+    valueGetter: (_, row) => row.status.value,
   },
   {
     headerName: 'Pinned',

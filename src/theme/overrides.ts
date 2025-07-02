@@ -207,9 +207,13 @@ export const appComponents = ({
       styleOverrides: {
         root: ({ theme }) => ({
           textTransform: 'none',
-          transition: theme.transitions.create('transform'),
-          '&.Mui-selected': {
-            transform: 'scale(1.43)', // 20px
+          fontSize: '1.25rem',
+          'span:not(.MuiTouchRipple-root)': {
+            transition: theme.transitions.create('transform'),
+            transform: 'scale(.75)',
+          },
+          '&.Mui-selected span:not(.MuiTouchRipple-root)': {
+            transform: 'scale(1)',
           },
         }),
       },

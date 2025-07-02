@@ -5,7 +5,7 @@ import {
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Skeleton, Stack, Tab, Tooltip, Typography } from '@mui/material';
+import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { Many, Nil } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -17,7 +17,7 @@ import { Error } from '~/components/Error';
 import { FormattedDate, FormattedDateTime } from '~/components/Formatters';
 import { IconButton } from '~/components/IconButton';
 import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
-import { TabsContainer } from '~/components/Tabs';
+import { Tab, TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';

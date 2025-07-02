@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import * as path from 'path';
@@ -32,6 +33,10 @@ export const create = async () => {
   );
   router.use(bodyParser.json());
   router.use(cookieParser());
+
+  // Allow images to be served from anywhere.
+  // Emails reference these images, and they can be rendered anywhere.
+  router.use('/images/*', cors());
 
   // Serve static assets
   router.use(

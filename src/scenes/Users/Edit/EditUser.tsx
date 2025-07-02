@@ -7,7 +7,7 @@ import { UpdateUserDocument } from './EditUser.graphql';
 
 export type EditUserProps = Except<
   UserFormProps<UpdateUserInput>,
-  'prefix' | 'onSubmit' | 'initialValues'
+  'fieldsPrefix' | 'onSubmit' | 'initialValues'
 >;
 
 export const EditUser = (props: EditUserProps) => {
@@ -30,6 +30,7 @@ export const EditUser = (props: EditUserProps) => {
               email: user.email.value,
               title: user.title.value,
               roles: user.roles.value,
+              status: user.status.value,
             },
           }
         : undefined,
@@ -40,7 +41,7 @@ export const EditUser = (props: EditUserProps) => {
     <UserForm<UpdateUserInput & { user: { email?: Maybe<string> } }>
       title="Edit Person"
       {...props}
-      prefix="user"
+      fieldsPrefix="user"
       initialValues={initialValues}
       onSubmit={async ({ user }) => {
         await updateUser({
