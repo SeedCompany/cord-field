@@ -1,14 +1,8 @@
-import { type CreateFieldZone as CreateFieldZoneType } from '~/api/schema.graphql';
-import { CreateFieldZone } from '~/scenes/FieldZones/CreateFieldZone/CreateFieldZone';
-import { FieldZoneFormValues } from '~/scenes/FieldZones/FieldZoneForm/FieldZoneForm';
-import { FieldZoneFormFragment } from '~/scenes/FieldZones/FieldZoneForm/FieldZoneForm.graphql';
+import { CreateFieldZone } from '../../../FieldZone';
 import { LookupField } from '../LookupField';
 import { FieldZoneLookupDocument } from './FieldZoneLookup.graphql';
 
-export const FieldZoneField = LookupField.createFor<
-  FieldZoneFormFragment,
-  FieldZoneFormValues<CreateFieldZoneType>
->({
+export const FieldZoneField = LookupField.createFor({
   resource: 'FieldZone',
   lookupDocument: FieldZoneLookupDocument,
   label: 'Field Zone',

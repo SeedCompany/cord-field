@@ -1,11 +1,11 @@
 import { Stack } from '@mui/material';
 import { Merge } from 'type-fest';
 import { CreateFieldZone, UpdateFieldZone } from '~/api/schema.graphql';
-import { DialogForm, DialogFormProps } from '~/components/Dialog/DialogForm';
-import { SecuredField, SubmitError, TextField } from '~/components/form';
-import { FieldGroup } from '~/components/form/FieldGroup';
-import { UserField } from '~/components/form/Lookup/User/UserField';
-import { UserLookupItemFragment } from '~/components/form/Lookup/User/UserLookup.graphql';
+import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
+import { SecuredField, SubmitError, TextField } from '../../form';
+import { FieldGroup } from '../../form/FieldGroup';
+import { UserField } from '../../form/Lookup/User/UserField';
+import { UserLookupItemFragment } from '../../form/Lookup/User/UserLookup.graphql';
 import { FieldZoneFormFragment } from './FieldZoneForm.graphql';
 
 type FieldZoneMutation = UpdateFieldZone | CreateFieldZone;

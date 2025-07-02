@@ -12,8 +12,8 @@ import {
 import { Link } from '~/components/Routing';
 import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
+import { EditFieldZone } from '../../../components/FieldZone';
 import { Redacted } from '../../../components/Redacted';
-import { EditFieldZone } from '../Edit/EditFieldZone';
 import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql';
 
 export const FieldZoneDetail = () => {
