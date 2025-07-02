@@ -54,6 +54,11 @@ fragment DisplayUser on User {
     canEdit
     value
   }
+  status {
+    canRead
+    canEdit
+    value
+  }
   fullName
   timezone {
     canRead
