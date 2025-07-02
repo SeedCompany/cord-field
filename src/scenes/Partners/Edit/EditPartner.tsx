@@ -118,7 +118,7 @@ const fieldMapping = {
       label="Reach"
       options={OrganizationReachList}
       getLabel={labelFrom(OrganizationReachLabels)}
-      layout="two-column"
+      layout="column"
       {...props}
     />
   ),
