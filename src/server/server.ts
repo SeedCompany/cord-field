@@ -36,7 +36,10 @@ export const create = async () => {
 
   // Allow images to be served from anywhere.
   // Emails reference these images, and they can be rendered anywhere.
-  router.use('/images/*', cors());
+  router.use('/images/*', cors(), (req, res, next) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  });
 
   // Serve static assets
   router.use(

@@ -6,7 +6,7 @@ query Partner($input: ID!) {
 
 fragment partnerDetails on Partner {
   ...Id
-  createdAt
+  ...partnerOwnDetails
   organization {
     canRead
     canEdit
@@ -14,6 +14,12 @@ fragment partnerDetails on Partner {
       ...organizationDetails
     }
   }
+}
+
+# Seperated for UpdatePartner mutation
+fragment partnerOwnDetails on Partner {
+  ...Id
+  createdAt
   pointOfContact {
     canRead
     canEdit
@@ -68,6 +74,16 @@ fragment organizationDetails on Organization {
     value
   }
   acronym {
+    canRead
+    canEdit
+    value
+  }
+  types {
+    canRead
+    canEdit
+    value
+  }
+  reach {
     canRead
     canEdit
     value
