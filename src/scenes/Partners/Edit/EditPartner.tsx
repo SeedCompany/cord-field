@@ -117,11 +117,16 @@ const fieldMapping = {
   'partner.startDate': ({ props }) => (
     <DateField {...props} label="Start Date" />
   ),
-  'partner.fieldRegions': ({ props }) => {
-    return <FieldRegionField {...props} label="Field Regions" multiple />;
-  },
+  'partner.fieldRegions': ({ props }) => (
+    <FieldRegionField
+      {...props}
+      label="Field Regions"
+      multiple
+      variant="outlined"
+    />
+  ),
   'partner.countries': ({ props }) => (
-    <LocationField {...props} label="Countries" multiple />
+    <LocationField {...props} label="Countries" multiple variant="outlined" />
   ),
   'organization.name': ({ props }) => (
     <TextField {...props} required label="Name" />
