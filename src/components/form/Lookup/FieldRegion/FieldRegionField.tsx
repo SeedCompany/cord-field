@@ -1,12 +1,8 @@
-import { DisplayFieldRegionFragment as FieldRegion } from '~/common';
-import { CreateFieldRegion, FieldRegionFormValues } from '../../../FieldRegion';
+import { CreateFieldRegion } from '../../../FieldRegion';
 import { LookupField } from '../LookupField';
 import { FieldRegionLookupDocument } from './FieldRegionLookup.graphql';
 
-export const FieldRegionField = LookupField.createFor<
-  FieldRegion,
-  FieldRegionFormValues
->({
+export const FieldRegionField = LookupField.createFor({
   resource: 'FieldRegion',
   lookupDocument: FieldRegionLookupDocument,
   label: 'Field Region',

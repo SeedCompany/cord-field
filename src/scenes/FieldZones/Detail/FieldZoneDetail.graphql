@@ -1,0 +1,14 @@
+query FieldZoneDetail($fieldZoneId: ID!) {
+  fieldZone(id: $fieldZoneId) {
+    name {
+      value
+    }
+    director {
+      value {
+        id
+        fullName
+      }
+    }
+    ...FieldZoneForm
+  }
+}
