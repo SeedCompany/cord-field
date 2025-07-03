@@ -1,0 +1,15 @@
+fragment FieldZoneForm on FieldZone {
+  id
+  name {
+    canRead
+    canEdit
+    value
+  }
+  director {
+    canEdit
+    canRead
+    value {
+      ...UserLookupItem
+    }
+  }
+}

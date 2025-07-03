@@ -46,8 +46,14 @@ const Users = loadable(() => import('../Users'), {
 const Locations = loadable(() => import('../Locations/Locations'), {
   resolveComponent: (m) => m.Locations,
 });
+const FieldRegions = loadable(() => import('../FieldRegions/FieldRegions'), {
+  resolveComponent: (m) => m.FieldRegions,
+});
 const SearchResults = loadable(() => import('../SearchResults'), {
   resolveComponent: (m) => m.SearchResults,
+});
+const FieldZones = loadable(() => import('../FieldZones/FieldZones'), {
+  resolveComponent: (m) => m.FieldZones,
 });
 const Dashboard = loadable(() => import('../Dashboard'), {
   resolveComponent: (m) => m.DashboardRoutes,
@@ -78,7 +84,9 @@ export const Root = () => {
         <Route path="languages/*" element={<Languages />} />
         <Route path="users/*" element={<Users />} />
         <Route path="search" element={<SearchResults />} />
+        <Route path="field-regions/*" element={<FieldRegions />} />
         <Route path="locations/*" element={<Locations />} />
+        <Route path="field-zones/*" element={<FieldZones />} />
         {NotFoundRoute}
       </Route>
       <Route key="auth" element={<AuthLayout />}>
