@@ -1,0 +1,8 @@
+fragment FieldZoneCard on FieldZone {
+  id
+  name {
+    canRead
+    value
+  }
+  createdAt
+}
