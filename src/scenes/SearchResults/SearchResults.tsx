@@ -48,6 +48,8 @@ export const SearchResults = () => {
           'Location',
           'Film',
           'Story',
+          'FieldRegion',
+          'FieldZone',
         ],
       },
     },
@@ -67,6 +69,8 @@ export const SearchResults = () => {
             <ProjectListItemCard />
             <PartnerListItemCard />
             <UserListItemCardLandscape />
+            <FieldRegionCard />
+            <FieldZoneCard />
           </>
         ) : data && data.search.items.length > 0 ? (
           data.search.items.map((item, _, list) => {
@@ -116,6 +120,16 @@ const displayItem = (
       return [
         <Navigate replace to={`/locations/${item.id}`} />,
         <LocationCard key={item.id} location={item} />,
+      ];
+    case 'FieldRegion':
+      return [
+        <Navigate replace to={`/field-regions/${item.id}`} />,
+        <FieldRegionCard key={item.id} fieldRegion={item} />,
+      ];
+    case 'FieldZone':
+      return [
+        <Navigate replace to={`/field-zones/${item.id}`} />,
+        <FieldZoneCard key={item.id} fieldZone={item} />,
       ];
     case 'Film':
     case 'Story':
