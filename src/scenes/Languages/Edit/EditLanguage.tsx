@@ -56,7 +56,6 @@ export const EditLanguage = (props: EditLanguageProps) => {
               hasExternalFirstScripture:
                 language.hasExternalFirstScripture.value,
               isAvailableForReporting: language.isAvailableForReporting.value,
-              isWiderComm: language.isWiderComm.value,
             },
           }
         : undefined,

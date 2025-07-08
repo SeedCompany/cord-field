@@ -77,11 +77,6 @@ fragment LanguageDetail on Language {
       ...ProjectListItem
     }
   }
-  isWiderComm {
-    canEdit
-    canRead
-    value
-  }
   isAvailableForReporting {
     canEdit
     canRead

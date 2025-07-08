@@ -172,12 +172,6 @@ export const LanguageDetail = () => {
               data={language?.isAvailableForReporting}
               wrap={(node) => <Grid item>{node}</Grid>}
             />
-            <BooleanProperty
-              label="Wider Communication Language"
-              redacted="You do not have permission to view whether the language is a wider communication language"
-              data={language?.isWiderComm}
-              wrap={(node) => <Grid item>{node}</Grid>}
-            />
           </Grid>
           <DisplayProperty label="ID" value={id} loading={!language} />
           <DisplayProperty
