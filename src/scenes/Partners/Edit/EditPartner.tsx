@@ -36,6 +36,8 @@ import {
 } from '../../../components/form';
 import {
   FieldRegionField,
+  LanguageField,
+  LanguageLookupItem,
   LocationField,
   UserField,
   UserLookupItem,
@@ -51,6 +53,9 @@ type PartnerFormValues = {
       pointOfContactId: UserLookupItem | null;
       fieldRegions: readonly DisplayFieldRegionFragment[];
       countries: readonly DisplayLocationFragment[];
+      languageOfReportingId: LanguageLookupItem | null;
+      languageOfWiderCommunicationId: LanguageLookupItem | null;
+      languagesOfConsulting: PartnerDetailsFragment['languagesOfConsulting']['value'];
     }
   >;
   organization: UpdateOrganization;
@@ -128,6 +133,25 @@ const fieldMapping = {
   'partner.countries': ({ props }) => (
     <LocationField {...props} label="Countries" multiple variant="outlined" />
   ),
+  'partner.languageOfReportingId': ({ props }) => (
+    <LanguageField
+      {...props}
+      label="Language of Reporting"
+      CreateDialogForm={undefined}
+      getOptionDisabled={(option) => !option.isAvailableForReporting.value}
+    />
+  ),
+  'partner.languageOfWiderCommunicationId': ({ props }) => (
+    <LanguageField
+      {...props}
+      label="Language of Wider Communication"
+      CreateDialogForm={undefined}
+      getOptionDisabled={(option) => !option.isWiderComm.value}
+    />
+  ),
+  'partner.languagesOfConsulting': ({ props }) => (
+    <LanguageField {...props} multiple label="Languages of Consulting" />
+  ),
   'organization.name': ({ props }) => (
     <TextField {...props} required label="Name" />
   ),
@@ -194,6 +218,10 @@ export const EditPartner = ({
         pointOfContactId: partner.pointOfContact.value ?? null,
         fieldRegions: partner.fieldRegions.value,
         countries: partner.countries.value,
+        languageOfReportingId: partner.languageOfReporting.value ?? null,
+        languageOfWiderCommunicationId:
+          partner.languageOfWiderCommunication.value ?? null,
+        languagesOfConsulting: partner.languagesOfConsulting.value,
       },
       organization: {
         id: organization.id,
@@ -219,6 +247,12 @@ export const EditPartner = ({
               pointOfContactId: partner.pointOfContactId?.id ?? null,
               fieldRegions: partner.fieldRegions.map((region) => region.id),
               countries: partner.countries.map((country) => country.id),
+              languageOfWiderCommunicationId:
+                partner.languageOfWiderCommunicationId?.id ?? null,
+              languageOfReportingId: partner.languageOfReportingId?.id ?? null,
+              languagesOfConsulting: partner.languagesOfConsulting.map(
+                (lang) => lang.id
+              ),
             },
             organization,
           },
