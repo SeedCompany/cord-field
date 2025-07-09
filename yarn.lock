@@ -7306,9 +7306,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001538, caniuse-lite@npm:^1.0.30001541":
-  version: 1.0.30001715
-  resolution: "caniuse-lite@npm:1.0.30001715"
-  checksum: 10c0/0109a7da797ffbe1aa197baa5242b205011098eecec1087ef3d0c58ceea19be325ab6679b2751a78660adc3051a9f77e99d5789938fd1eb1235e6fdf6a1dbf8e
+  version: 1.0.30001727
+  resolution: "caniuse-lite@npm:1.0.30001727"
+  checksum: 10c0/f0a441c05d8925d728c2d02ce23b001935f52183a3bf669556f302568fe258d1657940c7ac0b998f92bc41383e185b390279a7d779e6d96a2b47881f56400221
   languageName: node
   linkType: hard
 
@@ -8190,7 +8190,7 @@ __metadata:
     notistack: "npm:^2.0.8"
     npm-run-all: "npm:^4.1.5"
     papaparse: "npm:^5.4.1"
-    posthog-js: "npm:^1.157.2"
+    posthog-js: "npm:^1.257.0"
     prettier: "npm:^2.8.8"
     query-string: "npm:^7.1.3"
     razzle: "patch:razzle@npm%3A4.2.18#~/.yarn/patches/razzle-npm-4.2.18-e0a2c6fe0c.patch"
@@ -8255,6 +8255,13 @@ __metadata:
   version: 3.33.1
   resolution: "core-js-pure@npm:3.33.1"
   checksum: 10c0/c7f7f210b15c2d58e9d9a1b5096f06c8f326bc5274a12eaddee0818d073538a7b2af3d7525162eb37a84fe6f86f2fe6eea1972ddf4615b45bbab2dbfa343cf1b
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.38.1":
+  version: 3.44.0
+  resolution: "core-js@npm:3.44.0"
+  checksum: 10c0/759bf3dc5f75068e9425dddf895fd5531c38794a11ea1c2b65e5ef7c527fe3652d59e8c287e574a211af9bab3c057c5c3fa6f6a773f4e142af895106efad38a4
   languageName: node
   linkType: hard
 
@@ -16566,14 +16573,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:^1.157.2":
-  version: 1.166.1
-  resolution: "posthog-js@npm:1.166.1"
+"posthog-js@npm:^1.257.0":
+  version: 1.257.0
+  resolution: "posthog-js@npm:1.257.0"
   dependencies:
+    core-js: "npm:^3.38.1"
     fflate: "npm:^0.4.8"
     preact: "npm:^10.19.3"
-    web-vitals: "npm:^4.0.1"
-  checksum: 10c0/7a7e3195472956f1192352d62a2a663e535f63734cf532edd32fae4e130afa2c84ac32c86c84dd9adb7cbf7f94617641ffe4fd2a888294dfbb56dbebd3eef2f2
+    web-vitals: "npm:^4.2.4"
+  peerDependencies:
+    "@rrweb/types": 2.0.0-alpha.17
+    rrweb-snapshot: 2.0.0-alpha.17
+  peerDependenciesMeta:
+    "@rrweb/types":
+      optional: true
+    rrweb-snapshot:
+      optional: true
+  checksum: 10c0/a2471791a6c0ae1fb10ccc36941c111c3e63ca06202d74e727627c887a15c48f1b0d3c177884c49b8fad56148b499ab91e2064baf184e0957af982696096eb59
   languageName: node
   linkType: hard
 
@@ -20729,10 +20745,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^4.0.1":
-  version: 4.2.3
-  resolution: "web-vitals@npm:4.2.3"
-  checksum: 10c0/905bdb9434f365435c3c00e5f473ce088980fcd61068906e20a575bae9590e1cc28dab0f90958c66717591e2f4c9b809ec8025cef5796fa4bc1304d50332f125
+"web-vitals@npm:^4.2.4":
+  version: 4.2.4
+  resolution: "web-vitals@npm:4.2.4"
+  checksum: 10c0/383c9281d5b556bcd190fde3c823aeb005bb8cf82e62c75b47beb411014a4ed13fa5c5e0489ed0f1b8d501cd66b0bebcb8624c1a75750bd5df13e2a3b1b2d194
   languageName: node
   linkType: hard
 
