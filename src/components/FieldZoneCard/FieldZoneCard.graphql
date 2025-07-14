@@ -1,0 +1,14 @@
+fragment FieldZoneCard on FieldZone {
+  id
+  name {
+    canRead
+    value
+  }
+  director {
+    canRead
+    value {
+      id
+      fullName
+    }
+  }
+}

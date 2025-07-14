@@ -1,0 +1,16 @@
+fragment FieldRegionCard on FieldRegion {
+  id
+  name {
+    canRead
+    canEdit
+    value
+  }
+  director {
+    canRead
+    canEdit
+    value {
+      id
+      fullName
+    }
+  }
+}
