@@ -4,5 +4,11 @@ fragment FieldZoneCard on FieldZone {
     canRead
     value
   }
-  createdAt
+  director {
+    canRead
+    value {
+      id
+      fullName
+    }
+  }
 }

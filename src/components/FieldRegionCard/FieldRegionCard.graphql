@@ -1,9 +1,16 @@
 fragment FieldRegionCard on FieldRegion {
   id
-  createdAt
   name {
     canRead
     canEdit
     value
+  }
+  director {
+    canRead
+    canEdit
+    value {
+      id
+      fullName
+    }
   }
 }
