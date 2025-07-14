@@ -5,7 +5,7 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { FormattedDateTime } from '../Formatters';
+import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { FieldRegionCardFragment } from './FieldRegionCard.graphql';
@@ -19,7 +19,7 @@ export const FieldRegionCard = ({
   fieldRegion,
   loading,
 }: FieldRegionCardProps) => {
-  const { id, name, createdAt } = fieldRegion ?? {};
+  const { id, name, director } = fieldRegion ?? {};
   return (
     <Card sx={{ width: '100%', maxWidth: 400 }}>
       <CardActionAreaLink to={`/field-regions/${id}`}>
@@ -36,6 +36,22 @@ export const FieldRegionCard = ({
               />
             )}
           </Typography>
+          {loading ? (
+            <Skeleton width="75%" />
+          ) : director?.canRead === true ? (
+            <DisplaySimpleProperty
+              LabelProps={{ color: 'textSecondary' }}
+              label="Director"
+              value={director.value?.fullName}
+              loading={!director}
+              loadingWidth="25%"
+            />
+          ) : (
+            <Redacted
+              info="You don't have permission to view this field region's director"
+              width="75%"
+            />
+          )}
         </CardContent>
       </CardActionAreaLink>
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -46,21 +62,6 @@ export const FieldRegionCard = ({
         >
           View Field Region
         </ButtonLink>
-        <Typography
-          variant="caption"
-          color="textSecondary"
-          sx={(theme) => ({
-            pr: theme.spacing(1),
-          })}
-        >
-          {loading ? (
-            <Skeleton width="25%" />
-          ) : (
-            <>
-              Created <FormattedDateTime date={createdAt} />
-            </>
-          )}
-        </Typography>
       </CardActions>
     </Card>
   );

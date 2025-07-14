@@ -5,7 +5,7 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { FormattedDateTime } from '../Formatters';
+import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { FieldZoneCardFragment } from './FieldZoneCard.graphql';
@@ -16,7 +16,7 @@ export interface FieldZoneCardProps {
 }
 
 export const FieldZoneCard = ({ fieldZone, loading }: FieldZoneCardProps) => {
-  const { id, name, createdAt } = fieldZone ?? {};
+  const { id, name, director } = fieldZone ?? {};
   return (
     <Card sx={{ width: '100%', maxWidth: 400 }}>
       <CardActionAreaLink to={`/field-zones/${id}`}>
@@ -33,6 +33,22 @@ export const FieldZoneCard = ({ fieldZone, loading }: FieldZoneCardProps) => {
               />
             )}
           </Typography>
+          {loading ? (
+            <Skeleton width="75%" />
+          ) : director?.canRead === true ? (
+            <DisplaySimpleProperty
+              LabelProps={{ color: 'textSecondary' }}
+              label="Director"
+              value={director.value?.fullName}
+              loading={!director}
+              loadingWidth="25%"
+            />
+          ) : (
+            <Redacted
+              info="You don't have permission to view this field zone's director"
+              width="75%"
+            />
+          )}
         </CardContent>
       </CardActionAreaLink>
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -43,21 +59,6 @@ export const FieldZoneCard = ({ fieldZone, loading }: FieldZoneCardProps) => {
         >
           View Field Zone
         </ButtonLink>
-        <Typography
-          variant="caption"
-          color="textSecondary"
-          sx={(theme) => ({
-            pr: theme.spacing(1),
-          })}
-        >
-          {loading ? (
-            <Skeleton width="25%" />
-          ) : (
-            <>
-              Created <FormattedDateTime date={createdAt} />
-            </>
-          )}
-        </Typography>
       </CardActions>
     </Card>
   );
