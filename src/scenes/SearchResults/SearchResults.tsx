@@ -41,7 +41,7 @@ export const SearchResults = () => {
   });
 
   return (
-    <Stack
+    <Box
       sx={(theme) => ({
         flex: 1,
         overflowY: 'auto',
@@ -49,13 +49,11 @@ export const SearchResults = () => {
       })}
     >
       <Helmet title={`${query} - Search`} />
-      <Box
+      <Stack
         component="main"
         sx={{
+          gap: 2,
           maxWidth: 600,
-          '& > *': {
-            mb: 2,
-          },
         }}
       >
         {error ? (
@@ -83,8 +81,8 @@ export const SearchResults = () => {
         ) : (
           <Error show>No results found</Error>
         )}
-      </Box>
-    </Stack>
+      </Stack>
+    </Box>
   );
 };
 
