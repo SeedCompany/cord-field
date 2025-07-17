@@ -1,0 +1,11 @@
+mutation RemoveOrganizationFromUser($input: RemoveOrganizationFromUserInput!) {
+  removeOrganizationFromUser(input: $input) {
+    partner {
+      ...userPartnerDataGridRow
+    }
+  }
+}
+
+fragment RemoveOrganizationFromUserForm on User {
+  ...Id
+}
