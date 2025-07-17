@@ -1,0 +1,17 @@
+query UserPartnerList($userId: ID!, $input: PartnerListInput) {
+  user(id: $userId) {
+    id
+    partners(input: $input) {
+      canRead
+      hasMore
+      total
+      items {
+        ...userPartnerDataGridRow
+      }
+    }
+  }
+}
+
+fragment userPartnerDataGridRow on Partner {
+  ...partnerDataGridRow
+}

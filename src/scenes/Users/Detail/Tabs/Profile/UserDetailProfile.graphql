@@ -1,4 +1,13 @@
 fragment UserProfile on User {
+  primaryOrganization {
+    organization {
+      value {
+        name {
+          value
+        }
+      }
+    }
+  }
   ...DisplayUser
   ...UserForm
 }

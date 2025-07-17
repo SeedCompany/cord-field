@@ -1,0 +1,11 @@
+mutation AssignOrganizationToUser($input: AssignOrganizationToUserInput!) {
+  assignOrganizationToUser(input: $input) {
+    partner {
+      ...userPartnerDataGridRow
+    }
+  }
+}
+
+fragment AssignOrganizationToUserForm on User {
+  ...Id
+}
