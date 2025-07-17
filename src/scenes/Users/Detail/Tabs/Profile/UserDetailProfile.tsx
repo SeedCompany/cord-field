@@ -18,7 +18,6 @@ import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
-import { PartnerListItemCard } from '~/components/PartnerListItemCard';
 import { EditUser } from '../../../Edit';
 import { UserProfileFragment } from './UserDetailProfile.graphql';
 
@@ -76,23 +75,15 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
           loading={!user}
         />
         <DisplayProperty
+          label="Primary Partner"
+          value={user.primaryOrganization?.organization.value?.name.value}
+          loading={!user}
+        />
+        <DisplayProperty
           label="About"
           value={user.about.value}
           loading={!user}
         />
-
-        {!!user.partners.items.length && (
-          <>
-            <Typography variant="h3">Partners</Typography>
-            <Box sx={{ mt: 1 }}>
-              {user.partners.items.map((item) => (
-                <Box key={item.id} sx={{ mb: 2 }}>
-                  <PartnerListItemCard partner={item} />
-                </Box>
-              ))}
-            </Box>
-          </>
-        )}
       </Stack>
       <Box sx={{ p: 1 }}>
         {canEditAnyFields ? (
