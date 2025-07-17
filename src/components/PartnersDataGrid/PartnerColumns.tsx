@@ -102,6 +102,7 @@ export const PartnerInitialState = {
       ...getInitialVisibility(PartnerColumns),
       isMember: false,
       pinned: false,
+      actions: false,
     },
   },
 } satisfies DataGridProps['initialState'];
