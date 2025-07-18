@@ -1,0 +1,4 @@
+fragment FieldZoneProfile on FieldZone {
+  ...DisplayFieldZone
+  ...FieldZoneForm
+}
