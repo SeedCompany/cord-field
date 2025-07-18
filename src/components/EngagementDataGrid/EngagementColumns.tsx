@@ -155,7 +155,23 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     headerName: 'Country',
     field: 'project.primaryLocation.name',
     ...textColumn(),
+    width: 250,
     valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
+  },
+  {
+    field: 'project.fieldRegion.name',
+    headerName: 'Field Region',
+    ...textColumn(),
+    width: 250,
+    valueGetter: (_, { project }) => project.fieldRegion.value?.name.value,
+    renderCell: ({ row: engagement }) => {
+      const fieldRegion = engagement.project.fieldRegion;
+      return (
+        <Link to={`/field-regions/${fieldRegion.value?.id}`}>
+          {fieldRegion.value?.name.value}
+        </Link>
+      );
+    },
   },
   {
     headerName: 'ISO',
