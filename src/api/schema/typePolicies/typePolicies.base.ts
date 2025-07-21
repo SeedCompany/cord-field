@@ -90,10 +90,14 @@ export const typePolicies: TypePolicies = {
       projects: {}, // no page merging (infinite scroll)
     },
   },
+  FieldZone: {
+    fields: {
+      projects: {}, // no page merging (infinite scroll)
+    },
+  },
   Query: {
     fields: {
       projects: {},
-      engagements: {},
       progressReports: {},
       partners: {},
       users: {},
