@@ -1,0 +1,4 @@
+fragment FieldRegionProfile on FieldRegion {
+  ...DisplayFieldRegion
+  ...FieldRegionForm
+}
