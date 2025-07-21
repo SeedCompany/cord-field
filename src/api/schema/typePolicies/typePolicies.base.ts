@@ -85,6 +85,11 @@ export const typePolicies: TypePolicies = {
       engagements: {},
     },
   },
+  FieldRegion: {
+    fields: {
+      projects: {}, // no page merging (infinite scroll)
+    },
+  },
   Query: {
     fields: {
       projects: {},
