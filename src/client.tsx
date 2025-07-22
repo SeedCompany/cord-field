@@ -1,7 +1,10 @@
 import { CacheProvider } from '@emotion/react';
 import { loadableReady } from '@loadable/component';
+import { isNotFalsy } from '@seedcompany/common';
 import Cookies from 'js-cookie';
 import { Settings, Zone } from 'luxon';
+import { posthog } from 'posthog-js';
+import { PostHogProvider } from 'posthog-js/react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { createRoot } from 'react-dom/client';
@@ -9,6 +12,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { TssCacheProvider } from 'tss-react';
 import { basePathOfUrl } from '~/common';
+import { GqlSensitiveOperations } from './api';
 import { ImpersonationProvider } from './api/client/ImpersonationContext';
 import { App } from './App';
 import { Nest } from './components/Nest';
@@ -56,6 +60,38 @@ const root = document.getElementById('root')!;
 const emotionCacheMui = createMuiEmotionCache();
 const emotionCacheTss = createTssEmotionCache();
 
+const postHogClient = (() => {
+  const host = process.env.RAZZLE_POSTHOG_HOST;
+  const token = process.env.RAZZLE_POSTHOG_KEY;
+  if (!(host && token)) {
+    return undefined;
+  }
+  posthog.init(token, {
+    api_host: host,
+    session_recording: {
+      maskAllInputs: true,
+      maskInputFn: (text, element) => {
+        const redact =
+          element?.attributes.getNamedItem('data-private')?.value === 'redact';
+        return redact ? '*'.repeat(text.length) : text;
+      },
+      maskTextSelector: '[data-private="redact"]',
+      maskCapturedNetworkRequestFn: (request) => {
+        // Relies on operation name suffix which is configured in Apollo HttpLink config
+        if (
+          [...GqlSensitiveOperations].some((op) =>
+            request.name.endsWith(`/${op}`)
+          )
+        ) {
+          request.requestBody = undefined;
+        }
+        return request;
+      },
+    },
+  });
+  return posthog;
+})();
+
 const clientOnlyProviders = [
   <BrowserRouter
     key="router"
@@ -66,7 +102,8 @@ const clientOnlyProviders = [
   <CacheProvider key="emotion-mui" value={emotionCacheMui} />,
   <TssCacheProvider key="emotion-tss" value={emotionCacheTss} children={[]} />,
   <ImpersonationProvider key="impersonation" />,
-];
+  postHogClient && <PostHogProvider key="posthog" client={postHogClient} />,
+].filter(isNotFalsy);
 
 void Promise.all(setup).then(() => {
   createRoot(root).render(

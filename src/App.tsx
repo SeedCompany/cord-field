@@ -2,8 +2,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
-import { posthog } from 'posthog-js';
-import { PostHogProvider } from 'posthog-js/react';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
@@ -41,38 +39,6 @@ if (logRocketAppId) {
   );
 }
 
-const postHogClient = (() => {
-  const host = process.env.RAZZLE_POSTHOG_HOST;
-  const token = process.env.RAZZLE_POSTHOG_KEY;
-  if (!(host && token)) {
-    return undefined;
-  }
-  posthog.init(token, {
-    api_host: host,
-    session_recording: {
-      maskAllInputs: true,
-      maskInputFn: (text, element) => {
-        const redact =
-          element?.attributes.getNamedItem('data-private')?.value === 'redact';
-        return redact ? '*'.repeat(text.length) : text;
-      },
-      maskTextSelector: '[data-private="redact"]',
-      maskCapturedNetworkRequestFn: (request) => {
-        // Relies on operation name suffix which is configured in Apollo HttpLink config
-        if (
-          [...GqlSensitiveOperations].some((op) =>
-            request.name.endsWith(`/${op}`)
-          )
-        ) {
-          request.requestBody = undefined;
-        }
-        return request;
-      },
-    },
-  });
-  return posthog;
-})();
-
 MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
 
 /**
@@ -82,7 +48,6 @@ MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
  * Order still matters (the first is the outer most component)
  */
 export const appProviders = [
-  postHogClient && <PostHogProvider key="posthog" client={postHogClient} />,
   <ThemeProvider key="theme" theme={createTheme()} />,
   <LocalizationProvider key="i10n" dateAdapter={LuxonCalenderDateUtils} />,
   <SnackbarProvider key="snackbar" />, // needed by apollo
