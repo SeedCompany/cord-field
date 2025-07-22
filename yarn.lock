@@ -8190,7 +8190,7 @@ __metadata:
     notistack: "npm:^2.0.8"
     npm-run-all: "npm:^4.1.5"
     papaparse: "npm:^5.4.1"
-    posthog-js: "npm:^1.257.0"
+    posthog-js: "npm:^1.257.1"
     prettier: "npm:^2.8.8"
     query-string: "npm:^7.1.3"
     razzle: "patch:razzle@npm%3A4.2.18#~/.yarn/patches/razzle-npm-4.2.18-e0a2c6fe0c.patch"
@@ -16573,9 +16573,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-js@npm:^1.257.0":
-  version: 1.257.0
-  resolution: "posthog-js@npm:1.257.0"
+"posthog-js@npm:^1.257.1":
+  version: 1.257.1
+  resolution: "posthog-js@npm:1.257.1"
   dependencies:
     core-js: "npm:^3.38.1"
     fflate: "npm:^0.4.8"
@@ -16589,7 +16589,7 @@ __metadata:
       optional: true
     rrweb-snapshot:
       optional: true
-  checksum: 10c0/a2471791a6c0ae1fb10ccc36941c111c3e63ca06202d74e727627c887a15c48f1b0d3c177884c49b8fad56148b499ab91e2064baf184e0957af982696096eb59
+  checksum: 10c0/9e99e1b19e40117abdc877fe99ed0b06757bde1b50e8d4eaa07a7863faac1ea789ce6b2526c2c3b1345ea40f4bc2d5bb75283c52a84416d3570a14bab1cc79d3
   languageName: node
   linkType: hard
 
