@@ -5,7 +5,6 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { LocationTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { FormattedDateTime } from '../Formatters';
@@ -13,22 +12,6 @@ import { ProgressButton } from '../ProgressButton';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LocationCardFragment } from './LocationCard.graphql';
-
-const useStyles = makeStyles()(({ spacing }) => {
-  return {
-    root: {
-      width: '100%',
-      maxWidth: 400,
-    },
-    cardActions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    createdAt: {
-      paddingRight: spacing(1), // make symmetrical with button padding
-    },
-  };
-});
 
 export interface LocationCardProps {
   className?: string;
@@ -46,9 +29,8 @@ export const LocationCard = ({
   removing,
 }: LocationCardProps) => {
   const { id, name, locationType, createdAt } = location ?? {};
-  const { classes, cx } = useStyles();
   return (
-    <Card className={cx(classes.root, className)}>
+    <Card className={className} sx={{ width: '100%', maxWidth: 400 }}>
       <CardActionAreaLink to={`/locations/${id}`}>
         <CardContent>
           <Typography variant="h4" gutterBottom>
@@ -77,7 +59,7 @@ export const LocationCard = ({
           </Typography>
         </CardContent>
       </CardActionAreaLink>
-      <CardActions className={classes.cardActions}>
+      <CardActions sx={{ justifyContent: 'space-between' }}>
         <ButtonLink to={`/locations/${id}`} color="primary" disabled={loading}>
           View Location
         </ButtonLink>
@@ -94,7 +76,9 @@ export const LocationCard = ({
           <Typography
             variant="caption"
             color="textSecondary"
-            className={classes.createdAt}
+            sx={{
+              pr: 1,
+            }}
           >
             {loading ? (
               <Skeleton width="25%" />

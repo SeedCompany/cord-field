@@ -4,15 +4,7 @@ import {
   Edit as EditIcon,
 } from '@mui/icons-material';
 import { Alert, AlertTitle, Tooltip } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { IconButton } from '../IconButton';
-
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    maxWidth: breakpoints.values.md,
-    margin: spacing(0, 2),
-  },
-}));
 
 interface Props {
   changesetId: string | undefined;
@@ -21,8 +13,6 @@ interface Props {
 }
 
 export const ChangesetBanner = (props: Props) => {
-  const { classes } = useStyles();
-
   if (!props.changesetId) {
     return null;
   }
@@ -30,7 +20,10 @@ export const ChangesetBanner = (props: Props) => {
     <Alert
       severity="info"
       icon={<ChangeIcon fontSize="inherit" />}
-      className={classes.root}
+      sx={(theme) => ({
+        maxWidth: theme.breakpoints.values.md,
+        margin: theme.spacing(0, 2),
+      })}
       action={
         <>
           {props.onEdit && (
