@@ -7,24 +7,11 @@ import {
 } from '@mui/material';
 import { To } from 'history';
 import { compact } from 'lodash';
-import { makeStyles } from 'tss-react/mui';
+// Removed makeStyles, using sx prop for layout and spacing
 import { listOrPlaceholders } from '~/common';
 import { Avatar } from '../Avatar';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  bottomContent: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  avatarGroup: {
-    marginRight: spacing(1),
-  },
-  memberNames: {
-    flexGrow: 1,
-  },
-}));
 
 export interface MemberSummaryItem {
   // url to picture
@@ -51,8 +38,6 @@ export const MemberListSummary = ({
   to,
   icon,
 }: MemberListSummaryProps) => {
-  const { classes } = useStyles();
-
   return (
     <CardActionAreaLink to={to} disabled={!members}>
       <CardContent>
@@ -71,8 +56,8 @@ export const MemberListSummary = ({
             See All
           </Typography>
         </Stack>
-        <div className={classes.bottomContent}>
-          <AvatarGroup max={max} className={classes.avatarGroup}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <AvatarGroup max={max} sx={{ mr: 1 }}>
             {listOrPlaceholders(members, max).map((member, i) => (
               <Avatar
                 key={member?.id || i}
@@ -84,11 +69,7 @@ export const MemberListSummary = ({
               </Avatar>
             ))}
           </AvatarGroup>
-          <Typography
-            className={classes.memberNames}
-            color="primary"
-            variant="body2"
-          >
+          <Typography sx={{ flexGrow: 1 }} color="primary" variant="body2">
             {!members ? (
               <>
                 <Skeleton variant="text" width="75%" />

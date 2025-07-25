@@ -2,49 +2,14 @@ import {
   Cancel as CancelIcon,
   CheckCircle as CheckIcon,
 } from '@mui/icons-material';
-import { CircularProgress, IconButton, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { UploadFile } from './Reducer';
-
-const useStyles = makeStyles()(({ palette, spacing }) => ({
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: spacing(1),
-    '&:not(:last-of-type)': {
-      borderBottom: `1px solid ${palette.divider}`,
-    },
-    width: '100%',
-  },
-  text: {
-    marginRight: spacing(2),
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  fileName: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  statusText: {
-    fontSize: '0.65rem',
-    verticalAlign: 'middle',
-  },
-  percentCompleted: {
-    verticalAlign: 'middle',
-  },
-  progressContainer: {
-    padding: '12px',
-  },
-  postUploadButton: {
-    color: palette.error.main,
-  },
-  completedIcon: {
-    color: palette.primary.main,
-  },
-}));
 
 interface UploadItemProps {
   file: UploadFile;
@@ -54,7 +19,6 @@ interface UploadItemProps {
 export const UploadItem = (props: UploadItemProps) => {
   const { file, onClear } = props;
   const { error, fileName, percentCompleted, uploadId, completedAt } = file;
-  const { classes } = useStyles();
 
   const progressLabel = error
     ? error.message
@@ -65,33 +29,65 @@ export const UploadItem = (props: UploadItemProps) => {
     : 'Uploading';
 
   return (
-    <div className={classes.container}>
-      <div className={classes.text}>
-        <Typography variant="body2" className={classes.fileName}>
+    <Box
+      sx={(theme) => ({
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: theme.spacing(1),
+        '&:not(:last-of-type)': {
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        },
+        width: '100%',
+      })}
+    >
+      <Stack
+        sx={(theme) => ({
+          mr: theme.spacing(2),
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        })}
+      >
+        <Typography
+          variant="body2"
+          sx={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
           {fileName}
         </Typography>
         <Typography
           variant="caption"
-          className={classes.statusText}
+          sx={{
+            fontSize: '0.65rem',
+            verticalAlign: 'middle',
+          }}
           color={error ? 'error' : 'textSecondary'}
         >
           {progressLabel}
         </Typography>
         {!error && !completedAt && uploadId && (
           <Typography
-            className={classes.percentCompleted}
+            sx={{
+              verticalAlign: 'middle',
+            }}
             variant="caption"
             color="primary"
           >
             &nbsp;– {Math.min(99, Math.round(percentCompleted))}%
           </Typography>
         )}
-      </div>
+      </Stack>
       {error ? (
         <IconButton
           aria-label="clear"
           onClick={onClear}
-          className={classes.postUploadButton}
+          sx={(theme) => ({
+            color: theme.palette.error.main,
+          })}
         >
           <CancelIcon />
         </IconButton>
@@ -99,12 +95,22 @@ export const UploadItem = (props: UploadItemProps) => {
         <IconButton
           aria-label="completed"
           onClick={() => console.log('TODO: Add onCompleted click handler')}
-          className={classes.postUploadButton}
+          sx={(theme) => ({
+            color: theme.palette.error.main,
+          })}
         >
-          <CheckIcon className={classes.completedIcon} />
+          <CheckIcon
+            sx={(theme) => ({
+              color: theme.palette.primary.main,
+            })}
+          />
         </IconButton>
       ) : (
-        <div className={classes.progressContainer}>
+        <div
+          style={{
+            padding: '12px',
+          }}
+        >
           <CircularProgress
             variant="determinate"
             size="1.5em"
@@ -113,6 +119,6 @@ export const UploadItem = (props: UploadItemProps) => {
           />
         </div>
       )}
-    </div>
+    </Box>
   );
 };
