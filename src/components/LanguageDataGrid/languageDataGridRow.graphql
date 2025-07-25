@@ -17,6 +17,9 @@ fragment languageDataGridRow on Language {
   population {
     value
   }
+  signLanguageCode {
+    value
+  }
   sensitivity
   pinned
 }
