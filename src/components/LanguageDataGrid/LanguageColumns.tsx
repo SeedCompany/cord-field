@@ -27,17 +27,27 @@ export const LanguageColumns: Array<GridColDef<Language>> = [
   {
     field: 'ethnologue.code',
     headerName: 'Eth Code',
+    description: 'Ethnologue Code',
     ...textColumn(),
     valueGetter: (_, { ethnologue }) => ethnologue.code.value,
-    width: 90,
+    width: 120,
   },
   {
     field: 'registryOfLanguageVarietiesCode',
     headerName: 'ROLV',
+    description: 'Registry of Language Varieties Code',
     ...textColumn(),
-    width: 90,
+    width: 120,
     valueGetter: (_, { registryOfLanguageVarietiesCode }) =>
       registryOfLanguageVarietiesCode.value,
+  },
+  {
+    field: 'signLanguageCode',
+    headerName: 'SL Code',
+    description: 'Sign Language Code',
+    ...textColumn(),
+    width: 120,
+    valueGetter: (_, { signLanguageCode }) => signLanguageCode.value,
   },
   SensitivityColumn({}),
   {
