@@ -5,48 +5,17 @@ import {
   CardActions,
   Grid,
   Skeleton,
+  Stack,
   Tooltip,
   TooltipProps,
   Typography,
 } from '@mui/material';
 import { To } from 'history';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { DateTimeOrISO } from '~/common';
 import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-
-const useStyles = makeStyles()(({ spacing, palette }) => ({
-  root: {
-    flex: 1,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  topArea: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    padding: spacing(3, 4),
-  },
-  rightContent: {
-    flex: 1,
-    alignSelf: 'flex-start',
-    paddingLeft: spacing(4),
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-  },
-  emptyValue: {
-    color: palette.action.disabled,
-  },
-  bottomArea: {
-    paddingRight: spacing(1),
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-}));
 
 interface FieldOverviewCardData {
   value?: ReactNode;
@@ -82,30 +51,36 @@ export const FieldOverviewCard = ({
   title,
   viewLabel: buttonLabel,
 }: FieldOverviewCardProps) => {
-  const { classes, cx } = useStyles();
+  // Styles removed, now using sx and component props
 
   const showData = !loading && !redacted;
   const ActionArea = showData && data?.to ? CardActionAreaLink : CardActionArea;
   const Btn = data?.to ? ButtonLink : Button;
 
   const card = (
-    <Card className={cx(classes.root, className)}>
+    <Card
+      className={className}
+      sx={{ flex: 1, height: '100%', display: 'flex', flexDirection: 'column' }}
+    >
       <ActionArea
         disabled={!data || redacted}
         to={data?.to ?? ''}
-        className={classes.topArea}
+        sx={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          p: [3, 4],
+        }}
         onClick={onClick}
       >
         <HugeIcon icon={icon} loading={!data} />
-        <div className={classes.rightContent}>
+        <Stack flex={1} alignSelf="flex-start" pl={4} spacing={2}>
           <Typography variant="h4">
             {loading ? <Skeleton width="80%" /> : data ? title : ''}
           </Typography>
           <Typography
             variant="h1"
-            className={cx({
-              [classes.emptyValue]: data && !data.value,
-            })}
+            sx={data && !data.value ? { color: 'action.disabled' } : undefined}
           >
             {loading || redacted ? (
               <Skeleton animation={loading ? 'pulse' : false} />
@@ -115,7 +90,7 @@ export const FieldOverviewCard = ({
               ''
             )}
           </Typography>
-        </div>
+        </Stack>
       </ActionArea>
       {buttonLabel && (
         <CardActions>
@@ -123,7 +98,11 @@ export const FieldOverviewCard = ({
             container
             spacing={loading ? 4 : 2}
             wrap="nowrap"
-            className={classes.bottomArea}
+            sx={{
+              pr: 1,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
           >
             <Grid item xs={loading}>
               <Btn

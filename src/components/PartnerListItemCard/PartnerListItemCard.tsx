@@ -1,31 +1,12 @@
 import { Card, CardContent, Skeleton, Stack, Typography } from '@mui/material';
 import { random } from 'lodash';
-import { makeStyles } from 'tss-react/mui';
+// Removed makeStyles, using sx prop for layout and positioning
 import { PartialDeep } from 'type-fest';
 import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
 import { PartnerListItemFragment } from './PartnerListItemCard.graphql';
 
-const useStyles = makeStyles()(({ breakpoints }) => {
-  const cardWidth = breakpoints.values.sm;
-  return {
-    root: {
-      width: '100%',
-      maxWidth: cardWidth,
-      position: 'relative',
-    },
-    card: {
-      display: 'flex',
-      alignItems: 'initial',
-    },
-    pin: {
-      position: 'absolute',
-      top: 5,
-      right: 5,
-    },
-  };
-});
 export interface PartnerListItemCardProps {
   partner?: PartnerListItemFragment;
   className?: string;
@@ -38,18 +19,23 @@ export const PartnerListItemCard = ({
   partner,
   className,
 }: PartnerListItemCardProps) => {
-  const { classes, cx } = useStyles();
-
   const org = partner?.organization.value;
   const acronym = org?.acronym.value;
   const name = org?.name.value;
 
   return (
-    <Card className={cx(className, classes.root)}>
+    <Card
+      className={className}
+      sx={{
+        width: '100%',
+        maxWidth: (theme) => theme.breakpoints.values.sm,
+        position: 'relative',
+      }}
+    >
       <CardActionAreaLink
         disabled={!partner}
         to={`/partners/${partner?.id}`}
-        className={classes.card}
+        sx={{ display: 'flex', alignItems: 'initial' }}
       >
         <Stack component={CardContent} flex={1} gap={1}>
           <Typography variant="h4">
@@ -77,7 +63,7 @@ export const PartnerListItemCard = ({
         listFilter={(args: PartialDeep<PartnersQueryVariables>) =>
           args.input?.filter?.pinned ?? false
         }
-        className={classes.pin}
+        sx={{ position: 'absolute', top: 5, right: 5 }}
         size="small"
       />
     </Card>
