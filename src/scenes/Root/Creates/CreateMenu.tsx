@@ -1,10 +1,9 @@
 import { Add } from '@mui/icons-material';
-import { ButtonProps, Menu, MenuItem, MenuProps } from '@mui/material';
+import { Button, ButtonProps, Menu, MenuItem, MenuProps } from '@mui/material';
 import { entries } from '@seedcompany/common';
 import { startCase } from 'lodash';
 import { useContext, useMemo, useState } from 'react';
 import { Power } from '~/api/schema.graphql';
-import { CreateButton } from '../../../components/CreateButton';
 import { useSession } from '../../../components/Session';
 import { CreateItemContext } from './CreateDialogProviders';
 import { creates } from './Creates';
@@ -46,7 +45,9 @@ export const CreateButtonMenu = (props: CreateButtonMenuProps) => {
 
   return (
     <>
-      <CreateButton
+      <Button
+        variant="contained"
+        color="error"
         aria-controls="create-menu"
         aria-haspopup="true"
         startIcon={<Add />}
@@ -54,7 +55,7 @@ export const CreateButtonMenu = (props: CreateButtonMenuProps) => {
         {...rest}
       >
         Create New Item
-      </CreateButton>
+      </Button>
       <Menu
         id="create-menu"
         open={anchorEl !== null}

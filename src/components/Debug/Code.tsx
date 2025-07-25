@@ -1,26 +1,36 @@
+import { Box, BoxProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { makeStyles } from 'tss-react/mui';
 import { ChildrenProp } from '~/common';
 
-const useStyles = makeStyles()((theme) => ({
-  root: {
-    padding: theme.spacing(1),
-    borderRadius: theme.shape.borderRadius,
-    color: theme.palette.background.paper,
-    backgroundColor: theme.palette.grey[800],
-  },
-}));
+interface CodeProps extends Omit<BoxProps, 'component'> {
+  json?: any;
+}
 
 export const Code = ({
-  className,
   json,
   children,
-}: { json?: any; className?: string } & ChildrenProp) => {
-  const { classes, cx } = useStyles();
+  sx,
+  ...rest
+}: CodeProps & ChildrenProp) => {
   return (
-    <pre className={cx(classes.root, className)}>
+    <Box
+      component="pre"
+      sx={{
+        p: 1,
+        borderRadius: 1,
+        margin: 0,
+        color: 'common.white',
+        bgcolor: 'grey.800',
+        fontFamily: 'monospace',
+        fontSize: '0.875rem',
+        overflow: 'auto',
+        whiteSpace: 'pre-wrap',
+        ...sx,
+      }}
+      {...rest}
+    >
       {json ? JSON.stringify(json, undefined, 2) : children}
-    </pre>
+    </Box>
   );
 };
 
