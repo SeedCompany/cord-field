@@ -24,7 +24,7 @@ export const PartnershipSummary = ({
       title="Partnerships"
       to="partnerships"
       members={members}
-      icon={<PeopleJoinedIcon style={{ fontSize: 42, marginTop: -8 }} />}
+      icon={<PeopleJoinedIcon sx={{ fontSize: 42, mt: -1 }} />}
     />
   );
 };
