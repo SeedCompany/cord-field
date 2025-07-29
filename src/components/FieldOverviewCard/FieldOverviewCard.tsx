@@ -3,6 +3,7 @@ import {
   Card,
   CardActionArea,
   CardActions,
+  CardProps,
   Grid,
   Skeleton,
   Stack,
@@ -12,7 +13,7 @@ import {
 } from '@mui/material';
 import { To } from 'history';
 import { ReactNode } from 'react';
-import { DateTimeOrISO } from '~/common';
+import { DateTimeOrISO, extendSx } from '~/common';
 import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, HugeIconProps } from '../Icons';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
@@ -22,6 +23,8 @@ interface FieldOverviewCardData {
   updatedAt?: DateTimeOrISO;
   to?: To;
 }
+
+// removed duplicate import
 
 export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
   className?: string;
@@ -34,6 +37,7 @@ export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
   redacted?: boolean;
   title?: string;
   viewLabel?: string;
+  CardProps?: CardProps;
 }
 
 const DEFAULT_EMPTY = <>&nbsp;</>;
@@ -50,9 +54,8 @@ export const FieldOverviewCard = ({
   redacted,
   title,
   viewLabel: buttonLabel,
+  CardProps,
 }: FieldOverviewCardProps) => {
-  // Styles removed, now using sx and component props
-
   const showData = !loading && !redacted;
   const ActionArea = showData && data?.to ? CardActionAreaLink : CardActionArea;
   const Btn = data?.to ? ButtonLink : Button;
@@ -60,7 +63,15 @@ export const FieldOverviewCard = ({
   const card = (
     <Card
       className={className}
-      sx={{ flex: 1, height: '100%', display: 'flex', flexDirection: 'column' }}
+      sx={[
+        {
+          flex: 1,
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        },
+        ...extendSx(CardProps?.sx),
+      ]}
     >
       <ActionArea
         disabled={!data || redacted}
@@ -69,7 +80,8 @@ export const FieldOverviewCard = ({
           flex: 1,
           display: 'flex',
           justifyContent: 'space-evenly',
-          p: [3, 4],
+          py: 3,
+          px: 4,
         }}
         onClick={onClick}
       >

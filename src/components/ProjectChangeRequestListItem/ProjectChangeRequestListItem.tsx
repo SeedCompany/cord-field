@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -7,7 +8,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { ProjectChangeRequestTypeLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { useProjectId } from '../../scenes/Projects/useProjectId';
@@ -27,7 +27,6 @@ export const ProjectChangeRequestListItem = ({
 }: ProjectChangeRequestListItemProps) => {
   const { projectId, changesetId: currentlyViewing } = useProjectId();
   const navigate = useNavigate();
-  const theme = useTheme();
 
   return (
     <Card className={className}>
@@ -51,14 +50,7 @@ export const ProjectChangeRequestListItem = ({
           >
             {!data ? <Skeleton width="100%" /> : data.status.value}
           </Typography>
-          <span
-            style={{
-              color: theme.palette.text.secondary,
-              margin: theme.spacing(0, 1),
-            }}
-          >
-            —
-          </span>
+          <Box sx={{ color: 'text.secondary', mx: 1 }}>—</Box>
           <Typography
             component="span"
             variant="inherit"
@@ -84,10 +76,11 @@ export const ProjectChangeRequestListItem = ({
         </Typography>
       </CardContent>
       <CardActions
-        sx={{
+        sx={(theme) => ({
           display: 'flex',
+          justifyContent: 'space-between',
           padding: theme.spacing(1, 2, 1, 1),
-        }}
+        })}
       >
         {!data || data.canEdit ? (
           <Button
@@ -105,7 +98,6 @@ export const ProjectChangeRequestListItem = ({
             Review
           </Button>
         </Tooltip>
-        <div style={{ flex: 1 }} />
         <Typography variant="subtitle2" color="textSecondary">
           {!data ? (
             <Skeleton width="23ch" />

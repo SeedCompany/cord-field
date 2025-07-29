@@ -1,6 +1,5 @@
 import { Card, CardContent, Skeleton, Stack, Typography } from '@mui/material';
 import { random } from 'lodash';
-// Removed makeStyles, using sx prop for layout and positioning
 import { PartialDeep } from 'type-fest';
 import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
 import { CardActionAreaLink } from '../Routing';

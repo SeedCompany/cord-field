@@ -93,13 +93,7 @@ export const Error = ({
       <Typography gutterBottom>Oops, Sorry.</Typography>
       {rendered}
       {!disableButtons && (
-        <Grid
-          container
-          spacing={3}
-          style={{
-            marginTop: theme.spacing(3),
-          }}
-        >
+        <Grid container spacing={3} sx={{ mt: 3 }}>
           <Grid item>
             <Button
               onClick={() => navigate(-1)}
