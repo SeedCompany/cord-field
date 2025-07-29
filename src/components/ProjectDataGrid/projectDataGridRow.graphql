@@ -18,12 +18,21 @@ fragment projectDataGridRow on Project {
       }
     }
   }
+  fieldRegion {
+    value {
+      id
+      name {
+        value
+      }
+    }
+  }
   mouStart {
     value
   }
   mouEnd {
     value
   }
+
   isMember
   pinned
 }
