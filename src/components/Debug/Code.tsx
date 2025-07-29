@@ -1,6 +1,6 @@
 import { Box, BoxProps } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { ChildrenProp } from '~/common';
+import { ChildrenProp, extendSx } from '~/common';
 
 interface CodeProps extends Omit<BoxProps, 'component'> {
   json?: any;
@@ -15,18 +15,15 @@ export const Code = ({
   return (
     <Box
       component="pre"
-      sx={{
-        p: 1,
-        borderRadius: 1,
-        margin: 0,
-        color: 'common.white',
-        bgcolor: 'grey.800',
-        fontFamily: 'monospace',
-        fontSize: '0.875rem',
-        overflow: 'auto',
-        whiteSpace: 'pre-wrap',
-        ...sx,
-      }}
+      sx={[
+        (theme) => ({
+          padding: theme.spacing(1),
+          borderRadius: theme.shape.borderRadius,
+          color: theme.palette.background.paper,
+          backgroundColor: theme.palette.grey[800],
+        }),
+        ...extendSx(sx),
+      ]}
       {...rest}
     >
       {json ? JSON.stringify(json, undefined, 2) : children}

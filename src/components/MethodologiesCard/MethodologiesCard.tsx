@@ -82,9 +82,9 @@ export const MethodologiesCard = ({
   );
 
   return (
-    <Card className={className} sx={{ width: '100%', height: '100%' }}>
+    <Card className={className} sx={{ width: '1', height: '1' }}>
       {data?.canEdit ? (
-        <CardActionArea onClick={onClick} sx={{ height: '100%' }}>
+        <CardActionArea onClick={onClick} sx={{ height: '1' }}>
           {content}
         </CardActionArea>
       ) : (

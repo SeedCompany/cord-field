@@ -82,33 +82,21 @@ export const UploadItem = (props: UploadItemProps) => {
         )}
       </Stack>
       {error ? (
-        <IconButton
-          aria-label="clear"
-          onClick={onClear}
-          sx={(theme) => ({
-            color: theme.palette.error.main,
-          })}
-        >
+        <IconButton aria-label="clear" onClick={onClear} color="error">
           <CancelIcon />
         </IconButton>
       ) : completedAt ? (
         <IconButton
           aria-label="completed"
+          color="error"
           onClick={() => console.log('TODO: Add onCompleted click handler')}
-          sx={(theme) => ({
-            color: theme.palette.error.main,
-          })}
         >
-          <CheckIcon
-            sx={(theme) => ({
-              color: theme.palette.primary.main,
-            })}
-          />
+          <CheckIcon color="primary" />
         </IconButton>
       ) : (
-        <div
-          style={{
-            padding: '12px',
+        <Box
+          sx={{
+            p: '12px',
           }}
         >
           <CircularProgress
@@ -117,7 +105,7 @@ export const UploadItem = (props: UploadItemProps) => {
             thickness={4.6}
             value={percentCompleted}
           />
-        </div>
+        </Box>
       )}
     </Box>
   );

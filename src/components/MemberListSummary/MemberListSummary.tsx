@@ -7,7 +7,6 @@ import {
 } from '@mui/material';
 import { To } from 'history';
 import { compact } from 'lodash';
-// Removed makeStyles, using sx prop for layout and spacing
 import { listOrPlaceholders } from '~/common';
 import { Avatar } from '../Avatar';
 import { HugeIcon, HugeIconProps } from '../Icons';
