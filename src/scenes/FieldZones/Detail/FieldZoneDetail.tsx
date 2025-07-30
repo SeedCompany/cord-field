@@ -39,8 +39,8 @@ export const FieldZoneDetail = () => {
     >
       <Error error={error}>
         {{
-          NotFound: 'Could not find fieldZone',
-          Default: 'Error loading fieldZone',
+          NotFound: 'Could not find field zone',
+          Default: 'Error loading field zone',
         }}
       </Error>
       <Helmet title={fieldZone?.name.value ?? undefined} />
@@ -83,7 +83,7 @@ export const FieldZoneDetail = () => {
                 <Tab label="Projects" value="projects" />
               </TabList>
               <TabPanel value="profile">
-                {fieldZone && <FieldZoneProfile fieldZone={fieldZone} />}
+                <FieldZoneProfile fieldZone={fieldZone} />
               </TabPanel>
               <TabPanel value="projects">
                 {fieldZone && <FieldZoneProjects />}

@@ -19,7 +19,7 @@ import { Link } from '~/components/Routing';
 import { FieldRegionProfileFragment } from './FieldRegionProfile.graphql';
 
 interface FieldRegionProfileProps {
-  fieldRegion: FieldRegionProfileFragment;
+  fieldRegion: FieldRegionProfileFragment | undefined;
 }
 
 export const FieldRegionProfile = ({
@@ -43,23 +43,28 @@ export const FieldRegionProfile = ({
         sx={{
           p: 2,
           gap: 2,
+          flex: 1,
         }}
       >
         <DisplayProperty
           label="Field Zone"
           value={
-            <Link to={`/field-zones/${fieldRegion.fieldZone.value?.id}`}>
-              {fieldRegion.fieldZone.value?.name.value}
-            </Link>
+            fieldRegion?.fieldZone.value ? (
+              <Link to={`/field-zones/${fieldRegion.fieldZone.value.id}`}>
+                {fieldRegion.fieldZone.value.name.value}
+              </Link>
+            ) : null
           }
           loading={!fieldRegion}
         />
         <DisplayProperty
           label="Director"
           value={
-            <Link to={`/users/${fieldRegion.director.value?.id}`}>
-              {fieldRegion.director.value?.fullName}
-            </Link>
+            fieldRegion?.director.value ? (
+              <Link to={`/users/${fieldRegion.director.value.id}`}>
+                {fieldRegion.director.value.fullName}
+              </Link>
+            ) : null
           }
           loading={!fieldRegion}
         />
@@ -67,13 +72,15 @@ export const FieldRegionProfile = ({
       <Box sx={{ p: 1 }}>
         {canEditAnyFields ? (
           <Tooltip title="Edit Field Region">
-            <IconButton aria-label="edit field region" onClick={editRegion}>
+            <IconButton onClick={editRegion}>
               <Edit />
             </IconButton>
           </Tooltip>
         ) : null}
       </Box>
-      <EditFieldRegion fieldRegion={fieldRegion} {...editRegionState} />
+      {fieldRegion && (
+        <EditFieldRegion fieldRegion={fieldRegion} {...editRegionState} />
+      )}
     </Box>
   );
 };

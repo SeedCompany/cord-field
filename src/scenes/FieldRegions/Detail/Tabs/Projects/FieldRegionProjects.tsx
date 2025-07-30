@@ -54,7 +54,7 @@ export const FieldRegionProjects = () => {
         {...props}
         slots={slots}
         slotProps={slotProps}
-        columns={ProjectColumns}
+        columns={FieldRegionProjectColumns}
         initialState={ProjectInitialState}
         headerFilters
         hideFooter
@@ -63,3 +63,8 @@ export const FieldRegionProjects = () => {
     </TabPanelContent>
   );
 };
+
+// Remove the 'fieldRegion' column since this view is scoped to a specific field region
+const FieldRegionProjectColumns = ProjectColumns.filter(
+  (col) => col.field !== 'fieldRegion.name'
+);

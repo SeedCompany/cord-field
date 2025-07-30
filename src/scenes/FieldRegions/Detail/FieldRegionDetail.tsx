@@ -18,7 +18,7 @@ const useFieldRegionDetailsFilters = makeQueryHandler({
 export const FieldRegionDetail = () => {
   const { fieldRegionId = '' } = useParams();
 
-  const { data, error } = useQuery(FieldRegionDetailDocument, {
+  const { data, error, loading } = useQuery(FieldRegionDetailDocument, {
     variables: { fieldRegionId },
   });
 
@@ -60,8 +60,10 @@ export const FieldRegionDetail = () => {
                 lineHeight: 'inherit',
               }}
             >
-              {!fieldRegion ? (
-                <Skeleton width="20ch" />
+              {loading ? (
+                <Skeleton width={200} />
+              ) : !fieldRegion ? (
+                <Skeleton width={200} />
               ) : (
                 fieldRegion.name.value ?? (
                   <Redacted
@@ -83,12 +85,10 @@ export const FieldRegionDetail = () => {
                 <Tab label="Projects" value="projects" />
               </TabList>
               <TabPanel value="profile">
-                {fieldRegion && (
-                  <FieldRegionProfile fieldRegion={fieldRegion} />
-                )}
+                <FieldRegionProfile fieldRegion={fieldRegion} />
               </TabPanel>
               <TabPanel value="projects">
-                {fieldRegion && <FieldRegionProjects />}
+                <FieldRegionProjects />
               </TabPanel>
             </TabContext>
           </TabsContainer>

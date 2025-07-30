@@ -19,7 +19,7 @@ import { Link } from '~/components/Routing';
 import { FieldZoneProfileFragment } from './FieldZoneProfile.graphql';
 
 interface FieldZoneProfileProps {
-  fieldZone: FieldZoneProfileFragment;
+  fieldZone: FieldZoneProfileFragment | undefined;
 }
 
 export const FieldZoneProfile = ({ fieldZone }: FieldZoneProfileProps) => {
@@ -46,9 +46,11 @@ export const FieldZoneProfile = ({ fieldZone }: FieldZoneProfileProps) => {
         <DisplayProperty
           label="Director"
           value={
-            <Link to={`/users/${fieldZone.director.value?.id}`}>
-              {fieldZone.director.value?.fullName}
-            </Link>
+            fieldZone?.director.value ? (
+              <Link to={`/users/${fieldZone.director.value.id}`}>
+                {fieldZone.director.value.fullName}
+              </Link>
+            ) : null
           }
           loading={!fieldZone}
         />
@@ -56,13 +58,13 @@ export const FieldZoneProfile = ({ fieldZone }: FieldZoneProfileProps) => {
       <Box sx={{ p: 1 }}>
         {canEditAnyFields ? (
           <Tooltip title="Edit Field Zone">
-            <IconButton aria-label="edit field Zone" onClick={editZone}>
+            <IconButton onClick={editZone}>
               <Edit />
             </IconButton>
           </Tooltip>
         ) : null}
       </Box>
-      <EditFieldZone fieldZone={fieldZone} {...editZoneState} />
+      {fieldZone && <EditFieldZone fieldZone={fieldZone} {...editZoneState} />}
     </Box>
   );
 };
