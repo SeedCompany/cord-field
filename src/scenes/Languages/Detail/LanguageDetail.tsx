@@ -165,6 +165,14 @@ export const LanguageDetail = () => {
               wrap={(node) => <Grid item>{node}</Grid>}
             />
           </Grid>
+          <Grid direction="row" container spacing={2} alignItems="center">
+            <BooleanProperty
+              label="Reporting Language"
+              redacted="You do not have permission to view whether the language is a reporting language"
+              data={language?.isAvailableForReporting}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+          </Grid>
           <DisplayProperty label="ID" value={id} loading={!language} />
           <DisplayProperty
             label="Pronunciation Guide"
