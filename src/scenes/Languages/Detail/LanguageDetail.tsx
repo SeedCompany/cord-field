@@ -95,6 +95,7 @@ export const LanguageDetail = () => {
     sponsorStartDate,
     sponsorEstimatedEndDate,
     displayName,
+    usesAIAssistance,
     name,
   } = language ?? {};
 
@@ -220,7 +221,11 @@ export const LanguageDetail = () => {
             value={asDate(sponsorEstimatedEndDate?.value)?.fiscalYear}
             loading={!language}
           />
-
+          <DisplayProperty
+            label="Does this language use AI assistance?"
+            value={usesAIAssistance?.value ? 'Yes' : 'No'}
+            loading={!language}
+          />
           <Grid item>
             <FirstScripture data={data?.language} />
           </Grid>

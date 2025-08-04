@@ -20,6 +20,9 @@ fragment languageDataGridRow on Language {
   signLanguageCode {
     value
   }
+  usesAIAssistance {
+    value
+  }
   sensitivity
   pinned
 }
