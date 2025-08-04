@@ -49,6 +49,13 @@ export const LanguageColumns: Array<GridColDef<Language>> = [
     filterable: false,
   },
   {
+    field: 'usesAIAssistance',
+    headerName: 'Uses AI',
+    ...booleanColumn(),
+    width: 150,
+    valueGetter: (_, { usesAIAssistance }) => usesAIAssistance.value,
+  },
+  {
     field: 'id',
     headerName: 'ID',
     valueGetter: (_, language) => language.id,
