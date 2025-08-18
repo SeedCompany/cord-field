@@ -1,0 +1,5 @@
+mutation DeleteToolUsage($id: ID!) {
+  deleteToolUsage(id: $id) {
+    __typename
+  }
+}
