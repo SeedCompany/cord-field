@@ -12,6 +12,7 @@ import { LanguageEngagementDescription } from './Description';
 import { LanguageEngagementHeader } from './Header';
 import { LanguageEngagementMilestone } from './Milestone/Milestone';
 import { PlanningSpreadsheet } from './PlanningSpreadsheet';
+import { Tools } from './Tools/Tools';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
@@ -99,6 +100,9 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
             direction="column"
             spacing={2}
           >
+            <Grid item>
+              <Tools engagement={engagement} />
+            </Grid>
             <Grid item>
               <LanguageEngagementMilestone engagement={engagement} />
             </Grid>
