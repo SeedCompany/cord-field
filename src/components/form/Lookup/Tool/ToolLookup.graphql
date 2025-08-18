@@ -1,0 +1,14 @@
+query ToolLookup($query: String!) {
+  search(input: { query: $query, type: [Tool] }) {
+    items {
+      ...ToolLookupItem
+    }
+  }
+}
+
+fragment ToolLookupItem on Tool {
+  id
+  name {
+    value
+  }
+}

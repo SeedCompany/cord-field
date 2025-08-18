@@ -1,0 +1,7 @@
+mutation UpdateTool($input: UpdateTool!) {
+  updateTool(input: $input) {
+    tool {
+      ...ToolForm
+    }
+  }
+}
