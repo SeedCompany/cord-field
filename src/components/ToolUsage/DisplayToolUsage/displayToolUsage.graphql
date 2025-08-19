@@ -1,0 +1,11 @@
+fragment displayToolUsage on ToolUsage {
+  id
+  startDate {
+    canRead
+    canEdit
+    value
+  }
+  tool {
+    ...ToolLookupItem
+  }
+}

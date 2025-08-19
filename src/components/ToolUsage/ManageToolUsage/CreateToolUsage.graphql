@@ -1,0 +1,17 @@
+mutation CreateToolUsage($input: CreateToolUsage!) {
+  createToolUsage(input: $input) {
+    toolUsage {
+      ...ToolUsageForm
+      # refresh containers usage list
+      container {
+        __typename
+        id
+        tools {
+          items {
+            id
+          }
+        }
+      }
+    }
+  }
+}
