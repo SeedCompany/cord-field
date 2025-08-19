@@ -17,7 +17,7 @@ export const DisplayToolUsage = ({ usage }: Props) => (
 
         {usage.startDate.value && (
           <Typography variant="body2">
-            Started: <FormattedDate date={usage.startDate.value} />
+            Started Using: <FormattedDate date={usage.startDate.value} />
           </Typography>
         )}
       </Box>

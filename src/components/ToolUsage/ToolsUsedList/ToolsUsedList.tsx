@@ -51,11 +51,7 @@ export const ToolsUsedList = ({ resource }: Props) => {
         )}
       </Box>
 
-      <ManageToolUsage
-        container={resource}
-        existingTools={tools}
-        {...manageToolsState}
-      />
+      <ManageToolUsage container={resource} {...manageToolsState} />
     </Box>
   );
 };

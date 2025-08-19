@@ -1,3 +1,12 @@
+fragment manageToolUsages on Resource {
+  id
+  tools {
+    items {
+      ...ToolUsageForm
+    }
+    canCreate
+  }
+}
 fragment ToolUsageForm on ToolUsage {
   id
   startDate {
@@ -8,4 +17,5 @@ fragment ToolUsageForm on ToolUsage {
   tool {
     ...ToolLookupItem
   }
+  canDelete
 }

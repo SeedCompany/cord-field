@@ -2,7 +2,7 @@ mutation CreateToolUsage($input: CreateToolUsage!) {
   createToolUsage(input: $input) {
     toolUsage {
       ...ToolUsageForm
-      # return entire list of tools for container cache
+      # refresh containers usage list
       container {
         __typename
         id
