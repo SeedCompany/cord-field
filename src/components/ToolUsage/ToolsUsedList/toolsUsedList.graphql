@@ -1,6 +1,8 @@
 fragment toolsUsedList on Resource {
   ...Id
   tools {
-    ...displayToolUsage
+    items {
+      ...displayToolUsage
+    }
   }
 }

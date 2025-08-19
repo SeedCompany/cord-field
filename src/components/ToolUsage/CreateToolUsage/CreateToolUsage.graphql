@@ -7,7 +7,9 @@ mutation CreateToolUsage($input: CreateToolUsage!) {
         __typename
         id
         tools {
-          id
+          items {
+            id
+          }
         }
       }
     }

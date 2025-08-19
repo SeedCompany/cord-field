@@ -13,7 +13,7 @@ interface Props {
 export const ToolsUsedList = ({ resource }: Props) => {
   const [manageToolsState, openManageTools] = useDialog();
 
-  const tools = resource.tools;
+  const tools = resource.tools.items;
 
   return (
     <Box>
