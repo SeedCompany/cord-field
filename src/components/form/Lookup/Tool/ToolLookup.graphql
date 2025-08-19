@@ -6,9 +6,20 @@ query ToolLookup($query: String!) {
   }
 }
 
+# This does need to match what we need in our display usage
+# As we use the lookup result for the optimistic creation of the tool usage.
+# And that requires this extra info.
+# This is lightweight enough that I'm not worried about over-fetching,
+# plus the result set will be small for tools.
+# What would be better would be to allow extra fragments on certain LookupField elements.
 fragment ToolLookupItem on Tool {
   id
   name {
+    canRead
+    value
+  }
+  aiBased {
+    canRead
     value
   }
 }

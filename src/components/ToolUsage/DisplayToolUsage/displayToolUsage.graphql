@@ -6,14 +6,6 @@ fragment displayToolUsage on ToolUsage {
     value
   }
   tool {
-    id
-    name {
-      canRead
-      value
-    }
-    aiBased {
-      canRead
-      value
-    }
+    ...ToolLookupItem
   }
 }

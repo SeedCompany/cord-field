@@ -1,5 +1,6 @@
 import { Edit } from '@mui/icons-material';
 import { Box, Tooltip, Typography } from '@mui/material';
+import { cmpBy } from '@seedcompany/common';
 import { useDialog } from '../../Dialog';
 import { IconButton } from '../../IconButton';
 import { DisplayToolUsage } from '../DisplayToolUsage/DisplayToolUsage';
@@ -45,9 +46,9 @@ export const ToolsUsedList = ({ resource }: Props) => {
         {tools.length === 0 ? (
           <Typography color="textSecondary">No tools used yet</Typography>
         ) : (
-          tools.map((usage) => (
-            <DisplayToolUsage key={usage.id} usage={usage} />
-          ))
+          tools
+            .toSorted(cmpBy((usage) => usage.tool.name.value))
+            .map((usage) => <DisplayToolUsage key={usage.id} usage={usage} />)
         )}
       </Box>
 

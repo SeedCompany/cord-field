@@ -1,14 +1,23 @@
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError, Reference, useMutation } from '@apollo/client';
 import { Box, Chip, Divider, Stack, Typography } from '@mui/material';
+import { cmpBy } from '@seedcompany/common';
 import { GraphQLError } from 'graphql';
 import { useMemo, useState } from 'react';
-import { CalendarDate, CalendarDateOrISO } from '../../../common';
+import { CalendarDate, CalendarDateOrISO, ISOString } from '~/common';
+import { readFragment } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { DateField, SubmitError } from '../../form';
 import { ToolField, ToolLookupItem } from '../../form/Lookup';
+import {
+  ToolLookupItemFragment,
+  ToolLookupItemFragmentDoc,
+} from '../../form/Lookup/Tool/ToolLookup.graphql';
 import { CreateToolUsageDocument } from './CreateToolUsage.graphql';
 import { DeleteToolUsageDocument } from './DeleteToolUsage.graphql';
-import { ManageToolUsagesFragment } from './ToolUsageForm.graphql';
+import {
+  ManageToolUsagesFragment,
+  ToolUsageFormFragment,
+} from './ToolUsageForm.graphql';
 
 interface CreateToolUsageFormValues {
   startDate?: CalendarDateOrISO | null;
@@ -31,8 +40,76 @@ export const ManageToolUsage = ({
   );
   const [today] = useState(CalendarDate.now);
 
-  const [createToolUsage] = useMutation(CreateToolUsageDocument);
-  const [deleteToolUsage] = useMutation(DeleteToolUsageDocument);
+  const [createToolUsage, { client }] = useMutation(CreateToolUsageDocument, {
+    optimisticResponse: ({ input }) => {
+      const tool: ToolLookupItemFragment = readFragment(client.cache, {
+        fragment: ToolLookupItemFragmentDoc,
+        object: { __typename: 'Tool', id: input.tool },
+        optimistic: true,
+      })!;
+      const newOptimisticUsage = {
+        __typename: 'ToolUsage',
+        id: input.tool, // fake but will be unique.
+        tool,
+        startDate: {
+          __typename: 'SecuredDateNullable',
+          canRead: true,
+          canEdit: true,
+          value:
+            ((input.startDate as CalendarDate | null)?.toISO() as
+              | ISOString
+              | undefined) ?? null,
+        },
+        // We can't delete it because we don't have the real ID from the API
+        // to delete with.
+        canDelete: false,
+      } as const;
+      return {
+        createToolUsage: {
+          __typename: 'CreateToolUsageOutput',
+          toolUsage: {
+            ...newOptimisticUsage,
+            container: {
+              ...container,
+              tools: {
+                ...container.tools,
+                items: [...container.tools.items, newOptimisticUsage],
+              },
+            },
+          },
+        },
+      } as const;
+    },
+  });
+  const [runDeleteToolUsage] = useMutation(DeleteToolUsageDocument);
+  const deleteUsageFn = (usage: ToolUsageFormFragment) => {
+    if (!usage.canDelete) {
+      return undefined;
+    }
+    return () =>
+      runDeleteToolUsage({
+        variables: { id: usage.id },
+        optimisticResponse: {
+          deleteToolUsage: {
+            __typename: 'DeleteToolUsageOutput',
+          },
+        },
+        update: (cache) => {
+          cache.modify({
+            id: cache.identify(container),
+            fields: {
+              tools: (existing, { readField }) => ({
+                ...existing,
+                items: existing.items.filter(
+                  (tool: Reference) => readField('id', tool) !== usage.id
+                ),
+              }),
+            },
+            optimistic: true,
+          });
+        },
+      });
+  };
 
   return (
     <DialogForm<CreateToolUsageFormValues>
@@ -58,7 +135,7 @@ export const ManageToolUsage = ({
           });
         }
 
-        await createToolUsage({
+        void createToolUsage({
           variables: {
             input: {
               ...values,
@@ -67,8 +144,10 @@ export const ManageToolUsage = ({
             },
           },
         });
-        form.restart();
-        setTimeout(() => form.focus('tool'), 0);
+        setTimeout(() => {
+          form.restart();
+          form.focus('tool');
+        }, 0);
       }}
       onClose={(reason, form) => {
         if (reason === 'success') return; // Keep the dialog open on success
@@ -78,28 +157,18 @@ export const ManageToolUsage = ({
       <Stack gap={2}>
         {container.tools.items.length > 0 ? (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }} role="list">
-            {container.tools.items.map((usage) => (
-              <Chip
-                key={usage.id}
-                role="listitem"
-                label={usage.tool.name.value}
-                color="default"
-                onDelete={
-                  usage.canDelete
-                    ? () =>
-                        deleteToolUsage({
-                          variables: { id: usage.id },
-                          optimisticResponse: {
-                            deleteToolUsage: {
-                              __typename: 'DeleteToolUsageOutput',
-                            },
-                          },
-                        })
-                    : undefined
-                }
-                // TODO onClick to switch to editing the specific usage.
-              />
-            ))}
+            {container.tools.items
+              .toSorted(cmpBy((usage) => usage.tool.name.value))
+              .map((usage) => (
+                <Chip
+                  key={usage.id}
+                  role="listitem"
+                  label={usage.tool.name.value}
+                  color="default"
+                  onDelete={deleteUsageFn(usage)}
+                  // TODO onClick to switch to editing the specific usage.
+                />
+              ))}
           </Box>
         ) : (
           <Typography color="text.secondary">No tools used yet</Typography>
