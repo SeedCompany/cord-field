@@ -9,8 +9,6 @@ export const ToolField = LookupField.createFor({
   placeholder: 'Search for a tool by name',
   CreateDialogForm: CreateTool,
   getInitialValues: (val) => ({
-    tool: {
-      name: val,
-    },
+    name: val,
   }),
 });

@@ -1,4 +1,4 @@
-mutation UpdateTool($input: UpdateTool!) {
+mutation EditTool($input: UpdateTool!) {
   updateTool(input: $input) {
     tool {
       ...ToolForm
