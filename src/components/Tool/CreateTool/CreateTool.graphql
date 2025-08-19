@@ -1,0 +1,7 @@
+mutation CreateTool($input: CreateTool!) {
+  createTool(input: $input) {
+    tool {
+      ...ToolForm
+    }
+  }
+}

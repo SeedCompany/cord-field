@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 import { ProgressReportsOverviewCard } from '../../../components/ProgressReportsOverviewCard/ProgressReportsOverviewCard';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { FabLink } from '../../../components/Routing';
+import { ToolsUsedList } from '../../../components/ToolUsage';
 import { ProductList } from '../../Products/List/ProductList';
 import { EngagementQuery } from '../Engagement.graphql';
 import { CeremonyForm } from './Ceremony';
@@ -99,6 +100,9 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
             direction="column"
             spacing={2}
           >
+            <Grid item>
+              <ToolsUsedList resource={engagement} />
+            </Grid>
             <Grid item>
               <LanguageEngagementMilestone engagement={engagement} />
             </Grid>
