@@ -68,6 +68,7 @@ export const ManageToolUsage = ({
           },
         });
         form.restart();
+        setTimeout(() => form.focus('tool'), 0);
       }}
       onClose={(reason, form) => {
         if (reason === 'success') return; // Keep the dialog open on success
