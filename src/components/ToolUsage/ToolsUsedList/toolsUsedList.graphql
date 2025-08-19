@@ -1,0 +1,6 @@
+fragment toolsUsedList on Resource {
+  ...Id
+  tools {
+    ...displayToolUsage
+  }
+}

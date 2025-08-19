@@ -1,0 +1,19 @@
+fragment displayToolUsage on ToolUsage {
+  id
+  startDate {
+    canRead
+    canEdit
+    value
+  }
+  tool {
+    id
+    name {
+      canRead
+      value
+    }
+    aiBased {
+      canRead
+      value
+    }
+  }
+}

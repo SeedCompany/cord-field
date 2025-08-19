@@ -4,6 +4,7 @@ import { makeStyles } from 'tss-react/mui';
 import { ProgressReportsOverviewCard } from '../../../components/ProgressReportsOverviewCard/ProgressReportsOverviewCard';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { FabLink } from '../../../components/Routing';
+import { ToolsUsedList } from '../../../components/ToolUsage';
 import { ProductList } from '../../Products/List/ProductList';
 import { EngagementQuery } from '../Engagement.graphql';
 import { CeremonyForm } from './Ceremony';
@@ -12,7 +13,6 @@ import { LanguageEngagementDescription } from './Description';
 import { LanguageEngagementHeader } from './Header';
 import { LanguageEngagementMilestone } from './Milestone/Milestone';
 import { PlanningSpreadsheet } from './PlanningSpreadsheet';
-import { Tools } from './Tools/Tools';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
@@ -101,7 +101,7 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
             spacing={2}
           >
             <Grid item>
-              <Tools engagement={engagement} />
+              <ToolsUsedList resource={engagement} />
             </Grid>
             <Grid item>
               <LanguageEngagementMilestone engagement={engagement} />
