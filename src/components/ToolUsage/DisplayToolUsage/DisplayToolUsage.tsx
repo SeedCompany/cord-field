@@ -15,11 +15,14 @@ export const DisplayToolUsage = ({ usage }: Props) => (
           <Typography variant="body2">AI-Based Tool</Typography>
         )}
 
-        {usage.startDate.value && (
-          <Typography variant="body2">
-            Started Using: <FormattedDate date={usage.startDate.value} />
-          </Typography>
-        )}
+        <Typography variant="body2">
+          Started Using:{' '}
+          {usage.startDate.value ? (
+            <FormattedDate date={usage.startDate.value} />
+          ) : (
+            'Unknown'
+          )}
+        </Typography>
       </Box>
     }
   >
