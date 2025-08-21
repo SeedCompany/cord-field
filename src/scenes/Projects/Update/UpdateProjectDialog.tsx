@@ -41,6 +41,7 @@ export type EditableProjectField = ExtractStrict<
   keyof UpdateProject | 'mouRange',
   // Add more fields here as needed
   | 'name'
+  | 'departmentId'
   | 'mouRange'
   | 'estimatedSubmission'
   | 'fieldRegionId'
@@ -82,6 +83,11 @@ const fieldMapping: Record<
   marketingLocationId: ({ props }) => (
     <LocationField {...props} label="Marketing Location" />
   ),
+  departmentId: ({ props, project }) => {
+    // deviate from canEdit=false standard UX, since this is tacked onto name edit
+    if (!project.departmentId.canEdit) return null;
+    return <TextField {...props} label="Department ID" />;
+  },
 };
 
 interface UpdateProjectFormValues {
@@ -129,6 +135,7 @@ export const UpdateProjectDialog = ({
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
       marketingLocationId: project.marketingLocation.value,
+      departmentId: project.departmentId.value,
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
@@ -155,6 +162,7 @@ export const UpdateProjectDialog = ({
     project.sensitivity,
     project.marketingLocation.value,
     project.id,
+    project.departmentId,
     editFields,
   ]);
 
