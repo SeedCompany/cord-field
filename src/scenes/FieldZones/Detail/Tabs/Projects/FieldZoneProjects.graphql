@@ -1,0 +1,17 @@
+query FieldZoneProjects($fieldZoneId: ID!, $input: ProjectListInput) {
+  fieldZone(id: $fieldZoneId) {
+    id
+    projects(input: $input) {
+      canRead
+      hasMore
+      total
+      items {
+        ...fieldZoneProjectDataGridRow
+      }
+    }
+  }
+}
+
+fragment fieldZoneProjectDataGridRow on Project {
+  ...projectDataGridRow
+}
