@@ -232,7 +232,7 @@ export const ProjectOverview = () => {
               <Tooltip title="Edit Project Name">
                 <IconButton
                   aria-label="edit project name"
-                  onClick={() => editField(['name'])}
+                  onClick={() => editField(['name', 'departmentId'])}
                   loading={!project}
                 >
                   <Edit />
