@@ -1,10 +1,12 @@
 import { Stack } from '@mui/material';
 import { memoize } from 'lodash';
-import { SetRequired } from 'type-fest';
+import { Merge, SetRequired } from 'type-fest';
 import {
+  CreatePerson,
   GenderLabels,
   GenderList,
   RoleLabels,
+  UpdateUser,
   UserStatusLabels,
   UserStatusList,
 } from '~/api/schema.graphql';
@@ -14,6 +16,7 @@ import {
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  DropzoneField,
   EmailField,
   EnumField,
   matchFieldIfSame,
@@ -24,6 +27,21 @@ import {
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { useSession } from '../../../components/Session';
 import { UserFormFragment } from './UserForm.graphql';
+
+export interface UserFormValues<T extends UpdateUser | CreatePerson> {
+  user: Merge<
+    T,
+    {
+      photo?: File[];
+    }
+  >;
+  person: Merge<
+    T,
+    {
+      photo?: File[];
+    }
+  >;
+}
 
 export type UserFormProps<T, R = void> = SetRequired<
   DialogFormProps<T, R>,
@@ -169,6 +187,17 @@ export const UserForm = <T, R = void>({
             />
           )}
         </SecuredField>
+        <DropzoneField
+          name="photo"
+          label={
+            <>
+              User Photo
+              <br />
+              Click or drop image here to upload
+            </>
+          }
+          disabled={user?.photo.canEdit}
+        />
       </Stack>
     </DialogForm>
   );

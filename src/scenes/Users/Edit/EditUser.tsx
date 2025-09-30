@@ -1,16 +1,21 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { Maybe, UpdateUserInput } from '~/api/schema.graphql';
-import { UserForm, UserFormProps } from '../UserForm';
+import { UpdateUser } from '~/api/schema.graphql';
+import { useUploadFileAsync } from '../../../components/files/hooks';
+import { UserForm, UserFormProps, UserFormValues } from '../UserForm';
 import { UpdateUserDocument } from './EditUser.graphql';
 
+type FormValues = UserFormValues<UpdateUser>;
+type FormProps = UserFormProps<FormValues>;
+
 export type EditUserProps = Except<
-  UserFormProps<UpdateUserInput>,
+  FormProps,
   'fieldsPrefix' | 'onSubmit' | 'initialValues'
 >;
 
 export const EditUser = (props: EditUserProps) => {
+  const uploadFile = useUploadFileAsync();
   const [updateUser] = useMutation(UpdateUserDocument);
   const user = props.user;
 
@@ -39,19 +44,30 @@ export const EditUser = (props: EditUserProps) => {
   );
 
   return (
-    <UserForm<UpdateUserInput & { user: { email?: Maybe<string> } }>
+    <UserForm<FormValues>
       title="Edit Person"
       {...props}
       fieldsPrefix="user"
       initialValues={initialValues}
       onSubmit={async ({ user }) => {
+        if (!user) throw new Error('User data is required');
+
+        // Extract photo separately due to type constraints
+        const { photo, ...userData } = user as typeof user & { photo?: File[] };
+        const [uploadedPhotoInfo, finalizeUpload] = await uploadFile(
+          photo?.[0]
+        );
+
         await updateUser({
           variables: {
             input: {
-              user,
+              user: {
+                ...userData,
+                photo: uploadedPhotoInfo,
+              },
             },
           },
-        });
+        }).then(...finalizeUpload.tap);
       }}
     />
   );

@@ -76,4 +76,12 @@ fragment DisplayUser on User {
     canEdit
     value
   }
+  photo {
+    canRead
+    canEdit
+    value {
+      id
+      url
+    }
+  }
 }

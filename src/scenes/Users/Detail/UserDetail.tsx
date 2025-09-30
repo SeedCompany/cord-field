@@ -1,6 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Skeleton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
@@ -96,6 +103,22 @@ export const UserDetail = () => {
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
           </Box>
+          {user?.photo.value && (
+            <Box>
+              <Avatar
+                src={user.photo.value.url}
+                alt={`${user.fullName} photo`}
+                sx={{
+                  width: 200,
+                  height: 200,
+                  fontSize: '4rem',
+                }}
+              >
+                {user.fullName?.charAt(0)}
+              </Avatar>
+            </Box>
+          )}
+
           <DisplayProperty
             label="Status"
             value={user?.status.value}
