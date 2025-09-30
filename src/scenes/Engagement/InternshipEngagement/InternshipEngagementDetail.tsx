@@ -1,5 +1,5 @@
-import { DateRange } from '@mui/icons-material';
-import { Breadcrumbs, Grid, Typography } from '@mui/material';
+import { DateRange, Edit } from '@mui/icons-material';
+import { Breadcrumbs, Chip, Grid, Tooltip, Typography } from '@mui/material';
 import { Many } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
@@ -7,7 +7,8 @@ import {
   EngagementStatusLabels,
   InternshipPositionLabels,
 } from '~/api/schema.graphql';
-import { labelFrom } from '~/common';
+import { canEditAny, labelFrom } from '~/common';
+import { Fab } from '~/components/Fab';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
@@ -31,6 +32,7 @@ import {
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.graphql';
+import { EngagementDescription } from '../LanguageEngagement/Description';
 import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
@@ -64,6 +66,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
 
   const intern = engagement.intern.value;
   const name = intern?.fullName;
+  const editable = canEditAny(engagement);
 
   return (
     <>
@@ -112,6 +115,19 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                       </Typography>
                     )}
                   </Grid>
+                  {editable && (
+                    <Grid item>
+                      <Tooltip title="Update Marketability">
+                        <Fab
+                          color="primary"
+                          aria-label="Update internship engagement"
+                          onClick={() => show(['marketable'])}
+                        >
+                          <Edit />
+                        </Fab>
+                      </Tooltip>
+                    </Grid>
+                  )}
                   <Grid item>
                     <DeleteEngagement
                       project={engagement.project}
@@ -170,6 +186,14 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                     onClick={() => show('countryOfOriginId')}
                   />
                 </Grid>
+                {engagement.marketable.value && (
+                  <Grid item>
+                    <Chip label="Marketable" color="info" />
+                  </Grid>
+                )}
+              </Grid>
+              <Grid item>
+                <EngagementDescription engagement={engagement} />
               </Grid>
               <Grid item container spacing={3}>
                 <Grid item xs={6}>

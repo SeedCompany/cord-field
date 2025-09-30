@@ -1,5 +1,6 @@
-fragment EngagementDescription on LanguageEngagement {
+fragment EngagementDescription on Engagement {
   ...Id
+  __typename
   description {
     canRead
     canEdit

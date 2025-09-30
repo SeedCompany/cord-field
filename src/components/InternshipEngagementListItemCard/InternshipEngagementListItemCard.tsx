@@ -2,6 +2,7 @@ import {
   Card,
   CardActions,
   CardContent,
+  Chip,
   Grid,
   Typography,
 } from '@mui/material';
@@ -47,6 +48,7 @@ export const InternshipEngagementListItemCard = (
   const endDate = getEndDate(props);
   const position = props.position.value;
   const country = props.countryOfOrigin.value?.name.value;
+  const marketable = props.marketable.value;
 
   return (
     <Card className={cx(classes.root, props.className)}>
@@ -94,6 +96,11 @@ export const InternshipEngagementListItemCard = (
               />
             </Grid>
           ) : null}
+          {marketable && (
+            <Grid item>
+              <Chip label="Marketable" color="info" />
+            </Grid>
+          )}
         </Grid>
       </CardActionAreaLink>
       <CardActions>
