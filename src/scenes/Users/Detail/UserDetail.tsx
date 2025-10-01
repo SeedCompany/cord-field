@@ -15,7 +15,7 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
 import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
-import { canEditAny, labelFrom, labelsFrom } from '~/common';
+import { canEditAny, labelFrom, labelsFrom, square } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
@@ -104,19 +104,7 @@ export const UserDetail = () => {
             <ImpersonationToggle user={user} />
           </Box>
           {user?.photo.value && (
-            <Box>
-              <Avatar
-                src={user.photo.value.url}
-                alt={`${user.fullName} photo`}
-                sx={{
-                  width: 200,
-                  height: 200,
-                  fontSize: '4rem',
-                }}
-              >
-                {user.fullName?.charAt(0)}
-              </Avatar>
-            </Box>
+            <Avatar src={user.photo.value.url} alt="" sx={square(200)} />
           )}
 
           <DisplayProperty
