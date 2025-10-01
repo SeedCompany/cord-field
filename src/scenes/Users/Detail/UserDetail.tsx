@@ -7,8 +7,8 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
-import { RoleLabels } from '~/api/schema.graphql';
-import { canEditAny, labelsFrom } from '~/common';
+import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
+import { canEditAny, labelFrom, labelsFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
@@ -99,6 +99,11 @@ export const UserDetail = () => {
           <DisplayProperty
             label="Status"
             value={user?.status.value}
+            loading={!user}
+          />
+          <DisplayProperty
+            label="Gender"
+            value={labelFrom(GenderLabels)(user?.gender.value)}
             loading={!user}
           />
           <DisplayProperty

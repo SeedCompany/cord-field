@@ -71,4 +71,9 @@ fragment DisplayUser on User {
       }
     }
   }
+  gender {
+    canRead
+    canEdit
+    value
+  }
 }
