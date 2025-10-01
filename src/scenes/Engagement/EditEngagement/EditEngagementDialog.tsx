@@ -65,6 +65,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'paratextRegistryId'
   | 'openToInvestorVisit'
   | 'usingAIAssistedTranslation'
+  | 'marketable'
 >;
 
 interface EngagementFieldProps {
@@ -165,6 +166,7 @@ const fieldMapping: Record<
       {...props}
     />
   ),
+  marketable: ({ props }) => <CheckboxField {...props} label="Marketable" />,
 };
 
 interface EngagementFormValues {
@@ -233,6 +235,7 @@ export const EditEngagementDialog = ({
             position: engagement.position.value,
             mentorId: engagement.mentor.value,
             countryOfOriginId: engagement.countryOfOrigin.value,
+            marketable: engagement.marketable.value,
           }),
     };
 

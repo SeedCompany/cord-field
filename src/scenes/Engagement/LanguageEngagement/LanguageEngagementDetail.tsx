@@ -9,7 +9,7 @@ import { ProductList } from '../../Products/List/ProductList';
 import { EngagementQuery } from '../Engagement.graphql';
 import { CeremonyForm } from './Ceremony';
 import { DatesForm } from './DatesForm';
-import { LanguageEngagementDescription } from './Description';
+import { EngagementDescription } from './Description';
 import { LanguageEngagementHeader } from './Header';
 import { LanguageEngagementMilestone } from './Milestone/Milestone';
 import { PlanningSpreadsheet } from './PlanningSpreadsheet';
@@ -107,7 +107,7 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
               <LanguageEngagementMilestone engagement={engagement} />
             </Grid>
             <Grid item>
-              <LanguageEngagementDescription engagement={engagement} />
+              <EngagementDescription engagement={engagement} />
             </Grid>
             <Grid item container spacing={2} alignItems="center">
               <Grid item component={Typography} variant="h3" paragraph>
