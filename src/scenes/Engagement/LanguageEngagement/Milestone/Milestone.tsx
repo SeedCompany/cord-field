@@ -108,8 +108,7 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
             )}
           </Stack>
           <Typography variant="body2" color="textSecondary">
-            Cumulative scripture translated upon successful completion of this
-            engagement
+            Completion of milestone translation goals within this MOU phase
           </Typography>
           {isEditing ? (
             <SelectField
