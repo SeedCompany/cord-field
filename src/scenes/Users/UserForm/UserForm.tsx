@@ -2,6 +2,8 @@ import { Stack } from '@mui/material';
 import { memoize } from 'lodash';
 import { SetRequired } from 'type-fest';
 import {
+  GenderLabels,
+  GenderList,
   RoleLabels,
   UserStatusLabels,
   UserStatusList,
@@ -96,12 +98,22 @@ export const UserForm = <T, R = void>({
             )}
           </SecuredField>
         </Stack>
+        <SecuredField obj={user} name="gender">
+          {(props) => (
+            <EnumField
+              label="Gender"
+              options={GenderList}
+              getLabel={labelFrom(GenderLabels)}
+              {...props}
+            />
+          )}
+        </SecuredField>
         <SecuredField obj={user} name="status">
           {(props) => (
             <EnumField
               label="Status"
               options={UserStatusList}
-              getLabel={(value) => UserStatusLabels[value]}
+              getLabel={labelFrom(UserStatusLabels)}
               {...props}
             />
           )}
