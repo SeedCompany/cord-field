@@ -31,6 +31,7 @@ export const EditUser = (props: EditUserProps) => {
               title: user.title.value,
               roles: user.roles.value,
               status: user.status.value,
+              gender: user.gender.value,
             },
           }
         : undefined,

@@ -6,7 +6,10 @@ import { Form } from 'react-final-form';
 import { RichTextJson } from '~/common';
 import { IconButton } from '../../../../components/IconButton';
 import { RichTextField, RichTextView } from '../../../../components/RichText';
-import { UpdateLanguageEngagementDocument } from '../../EditEngagement/EditEngagementDialog.graphql';
+import {
+  UpdateInternshipEngagementDocument,
+  UpdateLanguageEngagementDocument,
+} from '../../EditEngagement/EditEngagementDialog.graphql';
 import { EngagementDescriptionFragment } from './Description.graphql';
 
 interface Props {
@@ -17,11 +20,15 @@ interface FormShape {
   description: RichTextJson | null;
 }
 
-export const LanguageEngagementDescription = ({ engagement }: Props) => {
+export const EngagementDescription = ({ engagement }: Props) => {
   const { description } = engagement;
 
   const [isEditing, setIsEditing] = useState(false);
-  const [updateDescription] = useMutation(UpdateLanguageEngagementDocument);
+  const [updateDescription] = useMutation(
+    engagement.__typename === 'LanguageEngagement'
+      ? UpdateLanguageEngagementDocument
+      : UpdateInternshipEngagementDocument
+  );
 
   const initialValues = useMemo(
     (): FormShape => ({ description: description.value ?? null }),
