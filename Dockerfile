@@ -19,7 +19,7 @@ EOF
 WORKDIR /app
 ENV NODE_ENV=production
 
-FROM node as builder
+FROM node AS builder
 
 # Install dependencies (in separate docker layer from app code)
 COPY .yarn .yarn
@@ -42,7 +42,7 @@ RUN yarn cache clean --all
 # Re-install prod dependencies
 RUN yarn workspaces focus --all --production
 
-FROM node as run
+FROM node AS run
 
 COPY --from=builder /app/.yarn ./.yarn
 COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
