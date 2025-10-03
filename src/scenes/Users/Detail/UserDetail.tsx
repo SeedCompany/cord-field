@@ -1,6 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Skeleton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
@@ -8,7 +15,7 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
 import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
-import { canEditAny, labelFrom, labelsFrom } from '~/common';
+import { canEditAny, labelFrom, labelsFrom, square } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
@@ -96,6 +103,10 @@ export const UserDetail = () => {
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
           </Box>
+          {user?.photo.value && (
+            <Avatar src={user.photo.value.url} alt="" sx={square(200)} />
+          )}
+
           <DisplayProperty
             label="Status"
             value={user?.status.value}
