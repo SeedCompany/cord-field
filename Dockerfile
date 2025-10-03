@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:20-slim as node
+FROM public.ecr.aws/docker/library/node:24-slim as node
 
 RUN <<EOF
 set -e
