@@ -32,6 +32,10 @@ export const ProgressButton = forwardRef<
     <>
       {progress ? (
         <div
+          // This is to center spinner within button, while maintaining consistent button width.
+          // If we were to replace the button text, the button size could change which we want to
+          // avoid because the buttons shifting around is jarring for the user. Esp since the
+          // spinner is only shown for a short time.
           style={{
             position: 'absolute',
             inset: 0,
