@@ -16,4 +16,13 @@ fragment LanguageLookupItem on Language {
   displayName {
     value
   }
+  ethnologue {
+    code {
+      value
+    }
+  }
+  registryOfLanguageVarietiesCode {
+    value
+  }
+
 }
