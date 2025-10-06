@@ -1,0 +1,15 @@
+mutation UpdateUserPhoto($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    user {
+      id
+      photo {
+        canRead
+        canEdit
+        value {
+          id
+          url
+        }
+      }
+    }
+  }
+}
