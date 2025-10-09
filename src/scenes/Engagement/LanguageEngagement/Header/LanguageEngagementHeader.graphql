@@ -28,6 +28,11 @@ fragment LanguageEngagementHeader on LanguageEngagement {
     canEdit
     value
   }
+  completedMilestone {
+    canRead
+    canEdit
+    value
+  }
   dateRange {
     ...securedDateRange
   }

@@ -91,7 +91,7 @@ export const LanguageEngagementHeader = ({
           </Grid>
           {editable && (
             <Grid item>
-              <Tooltip title="Update First Scripture and Luke Partnership">
+              <Tooltip title="Update Engagement Properties">
                 <Fab
                   color="primary"
                   aria-label="Update language engagement"
@@ -100,6 +100,7 @@ export const LanguageEngagementHeader = ({
                       'firstScripture',
                       'lukePartnership',
                       'openToInvestorVisit',
+                      'completedMilestone',
                       'usingAIAssistedTranslation',
                     ])
                   }
@@ -184,6 +185,12 @@ export const LanguageEngagementHeader = ({
           label="Open to Investor Visit"
           redacted="You do not have permission to view whether this engagement is open to investor visit"
           data={engagement.openToInvestorVisit}
+          wrap={(node) => <Grid item>{node}</Grid>}
+        />
+        <BooleanProperty
+          label="Completed Milestone"
+          redacted="You do not have permission to view whether this engagement has completed its milestone"
+          data={engagement.completedMilestone}
           wrap={(node) => <Grid item>{node}</Grid>}
         />
       </Grid>

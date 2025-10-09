@@ -66,6 +66,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'openToInvestorVisit'
   | 'usingAIAssistedTranslation'
   | 'marketable'
+  | 'completedMilestone'
 >;
 
 interface EngagementFieldProps {
@@ -167,6 +168,12 @@ const fieldMapping: Record<
     />
   ),
   marketable: ({ props }) => <CheckboxField {...props} label="Marketable" />,
+  completedMilestone: ({ props }) => (
+    <CheckboxField
+      {...props}
+      label="Was Milestone completed during engagement?"
+    />
+  ),
 };
 
 interface EngagementFormValues {
@@ -229,6 +236,7 @@ export const EditEngagementDialog = ({
             openToInvestorVisit: engagement.openToInvestorVisit.value,
             usingAIAssistedTranslation:
               engagement.usingAIAssistedTranslation.value,
+            completedMilestone: engagement.completedMilestone.value,
           }
         : {
             methodologies: engagement.methodologies.value,
