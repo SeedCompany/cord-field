@@ -17,10 +17,10 @@ import { SelectField } from '~/components/form';
 import { TriStateBooleanField } from '~/components/form/TriStateBooleanField';
 import { IconButton } from '../../../../components/IconButton';
 import { UpdateLanguageEngagementDocument } from '../../EditEngagement/EditEngagementDialog.graphql';
-import { EngagementMilestoneReachedFragment } from './Milestone.graphql';
+import { EngagementMilestoneFragment } from './Milestone.graphql';
 
 interface Props {
-  engagement: EngagementMilestoneReachedFragment;
+  engagement: EngagementMilestoneFragment;
 }
 
 interface FormShape {
