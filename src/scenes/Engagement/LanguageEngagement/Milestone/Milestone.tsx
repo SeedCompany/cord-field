@@ -198,7 +198,7 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
               actualMilestones.has(values.milestonePlanned) && (
                 <TriStateBooleanField
                   name="milestoneReached"
-                  label="Was it actually reached/completed?"
+                  label="Was it completed?"
                   helperText={false}
                   sx={{ width: 'fit-content' }}
                 />
@@ -215,7 +215,7 @@ const Strikethrough = styled('s')(({ theme }) => ({
   textDecoration: 'none',
   position: 'relative',
   '&:after': {
-    color: theme.palette.error.main,
+    color: theme.palette.text.disabled,
     pointerEvents: 'none',
     content: '""',
     display: 'block',
