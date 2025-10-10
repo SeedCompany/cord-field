@@ -20,9 +20,9 @@
     "trigger-codepipeline": "rm -rf bin/dist && tsc -p bin && node bin/dist/start-codepipeline"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   },
-  "packageManager": "yarn@4.9.2",
+  "packageManager": "yarn@4.10.3",
   "dependencies": {
     "@apollo/client": "3.7.*",
     "@babel/runtime": "^7.23.2",
@@ -68,7 +68,7 @@
     "@react-editor-js/client": "^2.1.0",
     "@react-editor-js/core": "^2.1.0",
     "@react-editor-js/server": "^2.1.0",
-    "@seedcompany/common": ">=0.14 <1",
+    "@seedcompany/common": "^1.2.1",
     "ahooks": "^3.7.8",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
@@ -223,8 +223,8 @@
     "ts-morph": "^20.0.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
-    "type-fest": "^4.18.2",
-    "typescript": "^5.7.3",
+    "type-fest": "^5.0.1",
+    "typescript": "^5.9.3",
     "webpack": "^4.47.0",
     "webpack-bundle-analyzer": "^4.9.1",
     "webpack-dev-server": "^4.15.1",

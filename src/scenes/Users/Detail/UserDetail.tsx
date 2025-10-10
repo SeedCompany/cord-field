@@ -10,6 +10,7 @@ import { PartialDeep } from 'type-fest';
 import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom, labelsFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
+import { UserPhoto } from '~/components/UserPhoto';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
 import {
@@ -96,6 +97,7 @@ export const UserDetail = () => {
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
           </Box>
+          {user && <UserPhoto user={user} sx={{ alignSelf: 'start' }} />}
           <DisplayProperty
             label="Status"
             value={user?.status.value}

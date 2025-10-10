@@ -76,4 +76,5 @@ fragment DisplayUser on User {
     canEdit
     value
   }
+  ...userPhoto
 }
