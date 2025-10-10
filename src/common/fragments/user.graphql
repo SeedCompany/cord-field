@@ -60,7 +60,6 @@ fragment DisplayUser on User {
     value
   }
   fullName
-  avatarLetters
   timezone {
     canRead
     canEdit
@@ -77,11 +76,5 @@ fragment DisplayUser on User {
     canEdit
     value
   }
-  photo {
-    canEdit
-    canRead
-    value {
-      url
-    }
-  }
+  ...userPhoto
 }

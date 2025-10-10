@@ -97,21 +97,7 @@ export const UserDetail = () => {
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
           </Box>
-          {user && (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'flex-start',
-              }}
-            >
-              <UserPhoto
-                securedPhoto={user.photo}
-                userId={userId}
-                avatarLetters={user.avatarLetters}
-                sx={{ mb: 2 }}
-              />
-            </Box>
-          )}
+          {user && <UserPhoto user={user} sx={{ alignSelf: 'start' }} />}
           <DisplayProperty
             label="Status"
             value={user?.status.value}

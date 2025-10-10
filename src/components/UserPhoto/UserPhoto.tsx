@@ -1,17 +1,13 @@
 import { useMutation } from '@apollo/client';
 import { PersonOutlined as PersonIcon } from '@mui/icons-material';
-import { Avatar, Box, Card, CardActionArea, Tooltip } from '@mui/material';
-import { forwardRef } from 'react';
+import { Avatar, ButtonBase, Tooltip } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import { useDropzone } from 'react-dropzone';
-import { Maybe } from '~/api/schema.graphql';
-import { SecuredProp, StyleProps } from '~/common';
+import { extendSx, square, StyleProps } from '~/common';
 import { useUploadFileAsync } from '../files/hooks';
 import { DropOverlay } from '../Upload/DropOverlay';
 import { UpdateUserPhotoDocument } from './UpdateUserPhoto.graphql';
-
-interface PhotoFile {
-  url: string;
-}
+import { UserPhotoFragment } from './userPhoto.graphql';
 
 const DEFAULT_SIZE = 150;
 const ACCEPTED_IMAGE_TYPES = {
@@ -19,38 +15,25 @@ const ACCEPTED_IMAGE_TYPES = {
 };
 
 export interface UserPhotoProps extends StyleProps {
-  securedPhoto: SecuredProp<PhotoFile | null>;
-  userId: string;
-  avatarLetters?: Maybe<string>;
+  user: UserPhotoFragment;
+  size?: number;
 }
 
-export const UserPhoto = forwardRef<any, UserPhotoProps>(function UserPhoto(
-  props,
-  ref
-) {
-  const { securedPhoto, userId, avatarLetters, ...rest } = props;
-
-  const { value: photo, canRead, canEdit } = securedPhoto;
+export const UserPhoto = ({ user, size, ...rest }: UserPhotoProps) => {
+  const { value: photo, canEdit } = user.photo;
 
   const uploadFile = useUploadFileAsync();
   const [updateUser] = useMutation(UpdateUserPhotoDocument);
 
   const handlePhotoUpload = async (file: File) => {
-    if (!canEdit) return;
-
     try {
       const [uploadedPhoto, finalize] = await uploadFile(file);
 
       await updateUser({
         variables: {
-          input: {
-            user: {
-              id: userId,
-              photo: uploadedPhoto,
-            },
-          },
+          user: user.id,
+          photo: uploadedPhoto,
         },
-        refetchQueries: ['User'],
       }).then(...finalize.tap);
     } catch (e) {
       console.error(e);
@@ -58,87 +41,67 @@ export const UserPhoto = forwardRef<any, UserPhotoProps>(function UserPhoto(
     }
   };
 
-  const onPhotoUpload = (files: File[]) => {
-    if (files.length > 0 && files[0]) {
-      void handlePhotoUpload(files[0]);
-    }
-  };
-
-  const isDisabled = (photo && !canRead) || (!photo && !canEdit);
-
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: onPhotoUpload,
-    disabled: isDisabled,
+    onDrop: (files: File[]) => {
+      if (!canEdit) return;
+      const file = files[0];
+      if (file) {
+        void handlePhotoUpload(file);
+      }
+    },
+    disabled: !canEdit,
     multiple: false,
     accept: ACCEPTED_IMAGE_TYPES,
     noClick: false,
     noKeyboard: false,
   });
 
-  const photoUrl = photo?.url;
-
   return (
-    <Card
-      {...getRootProps()}
-      sx={{
-        position: 'relative',
-        width: DEFAULT_SIZE,
-        height: DEFAULT_SIZE,
-        borderRadius: '50%',
-      }}
+    <Tooltip
+      title={canEdit && !isDragActive ? 'Click or drag in photo' : undefined}
     >
-      <input {...getInputProps()} name="user_photo_uploader" />
-      <DropOverlay
-        isDragActive={isDragActive}
-        sx={{
-          borderRadius: '50%',
-          inset: 0,
-        }}
+      <ButtonBase
+        component="label"
+        {...getRootProps({
+          disabled: !canEdit,
+          ...rest,
+          sx: [
+            (theme) => ({
+              borderRadius: '50%',
+              '&.Mui-focusVisible': {
+                outline: `2px solid ${theme.palette.primary.main}`,
+                outlineOffset: '2px',
+              },
+            }),
+            ...extendSx(rest.sx),
+          ],
+          href: '', // just to make TS happy
+        })}
       >
-        {!photo ? 'Add profile photo' : 'Drop new photo to upload'}
-      </DropOverlay>
-      <Tooltip title={canEdit ? 'Click or drag in photo' : undefined}>
-        <CardActionArea
-          {...rest}
-          ref={ref}
-          disabled={isDisabled}
+        <DropOverlay
+          isDragActive={isDragActive}
+          sx={(theme) => ({
+            borderRadius: 'inherit',
+            inset: '-2px',
+            border: 'none',
+            outline: `2px solid ${theme.palette.primary.main}`,
+            background: alpha(theme.palette.background.paper, 0.9),
+            padding: 1,
+          })}
+        >
+          {!photo ? 'Add profile photo' : 'Drop new photo to upload'}
+        </DropOverlay>
+        <Avatar
+          src={photo?.url}
           sx={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
+            ...square('2em'),
+            fontSize: (size ?? DEFAULT_SIZE) / 2,
           }}
         >
-          {!photo ? (
-            <Avatar
-              sx={{
-                width: '100%',
-                height: '100%',
-                fontSize: 70,
-              }}
-            >
-              {avatarLetters ? (
-                avatarLetters
-              ) : (
-                <PersonIcon fontSize="inherit" />
-              )}
-            </Avatar>
-          ) : (
-            <Box
-              component="img"
-              src={photoUrl}
-              alt="Profile photo"
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          )}
-        </CardActionArea>
-      </Tooltip>
-    </Card>
+          {user.avatarLetters ?? <PersonIcon fontSize="inherit" />}
+        </Avatar>
+        <input {...getInputProps()} name="user_photo_uploader" />
+      </ButtonBase>
+    </Tooltip>
   );
-});
+};
