@@ -77,6 +77,11 @@ fragment LanguageDetail on Language {
       ...ProjectListItem
     }
   }
+  isAvailableForReporting {
+    canEdit
+    canRead
+    value
+  }
   ...FirstScripture
   ...TogglePin
 }
