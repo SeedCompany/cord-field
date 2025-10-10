@@ -77,20 +77,20 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     headerName: 'Milestone',
     description:
       'Completion of milestone translation goals within this MOU phase',
-    field: 'milestoneReached',
+    field: 'milestonePlanned',
     ...enumColumn(LanguageMilestoneList, LanguageMilestoneLabels),
     width: 130,
     valueGetter: (_, row) =>
       row.__typename === 'LanguageEngagement'
-        ? row.milestoneReached.value
+        ? row.milestonePlanned.value
         : null,
     filterable: true,
     editable: true,
     isEditable: ({ row }) =>
-      row.__typename === 'LanguageEngagement' && row.milestoneReached.canEdit,
+      row.__typename === 'LanguageEngagement' && row.milestonePlanned.canEdit,
     valueSetter: (value, row) =>
       row.__typename === 'LanguageEngagement'
-        ? { ...row, milestoneReached: { ...row.milestoneReached, value } }
+        ? { ...row, milestonePlanned: { ...row.milestonePlanned, value } }
         : row,
   },
   {

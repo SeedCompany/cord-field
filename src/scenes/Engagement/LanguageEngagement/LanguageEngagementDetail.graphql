@@ -5,7 +5,7 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   ...EngagementPlanningSpreadsheet
   ...LanguageEngagementDatesForm
   ...EngagementDescription
-  ...engagementMilestoneReached
+  ...engagementMilestone
   ...aiAssistedTranslation
   ...toolsUsedList
   ceremony {
