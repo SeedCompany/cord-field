@@ -144,7 +144,7 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
           </Stack>
 
           <Typography variant="body2" color="textSecondary">
-            Completion of milestone translation goals within this MOU phase
+            Completion of milestone translation goals within this MOU
           </Typography>
 
           <Stack direction="row" spacing={3} flexWrap="wrap">

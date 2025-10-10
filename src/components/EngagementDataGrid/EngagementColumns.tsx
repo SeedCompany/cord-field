@@ -75,8 +75,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
   },
   {
     headerName: 'Milestone',
-    description:
-      'Completion of milestone translation goals within this MOU phase',
+    description: 'Completion of milestone translation goals within this MOU',
     field: 'milestonePlanned',
     ...enumColumn(LanguageMilestoneList, LanguageMilestoneLabels),
     width: 130,
