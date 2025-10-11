@@ -61,7 +61,6 @@ export const UserPhoto = ({ user, size, ...rest }: UserPhotoProps) => {
       title={canEdit && !isDragActive ? 'Click or drag in photo' : undefined}
     >
       <ButtonBase
-        component="label"
         {...getRootProps({
           disabled: !canEdit,
           ...rest,
