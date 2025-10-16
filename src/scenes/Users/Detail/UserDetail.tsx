@@ -30,6 +30,7 @@ export const UserDetail = () => {
   const { userId = '' } = useParams();
   const { data, error } = useQuery(UserDocument, {
     variables: { userId },
+    fetchPolicy: 'cache-and-network',
   });
   useComments(userId);
 
