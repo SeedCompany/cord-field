@@ -1,5 +1,6 @@
 import { ApolloClient, fromPromise } from '@apollo/client';
 import { ErrorLink } from '@apollo/client/link/error';
+import { GraphQLErrorExtensions } from 'graphql';
 import { SessionDocument } from '~/components/Session/session.graphql';
 import { GQLOperations } from '../../operationsList';
 
@@ -17,11 +18,11 @@ export class SessionLink extends ErrorLink {
   constructor() {
     super(({ graphQLErrors, operation, forward }) => {
       for (const gqlError of graphQLErrors || []) {
-        const ext = gqlError.extensions;
+        const ext = gqlError.extensions as Partial<GraphQLErrorExtensions>;
 
         // Re-establish session if needed then retry the operation
         if (
-          ext.codes[0] === 'NoSession' &&
+          ext.codes?.[0] === 'NoSession' &&
           operation.operationName !== GQLOperations.Query.Session
         ) {
           if (!this.client) {
