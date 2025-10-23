@@ -1,7 +1,6 @@
 import { ApolloError, Reference, useMutation } from '@apollo/client';
 import { Box, Chip, Divider, Stack, Typography } from '@mui/material';
 import { cmpBy } from '@seedcompany/common';
-import { GraphQLError } from 'graphql';
 import { useMemo, useState } from 'react';
 import { CalendarDate, CalendarDateOrISO, ISOString } from '~/common';
 import { readFragment } from '../../../api';
@@ -125,12 +124,13 @@ export const ManageToolUsage = ({
         if (!values.tool) {
           throw new ApolloError({
             graphQLErrors: [
-              new GraphQLError('Required', {
+              {
+                message: 'Required',
                 extensions: {
                   codes: ['Input'],
                   field: 'tool',
                 },
-              }),
+              },
             ],
           });
         }
