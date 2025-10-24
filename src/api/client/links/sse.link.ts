@@ -17,7 +17,10 @@ import {
   RequestParams,
 } from 'graphql-sse';
 
-type SSELinkOptions = { uri: UriFunction } & Pick<HttpOptions, 'print'> &
+type SSELinkOptions = { uri: UriFunction } & Pick<
+  HttpOptions,
+  'fetch' | 'print'
+> &
   Pick<ClientOptions, 'credentials'>;
 
 export class SseLink extends ApolloLink {
@@ -34,6 +37,7 @@ export class SseLink extends ApolloLink {
       credentials: options.credentials,
       headers: (request) =>
         this.operationsByRequest.get(request)!.getContext().headers,
+      fetchFn: options.fetch,
     });
   }
 

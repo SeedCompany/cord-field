@@ -17,5 +17,6 @@ export const createSseLink = () =>
   new SseLink({
     uri: (op) => `${serverHost}/graphql/${op.operationName}`,
     credentials: 'include',
+    fetch,
     print: dedupeFragmentsPrinter,
   });
