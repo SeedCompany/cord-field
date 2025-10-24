@@ -1,41 +1,59 @@
 import {
   ApolloLink,
   FetchResult,
+  HttpOptions,
   Observable,
   Operation,
   UriFunction,
 } from '@apollo/client';
-import { Printer } from '@apollo/client/link/http/selectHttpOptionsAndBody';
 import { isLiveQueryOperationDefinitionNode } from '@n1ru4l/graphql-live-query';
 import { applyLiveQueryJSONDiffPatch } from '@n1ru4l/graphql-live-query-patch-jsondiffpatch';
 import { applyAsyncIterableIteratorToSink } from '@n1ru4l/push-pull-async-iterable-iterator';
-import { Repeater } from '@repeaterjs/repeater';
 import { getOperationAST, print } from 'graphql';
+import {
+  Client,
+  ClientOptions,
+  createClient,
+  RequestParams,
+} from 'graphql-sse';
 
-type SSELinkOptions = EventSourceInit & { uri: UriFunction; print?: Printer };
+type SSELinkOptions = { uri: UriFunction } & Pick<HttpOptions, 'print'> &
+  Pick<ClientOptions, 'credentials'>;
 
 export class SseLink extends ApolloLink {
+  private readonly client: Client;
+  private readonly operationsByRequest = new WeakMap<
+    RequestParams,
+    Operation
+  >();
+
   constructor(private readonly options: SSELinkOptions) {
     super();
+    this.client = createClient({
+      url: (request) => options.uri(this.operationsByRequest.get(request)!),
+      credentials: options.credentials,
+      headers: (request) =>
+        this.operationsByRequest.get(request)!.getContext().headers,
+    });
   }
 
-  request(operation: Operation): Observable<FetchResult> {
-    const ctx = operation.getContext();
-    const url = new URL(this.options.uri(operation));
-    url.searchParams.set('operationName', operation.operationName);
-    url.searchParams.set('variables', JSON.stringify(operation.variables));
-    url.searchParams.set('extensions', JSON.stringify(operation.extensions));
-    if (ctx.http.includeQuery) {
-      url.searchParams.set(
-        'query',
-        this.options.print?.(operation.query, print) ?? print(operation.query)
-      );
-    }
+  request(op: Operation): Observable<FetchResult> {
+    const ctx = op.getContext();
+
+    const request: RequestParams = {
+      operationName: op.operationName,
+      variables: op.variables,
+      extensions: op.extensions,
+      query: ctx.http.includeQuery
+        ? this.options.print?.(op.query, print) ?? print(op.query)
+        : undefined!,
+    };
+    this.operationsByRequest.set(request, op);
 
     return new Observable<FetchResult>((subscriber) =>
       applyAsyncIterableIteratorToSink(
         applyLiveQueryJSONDiffPatch(
-          makeEventStreamSource(url.toString(), this.options)
+          this.client.iterate(request) as AsyncIterable<FetchResult>
         ),
         subscriber
       )
@@ -44,37 +62,12 @@ export class SseLink extends ApolloLink {
 }
 
 export const isLive = ({ query, operationName, variables }: Operation) => {
-  const definition = getOperationAST(query, operationName);
-  const isSubscription =
-    definition?.kind === 'OperationDefinition' &&
-    definition.operation === 'subscription';
-
-  const isLiveQuery =
-    !!definition && isLiveQueryOperationDefinitionNode(definition, variables);
-
-  return isSubscription || isLiveQuery;
+  const operation = getOperationAST(query, operationName);
+  if (!operation) {
+    return false;
+  }
+  return (
+    operation.operation === 'subscription' ||
+    isLiveQueryOperationDefinitionNode(operation, variables)
+  );
 };
-
-function makeEventStreamSource(url: string, options: SSELinkOptions) {
-  return new Repeater<FetchResult>(async (push, stop) => {
-    const source = new EventSource(url, options);
-    source.addEventListener('next', (event) => {
-      const data = JSON.parse(event.data);
-      if (data.patch) {
-        console.debug('LiveQuery patch', data);
-      }
-      void push(data);
-      if (source.readyState === 2) {
-        stop();
-      }
-    });
-    source.addEventListener('error', (_eventNotError) => {
-      stop();
-    });
-    source.addEventListener('complete', () => {
-      stop();
-    });
-    await stop;
-    source.close();
-  });
-}
