@@ -29,9 +29,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.11.*":
-  version: 3.11.10
-  resolution: "@apollo/client@npm:3.11.10"
+"@apollo/client@npm:3.12.*":
+  version: 3.12.11
+  resolution: "@apollo/client@npm:3.12.11"
   dependencies:
     "@graphql-typed-document-node/core": "npm:^3.1.1"
     "@wry/caches": "npm:^1.0.0"
@@ -42,16 +42,15 @@ __metadata:
     optimism: "npm:^0.18.0"
     prop-types: "npm:^15.7.2"
     rehackt: "npm:^0.1.0"
-    response-iterator: "npm:^0.2.6"
     symbol-observable: "npm:^4.0.0"
     ts-invariant: "npm:^0.10.3"
     tslib: "npm:^2.3.0"
     zen-observable-ts: "npm:^1.2.5"
   peerDependencies:
     graphql: ^15.0.0 || ^16.0.0
-    graphql-ws: ^5.5.5
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc <19.0.0
+    graphql-ws: ^5.5.5 || ^6.0.3
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
     subscriptions-transport-ws: ^0.9.0 || ^0.11.0
   peerDependenciesMeta:
     graphql-ws:
@@ -62,7 +61,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: 10c0/27bb910d347e7bb88ae48a39c6e328d8389bfe679cd4529889878bffcc73d00b1122b9fc3501f079d35835622bd33d9848a4e7bad579aa2a2d1f5dee824c5586
+  checksum: 10c0/405a7a933375d584be76971253d774e521520c553ed0dee7eb8dbd1b95f7db13fdd3f828b63a12143abbaf46fa75a87a6b856c16cd82e36d008fe2b3ec7cc5f2
   languageName: node
   linkType: hard
 
@@ -8089,7 +8088,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cord-field@workspace:."
   dependencies:
-    "@apollo/client": "npm:3.11.*"
+    "@apollo/client": "npm:3.12.*"
     "@babel/core": "npm:^7.23.2"
     "@babel/helper-plugin-utils": "npm:^7.22.5"
     "@babel/plugin-transform-numeric-separator": "npm:^7.10.4"
@@ -17962,13 +17961,6 @@ __metadata:
   bin:
     resolve: bin/resolve
   checksum: 10c0/78ad6edb8309a2bfb720c2c1898f7907a37f858866ce11a5974643af1203a6a6e05b2fa9c53d8064a673a447b83d42569260c306d43628bff5bb101969708355
-  languageName: node
-  linkType: hard
-
-"response-iterator@npm:^0.2.6":
-  version: 0.2.25
-  resolution: "response-iterator@npm:0.2.25"
-  checksum: 10c0/c67e7b3ce57d5275196b8cc325f1e6ba3213b7b9a40160914d738a40fad4411d683344ef8eec72554ad7a3a5286bf06a1a580b7e7a208820be10d622e053ef44
   languageName: node
   linkType: hard
 
