@@ -40,6 +40,18 @@ export class SseLink extends ApolloLink {
   request(op: Operation): Observable<FetchResult> {
     const ctx = op.getContext();
 
+    // Skip subscriptions on SSR.
+    // Some GQL patterns have data loads via subscriptions where the server
+    // emits the value first and then listens for subsequent updates.
+    // This is not the case for us, so far, so we can always skip the
+    // "side effect handling" on the server.
+    if (
+      typeof window === 'undefined' &&
+      getOperationAST(op.query, op.operationName)?.operation === 'subscription'
+    ) {
+      return new Observable<FetchResult>((subscriber) => subscriber.complete());
+    }
+
     const request: RequestParams = {
       operationName: op.operationName,
       variables: op.variables,
