@@ -29,9 +29,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.12.*":
-  version: 3.12.11
-  resolution: "@apollo/client@npm:3.12.11"
+"@apollo/client@npm:3.14.*":
+  version: 3.14.0
+  resolution: "@apollo/client@npm:3.14.0"
   dependencies:
     "@graphql-typed-document-node/core": "npm:^3.1.1"
     "@wry/caches": "npm:^1.0.0"
@@ -61,7 +61,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: 10c0/405a7a933375d584be76971253d774e521520c553ed0dee7eb8dbd1b95f7db13fdd3f828b63a12143abbaf46fa75a87a6b856c16cd82e36d008fe2b3ec7cc5f2
+  checksum: 10c0/38776832627def88f707131f9fe394e10b067c67ce84102664cd8f922229671fc5d61bcff702c0c403972f6a57998f243210c681bcda96c68b2b3c82dbb1c789
   languageName: node
   linkType: hard
 
@@ -8088,7 +8088,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cord-field@workspace:."
   dependencies:
-    "@apollo/client": "npm:3.12.*"
+    "@apollo/client": "npm:3.14.*"
     "@babel/core": "npm:^7.23.2"
     "@babel/helper-plugin-utils": "npm:^7.22.5"
     "@babel/plugin-transform-numeric-separator": "npm:^7.10.4"
