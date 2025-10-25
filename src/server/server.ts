@@ -19,6 +19,10 @@ const PUBLIC_DIR = path.resolve(
 const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
 const BASE_PATH = withoutTrailingSlash(basePathOfUrl(PUBLIC_URL));
 
+// getting 'canonizeResults' false positive, maybe this:
+// https://github.com/apollographql/apollo-client/issues/12917
+(global as any)[Symbol.for('apollo.deprecations')] = true;
+
 export const create = async () => {
   const app = express();
   const router: express.Router = BASE_PATH ? express.Router() : app;
