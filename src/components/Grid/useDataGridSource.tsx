@@ -1,5 +1,7 @@
 import {
   type TypedDocumentNode as DocumentNode,
+  MaybeMasked,
+  Unmasked,
   useQuery,
 } from '@apollo/client';
 import {
@@ -132,12 +134,14 @@ export const useDataGridSource = <
     // eslint-disable-next-line react-hooks/exhaustive-deps -- these deps should not be changing between renders
   }, []);
 
-  function listFrom(data: Output): List;
-  function listFrom(data: Output | Nil): List | undefined;
-  function listFrom(data: Output | Nil) {
+  function listFrom(data: Unmasked<Output> | MaybeMasked<Output>): List;
+  function listFrom(
+    data: Unmasked<Output> | MaybeMasked<Output> | Nil
+  ): List | undefined;
+  function listFrom(data: Unmasked<Output> | MaybeMasked<Output> | Nil) {
     return data ? (get(data, listAt) as List) : undefined;
   }
-  function cacheInfo(data: Output | Nil) {
+  function cacheInfo(data: MaybeMasked<Output> | Nil) {
     if (!data) {
       return undefined;
     }
@@ -161,7 +165,7 @@ export const useDataGridSource = <
   // This is read back in the first useQuery hook, above.
   const updateAllPagesQuery = (
     variables: Vars,
-    next: Output,
+    next: Unmasked<Output>,
     updateTotal: boolean
   ) => {
     client.cache.updateQuery(
@@ -279,10 +283,10 @@ export const useDataGridSource = <
     return merge({}, variables, { input: rest });
   }, [variables, input]);
 
-  const addToAllPagesCache = (next: Output) => {
-    updateAllPagesQuery(variables, next, !hasFilter);
+  const addToAllPagesCache = (next: MaybeMasked<Output>) => {
+    updateAllPagesQuery(variables, next as Unmasked<Output>, !hasFilter);
     if (hasFilter) {
-      updateAllPagesQuery(variablesWithFilter, next, true);
+      updateAllPagesQuery(variablesWithFilter, next as Unmasked<Output>, true);
     }
   };
 
@@ -303,7 +307,7 @@ export const useDataGridSource = <
       () => merge({}, variables, { input: { ...input, page: 1 } }),
       [variables, input]
     ),
-    onCompleted: addToAllPagesCache,
+    onCompleted: (x: MaybeMasked<NoInfer<Output>>) => addToAllPagesCache(x),
   });
 
   const list = loading
