@@ -27,8 +27,10 @@ export const createClient = ({
   const sessionLink = new SessionLink();
 
   const client = new ApolloClient({
-    name: 'cord-field',
-    version: process.env.RAZZLE_GIT_HASH,
+    clientAwareness: {
+      name: 'cord-field',
+      version: process.env.RAZZLE_GIT_HASH,
+    },
     ssrMode: !!ssr,
     cache: createCache(),
     link: ApolloLink.from([
