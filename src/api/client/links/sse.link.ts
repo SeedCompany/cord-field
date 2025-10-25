@@ -6,10 +6,11 @@ import {
   Operation,
   UriFunction,
 } from '@apollo/client';
+import { print } from '@apollo/client/utilities';
 import { isLiveQueryOperationDefinitionNode } from '@n1ru4l/graphql-live-query';
 import { applyLiveQueryJSONDiffPatch } from '@n1ru4l/graphql-live-query-patch-jsondiffpatch';
 import { applyAsyncIterableIteratorToSink } from '@n1ru4l/push-pull-async-iterable-iterator';
-import { getOperationAST, print } from 'graphql';
+import { getOperationAST } from 'graphql';
 import {
   Client,
   ClientOptions,
