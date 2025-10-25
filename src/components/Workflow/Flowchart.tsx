@@ -2,7 +2,7 @@ import { TypedDocumentNode as DocumentNode, useQuery } from '@apollo/client';
 import { mapEntries } from '@seedcompany/common';
 import { useDebounceFn, useLocalStorageState } from 'ahooks';
 import { OperationDefinitionNode } from 'graphql';
-import { ComponentType, useCallback, useMemo } from 'react';
+import { ComponentType, useCallback, useEffect, useMemo } from 'react';
 import ReactFlow, {
   applyNodeChanges,
   Background,
@@ -53,17 +53,20 @@ const Flowchart = (props: Props) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const autoLayout = useAutoLayout(setNodes);
 
-  useQuery(props.doc, {
-    onCompleted: ({ workflow }) => {
-      autoLayout.restart();
-      const { nodes, edges } = parseWorkflow(workflow);
-      const persistedPosNodes = nodes.map((node) =>
-        storedPos?.[node.id] ? { ...node, position: storedPos[node.id]! } : node
-      );
-      setNodes(persistedPosNodes);
-      setEdges(edges);
-    },
-  });
+  const { data } = useQuery(props.doc);
+  useEffect(() => {
+    const workflow = data?.workflow;
+    if (!workflow) return;
+
+    autoLayout.restart();
+    const { nodes, edges } = parseWorkflow(workflow);
+    const persistedPosNodes = nodes.map((node) =>
+      storedPos?.[node.id] ? { ...node, position: storedPos[node.id]! } : node
+    );
+    setNodes(persistedPosNodes);
+    setEdges(edges);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   const persist = useDebounceFn((nextNodes: typeof nodes) => {
     setStoredPos(

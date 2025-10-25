@@ -307,8 +307,11 @@ export const useDataGridSource = <
       () => merge({}, variables, { input: { ...input, page: 1 } }),
       [variables, input]
     ),
-    onCompleted: (x: MaybeMasked<NoInfer<Output>>) => addToAllPagesCache(x),
   });
+  useEffect(() => {
+    firstPage && addToAllPagesCache(firstPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firstPage]);
 
   const list = loading
     ? { items: emptyList, total: undefined }
