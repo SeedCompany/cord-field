@@ -29,8 +29,6 @@ export const createClient = ({
   const client = new ApolloClient({
     name: 'cord-field',
     version: process.env.RAZZLE_GIT_HASH,
-    // This should be the default, but it doesn't appear that the library can detect the environment correctly.
-    connectToDevTools: process.env.NODE_ENV !== 'production',
     ssrMode: !!ssr,
     cache: createCache(),
     link: ApolloLink.from([
