@@ -2,7 +2,7 @@ import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { isNotNil, sortBy } from '@seedcompany/common';
 import { difference, uniqBy } from 'lodash';
 import { readFragment } from '~/api';
-import { StepProgress } from '~/api/schema.graphql';
+import { ProductProgress, StepProgress } from '~/api/schema.graphql';
 import { IdFragment } from '~/common';
 import { ProductFormFragment } from '../ProductForm/ProductForm.graphql';
 import {
@@ -64,10 +64,11 @@ export const updateProgressSteps =
     );
 
     for (const progress of progressList) {
-      cache.modify({
+      cache.modify<ProductProgress>({
         id: cache.identify(progress),
         fields: {
-          steps: (prev: StepProgress[] | null) => {
+          // @ts-expect-error https://github.com/apollographql/apollo-client/pull/12983
+          steps: (prev: readonly StepProgress[] | null) => {
             const newList = [
               ...(prev?.filter((sp) => !removedSteps.includes(sp.step)) ?? []),
               ...missingSteps.map(

@@ -1,4 +1,5 @@
 import { ApolloCache } from '@apollo/client';
+import { Modifier } from '@apollo/client/cache';
 import { DeepPartial } from 'ts-essentials';
 import { invalidateProps, updateFragment } from '~/api';
 import { Project as ProjectShape } from '~/api/schema.graphql';
@@ -82,14 +83,14 @@ const updateDateCalcField = <Key extends string>(
   cache.modify({
     id: cache.identify(obj),
     fields: {
-      [key]: () => ({
+      [key]: (() => ({
         ...obj[key],
         value: {
           ...fromProject.value,
           start: override.value?.start ?? fromProject.value?.start,
           end: override.value?.end ?? fromProject.value?.end,
         },
-      }),
+      })) satisfies Modifier<SecuredDateRange>,
     },
   });
 };
