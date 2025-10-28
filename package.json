@@ -24,7 +24,7 @@
   },
   "packageManager": "yarn@4.10.3",
   "dependencies": {
-    "@apollo/client": "3.7.*",
+    "@apollo/client": "3.14.*",
     "@babel/runtime": "^7.23.2",
     "@dagrejs/dagre": "^1.1.2",
     "@date-io/core": "^2.17.0",

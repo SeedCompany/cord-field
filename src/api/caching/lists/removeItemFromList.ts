@@ -28,18 +28,21 @@ import { ListModifier, modifyList, ModifyListOptions } from './modifyList';
  * })
  */
 export const removeItemFromList =
-  <OwningObj extends { id: string }, Item extends Entity, Args>({
+  <
+    OwningObj extends { id: string },
+    Item extends Entity,
+    Args,
+    TData,
+    TVariables,
+    TContext,
+    TCache extends ApolloCache<any>
+  >({
     listId,
     filter,
     item,
   }: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
     item: Item;
-  }): MutationUpdaterFunction<
-    unknown,
-    unknown,
-    unknown,
-    ApolloCache<unknown>
-  > =>
+  }): MutationUpdaterFunction<TData, TVariables, TContext, TCache> =>
   (cache, { data }) => {
     if (!data) {
       return;

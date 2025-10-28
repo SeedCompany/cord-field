@@ -1,6 +1,6 @@
 import { ApolloCache, isReference, TypePolicies } from '@apollo/client';
 import type { Reference } from '@apollo/client';
-import { Modifier } from '@apollo/client/cache/core/types/common';
+import { Modifier, Modifiers } from '@apollo/client/cache/core/types/common';
 import type { EntityStore } from '@apollo/client/cache/inmemory/entityStore';
 import { mapValues, Nil } from '@seedcompany/common';
 import type { ConditionalKeys } from 'type-fest';
@@ -74,7 +74,7 @@ export const modifyList = <OwningObj extends Entity, Args>({
   const fields = mapValues.fromList(listVariations, () => modifier).asRecord;
   cache.modify({
     ...(id ? { id } : {}),
-    fields,
+    fields: fields as Modifiers<OwningObj>,
   });
 };
 

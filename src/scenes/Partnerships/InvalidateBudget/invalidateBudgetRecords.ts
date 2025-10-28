@@ -1,4 +1,4 @@
-import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
+import { ApolloCache, MutationUpdaterFunction, Unmasked } from '@apollo/client';
 import { DateTime, Interval } from 'luxon';
 import { invalidateProps } from '~/api';
 import { Project as ProjectShape } from '~/api/schema.graphql';
@@ -18,8 +18,8 @@ type Partnership = PartnershipToCheckBudgetChangeFragment | undefined;
 export const invalidateBudgetRecords =
   <R>(
     project: Project,
-    previousOrFn: Partnership | ((res: R) => Partnership),
-    updatedOrFn: Partnership | ((res: R) => Partnership)
+    previousOrFn: Partnership | ((res: Unmasked<R>) => Partnership),
+    updatedOrFn: Partnership | ((res: Unmasked<R>) => Partnership)
   ): MutationUpdaterFunction<R, unknown, unknown, ApolloCache<unknown>> =>
   (cache: ApolloCache<unknown>, res) => {
     const previous: Partnership =

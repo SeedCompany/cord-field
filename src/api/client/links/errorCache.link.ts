@@ -1,7 +1,10 @@
 import { ApolloLink, fromPromise } from '@apollo/client';
-import { GraphQLError } from 'graphql';
+import { GraphQLFormattedError } from 'graphql';
 
-export type ErrorCache = Record<string, readonly GraphQLError[] | undefined>;
+export type ErrorCache = Record<
+  string,
+  readonly GraphQLFormattedError[] | undefined
+>;
 
 /**
  * This allows to errors to be cached & reused without going to the network.
