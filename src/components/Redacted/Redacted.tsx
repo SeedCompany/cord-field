@@ -1,6 +1,6 @@
 import { Skeleton, SkeletonProps, Tooltip, TooltipProps } from '@mui/material';
 import { Except } from 'type-fest';
-import { ChildrenProp } from '~/common';
+import { ChildrenProp, extendSx } from '~/common';
 
 export interface RedactedProps {
   info: TooltipProps['title'];
@@ -22,10 +22,12 @@ export const Redacted = ({
         animation={false}
         width={width}
         {...SkeletonProps}
-        sx={{
-          transform: 'initial',
-          ...SkeletonProps?.sx,
-        }}
+        sx={[
+          {
+            transform: 'initial',
+          },
+          ...extendSx(SkeletonProps?.sx),
+        ]}
       >
         {children}
       </Skeleton>

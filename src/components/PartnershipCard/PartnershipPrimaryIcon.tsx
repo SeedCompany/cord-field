@@ -1,22 +1,19 @@
 import { Star } from '@mui/icons-material';
 import { SvgIconProps, Tooltip } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { extendSx } from '~/common';
 
-const useStyles = makeStyles()(() => ({
-  primary: {
-    color: '#ffb400',
-  },
-}));
-
-export const PartnershipPrimaryIcon = ({
-  className,
-  ...rest
-}: SvgIconProps) => {
-  const { classes, cx } = useStyles();
-
+export const PartnershipPrimaryIcon = ({ sx, ...rest }: SvgIconProps) => {
   return (
     <Tooltip title="Primary">
-      <Star className={cx(classes.primary, className)} {...rest} />
+      <Star
+        sx={[
+          {
+            color: '#ffb400',
+          },
+          ...extendSx(sx),
+        ]}
+        {...rest}
+      />
     </Tooltip>
   );
 };

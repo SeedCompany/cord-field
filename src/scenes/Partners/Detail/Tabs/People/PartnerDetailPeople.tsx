@@ -7,7 +7,6 @@ import {
   Typography,
 } from '@mui/material';
 import { Many } from 'lodash';
-import { makeStyles } from 'tss-react/mui';
 import { square } from '~/common';
 import { Avatar } from '~/components/Avatar';
 import { TabPanelContent } from '~/components/Tabs';
@@ -20,22 +19,7 @@ interface Props {
   editPartner: (item: Many<EditablePartnerField>) => void;
 }
 
-const useStyles = makeStyles()(({ palette }) => ({
-  pocCardActionArea: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  pocCardAvatar: {
-    ...square(86),
-    fontSize: 70,
-    color: palette.background.paper,
-  },
-}));
-
 export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
-  const { classes } = useStyles();
-
   return (
     <TabPanelContent sx={{ pb: 4 }}>
       <Typography variant="h3" gutterBottom>
@@ -47,11 +31,21 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
           !partner?.pointOfContact.value ? (
             <CardActionArea
               onClick={() => edit('partner.pointOfContactId')}
-              className={classes.pocCardActionArea}
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
               aria-label="add mentor"
             >
               <CardContent>
-                <Avatar className={classes.pocCardAvatar}>
+                <Avatar
+                  sx={(theme) => ({
+                    ...square(86),
+                    fontSize: 70,
+                    color: theme.palette.background.paper,
+                  })}
+                >
                   <Add fontSize="inherit" />
                 </Avatar>
               </CardContent>

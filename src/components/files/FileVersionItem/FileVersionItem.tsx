@@ -4,7 +4,6 @@ import {
   ListItemSecondaryAction,
   ListItemText,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { FormattedDateTime } from '../../Formatters';
 import {
   FileActionsPopup as ActionsMenu,
@@ -14,27 +13,12 @@ import {
 import { getFileComponents } from '../fileTypes';
 import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.graphql';
 
-const useStyles = makeStyles()(({ spacing, typography }) => ({
-  iconContainer: {
-    marginRight: spacing(2),
-    minWidth: spacing(4),
-  },
-  icon: {
-    fontSize: typography.h2.fontSize,
-  },
-  text: {
-    cursor: 'pointer',
-    marginRight: spacing(3),
-  },
-}));
-
 interface FileVersionItemProps {
   version: FileVersionItem_FileVersion_Fragment;
   actions: FileAction[];
 }
 
 export const FileVersionItem = (props: FileVersionItemProps) => {
-  const { classes } = useStyles();
   const { openFilePreview } = useFileActions();
   const { version, actions } = props;
 
@@ -64,12 +48,14 @@ export const FileVersionItem = (props: FileVersionItemProps) => {
 
   return (
     <ListItem>
-      <ListItemIcon className={classes.iconContainer}>
-        <Icon className={classes.icon} />
+      <ListItemIcon
+        sx={(theme) => ({ marginRight: 2, minWidth: theme.spacing(4) })}
+      >
+        <Icon sx={{ fontSize: 'h2.fontSize' }} />
       </ListItemIcon>
       <ListItemText
         onClick={() => openFilePreview(version)}
-        className={classes.text}
+        sx={{ cursor: 'pointer', marginRight: 3 }}
         primary={name}
         secondary={
           <>

@@ -6,7 +6,6 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import {
   EngagementStatusLabels,
   InternshipPositionLabels,
@@ -18,32 +17,12 @@ import { FormattedDate } from '../Formatters';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { InternshipEngagementListItemFragment } from './InternshipEngagementListItem.graphql';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    width: '100%',
-  },
-  card: {
-    display: 'flex',
-    alignItems: 'initial',
-  },
-  cardContent: {
-    flex: 1,
-    padding: spacing(2, 3),
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-}));
-
 export type InternshipEngagementListItemCardProps =
-  InternshipEngagementListItemFragment & {
-    className?: string;
-  };
+  InternshipEngagementListItemFragment;
 
 export const InternshipEngagementListItemCard = (
-  props: InternshipEngagementListItemCardProps
+  props: InternshipEngagementListItemFragment
 ) => {
-  const { classes, cx } = useStyles();
-
   const fullName = props.intern.value?.fullName;
   const endDate = getEndDate(props);
   const position = props.position.value;
@@ -51,10 +30,17 @@ export const InternshipEngagementListItemCard = (
   const marketable = props.marketable.value;
 
   return (
-    <Card className={cx(classes.root, props.className)}>
+    <Card
+      sx={{
+        width: '100%',
+      }}
+    >
       <CardActionAreaLink
         to={`/engagements/${idForUrl(props)}`}
-        className={classes.card}
+        sx={{
+          display: 'flex',
+          alignItems: 'initial',
+        }}
       >
         <Grid
           component={CardContent}
@@ -62,7 +48,12 @@ export const InternshipEngagementListItemCard = (
           direction="column"
           justifyContent="space-between"
           spacing={1}
-          className={classes.cardContent}
+          sx={(theme) => ({
+            flex: 1,
+            p: theme.spacing(2, 3),
+            display: 'flex',
+            justifyContent: 'space-between',
+          })}
         >
           <Grid item>
             <Typography variant="h4">{fullName}</Typography>

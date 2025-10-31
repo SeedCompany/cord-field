@@ -1,28 +1,8 @@
 import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { random } from 'lodash';
-import { makeStyles } from 'tss-react/mui';
 import { CardActionAreaLink } from '../Routing';
 import { OrganizationListItemFragment } from './OrganizationListItem.graphql';
 
-const useStyles = makeStyles()(({ breakpoints, spacing }) => {
-  const cardWidth = breakpoints.values.sm;
-  return {
-    root: {
-      width: '100%',
-      maxWidth: cardWidth,
-    },
-    card: {
-      display: 'flex',
-      alignItems: 'initial',
-    },
-    cardContent: {
-      flex: 1,
-      padding: spacing(2, 3),
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-  };
-});
 export interface OrganizationListItemCardProps {
   organization?: OrganizationListItemFragment;
   className?: string;
@@ -35,16 +15,28 @@ export const OrganizationListItemCard = ({
   organization,
   className,
 }: OrganizationListItemCardProps) => {
-  const { classes, cx } = useStyles();
-
   return (
-    <Card className={cx(className, classes.root)}>
+    <Card
+      className={className}
+      sx={(theme) => ({
+        width: '100%',
+        maxWidth: theme.breakpoints.values.sm,
+      })}
+    >
       <CardActionAreaLink
         disabled={!organization}
         to={`/organizations/${organization?.id}`}
-        className={classes.card}
+        sx={{ display: 'flex', alignItems: 'initial' }}
       >
-        <CardContent className={classes.cardContent}>
+        <CardContent
+          sx={{
+            flex: 1,
+            py: 2,
+            px: 3,
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <Typography variant="h4">

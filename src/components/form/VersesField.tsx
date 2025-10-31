@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { isEqual, uniqWith } from 'lodash';
 import { useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
   formatScriptureRange,
@@ -41,20 +40,6 @@ export type VersesFieldProps = Except<FieldConfig<Val, true>, 'multiple'> & {
     TextFieldProps,
     'helperText' | 'label' | 'required' | 'autoFocus' | 'placeholder'
   >;
-
-const useStyles = makeStyles()(() => ({
-  chip: {
-    color: '#FFFFFF',
-    backgroundColor: '#2D9CDB',
-    fontWeight: 600,
-    lineHeight: '32px',
-    margin: 2.5,
-    fontSize: 16,
-  },
-  chipDeleteIcon: {
-    color: '#FFFFFF',
-  },
-}));
 
 const validateInput = (input: string) => {
   const currentChar = input[input.length - 1];
@@ -107,8 +92,6 @@ export function VersesField({
       return e.message;
     }
   };
-
-  const { classes } = useStyles();
 
   const [inputValue, setInputValue] = useState<string>('');
   const { input, meta, ref, rest } = useField<Val, true>({
@@ -207,9 +190,18 @@ export function VersesField({
               classes={{
                 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 ...(ChipProps?.classes ?? {}),
-                deleteIcon: classes.chipDeleteIcon,
               }}
-              className={classes.chip}
+              sx={{
+                color: '#FFFFFF',
+                backgroundColor: '#2D9CDB',
+                fontWeight: 600,
+                lineHeight: '32px',
+                margin: 2.5,
+                fontSize: 16,
+                '& .MuiChip-deleteIcon': {
+                  color: '#FFFFFF',
+                },
+              }}
               key={index}
             />
           );
