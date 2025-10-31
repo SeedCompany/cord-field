@@ -1,24 +1,13 @@
-import { makeStyles } from '@mui/material';
 import { CreateNewFolder } from '@mui/icons-material';
-import { select } from '@storybook/addon-knobs';
 import { Avatar as A, AvatarProps } from './Avatar';
 
 export default {
   title: 'Components/Avatar',
 };
 
-const useStyles = makeStyles(() => ({
-  color: {
-    backgroundColor: '#467F3B',
-  },
-}));
-
 const GenericAvatar = (props: AvatarProps) => (
   <>
-    <A
-      variant={select('Variant', ['square', 'rounded', 'circle'], 'circle')}
-      {...props}
-    />
+    <A variant="circular" {...props} />
     <br></br>
     <br></br>
     <a href="https://material-ui.com/api/avatar/">MUI Docs</a>
@@ -33,8 +22,7 @@ export const Image = () => (
 );
 
 export const Initials = () => {
-  const classes = useStyles();
-  return <GenericAvatar children="JS" className={classes.color} />;
+  return <GenericAvatar children="JS" sx={{ backgroundColor: '#467F3B' }} />;
 };
 
 export const Loading = () => <GenericAvatar loading={true} />;

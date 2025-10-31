@@ -26,7 +26,6 @@ import {
   useContext,
   useMemo,
 } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Except, MergeExclusive } from 'type-fest';
 import { StyleProps } from '~/common';
 import { FieldConfig, useField, Value } from './useField';
@@ -58,19 +57,6 @@ export type EnumFieldProps<
   > &
   StyleProps;
 
-const useStyles = makeStyles()(({ typography, spacing }) => ({
-  fieldLabel: {
-    fontWeight: typography.weight.bold,
-  },
-  toggleSplitContainer: {
-    margin: spacing(-1),
-    padding: spacing(1, 0),
-  },
-  toggleGroupedContainer: {
-    margin: spacing(1, 0),
-  },
-}));
-
 const defaultDefaultValue = [] as const;
 
 export const EnumField = <
@@ -91,7 +77,6 @@ export const EnumField = <
     getLabel,
     defaultOption,
     children: childrenProp,
-    className,
     sx,
   } = props;
 
@@ -149,8 +134,6 @@ export const EnumField = <
     allowNull: !multiple,
     disabled: props.disabled,
   });
-
-  const { classes, cx } = useStyles();
 
   const { name, onChange, onBlur, onFocus } = input;
 
@@ -255,11 +238,14 @@ export const EnumField = <
   const renderedOptions =
     variant === 'checkbox' || variant === 'toggle-split' ? (
       <FormGroup
-        classes={{
-          root: cx({
-            [classes.toggleSplitContainer]: variant === 'toggle-split',
-          }),
-        }}
+        sx={
+          variant === 'toggle-split'
+            ? (theme) => ({
+                margin: -1,
+                padding: theme.spacing(1, 0),
+              })
+            : undefined
+        }
         row={layout === 'row'}
       >
         {children}
@@ -268,7 +254,9 @@ export const EnumField = <
       <ToggleButtonGroup
         exclusive={!multiple}
         orientation={layout === 'row' ? 'horizontal' : 'vertical'}
-        className={classes.toggleGroupedContainer}
+        sx={(theme) => ({
+          margin: theme.spacing(1, 0),
+        })}
       >
         {children}
       </ToggleButtonGroup>
@@ -299,11 +287,13 @@ export const EnumField = <
         }
         onBlur(e);
       }}
-      className={className}
       sx={sx}
     >
       {label && (
-        <FormLabel component="legend" className={classes.fieldLabel}>
+        <FormLabel
+          component="legend"
+          sx={{ fontWeight: (theme) => theme.typography.weight.bold }}
+        >
           {label}
         </FormLabel>
       )}

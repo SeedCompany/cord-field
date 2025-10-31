@@ -1,7 +1,6 @@
 import { Add } from '@mui/icons-material';
-import { Breadcrumbs, Tooltip, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
@@ -12,26 +11,7 @@ import { useProjectId } from '../../useProjectId';
 import { CreateProjectChangeRequest } from '../Create';
 import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.graphql';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-  },
-  main: {
-    padding: spacing(4),
-    maxWidth: breakpoints.values.sm,
-  },
-  headerContainer: {
-    margin: spacing(3, 0),
-    display: 'flex',
-  },
-  title: {
-    marginRight: spacing(3),
-  },
-}));
-
 export const ProjectChangeRequestList = () => {
-  const { classes } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const { root: data, ...list } = useListQuery(ChangeRequestList, {
     listAt: (res) => res.project.changeRequests,
@@ -44,8 +24,19 @@ export const ProjectChangeRequestList = () => {
   const [createState, openCreateDialog] = useDialog();
 
   return (
-    <div className={classes.root}>
-      <main className={classes.main}>
+    <Box
+      sx={{
+        flex: 1,
+        overflowY: 'auto',
+      }}
+    >
+      <Box
+        component="main"
+        sx={(theme) => ({
+          p: 4,
+          maxWidth: theme.breakpoints.values.sm,
+        })}
+      >
         <Helmet
           title={`Change Requests - ${data?.project.name.value ?? 'A Project'}`}
         />
@@ -53,8 +44,13 @@ export const ProjectChangeRequestList = () => {
           <ProjectBreadcrumb data={data?.project} />
           <Breadcrumb to=".">Change Requests</Breadcrumb>
         </Breadcrumbs>
-        <div className={classes.headerContainer}>
-          <Typography variant="h2" className={classes.title}>
+        <Box
+          sx={(theme) => ({
+            m: theme.spacing(3, 0),
+            display: 'flex',
+          })}
+        >
+          <Typography variant="h2" sx={{ mr: 3 }}>
             Change Requests
           </Typography>
           {(!list.data || list.data.canCreate) && (
@@ -74,7 +70,7 @@ export const ProjectChangeRequestList = () => {
               project={data.project}
             />
           )}
-        </div>
+        </Box>
         {list.data?.canRead === false ? (
           <Typography>
             Sorry, you don't have permission to view this project's change
@@ -90,7 +86,7 @@ export const ProjectChangeRequestList = () => {
             renderSkeleton={<ProjectChangeRequestListItem />}
           />
         )}
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 };
