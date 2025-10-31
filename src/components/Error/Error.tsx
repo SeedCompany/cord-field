@@ -1,24 +1,14 @@
 import { ApolloError } from '@apollo/client';
 import { Button, Grid, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { usePrevious } from 'ahooks';
 import { isPlainObject } from 'lodash';
 import { ElementType, isValidElement, ReactNode, useEffect } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { getErrorInfo } from '~/api';
 import { ButtonLink, StatusCode, useNavigate } from '../Routing';
 import { ErrorRenderers, renderError } from './error-handling';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  page: {
-    overflow: 'auto',
-    padding: spacing(4, 0, 0, 4),
-  },
-  buttons: {
-    marginTop: spacing(3),
-  },
-}));
 
 export interface ErrorProps {
   /**
@@ -62,8 +52,8 @@ export const Error = ({
   disableButtons,
   component: Component = 'div',
 }: ErrorProps) => {
-  const { classes, cx } = useStyles();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   useResetErrorOnLocationChange();
 
@@ -87,14 +77,21 @@ export const Error = ({
     error && getErrorInfo(error).codes.includes('NotFound') ? 404 : 500;
 
   return (
-    <Component className={cx(page && classes.page)}>
+    <Component
+      style={{
+        ...(page && {
+          overflow: 'auto',
+          padding: theme.spacing(4, 0, 0, 4),
+        }),
+      }}
+    >
       {/* Default status code to be helpful for the most common ones. The
       children can still override this by rendering <StatusCode /> themselves */}
       <StatusCode code={statusCode} />
       <Typography gutterBottom>Oops, Sorry.</Typography>
       {rendered}
       {!disableButtons && (
-        <Grid container spacing={3} className={classes.buttons}>
+        <Grid container spacing={3} sx={{ mt: 3 }}>
           <Grid item>
             <Button
               onClick={() => navigate(-1)}
