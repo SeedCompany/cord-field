@@ -6,7 +6,6 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { RoleLabels } from '~/api/schema.graphql';
 import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';
@@ -14,25 +13,6 @@ import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { Link } from '../Routing';
 import { ProjectMemberCardFragment } from './ProjectMember.graphql';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  cardContent: {
-    display: 'flex',
-  },
-  cardActions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: spacing(1, 2, 1, 1),
-  },
-  avatar: {
-    width: spacing(7),
-    height: spacing(7),
-    marginRight: spacing(2),
-  },
-  memberInfo: {
-    flexGrow: 1,
-  },
-}));
 
 export interface ProjectMemberCardProps {
   projectMember?: ProjectMemberCardFragment;
@@ -48,20 +28,22 @@ export const ProjectMemberCard = ({
   onEdit,
   className,
 }: ProjectMemberCardProps) => {
-  const { classes } = useStyles();
-
   return (
     <Card className={className}>
-      <CardContent className={classes.cardContent}>
+      <CardContent sx={{ display: 'flex' }}>
         <Avatar
-          className={classes.avatar}
+          sx={(theme) => ({
+            width: theme.spacing(7),
+            height: theme.spacing(7),
+            mr: 2,
+          })}
           variant="circular"
           alt={projectMember?.user.value?.fullName ?? ''}
           loading={!projectMember}
         >
           {projectMember?.user.value?.avatarLetters}
         </Avatar>
-        <div className={classes.memberInfo}>
+        <div style={{ flexGrow: 1 }}>
           <UserRef projectMember={projectMember} />
           <Typography variant="body2" color="primary">
             {!projectMember ? (
@@ -79,7 +61,14 @@ export const ProjectMemberCard = ({
           </Typography>
         </div>
       </CardContent>
-      <CardActions className={classes.cardActions}>
+      <CardActions
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          p: 1,
+          pr: 2,
+        }}
+      >
         <Button disabled={!projectMember} color="primary" onClick={onEdit}>
           Edit
         </Button>

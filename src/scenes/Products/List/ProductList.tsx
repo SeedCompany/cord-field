@@ -1,23 +1,11 @@
 import { Card, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { getChangeset } from '~/api';
 import { IdFragment } from '~/common';
 import { List, useListQuery } from '../../../components/List';
 import { ProductCard } from '../../../components/ProductCard';
 import { ProductListDocument } from './ProductList.graphql';
 
-const useStyles = makeStyles()(() => ({
-  root: {
-    padding: 0,
-    margin: 0,
-    overflow: 'visible',
-    flex: 1,
-  },
-}));
-
 export const ProductList = ({ engagement }: { engagement: IdFragment }) => {
-  const { classes } = useStyles();
-
   const list = useListQuery(ProductListDocument, {
     variables: {
       engagement: engagement.id,
@@ -46,7 +34,12 @@ export const ProductList = ({ engagement }: { engagement: IdFragment }) => {
   return (
     <List
       {...list}
-      className={classes.root}
+      sx={{
+        p: 0,
+        m: 0,
+        overflow: 'visible',
+        flex: 1,
+      }}
       spacing={1}
       renderItem={(product) => <ProductCard product={product} />}
       renderSkeleton={<Card />}
