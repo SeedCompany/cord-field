@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
   Autocomplete,
@@ -23,7 +23,7 @@ import {
   useState,
 } from 'react';
 import { Except, SetOptional, SetRequired } from 'type-fest';
-import { isNetworkRequestInFlight } from '~/api';
+import { isNetworkRequestInFlight, NoVars } from '~/api';
 import { Power } from '~/api/schema.graphql';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';
@@ -347,8 +347,13 @@ type SetOptionalIf<
   Condition
 > = Subject extends Condition ? SetOptional<T, Keys> : T;
 
-LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
+LookupField.createFor = <
+  T extends { id: string },
+  CreateFormValues = never,
+  InitialOptionsQueryResult = never
+>({
   resource,
+  initial,
   ...config
 }: SetOptionalIf<
   SetOptional<
@@ -363,8 +368,20 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
   StandardNamedObject
 > & {
   resource: string;
+  initial?: [
+    query: DocumentNode<InitialOptionsQueryResult, NoVars>,
+    selector: (result: InitialOptionsQueryResult) => readonly T[]
+  ];
 }) => {
   const compareBy = config.compareBy ?? ((item: T) => item.id);
+  const useInitialOptions = initial
+    ? () => {
+        const [query, selector] = initial;
+        const res = useQuery(query);
+        const options = res.data ? selector(res.data) : undefined;
+        return { options };
+      }
+    : undefined;
   const Comp = function <
     Multiple extends boolean | undefined,
     DisableClearable extends boolean | undefined
@@ -374,11 +391,13 @@ LookupField.createFor = <T extends { id: string }, CreateFormValues = never>({
       'lookupDocument' | 'compareBy' | 'getOptionLabel'
     >
   ) {
+    const initialOptions = useInitialOptions?.();
     return (
       <LookupField<T, Multiple, DisableClearable, CreateFormValues>
         compareBy={compareBy}
         getOptionLabel={(item: StandardNamedObject) => item.name.value}
         createPower={`Create${resource}` as Power}
+        initialOptions={initialOptions}
         {...(config as any)}
         {...props}
       />
