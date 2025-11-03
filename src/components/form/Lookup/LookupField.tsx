@@ -53,9 +53,11 @@ export type LookupFieldProps<
     CreateDialogForm?: ComponentType<
       Except<DialogFormProps<CreateFormValues, T>, 'onSubmit'>
     >;
+    /** For create form. Poorly named. */
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
     getOptionLabel: (option: T) => string | null | undefined;
     createPower?: Power;
+    initialOptions?: { options?: readonly T[] };
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, false>,
     | 'value'
@@ -93,6 +95,7 @@ export function LookupField<
   variant,
   createPower,
   margin,
+  initialOptions: initial,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const { powers } = useSession();
@@ -138,8 +141,9 @@ export function LookupField<
   const [fetch, { data, networkStatus }] = useLazyQuery(lookupDocument, {
     notifyOnNetworkStatusChange: true,
   });
-  // Not just for first load, but every network request
-  const loading = isNetworkRequestInFlight(networkStatus);
+  // Not just for the first load, but every network request
+  const searchResultsLoading = isNetworkRequestInFlight(networkStatus);
+  const initialOptionsLoading = initial && !initial.options;
 
   const [createDialogState, createDialogItem, createInitialValues] =
     useDialog<Partial<CreateFormValues>>();
@@ -163,8 +167,11 @@ export function LookupField<
     });
   }, [input, fetch, field.value, multiple, selectedText]);
 
-  // Only open popup if searching for item & focused
-  const open = Boolean(input) && input !== selectedText && meta.active;
+  // Only open the popup if focused and
+  // (searching for an item or have initial options).
+  const open =
+    !!meta.active &&
+    ((input && input !== selectedText) || (!input && !!initial));
 
   // Augment results with currently selected items to indicate that
   // they are still valid (and to prevent MUI warning)
@@ -174,15 +181,22 @@ export function LookupField<
       : (field.value as T | null)
       ? [field.value as T]
       : [];
-    if (!data?.search.items.length) {
+    const searchResults = data?.search.items;
+    const initialItems = initial?.options;
+
+    if (!searchResults?.length && !initialItems?.length) {
       return selected; // optimization for no results
     }
 
-    const resultsWithCurrent = [...data.search.items, ...selected];
+    const merged = [
+      ...(searchResults ?? []),
+      ...(initialItems ?? []),
+      ...selected,
+    ];
 
     // Filter out duplicates caused by selected items also appearing in search results.
-    return uniqBy(resultsWithCurrent, compareBy);
-  }, [data?.search.items, field.value, compareBy, multiple]);
+    return uniqBy(merged, compareBy);
+  }, [data?.search.items, initial?.options, field.value, compareBy, multiple]);
 
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
@@ -234,7 +248,7 @@ export function LookupField<
 
         if (
           !freeSolo ||
-          loading || // item could be returned with request in flight
+          searchResultsLoading || // item could be returned with request in flight
           params.inputValue === '' ||
           filtered.map(getOptionLabel).includes(params.inputValue)
         ) {
@@ -258,7 +272,8 @@ export function LookupField<
       onKeyDown={(event) => {
         // Prevent submitting the form while searching, user is probably trying
         // to execute search (which happens automatically).
-        if (event.key === 'Enter' && loading) event.preventDefault();
+        if (event.key === 'Enter' && searchResultsLoading)
+          event.preventDefault();
       }}
       onInputChange={(_, val) => {
         setInput(val);
@@ -266,7 +281,7 @@ export function LookupField<
       onChange={(_, value) => {
         const lastItem = multiple ? last(value as T[]) : value;
         if (typeof lastItem === 'string' && freeSolo) {
-          if (loading) {
+          if (searchResultsLoading) {
             // Prevent creating while loading
             return;
           }
@@ -280,7 +295,7 @@ export function LookupField<
         }
         field.onChange(value);
       }}
-      loading={loading}
+      loading={searchResultsLoading || initialOptionsLoading}
       open={open}
       forcePopupIcon={!open ? false : undefined}
       renderInput={(params) => (
