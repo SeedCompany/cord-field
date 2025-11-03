@@ -27,7 +27,7 @@ export const ToolForm = <R,>({ tool, ...rest }: ToolFormProps<R>) => (
           {...props}
           label="AI Based"
           helperText="Check if this tool uses artificial intelligence"
-          defaultValue={true}
+          defaultValue={false}
         />
       )}
     </SecuredField>
