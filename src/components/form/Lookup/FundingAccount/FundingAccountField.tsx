@@ -5,12 +5,21 @@ import {
   FundingAccountLookupItemFragment as FundingAccount,
   FundingAccountLookupDocument,
 } from './FundingAccountField.graphql';
+import {
+  InitialFundingAccountOptionsQuery,
+  InitialFundingAccountOptionsDocument as InitialFundingAccounts,
+} from './InitialFundingAccountOptions.graphql';
 
 export const FundingAccountField = LookupField.createFor<
   FundingAccount,
-  CreateFundingAccountInput
+  CreateFundingAccountInput,
+  InitialFundingAccountOptionsQuery
 >({
   resource: 'FundingAccount',
+  initial: [
+    InitialFundingAccounts,
+    ({ fundingAccounts }) => fundingAccounts.items,
+  ],
   lookupDocument: FundingAccountLookupDocument,
   label: 'Funding Account',
   placeholder: 'Search for a funding account by name',
