@@ -27,9 +27,12 @@ export const modifyProgressRelatingToEngagement =
     }
     const reports = progressRelatingToEngagement(cache, engagement);
     for (const report of reports) {
-      cache.modify({
+      cache.modify<ProgressReport>({
         id: cache.identify(report),
-        fields: { progress: action(report, res.data) },
+        fields: {
+          // @ts-expect-error https://github.com/apollographql/apollo-client/pull/12983
+          progress: action(report, res.data),
+        },
       });
     }
   };

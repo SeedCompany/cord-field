@@ -1,4 +1,4 @@
-import { ApolloClient, ApolloLink } from '@apollo/client';
+import { ApolloClient, ApolloLink, split } from '@apollo/client';
 import { ErrorHandler, onError } from '@apollo/client/link/error';
 import { RetryLink } from '@apollo/client/link/retry';
 import { RefObject } from 'react';
@@ -6,10 +6,11 @@ import { createCache } from './createCache';
 import { Impersonation } from './ImpersonationContext';
 import { delayLink } from './links/delay.link';
 import { ErrorCache, ErrorCacheLink } from './links/errorCache.link';
-import { createHttpLink } from './links/http.link';
+import { createHttpLink, createSseLink } from './links/http.link';
 import { createImpersonationLink } from './links/impersonation.link';
 import { createPersistedQueryLink } from './links/persisted-queries.link';
 import { SessionLink } from './links/session.link';
+import { isLive } from './links/sse.link';
 import { createSsrLink, SsrLinkProps } from './links/ssr.link';
 
 export const createClient = ({
@@ -26,10 +27,10 @@ export const createClient = ({
   const sessionLink = new SessionLink();
 
   const client = new ApolloClient({
-    name: 'cord-field',
-    version: process.env.RAZZLE_GIT_HASH,
-    // This should be the default, but it doesn't appear that the library can detect the environment correctly.
-    connectToDevTools: process.env.NODE_ENV !== 'production',
+    clientAwareness: {
+      name: 'cord-field',
+      version: process.env.RAZZLE_GIT_HASH,
+    },
     ssrMode: !!ssr,
     cache: createCache(),
     link: ApolloLink.from([
@@ -43,7 +44,7 @@ export const createClient = ({
       ssr ? createSsrLink(ssr) : sessionLink,
       new RetryLink(),
       createPersistedQueryLink(),
-      createHttpLink(),
+      split(isLive, createSseLink(), createHttpLink()),
     ]),
   });
   sessionLink.client = client;

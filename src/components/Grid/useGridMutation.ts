@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { Unmasked, useMutation } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import { isEqual } from 'lodash';
 
@@ -9,7 +9,7 @@ export const useGridMutation = <Row, MutationRes, Vars>(
     (object: Row) =>
       | {
           variables: Vars;
-          optimisticResponse: MutationRes;
+          optimisticResponse: Unmasked<MutationRes>;
         }
       | undefined
   >

@@ -42,11 +42,12 @@ const deleteField: Modifier<any> = (_, { DELETE }) => DELETE;
  * mutation's cache function.
  */
 export const onUpdateInvalidateProps =
-  <MutationOutput, OwningObj extends GqlObject>(
+  <OwningObj extends GqlObject>(
     object: OwningObj,
     ...fields: PropKeys<OwningObj>
   ): MutationUpdaterFunction<
-    MutationOutput,
+    // Any is fine here because we don't use it.
+    any,
     unknown,
     unknown,
     ApolloCache<unknown>

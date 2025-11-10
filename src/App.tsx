@@ -7,6 +7,7 @@ import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
 import { ConfettiProvider } from './components/Confetti';
 import { Nest } from './components/Nest';
+import { SessionProvider } from './components/Session';
 import { SnackbarProvider } from './components/Snackbar';
 import { UploadProvider as FileUploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
@@ -52,6 +53,7 @@ export const appProviders = [
   <LocalizationProvider key="i10n" dateAdapter={LuxonCalenderDateUtils} />,
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,
+  <SessionProvider key="session" />,
   <FileUploadProvider key="files" />,
   <ConfettiProvider key="confetti" />,
   <CommentsProvider key="comments" />,

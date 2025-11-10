@@ -36,6 +36,11 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     canRead
     canEdit
   }
+  webId {
+    value
+    canRead
+    canEdit
+  }
   countryOfOrigin {
     canRead
     canEdit

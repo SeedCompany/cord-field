@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@apollo/client/link/error';
 import { Close } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
+import { GraphQLErrorExtensions } from 'graphql';
 import { ProviderContext as Snackbar, useSnackbar } from 'notistack';
 import { useRef } from 'react';
 
@@ -31,8 +32,9 @@ const errorRenderer =
     }
 
     for (const gqlError of graphQLErrors || []) {
-      const codes = new Set(gqlError.extensions.codes);
-      const stacktrace = gqlError.extensions.stacktrace ?? [];
+      const ext = gqlError.extensions as Partial<GraphQLErrorExtensions>;
+      const codes = new Set(ext.codes);
+      const stacktrace = ext.stacktrace ?? [];
 
       // don't show client errors unless they are API communication related
       if (codes.has('Client') && !codes.has('GraphQL')) {

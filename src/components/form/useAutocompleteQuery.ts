@@ -1,4 +1,4 @@
-import { OperationVariables, useQuery } from '@apollo/client';
+import { MaybeMasked, OperationVariables, useQuery } from '@apollo/client';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { AutocompleteProps } from '@mui/material';
@@ -25,7 +25,7 @@ export type AutocompleteResult<Item, Data> = Pick<
 > & {
   options: readonly Item[];
   // The root object of the query result.
-  root?: Data;
+  root?: MaybeMasked<Data>;
 };
 
 /**
