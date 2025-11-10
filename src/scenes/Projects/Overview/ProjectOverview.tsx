@@ -10,11 +10,10 @@ import {
   Publish,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
-import { Chip, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Box, Chip, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Many } from '@seedcompany/common';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { ProjectStepLabels, ProjectTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
@@ -69,54 +68,7 @@ type EngagementListItem =
   | LanguageEngagementListItemFragment
   | InternshipEngagementListItemFragment;
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-  },
-  main: {
-    maxWidth: breakpoints.values.md,
-    '& > *:not(:last-child)': {
-      marginBottom: spacing(3),
-    },
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
-    gap: spacing(1),
-    alignItems: 'center',
-  },
-  name: {
-    marginRight: spacing(2), // a little extra between text and buttons
-    // centers text with buttons better
-    lineHeight: 'inherit',
-    alignSelf: 'flex-start',
-  },
-  nameLoading: {
-    width: '30%',
-    alignSelf: 'initial',
-  },
-  subheader: {
-    display: 'flex',
-    alignItems: 'center',
-    '& > *': {
-      marginRight: spacing(2),
-    },
-  },
-  engagementList: {
-    // fix spacing above applied with > *
-    marginTop: spacing(-3),
-    // marginRight: -16,
-    // padding: 0,
-  },
-  engagementListItems: {
-    maxWidth: 492,
-  },
-}));
-
 export const ProjectOverview = () => {
-  const { classes, cx } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const beta = useBetaFeatures();
   const formatNumber = useNumberFormatter();
@@ -194,7 +146,7 @@ export const ProjectOverview = () => {
     : CreateInternshipEngagement;
 
   return (
-    <main className={classes.root}>
+    <Box component="main" sx={{ flex: 1, overflowY: 'auto', padding: 4 }}>
       <Helmet title={project?.name.value ?? undefined} />
       <Error error={error}>
         {{
@@ -203,11 +155,37 @@ export const ProjectOverview = () => {
         }}
       </Error>
       {!error && (
-        <div className={classes.main}>
-          <header className={classes.header}>
+        <Box
+          sx={(theme) => ({
+            maxWidth: theme.breakpoints.values.md,
+            '& > *:not(:last-child)': {
+              mb: 3,
+            },
+          })}
+        >
+          <Box
+            component="header"
+            sx={{
+              flex: 1,
+              display: 'flex',
+              gap: 1,
+              alignItems: 'center',
+            }}
+          >
             <Typography
               variant="h2"
-              className={cx(classes.name, project ? null : classes.nameLoading)}
+              sx={{
+                mr: 2, // a little extra between text and buttons
+                // centers text with buttons better
+                lineHeight: 'inherit',
+                alignSelf: 'flex-start',
+                ...(project
+                  ? {}
+                  : {
+                      width: '30%',
+                      alignSelf: 'initial',
+                    }),
+              }}
             >
               {!project ? (
                 <Skeleton width="100%" />
@@ -255,9 +233,17 @@ export const ProjectOverview = () => {
                 loading={!project}
               />
             )}
-          </header>
+          </Box>
 
-          <div className={classes.subheader}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              '& > :not(:last-child)': {
+                mr: 2,
+              },
+            }}
+          >
             <Typography variant="h4">
               {project ? 'Project Overview' : <Skeleton width={200} />}
             </Typography>
@@ -266,7 +252,7 @@ export const ProjectOverview = () => {
                 Updated <FormattedDateTime date={project.modifiedAt} />
               </Typography>
             )}
-          </div>
+          </Box>
 
           <Grid container spacing={2}>
             <DisplaySimpleProperty
@@ -549,26 +535,26 @@ export const ProjectOverview = () => {
               )}
             </Grid>
           </Grid>
-          <List
-            {...engagements}
-            classes={{
-              root: classes.engagementList,
-              container: classes.engagementListItems,
-            }}
-            spacing={3}
-            // ItemProps={{ sm: 12, md: 6 }}
-            renderItem={(engagement) =>
-              engagement.__typename === 'LanguageEngagement' ? (
-                <LanguageEngagementListItemCard {...engagement} />
-              ) : (
-                <InternshipEngagementListItemCard {...engagement} />
-              )
-            }
-            skeletonCount={0}
-            renderSkeleton={null}
-          />
+          <Box sx={{ marginTop: -3 }}>
+            <List
+              {...engagements}
+              ContainerProps={{
+                sx: { maxWidth: 492 },
+              }}
+              spacing={3}
+              renderItem={(engagement) =>
+                engagement.__typename === 'LanguageEngagement' ? (
+                  <LanguageEngagementListItemCard {...engagement} />
+                ) : (
+                  <InternshipEngagementListItemCard {...engagement} />
+                )
+              }
+              skeletonCount={0}
+              renderSkeleton={null}
+            />
+          </Box>
           {!!project && <ProjectPostList project={project} />}
-        </div>
+        </Box>
       )}
       {workflowProject && (
         <ProjectWorkflowDialog {...workflowState} project={workflowProject} />
@@ -589,6 +575,6 @@ export const ProjectOverview = () => {
           events={project.workflowEvents}
         />
       )}
-    </main>
+    </Box>
   );
 };

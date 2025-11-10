@@ -1,6 +1,5 @@
 import { Add } from '@mui/icons-material';
 import { Grid, Tooltip, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { useDialog } from '../Dialog';
 import { Fab } from '../Fab';
@@ -9,12 +8,6 @@ import { CreatePost } from './CreatePost';
 import { PostableIdFragment } from './PostableId.graphql';
 import { PostListItemCard } from './PostListItemCard';
 import { PostListItemCardFragment } from './PostListItemCard/PostListItemCard.graphql';
-
-const useStyles = makeStyles()(() => ({
-  postListItems: {
-    maxWidth: 600,
-  },
-}));
 
 interface PostListProps
   extends Except<
@@ -30,7 +23,6 @@ export const PostList = ({
   parent,
   ...rest
 }: PostListProps) => {
-  const { classes } = useStyles();
   const [createPostState, createPost] = useDialog();
 
   return (
@@ -49,7 +41,9 @@ export const PostList = ({
       </Grid>
       <List
         {...rest}
-        classes={{ container: classes.postListItems }}
+        ContainerProps={{
+          sx: { maxWidth: 600 },
+        }}
         spacing={3}
         renderItem={(post) => (
           <PostListItemCard

@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -10,19 +11,12 @@ import {
   Skeleton,
 } from '@mui/material';
 import { Fragment } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
   FileVersionItem,
 } from '../FileVersionItem';
 import { FileVersionsDocument } from './FileActions.graphql';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  skeleton: {
-    padding: spacing(1, 3),
-  },
-}));
 
 type FileVersionsProps = DialogProps & {
   file: FileActionItem | undefined;
@@ -32,8 +26,6 @@ type FileVersionsProps = DialogProps & {
 export const FileVersions = (props: FileVersionsProps) => {
   const { file, actions, ...dialogProps } = props;
   const { onClose } = dialogProps;
-
-  const { classes } = useStyles();
 
   const id = file?.id ?? '';
   const { data, loading } = useQuery(FileVersionsDocument, {
@@ -61,9 +53,9 @@ export const FileVersions = (props: FileVersionsProps) => {
         {loading
           ? [0, 1, 2].map((item) => (
               <Fragment key={item}>
-                <div className={classes.skeleton}>
+                <Box sx={{ py: 1, px: 3 }}>
                   <Skeleton variant="rectangular" width={400} height={50} />
-                </div>
+                </Box>
                 {item < 2 && <Divider />}
               </Fragment>
             ))
