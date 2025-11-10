@@ -28,6 +28,11 @@ export const ImpersonationProvider = ({
   children,
   initial,
 }: ChildrenProp & { initial?: Impersonation | null }) => {
+  const [broadcast] = useState(() =>
+    typeof BroadcastChannel !== 'undefined'
+      ? new BroadcastChannel('impersonation')
+      : undefined
+  );
   const [impersonation, setImpersonation] = useState(() => {
     if (initial !== undefined) {
       return initial ?? undefined;
@@ -41,6 +46,7 @@ export const ImpersonationProvider = ({
         : undefined;
       next = next && Object.keys(next).length === 0 ? undefined : next;
       setImpersonation(next);
+      broadcast?.postMessage(next);
       if (!next) {
         Cookies.remove('impersonation');
         return;
@@ -50,7 +56,7 @@ export const ImpersonationProvider = ({
         sameSite: 'strict',
       });
     },
-    [setImpersonation]
+    [setImpersonation, broadcast]
   );
   const value = useMemo(
     () => ({
@@ -60,6 +66,21 @@ export const ImpersonationProvider = ({
     }),
     [impersonation, set]
   );
+
+  useEffect(() => {
+    if (!broadcast) {
+      return;
+    }
+    const listener = (event: MessageEvent) => {
+      setImpersonation(event.data);
+    };
+    broadcast.addEventListener('message', listener);
+    return () => {
+      broadcast.removeEventListener('message', listener);
+      broadcast.close();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Expose devtools API
   const latest = useLatest(value);
