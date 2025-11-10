@@ -186,6 +186,18 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                     onClick={() => show('countryOfOriginId')}
                   />
                 </Grid>
+                <Grid item>
+                  <DataButton
+                    onClick={() => show(['webId'])}
+                    secured={engagement.webId}
+                    redacted="You do not have permission to view Web ID"
+                    children={
+                      engagement.webId.value &&
+                      `Web ID: ${engagement.webId.value}`
+                    }
+                    empty="Enter Web ID"
+                  />
+                </Grid>
                 {engagement.marketable.value && (
                   <Grid item>
                     <Chip label="Marketable" color="info" />
