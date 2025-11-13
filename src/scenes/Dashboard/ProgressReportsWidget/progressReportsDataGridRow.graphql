@@ -6,6 +6,7 @@ query ProgressReports($input: ProgressReportListInput) {
       ...progressReportsDataGridRow
     }
     total
+    hasMore
   }
 }
 
