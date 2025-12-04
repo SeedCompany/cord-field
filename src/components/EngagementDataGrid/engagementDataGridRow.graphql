@@ -9,6 +9,19 @@ fragment engagementDataGridRow on Engagement {
   endDate {
     value
   }
+  tools {
+    items {
+      tool {
+        name {
+          value
+        }
+        aiBased {
+          value
+        }
+      }
+    }
+  }
+
   project {
     id
     type
