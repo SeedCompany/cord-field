@@ -1,5 +1,5 @@
 fragment engagementDataGridRow on Engagement {
-  id
+  ...engagementBaseDataGridRow
   status {
     value
   }
@@ -9,23 +9,8 @@ fragment engagementDataGridRow on Engagement {
   endDate {
     value
   }
-  tools {
-    items {
-      tool {
-        name {
-          value
-        }
-        aiBased {
-          value
-        }
-      }
-    }
-  }
-
   project {
-    id
     type
-    ...ProjectLookupItem
     sensitivity
     step {
       value
@@ -53,8 +38,6 @@ fragment engagementDataGridRow on Engagement {
     mouEnd {
       value
     }
-    pinned
-    isMember
   }
 
   ... on LanguageEngagement {
@@ -74,16 +57,32 @@ fragment engagementDataGridRow on Engagement {
     ...aiAssistedTranslation
     language {
       value {
-        id
-        displayName {
-          value
-        }
         ethnologue {
           code {
             value
           }
         }
         registryOfLanguageVarietiesCode {
+          value
+        }
+      }
+    }
+  }
+}
+
+fragment engagementBaseDataGridRow on Engagement {
+  id
+  project {
+    id
+    ...ProjectLookupItem
+    pinned
+    isMember
+  }
+  ... on LanguageEngagement {
+    language {
+      value {
+        id
+        displayName {
           value
         }
       }
