@@ -1,7 +1,7 @@
 query EngagementUsingAIList($input: EngagementListInput) {
   engagements(input: $input) {
     items {
-      ...engagementDataGridRow
+      ...engagementUsingAIDataGridRow
     }
     total
     hasMore
@@ -9,5 +9,21 @@ query EngagementUsingAIList($input: EngagementListInput) {
 }
 
 fragment engagementUsingAIDataGridRow on Engagement {
-  ...engagementDataGridRow
+  ...engagementBaseDataGridRow
+  tools {
+    items {
+      tool {
+        name {
+          value
+        }
+        aiBased {
+          value
+        }
+      }
+    }
+  }
+
+  ... on LanguageEngagement {
+    ...aiAssistedTranslation
+  }
 }
