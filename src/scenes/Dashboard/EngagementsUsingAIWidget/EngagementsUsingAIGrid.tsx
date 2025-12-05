@@ -5,20 +5,14 @@ import {
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
+import { merge, pick } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
+import { EngagementFilters, EngagementListInput } from '~/api/schema.graphql';
+import { extendSx } from '~/common';
+import { EngagementColumnMap } from '~/components/EngagementDataGrid';
 import {
-  AiAssistedTranslationLabels,
-  AiAssistedTranslationList,
-  EngagementFilters,
-  EngagementListInput,
-} from '~/api/schema.graphql';
-import { CalendarDate, extendSx } from '~/common';
-import {
-  booleanColumn,
   DefaultDataGridStyles,
-  enumColumn,
   getInitialVisibility,
   noHeaderFilterButtons,
   QuickFilterButton,
@@ -29,9 +23,6 @@ import {
   useDataGridSource,
   useFilterToggle,
 } from '~/components/Grid';
-import { LinkColumn } from '~/components/Grid/Columns/LinkColumn';
-import { ProjectNameColumn } from '~/components/Grid/Columns/ProjectNameColumn';
-import { Link } from '~/components/Routing';
 import {
   EngagementUsingAiDataGridRowFragment as EngagementUsingAI,
   EngagementUsingAiListDocument,
@@ -42,51 +33,13 @@ export type EngagementUsingAIColumnMapShape = Record<
   SetOptional<GridColDef<EngagementUsingAI>, 'field'>
 >;
 
-export const EngagementUsingAIColumnMap = {
-  project: ProjectNameColumn({
-    field: 'project.name',
-    valueGetter: (_, engagement) => engagement.project,
-  }),
-  language: {
-    headerName: 'Language / Intern',
-    field: 'nameProjectLast',
-    ...textColumn(),
-    width: 200,
-    valueGetter: (_, row) => {
-      return row.__typename === 'LanguageEngagement'
-        ? row.language.value?.name.value
-        : row.__typename === 'InternshipEngagement'
-        ? row.intern.value?.fullName
-        : null;
-    },
-    renderCell: ({ value, row }) => {
-      return row.__typename === 'LanguageEngagement' ? (
-        <Link to={`/languages/${row.language.value!.id}`}>{value}</Link>
-      ) : row.__typename === 'InternshipEngagement' ? (
-        <Link to={`/users/${row.intern.value!.id}`}>{value}</Link>
-      ) : null;
-    },
-    hideable: false,
-    serverFilter: (value): EngagementFilters => ({ engagedName: value }),
-  },
-  viewEngagement: LinkColumn({
-    field: 'Engagement',
-    headerName: '',
-    valueGetter: (_, engagement) => engagement,
-    destination: (id) => `/engagements/${id}`,
-  }),
-  usingAIAssistedTranslation: {
-    headerName: 'AI Assistance',
-    description: 'Is using AI assistance in translation?',
-    field: 'usingAIAssistedTranslation',
-    width: 150,
-    ...enumColumn(AiAssistedTranslationList, AiAssistedTranslationLabels),
-    valueGetter: (_, row) =>
-      row.__typename === 'LanguageEngagement'
-        ? row.usingAIAssistedTranslation.value
-        : null,
-    filterable: true,
-  },
+export const EngagementUsingAIColumns = Object.values({
+  ...pick(EngagementColumnMap, [
+    'project.name',
+    'nameProjectLast',
+    'Engagement',
+    'usingAIAssistedTranslation',
+  ]),
   tool: {
     headerName: 'AI Tools',
     field: 'tool',
@@ -94,12 +47,7 @@ export const EngagementUsingAIColumnMap = {
     flex: 1,
     valueGetter: (_, row) =>
       row.tools.items
-        .reduce((acc, toolUsage) => {
-          if (toolUsage.tool.aiBased.value) {
-            acc.push(toolUsage.tool.name.value!);
-          }
-          return acc;
-        }, [] as string[])
+        .flatMap(({ tool }) => (tool.aiBased.value ? tool.name.value! : []))
         .join(', '),
     sortable: false,
     filterable: true,
@@ -109,29 +57,14 @@ export const EngagementUsingAIColumnMap = {
       },
     }),
   },
-  isMember: {
-    headerName: 'Mine',
-    field: 'project.isMember',
-    ...booleanColumn(),
-    valueGetter: (_, engagement) => engagement.project.isMember,
-  },
-  pinned: {
-    headerName: 'Pinned',
-    field: 'project.pinned',
-    ...booleanColumn(),
-    valueGetter: (_, engagement) => engagement.project.pinned,
-  },
-} satisfies EngagementUsingAIColumnMapShape;
-
-const columns = Object.values(EngagementUsingAIColumnMap);
+  ...pick(EngagementColumnMap, ['project.isMember', 'project.pinned']),
+} satisfies EngagementUsingAIColumnMapShape);
 
 export interface EngagementsUsingAIGridProps extends DataGridProps {
-  quarter: CalendarDate;
   expanded: boolean;
 }
 
 export const EngagementsUsingAIGrid = ({
-  quarter,
   expanded,
   ...props
 }: Omit<EngagementsUsingAIGridProps, 'columns'>) => {
@@ -164,7 +97,7 @@ export const EngagementsUsingAIGrid = ({
   const initialState = {
     columns: {
       columnVisibilityModel: {
-        ...getInitialVisibility(columns),
+        ...getInitialVisibility(EngagementUsingAIColumns),
         viewReport: expanded,
         'project.isMember': false,
         'project.pinned': false,
@@ -204,7 +137,7 @@ export const EngagementsUsingAIGrid = ({
       {...DefaultDataGridStyles}
       {...dataGridProps}
       {...props}
-      columns={columns}
+      columns={EngagementUsingAIColumns}
       initialState={initialState}
       slots={slots}
       slotProps={slotProps}
