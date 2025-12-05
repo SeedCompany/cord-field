@@ -7,14 +7,12 @@ import {
   WidgetHeader,
   WidgetProps,
 } from '~/components/Widgets';
-import { useQuarterState } from '../ProgressReportsWidget/useQuarterState';
 import { EngagementsUsingAIGrid } from './EngagementsUsingAIGrid';
 
 export const EngagementsUsingAIWidget = ({
   expanded,
   ...props
 }: WidgetProps & { expanded: boolean }) => {
-  const quarter = useQuarterState();
   const location = useLocation();
 
   return (
@@ -33,7 +31,6 @@ export const EngagementsUsingAIWidget = ({
       />
       <TableWidget>
         <EngagementsUsingAIGrid
-          quarter={quarter.current}
           hideFooter
           expanded={expanded}
           sx={[
