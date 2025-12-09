@@ -11,14 +11,13 @@ import {
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { RoleLabels } from '~/api/schema.graphql';
-import { canEditAny, labelsFrom } from '~/common';
+import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
+import { canEditAny, labelFrom, labelsFrom } from '~/common';
 import { useDialog } from '~/components/Dialog';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
-import { PartnerListItemCard } from '~/components/PartnerListItemCard';
 import { EditUser } from '../../../Edit';
 import { UserProfileFragment } from './UserDetailProfile.graphql';
 
@@ -46,6 +45,16 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
           gap: 2,
         }}
       >
+        <DisplayProperty
+          label="Status"
+          value={user.status.value}
+          loading={!user}
+        />
+        <DisplayProperty
+          label="Gender"
+          value={labelFrom(GenderLabels)(user.gender.value)}
+          loading={!user}
+        />
         <DisplayProperty
           label="Email"
           value={user.email.value}
@@ -80,19 +89,6 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
           value={user.about.value}
           loading={!user}
         />
-
-        {!!user.partners.items.length && (
-          <>
-            <Typography variant="h3">Partners</Typography>
-            <Box sx={{ mt: 1 }}>
-              {user.partners.items.map((item) => (
-                <Box key={item.id} sx={{ mb: 2 }}>
-                  <PartnerListItemCard partner={item} />
-                </Box>
-              ))}
-            </Box>
-          </>
-        )}
       </Stack>
       <Box sx={{ p: 1 }}>
         {canEditAnyFields ? (
