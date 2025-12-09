@@ -18,6 +18,7 @@ export const Sensitivity = ({
   value,
   loading,
   sx,
+  className,
 }: SensitivityProps & StyleProps) => {
   const theme = useTheme();
 
@@ -28,7 +29,7 @@ export const Sensitivity = ({
   } as const;
 
   return (
-    <Box sx={extendSx(sx)}>
+    <Box className={className} sx={extendSx(sx)}>
       <Box
         sx={{
           display: 'flex',
@@ -69,10 +70,7 @@ export const Sensitivity = ({
                 sx={{
                   borderRadius: 'inherit',
                   position: 'absolute',
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
+                  inset: 0,
                   height: '100%',
                   width: '100%',
                 }}
