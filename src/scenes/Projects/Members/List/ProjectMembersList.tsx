@@ -1,8 +1,7 @@
 import { Add } from '@mui/icons-material';
-import { Breadcrumbs, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Stack, Tooltip, Typography } from '@mui/material';
 import { partition } from 'lodash';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { useDialog } from '../../../../components/Dialog';
 import { Fab } from '../../../../components/Fab';
@@ -14,24 +13,7 @@ import { CreateProjectMember } from '../Create/CreateProjectMember';
 import { UpdateProjectMember, UpdateProjectMemberProps } from '../Update';
 import { ProjectMembersDocument } from './ProjectMembers.graphql';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-    maxWidth: breakpoints.values.sm,
-  },
-  headerContainer: {
-    margin: spacing(3, 0),
-    display: 'flex',
-  },
-  title: {
-    marginRight: spacing(3),
-  },
-}));
-
 export const ProjectMembersList = () => {
-  const { classes } = useStyles();
   const { projectId, changesetId } = useProjectId();
   const { root: data, ...list } = useListQuery(ProjectMembersDocument, {
     listAt: (res) => res.project.team,
@@ -52,7 +34,14 @@ export const ProjectMembersList = () => {
   );
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={(theme) => ({
+        flex: 1,
+        overflowY: 'auto',
+        p: 4,
+        maxWidth: theme.breakpoints.values.sm,
+      })}
+    >
       <Helmet
         title={`Team Members - ${data?.project.name.value ?? 'A Project'}`}
       />
@@ -60,8 +49,18 @@ export const ProjectMembersList = () => {
         <ProjectBreadcrumb data={data?.project} />
         <Breadcrumb to=".">Team Members</Breadcrumb>
       </Breadcrumbs>
-      <div className={classes.headerContainer}>
-        <Typography variant="h2" className={classes.title}>
+      <Box
+        sx={(theme) => ({
+          margin: theme.spacing(3, 0),
+          display: 'flex',
+        })}
+      >
+        <Typography
+          variant="h2"
+          sx={{
+            mr: 3,
+          }}
+        >
           Team Members
         </Typography>
         {(!list.data || list.data.canCreate) && (
@@ -79,7 +78,7 @@ export const ProjectMembersList = () => {
         {data && (
           <CreateProjectMember {...createMemberState} project={data.project} />
         )}
-      </div>
+      </Box>
       {list.data?.canRead === false ? (
         <Typography>
           Sorry, you don't have permission to view this project's team members.
@@ -124,6 +123,6 @@ export const ProjectMembersList = () => {
           project={data!.project}
         />
       )}
-    </div>
+    </Box>
   );
 };

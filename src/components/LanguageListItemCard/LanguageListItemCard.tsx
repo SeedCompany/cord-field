@@ -1,5 +1,11 @@
-import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Skeleton,
+  Typography,
+} from '@mui/material';
 import { PartialDeep } from 'type-fest';
 import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
@@ -9,57 +15,24 @@ import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
 import { LanguageListItemFragment } from './LanguageListItem.graphql';
 
-const useStyles = makeStyles()(({ spacing }) => {
-  return {
-    root: {
-      width: '100%',
-      maxWidth: 400,
-      position: 'relative',
-    },
-    name: {
-      marginBottom: spacing(2),
-    },
-    bottomSection: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
-    },
-    leftContent: {
-      flex: 1,
-    },
-    rightContent: {
-      marginLeft: spacing(2),
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-end',
-      textAlign: 'right',
-    },
-    sensitivity: {
-      marginTop: spacing(1),
-    },
-    pin: {
-      position: 'absolute',
-      top: 10,
-      right: 10,
-    },
-  };
-});
-
 export interface LanguageListItemCardProps {
-  className?: string;
   language?: LanguageListItemFragment;
 }
 
 export const LanguageListItemCard = ({
-  className,
   language,
 }: LanguageListItemCardProps) => {
-  const { classes, cx } = useStyles();
   const formatNumber = useNumberFormatter();
   const population = language?.population.value;
 
   return (
-    <Card className={cx(classes.root, className)}>
+    <Card
+      sx={{
+        width: '100%',
+        maxWidth: 400,
+        position: 'relative',
+      }}
+    >
       <CardActionAreaLink
         disabled={!language}
         to={`/languages/${language?.id}`}
@@ -67,7 +40,12 @@ export const LanguageListItemCard = ({
         <CardContent>
           <Grid container spacing={1}>
             <Grid item xs={language ? undefined : true}>
-              <Typography variant="h4" className={classes.name}>
+              <Typography
+                variant="h4"
+                sx={{
+                  mb: 2,
+                }}
+              >
                 {!language ? (
                   <Skeleton width="50%" variant="text" />
                 ) : (
@@ -76,8 +54,18 @@ export const LanguageListItemCard = ({
               </Typography>
             </Grid>
           </Grid>
-          <div className={classes.bottomSection}>
-            <div className={classes.leftContent}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+              }}
+            >
               <DisplaySimpleProperty
                 LabelProps={{ color: 'textSecondary' }}
                 label="Ethnologue Code"
@@ -95,10 +83,20 @@ export const LanguageListItemCard = ({
               <Sensitivity
                 value={language?.sensitivity}
                 loading={!language}
-                className={classes.sensitivity}
+                sx={{
+                  mt: 1,
+                }}
               />
             </div>
-            <div className={classes.rightContent}>
+            <Box
+              sx={{
+                marginLeft: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                textAlign: 'right',
+              }}
+            >
               {!language || population ? (
                 <>
                   <Typography variant="body2" color="textSecondary">
@@ -113,7 +111,7 @@ export const LanguageListItemCard = ({
                   </Typography>
                 </>
               ) : null}
-            </div>
+            </Box>
           </div>
         </CardContent>
       </CardActionAreaLink>
@@ -124,7 +122,11 @@ export const LanguageListItemCard = ({
         listFilter={(args: PartialDeep<LanguagesQueryVariables>) =>
           args.input?.filter?.pinned ?? false
         }
-        className={classes.pin}
+        sx={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+        }}
       />
     </Card>
   );

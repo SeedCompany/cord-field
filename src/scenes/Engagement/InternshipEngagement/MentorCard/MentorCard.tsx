@@ -1,36 +1,10 @@
 import { Add } from '@mui/icons-material';
 import { Button, CardActionArea, CardContent, Typography } from '@mui/material';
 import { ReactElement, ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { square } from '~/common';
 import { Avatar } from '../../../../components/Avatar';
 import { UserListItemCardPortrait as UserCard } from '../../../../components/UserListItemCard';
 import { MentorCardFragment } from './MentorCard.graphql';
-
-const useStyles = makeStyles()(({ palette }) => ({
-  root: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  actionArea: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  title: {
-    // To match certification title.
-    // This is hacky, we should try to find a way to do this without pixel
-    // coupling.
-    marginTop: 7,
-    marginBottom: 15,
-  },
-  avatar: {
-    ...square(86),
-    fontSize: 70,
-    color: palette.background.paper,
-  },
-}));
 
 export interface MentorCardProps {
   data?: MentorCardFragment;
@@ -39,16 +13,29 @@ export interface MentorCardProps {
 }
 
 export const MentorCard = ({ data, onEdit, wrap }: MentorCardProps) => {
-  const { classes } = useStyles();
-
   if (data?.canRead === false) {
     return null;
   }
   const empty = data && !data.value;
 
   const mentor = (
-    <div className={classes.root}>
-      <Typography variant="h4" className={classes.title}>
+    <div
+      style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Typography
+        variant="h4"
+        sx={{
+          // To match certification title.
+          // This is hacky, we should try to find a way to do this without pixel
+          // coupling.
+          mt: '7px',
+          mb: '15px',
+        }}
+      >
         Mentor
       </Typography>
       <UserCard
@@ -57,11 +44,21 @@ export const MentorCard = ({ data, onEdit, wrap }: MentorCardProps) => {
           empty ? (
             <CardActionArea
               onClick={onEdit}
-              className={classes.actionArea}
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
               aria-label="add mentor"
             >
               <CardContent>
-                <Avatar className={classes.avatar}>
+                <Avatar
+                  sx={(theme) => ({
+                    ...square(86),
+                    fontSize: 70,
+                    color: theme.palette.background.paper,
+                  })}
+                >
                   <Add fontSize="inherit" />
                 </Avatar>
               </CardContent>

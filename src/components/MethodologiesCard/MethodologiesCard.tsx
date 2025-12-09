@@ -6,7 +6,6 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
 import {
   ApproachIcons,
   displayMethodology,
@@ -14,31 +13,6 @@ import {
   MethodologyToApproach,
 } from '~/common';
 import { MethodologiesCardFragment } from './MethodologiesCard.graphql';
-
-const useStyles = makeStyles()(({ palette, spacing }) => ({
-  root: {
-    width: '100%',
-    height: '100%',
-  },
-  actionArea: {
-    height: '100%',
-  },
-  cardContent: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: spacing(3, 4),
-  },
-  methodology: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  icon: {
-    display: 'flex',
-    color: palette.text.secondary,
-    marginRight: spacing(0.5),
-  },
-}));
 
 export interface MethodologiesCardProps {
   data?: MethodologiesCardFragment;
@@ -51,17 +25,23 @@ export const MethodologiesCard = ({
   onClick,
   className,
 }: MethodologiesCardProps) => {
-  const { classes, cx } = useStyles();
-
   if (data?.canRead === false) {
     return null;
   }
 
   const methodologyListChips = listOrPlaceholders(data?.value, 2).map(
     (methodology, index) => (
-      <Grid item className={classes.methodology} key={methodology ?? index}>
+      <Grid
+        item
+        key={methodology ?? index}
+        sx={{ display: 'flex', alignItems: 'center' }}
+      >
         {methodology && (
-          <Grid item wrap="nowrap" className={classes.icon}>
+          <Grid
+            item
+            wrap="nowrap"
+            sx={{ display: 'flex', color: 'text.secondary', mr: 0.5 }}
+          >
             {ApproachIcons[MethodologyToApproach[methodology]]}
           </Grid>
         )}
@@ -77,7 +57,15 @@ export const MethodologiesCard = ({
   );
 
   const content = (
-    <CardContent className={classes.cardContent}>
+    <CardContent
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        py: 3,
+        px: 4,
+      }}
+    >
       <Typography variant="h4" paragraph>
         Methodologies
       </Typography>
@@ -94,9 +82,9 @@ export const MethodologiesCard = ({
   );
 
   return (
-    <Card className={cx(classes.root, className)}>
+    <Card className={className} sx={{ width: '100%', height: '100%' }}>
       {data?.canEdit ? (
-        <CardActionArea onClick={onClick} className={classes.actionArea}>
+        <CardActionArea onClick={onClick} sx={{ height: '100%' }}>
           {content}
         </CardActionArea>
       ) : (

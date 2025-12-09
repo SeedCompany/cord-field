@@ -1,7 +1,6 @@
 import { Add } from '@mui/icons-material';
-import { Breadcrumbs, Tooltip, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { useDialog } from '../../../components/Dialog';
 import { Fab } from '../../../components/Fab';
@@ -14,25 +13,7 @@ import { EditPartnership } from '../Edit';
 import { PartnershipFormFragment } from '../PartnershipForm';
 import { ProjectPartnershipsDocument } from './PartnershipList.graphql';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    flex: 1,
-    overflowY: 'auto',
-    padding: spacing(4),
-    maxWidth: breakpoints.values.sm,
-  },
-  headerContainer: {
-    margin: spacing(3, 0),
-    display: 'flex',
-  },
-  title: {
-    marginRight: spacing(3),
-  },
-}));
-
 export const PartnershipList = () => {
-  const { classes } = useStyles();
-
   const { projectId, changesetId, projectUrl } = useProjectId();
   const { root: data, ...list } = useListQuery(ProjectPartnershipsDocument, {
     variables: { project: projectId, changeset: changesetId },
@@ -48,7 +29,14 @@ export const PartnershipList = () => {
     useDialog<PartnershipFormFragment>();
 
   return (
-    <div className={classes.root}>
+    <Box
+      sx={(theme) => ({
+        flex: 1,
+        overflowY: 'auto',
+        p: 4,
+        maxWidth: theme.breakpoints.values.sm,
+      })}
+    >
       <Helmet
         title={`Partnerships - ${data?.project.name.value ?? 'A Project'}`}
       />
@@ -56,8 +44,13 @@ export const PartnershipList = () => {
         <ProjectBreadcrumb data={project} />
         <Breadcrumb to={`${projectUrl}/partnerships`}>Partnerships</Breadcrumb>
       </Breadcrumbs>
-      <div className={classes.headerContainer}>
-        <Typography variant="h2" className={classes.title}>
+      <Box
+        sx={(theme) => ({
+          margin: theme.spacing(3, 0),
+          display: 'flex',
+        })}
+      >
+        <Typography variant="h2" sx={{ mr: 3 }}>
           Partnerships
         </Typography>
         {partnerships?.canCreate && (
@@ -71,7 +64,7 @@ export const PartnershipList = () => {
             </Fab>
           </Tooltip>
         )}
-      </div>
+      </Box>
       <List
         {...list}
         renderItem={(partnership) => (
@@ -88,6 +81,6 @@ export const PartnershipList = () => {
       {project && (
         <CreatePartnership {...createDialogState} project={project} />
       )}
-    </div>
+    </Box>
   );
 };

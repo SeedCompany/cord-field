@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Add, Edit } from '@mui/icons-material';
-import { Grid, Skeleton, Tooltip, Typography } from '@mui/material';
+import { Box, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
 import { removeItemFromList } from '~/api';
 import { asDate, canEditAny, listOrPlaceholders } from '~/common';
@@ -39,36 +38,7 @@ import {
 import { LanguagePostList } from './LanguagePostList';
 import { LeastOfThese } from './LeastOfThese';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    overflowY: 'auto',
-    padding: spacing(4),
-    '& > *:not(:last-child)': {
-      marginBottom: spacing(3),
-    },
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
-    gap: spacing(1),
-  },
-  name: {
-    marginRight: spacing(2), // a little extra between text and buttons
-    lineHeight: 'inherit', // centers text with buttons better
-  },
-  listHeader: {
-    marginBottom: spacing(1),
-  },
-  listItem: {
-    marginBottom: spacing(2),
-  },
-  hidden: {
-    visibility: 'hidden',
-  },
-}));
-
 export const LanguageDetail = () => {
-  const { classes } = useStyles();
   const { languageId = '' } = useParams();
   const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },
@@ -106,7 +76,16 @@ export const LanguageDetail = () => {
   );
 
   return (
-    <main className={classes.root}>
+    <Box
+      component="main"
+      sx={{
+        overflowY: 'auto',
+        p: 4,
+        '& > *:not(:last-child)': {
+          mb: 3,
+        },
+      }}
+    >
       <Helmet title={name?.value ?? displayName?.value ?? undefined} />
       <Error error={error}>
         {{
@@ -116,8 +95,20 @@ export const LanguageDetail = () => {
       </Error>
       {!error && (
         <>
-          <div className={classes.header}>
-            <Typography variant="h2" className={classes.name}>
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              gap: 1,
+            }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                mr: 2, // a little extra between text and buttons
+                lineHeight: 'inherit', // centers text with buttons better
+              }}
+            >
               {!language ? (
                 <Skeleton width="16ch" />
               ) : (
@@ -146,7 +137,7 @@ export const LanguageDetail = () => {
               }
             />
             <ToggleCommentsButton loading={!language} />
-          </div>
+          </Box>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
               <Sensitivity value={sensitivity} loading={!language} />
@@ -230,7 +221,9 @@ export const LanguageDetail = () => {
                 container
                 spacing={2}
                 alignItems="center"
-                className={classes.listHeader}
+                sx={{
+                  mb: 1,
+                }}
               >
                 <Grid item>
                   <Typography variant="h3">Locations</Typography>
@@ -240,11 +233,10 @@ export const LanguageDetail = () => {
                     <Fab
                       color="error"
                       aria-label="add location"
-                      className={
-                        locations?.canCreate === true
-                          ? undefined
-                          : classes.hidden
-                      }
+                      sx={{
+                        visibility:
+                          locations?.canCreate === true ? 'visible' : 'hidden',
+                      }}
                       onClick={addLocation}
                     >
                       <Add />
@@ -257,7 +249,6 @@ export const LanguageDetail = () => {
                   <LocationCard
                     key={location?.id ?? index}
                     location={location}
-                    className={classes.listItem}
                     loading={!location}
                     removing={removing}
                     onRemove={() =>
@@ -274,6 +265,9 @@ export const LanguageDetail = () => {
                         }),
                       })
                     }
+                    sx={{
+                      mb: 2,
+                    }}
                   />
                 )
               )}
@@ -298,7 +292,9 @@ export const LanguageDetail = () => {
                 <ProjectListItemCard
                   key={project?.id ?? index}
                   project={project}
-                  className={classes.listItem}
+                  sx={{
+                    mb: 2,
+                  }}
                 />
               ))}
               {projects?.canRead === false ? (
@@ -328,7 +324,7 @@ export const LanguageDetail = () => {
           ) : null}
         </>
       )}
-    </main>
+    </Box>
   );
 };
 

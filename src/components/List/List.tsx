@@ -1,22 +1,12 @@
-import { Grid, GridProps } from '@mui/material';
+import { Box, Grid, GridProps } from '@mui/material';
 import { times } from 'lodash';
 import { ReactNode, RefObject, useRef } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { Entity, isNetworkRequestInFlight, PaginatedListOutput } from '~/api';
-import { UseStyles } from '~/common';
+import { extendSx, StyleProps } from '~/common';
 import { usePersistedScroll } from '../../hooks/usePersistedScroll';
 import { ChangesetBadge, useDetermineChangesetDiffItem } from '../Changeset';
 import { ProgressButton, ProgressButtonProps } from '../ProgressButton';
 import { ListQueryResult } from './useListQuery';
-
-const useStyles = makeStyles<ListProps<any>>()(({ spacing }) => ({
-  root: {
-    overflow: 'auto',
-    marginLeft: spacing(-2),
-    padding: spacing(2),
-  },
-  container: {},
-}));
 
 export interface ListProps<Item extends Entity>
   extends ListQueryResult<
@@ -24,8 +14,7 @@ export interface ListProps<Item extends Entity>
       PaginatedListOutput<Item> & { canCreate?: boolean },
       unknown
     >,
-    Pick<GridProps, 'spacing'>,
-    UseStyles<typeof useStyles> {
+    Pick<GridProps, 'spacing'> {
   renderItem: (item: Item) => ReactNode;
   renderSkeleton: ReactNode | ((index: number) => ReactNode);
   renderCreate?: ReactNode;
@@ -39,10 +28,11 @@ export interface ListProps<Item extends Entity>
   LoadMoreButtonProps?: ProgressButtonProps;
   /** Reference to the element that is actually scrolling, if it's not this list */
   scrollRef?: RefObject<HTMLElement>;
-  className?: string;
 }
 
-export const List = <Item extends Entity>(props: ListProps<Item>) => {
+export const List = <Item extends Entity>(
+  props: ListProps<Item> & StyleProps
+) => {
   const {
     networkStatus,
     data,
@@ -60,25 +50,26 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
     LoadMoreItemProps,
     LoadMoreButtonProps,
     scrollRef: scrollRefProp,
-    className,
+    sx,
   } = props;
-  const { classes, cx } = useStyles(props, {
-    props: { classes: props.classes },
-  });
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   usePersistedScroll(scrollRefProp ?? scrollRef);
   const determineChangesetDiff = useDetermineChangesetDiffItem();
 
   return (
-    <div className={cx(classes.root, className)} ref={scrollRef}>
-      <Grid
-        direction="column"
-        spacing={spacing}
-        {...ContainerProps}
-        container
-        className={classes.container}
-      >
+    <Box
+      sx={[
+        {
+          overflow: 'auto',
+          ml: -2,
+          p: 2,
+        },
+        ...extendSx(sx),
+      ]}
+      ref={scrollRef}
+    >
+      <Grid direction="column" spacing={spacing} {...ContainerProps} container>
         {!data?.items
           ? times(skeletonCount).map((index) => (
               <Grid {...ItemProps} {...SkeletonItemProps} item key={index}>
@@ -113,6 +104,6 @@ export const List = <Item extends Entity>(props: ListProps<Item>) => {
           </Grid>
         )}
       </Grid>
-    </div>
+    </Box>
   );
 };
