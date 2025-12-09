@@ -130,7 +130,7 @@ export const ProjectListItemCard = ({
             }}
           >
             <DisplaySimpleProperty aria-hidden="true" />
-            <div
+            <Box
               style={{
                 flex: 2,
                 display: 'flex',
@@ -168,7 +168,7 @@ export const ProjectListItemCard = ({
                   </>
                 )}
               </Typography>
-            </div>
+            </Box>
             {!project ? (
               <Skeleton variant="text" />
             ) : (

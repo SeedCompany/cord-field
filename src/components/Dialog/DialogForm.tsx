@@ -1,5 +1,6 @@
 import { useReactiveVar } from '@apollo/client';
 import {
+  Box,
   Button,
   ButtonProps,
   Dialog,
@@ -166,7 +167,7 @@ export function DialogForm<T, R = void>({
               {leftAction ? (
                 <>
                   {leftAction}
-                  <div style={{ flex: 1 }} />
+                  <Box sx={{ flex: 1 }} />
                 </>
               ) : null}
               {closeLabel !== false && (

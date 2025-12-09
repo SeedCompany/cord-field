@@ -1,6 +1,6 @@
 import { InputAdornment } from '@mui/material';
 import { Except } from 'type-fest';
-import { Nullable } from '~/common';
+import { extendSx, Nullable } from '~/common';
 import {
   FormattedTextField,
   FormattedTextFieldProps,
@@ -230,14 +230,18 @@ export const NumberField = ({
             }
           : {}),
         ...props.InputProps,
-        sx: {
-          ...(alignRight && {
-            '& input': {
-              textAlign: 'right',
-            },
-          }),
-          ...props.InputProps?.sx,
-        },
+        sx: [
+          ...(alignRight
+            ? [
+                {
+                  '& input': {
+                    textAlign: 'right',
+                  },
+                },
+              ]
+            : []),
+          ...extendSx(props.InputProps?.sx),
+        ],
       }}
     />
   );

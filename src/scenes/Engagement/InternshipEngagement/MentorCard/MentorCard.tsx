@@ -29,8 +29,11 @@ export const MentorCard = ({ data, onEdit, wrap }: MentorCardProps) => {
       <Typography
         variant="h4"
         sx={{
-          mt: 7,
-          mb: 15,
+          // To match certification title.
+          // This is hacky, we should try to find a way to do this without pixel
+          // coupling.
+          mt: '7px',
+          mb: '15px',
         }}
       >
         Mentor

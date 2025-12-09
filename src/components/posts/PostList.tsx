@@ -1,6 +1,7 @@
 import { Add } from '@mui/icons-material';
 import { Grid, Tooltip, Typography } from '@mui/material';
 import { Except } from 'type-fest';
+import { extendSx } from '~/common';
 import { useDialog } from '../Dialog';
 import { Fab } from '../Fab';
 import { List, ListProps } from '../List';
@@ -42,7 +43,8 @@ export const PostList = ({
       <List
         {...rest}
         ContainerProps={{
-          sx: { maxWidth: 600 },
+          ...rest.ContainerProps,
+          sx: [{ maxWidth: 600 }, ...extendSx(rest.ContainerProps?.sx)],
         }}
         spacing={3}
         renderItem={(post) => (
