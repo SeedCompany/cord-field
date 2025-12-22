@@ -14,6 +14,7 @@ import { ComponentType, useMemo } from 'react';
 import { onUpdateChangeFragment, readFragment } from '~/api';
 import { IdFragment, SecuredProp } from '~/common';
 import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
+import { useCurrencyFormatter } from '~/components/Formatters/useCurrencyFormatter';
 import {
   changesetGridSlots,
   useDeletedItemsOfChangeset,
@@ -21,7 +22,7 @@ import {
 import { useCurrencyColumn } from '../../../components/Grid/useCurrencyColumn';
 import {
   BudgetRecordFragment as BudgetRecord,
-  CalculateNewTotalFragmentDoc as CalculateNewTotal,
+  CalculateNewTotalAndRollupFragmentDoc as CalculateNewTotalAndRollup,
   ProjectBudgetQuery,
   UpdateProjectBudgetRecordDocument as UpdateRecord,
 } from './ProjectBudget.graphql';
@@ -55,12 +56,28 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
   const [updateBudgetRecord, { client: apollo }] = useMutation(UpdateRecord, {
     update: onUpdateChangeFragment({
       object: budget?.value ?? undefined,
-      fragment: CalculateNewTotal,
+      fragment: CalculateNewTotalAndRollup,
       updater: (cached) => ({
         ...cached,
         total: sumBy(cached.records, (record) => record.amount.value ?? 0),
+        recordRollup: {
+          hasPreApproved: cached.records.some(
+            (record) => record.preApprovedAmount.value != null
+          ),
+          preApprovedExceeded: cached.records.some((record) => {
+            const amount = record.amount.value;
+            const preApproved = record.preApprovedAmount.value;
+            return (
+              amount != null && preApproved != null && amount > preApproved
+            );
+          }),
+        },
       }),
     }),
+  });
+
+  const formatCurrency = useCurrencyFormatter({
+    maximumFractionDigits: 2,
   });
 
   const deletedRecords = useDeletedItemsOfChangeset(isBudgetRecord);
@@ -89,23 +106,77 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       valueGetter: getSecuredValue,
     },
     {
+      headerName: 'Pre-Approved',
+      field: 'preApprovedAmount',
+      flex: 1,
+      ...useCurrencyColumn(),
+      valueGetter: (_, row) =>
+        row.preApprovedAmount.value !== null
+          ? row.preApprovedAmount.value
+          : null,
+      valueFormatter: (value) => (value !== null ? formatCurrency(value) : '-'),
+      valueSetter: setSecuredValue('preApprovedAmount'),
+      editable: true,
+    },
+    {
       headerName: 'Amount',
       field: 'amount',
       flex: 1,
       ...useCurrencyColumn(),
       valueGetter: getSecuredValue,
       valueSetter: setSecuredValue('amount'),
-      changesetAware: true,
       editable: true,
+      cellClassName: (params) => {
+        const amount = params.row.amount.value;
+        const preApprovedAmount = params.row.preApprovedAmount.value;
+        const exceedsApproved =
+          amount != null &&
+          preApprovedAmount != null &&
+          amount > preApprovedAmount;
+
+        return exceedsApproved ? 'cell-invalid' : '';
+      },
+      renderCell: (params) => {
+        const amount = params.row.amount.value;
+        const preApprovedAmount = params.row.preApprovedAmount.value;
+        const exceedsApproved =
+          amount != null &&
+          preApprovedAmount != null &&
+          amount > preApprovedAmount;
+
+        if (exceedsApproved) {
+          return (
+            <Tooltip
+              title={`Amount ${formatCurrency(
+                amount
+              )} exceeds pre-approved amount ${formatCurrency(
+                preApprovedAmount
+              )}`}
+              placement="top"
+            >
+              <span>{params.formattedValue}</span>
+            </Tooltip>
+          );
+        }
+
+        return params.formattedValue;
+      },
     },
   ];
 
   const handleRowSave = async (record: BudgetRecord, prev: BudgetRecord) => {
-    // eslint-disable-next-line eqeqeq
-    if (record.amount.value == prev.amount.value) {
+    // Check if either amount or preApprovedAmount has changed
+    const amountChanged = record.amount.value != prev.amount.value;
+    const preApprovedAmountChanged =
+      Number(record.preApprovedAmount.value) !=
+      Number(prev.preApprovedAmount.value);
+
+    if (!amountChanged && !preApprovedAmountChanged) {
       return record;
     }
+
     const newAmount = record.amount.value || null;
+    const newPreApprovedAmount = record.preApprovedAmount.value || null;
 
     // If we have a changeset, fetch (from cache) the additional
     // data required to provide an optimistic response.
@@ -126,7 +197,10 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         input: {
           budgetRecord: {
             id: record.id,
-            amount: newAmount,
+            ...(amountChanged && { amount: newAmount }),
+            ...(preApprovedAmountChanged && {
+              preApprovedAmount: newPreApprovedAmount,
+            }),
           },
           changeset: record.changeset?.id,
         },
@@ -145,7 +219,11 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
                   changeset: cachedChangeset,
                   amount: {
                     __typename: 'SecuredFloatNullable',
-                    value: newAmount,
+                    value: amountChanged ? newAmount : record.amount.value,
+                  },
+                  preApprovedAmount: {
+                    __typename: 'SecuredFloatNullable',
+                    value: newPreApprovedAmount,
                   },
                 },
               },
