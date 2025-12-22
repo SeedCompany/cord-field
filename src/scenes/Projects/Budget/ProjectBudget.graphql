@@ -6,6 +6,11 @@ fragment BudgetRecord on BudgetRecord {
     canRead
     value
   }
+  preApprovedAmount {
+    value
+    canEdit
+    canRead
+  }
   fiscalYear {
     canEdit
     canRead
@@ -82,17 +87,27 @@ mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecord!) {
       amount {
         value
       }
+      preApprovedAmount {
+        value
+      }
       ...RecalculateChangesetDiff
     }
   }
 }
 
-fragment CalculateNewTotal on Budget {
+fragment CalculateNewTotalAndRollup on Budget {
   ...Id
   total
+  recordRollup {
+    hasPreApproved
+    preApprovedExceeded
+  }
   records {
     ...Id
     amount {
+      value
+    }
+    preApprovedAmount {
       value
     }
   }
