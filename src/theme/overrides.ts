@@ -178,7 +178,7 @@ export const appComponents = ({
 
           // Cell error styling
           '& .cell-invalid': {
-            pr: '10px',
+            paddingRight: '10px',
             backgroundColor: fade(palette.error.light, 0.4),
             '&:hover': {
               backgroundColor: fade(palette.error.light, 0.8),
