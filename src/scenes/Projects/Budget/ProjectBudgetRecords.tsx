@@ -62,13 +62,15 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         total: sumBy(cached.records, (record) => record.amount.value ?? 0),
         recordRollup: {
           hasPreApproved: cached.records.some(
-            (record) => record.preApprovedAmount.value != null
+            (record) => typeof record.preApprovedAmount.value === 'number'
           ),
           preApprovedExceeded: cached.records.some((record) => {
             const amount = record.amount.value;
             const preApproved = record.preApprovedAmount.value;
             return (
-              amount != null && preApproved != null && amount > preApproved
+              typeof amount === 'number' &&
+              typeof preApproved === 'number' &&
+              amount > preApproved
             );
           }),
         },
@@ -111,10 +113,11 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       flex: 1,
       ...useCurrencyColumn(),
       valueGetter: (_, row) =>
-        row.preApprovedAmount.value !== null
+        typeof row.preApprovedAmount.value === 'number'
           ? row.preApprovedAmount.value
           : null,
-      valueFormatter: (value) => (value !== null ? formatCurrency(value) : '-'),
+      valueFormatter: (value: number | null) =>
+        value !== null ? formatCurrency(value) : '-',
       valueSetter: setSecuredValue('preApprovedAmount'),
       editable: true,
     },
@@ -130,8 +133,8 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         const amount = params.row.amount.value;
         const preApprovedAmount = params.row.preApprovedAmount.value;
         const exceedsApproved =
-          amount != null &&
-          preApprovedAmount != null &&
+          typeof amount === 'number' &&
+          typeof preApprovedAmount === 'number' &&
           amount > preApprovedAmount;
 
         return exceedsApproved ? 'cell-invalid' : '';
@@ -140,8 +143,8 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         const amount = params.row.amount.value;
         const preApprovedAmount = params.row.preApprovedAmount.value;
         const exceedsApproved =
-          amount != null &&
-          preApprovedAmount != null &&
+          typeof amount === 'number' &&
+          typeof preApprovedAmount === 'number' &&
           amount > preApprovedAmount;
 
         if (exceedsApproved) {
@@ -166,9 +169,9 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
 
   const handleRowSave = async (record: BudgetRecord, prev: BudgetRecord) => {
     // Check if either amount or preApprovedAmount has changed
-    const amountChanged = record.amount.value != prev.amount.value;
+    const amountChanged = record.amount.value !== prev.amount.value;
     const preApprovedAmountChanged =
-      Number(record.preApprovedAmount.value) !=
+      Number(record.preApprovedAmount.value) !==
       Number(prev.preApprovedAmount.value);
 
     if (!amountChanged && !preApprovedAmountChanged) {
