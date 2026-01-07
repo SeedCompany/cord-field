@@ -78,7 +78,7 @@ export const FileRow = (props: GridRowProps) => {
           variables: {
             input: {
               id: node.id,
-              parentId: res.id,
+              parent: res.id,
             },
           },
           update: callAll(

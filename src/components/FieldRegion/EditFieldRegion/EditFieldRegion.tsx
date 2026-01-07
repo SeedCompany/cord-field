@@ -28,8 +28,8 @@ export const EditFieldRegion = (
       fieldRegion: {
         id: fieldRegion.id,
         name: fieldRegion.name.value,
-        fieldZoneId: fieldRegion.fieldZone.value ?? null,
-        directorId: fieldRegion.director.value ?? null,
+        fieldZone: fieldRegion.fieldZone.value ?? null,
+        director: fieldRegion.director.value ?? null,
       },
     }),
     [fieldRegion]
@@ -45,8 +45,8 @@ export const EditFieldRegion = (
           fieldRegion: {
             id: values.id,
             name: values.name,
-            fieldZoneId: values.fieldZoneId?.id,
-            directorId: values.directorId?.id,
+            fieldZone: values.fieldZone?.id,
+            director: values.director?.id,
           },
         };
 

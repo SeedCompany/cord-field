@@ -53,7 +53,7 @@ export const CreateProjectChangeRequest = ({
             input: {
               projectChangeRequest: {
                 ...input,
-                projectId: project.id,
+                project: project.id,
               },
             },
           },

@@ -12,7 +12,7 @@ export type ChangesOf<T extends GqlObject> = T extends unknown
       [K in keyof GqlTypeOf<T> &
         keyof T &
         string as GqlTypeOf<T>[K] extends SecuredRelation
-        ? `${K}Id`
+        ? `${K}`
         : GqlTypeOf<T>[K] extends SecuredProp<any>
         ? K
         : never]?: Unsecure<GqlTypeOf<T>[K]>;

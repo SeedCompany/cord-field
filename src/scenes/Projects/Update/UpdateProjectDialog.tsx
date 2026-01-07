@@ -44,10 +44,10 @@ export type EditableProjectField = ExtractStrict<
   | 'departmentId'
   | 'mouRange'
   | 'estimatedSubmission'
-  | 'fieldRegionId'
-  | 'primaryLocationId'
+  | 'fieldRegion'
+  | 'primaryLocation'
   | 'sensitivity'
-  | 'marketingLocationId'
+  | 'marketingLocation'
 >;
 
 interface ProjectFieldProps {
@@ -62,10 +62,10 @@ const fieldMapping: Record<
   ComponentType<ProjectFieldProps>
 > = {
   name: ({ props }) => <TextField {...props} label="Project Name" />,
-  primaryLocationId: ({ props }) => (
+  primaryLocation: ({ props }) => (
     <LocationField {...props} label="Primary Location" />
   ),
-  fieldRegionId: ({ props }) => (
+  fieldRegion: ({ props }) => (
     <FieldRegionField {...props} label="Field Region" />
   ),
   mouRange: ({ props }) => (
@@ -80,7 +80,7 @@ const fieldMapping: Record<
   sensitivity: ({ props }) => (
     <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
-  marketingLocationId: ({ props }) => (
+  marketingLocation: ({ props }) => (
     <LocationField {...props} label="Marketing Location" />
   ),
   departmentId: ({ props, project }) => {
@@ -94,9 +94,9 @@ interface UpdateProjectFormValues {
   project: Merge<
     UpdateProject,
     {
-      primaryLocationId?: DisplayLocationFragment | null;
-      fieldRegionId?: DisplayFieldRegionFragment | null;
-      marketingLocationId?: DisplayLocationFragment | null;
+      primaryLocation?: DisplayLocationFragment | null;
+      fieldRegion?: DisplayFieldRegionFragment | null;
+      marketingLocation?: DisplayLocationFragment | null;
     }
   >;
 }
@@ -128,13 +128,13 @@ export const UpdateProjectDialog = ({
       'id'
     > = {
       name: project.name.value,
-      primaryLocationId: project.primaryLocation.value,
-      fieldRegionId: project.fieldRegion.value,
+      primaryLocation: project.primaryLocation.value,
+      fieldRegion: project.fieldRegion.value,
       mouStart: project.mouRange.value.start,
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
-      marketingLocationId: project.marketingLocation.value,
+      marketingLocation: project.marketingLocation.value,
       departmentId: project.departmentId.value,
     };
 
@@ -197,14 +197,14 @@ export const UpdateProjectDialog = ({
             input: {
               project: {
                 ...data,
-                primaryLocationId: dirtyFields['project.primaryLocationId']
-                  ? data.primaryLocationId?.id ?? null
+                primaryLocation: dirtyFields['project.primaryLocation']
+                  ? data.primaryLocation?.id ?? null
                   : undefined,
-                fieldRegionId: dirtyFields['project.fieldRegionId']
-                  ? data.fieldRegionId?.id ?? null
+                fieldRegion: dirtyFields['project.fieldRegion']
+                  ? data.fieldRegion?.id ?? null
                   : undefined,
-                marketingLocationId: dirtyFields['project.marketingLocationId']
-                  ? data.marketingLocationId?.id ?? null
+                marketingLocation: dirtyFields['project.marketingLocation']
+                  ? data.marketingLocation?.id ?? null
                   : undefined,
               },
               changeset: project.changeset?.id,

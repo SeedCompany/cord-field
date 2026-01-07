@@ -29,7 +29,7 @@ export const CreateFieldZone = (props: CreateFieldZoneProps) => {
         const input: CreateFieldZoneInput = {
           fieldZone: {
             name: values.fieldZone.name,
-            directorId: values.fieldZone.directorId!.id,
+            director: values.fieldZone.director!.id,
           },
         };
 

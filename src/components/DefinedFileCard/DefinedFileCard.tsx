@@ -112,7 +112,7 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       await uploadFile({
         variables: {
           id,
-          upload: { uploadId, name },
+          upload: { upload: uploadId, name },
         },
       });
     };

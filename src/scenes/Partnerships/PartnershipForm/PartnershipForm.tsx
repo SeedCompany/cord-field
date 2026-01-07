@@ -33,7 +33,7 @@ type PartnershipFormValues = Partial<
   CreatePartnershipFormInput | EditPartnershipFormInput
 > & {
   partnership?: {
-    partnerLookupItem?: PartnerLookupItem;
+    partner?: PartnerLookupItem;
   };
 };
 
@@ -50,7 +50,7 @@ const decorators: Array<Decorator<PartnershipFormValues>> = [
   onFieldChange(
     // if user selects a different partner (on create partnership), wipe the types and fin type values
     {
-      field: 'partnership.partnerLookupItem',
+      field: 'partnership.partner',
       isEqual: PartnerField.isEqual,
       updates: {
         'partnership.types': () => undefined,
@@ -81,10 +81,9 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
       decorators={decorators as unknown as Array<Decorator<T>>}
     >
       {({ values }) => {
-        const lookupPartnerTypes =
-          values.partnership?.partnerLookupItem?.types.value;
+        const lookupPartnerTypes = values.partnership?.partner?.types.value;
         const lookupPartnerFinType =
-          values.partnership?.partnerLookupItem?.financialReportingTypes.value;
+          values.partnership?.partner?.financialReportingTypes.value;
         const currentPartnerTypes = partnership?.partner.value?.types.value;
         const currentPartnerFinTypes =
           partnership?.partner.value?.financialReportingTypes.value;
@@ -92,7 +91,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
         return (
           <>
             <SubmitError />
-            {!partnership && <PartnerField name="partnerLookupItem" required />}
+            {!partnership && <PartnerField name="partner" required />}
             {lookupPartnerTypes?.length || currentPartnerTypes?.length ? (
               <SecuredField obj={partnership} name="types">
                 {(props) => (

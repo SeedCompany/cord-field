@@ -56,7 +56,7 @@ export const ProductFormFields = ({
   { product?: ProductFormFragment }
 >) => {
   const [openedSection, onOpen] = useState<ProductKey | undefined>(
-    product ? undefined : 'producesId'
+    product ? undefined : 'produces'
   );
 
   return (

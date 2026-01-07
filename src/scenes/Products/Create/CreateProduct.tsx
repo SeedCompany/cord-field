@@ -104,7 +104,7 @@ export const CreateProduct = () => {
     const createProduct = async () => {
       const {
         productType,
-        producesId,
+        produces,
         scriptureReferences,
         unspecifiedScripture,
         book,
@@ -124,7 +124,7 @@ export const CreateProduct = () => {
         const { data } = await createOtherProduct({
           variables: {
             input: {
-              engagementId,
+              engagement: engagementId,
               title: title || '',
               description,
               ...inputs,
@@ -136,7 +136,7 @@ export const CreateProduct = () => {
         const { data } = await createDirectScriptureProduct({
           variables: {
             input: {
-              engagementId,
+              engagement: engagementId,
               scriptureReferences: parsedScriptureReferences,
               unspecifiedScripture:
                 parsedScriptureReferences.length > 0 ||
@@ -156,9 +156,9 @@ export const CreateProduct = () => {
         const { data } = await createDerivativeScriptureProduct({
           variables: {
             input: {
-              engagementId,
+              engagement: engagementId,
               ...inputs,
-              produces: producesId!.id,
+              produces: produces!.id,
               scriptureReferencesOverride: parsedScriptureReferences,
             },
           },
@@ -185,7 +185,7 @@ export const CreateProduct = () => {
       );
       await updatePartnershipsProducingMediums({
         variables: {
-          engagementId: engagement.id,
+          engagement: engagement.id,
           input: ppmInput,
         },
       });

@@ -265,8 +265,8 @@ export const LanguageDetail = () => {
                       location &&
                       void removeLocation({
                         variables: {
-                          languageId: language.id,
-                          locationId: location.id,
+                          language: language.id,
+                          location: location.id,
                         },
                         update: removeItemFromList({
                           listId: [language, 'locations'],

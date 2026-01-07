@@ -26,12 +26,13 @@ export const CreateProjectDirectory = (
   const onSubmit: CreateProjectDirectoryProps['onSubmit'] = async (
     nameInput
   ) => {
-    const input = {
-      ...nameInput,
-      parentId: directoryId,
-    };
     const { data } = await createDirectory({
-      variables: { input },
+      variables: {
+        input: {
+          ...nameInput,
+          parent: directoryId,
+        },
+      },
       update: addItemToList({
         listId: [{ __typename: 'Directory', id: directoryId }, 'children'],
         outputToItem: (res) => res.createDirectory,

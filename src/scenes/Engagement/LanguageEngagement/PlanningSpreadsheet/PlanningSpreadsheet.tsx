@@ -67,7 +67,7 @@ export const PlanningSpreadsheet = ({ engagement, ...rest }: Props) => {
               await updateEngagement({
                 variables: {
                   id: engagement.id,
-                  upload: { uploadId, name },
+                  upload: { upload: uploadId, name },
                   methodology,
                 },
               });

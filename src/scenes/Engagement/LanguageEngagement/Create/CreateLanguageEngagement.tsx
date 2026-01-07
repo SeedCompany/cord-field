@@ -18,7 +18,7 @@ import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
   engagement: {
-    languageId: LanguageLookupItem;
+    language: LanguageLookupItem;
   };
 }
 
@@ -37,14 +37,14 @@ export const CreateLanguageEngagement = ({
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     const languageRef = {
       __typename: 'Language',
-      id: engagement.languageId.id,
+      id: engagement.language.id,
     } as const;
     await createEngagement({
       variables: {
         input: {
           engagement: {
-            projectId: project.id,
-            languageId: engagement.languageId.id,
+            project: project.id,
+            language: engagement.language.id,
           },
           changeset: project.changeset?.id,
         },
@@ -71,7 +71,7 @@ export const CreateLanguageEngagement = ({
       changesetAware
     >
       <SubmitError />
-      <LanguageField name="engagement.languageId" label="Language" required />
+      <LanguageField name="engagement.language" label="Language" required />
     </DialogForm>
   );
 };

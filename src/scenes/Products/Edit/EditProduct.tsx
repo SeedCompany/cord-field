@@ -143,7 +143,7 @@ export const EditProduct = () => {
               product.produces.value?.__typename === 'Story' ||
               product.produces.value?.__typename === 'EthnoArt')
           ? {
-              producesId: {
+              produces: {
                 id: product.produces.value.id,
                 name: product.produces.value.name,
               },
@@ -195,7 +195,7 @@ export const EditProduct = () => {
 
       const {
         productType,
-        producesId,
+        produces,
         scriptureReferences,
         book,
         title,
@@ -248,7 +248,7 @@ export const EditProduct = () => {
             input: {
               id: product.id,
               ...input,
-              produces: producesId!.id,
+              produces: produces!.id,
               scriptureReferencesOverride: parsedScriptureReferences,
             },
           },
@@ -274,7 +274,7 @@ export const EditProduct = () => {
       );
       await updatePartnershipsProducingMediums({
         variables: {
-          engagementId: engagement.id,
+          engagement: engagement.id,
           input: ppmInput,
         },
       });
