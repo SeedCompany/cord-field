@@ -11,7 +11,7 @@ fragment BudgetRecord on BudgetRecord {
     canEdit
     canRead
   }
-  adjustedAmount {
+  initialAmount {
     value
     canEdit
     canRead
@@ -96,7 +96,7 @@ mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecordInput!) {
       preApprovedAmount {
         value
       }
-      adjustedAmount {
+      initialAmount {
         value
       }
       ...RecalculateChangesetDiff
@@ -107,7 +107,7 @@ mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecordInput!) {
 fragment CalculateNewTotalAndRollup on Budget {
   ...Id
   total
-  recordRollup {
+  budgetSummary {
     hasPreApproved
     preApprovedExceeded
   }
@@ -119,7 +119,7 @@ fragment CalculateNewTotalAndRollup on Budget {
     preApprovedAmount {
       value
     }
-    adjustedAmount {
+    initialAmount {
       value
     }
   }

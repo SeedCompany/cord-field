@@ -2,7 +2,7 @@ fragment BudgetOverview on Budget {
   ...Id
   createdAt
   total
-  recordRollup {
+  budgetSummary {
     hasPreApproved
     preApprovedExceeded
   }

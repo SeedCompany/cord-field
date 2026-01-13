@@ -59,10 +59,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       fragment: CalculateNewTotalAndRollup,
       updater: (cached) => ({
         ...cached,
-        total: sumBy(
-          cached.records,
-          (record) => record.adjustedAmount.value ?? 0
-        ),
+        total: sumBy(cached.records, (record) => record.amount.value ?? 0),
         recordRollup: {
           hasPreApproved: cached.records.some(
             (record) => typeof record.preApprovedAmount.value === 'number'
@@ -125,13 +122,33 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       editable: true,
     },
     {
+      headerName: 'Approved',
+      field: 'initialAmount',
+      flex: 1,
+      ...useCurrencyColumn(),
+      valueGetter: getSecuredValue,
+      valueSetter: setSecuredValue('initialAmount'),
+      editable: true,
+      changesetAware: true,
+      cellClassName: (params) => {
+        const initial = params.row.initialAmount.value;
+        const preApprovedAmount = params.row.preApprovedAmount.value;
+        const exceedsApproved =
+          typeof initial === 'number' &&
+          typeof preApprovedAmount === 'number' &&
+          initial > preApprovedAmount;
+
+        return exceedsApproved ? 'cell-invalid' : '';
+      },
+    },
+    {
       headerName: 'Amount',
       field: 'amount',
       flex: 1,
       ...useCurrencyColumn(),
       valueGetter: getSecuredValue,
       valueSetter: setSecuredValue('amount'),
-      editable: true,
+      editable: budget?.value?.status !== 'Pending',
       changesetAware: true,
       cellClassName: (params) => {
         const amount = params.row.amount.value;
@@ -143,39 +160,19 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
 
         return exceedsApproved ? 'cell-invalid' : '';
       },
-    },
-    {
-      headerName: 'Adjusted',
-      field: 'adjustedAmount',
-      flex: 1,
-      ...useCurrencyColumn(),
-      valueGetter: getSecuredValue,
-      valueSetter: setSecuredValue('adjustedAmount'),
-      editable: budget?.value?.status !== 'Pending',
-      changesetAware: true,
-      cellClassName: (params) => {
-        const adjustedAmount = params.row.adjustedAmount.value;
-        const preApprovedAmount = params.row.preApprovedAmount.value;
-        const exceedsApproved =
-          typeof adjustedAmount === 'number' &&
-          typeof preApprovedAmount === 'number' &&
-          adjustedAmount > preApprovedAmount;
-
-        return exceedsApproved ? 'cell-invalid' : '';
-      },
       renderCell: (params) => {
-        const adjustedAmount = params.row.adjustedAmount.value;
+        const amount = params.row.amount.value;
         const preApprovedAmount = params.row.preApprovedAmount.value;
         const exceedsApproved =
-          typeof adjustedAmount === 'number' &&
+          typeof amount === 'number' &&
           typeof preApprovedAmount === 'number' &&
-          adjustedAmount > preApprovedAmount;
+          amount > preApprovedAmount;
 
         if (exceedsApproved) {
           return (
             <Tooltip
               title={`Amount ${formatCurrency(
-                adjustedAmount
+                amount
               )} exceeds pre-approved amount ${formatCurrency(
                 preApprovedAmount
               )}`}
@@ -198,16 +195,16 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       Number(record.preApprovedAmount.value) !==
       Number(prev.preApprovedAmount.value);
 
-    const adjustedAmountChanged =
-      Number(record.adjustedAmount.value) !== Number(prev.adjustedAmount.value);
+    const initialAmountChanged =
+      Number(record.initialAmount.value) !== Number(prev.initialAmount.value);
 
-    if (!amountChanged && !preApprovedAmountChanged && !adjustedAmountChanged) {
+    if (!amountChanged && !preApprovedAmountChanged && !initialAmountChanged) {
       return record;
     }
 
     const newAmount = record.amount.value || null;
     const newPreApprovedAmount = record.preApprovedAmount.value || null;
-    const newAdjustedAmount = record.adjustedAmount.value || null;
+    const newInitialAmount = record.initialAmount.value || null;
 
     // If we have a changeset, fetch (from cache) the additional
     // data required to provide an optimistic response.
@@ -232,8 +229,8 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
             ...(preApprovedAmountChanged && {
               preApprovedAmount: newPreApprovedAmount,
             }),
-            ...(adjustedAmountChanged && {
-              adjustedAmount: newAdjustedAmount,
+            ...(initialAmountChanged && {
+              initialAmount: newInitialAmount,
             }),
           },
           changeset: record.changeset?.id,
@@ -253,7 +250,13 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
                   changeset: cachedChangeset,
                   amount: {
                     __typename: 'SecuredFloatNullable',
-                    value: amountChanged ? newAmount : record.amount.value,
+                    value:
+                      initialAmountChanged &&
+                      budget?.value?.status === 'Pending'
+                        ? newInitialAmount
+                        : amountChanged
+                        ? newAmount
+                        : record.amount.value,
                   },
                   preApprovedAmount: {
                     __typename: 'SecuredFloatNullable',
@@ -261,14 +264,11 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
                       ? newPreApprovedAmount
                       : record.preApprovedAmount.value,
                   },
-                  adjustedAmount: {
+                  initialAmount: {
                     __typename: 'SecuredFloatNullable',
-                    value:
-                      amountChanged && budget?.value?.status === 'Pending'
-                        ? newAmount
-                        : adjustedAmountChanged
-                        ? newAdjustedAmount
-                        : record.adjustedAmount.value,
+                    value: initialAmountChanged
+                      ? newInitialAmount
+                      : record.initialAmount.value,
                   },
                 },
               },
@@ -277,14 +277,14 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
 
     return {
       ...record,
-      adjustedAmount: {
-        ...record.adjustedAmount,
+      amount: {
+        ...record.amount,
         value:
-          amountChanged && budget?.value?.status === 'Pending'
+          initialAmountChanged && budget?.value?.status === 'Pending'
+            ? newInitialAmount
+            : amountChanged
             ? newAmount
-            : adjustedAmountChanged
-            ? newAdjustedAmount
-            : record.adjustedAmount.value,
+            : record.amount.value,
       },
     };
   };
@@ -320,7 +320,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
           if (field === 'amount') return record.amount.canEdit;
           if (field === 'preApprovedAmount')
             return record.preApprovedAmount.canEdit;
-          if (field === 'adjustedAmount') return record.adjustedAmount.canEdit;
+          if (field === 'initialAmount') return record.initialAmount.canEdit;
           return false;
         }}
         processRowUpdate={handleRowSave}
