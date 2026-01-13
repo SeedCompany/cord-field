@@ -29,7 +29,7 @@ export const BudgetOverviewCard = ({
           <Typography variant="h4">
             {loading ? <Skeleton width="80%" /> : 'Field Budget'}
           </Typography>
-          {budget?.recordRollup.preApprovedExceeded &&
+          {budget?.budgetSummary.preApprovedExceeded &&
             status === 'InDevelopment' && (
               <Tooltip title="Pre-approved Item Exceeded">
                 <Warning color="error" />
