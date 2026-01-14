@@ -58,8 +58,8 @@ export type EditableEngagementField = ExtractStrict<
   | 'disbursementCompleteDate'
   | 'methodologies'
   | 'position'
-  | 'countryOfOriginId'
-  | 'mentorId'
+  | 'countryOfOrigin'
+  | 'mentor'
   | 'firstScripture'
   | 'lukePartnership'
   | 'paratextRegistryId'
@@ -142,10 +142,10 @@ const fieldMapping: Record<
       />
     );
   },
-  countryOfOriginId: ({ props }) => (
+  countryOfOrigin: ({ props }) => (
     <LocationField {...props} label="Country of Origin" />
   ),
-  mentorId: ({ props }) => <UserField {...props} label="Mentor" />,
+  mentor: ({ props }) => <UserField {...props} label="Mentor" />,
   firstScripture: ({ props }) => (
     <CheckboxField {...props} label="First Scripture" keepHelperTextSpacing />
   ),
@@ -175,8 +175,8 @@ interface EngagementFormValues {
   engagement: Merge<
     UpdateLanguageEngagement & UpdateInternshipEngagement,
     {
-      mentorId?: UserLookupItemFragment | null;
-      countryOfOriginId?: DisplayLocationFragment | null;
+      mentor?: UserLookupItemFragment | null;
+      countryOfOrigin?: DisplayLocationFragment | null;
     }
   >;
 }
@@ -235,8 +235,8 @@ export const EditEngagementDialog = ({
         : {
             methodologies: engagement.methodologies.value,
             position: engagement.position.value,
-            mentorId: engagement.mentor.value,
-            countryOfOriginId: engagement.countryOfOrigin.value,
+            mentor: engagement.mentor.value,
+            countryOfOrigin: engagement.countryOfOrigin.value,
             marketable: engagement.marketable.value,
             webId: engagement.webId.value,
           }),
@@ -312,17 +312,17 @@ export const EditEngagementDialog = ({
         }
       }}
       onSubmit={async ({ engagement: values }, form) => {
-        const input = {
-          engagement: {
-            ...values,
-            mentorId: getLookupId(values.mentorId),
-            countryOfOriginId: getLookupId(values.countryOfOriginId),
-          },
-          changeset: engagement.changeset?.id,
-        };
-
         await updateEngagement({
-          variables: { input },
+          variables: {
+            input: {
+              engagement: {
+                ...values,
+                mentor: getLookupId(values.mentor),
+                countryOfOrigin: getLookupId(values.countryOfOrigin),
+              },
+              changeset: engagement.changeset?.id,
+            },
+          },
           update: (cache) => {
             if (engagement.__typename === 'LanguageEngagement') {
               const dirty = form.getState().dirtyFields;

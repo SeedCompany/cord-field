@@ -16,9 +16,9 @@ import {
 export interface CreatePartnershipFormInput {
   partnership: Pick<
     CreatePartnershipType,
-    'projectId' | 'types' | 'financialReportingType' | 'primary'
+    'project' | 'types' | 'financialReportingType' | 'primary'
   > & {
-    partnerLookupItem: PartnerLookupItem;
+    partner: PartnerLookupItem;
   };
 }
 
@@ -56,14 +56,14 @@ export const CreatePartnership = ({
     <PartnershipForm<CreatePartnershipFormInput>
       title="Create Partnership"
       {...props}
-      onSubmit={async ({ partnership: { partnerLookupItem, ...rest } }) => {
+      onSubmit={async ({ partnership: { partner, ...rest } }) => {
         await createPartnership({
           variables: {
             input: {
               partnership: {
                 ...rest,
-                projectId: project.id,
-                partnerId: partnerLookupItem.id,
+                project: project.id,
+                partner: partner.id,
                 primary: rest.primary || undefined,
               },
               changeset: project.changeset?.id,

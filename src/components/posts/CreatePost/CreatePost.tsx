@@ -35,7 +35,7 @@ export const CreatePost = ({
           variables: {
             input: {
               post: {
-                parentId: parent.id,
+                parent: parent.id,
                 body: post.body,
                 type: post.type,
                 shareability: post.shareability,

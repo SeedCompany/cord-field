@@ -14,7 +14,7 @@ import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement
 
 interface CreateInternshipEngagementFormValues {
   engagement: {
-    internId: UserLookupItem;
+    intern: UserLookupItem;
   };
 }
 
@@ -37,8 +37,8 @@ export const CreateInternshipEngagement = ({
       variables: {
         input: {
           engagement: {
-            projectId: project.id,
-            internId: engagement.internId.id,
+            project: project.id,
+            intern: engagement.intern.id,
           },
           changeset: project.changeset?.id,
         },
@@ -61,7 +61,7 @@ export const CreateInternshipEngagement = ({
     >
       <SubmitError />
       <UserField
-        name="engagement.internId"
+        name="engagement.intern"
         label="Intern"
         placeholder="Enter person's name"
         required

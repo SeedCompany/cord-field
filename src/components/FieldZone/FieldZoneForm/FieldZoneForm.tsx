@@ -12,7 +12,7 @@ export interface FieldZoneFormValues<Mutation extends FieldZoneMutation> {
   fieldZone: Merge<
     Mutation,
     {
-      directorId: UserLookupItemFragment | null;
+      director: UserLookupItemFragment | null;
     }
   >;
 }
@@ -40,7 +40,7 @@ export const FieldZoneForm = <Mutation extends FieldZoneMutation, R>({
         />
       )}
     </SecuredField>
-    <SecuredField obj={fieldZone} name="directorId">
+    <SecuredField obj={fieldZone} name="director">
       {(props) => <UserField {...props} label="Director" required />}
     </SecuredField>
   </DialogForm>

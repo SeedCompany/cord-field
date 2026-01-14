@@ -40,12 +40,12 @@ export const CreatePartner = (props: CreatePartnerProps) => {
         )
       }
       {...props}
-      onSubmit={async ({ orgLookup: { id: organizationId } }) => {
+      onSubmit={async ({ orgLookup: { id: organization } }) => {
         const { data } = await createPartner({
           variables: {
             input: {
               partner: {
-                organizationId,
+                organization,
               },
             },
           },

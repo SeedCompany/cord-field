@@ -24,7 +24,7 @@ interface FormValues {
     Merge<
       CreateProjectMemberInput,
       {
-        userId: UserLookupItem;
+        user: UserLookupItem;
       }
     >
   >;
@@ -40,7 +40,7 @@ type CreateProjectMemberProps = Except<
 const decorators: Array<Decorator<FormValues>> = [
   ...DialogForm.defaultDecorators,
   onFieldChange({
-    field: 'projectMember.userId',
+    field: 'projectMember.user',
     isEqual: UserField.isEqual,
     updates: { 'projectMember.roles': () => [] },
   }),
@@ -60,7 +60,7 @@ export const CreateProjectMember = ({
   const initialValues = useMemo(
     () => ({
       projectMember: {
-        projectId: project.id,
+        project: project.id,
       },
     }),
     [project.id]
@@ -77,7 +77,7 @@ export const CreateProjectMember = ({
         const input = {
           projectMember: {
             ...data,
-            userId: data.userId.id,
+            user: data.user.id,
           },
         };
 
@@ -86,14 +86,14 @@ export const CreateProjectMember = ({
       fieldsPrefix="projectMember"
     >
       {({ values }) => {
-        const user = values.projectMember.userId;
+        const user = values.projectMember.user;
         const canRead = user?.roles.canRead;
         const userRoles = user?.roles.value;
 
         return (
           <>
             <SubmitError />
-            <UserField name="userId" required variant="outlined" />
+            <UserField name="user" required variant="outlined" />
             <AutocompleteField
               disabled={!canRead || !userRoles}
               multiple

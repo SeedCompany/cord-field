@@ -95,10 +95,7 @@ export const defaultHandlers = {
         const formFieldName =
           findField(missing.field) ??
           // Also find with a path prefix: mouStart -> project.mouStart
-          findField(RegExp(`\\.${missing.field}$`)) ??
-          // Also find with Id suffix: primaryLocation -> primaryLocationId
-          findField(missing.field + 'Id') ??
-          findField(RegExp(`\\.${missing.field}Id$`));
+          findField(RegExp(`\\.${missing.field}$`));
         if (formFieldName) {
           res.in.push({
             ...missing,

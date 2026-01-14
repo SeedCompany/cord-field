@@ -14,8 +14,8 @@ export interface FieldRegionFormValues<Mutation extends FieldRegionMutation> {
   fieldRegion: Merge<
     Mutation,
     {
-      fieldZoneId: DisplayFieldZoneFragment | null;
-      directorId: UserLookupItemFragment | null;
+      fieldZone: DisplayFieldZoneFragment | null;
+      director: UserLookupItemFragment | null;
     }
   >;
 }
@@ -43,10 +43,10 @@ export const FieldRegionForm = <Mutation extends FieldRegionMutation, R>({
         />
       )}
     </SecuredField>
-    <SecuredField obj={fieldRegion} name="fieldZoneId">
+    <SecuredField obj={fieldRegion} name="fieldZone">
       {(props) => <FieldZoneField {...props} label="Field Zone" required />}
     </SecuredField>
-    <SecuredField obj={fieldRegion} name="directorId">
+    <SecuredField obj={fieldRegion} name="director">
       {(props) => <UserField {...props} label="Director" required />}
     </SecuredField>
   </DialogForm>

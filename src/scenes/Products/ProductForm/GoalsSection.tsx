@@ -11,11 +11,11 @@ export const GoalsSection = ({
   accordionState,
 }: SectionProps) => {
   const isEditing = Boolean(product);
-  const { productType, producesId: produces } = values.product ?? {};
+  const { productType, produces } = values.product ?? {};
 
   return (
     <DefaultAccordion
-      name="producesId"
+      name="produces"
       {...accordionState}
       title="Goal"
       renderCollapsed={() => (

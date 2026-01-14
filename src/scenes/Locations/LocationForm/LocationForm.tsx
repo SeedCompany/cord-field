@@ -35,8 +35,8 @@ export interface LocationFormValues<
   location: Merge<
     CreateOrUpdateType,
     {
-      defaultFieldRegionId?: FieldRegionLookupItem | null;
-      fundingAccountId?: FundingAccountLookupItem | null;
+      defaultFieldRegion?: FieldRegionLookupItem | null;
+      fundingAccount?: FundingAccountLookupItem | null;
       mapImage?: File[];
     }
   >;
@@ -104,12 +104,12 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
         </SecuredField>
       </Grid>
       <Grid item xs={12}>
-        <SecuredField obj={location} name="fundingAccountId">
+        <SecuredField obj={location} name="fundingAccount">
           {(props) => <FundingAccountField margin="none" {...props} />}
         </SecuredField>
       </Grid>
       <Grid item xs={12}>
-        <SecuredField obj={location} name="defaultFieldRegionId">
+        <SecuredField obj={location} name="defaultFieldRegion">
           {(props) => (
             <FieldRegionField
               margin="none"

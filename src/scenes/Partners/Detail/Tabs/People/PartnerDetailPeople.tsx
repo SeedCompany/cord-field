@@ -46,7 +46,7 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
         content={
           !partner?.pointOfContact.value ? (
             <CardActionArea
-              onClick={() => edit('partner.pointOfContactId')}
+              onClick={() => edit('partner.pointOfContact')}
               className={classes.pocCardActionArea}
               aria-label="add mentor"
             >
@@ -64,7 +64,7 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
             disabled={
               !partner?.pointOfContact || !partner.pointOfContact.canEdit
             }
-            onClick={() => edit('partner.pointOfContactId')}
+            onClick={() => edit('partner.pointOfContact')}
           >
             {partner?.pointOfContact.value ? 'Edit' : 'Add'} Point of Contact
           </Button>

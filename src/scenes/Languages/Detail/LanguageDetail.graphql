@@ -81,8 +81,8 @@ fragment LanguageDetail on Language {
   ...TogglePin
 }
 
-mutation RemoveLocationFromLanguage($languageId: ID!, $locationId: ID!) {
-  removeLocationFromLanguage(languageId: $languageId, locationId: $locationId) {
+mutation RemoveLocationFromLanguage($language: ID!, $location: ID!) {
+  removeLocationFromLanguage(language: $language, location: $location) {
     ...LanguageDetail
     ...LanguageForm
   }

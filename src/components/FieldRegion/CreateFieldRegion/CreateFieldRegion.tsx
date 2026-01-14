@@ -29,8 +29,8 @@ export const CreateFieldRegion = (props: CreateFieldRegionProps) => {
         const input: CreateFieldRegionInput = {
           fieldRegion: {
             name: values.fieldRegion.name,
-            fieldZoneId: values.fieldRegion.fieldZoneId!.id,
-            directorId: values.fieldRegion.directorId!.id,
+            fieldZone: values.fieldRegion.fieldZone!.id,
+            director: values.fieldRegion.director!.id,
           },
         };
 

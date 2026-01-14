@@ -27,8 +27,8 @@ export const CreateLocation = (props: CreateLocationProps) => {
 
   const onSubmit: FormProps['onSubmit'] = async ({
     location: {
-      fundingAccountId,
-      defaultFieldRegionId,
+      fundingAccount,
+      defaultFieldRegion,
       mapImage: mapImages,
       ...rest
     },
@@ -39,8 +39,8 @@ export const CreateLocation = (props: CreateLocationProps) => {
 
     const input: CreateLocationType = {
       ...rest,
-      fundingAccountId: fundingAccountId?.id,
-      defaultFieldRegionId: defaultFieldRegionId?.id,
+      fundingAccount: fundingAccount?.id,
+      defaultFieldRegion: defaultFieldRegion?.id,
       mapImage: uploadedImageInfo,
     };
     const { data } = await createLocation({

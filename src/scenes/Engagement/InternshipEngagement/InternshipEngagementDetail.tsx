@@ -191,7 +191,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                     empty="Enter Country of Origin"
                     redacted="You do not have permission to view country of origin"
                     children={(location) => location.name.value}
-                    onClick={() => show('countryOfOriginId')}
+                    onClick={() => show('countryOfOrigin')}
                   />
                 </Grid>
                 <Grid item>
@@ -267,7 +267,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                       {node}
                     </Grid>
                   )}
-                  onEdit={() => show('mentorId')}
+                  onEdit={() => show('mentor')}
                 />
               </Grid>
             </Grid>

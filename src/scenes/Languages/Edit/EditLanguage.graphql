@@ -7,8 +7,8 @@ mutation UpdateLanguage($input: UpdateLanguageInput!) {
   }
 }
 
-mutation AddLocationToLanguage($languageId: ID!, $locationId: ID!) {
-  addLocationToLanguage(languageId: $languageId, locationId: $locationId) {
+mutation AddLocationToLanguage($language: ID!, $location: ID!) {
+  addLocationToLanguage(language: $language, location: $location) {
     ...LanguageDetail
     ...LanguageForm
   }

@@ -46,7 +46,7 @@ export interface ProductFormValues extends SubmitAction<'delete'> {
         UpdateDerivativeScriptureProduct &
         CreateOtherProduct &
         UpdateOtherProduct,
-      'id' | 'engagementId' | 'produces'
+      'id' | 'engagement' | 'produces'
     >,
     ProductFormCustomValues
   >;
