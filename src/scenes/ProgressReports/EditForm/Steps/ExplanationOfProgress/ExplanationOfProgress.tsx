@@ -150,14 +150,14 @@ export const ExplanationOfProgress: StepComponent = ({ report }) => {
                   color="error"
                 />
               </Tooltip>
-              <Tooltip title="-10% to 10%" placement="top">
+              <Tooltip title="-10% to 30%" placement="top">
                 <EnumOption<OptionGroup>
                   value="onTime"
                   label="On Time"
                   color="info"
                 />
               </Tooltip>
-              <Tooltip title="> 10%" placement="top">
+              <Tooltip title="> 30%" placement="top">
                 <EnumOption<OptionGroup>
                   value="ahead"
                   label="Ahead"
