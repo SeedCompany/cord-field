@@ -11,6 +11,9 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     value {
       id
       fullName
+      gender {
+        value
+      }
     }
   }
   position {
