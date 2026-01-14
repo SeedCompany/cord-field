@@ -8,6 +8,7 @@ import {
   InternshipPositionLabels,
 } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
+import { DisplaySimpleProperty } from '~/components/DisplaySimpleProperty';
 import { Fab } from '~/components/Fab';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
@@ -149,6 +150,13 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                   </Grid>
                 </Grid>
               </Grid>
+              <DisplaySimpleProperty
+                label="Gender"
+                value={intern?.gender.value}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+                wrap={(node) => <Grid item>{node}</Grid>}
+              />
               <Grid item container spacing={1} alignItems="center">
                 <Grid item>
                   <DataButton
