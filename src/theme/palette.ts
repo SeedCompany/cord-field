@@ -3,13 +3,23 @@ import { grey } from '@mui/material/colors';
 import { PaletteOptions } from '@mui/material/styles';
 import { Role } from '~/api/schema/schema.graphql';
 
-// Seed Company Brand Colors
+/**
+ * Seed Company Brand Colors
+ * These colors are used throughout the application to maintain brand consistency
+ * across both light and dark modes.
+ */
 const brandColors = {
+  /** #F7F1E7 - Light beige used for light mode default background */
   natural: '#F7F1E7',
+  /** #CDC3B0 - Medium beige used for secondary text in dark mode */
   stone: '#CDC3B0',
+  /** #FFFFFF - Pure white used for paper backgrounds in light mode and contrast text */
   white: '#FFFFFF',
+  /** #EBEBEC - Very light gray used for secondary color and primary text in dark mode */
   lightGray: '#EBEBEC',
+  /** #636466 - Dark gray used for secondary color in light mode and paper background in dark mode */
   darkGray: '#636466',
+  /** #323232 - Very dark gray (almost black) used for dark mode default background and primary text in light mode */
   black: '#323232',
 };
 
