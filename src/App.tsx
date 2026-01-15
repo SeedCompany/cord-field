@@ -1,8 +1,9 @@
-import { ThemeProvider, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
@@ -43,7 +44,7 @@ if (logRocketAppId) {
 
 MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
 
-const ThemeProviderWithDarkMode = ({ children }: { children: React.ReactNode }) => {
+const ThemeProviderWithDarkMode = ({ children }: { children: ReactNode }) => {
   // Detect system/browser dark mode preference
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {
     noSsr: true,
