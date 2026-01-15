@@ -63,7 +63,7 @@ export interface FieldOverviewCardProps extends Pick<HugeIconProps, 'icon'> {
   onClick?: () => void;
   redactedText?: TooltipProps['title'];
   redacted?: boolean;
-  title?: string;
+  title?: ReactNode;
   viewLabel?: string;
 }
 
@@ -88,6 +88,13 @@ export const FieldOverviewCard = ({
   const ActionArea = showData && data?.to ? CardActionAreaLink : CardActionArea;
   const Btn = data?.to ? ButtonLink : Button;
 
+  // Standard component if title is a string
+  const standardTitle = (
+    <Typography variant="h4">
+      {loading ? <Skeleton width="80%" /> : data ? title : ''}
+    </Typography>
+  );
+
   const card = (
     <Card className={cx(classes.root, className)}>
       <ActionArea
@@ -98,9 +105,7 @@ export const FieldOverviewCard = ({
       >
         <HugeIcon icon={icon} loading={!data} />
         <div className={classes.rightContent}>
-          <Typography variant="h4">
-            {loading ? <Skeleton width="80%" /> : data ? title : ''}
-          </Typography>
+          {typeof title === 'string' ? standardTitle : title}
           <Typography
             variant="h1"
             className={cx({

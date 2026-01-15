@@ -2,4 +2,8 @@ fragment BudgetOverview on Budget {
   ...Id
   createdAt
   total
+  summary {
+    hasPreApproved
+    preApprovedExceeded
+  }
 }

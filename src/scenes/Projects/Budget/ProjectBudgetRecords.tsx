@@ -15,13 +15,18 @@ import { onUpdateChangeFragment, readFragment } from '~/api';
 import { IdFragment, SecuredProp } from '~/common';
 import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
 import {
+  useFeatureEnabled,
+  VisibilityAndClickTracker,
+} from '~/components/Feature';
+import { useCurrencyFormatter } from '~/components/Formatters/useCurrencyFormatter';
+import {
   changesetGridSlots,
   useDeletedItemsOfChangeset,
 } from '../../../components/Changeset';
 import { useCurrencyColumn } from '../../../components/Grid/useCurrencyColumn';
 import {
   BudgetRecordFragment as BudgetRecord,
-  CalculateNewTotalFragmentDoc as CalculateNewTotal,
+  CalculateNewTotalAndRollupFragmentDoc as CalculateNewTotalAndRollup,
   ProjectBudgetQuery,
   UpdateProjectBudgetRecordDocument as UpdateRecord,
 } from './ProjectBudget.graphql';
@@ -52,15 +57,35 @@ const setSecuredValue =
 
 export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
   const { loading, budget } = props;
+  const approvedColumnEnabled = useFeatureEnabled('budgetApprovedColumn');
+
   const [updateBudgetRecord, { client: apollo }] = useMutation(UpdateRecord, {
     update: onUpdateChangeFragment({
       object: budget?.value ?? undefined,
-      fragment: CalculateNewTotal,
+      fragment: CalculateNewTotalAndRollup,
       updater: (cached) => ({
         ...cached,
         total: sumBy(cached.records, (record) => record.amount.value ?? 0),
+        recordRollup: {
+          hasPreApproved: cached.records.some(
+            (record) => typeof record.preApprovedAmount.value === 'number'
+          ),
+          preApprovedExceeded: cached.records.some((record) => {
+            const amount = record.amount.value;
+            const preApproved = record.preApprovedAmount.value;
+            return (
+              typeof amount === 'number' &&
+              typeof preApproved === 'number' &&
+              amount > preApproved
+            );
+          }),
+        },
       }),
     }),
+  });
+
+  const formatCurrency = useCurrencyFormatter({
+    maximumFractionDigits: 2,
   });
 
   const deletedRecords = useDeletedItemsOfChangeset(isBudgetRecord);
@@ -89,23 +114,115 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       valueGetter: getSecuredValue,
     },
     {
+      headerName: 'Pre-Approved',
+      field: 'preApprovedAmount',
+      flex: 1,
+      ...useCurrencyColumn(),
+      valueGetter: (_, row) =>
+        typeof row.preApprovedAmount.value === 'number'
+          ? row.preApprovedAmount.value
+          : null,
+      valueFormatter: (value: number | null) =>
+        value !== null ? formatCurrency(value) : '-',
+      valueSetter: setSecuredValue('preApprovedAmount'),
+      editable: true,
+    },
+    {
+      headerName: 'Approved',
+      field: 'initialAmount',
+      flex: 1,
+      ...useCurrencyColumn(),
+      valueGetter: getSecuredValue,
+      valueSetter: setSecuredValue('initialAmount'),
+      editable: true,
+      changesetAware: true,
+      cellClassName: (params) => {
+        const initial = params.row.initialAmount.value;
+        const preApprovedAmount = params.row.preApprovedAmount.value;
+        const exceedsApproved =
+          typeof initial === 'number' &&
+          typeof preApprovedAmount === 'number' &&
+          initial > preApprovedAmount;
+
+        return exceedsApproved ? 'cell-invalid' : '';
+      },
+    },
+    {
       headerName: 'Amount',
       field: 'amount',
       flex: 1,
       ...useCurrencyColumn(),
       valueGetter: getSecuredValue,
       valueSetter: setSecuredValue('amount'),
-      changesetAware: true,
       editable: true,
+      changesetAware: true,
+      cellClassName: (params) => {
+        const amount = params.row.amount.value;
+        const preApprovedAmount = params.row.preApprovedAmount.value;
+        const exceedsApproved =
+          typeof amount === 'number' &&
+          typeof preApprovedAmount === 'number' &&
+          amount > preApprovedAmount;
+
+        return exceedsApproved ? 'cell-invalid' : '';
+      },
+      renderCell: (params) => {
+        const amount = params.row.amount.value;
+        const preApprovedAmount = params.row.preApprovedAmount.value;
+        const exceedsApproved =
+          typeof amount === 'number' &&
+          typeof preApprovedAmount === 'number' &&
+          amount > preApprovedAmount;
+
+        if (exceedsApproved) {
+          return (
+            <Tooltip
+              title={`Amount ${formatCurrency(
+                amount
+              )} exceeds pre-approved amount ${formatCurrency(
+                preApprovedAmount
+              )}`}
+              placement="top"
+            >
+              <span>{params.formattedValue}</span>
+            </Tooltip>
+          );
+        }
+
+        return params.formattedValue;
+      },
     },
   ];
 
+  const visibleColumns = columns.filter((column) => {
+    if (column.field === 'initialAmount') {
+      return approvedColumnEnabled && budget?.value?.status !== 'Pending';
+    }
+
+    if (column.field === 'preApprovedAmount') {
+      return approvedColumnEnabled;
+    }
+
+    return true;
+  });
+
   const handleRowSave = async (record: BudgetRecord, prev: BudgetRecord) => {
-    // eslint-disable-next-line eqeqeq
-    if (record.amount.value == prev.amount.value) {
+    // Check if either amount or preApprovedAmount has changed
+    const amountChanged = record.amount.value !== prev.amount.value;
+    const preApprovedAmountChanged =
+      Number(record.preApprovedAmount.value) !==
+      Number(prev.preApprovedAmount.value);
+
+    const initialAmountChanged =
+      Number(record.initialAmount.value) !== Number(prev.initialAmount.value);
+
+    if (!amountChanged && !preApprovedAmountChanged && !initialAmountChanged) {
       return record;
     }
+
     const newAmount = record.amount.value || null;
+    const newPreApprovedAmount = record.preApprovedAmount.value || null;
+    const newInitialAmount = record.initialAmount.value || null;
 
     // If we have a changeset, fetch (from cache) the additional
     // data required to provide an optimistic response.
@@ -126,7 +243,13 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
         input: {
           budgetRecord: {
             id: record.id,
-            amount: newAmount,
+            ...(amountChanged && { amount: newAmount }),
+            ...(preApprovedAmountChanged && {
+              preApprovedAmount: newPreApprovedAmount,
+            }),
+            ...(initialAmountChanged && {
+              initialAmount: newInitialAmount,
+            }),
           },
           changeset: record.changeset?.id,
         },
@@ -145,7 +268,19 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
                   changeset: cachedChangeset,
                   amount: {
                     __typename: 'SecuredFloatNullable',
-                    value: newAmount,
+                    value: amountChanged ? newAmount : record.amount.value,
+                  },
+                  preApprovedAmount: {
+                    __typename: 'SecuredFloatNullable',
+                    value: preApprovedAmountChanged
+                      ? newPreApprovedAmount
+                      : record.preApprovedAmount.value,
+                  },
+                  initialAmount: {
+                    __typename: 'SecuredFloatNullable',
+                    value: initialAmountChanged
+                      ? newInitialAmount
+                      : record.initialAmount.value,
                   },
                 },
               },
@@ -157,34 +292,42 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
 
   return (
     <Card>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        loading={loading}
-        slots={{
-          ...changesetGridSlots,
-          cell: withEditTooltip(changesetGridSlots.cell),
-        }}
-        initialState={{
-          sorting: { sortModel: [{ field: 'fiscalYear', sort: 'asc' }] },
-        }}
-        localeText={{
-          noRowsLabel:
-            'Project does not have a date range or funding partnerships',
-        }}
-        autoHeight
-        disableColumnMenu
-        hideFooter
-        rowSelection={false}
-        sx={{
-          '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
-            {
-              display: 'none',
-            },
-        }}
-        isCellEditable={({ row: record }) => record.amount.canEdit}
-        processRowUpdate={handleRowSave}
-      />
+      <VisibilityAndClickTracker flag="budgetApprovedColumn" trackInteraction>
+        <DataGrid
+          rows={rows}
+          columns={visibleColumns}
+          loading={loading}
+          slots={{
+            ...changesetGridSlots,
+            cell: withEditTooltip(changesetGridSlots.cell),
+          }}
+          initialState={{
+            sorting: { sortModel: [{ field: 'fiscalYear', sort: 'asc' }] },
+          }}
+          localeText={{
+            noRowsLabel:
+              'Project does not have a date range or funding partnerships',
+          }}
+          autoHeight
+          disableColumnMenu
+          hideFooter
+          rowSelection={false}
+          sx={{
+            '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
+              {
+                display: 'none',
+              },
+          }}
+          isCellEditable={({ row: record, field }) => {
+            if (field === 'amount') return record.amount.canEdit;
+            if (field === 'preApprovedAmount')
+              return record.preApprovedAmount.canEdit;
+            if (field === 'initialAmount') return record.initialAmount.canEdit;
+            return false;
+          }}
+          processRowUpdate={handleRowSave}
+        />
+      </VisibilityAndClickTracker>
     </Card>
   );
 };
