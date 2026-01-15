@@ -1,7 +1,8 @@
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider, useMediaQuery } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
+import { useMemo } from 'react';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
@@ -42,6 +43,20 @@ if (logRocketAppId) {
 
 MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
 
+const ThemeProviderWithDarkMode = ({ children }: { children: React.ReactNode }) => {
+  // Detect system/browser dark mode preference
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {
+    noSsr: true,
+  });
+  
+  const theme = useMemo(
+    () => createTheme({ dark: prefersDarkMode }),
+    [prefersDarkMode]
+  );
+
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+};
+
 /**
  * Register all app providers here in a flat list.
  * These are used client-side, server-side, and in storybook.
@@ -49,7 +64,7 @@ MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
  * Order still matters (the first is the outer most component)
  */
 export const appProviders = [
-  <ThemeProvider key="theme" theme={createTheme()} />,
+  <ThemeProviderWithDarkMode key="theme" />,
   <LocalizationProvider key="i10n" dateAdapter={LuxonCalenderDateUtils} />,
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,

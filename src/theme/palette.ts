@@ -3,38 +3,46 @@ import { grey } from '@mui/material/colors';
 import { PaletteOptions } from '@mui/material/styles';
 import { Role } from '~/api/schema/schema.graphql';
 
+// Seed Company Brand Colors
+const brandColors = {
+  natural: '#F7F1E7',
+  stone: '#CDC3B0',
+  white: '#FFFFFF',
+  lightGray: '#EBEBEC',
+  darkGray: '#636466',
+  black: '#323232',
+};
+
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';
   const roleLuminance = dark ? 32 : 84;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
     background: {
-      default: dark ? '#303030' : grey[50], // MUI v4 default
+      default: dark ? brandColors.black : brandColors.natural,
+      paper: dark ? brandColors.darkGray : brandColors.white,
     },
     primary: {
       main: mainGreen,
-      contrastText: '#ffffff',
+      contrastText: brandColors.white,
     },
     secondary: {
-      main: dark ? grey[50] : '#3c444e',
+      main: dark ? brandColors.lightGray : brandColors.darkGray,
     },
     error: {
       main: '#ff5a5f',
-      contrastText: '#ffffff',
+      contrastText: brandColors.white,
     },
     create: {
       main: '#ff5a5f',
-      contrastText: '#ffffff',
+      contrastText: brandColors.white,
     },
     warning: {
       main: '#f2994a',
     },
     text: {
-      // Close to #3c444e while still using alpha
-      ...(!dark ? { primary: 'rgba(0, 0, 0, 0.75)' } : {}),
-      // Close to #8f928b while still using alpha
-      // Still it looks so contrast-less for form labels
-      // secondary: 'rgba(0, 0, 0, 0.45)',
+      primary: dark ? brandColors.lightGray : brandColors.black,
+      secondary: dark ? brandColors.stone : brandColors.darkGray,
     },
 
     // TODO theme.palette.augmentColor()
