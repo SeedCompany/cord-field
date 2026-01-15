@@ -10,7 +10,7 @@ export const sidebarTheme = createMuiTheme({
     ...base.palette,
     background: {
       ...base.palette.background,
-      paper: '#3c444e',
+      paper: '#636466', // Dark Gray from Seed Company brand colors
     },
   },
   components: {
