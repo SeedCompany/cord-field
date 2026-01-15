@@ -107,7 +107,7 @@ mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecordInput!) {
 fragment CalculateNewTotalAndRollup on Budget {
   ...Id
   total
-  budgetSummary {
+  summary {
     hasPreApproved
     preApprovedExceeded
   }
