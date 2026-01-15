@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation, useSubscription } from '@apollo/client';
 import { NotificationsNone } from '@mui/icons-material';
 import {
   Badge,
@@ -18,6 +18,7 @@ import {
 import { useListQuery } from '~/components/List';
 import { ProgressButton } from '~/components/ProgressButton';
 import { Notification } from './Notification';
+import { NotificationAddedDocument } from './NotificationAdded.graphql';
 import { NotificationListDocument } from './NotificationList.graphql';
 import { ReadNotificationDocument } from './ReadNotification.graphql';
 import { NotificationFragment } from './Views';
@@ -31,7 +32,33 @@ export const Notifications = () => {
   const { data, loadMore, loading } = useListQuery(NotificationListDocument, {
     listAt: (data) => data.notifications,
     skip: !enabled,
-    pollInterval: 60_000,
+  });
+  useSubscription(NotificationAddedDocument, {
+    skip: !enabled,
+    onData: ({ data, client }) => {
+      const added = data.data?.notificationAdded;
+      if (!added) {
+        return;
+      }
+      client.cache.updateQuery(
+        {
+          query: NotificationListDocument,
+        },
+        (prev) => {
+          if (!prev) {
+            return;
+          }
+          return {
+            notifications: {
+              ...prev.notifications,
+              total: prev.notifications.total + 1,
+              totalUnread: prev.notifications.totalUnread + 1,
+              items: [added.notification, ...prev.notifications.items],
+            },
+          };
+        }
+      );
+    },
   });
 
   const [markAsRead] = useMutation(ReadNotificationDocument, {
