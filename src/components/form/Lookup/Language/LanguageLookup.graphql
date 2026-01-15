@@ -16,4 +16,11 @@ fragment LanguageLookupItem on Language {
   displayName {
     value
   }
+  # both fields were added so they can be value checked for disabling purposes on multiselect
+  isWiderComm {
+    value
+  }
+  isAvailableForReporting {
+    value
+  }
 }
