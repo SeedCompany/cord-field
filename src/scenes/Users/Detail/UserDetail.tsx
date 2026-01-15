@@ -1,30 +1,27 @@
 import { useQuery } from '@apollo/client';
-import { Edit } from '@mui/icons-material';
-import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
-import { useInterval } from 'ahooks';
-import { DateTime } from 'luxon';
-import { useState } from 'react';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Box, Skeleton, Stack, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
-import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
-import { canEditAny, labelFrom, labelsFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
+import { Error } from '~/components/Error';
+import { Redacted } from '~/components/Redacted';
+import { Tab, TabsContainer } from '~/components/Tabs';
+import { TogglePinButton } from '~/components/TogglePinButton';
 import { UserPhoto } from '~/components/UserPhoto';
+import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
-import { useDialog } from '../../../components/Dialog';
-import {
-  DisplaySimpleProperty,
-  DisplaySimplePropertyProps,
-} from '../../../components/DisplaySimpleProperty';
-import { IconButton } from '../../../components/IconButton';
-import { PartnerListItemCard } from '../../../components/PartnerListItemCard';
-import { Redacted } from '../../../components/Redacted';
-import { TogglePinButton } from '../../../components/TogglePinButton';
-import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.graphql';
 import { ImpersonationToggle } from './ImpersonationToggle';
+import { UserDetailPartners } from './Tabs/Partners/UserDetailPartners';
+import { UserDetailProfile } from './Tabs/Profile/UserDetailProfile';
+import { UserDetailProjects } from './Tabs/Projects/UserDetailProjects';
 import { UserDocument } from './UserDetail.graphql';
+
+const useUserDetailsFilters = makeQueryHandler({
+  tab: withDefault(EnumParam(['profile', 'projects', 'partners']), 'profile'),
+});
 
 export const UserDetail = () => {
   const { userId = '' } = useParams();
@@ -32,12 +29,8 @@ export const UserDetail = () => {
     variables: { userId },
   });
   useComments(userId);
-
-  const [editUserState, editUser] = useDialog();
-
+  const [filters, setFilters] = useUserDetailsFilters();
   const user = data?.user;
-
-  const canEditAnyFields = canEditAny(user);
 
   return (
     <Stack
@@ -46,17 +39,22 @@ export const UserDetail = () => {
         overflowY: 'auto',
         p: 4,
         gap: 3,
-        maxWidth: (theme) => theme.breakpoints.values.md,
+        flex: 1,
+        maxWidth: (theme) => theme.breakpoints.values.xl,
       }}
     >
       <Helmet title={user?.fullName ?? undefined} />
-      {error ? (
-        <Typography variant="h4">Error loading person</Typography>
-      ) : (
+
+      <Error error={error}>
+        {{
+          NotFound: 'Could not find user',
+          Default: 'Error loading user',
+        }}
+      </Error>
+      {!error && (
         <>
           <Box
             sx={{
-              flex: 1,
               display: 'flex',
               gap: 1,
             }}
@@ -64,8 +62,8 @@ export const UserDetail = () => {
             <Typography
               variant="h2"
               sx={{
-                mr: 2, // a little extra between text and buttons
-                lineHeight: 'inherit', // centers text with buttons better
+                mr: 2,
+                lineHeight: 'inherit',
               }}
             >
               {!user ? (
@@ -79,13 +77,6 @@ export const UserDetail = () => {
                 )
               )}
             </Typography>
-            {canEditAnyFields ? (
-              <Tooltip title="Edit Person">
-                <IconButton aria-label="edit person" onClick={editUser}>
-                  <Edit />
-                </IconButton>
-              </Tooltip>
-            ) : null}
             <TogglePinButton
               object={user}
               label="Person"
@@ -97,113 +88,37 @@ export const UserDetail = () => {
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
           </Box>
-          {user && <UserPhoto user={user} sx={{ alignSelf: 'start' }} />}
-          <DisplayProperty
-            label="Status"
-            value={user?.status.value}
-            loading={!user}
-          />
-          <DisplayProperty
-            label="Gender"
-            value={labelFrom(GenderLabels)(user?.gender.value)}
-            loading={!user}
-          />
-          <DisplayProperty
-            label="Email"
-            value={user?.email.value}
-            loading={!user}
-          />
-          <DisplayProperty
-            label="Title"
-            value={user?.title.value}
-            loading={!user}
-          />
-          <DisplayProperty
-            label="Roles"
-            value={labelsFrom(RoleLabels)(user?.roles.value)}
-            loading={!user}
-          />
-          <DisplayProperty
-            label="Local Time"
-            value={
-              user?.timezone.value?.name ? (
-                <LocalTime timezone={user.timezone.value.name} />
-              ) : null
-            }
-            loading={!user}
-          />
-          <DisplayProperty
-            label="Phone"
-            value={user?.phone.value}
-            loading={!user}
-          />
-          <DisplayProperty
-            label="About"
-            value={user?.about.value}
-            loading={!user}
-          />
-          {user ? <EditUser user={user} {...editUserState} /> : null}
 
-          {!!user?.partners.items.length && (
-            <>
-              <Typography variant="h3">Partners</Typography>
-              <Stack sx={{ mt: 1, gap: 2 }}>
-                {user.partners.items.map((item) => (
-                  <PartnerListItemCard key={item.id} partner={item} />
-                ))}
-              </Stack>
-            </>
-          )}
+          {user && <UserPhoto user={user} sx={{ alignSelf: 'start' }} />}
+
+          <TabsContainer>
+            <TabContext value={filters.tab}>
+              <TabList
+                onChange={(_e, tab) => setFilters({ ...filters, tab })}
+                aria-label="user navigation tabs"
+                variant="scrollable"
+              >
+                <Tab label="Profile" value="profile" />
+                <Tab label="Projects" value="projects" />
+                {!!user?.partners.items.length && (
+                  <Tab label="Partners" value="partners" />
+                )}
+              </TabList>
+              <TabPanel value="profile">
+                {user && <UserDetailProfile user={user} />}
+              </TabPanel>
+              <TabPanel value="projects">
+                <UserDetailProjects />
+              </TabPanel>
+              {!!user?.partners.items.length && (
+                <TabPanel value="partners">
+                  <UserDetailPartners />
+                </TabPanel>
+              )}
+            </TabContext>
+          </TabsContainer>
         </>
       )}
     </Stack>
   );
 };
-
-const LocalTime = ({ timezone }: { timezone?: string }) => {
-  const now = useNow();
-  const formatted = now.toLocaleString({
-    timeZone: timezone,
-    ...DateTime.TIME_SIMPLE,
-    timeZoneName: 'short',
-  });
-  return <>{formatted}</>;
-};
-
-const useNow = (updateInterval = 1_000) => {
-  const [now, setNow] = useState(() => DateTime.local());
-  useInterval(() => {
-    setNow(DateTime.local());
-  }, updateInterval);
-  return now;
-};
-
-const DisplayProperty = (props: DisplaySimplePropertyProps) =>
-  !props.value && !props.loading ? null : (
-    <DisplaySimpleProperty
-      variant="body1"
-      {...{ component: 'div' }}
-      {...props}
-      loading={
-        props.loading ? (
-          <>
-            <Typography variant="body2">
-              <Skeleton width="10%" />
-            </Typography>
-            <Typography variant="body1">
-              <Skeleton width="40%" />
-            </Typography>
-          </>
-        ) : null
-      }
-      LabelProps={{
-        color: 'textSecondary',
-        variant: 'body2',
-        ...props.LabelProps,
-      }}
-      ValueProps={{
-        color: 'textPrimary',
-        ...props.ValueProps,
-      }}
-    />
-  );
