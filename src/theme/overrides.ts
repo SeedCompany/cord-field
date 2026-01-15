@@ -176,6 +176,15 @@ export const appComponents = ({
           '.MuiDataGrid-cell:has(svg:only-child, .MuiButtonBase-root:only-child)':
             { userSelect: 'all' },
 
+          // Cell error styling
+          '& .cell-invalid': {
+            paddingRight: '10px',
+            backgroundColor: fade(palette.error.light, 0.4),
+            '&:hover': {
+              backgroundColor: fade(palette.error.light, 0.8),
+            },
+          },
+
           // '--DataGrid-containerBackground': theme.palette.background.paper,
         },
         columnHeaderTitle: {
