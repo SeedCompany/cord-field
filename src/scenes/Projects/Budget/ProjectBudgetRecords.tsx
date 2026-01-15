@@ -14,6 +14,10 @@ import { ComponentType, useMemo } from 'react';
 import { onUpdateChangeFragment, readFragment } from '~/api';
 import { IdFragment, SecuredProp } from '~/common';
 import { RecalculateChangesetDiffFragmentDoc as RecalculateChangesetDiff } from '~/common/fragments';
+import {
+  useFeatureEnabled,
+  VisibilityAndClickTracker,
+} from '~/components/Feature';
 import { useCurrencyFormatter } from '~/components/Formatters/useCurrencyFormatter';
 import {
   changesetGridSlots,
@@ -53,6 +57,8 @@ const setSecuredValue =
 
 export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
   const { loading, budget } = props;
+  const approvedColumnEnabled = useFeatureEnabled('budgetApprovedColumn');
+
   const [updateBudgetRecord, { client: apollo }] = useMutation(UpdateRecord, {
     update: onUpdateChangeFragment({
       object: budget?.value ?? undefined,
@@ -148,7 +154,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       ...useCurrencyColumn(),
       valueGetter: getSecuredValue,
       valueSetter: setSecuredValue('amount'),
-      editable: budget?.value?.status !== 'Pending',
+      editable: true,
       changesetAware: true,
       cellClassName: (params) => {
         const amount = params.row.amount.value;
@@ -187,6 +193,18 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       },
     },
   ];
+
+  const visibleColumns = columns.filter((column) => {
+    if (column.field === 'initialAmount') {
+      return approvedColumnEnabled && budget?.value?.status !== 'Pending';
+    }
+
+    if (column.field === 'preApprovedAmount') {
+      return approvedColumnEnabled;
+    }
+
+    return true;
+  });
 
   const handleRowSave = async (record: BudgetRecord, prev: BudgetRecord) => {
     // Check if either amount or preApprovedAmount has changed
@@ -248,13 +266,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
                   changeset: cachedChangeset,
                   amount: {
                     __typename: 'SecuredFloatNullable',
-                    value:
-                      initialAmountChanged &&
-                      budget?.value?.status === 'Pending'
-                        ? newInitialAmount
-                        : amountChanged
-                        ? newAmount
-                        : record.amount.value,
+                    value: amountChanged ? newAmount : record.amount.value,
                   },
                   preApprovedAmount: {
                     __typename: 'SecuredFloatNullable',
@@ -273,56 +285,47 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
             },
     });
 
-    return {
-      ...record,
-      amount: {
-        ...record.amount,
-        value:
-          initialAmountChanged && budget?.value?.status === 'Pending'
-            ? newInitialAmount
-            : amountChanged
-            ? newAmount
-            : record.amount.value,
-      },
-    };
+    return record;
   };
 
   return (
     <Card>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        loading={loading}
-        slots={{
-          ...changesetGridSlots,
-          cell: withEditTooltip(changesetGridSlots.cell),
-        }}
-        initialState={{
-          sorting: { sortModel: [{ field: 'fiscalYear', sort: 'asc' }] },
-        }}
-        localeText={{
-          noRowsLabel:
-            'Project does not have a date range or funding partnerships',
-        }}
-        autoHeight
-        disableColumnMenu
-        hideFooter
-        rowSelection={false}
-        sx={{
-          '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
-            {
-              display: 'none',
-            },
-        }}
-        isCellEditable={({ row: record, field }) => {
-          if (field === 'amount') return record.amount.canEdit;
-          if (field === 'preApprovedAmount')
-            return record.preApprovedAmount.canEdit;
-          if (field === 'initialAmount') return record.initialAmount.canEdit;
-          return false;
-        }}
-        processRowUpdate={handleRowSave}
-      />
+      <VisibilityAndClickTracker flag="budgetApprovedColumn" trackInteraction>
+        <DataGrid
+          rows={rows}
+          columns={visibleColumns}
+          loading={loading}
+          slots={{
+            ...changesetGridSlots,
+            cell: withEditTooltip(changesetGridSlots.cell),
+          }}
+          initialState={{
+            sorting: { sortModel: [{ field: 'fiscalYear', sort: 'asc' }] },
+          }}
+          localeText={{
+            noRowsLabel:
+              'Project does not have a date range or funding partnerships',
+          }}
+          autoHeight
+          disableColumnMenu
+          hideFooter
+          rowSelection={false}
+          sx={{
+            '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
+              {
+                display: 'none',
+              },
+          }}
+          isCellEditable={({ row: record, field }) => {
+            if (field === 'amount') return record.amount.canEdit;
+            if (field === 'preApprovedAmount')
+              return record.preApprovedAmount.canEdit;
+            if (field === 'initialAmount') return record.initialAmount.canEdit;
+            return false;
+          }}
+          processRowUpdate={handleRowSave}
+        />
+      </VisibilityAndClickTracker>
     </Card>
   );
 };
