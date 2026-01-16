@@ -1,4 +1,4 @@
-mutation UpdateInternshipEngagement($input: UpdateInternshipEngagementInput!) {
+mutation UpdateInternshipEngagement($input: UpdateInternshipEngagement!) {
   updateInternshipEngagement(input: $input) {
     engagement {
       ...InternshipEngagementDetail
@@ -7,7 +7,7 @@ mutation UpdateInternshipEngagement($input: UpdateInternshipEngagementInput!) {
   }
 }
 
-mutation UpdateLanguageEngagement($input: UpdateLanguageEngagementInput!) {
+mutation UpdateLanguageEngagement($input: UpdateLanguageEngagement!) {
   updateLanguageEngagement(input: $input) {
     engagement {
       ...LanguageEngagementDetail

@@ -1,4 +1,4 @@
-import { CreateFundingAccountInput } from '~/api/schema.graphql';
+import { CreateFundingAccount as CreateFundingAccountInput } from '~/api/schema.graphql';
 import { LookupField } from '../..';
 import { CreateFundingAccount } from '../../../../scenes/Locations/LocationForm/FundingAccount/CreateFundingAccount';
 import {
@@ -24,10 +24,5 @@ export const FundingAccountField = LookupField.createFor<
   label: 'Funding Account',
   placeholder: 'Search for a funding account by name',
   CreateDialogForm: CreateFundingAccount,
-  // @ts-expect-error don't need to pass through entire initialValues
-  getInitialValues: (val) => ({
-    fundingAccount: {
-      name: val,
-    },
-  }),
+  getInitialValues: (name) => ({ name }),
 });

@@ -171,15 +171,13 @@ const fieldMapping: Record<
   webId: ({ props }) => <TextField {...props} label="Web ID" />,
 };
 
-interface EngagementFormValues {
-  engagement: Merge<
-    UpdateLanguageEngagement & UpdateInternshipEngagement,
-    {
-      mentor?: UserLookupItemFragment | null;
-      countryOfOrigin?: DisplayLocationFragment | null;
-    }
-  >;
-}
+type EngagementFormValues = Merge<
+  UpdateLanguageEngagement & UpdateInternshipEngagement,
+  {
+    mentor?: UserLookupItemFragment | null;
+    countryOfOrigin?: DisplayLocationFragment | null;
+  }
+>;
 
 export type EditEngagementDialogProps = Except<
   DialogFormProps<EngagementFormValues>,
@@ -215,10 +213,7 @@ export const EditEngagementDialog = ({
   );
 
   const initialValues = useMemo(() => {
-    const fullInitialValuesFields: Except<
-      EngagementFormValues['engagement'],
-      'id'
-    > = {
+    const fullInitialValuesFields: Except<EngagementFormValues, 'id'> = {
       startDateOverride: engagement.dateRangeOverride.value.start,
       endDateOverride: engagement.dateRangeOverride.value.end,
       completeDate: engagement.completeDate.value,
@@ -253,10 +248,8 @@ export const EditEngagementDialog = ({
     );
 
     return {
-      engagement: {
-        id: engagement.id,
-        ...filteredInitialValuesFields,
-      },
+      id: engagement.id,
+      ...filteredInitialValuesFields,
     };
   }, [editFields, engagement]);
 
@@ -272,16 +265,14 @@ export const EditEngagementDialog = ({
       {...props}
       initialValues={initialValues}
       validate={(values) => {
-        const start = asDate(values.engagement.startDateOverride);
-        const end = asDate(values.engagement.endDateOverride);
+        const start = asDate(values.startDateOverride);
+        const end = asDate(values.endDateOverride);
 
         if (start && end) {
           if (start > end) {
             return {
-              engagement: {
-                startDateOverride: 'Start date should come before end date',
-                endDateOverride: 'End date should come after start date',
-              },
+              startDateOverride: 'Start date should come before end date',
+              endDateOverride: 'End date should come after start date',
             };
           }
           return undefined;
@@ -293,9 +284,7 @@ export const EditEngagementDialog = ({
           start > asDate(engagement.dateRange.value.end)
         ) {
           return {
-            engagement: {
-              startDateOverride: `Start date should come before project's end date`,
-            },
+            startDateOverride: `Start date should come before project's end date`,
           };
         }
 
@@ -305,21 +294,17 @@ export const EditEngagementDialog = ({
           end < asDate(engagement.dateRange.value.start)
         ) {
           return {
-            engagement: {
-              endDateOverride: `End date should come after project's start date`,
-            },
+            endDateOverride: `End date should come after project's start date`,
           };
         }
       }}
-      onSubmit={async ({ engagement: values }, form) => {
+      onSubmit={async (values, form) => {
         await updateEngagement({
           variables: {
             input: {
-              engagement: {
-                ...values,
-                mentor: getLookupId(values.mentor),
-                countryOfOrigin: getLookupId(values.countryOfOrigin),
-              },
+              ...values,
+              mentor: getLookupId(values.mentor),
+              countryOfOrigin: getLookupId(values.countryOfOrigin),
               changeset: engagement.changeset?.id,
             },
           },
@@ -328,15 +313,12 @@ export const EditEngagementDialog = ({
               const dirty = form.getState().dirtyFields;
 
               // Invalidate progress reports if engagement date range changes
-              if (
-                'engagement.startDateOverride' in dirty ||
-                'engagement.endDateOverride' in dirty
-              ) {
+              if ('startDateOverride' in dirty || 'endDateOverride' in dirty) {
                 invalidateProps(cache, engagement, 'progressReports');
               }
 
               const language = engagement.language.value;
-              if (language && 'engagement.firstScripture' in dirty) {
+              if (language && 'firstScripture' in dirty) {
                 invalidateProps(cache, language, 'firstScripture');
               }
             }
@@ -345,15 +327,14 @@ export const EditEngagementDialog = ({
       }}
       errorHandlers={{
         Input: (e, next) =>
-          e.field === 'languageEngagement.firstScripture'
+          e.field === 'firstScripture'
             ? setIn(
                 {},
-                'engagement.firstScripture',
+                'firstScripture',
                 'Language has already has first Scripture'
               )
             : next(e),
       }}
-      fieldsPrefix="engagement"
     >
       <SubmitError />
       {fields}

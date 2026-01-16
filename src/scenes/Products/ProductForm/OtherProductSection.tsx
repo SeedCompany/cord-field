@@ -6,7 +6,7 @@ export const OtherProductSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  if (!values.product || values.product.productType !== 'Other') {
+  if (values.productType !== 'Other') {
     return null;
   }
 

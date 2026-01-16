@@ -1,4 +1,4 @@
-mutation CreateProjectDirectory($input: CreateDirectoryInput!) {
+mutation CreateProjectDirectory($input: CreateDirectory!) {
   createDirectory(input: $input) {
     id
     name

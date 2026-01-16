@@ -11,7 +11,7 @@ export const MediumsSection = ({ values, accordionState }: SectionProps) => (
     title="Distribution Methods"
     name="mediums"
     renderCollapsed={() =>
-      values.product?.mediums?.map((medium) => (
+      values.mediums?.map((medium) => (
         <ToggleButton selected key={medium} value={medium}>
           {ProductMediumLabels[medium]}
         </ToggleButton>

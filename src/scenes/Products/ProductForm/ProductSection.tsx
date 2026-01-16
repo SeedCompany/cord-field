@@ -36,14 +36,13 @@ export const ProductSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const { productType, produces } = values.product ?? {};
+  const { productType, produces } = values;
 
   useEffect(() => {
     if (!produces?.__typename) {
       return;
     } else if (productType !== produces.__typename) {
-      // @ts-expect-error yes, the field exists.
-      form.change('product.produces', null);
+      form.change('produces', undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productType]);
@@ -56,10 +55,7 @@ export const ProductSection = ({
     return null;
   }
 
-  const isProducesFieldMissing =
-    !produces &&
-    (touched?.['product.produces'] !== undefined ||
-      !touched?.['product.produces']);
+  const isProducesFieldMissing = !produces && !touched?.produces;
 
   return (
     <SecuredAccordion

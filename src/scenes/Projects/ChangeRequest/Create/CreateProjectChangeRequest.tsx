@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
 import {
-  CreateProjectChangeRequestInput,
+  CreateProjectChangeRequest as CreateProjectChangeRequestInput,
   ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
 } from '~/api/schema.graphql';
@@ -46,15 +46,12 @@ export const CreateProjectChangeRequest = ({
     <DialogForm
       {...props}
       title="Create Change Request"
-      fieldsPrefix="projectChangeRequest"
-      onSubmit={async ({ projectChangeRequest: input }) => {
+      onSubmit={async (input) => {
         const { data } = await createChangeRequest({
           variables: {
             input: {
-              projectChangeRequest: {
-                ...input,
-                project: project.id,
-              },
+              ...input,
+              project: project.id,
             },
           },
         });

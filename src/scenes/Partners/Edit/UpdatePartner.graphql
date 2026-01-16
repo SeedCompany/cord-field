@@ -2,7 +2,7 @@ mutation UpdatePartner(
   $partner: UpdatePartner!
   $organization: UpdateOrganization!
 ) {
-  updatePartner(input: { partner: $partner }) {
+  updatePartner(input: $partner) {
     partner {
       # Organization data cannot be fetched here as it will be stale.
       #
@@ -20,7 +20,7 @@ mutation UpdatePartner(
       ...partnerOwnDetails
     }
   }
-  updateOrganization(input: { organization: $organization }) {
+  updateOrganization(input: $organization) {
     organization {
       ...organizationDetails
     }

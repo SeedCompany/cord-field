@@ -21,9 +21,7 @@ fragment ExplanationOfProgressStep on ProgressReport {
   }
 }
 
-mutation ExplainProgressVariance(
-  $input: ProgressReportVarianceExplanationInput!
-) {
+mutation ExplainProgressVariance($input: ExplainProgressVariance!) {
   explainProgressVariance(input: $input) {
     ...ExplanationOfProgressStep
   }

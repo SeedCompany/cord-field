@@ -83,14 +83,12 @@ export const CreateProduct = () => {
 
   const initialValues = useMemo(() => {
     const values: ProductFormValues = {
-      product: {
-        title: '',
-        bookSelection: 'full',
-        producingMediums: mapEntries(
-          engagement?.partnershipsProducingMediums.items ?? [],
-          (pair) => [pair.medium, pair.partnership ?? undefined]
-        ).asRecord,
-      },
+      title: '',
+      bookSelection: 'full',
+      producingMediums: mapEntries(
+        engagement?.partnershipsProducingMediums.items ?? [],
+        (pair) => [pair.medium, pair.partnership ?? undefined]
+      ).asRecord,
     };
     return values;
   }, [engagement]);
@@ -113,7 +111,7 @@ export const CreateProduct = () => {
         description,
         producingMediums,
         ...inputs
-      } = submitted.product ?? {};
+      } = submitted;
 
       const parsedScriptureReferences =
         bookSelection === 'full' && book
@@ -170,14 +168,14 @@ export const CreateProduct = () => {
       if (
         !engagement ||
         !Object.keys(dirtyFields).some((field) =>
-          field.startsWith('product.producingMediums.')
+          field.startsWith('producingMediums.')
         )
       ) {
         // No producing partnerships have changed, API call not needed.
         return;
       }
 
-      const ppmInput = entries(submitted.product?.producingMediums ?? {}).map(
+      const ppmInput = entries(submitted.producingMediums ?? {}).map(
         ([medium, partnership]) => ({
           medium: medium,
           partnership: partnership?.id,

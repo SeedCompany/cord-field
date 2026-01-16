@@ -1,5 +1,5 @@
 mutation UpdateLanguageEngagementGrid($input: UpdateLanguageEngagement!) {
-  updateLanguageEngagement(input: { engagement: $input }) {
+  updateLanguageEngagement(input: $input) {
     engagement {
       ...engagementDataGridRow
     }

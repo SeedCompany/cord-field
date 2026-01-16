@@ -35,11 +35,12 @@ import { LanguageFormFragment } from './LangugeForm.graphql';
 
 type LanguageMutation = UpdateLanguage | CreateLanguage;
 
-export interface LanguageFormValues<Mutation extends LanguageMutation> {
-  language: Except<Mutation, 'sponsorEstimatedEndDate'> & {
-    sponsorEstimatedEndFY?: Nullable<number>;
-  };
-}
+export type LanguageFormValues<Mutation extends LanguageMutation> = Except<
+  Mutation,
+  'sponsorEstimatedEndDate'
+> & {
+  sponsorEstimatedEndFY?: Nullable<number>;
+};
 
 export type LanguageFormProps<Mutation extends LanguageMutation> =
   DialogFormProps<LanguageFormValues<Mutation>, LanguageListItemFragment> & {
@@ -55,7 +56,7 @@ const useStyles = makeStyles()(() => ({
 
 const decorators = [
   ...DialogForm.defaultDecorators,
-  matchFieldIfSame(`language.name`, `language.displayName`),
+  matchFieldIfSame('name', 'displayName'),
 ];
 
 export const LanguageForm = <Mutation extends LanguageMutation>({
@@ -80,10 +81,9 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
       }}
       {...rest}
       decorators={decorators}
-      fieldsPrefix="language"
       errorHandlers={{
         Input: (e, next, util) =>
-          e.field === 'language.hasExternalFirstScripture'
+          e.field === 'hasExternalFirstScripture'
             ? setIn(
                 {},
                 e.field,
@@ -240,7 +240,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                           {...props}
                           label="Sign Language Code"
                           placeholder="Enter Sign Language Code"
-                          disabled={!values.language?.isSignLanguage}
+                          disabled={!values.isSignLanguage}
                         />
                       </Grid>
                     )}

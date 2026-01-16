@@ -29,18 +29,16 @@ import {
 } from '../../../components/form/Lookup/FundingAccount';
 import { LocationFormFragment } from './LocationForm.graphql';
 
-export interface LocationFormValues<
+export type LocationFormValues<
   CreateOrUpdateType extends CreateLocation | UpdateLocation
-> {
-  location: Merge<
-    CreateOrUpdateType,
-    {
-      defaultFieldRegion?: FieldRegionLookupItem | null;
-      fundingAccount?: FundingAccountLookupItem | null;
-      mapImage?: File[];
-    }
-  >;
-}
+> = Merge<
+  CreateOrUpdateType,
+  {
+    defaultFieldRegion?: FieldRegionLookupItem | null;
+    fundingAccount?: FundingAccountLookupItem | null;
+    mapImage?: File[];
+  }
+>;
 
 export type LocationFormProps<CreateOrUpdateInput, R = void> = DialogFormProps<
   CreateOrUpdateInput,
@@ -57,7 +55,6 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
     DialogProps={{
       maxWidth: 'sm',
     }}
-    fieldsPrefix="location"
     {...rest}
   >
     <SubmitError />

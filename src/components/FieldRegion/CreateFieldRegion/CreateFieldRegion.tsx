@@ -1,9 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import {
-  CreateFieldRegionInput,
-  type CreateFieldRegion as CreateFieldRegionType,
-} from '~/api/schema.graphql';
+import { type CreateFieldRegion as CreateFieldRegionType } from '~/api/schema.graphql';
 import { DisplayFieldRegionFragment } from '~/common';
 import {
   FieldRegionForm,
@@ -26,12 +23,10 @@ export const CreateFieldRegion = (props: CreateFieldRegionProps) => {
       {...props}
       title="Create Field Region"
       onSubmit={async (values) => {
-        const input: CreateFieldRegionInput = {
-          fieldRegion: {
-            name: values.fieldRegion.name,
-            fieldZone: values.fieldRegion.fieldZone!.id,
-            director: values.fieldRegion.director!.id,
-          },
+        const input: CreateFieldRegionType = {
+          name: values.name,
+          fieldZone: values.fieldZone!.id,
+          director: values.director!.id,
         };
 
         const { data } = await createFieldRegion({

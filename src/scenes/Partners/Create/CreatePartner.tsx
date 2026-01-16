@@ -44,9 +44,7 @@ export const CreatePartner = (props: CreatePartnerProps) => {
         const { data } = await createPartner({
           variables: {
             input: {
-              partner: {
-                organization,
-              },
+              organization,
             },
           },
         });

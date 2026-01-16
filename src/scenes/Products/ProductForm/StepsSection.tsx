@@ -13,7 +13,7 @@ export const StepsSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const { methodology, steps, productType } = values.product ?? {};
+  const { methodology, steps, productType } = values;
 
   const { data, previousData } = useQuery(AvailableSteps, {
     variables: {
@@ -25,12 +25,10 @@ export const StepsSection = ({
   const prevSteps = previousData?.availableProductSteps;
   useEffect(() => {
     // When available steps changes, remove all currently selected steps that are now unavailable and set all available steps
-    // @ts-expect-error yes, the field exists.
-    form.change('product.steps', availableSteps);
+    form.change('steps', availableSteps);
     // All goal steps are selected when editing a goal
     if (!prevSteps) {
-      // @ts-expect-error yes, the field exists.
-      form.change('product.steps', steps);
+      form.change('steps', steps);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only when steps change
   }, [availableSteps]);

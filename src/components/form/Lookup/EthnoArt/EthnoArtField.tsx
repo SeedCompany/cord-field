@@ -1,4 +1,4 @@
-import { CreateEthnoArtInput } from '~/api/schema.graphql';
+import { CreateEthnoArt as CreateEthnoArtInput } from '~/api/schema.graphql';
 import { LookupField } from '../..';
 import { CreateEthnoArt } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/EthnoArt/CreateEthnoArt';
 import {
@@ -15,9 +15,5 @@ export const EthnoArtField = LookupField.createFor<
   label: 'EthnoArt',
   placeholder: 'Search for an EthnoArt by name',
   CreateDialogForm: CreateEthnoArt,
-  getInitialValues: (value) => ({
-    ethnoArt: {
-      name: value,
-    },
-  }),
+  getInitialValues: (name) => ({ name }),
 });

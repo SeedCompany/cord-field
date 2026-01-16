@@ -10,15 +10,13 @@ import { FieldRegionFormFragment } from './FieldRegionForm.graphql';
 
 type FieldRegionMutation = UpdateFieldRegion | CreateFieldRegion;
 
-export interface FieldRegionFormValues<Mutation extends FieldRegionMutation> {
-  fieldRegion: Merge<
-    Mutation,
-    {
-      fieldZone: DisplayFieldZoneFragment | null;
-      director: UserLookupItemFragment | null;
-    }
-  >;
-}
+export type FieldRegionFormValues<Mutation extends FieldRegionMutation> = Merge<
+  Mutation,
+  {
+    fieldZone: DisplayFieldZoneFragment | null;
+    director: UserLookupItemFragment | null;
+  }
+>;
 
 export type FieldRegionFormProps<
   Mutation extends FieldRegionMutation,
@@ -31,7 +29,7 @@ export const FieldRegionForm = <Mutation extends FieldRegionMutation, R>({
   fieldRegion,
   ...rest
 }: FieldRegionFormProps<Mutation, R>) => (
-  <DialogForm {...rest} fieldsPrefix="fieldRegion">
+  <DialogForm {...rest}>
     <SubmitError />
     <SecuredField obj={fieldRegion} name="name">
       {(props) => (

@@ -1,4 +1,4 @@
-mutation UpdateComment($input: UpdateCommentInput!) {
+mutation UpdateComment($input: UpdateComment!) {
   updateComment(input: $input) {
     comment {
       ...comment

@@ -1,4 +1,4 @@
-mutation createLanguageEngagement($input: CreateLanguageEngagementInput!) {
+mutation createLanguageEngagement($input: CreateLanguageEngagement!) {
   createLanguageEngagement(input: $input) {
     engagement {
       ...LanguageEngagementListItem

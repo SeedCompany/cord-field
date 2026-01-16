@@ -29,8 +29,8 @@ export const PartnershipProducingMediumsSection = ({
       name="mediums"
       renderCollapsed={() => (
         <List disablePadding>
-          {values.product?.mediums
-            ?.filter((medium) => values.product?.producingMediums?.[medium])
+          {values.mediums
+            ?.filter((medium) => values.producingMediums?.[medium])
             .map((medium) => (
               <ListItem key={medium}>
                 <Typography>{ProductMediumLabels[medium]}</Typography>
@@ -39,7 +39,7 @@ export const PartnershipProducingMediumsSection = ({
                 </Typography>
                 <Typography>
                   {
-                    values.product!.producingMediums![medium]!.partner.value
+                    values.producingMediums![medium]!.partner.value
                       ?.organization.value?.name.value
                   }
                 </Typography>
@@ -56,7 +56,7 @@ export const PartnershipProducingMediumsSection = ({
             Note that these are <b>shared</b> across all goals for the
             engagement
           </Typography>
-          {values.product?.mediums?.map((medium) => (
+          {values.mediums?.map((medium) => (
             <AutocompleteField
               key={medium}
               name={`producingMediums.${medium}`}

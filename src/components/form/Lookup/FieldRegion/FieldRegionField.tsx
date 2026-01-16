@@ -10,10 +10,5 @@ export const FieldRegionField = LookupField.createFor({
   label: 'Field Region',
   placeholder: 'Search for a field region by name',
   CreateDialogForm: CreateFieldRegion,
-  // @ts-expect-error don't need to pass through entire initialValues
-  getInitialValues: (val) => ({
-    fieldRegion: {
-      name: val,
-    },
-  }),
+  getInitialValues: (name) => ({ name }),
 });

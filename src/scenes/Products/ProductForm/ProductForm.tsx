@@ -37,8 +37,8 @@ const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
 // eslint-disable-next-line @typescript-eslint/no-empty-interface -- Declaration merging is used to define fields in each section
 export interface ProductFormCustomValues {}
 
-export interface ProductFormValues extends SubmitAction<'delete'> {
-  product?: Merge<
+export type ProductFormValues = SubmitAction<'delete'> &
+  Merge<
     Except<
       CreateDirectScriptureProduct &
         UpdateDirectScriptureProduct &
@@ -50,7 +50,6 @@ export interface ProductFormValues extends SubmitAction<'delete'> {
     >,
     ProductFormCustomValues
   >;
-}
 
 export type ProductFormProps = FormProps<ProductFormValues> & {
   product?: ProductFormFragment;
@@ -59,14 +58,14 @@ export type ProductFormProps = FormProps<ProductFormValues> & {
 
 const decorators: Array<Decorator<ProductFormValues>> = [
   onFieldChange({
-    field: 'product.productType',
+    field: 'productType',
     updates: {
-      'product.progressStepMeasurement': (
+      progressStepMeasurement: (
         productType: ProductTypes,
-        { product }
+        product
       ): ProgressMeasurement | undefined => {
         if (productType === 'Other') {
-          return product?.progressStepMeasurement ?? undefined;
+          return product.progressStepMeasurement ?? undefined;
         }
         if (productType === 'EthnoArt') {
           return 'Number';
@@ -76,26 +75,22 @@ const decorators: Array<Decorator<ProductFormValues>> = [
     },
   }),
   onFieldChange({
-    field: 'product.book',
+    field: 'book',
     updates: (book, field, allValues, prevValues) =>
       // Clear scripture if book is cleared or a different book is selected
-      !(book && !prevValues?.product?.book)
+      !(book && !prevValues?.book)
         ? {
-            'product.bookSelection': 'full',
-            'product.scriptureReferences': null,
-            'product.unspecifiedScripture': null,
+            bookSelection: 'full',
+            scriptureReferences: null,
+            unspecifiedScripture: null,
           }
         : {},
   }),
   onFieldChange({
-    field: 'product.bookSelection',
+    field: 'bookSelection',
     updates: (selection) => ({
-      ...(selection !== 'partialKnown'
-        ? { 'product.scriptureReferences': null }
-        : {}),
-      ...(selection !== 'partialUnknown'
-        ? { 'product.unspecifiedScripture': null }
-        : {}),
+      ...(selection !== 'partialKnown' ? { scriptureReferences: null } : {}),
+      ...(selection !== 'partialUnknown' ? { unspecifiedScripture: null } : {}),
     }),
   }),
 ];

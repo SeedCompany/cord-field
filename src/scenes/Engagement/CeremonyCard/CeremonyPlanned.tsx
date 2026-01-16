@@ -72,7 +72,7 @@ export const CeremonyPlanned = ({
           ...ceremony!,
           planned: {
             ...ceremony!.planned,
-            value: input.ceremony.planned!,
+            value: input.planned!,
           },
         },
       },
@@ -86,10 +86,8 @@ export const CeremonyPlanned = ({
     void updateCeremony({
       variables: {
         input: {
-          ceremony: {
-            id: ceremony.id,
-            planned,
-          },
+          id: ceremony.id,
+          planned,
         },
       },
     });

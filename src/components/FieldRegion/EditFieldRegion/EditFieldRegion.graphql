@@ -1,4 +1,4 @@
-mutation UpdateFieldRegion($input: UpdateFieldRegionInput!) {
+mutation UpdateFieldRegion($input: UpdateFieldRegion!) {
   updateFieldRegion(input: $input) {
     fieldRegion {
       ...FieldRegionForm

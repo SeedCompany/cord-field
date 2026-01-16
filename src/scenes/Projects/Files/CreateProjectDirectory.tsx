@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateDirectoryInput } from '~/api/schema.graphql';
+import { CreateDirectory } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -13,7 +13,7 @@ import { useProjectId } from '../useProjectId';
 import { CreateProjectDirectoryDocument } from './CreateProjectDirectory.graphql';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
-export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectoryInput>;
+export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectory>;
 
 export const CreateProjectDirectory = (
   props: Except<CreateProjectDirectoryProps, 'onSubmit'>

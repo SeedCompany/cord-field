@@ -1,7 +1,7 @@
 import { FormApi, FormState } from 'final-form';
 import { ComponentType, useState } from 'react';
 import { Except, Merge } from 'type-fest';
-import { FieldGroup, SecuredEditableKeys } from '../../../components/form';
+import { SecuredEditableKeys } from '../../../components/form';
 import { CompletionSection } from './CompletionSection';
 import { GoalsSection } from './GoalsSection';
 import { MediumsSection } from './MediumsSection';
@@ -59,22 +59,18 @@ export const ProductFormFields = ({
     product ? undefined : 'produces'
   );
 
-  return (
-    <FieldGroup prefix="product">
-      {sections.map((Section) => (
-        <Section
-          key={Section.name}
-          {...props}
-          product={product}
-          engagement={engagement}
-          accordionState={{
-            product,
-            openedSection,
-            onOpen,
-            ...props,
-          }}
-        />
-      ))}
-    </FieldGroup>
-  );
+  return sections.map((Section) => (
+    <Section
+      key={Section.name}
+      {...props}
+      product={product}
+      engagement={engagement}
+      accordionState={{
+        product,
+        openedSection,
+        onOpen,
+        ...props,
+      }}
+    />
+  ));
 };

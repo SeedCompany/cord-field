@@ -1,4 +1,4 @@
-mutation CreateLocation($input: CreateLocationInput!) {
+mutation CreateLocation($input: CreateLocation!) {
   createLocation(input: $input) {
     location {
       ...LocationDetail
