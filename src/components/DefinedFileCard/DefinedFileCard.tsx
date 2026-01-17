@@ -16,7 +16,7 @@ import {
 import { DateTime } from 'luxon';
 import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CreateDefinedFileVersionInput } from '~/api/schema.graphql';
+import { CreateDefinedFileVersion } from '~/api/schema.graphql';
 import { extendSx, SecuredProp, StyleProps } from '~/common';
 import {
   FileActionsPopup as ActionsMenu,
@@ -38,7 +38,7 @@ export interface DefinedFileCardProps extends StyleProps {
   securedFile: SecuredProp<FileNode>;
   uploadMutationDocument: DocumentNode<
     unknown,
-    { id: string; upload: CreateDefinedFileVersionInput }
+    { id: string; upload: CreateDefinedFileVersion }
   >;
   parentId: string;
   disableIcon?: boolean;

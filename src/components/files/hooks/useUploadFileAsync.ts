@@ -1,8 +1,8 @@
-import { CreateFileVersionInput } from '~/api/schema/schema.graphql';
+import { CreateFileVersion } from '~/api/schema/schema.graphql';
 import { defer, Deferred } from '../../../common/defer';
 import { useUpload as useUploadContext } from '../../../components/Upload';
 
-type UploadInfo = Pick<CreateFileVersionInput, 'upload' | 'name'>;
+type UploadInfo = Pick<CreateFileVersion, 'upload' | 'name'>;
 
 /**
  * Handles uploading the file and await the result to get the upload info.

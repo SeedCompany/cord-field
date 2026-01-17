@@ -1,4 +1,4 @@
-mutation UpdateLanguage($input: UpdateLanguageInput!) {
+mutation UpdateLanguage($input: UpdateLanguage!) {
   updateLanguage(input: $input) {
     language {
       ...LanguageDetail

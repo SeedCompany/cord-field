@@ -2,8 +2,8 @@ import { useMutation } from '@apollo/client';
 import { isEqual, noop } from 'lodash';
 import { useMemo } from 'react';
 import { Form, FormSpy } from 'react-final-form';
-import { UpdateCeremonyInput } from '~/api/schema.graphql';
-import { DateField, FieldGroup } from '../../../../components/form';
+import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
+import { DateField } from '../../../../components/form';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
@@ -21,11 +21,9 @@ export const CeremonyForm = ({
 
   const initialValues = useMemo(
     () => ({
-      ceremony: {
-        id: ceremonyId || '',
-        estimatedDate: estimatedDate?.value,
-        actualDate: actualDate?.value,
-      },
+      id: ceremonyId || '',
+      estimatedDate: estimatedDate?.value,
+      actualDate: actualDate?.value,
     }),
     [actualDate?.value, ceremonyId, estimatedDate?.value]
   );
@@ -35,7 +33,7 @@ export const CeremonyForm = ({
       <CeremonyPlanned {...ceremony} flipped />
       <Form<UpdateCeremonyInput> initialValues={initialValues} onSubmit={noop}>
         {() => (
-          <FieldGroup prefix="ceremony">
+          <>
             <FormSpy<UpdateCeremonyInput>
               subscription={{ values: true }}
               onChange={({ values: input }) => {
@@ -60,7 +58,7 @@ export const CeremonyForm = ({
                 !ceremony.value.actualDate.canEdit
               }
             />
-          </FieldGroup>
+          </>
         )}
       </Form>
     </>

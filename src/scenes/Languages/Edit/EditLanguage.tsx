@@ -30,32 +30,29 @@ export const EditLanguage = (props: EditLanguageProps) => {
     () =>
       language
         ? {
-            language: {
-              id: language.id,
-              name: language.name.value,
-              displayName: language.displayName.value,
-              displayNamePronunciation: language.displayNamePronunciation.value,
-              isDialect: language.isDialect.value,
-              ethnologue: {
-                code: language.ethnologue.code.value,
-                provisionalCode: language.ethnologue.provisionalCode.value,
-                name: language.ethnologue.name.value,
-                population: language.ethnologue.population.value,
-              },
-              populationOverride: language.populationOverride.value,
-              registryOfLanguageVarietiesCode:
-                language.registryOfLanguageVarietiesCode.value,
-              leastOfThese: language.leastOfThese.value,
-              leastOfTheseReason: language.leastOfTheseReason.value,
-              isSignLanguage: language.isSignLanguage.value,
-              signLanguageCode: language.signLanguageCode.value,
-              sensitivity: language.sensitivity,
-              sponsorEstimatedEndFY: asDate(
-                language.sponsorEstimatedEndDate.value
-              )?.fiscalYear,
-              hasExternalFirstScripture:
-                language.hasExternalFirstScripture.value,
+            id: language.id,
+            name: language.name.value,
+            displayName: language.displayName.value,
+            displayNamePronunciation: language.displayNamePronunciation.value,
+            isDialect: language.isDialect.value,
+            ethnologue: {
+              code: language.ethnologue.code.value,
+              provisionalCode: language.ethnologue.provisionalCode.value,
+              name: language.ethnologue.name.value,
+              population: language.ethnologue.population.value,
             },
+            populationOverride: language.populationOverride.value,
+            registryOfLanguageVarietiesCode:
+              language.registryOfLanguageVarietiesCode.value,
+            leastOfThese: language.leastOfThese.value,
+            leastOfTheseReason: language.leastOfTheseReason.value,
+            isSignLanguage: language.isSignLanguage.value,
+            signLanguageCode: language.signLanguageCode.value,
+            sensitivity: language.sensitivity,
+            sponsorEstimatedEndFY: asDate(
+              language.sponsorEstimatedEndDate.value
+            )?.fiscalYear,
+            hasExternalFirstScripture: language.hasExternalFirstScripture.value,
           }
         : undefined,
     [language]
@@ -76,23 +73,20 @@ export const EditLanguage = (props: EditLanguageProps) => {
             Paths<LanguageFormValues<UpdateLanguage>>
           >
         );
-        const { sponsorEstimatedEndFY, ...changes } =
-          pick(data, [...dirtyFields]).language ?? {};
+        const { sponsorEstimatedEndFY, ...changes } = pick(data, [
+          ...dirtyFields,
+        ]);
 
         const result = await updateLanguage({
           variables: {
             input: {
-              language: {
-                id: language.id,
-                ...changes,
-                sponsorEstimatedEndDate: dirtyFields.has(
-                  'language.sponsorEstimatedEndFY'
-                )
-                  ? CalendarDate.fiscalYearEndToCalendarDate(
-                      sponsorEstimatedEndFY
-                    ) ?? null
-                  : undefined,
-              },
+              id: language.id,
+              ...changes,
+              sponsorEstimatedEndDate: dirtyFields.has('sponsorEstimatedEndFY')
+                ? CalendarDate.fiscalYearEndToCalendarDate(
+                    sponsorEstimatedEndFY
+                  ) ?? null
+                : undefined,
             },
           },
         });

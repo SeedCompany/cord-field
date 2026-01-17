@@ -1,4 +1,4 @@
-mutation CreateFieldRegion($input: CreateFieldRegionInput!) {
+mutation CreateFieldRegion($input: CreateFieldRegion!) {
   createFieldRegion(input: $input) {
     fieldRegion {
       ...DisplayFieldRegion

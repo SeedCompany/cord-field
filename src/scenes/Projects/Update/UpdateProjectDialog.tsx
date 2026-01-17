@@ -21,7 +21,6 @@ import {
 import {
   DateField,
   EnumField,
-  FieldGroup,
   SecuredField,
   SubmitError,
   TextField,
@@ -90,16 +89,14 @@ const fieldMapping: Record<
   },
 };
 
-interface UpdateProjectFormValues {
-  project: Merge<
-    UpdateProject,
-    {
-      primaryLocation?: DisplayLocationFragment | null;
-      fieldRegion?: DisplayFieldRegionFragment | null;
-      marketingLocation?: DisplayLocationFragment | null;
-    }
-  >;
-}
+type UpdateProjectFormValues = Merge<
+  UpdateProject,
+  {
+    primaryLocation?: DisplayLocationFragment | null;
+    fieldRegion?: DisplayFieldRegionFragment | null;
+    marketingLocation?: DisplayLocationFragment | null;
+  }
+>;
 
 type UpdateProjectDialogProps = Except<
   DialogFormProps<UpdateProjectFormValues>,
@@ -123,10 +120,7 @@ export const UpdateProjectDialog = ({
   const [updateProject] = useMutation(UpdateProjectDocument);
 
   const initialValues = useMemo(() => {
-    const fullInitialValuesFields: Except<
-      UpdateProjectFormValues['project'],
-      'id'
-    > = {
+    const fullInitialValuesFields: Except<UpdateProjectFormValues, 'id'> = {
       name: project.name.value,
       primaryLocation: project.primaryLocation.value,
       fieldRegion: project.fieldRegion.value,
@@ -147,10 +141,8 @@ export const UpdateProjectDialog = ({
     );
 
     return {
-      project: {
-        id: project.id,
-        ...filteredInitialValuesFields,
-      },
+      id: project.id,
+      ...filteredInitialValuesFields,
     };
   }, [
     project.name.value,
@@ -176,37 +168,33 @@ export const UpdateProjectDialog = ({
       changesetAware={editFields.every((field) => !field.endsWith('Id'))}
       initialValues={initialValues}
       validate={(values) => {
-        const start = values.project.mouStart;
-        const end = values.project.mouEnd;
+        const start = values.mouStart;
+        const end = values.mouEnd;
 
         if (start && end && asDate(start) > asDate(end)) {
           return {
-            project: {
-              mouStart: 'Start date should come before end date',
-              mouEnd: 'End date should come after start date',
-            },
+            mouStart: 'Start date should come before end date',
+            mouEnd: 'End date should come after start date',
           };
         }
 
         return undefined;
       }}
-      onSubmit={async ({ project: data }, form) => {
+      onSubmit={async (data, form) => {
         const { dirtyFields } = form.getState();
         await updateProject({
           variables: {
             input: {
-              project: {
-                ...data,
-                primaryLocation: dirtyFields['project.primaryLocation']
-                  ? data.primaryLocation?.id ?? null
-                  : undefined,
-                fieldRegion: dirtyFields['project.fieldRegion']
-                  ? data.fieldRegion?.id ?? null
-                  : undefined,
-                marketingLocation: dirtyFields['project.marketingLocation']
-                  ? data.marketingLocation?.id ?? null
-                  : undefined,
-              },
+              ...data,
+              primaryLocation: dirtyFields.primaryLocation
+                ? data.primaryLocation?.id ?? null
+                : undefined,
+              fieldRegion: dirtyFields.fieldRegion
+                ? data.fieldRegion?.id ?? null
+                : undefined,
+              marketingLocation: dirtyFields.marketingLocation
+                ? data.marketingLocation?.id ?? null
+                : undefined,
               changeset: project.changeset?.id,
             },
           },
@@ -289,28 +277,24 @@ export const UpdateProjectDialog = ({
             [FORM_ERROR]: rendered,
             // Mark the field(s) as invalid,
             // even though we show the error in the unified spot.
-            project: {
-              ...(points.has('start') ? { mouStart: ' ' } : {}),
-              ...(points.has('end') ? { mouEnd: ' ' } : {}),
-            },
+            ...(points.has('start') ? { mouStart: ' ' } : {}),
+            ...(points.has('end') ? { mouEnd: ' ' } : {}),
           };
         },
       }}
     >
       <SubmitError />
-      <FieldGroup prefix="project">
-        {editFields.map((name) => {
-          const Field = fieldMapping[name];
-          if (name === 'sensitivity') {
-            return <Field props={{ name }} project={project} key={name} />;
-          }
-          return (
-            <SecuredField obj={project} name={name} key={name}>
-              {(props) => <Field props={props} project={project} />}
-            </SecuredField>
-          );
-        })}
-      </FieldGroup>
+      {editFields.map((name) => {
+        const Field = fieldMapping[name];
+        if (name === 'sensitivity') {
+          return <Field props={{ name }} project={project} key={name} />;
+        }
+        return (
+          <SecuredField obj={project} name={name} key={name}>
+            {(props) => <Field props={props} project={project} />}
+          </SecuredField>
+        );
+      })}
     </DialogForm>
   );
 };

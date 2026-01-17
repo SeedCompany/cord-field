@@ -1,4 +1,4 @@
-mutation createInternshipEngagement($input: CreateInternshipEngagementInput!) {
+mutation createInternshipEngagement($input: CreateInternshipEngagement!) {
   createInternshipEngagement(input: $input) {
     engagement {
       ...InternshipEngagementListItem

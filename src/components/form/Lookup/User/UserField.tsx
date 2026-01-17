@@ -1,4 +1,4 @@
-import { CreatePersonInput } from '~/api/schema.graphql';
+import { CreatePerson } from '~/api/schema.graphql';
 import { CreateUser } from '../../../../scenes/Users/Create';
 import { LookupField } from '../../index';
 import {
@@ -8,7 +8,7 @@ import {
 
 export const UserField = LookupField.createFor<
   UserLookupItemFragment,
-  CreatePersonInput
+  CreatePerson
 >({
   resource: 'User',
   lookupDocument: UserLookupDocument,
@@ -16,12 +16,8 @@ export const UserField = LookupField.createFor<
   label: 'Person',
   placeholder: 'Search for a person by name',
   CreateDialogForm: CreateUser,
-  getInitialValues: (val): Partial<CreatePersonInput> => ({
-    // @ts-expect-error the partial type doesn't match and the generic is not
-    // being passed around everywhere yet.
-    person: {
-      realFirstName: val,
-      displayFirstName: val,
-    },
+  getInitialValues: (val) => ({
+    realFirstName: val,
+    displayFirstName: val,
   }),
 });

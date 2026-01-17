@@ -11,11 +11,11 @@ import {
 } from '@mui/material';
 import { useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { UpdateCeremonyInput } from '~/api/schema.graphql';
+import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
 import { canEditAny } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
-import { DateField, FieldGroup, SubmitError } from '../../../components/form';
+import { DateField, SubmitError } from '../../../components/form';
 import { FormattedDate } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import {
@@ -81,11 +81,9 @@ export const CeremonyCard = ({
 
   const initialValues = useMemo(
     () => ({
-      ceremony: {
-        id: id || '',
-        estimatedDate: estimatedDate?.value,
-        actualDate: actualDate?.value,
-      },
+      id: id || '',
+      estimatedDate: estimatedDate?.value,
+      actualDate: actualDate?.value,
     }),
     [actualDate?.value, estimatedDate?.value, id]
   );
@@ -183,10 +181,8 @@ export const CeremonyCard = ({
         }}
       >
         <SubmitError />
-        <FieldGroup prefix="ceremony">
-          <DateField name="estimatedDate" label="Estimated Date" />
-          <DateField name="actualDate" label="Actual Date" />
-        </FieldGroup>
+        <DateField name="estimatedDate" label="Estimated Date" />
+        <DateField name="actualDate" label="Actual Date" />
       </DialogForm>
     </div>
   );

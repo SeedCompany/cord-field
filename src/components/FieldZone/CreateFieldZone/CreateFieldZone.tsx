@@ -1,9 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import {
-  CreateFieldZoneInput,
-  type CreateFieldZone as CreateFieldZoneType,
-} from '~/api/schema.graphql';
+import { type CreateFieldZone as CreateFieldZoneType } from '~/api/schema.graphql';
 import { DisplayFieldZoneFragment } from '~/common';
 import {
   FieldZoneForm,
@@ -26,11 +23,9 @@ export const CreateFieldZone = (props: CreateFieldZoneProps) => {
       {...props}
       title="Create Field Zone"
       onSubmit={async (values) => {
-        const input: CreateFieldZoneInput = {
-          fieldZone: {
-            name: values.fieldZone.name,
-            director: values.fieldZone.director!.id,
-          },
+        const input: CreateFieldZoneType = {
+          name: values.name,
+          director: values.director!.id,
         };
 
         const { data } = await createFieldZone({

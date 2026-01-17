@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateStoryInput } from '~/api/schema.graphql';
+import { CreateStory as CreateStoryInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -37,7 +37,7 @@ export const CreateStory = (props: CreateStoryProps) => {
     >
       <SubmitError />
       <TextField
-        name="story.name"
+        name="name"
         label="Name"
         placeholder="Enter story name"
         required

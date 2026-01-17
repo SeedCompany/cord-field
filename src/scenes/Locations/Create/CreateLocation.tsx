@@ -26,12 +26,10 @@ export const CreateLocation = (props: CreateLocationProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit: FormProps['onSubmit'] = async ({
-    location: {
-      fundingAccount,
-      defaultFieldRegion,
-      mapImage: mapImages,
-      ...rest
-    },
+    fundingAccount,
+    defaultFieldRegion,
+    mapImage: mapImages,
+    ...rest
   }) => {
     const [uploadedImageInfo, finalizeUpload] = await uploadFile(
       mapImages?.[0]
@@ -44,7 +42,7 @@ export const CreateLocation = (props: CreateLocationProps) => {
       mapImage: uploadedImageInfo,
     };
     const { data } = await createLocation({
-      variables: { input: { location: input } },
+      variables: { input },
     }).then(...finalizeUpload.tap);
     return data!.createLocation.location;
   };

@@ -1,6 +1,4 @@
 import { Stack } from '@mui/material';
-import { memoize } from 'lodash';
-import { SetRequired } from 'type-fest';
 import {
   GenderLabels,
   GenderList,
@@ -25,19 +23,16 @@ import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { useSession } from '../../../components/Session';
 import { UserFormFragment } from './UserForm.graphql';
 
-export type UserFormProps<T, R = void> = SetRequired<
-  DialogFormProps<T, R>,
-  'fieldsPrefix'
-> & {
+export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing user to edit */
   user?: UserFormFragment;
 };
 
-const decorators = memoize((prefix: string) => [
+const decorators = [
   ...DialogForm.defaultDecorators,
-  matchFieldIfSame(`${prefix}.realFirstName`, `${prefix}.displayFirstName`),
-  matchFieldIfSame(`${prefix}.realLastName`, `${prefix}.displayLastName`),
-]);
+  matchFieldIfSame('realFirstName', 'displayFirstName'),
+  matchFieldIfSame('realLastName', 'displayLastName'),
+];
 
 export const UserForm = <T, R = void>({
   user,
@@ -50,7 +45,7 @@ export const UserForm = <T, R = void>({
         maxWidth: 'sm',
       }}
       {...rest}
-      decorators={decorators(rest.fieldsPrefix)}
+      decorators={decorators}
     >
       <SubmitError />
       <Stack>

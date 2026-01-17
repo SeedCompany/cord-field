@@ -17,9 +17,7 @@ import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
-  engagement: {
-    language: LanguageLookupItem;
-  };
+  language: LanguageLookupItem;
 }
 
 type CreateLanguageEngagementProps = Except<
@@ -34,18 +32,16 @@ export const CreateLanguageEngagement = ({
   ...props
 }: CreateLanguageEngagementProps) => {
   const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
-  const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
+  const submit = async ({ language }: CreateLanguageEngagementFormValues) => {
     const languageRef = {
       __typename: 'Language',
-      id: engagement.language.id,
+      id: language.id,
     } as const;
     await createEngagement({
       variables: {
         input: {
-          engagement: {
-            project: project.id,
-            language: engagement.language.id,
-          },
+          project: project.id,
+          language: language.id,
           changeset: project.changeset?.id,
         },
       },
@@ -71,7 +67,7 @@ export const CreateLanguageEngagement = ({
       changesetAware
     >
       <SubmitError />
-      <LanguageField name="engagement.language" label="Language" required />
+      <LanguageField name="language" label="Language" required />
     </DialogForm>
   );
 };

@@ -1,5 +1,5 @@
 mutation UpdatePeriodicReport(
-  $input: UpdatePeriodicReportInput!
+  $input: UpdatePeriodicReport!
   $refreshFromPnp: Boolean!
 ) {
   updatePeriodicReport(input: $input) {
@@ -10,7 +10,7 @@ mutation UpdatePeriodicReport(
 
 mutation UploadPeriodicReportFile(
   $id: ID!
-  $upload: CreateDefinedFileVersionInput!
+  $upload: CreateDefinedFileVersion!
 ) {
   updatePeriodicReport(input: { id: $id, reportFile: $upload }) {
     ...PeriodicReport

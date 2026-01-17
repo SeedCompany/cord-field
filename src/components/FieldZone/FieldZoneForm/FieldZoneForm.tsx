@@ -8,14 +8,12 @@ import { FieldZoneFormFragment } from './FieldZoneForm.graphql';
 
 type FieldZoneMutation = UpdateFieldZone | CreateFieldZone;
 
-export interface FieldZoneFormValues<Mutation extends FieldZoneMutation> {
-  fieldZone: Merge<
-    Mutation,
-    {
-      director: UserLookupItemFragment | null;
-    }
-  >;
-}
+export type FieldZoneFormValues<Mutation extends FieldZoneMutation> = Merge<
+  Mutation,
+  {
+    director: UserLookupItemFragment | null;
+  }
+>;
 
 export type FieldZoneFormProps<
   Mutation extends FieldZoneMutation,
@@ -28,7 +26,7 @@ export const FieldZoneForm = <Mutation extends FieldZoneMutation, R>({
   fieldZone,
   ...rest
 }: FieldZoneFormProps<Mutation, R>) => (
-  <DialogForm {...rest} fieldsPrefix="fieldZone">
+  <DialogForm {...rest}>
     <SubmitError />
     <SecuredField obj={fieldZone} name="name">
       {(props) => (

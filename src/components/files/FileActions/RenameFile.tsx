@@ -1,6 +1,6 @@
 import { MutationFunctionOptions, useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import { RenameFileInput } from '~/api/schema.graphql';
+import { RenameFile as RenameFileInput } from '~/api/schema.graphql';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError, TextField } from '../../form';
 import { parseFileNameAndExtension } from '../../Formatters';

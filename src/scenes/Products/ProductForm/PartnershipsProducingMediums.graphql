@@ -22,7 +22,7 @@ fragment EditPartnershipsProducingMediumsInfo on LanguageEngagement {
 
 mutation UpdatePartnershipsProducingMediums(
   $engagement: ID!
-  $input: [PartnershipProducingMediumInput!]!
+  $input: [UpdatePartnershipProducingMedium!]!
 ) {
   updatePartnershipsProducingMediums(engagement: $engagement, input: $input) {
     engagement {

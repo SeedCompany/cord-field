@@ -11,7 +11,7 @@ export const GoalsSection = ({
   accordionState,
 }: SectionProps) => {
   const isEditing = Boolean(product);
-  const { productType, produces } = values.product ?? {};
+  const { productType, produces } = values;
 
   return (
     <DefaultAccordion

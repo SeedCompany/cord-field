@@ -1,4 +1,4 @@
-mutation CreatePartnership($input: CreatePartnershipInput!) {
+mutation CreatePartnership($input: CreatePartnership!) {
   createPartnership(input: $input) {
     partnership {
       ...PartnershipCard

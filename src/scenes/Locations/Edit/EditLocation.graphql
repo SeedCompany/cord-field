@@ -1,4 +1,4 @@
-mutation UpdateLocation($input: UpdateLocationInput!) {
+mutation UpdateLocation($input: UpdateLocation!) {
   updateLocation(input: $input) {
     location {
       ...LocationDetail
