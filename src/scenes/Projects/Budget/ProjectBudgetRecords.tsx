@@ -136,7 +136,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
             undefined
           : {
               updateBudgetRecord: {
-                __typename: 'UpdateBudgetRecordOutput',
+                __typename: 'BudgetRecordUpdated',
                 budgetRecord: {
                   __typename: 'BudgetRecord',
                   id: record.id,

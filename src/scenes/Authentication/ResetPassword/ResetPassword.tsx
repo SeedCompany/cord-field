@@ -20,10 +20,8 @@ export const ResetPassword = (props: Except<Props, 'onSubmit'>) => {
     try {
       await resetPassword({
         variables: {
-          input: {
-            token,
-            password,
-          },
+          token,
+          password,
         },
       });
       setSuccess(true);

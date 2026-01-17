@@ -17,7 +17,7 @@ export const useProcessEngagementUpdate = () =>
       },
       optimisticResponse: {
         updateLanguageEngagement: {
-          __typename: 'UpdateLanguageEngagementOutput',
+          __typename: 'LanguageEngagementUpdated',
           engagement: row,
         },
       },
