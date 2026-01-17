@@ -18,7 +18,7 @@ mutation CreateOtherProduct($input: CreateOtherProduct!) {
   }
 }
 
-fragment CreateProductResult on CreateProductOutput {
+fragment CreateProductResult on ProductCreated {
   product {
     ...ProductCard
     # Include what's needed for progress report, so we don't have to refetch data

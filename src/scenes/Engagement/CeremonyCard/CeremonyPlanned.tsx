@@ -67,7 +67,7 @@ export const CeremonyPlanned = ({
     optimisticResponse: ({ input }) => ({
       __typename: 'Mutation',
       updateCeremony: {
-        __typename: 'UpdateCeremonyOutput' as const,
+        __typename: 'CeremonyUpdated' as const,
         ceremony: {
           ...ceremony!,
           planned: {
