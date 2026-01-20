@@ -12,7 +12,7 @@ export const useProcessPartnerUpdate = () =>
     },
     optimisticResponse: {
       updatePartner: {
-        __typename: 'UpdatePartnerOutput',
+        __typename: 'PartnerUpdated',
         partner: row,
       },
     },
