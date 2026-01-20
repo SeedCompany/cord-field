@@ -1,10 +1,14 @@
-mutation CreatePartner($input: CreatePartnerInput!) {
+mutation CreatePartner($input: CreatePartner!) {
   createPartner(input: $input) {
     partner {
       id
-      organization { value {
-        name { value }
-      }}
+      organization {
+        value {
+          name {
+            value
+          }
+        }
+      }
       ...PartnerListItem
       ...PartnerLookupItem
     }

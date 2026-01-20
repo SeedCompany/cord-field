@@ -32,9 +32,7 @@ import { PartnershipFormFragment } from './PartnershipForm.graphql';
 type PartnershipFormValues = Partial<
   CreatePartnershipFormInput | EditPartnershipFormInput
 > & {
-  partnership?: {
-    partnerLookupItem?: PartnerLookupItem;
-  };
+  partner?: PartnerLookupItem;
 };
 
 export type PartnershipFormProps<T extends PartnershipFormValues> =
@@ -50,20 +48,20 @@ const decorators: Array<Decorator<PartnershipFormValues>> = [
   onFieldChange(
     // if user selects a different partner (on create partnership), wipe the types and fin type values
     {
-      field: 'partnership.partnerLookupItem',
+      field: 'partner',
       isEqual: PartnerField.isEqual,
       updates: {
-        'partnership.types': () => undefined,
-        'partnership.financialReportingType': () => undefined,
+        types: () => undefined,
+        financialReportingType: () => undefined,
       },
     },
     // if user unselects managing type (on create or update), wipe the financial reporting type values
     {
-      field: 'partnership.types',
+      field: 'types',
       updates: {
-        'partnership.financialReportingType': (partnerTypes, currentValues) =>
+        financialReportingType: (partnerTypes, currentValues) =>
           partnerTypes?.includes('Managing')
-            ? currentValues.partnership?.financialReportingType
+            ? currentValues.financialReportingType
             : undefined,
       },
     }
@@ -77,14 +75,12 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
   return (
     <DialogForm<T>
       {...rest}
-      fieldsPrefix="partnership"
       decorators={decorators as unknown as Array<Decorator<T>>}
     >
       {({ values }) => {
-        const lookupPartnerTypes =
-          values.partnership?.partnerLookupItem?.types.value;
+        const lookupPartnerTypes = values.partner?.types.value;
         const lookupPartnerFinType =
-          values.partnership?.partnerLookupItem?.financialReportingTypes.value;
+          values.partner?.financialReportingTypes.value;
         const currentPartnerTypes = partnership?.partner.value?.types.value;
         const currentPartnerFinTypes =
           partnership?.partner.value?.financialReportingTypes.value;
@@ -92,7 +88,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
         return (
           <>
             <SubmitError />
-            {!partnership && <PartnerField name="partnerLookupItem" required />}
+            {!partnership && <PartnerField name="partner" required />}
             {lookupPartnerTypes?.length || currentPartnerTypes?.length ? (
               <SecuredField obj={partnership} name="types">
                 {(props) => (
@@ -106,7 +102,7 @@ export const PartnershipForm = <T extends PartnershipFormValues>({
                 )}
               </SecuredField>
             ) : null}
-            {hasManagingType(values.partnership?.types) ? (
+            {hasManagingType(values.types) ? (
               <>
                 <SecuredField obj={partnership} name="financialReportingType">
                   {(props) => (

@@ -48,7 +48,7 @@ type PartnerFormValues = {
   partner: Merge<
     UpdatePartner,
     {
-      pointOfContactId: UserLookupItem | null;
+      pointOfContact: UserLookupItem | null;
       fieldRegions: readonly DisplayFieldRegionFragment[];
       countries: readonly DisplayLocationFragment[];
     }
@@ -82,7 +82,7 @@ type PossibleFields = Partial<
 >;
 
 const fieldMapping = {
-  'partner.pointOfContactId': ({ props }) => (
+  'partner.pointOfContact': ({ props }) => (
     <UserField {...props} label="Point of Contact" />
   ),
   'partner.globalInnovationsClient': ({ props }) => (
@@ -191,7 +191,7 @@ export const EditPartner = ({
         financialReportingTypes: partner.financialReportingTypes.value,
         address: partner.address.value,
         startDate: partner.startDate.value,
-        pointOfContactId: partner.pointOfContact.value ?? null,
+        pointOfContact: partner.pointOfContact.value ?? null,
         fieldRegions: partner.fieldRegions.value,
         countries: partner.countries.value,
       },
@@ -216,7 +216,7 @@ export const EditPartner = ({
           variables: {
             partner: {
               ...partner,
-              pointOfContactId: partner.pointOfContactId?.id ?? null,
+              pointOfContact: partner.pointOfContact?.id ?? null,
               fieldRegions: partner.fieldRegions.map((region) => region.id),
               countries: partner.countries.map((country) => country.id),
             },

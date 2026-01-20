@@ -29,9 +29,7 @@ import {
   UpdateProjectMemberDocument,
 } from './UpdateProjectMember.graphql';
 
-type FormShape = {
-  projectMember: UpdateProjectMemberShape;
-} & SubmitAction<'delete'>;
+type FormShape = UpdateProjectMemberShape & SubmitAction<'delete'>;
 
 export type UpdateProjectMemberProps = Except<
   DialogFormProps<FormShape>,
@@ -78,11 +76,9 @@ export const UpdateProjectMember = ({
 
   const initialValues = useMemo(
     (): FormShape => ({
-      projectMember: {
-        id: member.id,
-        roles: member.roles.value,
-        inactiveAt: member.inactiveAt.value ?? null,
-      },
+      id: member.id,
+      roles: member.roles.value,
+      inactiveAt: member.inactiveAt.value ?? null,
     }),
     [member]
   );
@@ -97,7 +93,7 @@ export const UpdateProjectMember = ({
       initialValues={initialValues}
       onSubmit={async ({ submitAction, ...input }, form) => {
         const dirty = form.getState().dirtyFields;
-        const activeChange = 'projectMember.inactiveAt' in dirty;
+        const activeChange = 'inactiveAt' in dirty;
         if (submitAction === 'delete') {
           await deleteProjectMember();
           return;
@@ -107,7 +103,6 @@ export const UpdateProjectMember = ({
           update: activeChange ? invalidateMemberLists : undefined,
         });
       }}
-      fieldsPrefix="projectMember"
       leftAction={
         member.canDelete && (
           <SubmitButton

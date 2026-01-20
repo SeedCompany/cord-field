@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
-import { useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { addItemToList } from '~/api';
 import {
@@ -19,16 +18,12 @@ import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
 import { ProjectMembersQuery } from '../List/ProjectMembers.graphql';
 import { CreateProjectMemberDocument } from './CreateProjectMember.graphql';
 
-interface FormValues {
-  projectMember: Partial<
-    Merge<
-      CreateProjectMemberInput,
-      {
-        userId: UserLookupItem;
-      }
-    >
-  >;
-}
+type FormValues = Merge<
+  Omit<CreateProjectMemberInput, 'project'>,
+  {
+    user: UserLookupItem;
+  }
+>;
 
 type CreateProjectMemberProps = Except<
   DialogFormProps<FormValues>,
@@ -40,9 +35,9 @@ type CreateProjectMemberProps = Except<
 const decorators: Array<Decorator<FormValues>> = [
   ...DialogForm.defaultDecorators,
   onFieldChange({
-    field: 'projectMember.userId',
+    field: 'user',
     isEqual: UserField.isEqual,
-    updates: { 'projectMember.roles': () => [] },
+    updates: { roles: () => [] },
   }),
 ];
 
@@ -57,43 +52,30 @@ export const CreateProjectMember = ({
     }),
   });
 
-  const initialValues = useMemo(
-    () => ({
-      projectMember: {
-        projectId: project.id,
-      },
-    }),
-    [project.id]
-  );
-
   return (
     <DialogForm<FormValues>
       title="Add Team Member"
       {...props}
-      initialValues={initialValues}
       decorators={decorators}
-      onSubmit={async ({ projectMember }) => {
-        const data = projectMember as Required<typeof projectMember>;
-        const input = {
-          projectMember: {
-            ...data,
-            userId: data.userId.id,
-          },
+      onSubmit={async (data) => {
+        const input: CreateProjectMemberInput = {
+          project: project.id,
+          ...data,
+          user: data.user.id,
         };
 
         await createProjectMember({ variables: { input } });
       }}
-      fieldsPrefix="projectMember"
     >
       {({ values }) => {
-        const user = values.projectMember.userId;
+        const user = values.user as Partial<FormValues>['user'];
         const canRead = user?.roles.canRead;
         const userRoles = user?.roles.value;
 
         return (
           <>
             <SubmitError />
-            <UserField name="userId" required variant="outlined" />
+            <UserField name="user" required variant="outlined" />
             <AutocompleteField
               disabled={!canRead || !userRoles}
               multiple

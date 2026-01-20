@@ -1,4 +1,4 @@
-mutation createOrganization($input: CreateOrganizationInput!) {
+mutation createOrganization($input: CreateOrganization!) {
   createOrganization(input: $input) {
     organization {
       id

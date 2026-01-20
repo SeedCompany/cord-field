@@ -82,11 +82,9 @@ export const LanguageEngagementMilestone = ({ engagement }: Props) => {
           await updateLanguageEngagement({
             variables: {
               input: {
-                engagement: {
-                  id: engagement.id,
-                  milestonePlanned: values.milestonePlanned,
-                  milestoneReached: values.milestoneReached,
-                },
+                id: engagement.id,
+                milestonePlanned: values.milestonePlanned,
+                milestoneReached: values.milestoneReached,
               },
             },
           });

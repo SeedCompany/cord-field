@@ -17,13 +17,14 @@ export const useUploadProjectFiles = (): UploadFilesConsumerFunction => {
     name,
     parentId,
   }) => {
-    const input = {
-      uploadId,
-      name,
-      parentId,
-    };
     await createFileVersion({
-      variables: { input },
+      variables: {
+        input: {
+          upload: uploadId,
+          name,
+          parent: parentId,
+        },
+      },
       update: addItemToList({
         listId: [{ __typename: 'Directory', id: parentId }, 'children'],
         outputToItem: (res) => res.createFileVersion,

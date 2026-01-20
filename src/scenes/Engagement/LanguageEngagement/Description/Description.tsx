@@ -47,10 +47,8 @@ export const EngagementDescription = ({ engagement }: Props) => {
           await updateDescription({
             variables: {
               input: {
-                engagement: {
-                  id: engagement.id,
-                  description: values.description,
-                },
+                id: engagement.id,
+                description: values.description,
               },
             },
           });

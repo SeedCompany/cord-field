@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except, SetRequired } from 'type-fest';
-import { UpdateFieldZone, UpdateFieldZoneInput } from '~/api/schema.graphql';
+import { UpdateFieldZone } from '~/api/schema.graphql';
 import { DisplayFieldZoneFragment } from '~/common';
 import {
   FieldZoneForm,
@@ -22,11 +22,9 @@ export const EditFieldZone = (
 
   const initialValues = useMemo(
     () => ({
-      fieldZone: {
-        id: fieldZone.id,
-        name: fieldZone.name.value,
-        directorId: fieldZone.director.value ?? null,
-      },
+      id: fieldZone.id,
+      name: fieldZone.name.value,
+      director: fieldZone.director.value ?? null,
     }),
     [fieldZone]
   );
@@ -36,13 +34,11 @@ export const EditFieldZone = (
       {...props}
       title="Edit Field Zone"
       initialValues={initialValues}
-      onSubmit={async ({ fieldZone: values }) => {
-        const input: UpdateFieldZoneInput = {
-          fieldZone: {
-            id: values.id,
-            name: values.name,
-            directorId: values.directorId?.id,
-          },
+      onSubmit={async (values) => {
+        const input: UpdateFieldZone = {
+          id: values.id,
+          name: values.name,
+          director: values.director?.id,
         };
 
         const { data } = await updateFieldZone({

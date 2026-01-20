@@ -1,4 +1,4 @@
-mutation UpdateFieldZone($input: UpdateFieldZoneInput!) {
+mutation UpdateFieldZone($input: UpdateFieldZone!) {
   updateFieldZone(input: $input) {
     fieldZone {
       ...FieldZoneForm

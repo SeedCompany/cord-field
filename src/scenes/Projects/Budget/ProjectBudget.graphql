@@ -56,9 +56,9 @@ query ProjectBudget($id: ID!, $changeset: ID) {
 
 mutation UpdateProjectBudgetUniversalTemplate(
   $id: ID!
-  $upload: CreateDefinedFileVersionInput!
+  $upload: CreateDefinedFileVersion!
 ) {
-  updateBudget(input: { budget: { id: $id, universalTemplateFile: $upload } }) {
+  updateBudget(input: { id: $id, universalTemplateFile: $upload }) {
     budget {
       ...Id
       universalTemplateFile {
@@ -75,7 +75,7 @@ mutation UpdateProjectBudgetUniversalTemplate(
   }
 }
 
-mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecordInput!) {
+mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecord!) {
   updateBudgetRecord(input: $input) {
     budgetRecord {
       ...Id

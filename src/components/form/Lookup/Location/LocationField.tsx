@@ -14,10 +14,5 @@ export const LocationField = LookupField.createFor<
   label: 'Location',
   placeholder: 'Search for a location by name',
   CreateDialogForm: CreateLocation,
-  // @ts-expect-error don't need to pass through entire initialValues
-  getInitialValues: (val) => ({
-    location: {
-      name: val,
-    },
-  }),
+  getInitialValues: (name) => ({ name }),
 });

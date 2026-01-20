@@ -409,7 +409,7 @@ export const ProjectOverview = () => {
                 secured={project?.primaryLocation}
                 redacted="You do not have permission to view primary location"
                 children={(location) => location.name.value}
-                onClick={() => editField('primaryLocationId')}
+                onClick={() => editField('primaryLocation')}
               />
             </Grid>
             <Grid item>
@@ -421,7 +421,7 @@ export const ProjectOverview = () => {
                 secured={project?.fieldRegion}
                 redacted="You do not have permission to view field region"
                 children={(location) => location.name.value}
-                onClick={() => editField('fieldRegionId')}
+                onClick={() => editField('fieldRegion')}
               />
             </Grid>
             <Grid item>
@@ -433,7 +433,7 @@ export const ProjectOverview = () => {
                 secured={project?.marketingLocation}
                 redacted="You do not have permission to view the marketing location"
                 children={(location) => location.name.value}
-                onClick={() => editField(['marketingLocationId'])}
+                onClick={() => editField(['marketingLocation'])}
               />
             </Grid>
           </Grid>

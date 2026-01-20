@@ -21,13 +21,10 @@ fragment EditPartnershipsProducingMediumsInfo on LanguageEngagement {
 }
 
 mutation UpdatePartnershipsProducingMediums(
-  $engagementId: ID!
-  $input: [PartnershipProducingMediumInput!]!
+  $engagement: ID!
+  $input: [UpdatePartnershipProducingMedium!]!
 ) {
-  updatePartnershipsProducingMediums(
-    engagementId: $engagementId
-    input: $input
-  ) {
+  updatePartnershipsProducingMediums(engagement: $engagement, input: $input) {
     engagement {
       ...Id
       partnershipsProducingMediums {

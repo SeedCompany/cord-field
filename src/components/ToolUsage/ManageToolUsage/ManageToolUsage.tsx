@@ -65,7 +65,7 @@ export const ManageToolUsage = ({
       } as const;
       return {
         createToolUsage: {
-          __typename: 'CreateToolUsageOutput',
+          __typename: 'ToolUsageCreated',
           toolUsage: {
             ...newOptimisticUsage,
             container: {
@@ -90,7 +90,7 @@ export const ManageToolUsage = ({
         variables: { id: usage.id },
         optimisticResponse: {
           deleteToolUsage: {
-            __typename: 'DeleteToolUsageOutput',
+            __typename: 'ToolUsageDeleted',
           },
         },
         update: (cache) => {

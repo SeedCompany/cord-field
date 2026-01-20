@@ -11,9 +11,7 @@ export type ChangesOf<T extends GqlObject> = T extends unknown
   ? {
       [K in keyof GqlTypeOf<T> &
         keyof T &
-        string as GqlTypeOf<T>[K] extends SecuredRelation
-        ? `${K}Id`
-        : GqlTypeOf<T>[K] extends SecuredProp<any>
+        string as GqlTypeOf<T>[K] extends SecuredProp<any>
         ? K
         : never]?: Unsecure<GqlTypeOf<T>[K]>;
     }
@@ -24,7 +22,6 @@ type Unsecure<T> = T extends SecuredProp<infer U>
     ? string
     : U
   : T;
-type SecuredRelation = SecuredProp<{ id: string }>;
 
 type DistributedKeyOf<T> = T extends unknown ? keyof T & string : never;
 
@@ -52,8 +49,8 @@ export const SecuredField = <
   let canEdit = true;
   let canRead = true;
   if (obj) {
-    // @ts-expect-error Grab key from object following naming convention. We check below that we grabbed it correctly.
-    const field: SecuredProp<any> = obj[name] ?? obj[name.replace(/Id$/, '')];
+    // @ts-expect-error We confirm this below
+    const field: SecuredProp<any> = obj[name];
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- sanity check since we ignored types above
     if (field === undefined || field.canRead == null || field.canEdit == null) {
       console.error(

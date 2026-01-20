@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreatePersonInput } from '~/api/schema.graphql';
+import { CreatePerson } from '~/api/schema.graphql';
 import { ButtonLink } from '../../../components/Routing';
 import { UserForm, UserFormProps } from '../UserForm';
 import {
@@ -12,8 +12,8 @@ import {
 
 type SubmitResult = CreatePersonMutation['createPerson']['user'];
 export type CreateUserProps = Except<
-  UserFormProps<CreatePersonInput, SubmitResult>,
-  'fieldsPrefix' | 'onSubmit'
+  UserFormProps<CreatePerson, SubmitResult>,
+  'onSubmit'
 >;
 
 export const CreateUser = (props: CreateUserProps) => {
@@ -26,7 +26,7 @@ export const CreateUser = (props: CreateUserProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   return (
-    <UserForm<CreatePersonInput, SubmitResult>
+    <UserForm<CreatePerson, SubmitResult>
       title="Create Person"
       onSuccess={(user) => {
         enqueueSnackbar(`Created person: ${user.fullName}`, {
@@ -39,7 +39,6 @@ export const CreateUser = (props: CreateUserProps) => {
         });
       }}
       {...props}
-      fieldsPrefix="person"
       onSubmit={async (input) => {
         const { data } = await createPerson({
           variables: { input },

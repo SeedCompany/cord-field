@@ -124,10 +124,8 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
     await updateBudgetRecord({
       variables: {
         input: {
-          budgetRecord: {
-            id: record.id,
-            amount: newAmount,
-          },
+          id: record.id,
+          amount: newAmount,
           changeset: record.changeset?.id,
         },
       },
@@ -138,7 +136,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
             undefined
           : {
               updateBudgetRecord: {
-                __typename: 'UpdateBudgetRecordOutput',
+                __typename: 'BudgetRecordUpdated',
                 budgetRecord: {
                   __typename: 'BudgetRecord',
                   id: record.id,

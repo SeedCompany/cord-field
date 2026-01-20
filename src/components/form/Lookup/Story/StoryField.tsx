@@ -1,4 +1,4 @@
-import { CreateStoryInput } from '~/api/schema.graphql';
+import { CreateStory as CreateStoryInput } from '~/api/schema.graphql';
 import { CreateStory } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/Story/CreateStory';
 import { LookupField } from '../../index';
 import {
@@ -12,9 +12,5 @@ export const StoryField = LookupField.createFor<Story, CreateStoryInput>({
   label: 'Story',
   placeholder: 'Search for a story by name',
   CreateDialogForm: CreateStory,
-  getInitialValues: (value) => ({
-    story: {
-      name: value,
-    },
-  }),
+  getInitialValues: (name) => ({ name }),
 });

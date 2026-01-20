@@ -67,12 +67,12 @@ export const CeremonyPlanned = ({
     optimisticResponse: ({ input }) => ({
       __typename: 'Mutation',
       updateCeremony: {
-        __typename: 'UpdateCeremonyOutput' as const,
+        __typename: 'CeremonyUpdated' as const,
         ceremony: {
           ...ceremony!,
           planned: {
             ...ceremony!.planned,
-            value: input.ceremony.planned!,
+            value: input.planned!,
           },
         },
       },
@@ -86,10 +86,8 @@ export const CeremonyPlanned = ({
     void updateCeremony({
       variables: {
         input: {
-          ceremony: {
-            id: ceremony.id,
-            planned,
-          },
+          id: ceremony.id,
+          planned,
         },
       },
     });

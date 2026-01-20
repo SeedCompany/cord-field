@@ -21,7 +21,6 @@ import {
 import {
   DateField,
   EnumField,
-  FieldGroup,
   SecuredField,
   SubmitError,
   TextField,
@@ -44,10 +43,10 @@ export type EditableProjectField = ExtractStrict<
   | 'departmentId'
   | 'mouRange'
   | 'estimatedSubmission'
-  | 'fieldRegionId'
-  | 'primaryLocationId'
+  | 'fieldRegion'
+  | 'primaryLocation'
   | 'sensitivity'
-  | 'marketingLocationId'
+  | 'marketingLocation'
 >;
 
 interface ProjectFieldProps {
@@ -62,10 +61,10 @@ const fieldMapping: Record<
   ComponentType<ProjectFieldProps>
 > = {
   name: ({ props }) => <TextField {...props} label="Project Name" />,
-  primaryLocationId: ({ props }) => (
+  primaryLocation: ({ props }) => (
     <LocationField {...props} label="Primary Location" />
   ),
-  fieldRegionId: ({ props }) => (
+  fieldRegion: ({ props }) => (
     <FieldRegionField {...props} label="Field Region" />
   ),
   mouRange: ({ props }) => (
@@ -80,7 +79,7 @@ const fieldMapping: Record<
   sensitivity: ({ props }) => (
     <EnumField {...props} label="Sensitivity" options={SensitivityList} />
   ),
-  marketingLocationId: ({ props }) => (
+  marketingLocation: ({ props }) => (
     <LocationField {...props} label="Marketing Location" />
   ),
   departmentId: ({ props, project }) => {
@@ -90,16 +89,14 @@ const fieldMapping: Record<
   },
 };
 
-interface UpdateProjectFormValues {
-  project: Merge<
-    UpdateProject,
-    {
-      primaryLocationId?: DisplayLocationFragment | null;
-      fieldRegionId?: DisplayFieldRegionFragment | null;
-      marketingLocationId?: DisplayLocationFragment | null;
-    }
-  >;
-}
+type UpdateProjectFormValues = Merge<
+  UpdateProject,
+  {
+    primaryLocation?: DisplayLocationFragment | null;
+    fieldRegion?: DisplayFieldRegionFragment | null;
+    marketingLocation?: DisplayLocationFragment | null;
+  }
+>;
 
 type UpdateProjectDialogProps = Except<
   DialogFormProps<UpdateProjectFormValues>,
@@ -123,18 +120,15 @@ export const UpdateProjectDialog = ({
   const [updateProject] = useMutation(UpdateProjectDocument);
 
   const initialValues = useMemo(() => {
-    const fullInitialValuesFields: Except<
-      UpdateProjectFormValues['project'],
-      'id'
-    > = {
+    const fullInitialValuesFields: Except<UpdateProjectFormValues, 'id'> = {
       name: project.name.value,
-      primaryLocationId: project.primaryLocation.value,
-      fieldRegionId: project.fieldRegion.value,
+      primaryLocation: project.primaryLocation.value,
+      fieldRegion: project.fieldRegion.value,
       mouStart: project.mouRange.value.start,
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
-      marketingLocationId: project.marketingLocation.value,
+      marketingLocation: project.marketingLocation.value,
       departmentId: project.departmentId.value,
     };
 
@@ -147,10 +141,8 @@ export const UpdateProjectDialog = ({
     );
 
     return {
-      project: {
-        id: project.id,
-        ...filteredInitialValuesFields,
-      },
+      id: project.id,
+      ...filteredInitialValuesFields,
     };
   }, [
     project.name.value,
@@ -176,37 +168,33 @@ export const UpdateProjectDialog = ({
       changesetAware={editFields.every((field) => !field.endsWith('Id'))}
       initialValues={initialValues}
       validate={(values) => {
-        const start = values.project.mouStart;
-        const end = values.project.mouEnd;
+        const start = values.mouStart;
+        const end = values.mouEnd;
 
         if (start && end && asDate(start) > asDate(end)) {
           return {
-            project: {
-              mouStart: 'Start date should come before end date',
-              mouEnd: 'End date should come after start date',
-            },
+            mouStart: 'Start date should come before end date',
+            mouEnd: 'End date should come after start date',
           };
         }
 
         return undefined;
       }}
-      onSubmit={async ({ project: data }, form) => {
+      onSubmit={async (data, form) => {
         const { dirtyFields } = form.getState();
         await updateProject({
           variables: {
             input: {
-              project: {
-                ...data,
-                primaryLocationId: dirtyFields['project.primaryLocationId']
-                  ? data.primaryLocationId?.id ?? null
-                  : undefined,
-                fieldRegionId: dirtyFields['project.fieldRegionId']
-                  ? data.fieldRegionId?.id ?? null
-                  : undefined,
-                marketingLocationId: dirtyFields['project.marketingLocationId']
-                  ? data.marketingLocationId?.id ?? null
-                  : undefined,
-              },
+              ...data,
+              primaryLocation: dirtyFields.primaryLocation
+                ? data.primaryLocation?.id ?? null
+                : undefined,
+              fieldRegion: dirtyFields.fieldRegion
+                ? data.fieldRegion?.id ?? null
+                : undefined,
+              marketingLocation: dirtyFields.marketingLocation
+                ? data.marketingLocation?.id ?? null
+                : undefined,
               changeset: project.changeset?.id,
             },
           },
@@ -289,28 +277,24 @@ export const UpdateProjectDialog = ({
             [FORM_ERROR]: rendered,
             // Mark the field(s) as invalid,
             // even though we show the error in the unified spot.
-            project: {
-              ...(points.has('start') ? { mouStart: ' ' } : {}),
-              ...(points.has('end') ? { mouEnd: ' ' } : {}),
-            },
+            ...(points.has('start') ? { mouStart: ' ' } : {}),
+            ...(points.has('end') ? { mouEnd: ' ' } : {}),
           };
         },
       }}
     >
       <SubmitError />
-      <FieldGroup prefix="project">
-        {editFields.map((name) => {
-          const Field = fieldMapping[name];
-          if (name === 'sensitivity') {
-            return <Field props={{ name }} project={project} key={name} />;
-          }
-          return (
-            <SecuredField obj={project} name={name} key={name}>
-              {(props) => <Field props={props} project={project} />}
-            </SecuredField>
-          );
-        })}
-      </FieldGroup>
+      {editFields.map((name) => {
+        const Field = fieldMapping[name];
+        if (name === 'sensitivity') {
+          return <Field props={{ name }} project={project} key={name} />;
+        }
+        return (
+          <SecuredField obj={project} name={name} key={name}>
+            {(props) => <Field props={props} project={project} />}
+          </SecuredField>
+        );
+      })}
     </DialogForm>
   );
 };

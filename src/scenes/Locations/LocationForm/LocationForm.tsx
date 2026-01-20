@@ -29,18 +29,16 @@ import {
 } from '../../../components/form/Lookup/FundingAccount';
 import { LocationFormFragment } from './LocationForm.graphql';
 
-export interface LocationFormValues<
+export type LocationFormValues<
   CreateOrUpdateType extends CreateLocation | UpdateLocation
-> {
-  location: Merge<
-    CreateOrUpdateType,
-    {
-      defaultFieldRegionId?: FieldRegionLookupItem | null;
-      fundingAccountId?: FundingAccountLookupItem | null;
-      mapImage?: File[];
-    }
-  >;
-}
+> = Merge<
+  CreateOrUpdateType,
+  {
+    defaultFieldRegion?: FieldRegionLookupItem | null;
+    fundingAccount?: FundingAccountLookupItem | null;
+    mapImage?: File[];
+  }
+>;
 
 export type LocationFormProps<CreateOrUpdateInput, R = void> = DialogFormProps<
   CreateOrUpdateInput,
@@ -57,7 +55,6 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
     DialogProps={{
       maxWidth: 'sm',
     }}
-    fieldsPrefix="location"
     {...rest}
   >
     <SubmitError />
@@ -104,12 +101,12 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
         </SecuredField>
       </Grid>
       <Grid item xs={12}>
-        <SecuredField obj={location} name="fundingAccountId">
+        <SecuredField obj={location} name="fundingAccount">
           {(props) => <FundingAccountField margin="none" {...props} />}
         </SecuredField>
       </Grid>
       <Grid item xs={12}>
-        <SecuredField obj={location} name="defaultFieldRegionId">
+        <SecuredField obj={location} name="defaultFieldRegion">
           {(props) => (
             <FieldRegionField
               margin="none"

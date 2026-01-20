@@ -10,10 +10,5 @@ export const FieldZoneField = LookupField.createFor({
   label: 'Field Zone',
   placeholder: 'Search for a field zone by name',
   CreateDialogForm: CreateFieldZone,
-  // @ts-expect-error don't need to pass through entire initialValues
-  getInitialValues: (val) => ({
-    fieldZone: {
-      name: val,
-    },
-  }),
+  getInitialValues: (name) => ({ name }),
 });

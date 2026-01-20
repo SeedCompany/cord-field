@@ -1,5 +1,5 @@
 mutation UpdatePartnerGrid($input: UpdatePartner!) {
-  updatePartner(input: { partner: $input }) {
+  updatePartner(input: $input) {
     partner {
       ...partnerDataGridRow
     }

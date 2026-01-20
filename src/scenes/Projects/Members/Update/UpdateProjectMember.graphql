@@ -1,4 +1,4 @@
-mutation UpdateProjectMember($input: UpdateProjectMemberInput!) {
+mutation UpdateProjectMember($input: UpdateProjectMember!) {
   updateProjectMember(input: $input) {
     projectMember {
       ...ProjectMemberCard

@@ -13,13 +13,12 @@ import {
   CreatePartnershipMutation,
 } from './CreatePartnership.graphql';
 
-export interface CreatePartnershipFormInput {
-  partnership: Pick<
+export interface CreatePartnershipFormInput
+  extends Pick<
     CreatePartnershipType,
-    'projectId' | 'types' | 'financialReportingType' | 'primary'
-  > & {
-    partnerLookupItem: PartnerLookupItem;
-  };
+    'project' | 'types' | 'financialReportingType' | 'primary'
+  > {
+  partner: PartnerLookupItem;
 }
 
 export type CreatePartnershipProps = Except<
@@ -56,16 +55,14 @@ export const CreatePartnership = ({
     <PartnershipForm<CreatePartnershipFormInput>
       title="Create Partnership"
       {...props}
-      onSubmit={async ({ partnership: { partnerLookupItem, ...rest } }) => {
+      onSubmit={async ({ partner, ...rest }) => {
         await createPartnership({
           variables: {
             input: {
-              partnership: {
-                ...rest,
-                projectId: project.id,
-                partnerId: partnerLookupItem.id,
-                primary: rest.primary || undefined,
-              },
+              ...rest,
+              project: project.id,
+              partner: partner.id,
+              primary: rest.primary || undefined,
               changeset: project.changeset?.id,
             },
           },

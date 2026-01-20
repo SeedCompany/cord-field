@@ -41,7 +41,6 @@ export const PostForm = <T, R = void>({
     DialogProps={{
       maxWidth: 'sm',
     }}
-    fieldsPrefix="post"
     {...rest}
   >
     <SubmitError />

@@ -118,50 +118,48 @@ export const EditProduct = () => {
       : 'full';
 
     const values: ProductFormValues = {
-      product: {
-        mediums: mediums.value,
-        methodology: methodology.value,
-        steps: product.steps.value,
-        describeCompletion: product.describeCompletion.value,
-        scriptureReferences: scriptureReferences,
-        book: book,
-        bookSelection: bookSelection,
-        progressStepMeasurement: progressStepMeasurement.value,
-        progressTarget: progressTarget.value,
-        unspecifiedScripture: unspecifiedScripture
-          ? {
-              totalVerses: unspecifiedScripture.totalVerses,
-            }
-          : undefined,
-        title: '',
-        ...(product.__typename === 'DirectScriptureProduct'
-          ? {
-              productType: product.__typename,
-            }
-          : product.__typename === 'DerivativeScriptureProduct' &&
-            (product.produces.value?.__typename === 'Film' ||
-              product.produces.value?.__typename === 'Story' ||
-              product.produces.value?.__typename === 'EthnoArt')
-          ? {
-              producesId: {
-                id: product.produces.value.id,
-                name: product.produces.value.name,
-              },
-              productType: product.produces.value.__typename,
-            }
-          : undefined),
-        ...(product.__typename === 'OtherProduct'
-          ? {
-              productType: 'Other',
-              title: product.title.value || '',
-              description: product.description.value || '',
-            }
-          : undefined),
-        producingMediums: mapEntries(
-          engagement?.partnershipsProducingMediums.items ?? [],
-          (pair) => [pair.medium, pair.partnership ?? undefined]
-        ).asRecord,
-      },
+      mediums: mediums.value,
+      methodology: methodology.value,
+      steps: product.steps.value,
+      describeCompletion: product.describeCompletion.value,
+      scriptureReferences: scriptureReferences,
+      book: book,
+      bookSelection: bookSelection,
+      progressStepMeasurement: progressStepMeasurement.value,
+      progressTarget: progressTarget.value,
+      unspecifiedScripture: unspecifiedScripture
+        ? {
+            totalVerses: unspecifiedScripture.totalVerses,
+          }
+        : undefined,
+      title: '',
+      ...(product.__typename === 'DirectScriptureProduct'
+        ? {
+            productType: product.__typename,
+          }
+        : product.__typename === 'DerivativeScriptureProduct' &&
+          (product.produces.value?.__typename === 'Film' ||
+            product.produces.value?.__typename === 'Story' ||
+            product.produces.value?.__typename === 'EthnoArt')
+        ? {
+            produces: {
+              id: product.produces.value.id,
+              name: product.produces.value.name,
+            },
+            productType: product.produces.value.__typename,
+          }
+        : undefined),
+      ...(product.__typename === 'OtherProduct'
+        ? {
+            productType: 'Other',
+            title: product.title.value || '',
+            description: product.description.value || '',
+          }
+        : undefined),
+      producingMediums: mapEntries(
+        engagement?.partnershipsProducingMediums.items ?? [],
+        (pair) => [pair.medium, pair.partnership ?? undefined]
+      ).asRecord,
     };
     return values;
   }, [product, engagement]);
@@ -186,7 +184,7 @@ export const EditProduct = () => {
     const updateProduct = async () => {
       if (
         Object.keys(dirtyFields).filter(
-          (field) => !field.startsWith('product.producingMediums.')
+          (field) => !field.startsWith('producingMediums.')
         ).length === 0
       ) {
         // Changes have not been made that affect the product.
@@ -195,7 +193,7 @@ export const EditProduct = () => {
 
       const {
         productType,
-        producesId,
+        produces,
         scriptureReferences,
         book,
         title,
@@ -204,7 +202,7 @@ export const EditProduct = () => {
         unspecifiedScripture,
         producingMediums,
         ...input
-      } = data.product ?? {};
+      } = data;
 
       const parsedScriptureReferences =
         bookSelection === 'partialUnknown'
@@ -248,7 +246,7 @@ export const EditProduct = () => {
             input: {
               id: product.id,
               ...input,
-              produces: producesId!.id,
+              produces: produces!.id,
               scriptureReferencesOverride: parsedScriptureReferences,
             },
           },
@@ -259,14 +257,14 @@ export const EditProduct = () => {
     const updatePpm = async () => {
       if (
         !Object.keys(dirtyFields).some((field) =>
-          field.startsWith('product.producingMediums.')
+          field.startsWith('producingMediums.')
         )
       ) {
         // No producing partnerships have changed, API call not needed.
         return;
       }
 
-      const ppmInput = entries(data.product?.producingMediums ?? {}).map(
+      const ppmInput = entries(data.producingMediums ?? {}).map(
         ([medium, partnership]) => ({
           medium: medium,
           partnership: partnership?.id,
@@ -274,7 +272,7 @@ export const EditProduct = () => {
       );
       await updatePartnershipsProducingMediums({
         variables: {
-          engagementId: engagement.id,
+          engagement: engagement.id,
           input: ppmInput,
         },
       });
