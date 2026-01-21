@@ -88,13 +88,6 @@ export const FieldOverviewCard = ({
   const ActionArea = showData && data?.to ? CardActionAreaLink : CardActionArea;
   const Btn = data?.to ? ButtonLink : Button;
 
-  // Standard component if title is a string
-  const standardTitle = (
-    <Typography variant="h4">
-      {loading ? <Skeleton width="80%" /> : data ? title : ''}
-    </Typography>
-  );
-
   const card = (
     <Card className={cx(classes.root, className)}>
       <ActionArea
@@ -105,7 +98,13 @@ export const FieldOverviewCard = ({
       >
         <HugeIcon icon={icon} loading={!data} />
         <div className={classes.rightContent}>
-          {typeof title === 'string' ? standardTitle : title}
+          {typeof title === 'string' ? (
+            <Typography variant="h4">
+              {loading ? <Skeleton width="80%" /> : data ? title : ''}
+            </Typography>
+          ) : (
+            title
+          )}
           <Typography
             variant="h1"
             className={cx({
