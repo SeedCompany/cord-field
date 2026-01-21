@@ -467,6 +467,7 @@ export const ProjectOverview = () => {
               <BudgetOverviewCard
                 budget={project?.budget.value}
                 loading={!project}
+                status={project?.projectStatus}
               />
             </Grid>
             <Grid item xs={12} md={6}>

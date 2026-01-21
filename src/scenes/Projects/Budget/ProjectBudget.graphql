@@ -6,6 +6,16 @@ fragment BudgetRecord on BudgetRecord {
     canRead
     value
   }
+  preApprovedAmount {
+    value
+    canEdit
+    canRead
+  }
+  initialAmount {
+    value
+    canEdit
+    canRead
+  }
   fiscalYear {
     canEdit
     canRead
@@ -42,6 +52,7 @@ query ProjectBudget($id: ID!, $changeset: ID) {
         records {
           ...BudgetRecord
         }
+        status
         universalTemplateFile {
           canEdit
           canRead
@@ -82,17 +93,33 @@ mutation UpdateProjectBudgetRecord($input: UpdateBudgetRecord!) {
       amount {
         value
       }
+      preApprovedAmount {
+        value
+      }
+      initialAmount {
+        value
+      }
       ...RecalculateChangesetDiff
     }
   }
 }
 
-fragment CalculateNewTotal on Budget {
+fragment CalculateNewTotalAndRollup on Budget {
   ...Id
   total
+  summary {
+    hasPreApproved
+    preApprovedExceeded
+  }
   records {
     ...Id
     amount {
+      value
+    }
+    preApprovedAmount {
+      value
+    }
+    initialAmount {
       value
     }
   }
