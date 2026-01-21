@@ -6,4 +6,8 @@ fragment BudgetOverview on Budget {
     hasPreApproved
     preApprovedExceeded
   }
+  project: parent {
+    id
+    type
+  }
 }
