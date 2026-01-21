@@ -30,7 +30,7 @@ export const BudgetOverviewCard = ({
           <Typography variant="h4">
             {loading ? <Skeleton width="80%" /> : 'Field Budget'}
           </Typography>
-          <Feature flag="budgetPreApproval">
+          <Feature flag="budgetPreApproval" match={true}>
             {budget?.summary.preApprovedExceeded &&
               status === 'InDevelopment' && (
                 <Tooltip title="Pre-approved Item Exceeded">
