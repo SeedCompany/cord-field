@@ -5,6 +5,7 @@ import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { MenuItemLink } from '../../../../components/Routing';
 import { useSession } from '../../../../components/Session';
 import { ChangePasswordMenuItem } from './ChangePasswordMenuItem';
+import { EarlyAccessMenuItem } from './EarlyAccessMenuItem';
 import { ImpersonationMenuItem } from './ImpersonationDialog';
 import { ToggleUploadManagerMenuItem } from './ToggleUploadManagerMenuItem';
 
@@ -49,6 +50,7 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
       )}
       <ToggleUploadManagerMenuItem onClick={handleCloseMenu} />
       <ImpersonationMenuItem onClick={handleCloseMenu} />
+      <EarlyAccessMenuItem />
       <MenuItemLink to="/logout">Sign Out</MenuItemLink>
     </Menu>
   );
