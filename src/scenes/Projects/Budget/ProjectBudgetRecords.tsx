@@ -128,7 +128,9 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       hidden: !isPreApprovalEnabled,
     },
     {
-      headerName: 'Approved',
+      headerName: 'Initially Approved',
+      description:
+        'The amount that was initially approved when the project started',
       field: 'initialAmount',
       flex: 1,
       ...useCurrencyColumn(),
@@ -151,6 +153,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
     },
     {
       headerName: 'Amount',
+      description: 'The current/adjusted amount from changes to the plan',
       field: 'amount',
       flex: 1,
       ...useCurrencyColumn(),
@@ -158,7 +161,6 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       valueSetter: setSecuredValue('amount'),
       editable: true,
       isEditable: ({ row }) => row.amount.canEdit,
-      changesetAware: true,
       cellClassName: (params) => {
         const amount = params.row.amount.value;
         const preApprovedAmount = params.row.preApprovedAmount.value;
@@ -169,6 +171,7 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
 
         return exceedsApproved ? 'cell-invalid' : '';
       },
+      changesetAware: false, // TODO? renderCell below overrides the ChangesetCell wrapping
       renderCell: (params) => {
         const amount = params.row.amount.value;
         const preApprovedAmount = params.row.preApprovedAmount.value;
