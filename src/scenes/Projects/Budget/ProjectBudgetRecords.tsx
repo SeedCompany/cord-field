@@ -125,7 +125,8 @@ export const ProjectBudgetRecords = (props: ProjectBudgetRecordsProps) => {
       editable: true,
       isEditable: ({ row }) => row.preApprovedAmount.canEdit,
       changesetAware: true,
-      hidden: !isPreApprovalEnabled,
+      hidden:
+        !isPreApprovalEnabled || budget?.value?.project.type !== 'Internship',
     },
     {
       headerName: 'Initially Approved',
