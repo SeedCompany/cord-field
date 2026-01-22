@@ -1,7 +1,26 @@
 import { PaletteColor, PaletteColorOptions } from '@mui/material';
-import { grey } from '@mui/material/colors';
 import { PaletteOptions } from '@mui/material/styles';
 import { Role } from '~/api/schema/schema.graphql';
+
+/**
+ * Seed Company Brand Colors
+ * These colors are used throughout the application to maintain brand consistency
+ * across both light and dark modes.
+ */
+const brandColors = {
+  /** #F7F1E7 - Light beige used for light mode default background */
+  natural: '#F7F1E7',
+  /** #CDC3B0 - Medium beige used for secondary text in dark mode */
+  stone: '#CDC3B0',
+  /** #FFFFFF - Pure white used for paper backgrounds in light mode and contrast text */
+  white: '#FFFFFF',
+  /** #EBEBEC - Very light gray used for secondary color and primary text in dark mode */
+  lightGray: '#EBEBEC',
+  /** #636466 - Dark gray used for secondary color in light mode and paper background in dark mode */
+  darkGray: '#636466',
+  /** #323232 - Very dark gray (almost black) used for dark mode default background and primary text in light mode */
+  black: '#323232',
+};
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';
@@ -9,32 +28,30 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
     background: {
-      default: dark ? '#303030' : grey[50], // MUI v4 default
+      default: dark ? brandColors.black : brandColors.natural,
+      paper: dark ? brandColors.darkGray : brandColors.white,
     },
     primary: {
       main: mainGreen,
-      contrastText: '#ffffff',
+      contrastText: brandColors.white,
     },
     secondary: {
-      main: dark ? grey[50] : '#3c444e',
+      main: dark ? brandColors.lightGray : brandColors.darkGray,
     },
     error: {
       main: '#ff5a5f',
-      contrastText: '#ffffff',
+      contrastText: brandColors.white,
     },
     create: {
       main: '#ff5a5f',
-      contrastText: '#ffffff',
+      contrastText: brandColors.white,
     },
     warning: {
       main: '#f2994a',
     },
     text: {
-      // Close to #3c444e while still using alpha
-      ...(!dark ? { primary: 'rgba(0, 0, 0, 0.75)' } : {}),
-      // Close to #8f928b while still using alpha
-      // Still it looks so contrast-less for form labels
-      // secondary: 'rgba(0, 0, 0, 0.45)',
+      primary: dark ? brandColors.lightGray : brandColors.black,
+      secondary: dark ? brandColors.stone : brandColors.darkGray,
     },
 
     // TODO theme.palette.augmentColor()
