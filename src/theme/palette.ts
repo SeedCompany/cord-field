@@ -1,5 +1,4 @@
 import { PaletteColor, PaletteColorOptions } from '@mui/material';
-import { grey } from '@mui/material/colors';
 import { PaletteOptions } from '@mui/material/styles';
 import { Role } from '~/api/schema/schema.graphql';
 
