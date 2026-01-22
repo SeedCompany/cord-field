@@ -1,146 +1,97 @@
 import { useQuery } from '@apollo/client';
-import { Edit } from '@mui/icons-material';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Box, Skeleton, Stack, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { canEditAny } from '~/common';
-import { useDialog } from '~/components/Dialog';
-import {
-  DisplaySimpleProperty,
-  DisplaySimplePropertyProps,
-} from '~/components/DisplaySimpleProperty';
-import { Link } from '~/components/Routing';
+import { Tab, TabsContainer } from '~/components/Tabs';
+import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { Error } from '../../../components/Error';
-import { Fab } from '../../../components/Fab';
-import { EditFieldZone } from '../../../components/FieldZone';
 import { Redacted } from '../../../components/Redacted';
 import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql';
+import { FieldZoneProfile } from './Tabs/Profile/FieldZoneProfile';
+import { FieldZoneProjects } from './Tabs/Projects/FieldZoneProjects';
+
+const useFieldZoneDetailsFilters = makeQueryHandler({
+  tab: withDefault(EnumParam(['profile', 'projects']), 'profile'),
+});
 
 export const FieldZoneDetail = () => {
   const { fieldZoneId = '' } = useParams();
-
-  const [editZoneState, editZone] = useDialog();
 
   const { data, error } = useQuery(FieldZoneDetailDocument, {
     variables: { fieldZoneId },
   });
 
+  const [filters, setFilters] = useFieldZoneDetailsFilters();
+
   const fieldZone = data?.fieldZone;
 
   return (
-    <Box
+    <Stack
       component="main"
       sx={{
-        flex: 1,
+        overflowY: 'auto',
         p: 4,
+        gap: 3,
+        flex: 1,
+        maxWidth: (theme) => theme.breakpoints.values.xl,
       }}
     >
-      <Helmet title={fieldZone?.name.value || undefined} />
       <Error error={error}>
         {{
           NotFound: 'Could not find field zone',
           Default: 'Error loading field zone',
         }}
       </Error>
+      <Helmet title={fieldZone?.name.value ?? undefined} />
+
       {!error && (
-        <Box
-          sx={{
-            maxWidth: (theme) => theme.breakpoints.values.md,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 3,
-          }}
-        >
+        <>
           <Box
-            component="header"
             sx={{
-              flex: 1,
               display: 'flex',
+              gap: 1,
             }}
           >
             <Typography
               variant="h2"
               sx={{
-                mr: 4,
-                width: !fieldZone?.name.value ? '40%' : undefined,
+                mr: 2,
+                lineHeight: 'inherit',
               }}
             >
               {!fieldZone ? (
-                <Skeleton width="100%" />
+                <Skeleton width="20ch" />
               ) : (
                 fieldZone.name.value ?? (
                   <Redacted
                     info="You don't have permission to view this field zone's name"
-                    width="40%"
+                    width="20ch"
                   />
                 )
               )}
             </Typography>
-            {canEditAny(fieldZone, true) && (
-              <Fab
-                color="primary"
-                aria-label="edit zone"
-                onClick={editZone}
-                loading={!fieldZone}
+          </Box>
+          <TabsContainer>
+            <TabContext value={filters.tab}>
+              <TabList
+                onChange={(_e, tab) => setFilters({ ...filters, tab })}
+                aria-label="field zone navigation tabs"
+                variant="scrollable"
               >
-                <Edit />
-              </Fab>
-            )}
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-            }}
-          >
-            <Typography variant="h4">
-              {fieldZone ? 'Field Zone' : <Skeleton width={200} />}
-            </Typography>
-          </Box>
-
-          <DisplayProperty
-            label="Director"
-            value={
-              fieldZone?.director.value && (
-                <Link to={`/users/${fieldZone.director.value.id}`}>
-                  {fieldZone.director.value.fullName}
-                </Link>
-              )
-            }
-            loading={!fieldZone}
-          />
-        </Box>
+                <Tab label="Profile" value="profile" />
+                <Tab label="Projects" value="projects" />
+              </TabList>
+              <TabPanel value="profile">
+                <FieldZoneProfile fieldZone={fieldZone} />
+              </TabPanel>
+              <TabPanel value="projects">
+                {fieldZone && <FieldZoneProjects />}
+              </TabPanel>
+            </TabContext>
+          </TabsContainer>
+        </>
       )}
-      {fieldZone && <EditFieldZone fieldZone={fieldZone} {...editZoneState} />}
-    </Box>
+    </Stack>
   );
 };
-
-const DisplayProperty = (props: DisplaySimplePropertyProps) =>
-  !props.value && !props.loading ? null : (
-    <DisplaySimpleProperty
-      variant="body1"
-      {...{ component: 'div' }}
-      {...props}
-      loading={
-        props.loading ? (
-          <>
-            <Typography variant="body2">
-              <Skeleton width="10%" />
-            </Typography>
-            <Typography variant="body1">
-              <Skeleton width="40%" />
-            </Typography>
-          </>
-        ) : null
-      }
-      LabelProps={{
-        color: 'textSecondary',
-        variant: 'body2',
-        ...props.LabelProps,
-      }}
-      ValueProps={{
-        color: 'textPrimary',
-        ...props.ValueProps,
-      }}
-    />
-  );

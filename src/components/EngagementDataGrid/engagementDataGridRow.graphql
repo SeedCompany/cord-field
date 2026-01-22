@@ -9,7 +9,6 @@ fragment engagementDataGridRow on Engagement {
   endDate {
     value
   }
-
   project {
     id
     type
@@ -20,6 +19,14 @@ fragment engagementDataGridRow on Engagement {
     }
     status
     primaryLocation {
+      value {
+        id
+        name {
+          value
+        }
+      }
+    }
+    fieldRegion {
       value {
         id
         name {
