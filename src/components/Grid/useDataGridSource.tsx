@@ -433,7 +433,7 @@ export const useDataGridSource = <
     apiRef,
     rows,
     loading,
-    rowCount: total,
+    rowCount: hasFilter && isCacheComplete ? rows.length : total,
     sortModel: view.sortModel,
     filterModel: view.filterModel,
     hideFooterPagination: true,
