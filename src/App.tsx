@@ -44,7 +44,7 @@ if (logRocketAppId) {
 
 MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
 
-const ThemeProviderWithDarkMode = ({ children }: { children: ReactNode }) => {
+const ThemeProviderWithDarkMode = ({ children }: { children?: ReactNode }) => {
   // Detect system/browser dark mode preference
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {
     noSsr: true,
