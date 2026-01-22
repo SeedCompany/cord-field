@@ -1,4 +1,4 @@
-query User($userId: ID!) {
+query User($userId: ID!) @live {
   user(id: $userId) {
     ...DisplayUser
     ...UserForm
