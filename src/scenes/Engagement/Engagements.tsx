@@ -13,8 +13,16 @@ const ProgressReportsList = loadable(() => import('../ProgressReports'), {
   resolveComponent: (m) => m.ProgressReportListPage,
 });
 
+const EngagementFlowchart = loadable(
+  () => import('./Workflow/EngagementFlowchart'),
+  {
+    resolveComponent: (m) => m.EngagementFlowchart,
+  }
+);
+
 export const Engagements = () => (
   <Routes>
+    <Route path="workflow" element={<EngagementFlowchart />} />
     <Route path=":engagementId/*" element={<EngagementDetail />} />
     {NotFoundRoute}
   </Routes>
