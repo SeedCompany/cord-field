@@ -138,6 +138,7 @@
     "@babel/plugin-transform-numeric-separator": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.23.2",
     "@babel/types": "^7.23.0",
+    "@editorjs/link-autocomplete": "^0.1.0",
     "@emotion/babel-plugin": "^11.11.0",
     "@emotion/jest": "^11.11.0",
     "@graphql-codegen/add": "^5.0.0",

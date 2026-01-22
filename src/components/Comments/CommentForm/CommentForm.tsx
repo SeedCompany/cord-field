@@ -33,7 +33,7 @@ export const CommentForm = ({
         <RichTextField
           name="body"
           label="Comment"
-          tools={['paragraph', 'delimiter', 'marker', 'list']}
+          tools={['paragraph', 'delimiter', 'marker', 'list', 'mentions']}
           placeholder={placeholder}
           helperText={false}
         />

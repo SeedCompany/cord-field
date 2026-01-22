@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client';
 import type {
   EditorConfig,
   default as EditorJS,
@@ -27,6 +28,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -67,6 +69,14 @@ export function RichTextField({
   showCharacterCount,
   ...props
 }: RichTextFieldProps) {
+  const apolloClient = useApolloClient();
+  const apollo = useMemo(() => {
+    // Client with no enumerable properties to avoid deep merging by Editor
+    return new Proxy(apolloClient, {
+      ownKeys: () => [],
+    });
+  }, [apolloClient]);
+
   const instanceRef = useRef<EditorJS>();
   const [isReady, setReady] = useState(false);
 
@@ -202,11 +212,21 @@ export function RichTextField({
               const EditorJS = pickEditorComponent(); // Returns a constant value
 
               const tools = toolNames
-                ? (pick(EDITOR_JS_TOOLS, toolNames) as EditorConfig['tools'])
+                ? (pick(EDITOR_JS_TOOLS, toolNames) as Partial<
+                    typeof EDITOR_JS_TOOLS
+                  >)
                 : EDITOR_JS_TOOLS;
               return (
                 <EditorJS
-                  tools={tools}
+                  tools={{
+                    ...tools,
+                    ...(tools.mentions && {
+                      mentions: {
+                        class: tools.mentions,
+                        config: { apollo },
+                      },
+                    }),
+                  }}
                   autofocus={props.autoFocus}
                   holder={id}
                   logLevel={'WARN' as LogLevels}
