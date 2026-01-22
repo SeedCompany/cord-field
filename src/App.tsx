@@ -49,7 +49,7 @@ const ThemeProviderWithDarkMode = ({ children }: { children?: ReactNode }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {
     noSsr: true,
   });
-  
+
   const theme = useMemo(
     () => createTheme({ dark: prefersDarkMode }),
     [prefersDarkMode]
