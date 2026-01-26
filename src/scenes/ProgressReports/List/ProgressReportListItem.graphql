@@ -1,13 +1,5 @@
 fragment ProgressReportListItem on ProgressReport {
-  ...Id
-  start
-  end
-  due
-  skippedReason {
-    value
-    canEdit
-    canRead
-  }
+  ...PeriodicReport
   status {
     value
   }

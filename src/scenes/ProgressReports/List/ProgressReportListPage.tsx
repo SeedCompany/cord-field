@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import { PeriodicReportsTable } from '~/components/PeriodicReports/PeriodicReportsTable';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
@@ -42,13 +43,23 @@ export const ProgressReportListPage = () => {
         <EngagementBreadcrumb key="engagement" data={engagement} />,
       ]}
       TableCardProps={{
-        sx: { maxWidth: 400 },
+        sx: {
+          maxWidth:
+            engagement?.project.__typename !==
+            'MultiplicationTranslationProject'
+              ? 400
+              : undefined,
+        },
       }}
     >
-      <ProgressReportsTable
-        loading={!engagement}
-        rows={engagement?.progressReports.items ?? []}
-      />
+      {engagement?.project.__typename === 'MultiplicationTranslationProject' ? (
+        <PeriodicReportsTable data={engagement.progressReports.items} />
+      ) : (
+        <ProgressReportsTable
+          loading={!engagement}
+          rows={engagement?.progressReports.items ?? []}
+        />
+      )}
     </PeriodicReportListLayout>
   );
 };
