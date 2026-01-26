@@ -1,5 +1,5 @@
 fragment ProgressReportListItem on ProgressReport {
-  ...PeriodicReport
+  ...ProgressReportAsPeriodicReport
   status {
     value
   }
