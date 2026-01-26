@@ -1,6 +1,7 @@
 import { Add } from '@mui/icons-material';
 import { Card, Grid, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import { PeriodicReportCard } from '~/components/PeriodicReports';
 import { ProgressReportsOverviewCard } from '../../../components/ProgressReportsOverviewCard/ProgressReportsOverviewCard';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { FabLink } from '../../../components/Routing';
@@ -63,10 +64,19 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
           <Grid item lg={5} container direction="column" spacing={3}>
             <Grid item container spacing={3}>
               <Grid item container className={classes.details}>
-                <ProgressReportsOverviewCard
-                  dueCurrently={engagement.currentProgressReportDue}
-                  dueNext={engagement.nextProgressReportDue}
-                />
+                {engagement.project.__typename ===
+                'MultiplicationTranslationProject' ? (
+                  <PeriodicReportCard
+                    type="Progress"
+                    dueCurrently={engagement.currentProgressReportDue}
+                    dueNext={engagement.nextProgressReportDue}
+                  />
+                ) : (
+                  <ProgressReportsOverviewCard
+                    dueCurrently={engagement.currentProgressReportDue}
+                    dueNext={engagement.nextProgressReportDue}
+                  />
+                )}
               </Grid>
               <Grid item container className={classes.details}>
                 <PlanningSpreadsheet engagement={engagement} />
