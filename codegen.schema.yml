@@ -51,7 +51,7 @@ generates:
         DateTime:
           input: ~/common#DateTimeOrISO
           output: ~/common#ISOString
-        JSONObject: Record<string, any>
+        JSONObject: ~/common#JsonObjectScalar
         URL: string
         RichText: RichTextJson
         Markdown: MarkdownString
