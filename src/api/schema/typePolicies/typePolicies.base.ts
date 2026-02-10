@@ -36,6 +36,7 @@ export const typePolicies: TypePolicies = {
   Language: {
     fields: {
       ethnologue: { merge: true },
+      locations: {},
     },
   },
   EthnologueLanguage: { keyFields: false },
