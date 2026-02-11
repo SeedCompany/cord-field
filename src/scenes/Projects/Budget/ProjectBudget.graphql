@@ -36,7 +36,7 @@ fragment BudgetRecord on BudgetRecord {
   }
 }
 
-query ProjectBudget($id: ID!, $changeset: ID) {
+query ProjectBudget($id: ID!, $changeset: ID) @live {
   project(id: $id, changeset: $changeset) {
     id
     ...ProjectBreadcrumb

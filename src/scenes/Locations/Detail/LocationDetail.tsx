@@ -58,6 +58,7 @@ export const LocationDetail = () => {
 
   const { data, error } = useQuery(LocationDocument, {
     variables: { locationId },
+    fetchPolicy: 'cache-and-network',
   });
   const location = data?.location;
   const fundingAccount = location?.fundingAccount.value;

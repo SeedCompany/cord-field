@@ -1,4 +1,4 @@
-query Partner($input: ID!) {
+query Partner($input: ID!) @live {
   partner(id: $input) {
     ...partnerDetails
   }

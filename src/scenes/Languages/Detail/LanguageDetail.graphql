@@ -1,4 +1,4 @@
-query Language($languageId: ID!) {
+query Language($languageId: ID!) @live {
   language(id: $languageId) {
     ...LanguageDetail
     ...LanguageForm

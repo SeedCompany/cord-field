@@ -40,6 +40,7 @@ export const ProductDetail = () => {
       id,
       changesetId,
     },
+    fetchPolicy: 'cache-and-network',
   });
   const product = data?.product;
   const {

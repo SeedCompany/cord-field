@@ -72,6 +72,7 @@ export const LanguageDetail = () => {
   const { languageId = '' } = useParams();
   const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },
+    fetchPolicy: 'cache-and-network',
   });
   useComments(languageId);
 
