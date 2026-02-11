@@ -6,7 +6,7 @@ applyTo: "**/*.{ts,tsx,graphql,gql}"
 
 This document provides guidelines for developers working on the CORD Field front-end project, a UI built with React, Material-UI (MUI) v5, and GraphQL, using Yarn and Razzle. The front-end connects to the CORD API v3.
 
-### Project Structure
+## Project Structure
 
 - `src/`: Source code
   - `src/api/`: client setup, caching strategies, schema definitions, and operation management.
@@ -17,7 +17,7 @@ This document provides guidelines for developers working on the CORD Field front
   - `src/server/`: server-side code and configuration files.
   - `src/theme/`: MUI theme configuration files.
 
-### Coding Standards
+## Coding Standards
 
 - Use single quotes for strings, 2 spaces for indentation.
 - Prefer arrow functions for callbacks, async/await for GraphQL queries/mutations.
@@ -33,7 +33,7 @@ This document provides guidelines for developers working on the CORD Field front
   - Define all object shapes in `src/common` or generated GraphQL types in `src/api`.
   - Use optional chaining (`?.`) or type guards for safe property access.
 
-### React Guidelines
+## React Guidelines
 
 - For new small components:
   - Pass most props to wrapping components for reusability.
@@ -41,11 +41,11 @@ This document provides guidelines for developers working on the CORD Field front
 - Avoid unnecessary HTML elements for styling (e.g., `<MyCard sx={{ m: 1 }} />` instead of `<Box sx={{ m: 1 }}><MyCard /></Box>`).
 - Use optional chaining (`?.`) or type guards for object properties.
 
-### Form Development
+## Form Development
 
 - Use custom form components with Final Form and react-final-form in `src/components/form`.
 
-### CSS Guidelines
+## CSS Guidelines
 
 - Use `sx` prop for styling; avoid StyledComponents or `makeStyles`.
 - Reference `src/theme` for spacing (1-8), palette colors, typography variants.
@@ -125,7 +125,7 @@ This document provides guidelines for developers working on the CORD Field front
     ```
     _Why_: Mixed style order reduces readability and maintainability.
 
-### Common Errors to Avoid
+## Common Errors to Avoid
 
 - **Accessing Non-Existent Properties**:
   - Never assume properties exist without type verification.
@@ -149,7 +149,7 @@ This document provides guidelines for developers working on the CORD Field front
     ```
     _Why_: Causes runtime errors due to unverified property access.
 
-### Tagged Comments
+## Tagged Comments
 
 - Use `// ai tag` to mark code for reference:
   - `example`: Best practice or model code.

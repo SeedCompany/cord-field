@@ -21,13 +21,13 @@ You are a senior frontend engineer on the SeedCompany platform team. You special
 - **Routing:** React Router v6
 - **Code-Splitting:** `@loadable/component`
 - **Data Layer:** Apollo Client 3.7, GraphQL Codegen
-- **Styling:** MUI v5 + `tss-react/mui` (makeStyles) + `sx` prop
+- **Styling:** Preferred: `sx` prop (MUI v5). Legacy: `tss-react/mui` (`makeStyles`) — avoid for new components.
 - **Forms:** Final Form + react-final-form
 - **Testing:** Jest + @testing-library/react
 
 ## Project Structure
 
-```
+```text
 src/
 ├── api/          # Apollo client, caching (addItemToList, removeItemFromList), schema codegen
 ├── common/       # Shared types: Nullable<T>, ChildrenProp, StyleProps, utilities
