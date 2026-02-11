@@ -74,7 +74,18 @@ export class SseLink extends ApolloLink {
         ),
         subscriber
       )
-    );
+    ).map((result) => {
+      if (result.extensions?.liveResourceIdentifier) {
+        // Help developers track which resource identifiers are being listened
+        // to for the operation.
+        // The API doesn't always have this enabled, usually only in dev.
+        console.debug({
+          operation: op.operationName,
+          liveResourceIdentifiers: result.extensions.liveResourceIdentifier,
+        });
+      }
+      return result;
+    });
   }
 }
 
