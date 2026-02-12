@@ -1,4 +1,4 @@
-query FieldZoneDetail($fieldZoneId: ID!) {
+query FieldZoneDetail($fieldZoneId: ID!) @live {
   fieldZone(id: $fieldZoneId) {
     name {
       value

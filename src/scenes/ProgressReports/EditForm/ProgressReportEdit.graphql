@@ -1,4 +1,4 @@
-query ProgressReportEdit($progressReportId: ID!) {
+query ProgressReportEdit($progressReportId: ID!) @live {
   periodicReport(id: $progressReportId) {
     ...ProgressReportEdit
   }

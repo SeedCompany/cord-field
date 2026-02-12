@@ -15,6 +15,7 @@ export const Engagement = () => {
       engagementId,
       changeset: changesetId,
     },
+    fetchPolicy: 'cache-and-network',
   });
   useComments(engagementId);
 

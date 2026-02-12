@@ -1,4 +1,4 @@
-query Engagement($engagementId: ID!, $changeset: ID) {
+query Engagement($engagementId: ID!, $changeset: ID) @live {
   engagement(id: $engagementId, changeset: $changeset) {
     ...Id
     ...LanguageEngagementDetail

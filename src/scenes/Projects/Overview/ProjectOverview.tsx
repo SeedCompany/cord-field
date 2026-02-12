@@ -158,6 +158,7 @@ export const ProjectOverview = () => {
         input: projectId,
         changeset: changesetId,
       },
+      fetchPolicy: 'cache-and-network',
     }
   );
   useComments(projectId);

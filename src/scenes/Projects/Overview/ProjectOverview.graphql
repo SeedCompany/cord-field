@@ -1,4 +1,4 @@
-query ProjectOverview($input: ID!, $changeset: ID) {
+query ProjectOverview($input: ID!, $changeset: ID) @live {
   project(id: $input, changeset: $changeset) {
     ...ProjectOverview
   }

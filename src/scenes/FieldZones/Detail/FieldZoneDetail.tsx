@@ -23,6 +23,7 @@ export const FieldZoneDetail = () => {
 
   const { data, error } = useQuery(FieldZoneDetailDocument, {
     variables: { fieldZoneId },
+    fetchPolicy: 'cache-and-network',
   });
 
   const fieldZone = data?.fieldZone;

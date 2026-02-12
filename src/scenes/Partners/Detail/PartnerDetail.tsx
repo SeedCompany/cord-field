@@ -47,6 +47,7 @@ export const PartnerDetail = () => {
     variables: {
       input: partnerId,
     },
+    fetchPolicy: 'cache-and-network',
   });
   useComments(partnerId);
 

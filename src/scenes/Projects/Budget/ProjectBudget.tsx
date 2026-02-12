@@ -43,6 +43,7 @@ export const ProjectBudget = () => {
 
   const { data, loading, error } = useQuery(ProjectBudgetDocument, {
     variables: { id: projectId, changeset: changesetId },
+    fetchPolicy: 'cache-and-network',
   });
 
   const budget = data?.project.budget;
