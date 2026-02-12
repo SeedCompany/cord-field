@@ -21,7 +21,7 @@ import {
   CreateDerivativeScriptureProductDocument as CreateDerivativeScriptureProduct,
   CreateDirectScriptureProductDocument as CreateDirectScriptureProduct,
   CreateOtherProductDocument as CreateOtherProduct,
-  CreateDirectScriptureProductMutation as CreateProductMutation,
+  CreateProductResultFragment,
   ProductInfoForCreateDocument,
 } from './CreateProduct.graphql';
 
@@ -59,7 +59,8 @@ export const CreateProduct = () => {
     addProductProgress(engagement!),
     addItemToList({
       listId: [engagement, 'products'],
-      outputToItem: (res: CreateProductMutation) => res.createProduct.product,
+      outputToItem: (res: { createProduct: CreateProductResultFragment }) =>
+        res.createProduct.product,
     })
   );
   const [createDirectScriptureProduct] = useMutation(
