@@ -58,6 +58,7 @@ export const ProgressReportDetail = () => {
       id,
       changesetId,
     },
+    fetchPolicy: 'cache-and-network',
   });
   if (error) {
     return (

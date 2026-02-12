@@ -23,6 +23,7 @@ export const FieldRegionDetail = () => {
 
   const { data, error } = useQuery(FieldRegionDetailDocument, {
     variables: { fieldRegionId },
+    fetchPolicy: 'cache-and-network',
   });
 
   const fieldRegion = data?.fieldRegion;

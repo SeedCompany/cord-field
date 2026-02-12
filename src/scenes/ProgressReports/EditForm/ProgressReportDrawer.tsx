@@ -23,6 +23,7 @@ export const ProgressReportDrawer = ({
     variables: {
       progressReportId: reportId,
     },
+    fetchPolicy: 'cache-and-network',
   });
   const report = data?.periodicReport;
 

@@ -1,4 +1,4 @@
-import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
+import { ApolloCache, FetchResult } from '@apollo/client';
 import { isNotNil, sortBy } from '@seedcompany/common';
 import { difference, uniqBy } from 'lodash';
 import { readFragment } from '~/api';
@@ -10,19 +10,18 @@ import {
   progressRelatingToEngagement,
 } from '../ProgressRefsRelatingToEngagement';
 import { CurrentProgressOfProductFragmentDoc as CurrentProgressOfProduct } from './CurrentProgessOfProduct.graphql';
-import { UpdateDirectScriptureProductMutation as UpdateProductMutation } from './EditProduct.graphql';
+import { UpdateProductResultFragment } from './EditProduct.graphql';
 
 export const updateProgressSteps =
+  (engagement: IdFragment, product: ProductFormFragment) =>
   (
-    engagement: IdFragment,
-    product: ProductFormFragment
-  ): MutationUpdaterFunction<
-    UpdateProductMutation,
-    unknown,
-    unknown,
-    ApolloCache<unknown>
-  > =>
-  (cache, mutationResult) => {
+    cache: ApolloCache<unknown>,
+    mutationResult: FetchResult<{
+      updateProduct: {
+        product: UpdateProductResultFragment;
+      };
+    }>
+  ) => {
     const updated = mutationResult.data?.updateProduct.product;
     if (!updated) {
       return; // mutation failed

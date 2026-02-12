@@ -1,4 +1,4 @@
-query Location($locationId: ID!) {
+query Location($locationId: ID!) @live {
   location(id: $locationId) {
     ...LocationDetail
   }
