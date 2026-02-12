@@ -1,4 +1,4 @@
-import { AssignmentOutlined, BarChart, ShowChart } from '@mui/icons-material';
+import { AssignmentOutlined, ShowChart } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -60,6 +60,7 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
     isDragActive,
     open: openFileBrowser,
   } = useDropzone({
+    accept: type === 'Progress' ? { 'application/pdf': ['.pdf'] } : undefined,
     onDrop: (files) => {
       if (!currentFile?.canEdit) {
         return;
@@ -79,20 +80,19 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
         className={props.className}
         sx={props.sx}
       >
-        <PeriodicReportCardContent to={link} icon={!disableIcon}>
-          {!disableIcon && (
+        <PeriodicReportCardContent to={link} icon={!disableIcon} type={type}>
+          {!disableIcon && type !== 'Progress' && (
             <HugeIcon
               icon={simpleSwitch(type, {
                 Narrative: AssignmentOutlined,
                 Financial: ShowChart,
-                Progress: BarChart,
               })}
               sx={{ gridArea: 'icon' }}
             />
           )}
 
-          <Typography variant="h4" sx={{ gridArea: 'title' }}>
-            {`${type} Reports`}
+          <Typography variant="h4" paragraph sx={{ gridArea: 'title' }}>
+            {`${type === 'Progress' ? 'Quarterly' : type} Reports`}
           </Typography>
           <ReportInfoContainer
             horizontalAt={260}
@@ -175,40 +175,49 @@ const PeriodicReportCardRoot = styled(Card)({
 
 const PeriodicReportCardContent = ({
   icon,
+  type,
   ...props
-}: CardActionAreaLinkProps & { icon: boolean }) => (
-  <CardActionAreaLink
-    {...props}
-    sx={[
-      {
-        flex: 1,
-        py: 3,
-        px: 4,
-        display: 'grid',
-        gap: 3,
-        gridTemplateColumns: 'min-content 1fr',
+}: CardActionAreaLinkProps & { icon: boolean; type: ReportType }) => {
+  const multiplicationProgressReportCardSx = {
+    p: 2,
+  };
+  const narrativeOrFinancialReportCardSx = {
+    flex: 1,
+    py: 3,
+    px: 4,
+    display: 'grid',
+    gap: 3,
+    gridTemplateColumns: 'min-content 1fr',
+    ...gridTemplateAreas`
+                title title
+                info info
+              `,
+    ...(icon && {
+      ...gridTemplateAreas`
+                icon title
+                info info
+              `,
+      [`@container (min-width: 430px)`]: {
         ...gridTemplateAreas`
-          title title
-          info info
-        `,
-        ...(icon && {
-          ...gridTemplateAreas`
-            icon title
-            info info
-          `,
-          [`@container (min-width: 430px)`]: {
-            ...gridTemplateAreas`
-              icon title
-              icon info
-            `,
-            '.MuiAvatar-root': { alignSelf: 'start' },
-          },
-        }),
+                  icon title
+                  icon info
+                `,
+        '.MuiAvatar-root': { alignSelf: 'start' },
       },
-      ...extendSx(props.sx),
-    ]}
-  />
-);
+    }),
+  };
+  return (
+    <CardActionAreaLink
+      {...props}
+      sx={[
+        type === 'Progress'
+          ? multiplicationProgressReportCardSx
+          : narrativeOrFinancialReportCardSx,
+        ...extendSx(props.sx),
+      ]}
+    />
+  );
+};
 
 export const PeriodicReportCard = (props: PeriodicReportCardProps) => (
   <FileActionsContextProvider>
