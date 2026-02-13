@@ -1,34 +1,34 @@
+import { useMutation } from '@apollo/client';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
 import {
   DataGridPro as DataGrid,
   DataGridProProps as DataGridProps,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-import { IconButton, Tooltip } from '@mui/material';
-import { Delete as DeleteIcon } from '@mui/icons-material';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { useDialog } from '~/components/Dialog';
 import {
   DefaultDataGridStyles,
   flexLayout,
   noHeaderFilterButtons,
   useDataGridSource,
 } from '~/components/Grid';
+import { createAddItemFooter } from '~/components/Grid/createAddItemFooter';
 import {
   LocationColumns,
   LocationInitialState,
   LocationToolbar,
 } from '~/components/LocationDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
+import { AddLocationToLanguageForm } from '../../../../Languages/Edit/AddLocationToLanguageForm';
 import {
   LanguageLocationDataGridRowFragment as LanguageLocation,
   LanguageLocationsDocument,
   RemoveLocationFromLanguageDocument,
 } from './LanguageLocations.graphql';
-import { useDialog } from '~/components/Dialog';
-import { AddLocationToLanguageForm } from '~/scenes/Languages/Edit/AddLocationToLanguageForm';
-import { createAddItemFooter } from '~/components/Grid/createAddItemFooter';
 
 export const LanguageDetailLocations = () => {
   const { languageId = '' } = useParams();
@@ -60,20 +60,15 @@ export const LanguageDetailLocations = () => {
           <Tooltip title="Remove Location">
             <IconButton
               size="small"
-              onClick={() =>
-                removeLocation({
+              onClick={() => {
+                void removeLocation({
                   variables: {
                     language: languageId,
                     location: location.id,
                   },
-                  refetchQueries: [
-                    {
-                      query: LanguageLocationsDocument,
-                      variables: { languageId },
-                    },
-                  ],
-                })
-              }
+                  refetchQueries: [LanguageLocationsDocument],
+                });
+              }}
             >
               <DeleteIcon fontSize="small" color="error" />
             </IconButton>
@@ -81,7 +76,7 @@ export const LanguageDetailLocations = () => {
         ),
       },
     ],
-    []
+    [removeLocation, languageId]
   );
 
   const LocationFooter = useMemo(

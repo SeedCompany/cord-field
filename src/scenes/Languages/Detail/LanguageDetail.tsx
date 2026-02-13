@@ -1,14 +1,14 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { TabContext } from '@mui/lab';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Box, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
 import { canEditAny } from '~/common';
+import { BooleanProperty } from '~/components/BooleanProperty';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
+import { Sensitivity } from '~/components/Sensitivity';
 import { Tab, TabsContainer } from '~/components/Tabs';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
@@ -20,6 +20,7 @@ import { TogglePinButton } from '../../../components/TogglePinButton';
 import { EditLanguage } from '../Edit';
 import { LanguagesQueryVariables } from '../List/languages.graphql';
 import { LanguageDocument } from './LanguageDetail.graphql';
+import { LeastOfThese } from './LeastOfThese';
 import { LanguageDetailLocations } from './Tabs/Locations/LanguageDetailLocations';
 import { LanguageDetailPosts } from './Tabs/Posts/LanguageDetailPosts';
 import { LanguageDetailProfile } from './Tabs/Profile/LanguageDetailProfile';
@@ -44,7 +45,14 @@ export const LanguageDetail = () => {
   const [editState, edit] = useDialog();
 
   const language = data?.language;
-  const { ethnologue, displayName, name } = language ?? {};
+  const {
+    ethnologue,
+    displayName,
+    name,
+    sensitivity,
+    isDialect,
+    isSignLanguage,
+  } = language ?? {};
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
 
@@ -101,6 +109,24 @@ export const LanguageDetail = () => {
             />
             <ToggleCommentsButton loading={!language} />
           </Box>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+              <Sensitivity value={sensitivity} loading={!language} />
+            </Grid>
+            <BooleanProperty
+              label="Dialect"
+              redacted="You do not have permission to view whether the language is a dialect"
+              data={isDialect}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+            <LeastOfThese language={language} />
+            <BooleanProperty
+              label="Sign Language"
+              redacted="You do not have permission to view whether the language is a sign language"
+              data={isSignLanguage}
+              wrap={(node) => <Grid item>{node}</Grid>}
+            />
+          </Grid>
           <TabsContainer>
             <TabContext value={filters.tab}>
               <TabList onChange={(_, next) => setFilters({ tab: next })}>
@@ -110,7 +136,7 @@ export const LanguageDetail = () => {
                 <Tab label="Posts" value="posts" />
               </TabList>
               <TabPanel value="profile">
-                {language && <LanguageDetailProfile language={language} />}
+                <LanguageDetailProfile language={language} />
               </TabPanel>
               <TabPanel value="locations">
                 <LanguageDetailLocations />
