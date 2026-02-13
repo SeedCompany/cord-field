@@ -8,11 +8,11 @@ import {
 } from '@mui/x-data-grid-pro';
 import { merge } from 'lodash';
 import { useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 import { useDialog } from '~/components/Dialog';
 import {
   DefaultDataGridStyles,
   flexLayout,
+  noFooter,
   noHeaderFilterButtons,
   useDataGridSource,
 } from '~/components/Grid';
@@ -24,59 +24,65 @@ import {
 } from '~/components/LocationDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
 import { AddLocationToLanguageForm } from '../../../../Languages/Edit/AddLocationToLanguageForm';
+import { LanguageDetailFragment } from '../../LanguageDetail.graphql';
 import {
   LanguageLocationDataGridRowFragment as LanguageLocation,
   LanguageLocationsDocument,
   RemoveLocationFromLanguageDocument,
 } from './LanguageLocations.graphql';
 
-export const LanguageDetailLocations = () => {
-  const { languageId = '' } = useParams();
-  const [locationFormState, addLocation] = useDialog();
-  const [removeLocation] = useMutation(RemoveLocationFromLanguageDocument);
+interface LanguageDetailLocationProps {
+  language: LanguageDetailFragment;
+}
 
+export const LanguageDetailLocations = ({
+  language,
+}: LanguageDetailLocationProps) => {
+  const { id, locations } = language;
+  const [locationFormState, addLocation] = useDialog();
+
+  const [removeLocation] = useMutation(RemoveLocationFromLanguageDocument);
   const [props] = useDataGridSource({
     query: LanguageLocationsDocument,
-    variables: { languageId },
+    variables: { languageId: id },
     listAt: 'language.locations',
     initialInput: {
       sort: 'name',
     },
   });
 
-  const columns = useMemo<Array<GridColDef<LanguageLocation>>>(
-    () => [
-      ...LocationColumns,
-      {
-        field: 'Remove Location',
-        headerName: '',
-        width: 60,
-        align: 'center',
-        sortable: false,
-        filterable: false,
-        disableColumnMenu: true,
-        hideable: false,
-        renderCell: ({ row: location }) => (
-          <Tooltip title="Remove Location">
-            <IconButton
-              size="small"
-              onClick={() => {
-                void removeLocation({
-                  variables: {
-                    language: languageId,
-                    location: location.id,
-                  },
-                  refetchQueries: [LanguageLocationsDocument],
-                });
-              }}
-            >
-              <DeleteIcon fontSize="small" color="error" />
-            </IconButton>
-          </Tooltip>
-        ),
-      },
-    ],
-    [removeLocation, languageId]
+  const actionsCol: GridColDef<LanguageLocation> = {
+    field: 'actions',
+    headerName: '',
+    width: 60,
+    align: 'center',
+    sortable: false,
+    filterable: false,
+    disableColumnMenu: true,
+    hideable: false,
+    renderCell: ({ row: location }) => (
+      <Tooltip title="Remove Location">
+        <IconButton
+          size="small"
+          onClick={() =>
+            void removeLocation({
+              variables: {
+                language: id,
+                location: location.id,
+              },
+              refetchQueries: [LanguageLocationsDocument],
+            })
+          }
+        >
+          <DeleteIcon fontSize="small" color="error" />
+        </IconButton>
+      </Tooltip>
+    ),
+  };
+
+  const columns = useMemo(
+    () => [...LocationColumns, ...(locations.canCreate ? [actionsCol] : [])],
+    [locations.canCreate, removeLocation, language]
   );
 
   const LocationFooter = useMemo(
@@ -112,12 +118,12 @@ export const LanguageDetailLocations = () => {
         columns={columns}
         initialState={LocationInitialState}
         headerFilters
-        sx={[flexLayout, noHeaderFilterButtons]}
+        hideFooter={!locations.canCreate}
+        sx={[flexLayout, noHeaderFilterButtons, noFooter]}
       />
-      <AddLocationToLanguageForm
-        languageId={languageId}
-        {...locationFormState}
-      />
+      {locations.canCreate && (
+        <AddLocationToLanguageForm languageId={id} {...locationFormState} />
+      )}
     </TabPanelContent>
   );
 };

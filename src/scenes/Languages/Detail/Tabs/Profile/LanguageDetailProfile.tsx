@@ -1,21 +1,11 @@
-import { Edit } from '@mui/icons-material';
-import {
-  Box,
-  IconButton,
-  Skeleton,
-  Stack,
-  Tooltip,
-  Typography,
-} from '@mui/material';
-import { asDate, canEditAny } from '~/common';
-import { useDialog } from '~/components/Dialog';
+import { Skeleton, Stack, Typography } from '@mui/material';
+import { asDate } from '~/common';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
 import { FormattedDate, useNumberFormatter } from '~/components/Formatters';
 import { TabPanelContent } from '~/components/Tabs';
-import { EditLanguage } from '../../../Edit';
 import { FirstScripture } from '../../FirstScripture';
 import { LanguageProfileFragment } from './LanguageDetailProfile.graphql';
 
@@ -26,10 +16,8 @@ interface LanguageDetailProfileProps {
 export const LanguageDetailProfile = ({
   language,
 }: LanguageDetailProfileProps) => {
-  const [editLanguageState, editLanguage] = useDialog();
   const formatNumber = useNumberFormatter();
 
-  const canEditAnyFields = canEditAny(language);
   const {
     ethnologue,
     signLanguageCode,
@@ -110,16 +98,6 @@ export const LanguageDetailProfile = ({
         />
         {language && <FirstScripture data={language} />}
       </Stack>
-      <Box sx={{ p: 1 }}>
-        {canEditAnyFields ? (
-          <Tooltip title="Edit Language">
-            <IconButton aria-label="edit language" onClick={editLanguage}>
-              <Edit />
-            </IconButton>
-          </Tooltip>
-        ) : null}
-      </Box>
-      <EditLanguage language={language} {...editLanguageState} />
     </TabPanelContent>
   );
 };
