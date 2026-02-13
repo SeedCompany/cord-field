@@ -7,8 +7,8 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
 import { LocationField } from '../../../components/form/Lookup';
-import { AddLocationToLanguageDocument } from './EditLanguage.graphql';
 import { LanguageLocationsDocument } from '../Detail/Tabs/Locations/LanguageLocations.graphql';
+import { AddLocationToLanguageDocument } from './EditLanguage.graphql';
 
 interface FormValues {
   location: DisplayLocationFragment;
@@ -37,12 +37,7 @@ export const AddLocationToLanguageForm = ({
             language: languageId,
             location: location.id,
           },
-          refetchQueries: [
-            {
-              query: LanguageLocationsDocument,
-              variables: { languageId },
-            },
-          ],
+          refetchQueries: [LanguageLocationsDocument],
         });
       }}
     >

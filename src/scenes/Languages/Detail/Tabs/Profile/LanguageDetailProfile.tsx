@@ -15,12 +15,12 @@ import {
 } from '~/components/DisplaySimpleProperty';
 import { FormattedDate, useNumberFormatter } from '~/components/Formatters';
 import { TabPanelContent } from '~/components/Tabs';
-import { EditLanguage } from '~/scenes/Languages/Edit';
+import { EditLanguage } from '../../../Edit';
 import { FirstScripture } from '../../FirstScripture';
 import { LanguageProfileFragment } from './LanguageDetailProfile.graphql';
 
 interface LanguageDetailProfileProps {
-  language: LanguageProfileFragment;
+  language?: LanguageProfileFragment;
 }
 
 export const LanguageDetailProfile = ({

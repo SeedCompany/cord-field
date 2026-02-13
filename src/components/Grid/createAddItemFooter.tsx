@@ -31,20 +31,21 @@ export const createAddItemFooter = ({
   tooltipTitle,
   disabled = false,
 }: AddItemFooterOptions) => {
-  return () => {
-    return (
-      <Stack
-        sx={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          background: 'var(--DataGrid-containerBackground)',
-          p: 1,
-          borderTop: 'thin solid var(--DataGrid-rowBorderColor)',
-          borderBottomLeftRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-        }}
-      >
-        <Tooltip title={tooltipTitle || label}>
+  const Footer = () => (
+    <Stack
+      sx={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        background: 'var(--DataGrid-containerBackground)',
+        p: 1,
+        borderTop: 'thin solid var(--DataGrid-rowBorderColor)',
+        borderBottomLeftRadius: 'inherit',
+        borderBottomRightRadius: 'inherit',
+      }}
+    >
+      <Tooltip title={tooltipTitle || label}>
+        <span>
+          {/* span is needed to wrap disabled button for tooltip to work */}
           <Button
             onClick={addItem}
             disabled={disabled}
@@ -55,8 +56,10 @@ export const createAddItemFooter = ({
           >
             <Add />
           </Button>
-        </Tooltip>
-      </Stack>
-    );
-  };
+        </span>
+      </Tooltip>
+    </Stack>
+  );
+  Footer.displayName = 'AddItemFooter';
+  return Footer;
 };
