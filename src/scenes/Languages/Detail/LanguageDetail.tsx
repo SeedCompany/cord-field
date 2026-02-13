@@ -139,7 +139,7 @@ export const LanguageDetail = () => {
                 <LanguageDetailProfile language={language} />
               </TabPanel>
               <TabPanel value="locations">
-                <LanguageDetailLocations />
+                {language && <LanguageDetailLocations language={language} />}
               </TabPanel>
               <TabPanel value="projects">
                 <LanguageDetailProjects />

@@ -68,6 +68,10 @@ fragment LanguageDetail on Language {
     canEdit
     value
   }
+  locations {
+    canRead
+    canCreate
+  }
   ...FirstScripture
   ...TogglePin
 }
