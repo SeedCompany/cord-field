@@ -1,7 +1,5 @@
 import { PaletteColor, PaletteColorOptions } from '@mui/material';
-import { grey } from '@mui/material/colors';
 import { PaletteOptions } from '@mui/material/styles';
-import { Role } from '~/api/schema/schema.graphql';
 
 /**
  * Seed Company Brand Colors
@@ -18,7 +16,7 @@ const brandColors = {
   /** #EBEBEC - Very light gray used for secondary color and primary text in dark mode */
   lightGray: '#EBEBEC',
   /** #636466 - Dark gray used for secondary color in light mode and paper background in dark mode */
-  darkGray: '#636466',
+  darkGray: '#414141',
   /** #323232 - Very dark gray (almost black) used for dark mode default background and primary text in light mode */
   black: '#323232',
 };
@@ -70,10 +68,10 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
 declare module '@mui/material/styles' {
   interface Palette {
     create: Palette['primary'];
-    roles: Partial<Record<Role, Pick<PaletteColor, 'main'>>>;
+    roles: Partial<Record<string, Pick<PaletteColor, 'main'>>>;
   }
   interface PaletteOptions {
     create: PaletteOptions['primary'];
-    roles: Partial<Record<Role, PaletteColorOptions>>;
+    roles: Partial<Record<string, PaletteColorOptions>>;
   }
 }

@@ -1,9 +1,9 @@
-import { useMediaQuery } from '@mui/material';
+import { CssBaseline, GlobalStyles, useMediaQuery } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
-import { ReactNode, useMemo } from 'react';
+import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
@@ -44,18 +44,47 @@ if (logRocketAppId) {
 
 MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
 
-const ThemeProviderWithDarkMode = ({ children }: { children: ReactNode }) => {
+export const ColorModeContext = createContext<{ toggleColorMode: () => void }>({
+  toggleColorMode: () => undefined,
+});
+
+const ThemeProviderWithDarkMode = ({ children }: { children?: ReactNode }) => {
   // Detect system/browser dark mode preference
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {
     noSsr: true,
   });
-  
-  const theme = useMemo(
-    () => createTheme({ dark: prefersDarkMode }),
-    [prefersDarkMode]
+
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    setMode(prefersDarkMode ? 'dark' : 'light');
+  }, [prefersDarkMode]);
+
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+      },
+    }),
+    []
   );
 
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+  const theme = useMemo(() => createTheme({ dark: mode === 'dark' }), [mode]);
+
+  return (
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline enableColorScheme />
+        <GlobalStyles
+          styles={(theme) => ({
+            html: { backgroundColor: theme.palette.background.default },
+            body: { backgroundColor: theme.palette.background.default },
+          })}
+        />
+        {children}
+      </ThemeProvider>
+    </ColorModeContext.Provider>
+  );
 };
 
 /**

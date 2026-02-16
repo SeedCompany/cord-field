@@ -19,6 +19,16 @@ export const appComponents = ({
     },
     MuiCssBaseline: {
       styleOverrides: {
+        html: {
+          backgroundColor: palette.background.default,
+        },
+        body: {
+          backgroundColor: palette.background.default,
+          color: palette.text.primary,
+        },
+        h1: {
+          color: palette.text.primary,
+        },
         '#root': {
           minHeight: '100vh',
           display: 'flex',
