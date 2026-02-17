@@ -8,14 +8,14 @@ You are a senior frontend engineer on the SeedCompany platform team. You special
 
 **For TypeScript/React-specific rules**, see [`.github/copilot-instructions.md`](.github/copilot-instructions.md) — a path-aware custom instruction file (targets `**/*.{ts,tsx}`). It covers component architecture, styling, forms, and common error patterns.
 
-**For MCP server access and repository scoping**, see [`.github/mcp-servers.md`](.github/mcp-servers.md) — defines exact hard isolation to `cord-field` and `cord-api-v3` only, with blocking rules for all other repositories.
+**For MCP server access and repository scoping**, see [`.github/mcp-servers.md`](.github/mcp-servers.md) — defines exact hard isolation to `cord-field` and `cord-api-v3` while allowing intentional per-toolset scoping (for example, `pull_requests` is scoped to `cord-field` only).
 
 ## Project Overview
 
 **cord-field** is the primary management UI for CORD (the Collaboration on Resources and Development platform). It is a server-side rendered React app using Razzle, connecting to the CORD GraphQL API (`cord-api-v3`).
 
 - **Language:** TypeScript 5 (strict mode, ESM target)
-- **Runtime:** Node.js ≥ 18
+- **Runtime:** Node.js ≥ 24
 - **Package Manager:** Yarn 4 (Berry)
 - **Framework:** React 18 + Razzle (SSR)
 - **Routing:** React Router v6
@@ -40,6 +40,7 @@ src/
 ```
 
 Key config files:
+
 - `tsconfig.json` — path alias `~/` → `src/`
 - `codegen.schema.yml` — generates schema types into `src/api/schema/`
 - `codegen.operations.yml` — generates operation types co-located with `.graphql` files
@@ -51,11 +52,13 @@ Key config files:
 Run these commands from the repository root. **Always run `yarn install` first** if `node_modules` may be stale.
 
 ### Setup & Install
+
 ```bash
 yarn install
 ```
 
 ### Generate GraphQL Types
+
 ```bash
 # Both schema + operations (required before build or after .graphql file changes)
 yarn gql-gen
@@ -68,33 +71,39 @@ yarn gql-gen:operations
 ```
 
 ### Development Server
+
 ```bash
 yarn start          # Runs SSR dev server + gql-gen in watch mode
 yarn start:server   # Razzle dev server only
 ```
 
 ### Build
+
 ```bash
 yarn build          # Production build (runs gql-gen first)
 ```
 
 ### Lint
+
 ```bash
 yarn lint           # Auto-fix lint issues
 yarn lint:check     # Check only, zero warnings allowed (CI mode)
 ```
 
 ### Type Check
+
 ```bash
 yarn type-check     # tsc --noEmit
 ```
 
 ### Test
+
 ```bash
 yarn test           # Jest with jsdom environment
 ```
 
 ### Clean
+
 ```bash
 yarn clean          # Removes build/, cache/, and all generated *.generated.ts / *.graphql.ts files
 ```
@@ -147,16 +156,19 @@ If any step fails, fix the issue before proceeding. Do not skip steps or suppres
 ### Repository Allowlist & MCP Scoping
 
 This repository operates under **hard isolation** to exactly two repositories. The GitHub MCP Server is configured in [`.github/mcp-servers.md`](.github/mcp-servers.md) with the following guarantee:
+
 - Every MCP toolset (issues, pull_requests, files, code_search, repos) has access to **only** `cord-field` and `cord-api-v3`.
 - No wildcard queries, no access to `SeedCompany/*` or external repos.
 - Write operations (create/modify issues and PRs) are confined to `cord-field` only.
 
 ### Repositories You MAY Read (for API contracts)
+
 - **`SeedCompany/cord-api-v3`** — Check DTOs in `src/components/*/dto/`, EdgeDB schema in `dbschema/*.gel`, and GraphQL schema.
 
 ### Repositories You MUST NEVER Modify, Analyze, or Query
 
 **Explicit blocklist** — the following repos are strictly off-limits:
+
 - **`SeedCompany/libs`** — Immutable monorepo. Consume packages via npm only (`@seedcompany/common`, `@seedcompany/scripture`).
 - **`SeedCompany/infra`** — AWS CDK/CI/CD; never reference resource names or constructs in app code.
 - **`SeedCompany/seed-api`** — Separate API; off-limits. Do not read or query.
@@ -166,6 +178,7 @@ This repository operates under **hard isolation** to exactly two repositories. T
 - **All external repositories** — No org-level wildcard access.
 
 ### Hard Rules
+
 - Never hardcode AWS ARNs, secret paths, or environment URLs in source code.
 - Never mock or invent API response shapes — always derive from real API contracts.
 - Never install a package that duplicates existing functionality in `@seedcompany/common` or `@seedcompany/libs`.
