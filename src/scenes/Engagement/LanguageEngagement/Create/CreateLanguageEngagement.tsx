@@ -1,12 +1,7 @@
 import { useMutation } from '@apollo/client';
-import {
-  List,
-  ListItem,
-  ListItemText,
-  ListSubheader,
-  Paper,
-  Typography,
-} from '@mui/material';
+import { Box, Paper, Tooltip, Typography } from '@mui/material';
+import { useMemo } from 'react';
+import { useFormState } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
@@ -21,7 +16,10 @@ import {
   LanguageField,
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
-import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.graphql';
+import {
+  CreateLanguageEngagementDocument,
+  CreateLanguageEngagementMutation,
+} from './CreateLanguageEngagement.graphql';
 import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
@@ -36,108 +34,106 @@ type CreateLanguageEngagementProps = Except<
   'onSubmit'
 > & {
   project: ProjectIdFragment;
-  values?: CreateLanguageEngagementFormValues; // Add explicit type for props.values
+  /** IDs of languages that already have an engagement on this project. */
+  engagedLanguageIds: readonly string[];
 };
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  helperTextKey: {
-    fontWeight: 600,
-    marginRight: spacing(1),
+const useStyles = makeStyles()(({ palette, spacing }) => ({
+  columnHeader: {
+    display: 'flex',
+    padding: spacing(0.5, 2),
+    borderBottom: `1px solid ${palette.divider}`,
   },
-  helperTextValue: {
-    marginRight: spacing(2),
+  columnHeaderName: {
+    flex: 1,
+    fontSize: '0.7rem',
+    fontWeight: 600,
+    color: palette.text.secondary,
+    textTransform: 'uppercase',
+  },
+  columnHeaderCode: {
+    flexShrink: 0,
+    width: 52,
+    fontSize: '0.7rem',
+    fontWeight: 600,
+    textAlign: 'right',
+    color: palette.text.secondary,
+    textTransform: 'uppercase',
+  },
+  optionRow: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    gap: spacing(1),
+  },
+  optionName: {
+    flex: 1,
+    minWidth: 0,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  optionCode: {
+    flexShrink: 0,
+    width: 52,
+    textAlign: 'right',
+    color: palette.text.secondary,
+  },
+  helperRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: spacing(2),
+  },
+  helperKey: {
+    fontWeight: 600,
   },
 }));
 
-export const CreateLanguageEngagement = ({
-  project,
-  ...props
-}: CreateLanguageEngagementProps) => {
-  const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
+/**
+ * Inner form content — rendered inside DialogForm's Form context so that
+ * useFormState can subscribe to live field values.
+ */
+const FormContent = ({
+  engagedLanguageIds,
+  sortComparator,
+}: {
+  engagedLanguageIds: readonly string[];
+  sortComparator: (a: LanguageLookupItem, b: LanguageLookupItem) => number;
+}) => {
   const { classes } = useStyles();
-  // Get engaged language IDs for this project
-  interface LanguageEngagement {
-    __typename: string;
-    language: {
-      value?: {
-        id: string;
-      };
-    };
-  }
+  const { values } = useFormState<CreateLanguageEngagementFormValues>({
+    subscription: { values: true },
+  });
+  const currentLanguage = values.engagement.languageId;
 
-  const engagedIds = useMemo(
-    () =>
-      project.engagements
-        .filter(
-          (e: LanguageEngagement) => e.__typename === 'LanguageEngagement'
-        )
-        .map((e: LanguageEngagement) => e.language.value?.id)
-        .filter(Boolean),
-    [project.engagements]
-  );
+  const renderOptionContent = (option: LanguageLookupItem) => {
+    const row = (
+      <span className={classes.optionRow}>
+        <span className={classes.optionName}>
+          {option.name.value ?? option.displayName.value}
+        </span>
+        <span className={classes.optionCode}>
+          {option.ethnologue?.code?.value ?? '-'}
+        </span>
+        <span className={classes.optionCode}>
+          {option.registryOfLanguageVarietiesCode?.value ?? '-'}
+        </span>
+      </span>
+    );
 
-  // Sort languages by engagement status: engaged languages appear after non-engaged ones.
-  const compareLanguageEngagedStatus = (
-    a: LanguageLookupItem,
-    b: LanguageLookupItem
-  ) => {
-    const aEngaged = engagedIds.includes(a.id);
-    const bEngaged = engagedIds.includes(b.id);
-    if (aEngaged === bEngaged) return 0;
-    return aEngaged ? 1 : -1;
-  };
-
-  // Helper to get the currently selected language
-  // (assumes LanguageField passes value as option)
-  // You may need to adjust this if LanguageField uses a different value prop
-  // For now, we use the value from props.values if available
-  const currentLanguage = props.values?.engagement.languageId || {
-    id: '',
-    ethnologue: { code: { value: '-' } },
-    registryOfLanguageVarietiesCode: { value: '-' },
-  }; // Ensure consistent structure and default values
-
-  const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
-    const languageRef = {
-      __typename: 'Language',
-      id: engagement.languageId.id,
-    } as const;
-
-    try {
-      await createEngagement({
-        variables: {
-          input: {
-            engagement: {
-              projectId: project.id,
-              languageId: engagement.languageId.id,
-            },
-            changeset: project.changeset?.id,
-          },
-        },
-        update: callAll(
-          addItemToList({
-            listId: [project, 'engagements'],
-            outputToItem: (res: CreateLanguageEngagementResponse) => res.createLanguageEngagement.engagement,
-          }),
-          addItemToList({
-            listId: [languageRef, 'projects'],
-            outputToItem: () => project,
-          }),
-          invalidatePartnersEngagements(),
-          recalculateSensitivity(project)
-        ),
-      });
-    } catch (error) {
-      console.error('Failed to create language engagement:', error);
+    if (engagedLanguageIds.includes(option.id)) {
+      return (
+        // Tooltip on a disabled Autocomplete option requires a non-disabled wrapper
+        <Tooltip title="Already added to this project" placement="right">
+          <span style={{ display: 'block', width: '100%' }}>{row}</span>
+        </Tooltip>
+      );
     }
+    return row;
   };
+
   return (
-    <DialogForm
-      {...props}
-      onSubmit={submit}
-      title="Create Language Engagement"
-      changesetAware
-    >
+    <>
       <SubmitError />
       <LanguageField
         name="engagement.languageId"
@@ -145,53 +141,103 @@ export const CreateLanguageEngagement = ({
         required
         PaperComponent={({ children }) => (
           <Paper>
-            <List>
-              <ListSubheader>
-                <ListItem divider dense>
-                  <ListItemText secondary="NAME" />
-                  <ListItemText secondary="ETH" />
-                  <ListItemText secondary="ROLV" />
-                </ListItem>
-              </ListSubheader>
-              {children}
-            </List>
+            <Box className={classes.columnHeader}>
+              <Typography className={classes.columnHeaderName}>Name</Typography>
+              <Typography className={classes.columnHeaderCode}>ETH</Typography>
+              <Typography className={classes.columnHeaderCode}>ROLV</Typography>
+            </Box>
+            {children}
           </Paper>
         )}
-        sortOptionComparator={compareLanguageEngagedStatus}
+        sortComparator={sortComparator}
         getOptionDisabled={(lang: LanguageLookupItem) =>
-          engagedIds.includes(lang.id)
+          engagedLanguageIds.includes(lang.id)
         }
+        renderOptionContent={renderOptionContent}
         helperText={
           currentLanguage ? (
-            <>
-              <Typography variant="caption" className={classes.helperTextKey}>
+            <Box className={classes.helperRow}>
+              <Typography variant="caption" className={classes.helperKey}>
                 ETH
               </Typography>
-              <Typography variant="caption" className={classes.helperTextValue}>
+              <Typography variant="caption">
                 {currentLanguage.ethnologue?.code?.value ?? '-'}
               </Typography>
-              <Typography variant="caption" className={classes.helperTextKey}>
+              <Typography variant="caption" className={classes.helperKey}>
                 ROLV
               </Typography>
-              <Typography variant="caption" className={classes.helperTextValue}>
+              <Typography variant="caption">
                 {currentLanguage.registryOfLanguageVarietiesCode?.value ?? '-'}
               </Typography>
-            </>
-          ) : (
-            ''
-          )
+            </Box>
+          ) : undefined
         }
-        renderOption={(option: any) => (
-          <ListItem dense>
-            <ListItemText
-              primary={option.name.value ?? option.displayName.value}
-            />
-            <ListItemText primary={option.ethnologue?.code?.value ?? '-'} />
-            <ListItemText
-              primary={option.registryOfLanguageVarietiesCode?.value ?? '-'}
-            />
-          </ListItem>
-        )}
+      />
+    </>
+  );
+};
+
+export const CreateLanguageEngagement = ({
+  project,
+  engagedLanguageIds,
+  ...props
+}: CreateLanguageEngagementProps) => {
+  const [createEngagement] = useMutation(CreateLanguageEngagementDocument);
+
+  // Push already-engaged languages to the bottom of the dropdown list
+  const sortComparator = useMemo(
+    () =>
+      (a: LanguageLookupItem, b: LanguageLookupItem): number => {
+        const aEngaged = engagedLanguageIds.includes(a.id);
+        const bEngaged = engagedLanguageIds.includes(b.id);
+        if (aEngaged === bEngaged) return 0;
+        return aEngaged ? 1 : -1;
+      },
+    [engagedLanguageIds]
+  );
+
+  const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
+    const languageRef = {
+      __typename: 'Language',
+      id: engagement.languageId.id,
+    } as const;
+
+    await createEngagement({
+      variables: {
+        input: {
+          engagement: {
+            projectId: project.id,
+            languageId: engagement.languageId.id,
+          },
+          changeset: project.changeset?.id,
+        },
+      },
+      update: callAll(
+        addItemToList({
+          listId: [project, 'engagements'],
+          outputToItem: (res: CreateLanguageEngagementMutation) =>
+            res.createLanguageEngagement.engagement,
+        }),
+        addItemToList({
+          listId: [languageRef, 'projects'],
+          outputToItem: () => project,
+        }),
+        invalidatePartnersEngagements(),
+        recalculateSensitivity(project)
+      ),
+    });
+  };
+
+  return (
+    <DialogForm
+      {...props}
+      onSubmit={submit}
+      title="Create Language Engagement"
+      changesetAware
+    >
+      <FormContent
+        engagedLanguageIds={engagedLanguageIds}
+        sortComparator={sortComparator}
       />
     </DialogForm>
   );

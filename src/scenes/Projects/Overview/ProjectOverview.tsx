@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material';
 import { Chip, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { Many } from '@seedcompany/common';
+import { useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
@@ -189,9 +190,17 @@ export const ProjectOverview = () => {
     0
   );
 
-  const CreateEngagement = isTranslation
-    ? CreateLanguageEngagement
-    : CreateInternshipEngagement;
+  // IDs of languages that already have an engagement on this project, used to
+  // disable duplicate selections in the Create Language Engagement dialog.
+  const engagedLanguageIds = useMemo(
+    () =>
+      engagements.data?.items.flatMap((e) =>
+        e.__typename === 'LanguageEngagement' && e.language.value
+          ? [e.language.value.id]
+          : []
+      ) ?? [],
+    [engagements.data?.items]
+  );
 
   return (
     <main className={classes.root}>
@@ -580,9 +589,19 @@ export const ProjectOverview = () => {
           editFields={fieldsBeingEdited}
         />
       ) : null}
-      {project && (
-        <CreateEngagement project={project} {...createEngagementState} />
-      )}
+      {project &&
+        (isTranslation ? (
+          <CreateLanguageEngagement
+            project={project}
+            engagedLanguageIds={engagedLanguageIds}
+            {...createEngagementState}
+          />
+        ) : (
+          <CreateInternshipEngagement
+            project={project}
+            {...createEngagementState}
+          />
+        ))}
       {project && (
         <WorkflowEventsDrawer
           {...workflowDrawerState}

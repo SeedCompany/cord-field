@@ -17,6 +17,7 @@ import {
 import { camelCase, last, uniqBy, upperFirst } from 'lodash';
 import {
   ComponentType,
+  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -56,6 +57,10 @@ export type LookupFieldProps<
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
     getOptionLabel: (option: T) => string | null | undefined;
     createPower?: Power;
+    /** Render the content inside each option's <li> element instead of the default label. */
+    renderOptionContent?: (option: T) => ReactNode;
+    /** Sort visible options after filtering. Already-engaged items can be pushed to the bottom. */
+    sortComparator?: (a: T, b: T) => number;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, false>,
     | 'value'
@@ -93,6 +98,8 @@ export function LookupField<
   variant,
   createPower,
   margin,
+  renderOptionContent,
+  sortComparator,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const { powers } = useSession();
@@ -218,6 +225,8 @@ export function LookupField<
         <li {...props}>
           {typeof option === 'string'
             ? `Create "${option}"`
+            : renderOptionContent
+            ? renderOptionContent(option)
             : getOptionLabel(option)}
         </li>
       )}
@@ -232,19 +241,24 @@ export function LookupField<
         // results that have already been selected.
         const filtered = createFilterOptions<T>()(options, params);
 
+        // Apply caller-provided sort (e.g. push disabled/engaged items to bottom)
+        const sorted = sortComparator
+          ? [...filtered].sort(sortComparator)
+          : filtered;
+
         if (
           !freeSolo ||
           loading || // item could be returned with request in flight
           params.inputValue === '' ||
-          filtered.map(getOptionLabel).includes(params.inputValue)
+          sorted.map(getOptionLabel).includes(params.inputValue)
         ) {
-          return filtered;
+          return sorted;
         }
 
         // If freeSolo is enabled and the input value doesn't match an existing
         // or previously selected option, add it to the list. i.e. 'Add "X"'.
         return [
-          ...filtered,
+          ...sorted,
           // We want to allow strings for new options,
           // which may differ from T. We handle them in renderOption.
           params.inputValue as T,
