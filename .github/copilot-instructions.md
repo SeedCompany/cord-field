@@ -27,7 +27,7 @@ This is the **CORD Field** front-end application: a React/TypeScript SPA with se
 
 ## Project Structure
 
-```
+```text
 src/
 ├── api/              # Apollo client, caching utilities, error handling, codegen outputs
 │   ├── client/       # Apollo Client creation, links, provider, impersonation
