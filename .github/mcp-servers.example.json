@@ -1,0 +1,60 @@
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${input:github_token}"
+      },
+      "toolsets": {
+        "issues": {
+          "enabled": true,
+          "scopes": [
+            "SeedCompany/cord-field",
+            "SeedCompany/cord-api-v3"
+          ],
+          "writeScopes": [
+            "SeedCompany/cord-field"
+          ]
+        },
+        "pull_requests": {
+          "enabled": true,
+          "scopes": [
+            "SeedCompany/cord-field"
+          ],
+          "writeScopes": [
+            "SeedCompany/cord-field"
+          ]
+        },
+        "files": {
+          "enabled": true,
+          "scopes": [
+            "SeedCompany/cord-field",
+            "SeedCompany/cord-api-v3"
+          ]
+        },
+        "code_search": {
+          "enabled": true,
+          "scopes": [
+            "SeedCompany/cord-field",
+            "SeedCompany/cord-api-v3"
+          ]
+        },
+        "repos": {
+          "enabled": true,
+          "scopes": [
+            "SeedCompany/cord-field",
+            "SeedCompany/cord-api-v3"
+          ]
+        }
+      }
+    },
+    "cord_api": {
+      "type": "http",
+      "url": "${input:graphql_url}",
+      "headers": {
+        "Authorization": "Bearer ${input:graphql_token}"
+      }
+    }
+  }
+}
