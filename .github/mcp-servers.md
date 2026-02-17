@@ -101,8 +101,6 @@ This configuration enforces **hard isolation** to exactly two repositories while
 4. **External repos blocked** — No access to any repository outside SeedCompany.
 5. **Write operations confined** — The agent can only create/modify PRs and issues in `cord-field`. `cord-api-v3` is strictly read-only (enforced via branch protection and writeScopes configuration).
 
-<!-- isolation guarantee moved/updated above -->
-
 ## Secrets and External Endpoints
 
 Do not commit real credentials into the repository. Use workspace/user secrets, a Vault, or a GitHub App installation token stored as a secret. Below are recommended placeholder inputs and an example `mcpServers` snippet showing how to reference them.
