@@ -82,7 +82,7 @@ export const LanguageDetailLocations = ({
 
   const columns = useMemo(
     () => [...LocationColumns, ...(locations.canCreate ? [actionsCol] : [])],
-    [locations.canCreate, removeLocation, language]
+    [locations.canCreate, removeLocation, language, actionsCol]
   );
 
   const LocationFooter = useMemo(
