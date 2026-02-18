@@ -151,6 +151,13 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                 </Grid>
               </Grid>
               <DisplaySimpleProperty
+                label="ID"
+                value={engagement.id}
+                LabelProps={{ color: 'textSecondary' }}
+                ValueProps={{ color: 'textPrimary' }}
+                wrap={(node) => <Grid item>{node}</Grid>}
+              />
+              <DisplaySimpleProperty
                 label="Gender"
                 value={intern?.gender.value}
                 LabelProps={{ color: 'textSecondary' }}

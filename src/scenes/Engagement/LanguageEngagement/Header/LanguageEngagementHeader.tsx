@@ -10,6 +10,7 @@ import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton'
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { DataButton } from '../../../../components/DataButton';
 import { useDialog } from '../../../../components/Dialog';
+import { DisplaySimpleProperty } from '../../../../components/DisplaySimpleProperty';
 import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Fab } from '../../../../components/Fab';
 import {
@@ -132,6 +133,14 @@ export const LanguageEngagementHeader = ({
             </Typography>
           </Grid>
         </Grid>
+      </Grid>
+      <Grid item>
+        <DisplaySimpleProperty
+          label="ID"
+          value={engagement.id}
+          LabelProps={{ color: 'textSecondary' }}
+          ValueProps={{ color: 'textPrimary' }}
+        />
       </Grid>
       <Grid item container spacing={1} alignItems="center">
         <Grid item>
