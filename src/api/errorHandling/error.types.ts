@@ -137,8 +137,8 @@ export const getErrorInfo = (e: unknown): ErrorInfo => {
 
   // For mutations, we will assume they will only have one error
   // since they should only be doing one operation.
-  const ext = e.graphQLErrors[0].extensions;
-  const codes = [...ext.codes, 'Default' as const];
+  const ext = e.graphQLErrors[0].extensions as Partial<CordErrorExtensions>;
+  const codes = [...(ext.codes ?? []), 'Default' as const];
   return {
     message: e.message,
     ...ext,

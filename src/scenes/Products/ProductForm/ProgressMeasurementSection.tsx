@@ -18,7 +18,7 @@ export const ProgressMeasurementSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const { progressStepMeasurement, productType } = values.product ?? {};
+  const { progressStepMeasurement, productType } = values;
 
   if (productType !== 'Other') {
     return null;

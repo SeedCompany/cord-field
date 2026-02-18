@@ -23,26 +23,22 @@ export const EditLocation = (props: EditLocationProps) => {
     () =>
       location
         ? {
-            location: {
-              id: location.id,
-              name: location.name.value,
-              type: location.type.value,
-              isoAlpha3: location.isoAlpha3.value,
-              fundingAccountId: location.fundingAccount.value,
-              defaultFieldRegionId: location.defaultFieldRegion.value,
-            },
+            id: location.id,
+            name: location.name.value,
+            type: location.type.value,
+            isoAlpha3: location.isoAlpha3.value,
+            fundingAccount: location.fundingAccount.value,
+            defaultFieldRegion: location.defaultFieldRegion.value,
           }
         : undefined,
     [location]
   );
 
   const onSubmit: FormProps['onSubmit'] = async ({
-    location: {
-      fundingAccountId,
-      defaultFieldRegionId,
-      mapImage: mapImages,
-      ...rest
-    },
+    fundingAccount,
+    defaultFieldRegion,
+    mapImage: mapImages,
+    ...rest
   }) => {
     const [uploadedImageInfo, finalizeUpload] = await uploadFile(
       mapImages?.[0]
@@ -50,13 +46,13 @@ export const EditLocation = (props: EditLocationProps) => {
 
     const input: UpdateLocation = {
       ...rest,
-      defaultFieldRegionId: defaultFieldRegionId?.id ?? null,
-      fundingAccountId: fundingAccountId?.id ?? null,
+      defaultFieldRegion: defaultFieldRegion?.id ?? null,
+      fundingAccount: fundingAccount?.id ?? null,
       mapImage: uploadedImageInfo,
     };
 
     await updateLocation({
-      variables: { input: { location: input } },
+      variables: { input },
     }).then(...finalizeUpload.tap);
   };
   return (

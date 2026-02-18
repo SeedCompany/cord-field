@@ -1,4 +1,4 @@
-mutation CreateFundingAccount($input: CreateFundingAccountInput!) {
+mutation CreateFundingAccount($input: CreateFundingAccount!) {
   createFundingAccount(input: $input) {
     fundingAccount {
       id

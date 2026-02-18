@@ -17,7 +17,7 @@ import { SecuredAccordion } from './SecuredAccordion';
 declare module './ProductForm' {
   interface ProductFormCustomValues {
     productType?: ProductTypes;
-    producesId?: FilmLookupItem | StoryLookupItem | EthnoArtLookupItem;
+    produces?: FilmLookupItem | StoryLookupItem | EthnoArtLookupItem;
   }
 }
 
@@ -36,14 +36,13 @@ export const ProductSection = ({
   values,
   accordionState,
 }: SectionProps) => {
-  const { productType, producesId: produces } = values.product ?? {};
+  const { productType, produces } = values;
 
   useEffect(() => {
     if (!produces?.__typename) {
       return;
     } else if (productType !== produces.__typename) {
-      // @ts-expect-error yes, the field exists.
-      form.change('product.producesId', null);
+      form.change('produces', undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productType]);
@@ -56,14 +55,11 @@ export const ProductSection = ({
     return null;
   }
 
-  const isProducesFieldMissing =
-    !produces &&
-    (touched?.['product.producesId'] !== undefined ||
-      !touched?.['product.producesId']);
+  const isProducesFieldMissing = !produces && !touched?.produces;
 
   return (
     <SecuredAccordion
-      name="producesId"
+      name="produces"
       {...accordionState}
       product={isProducesFieldMissing ? undefined : product}
       title={() => (

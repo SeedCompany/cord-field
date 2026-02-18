@@ -7,6 +7,7 @@ export * from './Location';
 export * from './Organization';
 export * from './Project';
 export * from './Story';
+export * from './Tool';
 export * from './User';
 export * from './Partner';
 export * from './FundingAccount';

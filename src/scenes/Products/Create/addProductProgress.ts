@@ -3,7 +3,7 @@ import { Storable } from '~/api';
 import { ProductProgress, StepProgress } from '~/api/schema.graphql';
 import { IdFragment } from '~/common';
 import { modifyProgressRelatingToEngagement } from '../ProgressRefsRelatingToEngagement';
-import { CreateDirectScriptureProductMutation as CreateProductMutation } from './CreateProduct.graphql';
+import { CreateProductResultFragment } from './CreateProduct.graphql';
 
 /**
  * For all related ProgressReports (via Engagement),
@@ -11,7 +11,9 @@ import { CreateDirectScriptureProductMutation as CreateProductMutation } from '.
  * For each step in the new product, add a StepProgress with a null completed value.
  */
 export const addProductProgress = (engagement: IdFragment) =>
-  modifyProgressRelatingToEngagement<CreateProductMutation>(
+  modifyProgressRelatingToEngagement<{
+    createProduct: CreateProductResultFragment;
+  }>(
     engagement,
     (report, { createProduct: { product, availableVariants } }) =>
       (list, { toReference }) => {

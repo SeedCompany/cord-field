@@ -1,10 +1,10 @@
 mutation UploadLanguageEngagementPnp(
   $id: ID!
-  $upload: CreateDefinedFileVersionInput!
+  $upload: CreateDefinedFileVersion!
   $methodology: ProductMethodology
 ) {
   updateLanguageEngagement(
-    input: { engagement: { id: $id, pnp: $upload, methodology: $methodology } }
+    input: { id: $id, pnp: $upload, methodology: $methodology }
   ) {
     engagement {
       id
@@ -31,11 +31,9 @@ mutation UploadLanguageEngagementPnp(
 
 mutation UploadInternshipEngagementGrowthPlan(
   $id: ID!
-  $upload: CreateDefinedFileVersionInput!
+  $upload: CreateDefinedFileVersion!
 ) {
-  updateInternshipEngagement(
-    input: { engagement: { id: $id, growthPlan: $upload } }
-  ) {
+  updateInternshipEngagement(input: { id: $id, growthPlan: $upload }) {
     engagement {
       id
       growthPlan {

@@ -21,7 +21,7 @@ import {
   CreateDerivativeScriptureProductDocument as CreateDerivativeScriptureProduct,
   CreateDirectScriptureProductDocument as CreateDirectScriptureProduct,
   CreateOtherProductDocument as CreateOtherProduct,
-  CreateDirectScriptureProductMutation as CreateProductMutation,
+  CreateProductResultFragment,
   ProductInfoForCreateDocument,
 } from './CreateProduct.graphql';
 
@@ -59,7 +59,8 @@ export const CreateProduct = () => {
     addProductProgress(engagement!),
     addItemToList({
       listId: [engagement, 'products'],
-      outputToItem: (res: CreateProductMutation) => res.createProduct.product,
+      outputToItem: (res: { createProduct: CreateProductResultFragment }) =>
+        res.createProduct.product,
     })
   );
   const [createDirectScriptureProduct] = useMutation(
@@ -83,14 +84,12 @@ export const CreateProduct = () => {
 
   const initialValues = useMemo(() => {
     const values: ProductFormValues = {
-      product: {
-        title: '',
-        bookSelection: 'full',
-        producingMediums: mapEntries(
-          engagement?.partnershipsProducingMediums.items ?? [],
-          (pair) => [pair.medium, pair.partnership ?? undefined]
-        ).asRecord,
-      },
+      title: '',
+      bookSelection: 'full',
+      producingMediums: mapEntries(
+        engagement?.partnershipsProducingMediums.items ?? [],
+        (pair) => [pair.medium, pair.partnership ?? undefined]
+      ).asRecord,
     };
     return values;
   }, [engagement]);
@@ -104,7 +103,7 @@ export const CreateProduct = () => {
     const createProduct = async () => {
       const {
         productType,
-        producesId,
+        produces,
         scriptureReferences,
         unspecifiedScripture,
         book,
@@ -113,7 +112,7 @@ export const CreateProduct = () => {
         description,
         producingMediums,
         ...inputs
-      } = submitted.product ?? {};
+      } = submitted;
 
       const parsedScriptureReferences =
         bookSelection === 'full' && book
@@ -124,7 +123,7 @@ export const CreateProduct = () => {
         const { data } = await createOtherProduct({
           variables: {
             input: {
-              engagementId,
+              engagement: engagementId,
               title: title || '',
               description,
               ...inputs,
@@ -136,7 +135,7 @@ export const CreateProduct = () => {
         const { data } = await createDirectScriptureProduct({
           variables: {
             input: {
-              engagementId,
+              engagement: engagementId,
               scriptureReferences: parsedScriptureReferences,
               unspecifiedScripture:
                 parsedScriptureReferences.length > 0 ||
@@ -156,9 +155,9 @@ export const CreateProduct = () => {
         const { data } = await createDerivativeScriptureProduct({
           variables: {
             input: {
-              engagementId,
+              engagement: engagementId,
               ...inputs,
-              produces: producesId!.id,
+              produces: produces!.id,
               scriptureReferencesOverride: parsedScriptureReferences,
             },
           },
@@ -170,14 +169,14 @@ export const CreateProduct = () => {
       if (
         !engagement ||
         !Object.keys(dirtyFields).some((field) =>
-          field.startsWith('product.producingMediums.')
+          field.startsWith('producingMediums.')
         )
       ) {
         // No producing partnerships have changed, API call not needed.
         return;
       }
 
-      const ppmInput = entries(submitted.product?.producingMediums ?? {}).map(
+      const ppmInput = entries(submitted.producingMediums ?? {}).map(
         ([medium, partnership]) => ({
           medium: medium,
           partnership: partnership?.id,
@@ -185,7 +184,7 @@ export const CreateProduct = () => {
       );
       await updatePartnershipsProducingMediums({
         variables: {
-          engagementId: engagement.id,
+          engagement: engagement.id,
           input: ppmInput,
         },
       });

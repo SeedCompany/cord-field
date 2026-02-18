@@ -33,7 +33,7 @@ export const ProgressReportCard = ({ progressReport, ...rest }: Props) => {
   const [reextract, { loading: reextracting }] = useMutation(
     ReextractPnpProgressDocument,
     {
-      variables: { reportId: progressReport.id },
+      variables: { report: progressReport.id },
       update: (cache, result) => {
         cache.modify({
           id: cache.identify(progressReport),

@@ -3,7 +3,9 @@ import { useAsyncEffect } from 'ahooks';
 import { pickBy } from 'lodash';
 import { PostHog } from 'posthog-js';
 import { usePostHog } from 'posthog-js/react';
+import { createContext, useContext } from 'react';
 import { SessionOutput } from '~/api/schema.graphql';
+import { ChildrenProp } from '~/common';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
 import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
 import {
@@ -12,10 +14,24 @@ import {
   SessionDocument,
 } from './session.graphql';
 
-export const useSession = () => {
-  const { data, loading: sessionLoading } = useQuery(SessionDocument, {
+const useSessionQuery = () =>
+  useQuery(SessionDocument, {
     ssr: true,
   });
+
+const SessionContext = createContext<
+  ReturnType<typeof useSessionQuery> | undefined
+>(undefined);
+
+export const SessionProvider = ({ children }: ChildrenProp) => {
+  const result = useSessionQuery();
+  return (
+    <SessionContext.Provider value={result}>{children}</SessionContext.Provider>
+  );
+};
+
+export const useSession = () => {
+  const { data, loading: sessionLoading } = useContext(SessionContext)!;
   const session = data?.session.user;
   const impersonator = data?.session.impersonator;
   const powers = data?.session.powers;

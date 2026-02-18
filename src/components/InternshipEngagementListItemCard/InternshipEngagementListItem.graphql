@@ -32,4 +32,7 @@ fragment InternshipEngagementListItem on InternshipEngagement {
   completeDate {
     value
   }
+  marketable {
+    value
+  }
 }

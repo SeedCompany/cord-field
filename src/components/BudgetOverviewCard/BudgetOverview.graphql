@@ -2,4 +2,12 @@ fragment BudgetOverview on Budget {
   ...Id
   createdAt
   total
+  summary {
+    hasPreApproved
+    preApprovedExceeded
+  }
+  project: parent {
+    id
+    type
+  }
 }

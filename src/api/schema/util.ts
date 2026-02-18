@@ -1,4 +1,5 @@
 import { Reference } from '@apollo/client';
+import { Simplify } from 'type-fest';
 import { GqlTypeMap } from './typeMap';
 
 export interface GqlObject {
@@ -29,3 +30,8 @@ type StorableVal<T> = T extends ReadonlyArray<infer U>
   : T extends Reference
   ? Reference
   : Storable<T> | Reference;
+
+/**
+ * A type compat with an operation that has no vars.
+ */
+export type NoVars = Simplify<Record<string, never>>;

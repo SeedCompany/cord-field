@@ -13,9 +13,7 @@ import { invalidatePartnersEngagements } from '../../LanguageEngagement/Create/i
 import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.graphql';
 
 interface CreateInternshipEngagementFormValues {
-  engagement: {
-    internId: UserLookupItem;
-  };
+  intern: UserLookupItem;
 }
 
 type CreateInternshipEngagementProps = Except<
@@ -30,16 +28,12 @@ export const CreateInternshipEngagement = ({
   ...props
 }: CreateInternshipEngagementProps) => {
   const [createEngagement] = useMutation(CreateInternshipEngagementDocument);
-  const submit = async ({
-    engagement,
-  }: CreateInternshipEngagementFormValues) => {
+  const submit = async ({ intern }: CreateInternshipEngagementFormValues) => {
     await createEngagement({
       variables: {
         input: {
-          engagement: {
-            projectId: project.id,
-            internId: engagement.internId.id,
-          },
+          project: project.id,
+          intern: intern.id,
           changeset: project.changeset?.id,
         },
       },
@@ -61,7 +55,7 @@ export const CreateInternshipEngagement = ({
     >
       <SubmitError />
       <UserField
-        name="engagement.internId"
+        name="intern"
         label="Intern"
         placeholder="Enter person's name"
         required

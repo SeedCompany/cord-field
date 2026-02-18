@@ -1,0 +1,22 @@
+fragment FieldRegionForm on FieldRegion {
+  id
+  name {
+    canRead
+    canEdit
+    value
+  }
+  director {
+    canEdit
+    canRead
+    value {
+      ...UserLookupItem
+    }
+  }
+  fieldZone {
+    canEdit
+    canRead
+    value {
+      ...DisplayFieldZone
+    }
+  }
+}

@@ -64,8 +64,8 @@ export const StepEditDialog = ({
         await update({
           variables: {
             input: {
-              productId: progress.product.id,
-              reportId: progress.report.id,
+              product: progress.product.id,
+              report: progress.report.id,
               steps: [
                 {
                   step: step.step,

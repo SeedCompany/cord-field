@@ -8,11 +8,19 @@ import {
   CoerceNonPrimitives,
   FinancialReportingTypeLabels,
   FinancialReportingTypeList,
+  OrganizationReachLabels,
+  OrganizationReachList,
+  OrganizationTypeLabels,
+  OrganizationTypeList,
   PartnerTypeList,
   UpdateOrganization,
   UpdatePartner,
 } from '~/api/schema.graphql';
-import { labelFrom } from '~/common';
+import {
+  DisplayFieldRegionFragment,
+  DisplayLocationFragment,
+  labelFrom,
+} from '~/common';
 import {
   DialogForm,
   DialogFormProps,
@@ -26,7 +34,12 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { UserField, UserLookupItem } from '../../../components/form/Lookup';
+import {
+  FieldRegionField,
+  LocationField,
+  UserField,
+  UserLookupItem,
+} from '../../../components/form/Lookup';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
@@ -35,7 +48,9 @@ type PartnerFormValues = {
   partner: Merge<
     UpdatePartner,
     {
-      pointOfContactId: UserLookupItem | null;
+      pointOfContact: UserLookupItem | null;
+      fieldRegions: readonly DisplayFieldRegionFragment[];
+      countries: readonly DisplayLocationFragment[];
     }
   >;
   organization: UpdateOrganization;
@@ -67,7 +82,7 @@ type PossibleFields = Partial<
 >;
 
 const fieldMapping = {
-  'partner.pointOfContactId': ({ props }) => (
+  'partner.pointOfContact': ({ props }) => (
     <UserField {...props} label="Point of Contact" />
   ),
   'partner.globalInnovationsClient': ({ props }) => (
@@ -102,11 +117,42 @@ const fieldMapping = {
   'partner.startDate': ({ props }) => (
     <DateField {...props} label="Start Date" />
   ),
+  'partner.fieldRegions': ({ props }) => (
+    <FieldRegionField
+      {...props}
+      label="Field Regions"
+      multiple
+      variant="outlined"
+    />
+  ),
+  'partner.countries': ({ props }) => (
+    <LocationField {...props} label="Countries" multiple variant="outlined" />
+  ),
   'organization.name': ({ props }) => (
     <TextField {...props} required label="Name" />
   ),
   'organization.acronym': ({ props }) => (
     <TextField {...props} label="Acronym" />
+  ),
+  'organization.reach': ({ props }) => (
+    <EnumField
+      multiple
+      label="Reach"
+      options={OrganizationReachList}
+      getLabel={labelFrom(OrganizationReachLabels)}
+      layout="column"
+      {...props}
+    />
+  ),
+  'organization.types': ({ props }) => (
+    <EnumField
+      multiple
+      label="Organizational Types"
+      options={OrganizationTypeList}
+      getLabel={labelFrom(OrganizationTypeLabels)}
+      layout="two-column"
+      {...props}
+    />
   ),
 } satisfies PossibleFields;
 
@@ -145,12 +191,16 @@ export const EditPartner = ({
         financialReportingTypes: partner.financialReportingTypes.value,
         address: partner.address.value,
         startDate: partner.startDate.value,
-        pointOfContactId: partner.pointOfContact.value ?? null,
+        pointOfContact: partner.pointOfContact.value ?? null,
+        fieldRegions: partner.fieldRegions.value,
+        countries: partner.countries.value,
       },
       organization: {
         id: organization.id,
         name: organization.name.value,
         acronym: organization.acronym.value,
+        types: organization.types.value,
+        reach: organization.reach.value,
       },
     } satisfies PartnerFormValues;
   }, [partner]);
@@ -166,7 +216,9 @@ export const EditPartner = ({
           variables: {
             partner: {
               ...partner,
-              pointOfContactId: partner.pointOfContactId?.id ?? null,
+              pointOfContact: partner.pointOfContact?.id ?? null,
+              fieldRegions: partner.fieldRegions.map((region) => region.id),
+              countries: partner.countries.map((country) => country.id),
             },
             organization,
           },

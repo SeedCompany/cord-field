@@ -1,4 +1,4 @@
-import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
+import { ApolloCache, MutationUpdaterFunction, Unmasked } from '@apollo/client';
 import { readFragment } from '~/api';
 import { Partnership } from '~/api/schema.graphql';
 import { IdFragment } from '~/common';
@@ -7,7 +7,7 @@ import { ProjectOldPrimaryPartnershipsFragmentDoc } from './projectOldPrimaryPar
 export const updateOldPrimaryPartnership =
   <R>(
     project: IdFragment,
-    getUpdated: (res: R) => Pick<Partnership, 'id' | 'primary'>
+    getUpdated: (res: Unmasked<R>) => Pick<Partnership, 'id' | 'primary'>
   ): MutationUpdaterFunction<R, unknown, unknown, ApolloCache<unknown>> =>
   (cache: ApolloCache<unknown>, res) => {
     if (!res.data) {

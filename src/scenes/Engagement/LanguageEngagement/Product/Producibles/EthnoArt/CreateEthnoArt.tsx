@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateEthnoArtInput } from '~/api/schema.graphql';
+import { CreateEthnoArt as CreateEthnoArtInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -37,7 +37,7 @@ export const CreateEthnoArt = (props: CreateEthnoArtProps) => {
     >
       <SubmitError />
       <TextField
-        name="ethnoArt.name"
+        name="name"
         label="Name"
         placeholder="Enter EthnoArt name"
         required

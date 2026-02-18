@@ -1,6 +1,12 @@
-fragment ProjectMemberList on SecuredProjectMemberList {
-  items {
-    ...ProjectMemberItem
+fragment projectMembersSummary on Project {
+  id
+  activeMembers: team(input: { filter: { active: true } }) {
+    total
   }
-  ...Pagination
+  team {
+    items {
+      ...ProjectMemberItem
+    }
+    ...Pagination
+  }
 }

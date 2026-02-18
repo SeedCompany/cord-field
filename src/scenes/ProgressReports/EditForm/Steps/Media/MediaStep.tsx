@@ -65,7 +65,7 @@ export const MediaStep: StepComponent = ({ report }) => {
       }
       const [uploadedImageInfo, finalizeUpload] = await uploadFile(newFile);
       const input: UploadProgressReportMedia = {
-        reportId: report.id,
+        report: report.id,
         file: uploadedImageInfo,
         variant: values.variant.key,
         variantGroup: newFileForExistingGroup

@@ -1,5 +1,6 @@
 import { Add } from '@mui/icons-material';
-import { Breadcrumbs, Tooltip, Typography } from '@mui/material';
+import { Breadcrumbs, Stack, Tooltip, Typography } from '@mui/material';
+import { partition } from 'lodash';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../../components/Breadcrumb';
@@ -10,7 +11,7 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { useProjectId } from '../../useProjectId';
 import { CreateProjectMember } from '../Create/CreateProjectMember';
-import { UpdateProjectMember, UpdateProjectMemberFormParams } from '../Update';
+import { UpdateProjectMember, UpdateProjectMemberProps } from '../Update';
 import { ProjectMembersDocument } from './ProjectMembers.graphql';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
@@ -40,14 +41,15 @@ export const ProjectMembersList = () => {
     },
   });
 
-  const [createProjectMemberDialogState, openCreateProjectMemberDialog] =
-    useDialog();
+  const [createMemberState, createMember] = useDialog();
 
-  const [
-    updateProjectMemberDialogState,
-    openUpdateProjectMemberDialog,
-    projectMemberProps,
-  ] = useDialog<UpdateProjectMemberFormParams>();
+  const [editMemberState, editMember, editingMember] =
+    useDialog<UpdateProjectMemberProps['member']>();
+
+  const [active, historic] = partition(
+    data?.project.team.items,
+    (member) => member.active !== false
+  );
 
   return (
     <div className={classes.root}>
@@ -68,17 +70,14 @@ export const ProjectMembersList = () => {
               color="error"
               aria-label="Add Team Member"
               loading={!list.data}
-              onClick={openCreateProjectMemberDialog}
+              onClick={createMember}
             >
               <Add />
             </Fab>
           </Tooltip>
         )}
         {data && (
-          <CreateProjectMember
-            {...createProjectMemberDialogState}
-            project={data.project}
-          />
+          <CreateProjectMember {...createMemberState} project={data.project} />
         )}
       </div>
       {list.data?.canRead === false ? (
@@ -88,27 +87,41 @@ export const ProjectMembersList = () => {
       ) : (
         <List
           {...list}
+          data={list.data ? { ...list.data, items: active } : undefined}
           spacing={3}
           renderItem={(member) => (
             <ProjectMemberCard
               projectMember={member}
-              onEdit={() =>
-                openUpdateProjectMemberDialog({
-                  project: data!.project,
-                  projectMemberId: member.id,
-                  userId: member.user.value?.id || '',
-                  userRoles: member.roles.value,
-                })
-              }
+              onEdit={() => editMember(member)}
             />
           )}
           renderSkeleton={<ProjectMemberCard />}
         />
       )}
-      {projectMemberProps && (
+      {historic.length > 0 && (
+        <>
+          <Typography variant="h3" sx={{ my: 2 }}>
+            Historic
+          </Typography>
+          <Stack
+            // to match the list above
+            sx={{ gap: 3, pr: 2 }}
+          >
+            {historic.map((member) => (
+              <ProjectMemberCard
+                key={member.id}
+                projectMember={member}
+                onEdit={() => editMember(member)}
+              />
+            ))}
+          </Stack>
+        </>
+      )}
+      {editingMember && (
         <UpdateProjectMember
-          {...updateProjectMemberDialogState}
-          {...projectMemberProps}
+          {...editMemberState}
+          member={editingMember}
+          project={data!.project}
         />
       )}
     </div>

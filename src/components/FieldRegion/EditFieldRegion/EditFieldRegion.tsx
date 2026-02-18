@@ -1,0 +1,54 @@
+import { useMutation } from '@apollo/client';
+import { useMemo } from 'react';
+import { Except, SetRequired } from 'type-fest';
+import { UpdateFieldRegion } from '~/api/schema.graphql';
+import { DisplayFieldRegionFragment } from '~/common';
+import {
+  FieldRegionForm,
+  FieldRegionFormProps,
+} from '../FieldRegionForm/FieldRegionForm';
+import { UpdateFieldRegionDocument } from './EditFieldRegion.graphql';
+
+type SubmitResult = DisplayFieldRegionFragment;
+export type EditFieldRegionProps = Except<
+  FieldRegionFormProps<UpdateFieldRegion, SubmitResult>,
+  'onSubmit' | 'initialValues'
+>;
+export const EditFieldRegion = (
+  props: SetRequired<EditFieldRegionProps, 'fieldRegion'>
+) => {
+  const [updateFieldRegion] = useMutation(UpdateFieldRegionDocument);
+  const { fieldRegion } = props;
+
+  const initialValues = useMemo(
+    () => ({
+      id: fieldRegion.id,
+      name: fieldRegion.name.value,
+      fieldZone: fieldRegion.fieldZone.value ?? null,
+      director: fieldRegion.director.value ?? null,
+    }),
+    [fieldRegion]
+  );
+
+  return (
+    <FieldRegionForm<UpdateFieldRegion, SubmitResult>
+      {...props}
+      title="Edit Field Region"
+      initialValues={initialValues}
+      onSubmit={async (values) => {
+        const input: UpdateFieldRegion = {
+          id: values.id,
+          name: values.name,
+          fieldZone: values.fieldZone?.id,
+          director: values.director?.id,
+        };
+
+        const { data } = await updateFieldRegion({
+          variables: { input },
+        });
+
+        return data!.updateFieldRegion.fieldRegion;
+      }}
+    />
+  );
+};

@@ -1,0 +1,19 @@
+query FieldRegionDetail($fieldRegionId: ID!) @live {
+  fieldRegion(id: $fieldRegionId) {
+    name {
+      value
+    }
+    director {
+      value {
+        id
+        fullName
+      }
+    }
+    fieldZone {
+      value {
+        ...DisplayFieldZone
+      }
+    }
+    ...FieldRegionForm
+  }
+}

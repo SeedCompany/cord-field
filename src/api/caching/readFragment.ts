@@ -1,4 +1,4 @@
-import { ApolloCache } from '@apollo/client';
+import { ApolloCache, Unmasked } from '@apollo/client';
 import { Cache } from '@apollo/client/cache/core/types/Cache';
 import { Reference, StoreObject } from '@apollo/client/utilities';
 import { ASTNode, FragmentDefinitionNode, Kind } from 'graphql';
@@ -37,7 +37,7 @@ export const readFragment = <
     id,
     ...options
   }: ReadFragmentOptions<FragmentType, TVariables, Partial>
-): MaybePartial<FragmentType, Partial> | null => {
+): Unmasked<MaybePartial<FragmentType, Partial>> | null => {
   if (object) {
     id = cache.identify(object as StoreObject);
     if (!id) {
@@ -54,9 +54,7 @@ export const readFragment = <
     return null;
   }
 
-  // This typecast is to make the type more correct. If we've specified
-  // returnPartialData then the result data is deeply partial.
-  return data as MaybePartial<FragmentType, Partial>;
+  return data as any;
 };
 
 export const getFragmentName = (

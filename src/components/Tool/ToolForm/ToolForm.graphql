@@ -1,0 +1,13 @@
+fragment ToolForm on Tool {
+  id
+  name {
+    canRead
+    canEdit
+    value
+  }
+  aiBased {
+    canRead
+    canEdit
+    value
+  }
+}

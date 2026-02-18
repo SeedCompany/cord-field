@@ -176,6 +176,15 @@ export const appComponents = ({
           '.MuiDataGrid-cell:has(svg:only-child, .MuiButtonBase-root:only-child)':
             { userSelect: 'all' },
 
+          // Cell error styling
+          '& .cell-invalid': {
+            paddingRight: '10px',
+            backgroundColor: fade(palette.error.light, 0.4),
+            '&:hover': {
+              backgroundColor: fade(palette.error.light, 0.8),
+            },
+          },
+
           // '--DataGrid-containerBackground': theme.palette.background.paper,
         },
         columnHeaderTitle: {
@@ -207,9 +216,13 @@ export const appComponents = ({
       styleOverrides: {
         root: ({ theme }) => ({
           textTransform: 'none',
-          transition: theme.transitions.create('transform'),
-          '&.Mui-selected': {
-            transform: 'scale(1.43)', // 20px
+          fontSize: '1.25rem',
+          'span:not(.MuiTouchRipple-root)': {
+            transition: theme.transitions.create('transform'),
+            transform: 'scale(.75)',
+          },
+          '&.Mui-selected span:not(.MuiTouchRipple-root)': {
+            transform: 'scale(1)',
           },
         }),
       },

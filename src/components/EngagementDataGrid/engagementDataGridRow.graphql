@@ -46,7 +46,7 @@ fragment engagementDataGridRow on Engagement {
         }
       }
     }
-    milestoneReached {
+    milestonePlanned {
       canRead
       canEdit
       value

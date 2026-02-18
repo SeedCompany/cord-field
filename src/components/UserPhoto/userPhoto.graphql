@@ -1,0 +1,11 @@
+fragment userPhoto on User {
+  id
+  avatarLetters
+  photo {
+    canEdit
+    canRead
+    value {
+      url
+    }
+  }
+}

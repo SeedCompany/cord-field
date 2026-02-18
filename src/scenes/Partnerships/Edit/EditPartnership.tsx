@@ -3,10 +3,12 @@ import { Decorator } from 'final-form';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
 import { onUpdateInvalidateProps, removeItemFromList } from '~/api';
-import { PeriodType, UpdatePartnershipInput } from '~/api/schema.graphql';
+import {
+  PeriodType,
+  UpdatePartnership as UpdatePartnershipInput,
+} from '~/api/schema.graphql';
 import { asDate, callAll } from '~/common';
 import { SubmitAction, SubmitButton } from '../../../components/form';
-import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
 import {
   hasManagingType,
@@ -21,12 +23,12 @@ import {
 } from './EditPartnership.graphql';
 import { updateOldPrimaryPartnership } from './UpdateOldPrimaryPartnership';
 
-export type EditPartnershipFormInput = UpdatePartnershipInput &
+export type EditPartnershipFormInput = Omit<
+  UpdatePartnershipInput,
+  'id' | 'changeset'
+> &
   SubmitAction<'delete'> & {
-    partnership?: {
-      partnerLookupItem?: PartnerLookupItem;
-      financialReportPeriod?: PeriodType;
-    };
+    financialReportPeriod?: PeriodType;
   };
 
 type EditPartnershipProps = Except<
@@ -45,12 +47,8 @@ const clearFinancialReportingType: Decorator<EditPartnershipFormInput> = (
       if (prevValues === undefined || prevValues !== initialValues) {
         prevValues = initialValues;
       }
-      if (
-        hasManagingType(prevValues.partnership?.types) &&
-        !hasManagingType(values.partnership.types)
-      ) {
-        // @ts-expect-error types don't account for nesting
-        form.change('partnership.financialReportingType', null);
+      if (hasManagingType(prevValues.types) && !hasManagingType(values.types)) {
+        form.change('financialReportingType', null);
       }
       prevValues = values;
     },
@@ -88,20 +86,16 @@ export const EditPartnership = (props: EditPartnershipProps) => {
 
   const initialValues = useMemo(
     () => ({
-      partnership: {
-        id: partnership.id,
-        agreementStatus: partnership.agreementStatus.value ?? 'NotAttached',
-        mouStatus: partnership.mouStatus.value ?? 'NotAttached',
-        types: partnership.types.value,
-        financialReportingType: partnership.financialReportingType.value,
-        mouStartOverride: partnership.mouRangeOverride.value.start,
-        mouEndOverride: partnership.mouRangeOverride.value.end,
-        primary: partnership.primary.value,
-        financialReportPeriod: project.financialReportPeriod.value!,
-      },
+      agreementStatus: partnership.agreementStatus.value ?? 'NotAttached',
+      mouStatus: partnership.mouStatus.value ?? 'NotAttached',
+      types: partnership.types.value,
+      financialReportingType: partnership.financialReportingType.value,
+      mouStartOverride: partnership.mouRangeOverride.value.start,
+      mouEndOverride: partnership.mouRangeOverride.value.end,
+      primary: partnership.primary.value,
+      financialReportPeriod: project.financialReportPeriod.value!,
     }),
     [
-      partnership.id,
       partnership.agreementStatus.value,
       partnership.mouStatus.value,
       partnership.types.value,
@@ -119,16 +113,14 @@ export const EditPartnership = (props: EditPartnershipProps) => {
       {...props}
       sendIfClean="delete" // Lets us delete without changing any fields
       validate={(values) => {
-        const start = asDate(values.partnership.mouStartOverride);
-        const end = asDate(values.partnership.mouEndOverride);
+        const start = asDate(values.mouStartOverride);
+        const end = asDate(values.mouEndOverride);
 
         if (start && end) {
           if (start > end) {
             return {
-              partnership: {
-                mouStartOverride: 'Start date should come before end date',
-                mouEndOverride: 'End date should come after start date',
-              },
+              mouStartOverride: 'Start date should come before end date',
+              mouEndOverride: 'End date should come after start date',
             };
           }
 
@@ -140,9 +132,7 @@ export const EditPartnership = (props: EditPartnershipProps) => {
           start > asDate(partnership.mouRange.value.end)
         ) {
           return {
-            partnership: {
-              mouStartOverride: `Start date should come before project's end date`,
-            },
+            mouStartOverride: `Start date should come before project's end date`,
           };
         }
 
@@ -152,13 +142,11 @@ export const EditPartnership = (props: EditPartnershipProps) => {
           end < asDate(partnership.mouRange.value.start)
         ) {
           return {
-            partnership: {
-              mouEndOverride: `End date should come after project's start date`,
-            },
+            mouEndOverride: `End date should come after project's start date`,
           };
         }
       }}
-      onSubmit={async ({ submitAction, partnership: values }) => {
+      onSubmit={async ({ submitAction, ...values }) => {
         if (submitAction === 'delete') {
           await deletePartnership({
             variables: {
@@ -175,8 +163,10 @@ export const EditPartnership = (props: EditPartnershipProps) => {
         await updatePartnership({
           variables: {
             changes: {
+              id: partnership.id,
+              changeset: partnership.changeset?.id,
               ...rest,
-              primary: values.primary || undefined,
+              primary: rest.primary || undefined,
             },
             changeset: partnership.changeset?.id,
             financialReportPeriodChanged,

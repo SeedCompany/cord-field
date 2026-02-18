@@ -10,7 +10,7 @@ import { LocationField } from '../../../components/form/Lookup';
 import { AddLocationToLanguageDocument } from './EditLanguage.graphql';
 
 interface FormValues {
-  locationId: DisplayLocationFragment;
+  location: DisplayLocationFragment;
 }
 
 type AddLocationToLanguageFormProps = Except<
@@ -30,17 +30,17 @@ export const AddLocationToLanguageForm = ({
     <DialogForm<FormValues>
       title="Add Location"
       {...props}
-      onSubmit={async ({ locationId }) => {
-        const variables = {
-          languageId,
-          locationId: locationId.id,
-        };
-
-        await addLocationToLang({ variables });
+      onSubmit={async ({ location }) => {
+        await addLocationToLang({
+          variables: {
+            language: languageId,
+            location: location.id,
+          },
+        });
       }}
     >
       <SubmitError />
-      <LocationField name="locationId" required />
+      <LocationField name="location" required />
     </DialogForm>
   );
 };

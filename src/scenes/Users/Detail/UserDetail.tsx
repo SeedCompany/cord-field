@@ -1,16 +1,16 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Skeleton, Tooltip, Typography } from '@mui/material';
+import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from 'tss-react/mui';
 import { PartialDeep } from 'type-fest';
-import { RoleLabels } from '~/api/schema.graphql';
-import { canEditAny, labelsFrom } from '~/common';
+import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
+import { canEditAny, labelFrom, labelsFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
+import { UserPhoto } from '~/components/UserPhoto';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
 import {
@@ -26,37 +26,11 @@ import { UsersQueryVariables } from '../List/users.graphql';
 import { ImpersonationToggle } from './ImpersonationToggle';
 import { UserDocument } from './UserDetail.graphql';
 
-const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
-  root: {
-    overflowY: 'auto',
-    padding: spacing(4),
-    '& > *:not(:last-child)': {
-      marginBottom: spacing(3),
-    },
-    maxWidth: breakpoints.values.md,
-  },
-  header: {
-    flex: 1,
-    display: 'flex',
-    gap: spacing(1),
-  },
-  name: {
-    marginRight: spacing(2), // a little extra between text and buttons
-    lineHeight: 'inherit', // centers text with buttons better
-  },
-  partnersContainer: {
-    marginTop: spacing(1),
-  },
-  partner: {
-    marginBottom: spacing(2),
-  },
-}));
-
 export const UserDetail = () => {
-  const { classes } = useStyles();
   const { userId = '' } = useParams();
   const { data, error } = useQuery(UserDocument, {
     variables: { userId },
+    fetchPolicy: 'cache-and-network',
   });
   useComments(userId);
 
@@ -67,14 +41,34 @@ export const UserDetail = () => {
   const canEditAnyFields = canEditAny(user);
 
   return (
-    <main className={classes.root}>
+    <Stack
+      component="main"
+      sx={{
+        overflowY: 'auto',
+        p: 4,
+        gap: 3,
+        maxWidth: (theme) => theme.breakpoints.values.md,
+      }}
+    >
       <Helmet title={user?.fullName ?? undefined} />
       {error ? (
         <Typography variant="h4">Error loading person</Typography>
       ) : (
         <>
-          <div className={classes.header}>
-            <Typography variant="h2" className={classes.name}>
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              gap: 1,
+            }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                mr: 2, // a little extra between text and buttons
+                lineHeight: 'inherit', // centers text with buttons better
+              }}
+            >
               {!user ? (
                 <Skeleton width="20ch" />
               ) : (
@@ -103,7 +97,18 @@ export const UserDetail = () => {
             />
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
-          </div>
+          </Box>
+          {user && <UserPhoto user={user} sx={{ alignSelf: 'start' }} />}
+          <DisplayProperty
+            label="Status"
+            value={user?.status.value}
+            loading={!user}
+          />
+          <DisplayProperty
+            label="Gender"
+            value={labelFrom(GenderLabels)(user?.gender.value)}
+            loading={!user}
+          />
           <DisplayProperty
             label="Email"
             value={user?.email.value}
@@ -143,20 +148,16 @@ export const UserDetail = () => {
           {!!user?.partners.items.length && (
             <>
               <Typography variant="h3">Partners</Typography>
-              <div className={classes.partnersContainer}>
+              <Stack sx={{ mt: 1, gap: 2 }}>
                 {user.partners.items.map((item) => (
-                  <PartnerListItemCard
-                    key={item.id}
-                    partner={item}
-                    className={classes.partner}
-                  />
+                  <PartnerListItemCard key={item.id} partner={item} />
                 ))}
-              </div>
+              </Stack>
             </>
           )}
         </>
       )}
-    </main>
+    </Stack>
   );
 };
 

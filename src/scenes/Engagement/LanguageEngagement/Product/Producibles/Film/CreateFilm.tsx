@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateFilmInput } from '~/api/schema.graphql';
+import { CreateFilm as CreateFilmInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -36,7 +36,7 @@ export const CreateFilm = (props: CreateFilmProps) => {
     >
       <SubmitError />
       <TextField
-        name="film.name"
+        name="name"
         label="Name"
         placeholder="Enter film name"
         required

@@ -17,5 +17,5 @@ export const LanguageField = LookupField.createFor<
   placeholder: 'Search for a language by name',
   getOptionLabel: (option) => option.name.value ?? option.displayName.value,
   CreateDialogForm: CreateLanguage,
-  getInitialValues: (name) => ({ language: { name, displayName: name } }),
+  getInitialValues: (name) => ({ name, displayName: name }),
 });

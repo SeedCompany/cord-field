@@ -1,4 +1,4 @@
-query ProductDetail($id: ID!, $changesetId: ID) {
+query ProductDetail($id: ID!, $changesetId: ID) @live {
   product(id: $id, changeset: $changesetId) {
     ...ProductDetail
   }

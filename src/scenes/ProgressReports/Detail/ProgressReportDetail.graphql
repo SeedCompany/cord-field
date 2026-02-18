@@ -1,4 +1,4 @@
-query ProgressReportDetail($id: ID!, $changesetId: ID) {
+query ProgressReportDetail($id: ID!, $changesetId: ID) @live {
   periodicReport(id: $id, changeset: $changesetId) {
     ...ProgressReportDetail
   }

@@ -36,9 +36,7 @@ const transitionTypeToColor: Record<
 };
 
 type UpdateProjectDialogProps = Except<
-  DialogFormProps<
-    SubmitAction & { engagement?: { status?: EngagementStatus } }
-  >,
+  DialogFormProps<SubmitAction & { status?: EngagementStatus }>,
   'sendIfClean' | 'submitLabel' | 'onSubmit' | 'initialValues' | 'errorHandlers'
 > & {
   engagement: Engagement;
@@ -75,11 +73,7 @@ export const EngagementWorkflowDialog = ({
       {...props}
       submitLabel={canBypassTransitions ? undefined : false}
       sendIfClean
-      onSubmit={async ({
-        submitAction,
-        engagement: submittedEngagementFields,
-      }) => {
-        const status = submittedEngagementFields?.status;
+      onSubmit={async ({ submitAction, status }) => {
         // If clicking save for status override, but there is no status, do nothing.
         if (!submitAction && !status) {
           return;
@@ -88,13 +82,11 @@ export const EngagementWorkflowDialog = ({
         await updateEngagement({
           variables: {
             input: {
-              engagement: {
-                id: engagement.id,
-                // remove index suffix used to make submit action unique
-                status:
-                  (submitAction?.split(':')[0] as EngagementStatus | null) ??
-                  status,
-              },
+              id: engagement.id,
+              // remove index suffix used to make submit action unique
+              status:
+                (submitAction?.split(':')[0] as EngagementStatus | null) ??
+                status,
             },
           },
         });
@@ -143,7 +135,7 @@ export const EngagementWorkflowDialog = ({
               </Typography>
             )}
             <AutocompleteField
-              name="engagement.status"
+              name="status"
               label="Override Status"
               options={EngagementStatusList}
               getOptionLabel={labelFrom(EngagementStatusLabels)}

@@ -25,17 +25,14 @@ export const CreateLanguage = (props: CreateLanguageProps) => {
     <LanguageForm<CreateLanguageType>
       title="Create Language"
       {...props}
-      onSubmit={async ({ language: { sponsorEstimatedEndFY, ...rest } }) => {
+      onSubmit={async ({ sponsorEstimatedEndFY, ...rest }) => {
         const res = await createLang({
           variables: {
             input: {
-              language: {
-                sponsorEstimatedEndDate:
-                  CalendarDate.fiscalYearEndToCalendarDate(
-                    sponsorEstimatedEndFY
-                  ),
-                ...rest,
-              },
+              sponsorEstimatedEndDate: CalendarDate.fiscalYearEndToCalendarDate(
+                sponsorEstimatedEndFY
+              ),
+              ...rest,
             },
           },
         });

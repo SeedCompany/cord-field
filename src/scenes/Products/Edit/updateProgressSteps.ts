@@ -1,8 +1,8 @@
-import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
+import { ApolloCache, FetchResult } from '@apollo/client';
 import { isNotNil, sortBy } from '@seedcompany/common';
 import { difference, uniqBy } from 'lodash';
 import { readFragment } from '~/api';
-import { StepProgress } from '~/api/schema.graphql';
+import { ProductProgress, StepProgress } from '~/api/schema.graphql';
 import { IdFragment } from '~/common';
 import { ProductFormFragment } from '../ProductForm/ProductForm.graphql';
 import {
@@ -10,19 +10,18 @@ import {
   progressRelatingToEngagement,
 } from '../ProgressRefsRelatingToEngagement';
 import { CurrentProgressOfProductFragmentDoc as CurrentProgressOfProduct } from './CurrentProgessOfProduct.graphql';
-import { UpdateDirectScriptureProductMutation as UpdateProductMutation } from './EditProduct.graphql';
+import { UpdateProductResultFragment } from './EditProduct.graphql';
 
 export const updateProgressSteps =
+  (engagement: IdFragment, product: ProductFormFragment) =>
   (
-    engagement: IdFragment,
-    product: ProductFormFragment
-  ): MutationUpdaterFunction<
-    UpdateProductMutation,
-    unknown,
-    unknown,
-    ApolloCache<unknown>
-  > =>
-  (cache, mutationResult) => {
+    cache: ApolloCache<unknown>,
+    mutationResult: FetchResult<{
+      updateProduct: {
+        product: UpdateProductResultFragment;
+      };
+    }>
+  ) => {
     const updated = mutationResult.data?.updateProduct.product;
     if (!updated) {
       return; // mutation failed
@@ -64,10 +63,11 @@ export const updateProgressSteps =
     );
 
     for (const progress of progressList) {
-      cache.modify({
+      cache.modify<ProductProgress>({
         id: cache.identify(progress),
         fields: {
-          steps: (prev: StepProgress[] | null) => {
+          // @ts-expect-error https://github.com/apollographql/apollo-client/pull/12983
+          steps: (prev: readonly StepProgress[] | null) => {
             const newList = [
               ...(prev?.filter((sp) => !removedSteps.includes(sp.step)) ?? []),
               ...missingSteps.map(

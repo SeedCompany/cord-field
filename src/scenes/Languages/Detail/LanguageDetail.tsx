@@ -72,6 +72,7 @@ export const LanguageDetail = () => {
   const { languageId = '' } = useParams();
   const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },
+    fetchPolicy: 'cache-and-network',
   });
   useComments(languageId);
 
@@ -265,8 +266,8 @@ export const LanguageDetail = () => {
                       location &&
                       void removeLocation({
                         variables: {
-                          languageId: language.id,
-                          locationId: location.id,
+                          language: language.id,
+                          location: location.id,
                         },
                         update: removeItemFromList({
                           listId: [language, 'locations'],
@@ -301,14 +302,14 @@ export const LanguageDetail = () => {
                   className={classes.listItem}
                 />
               ))}
-              {projects?.items.length === 0 ? (
-                <Typography color="textSecondary">
-                  This language is not engaged in any projects
-                </Typography>
-              ) : projects?.canRead === false ? (
+              {projects?.canRead === false ? (
                 <Typography color="textSecondary">
                   You don't have permission to see the projects this language is
                   engaged in
+                </Typography>
+              ) : projects?.items.length === 0 ? (
+                <Typography color="textSecondary">
+                  This language is not engaged in any projects
                 </Typography>
               ) : null}
             </Grid>

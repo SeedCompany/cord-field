@@ -1,5 +1,6 @@
 import { createPersistedQueryLink as createLink } from '@apollo/client/link/persisted-queries';
-import { DocumentNode, print } from 'graphql';
+import { print } from '@apollo/client/utilities';
+import { DocumentNode } from 'graphql';
 import { dedupeFragmentsPrinter } from './dedupeFragmentsPrinter';
 
 export const createPersistedQueryLink = () => createLink({ generateHash });

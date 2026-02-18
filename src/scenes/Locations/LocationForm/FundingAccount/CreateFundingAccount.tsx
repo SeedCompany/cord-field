@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import { CreateFundingAccountInput } from '~/api/schema.graphql';
+import { CreateFundingAccount as CreateFundingAccountInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -32,7 +32,6 @@ export const CreateFundingAccount = (props: CreateFundingAccountProps) => {
         return data!.createFundingAccount.fundingAccount;
       }}
       title="Create Funding Account"
-      fieldsPrefix="fundingAccount"
     >
       <SubmitError />
       <TextField

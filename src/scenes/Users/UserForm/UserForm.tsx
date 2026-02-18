@@ -1,6 +1,11 @@
-import { Grid } from '@mui/material';
-import { memoize } from 'lodash';
-import { RoleLabels } from '~/api/schema.graphql';
+import { Stack } from '@mui/material';
+import {
+  GenderLabels,
+  GenderList,
+  RoleLabels,
+  UserStatusLabels,
+  UserStatusList,
+} from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -8,7 +13,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import {
   EmailField,
-  FieldGroup,
+  EnumField,
   matchFieldIfSame,
   SecuredField,
   SubmitError,
@@ -21,18 +26,16 @@ import { UserFormFragment } from './UserForm.graphql';
 export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing user to edit */
   user?: UserFormFragment;
-  prefix: string;
 };
 
-const decorators = memoize((prefix: string) => [
+const decorators = [
   ...DialogForm.defaultDecorators,
-  matchFieldIfSame(`${prefix}.realFirstName`, `${prefix}.displayFirstName`),
-  matchFieldIfSame(`${prefix}.realLastName`, `${prefix}.displayLastName`),
-]);
+  matchFieldIfSame('realFirstName', 'displayFirstName'),
+  matchFieldIfSame('realLastName', 'displayLastName'),
+];
 
 export const UserForm = <T, R = void>({
   user,
-  prefix,
   ...rest
 }: UserFormProps<T, R>) => {
   const { session } = useSession();
@@ -42,62 +45,74 @@ export const UserForm = <T, R = void>({
         maxWidth: 'sm',
       }}
       {...rest}
-      decorators={decorators(prefix)}
+      decorators={decorators}
     >
       <SubmitError />
-      <FieldGroup prefix={prefix}>
-        <Grid container spacing={2}>
-          <Grid item xs>
-            <SecuredField obj={user} name="realFirstName">
-              {(props) => (
-                <TextField
-                  label="First Name"
-                  placeholder="Enter First Name"
-                  required
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-          <Grid item xs>
-            <SecuredField obj={user} name="realLastName">
-              {(props) => (
-                <TextField
-                  label="Last Name"
-                  placeholder="Enter Last Name"
-                  required
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs>
-            <SecuredField obj={user} name="displayFirstName">
-              {(props) => (
-                <TextField
-                  label="Public First Name"
-                  placeholder="Enter Public First Name"
-                  required
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-          <Grid item xs>
-            <SecuredField obj={user} name="displayLastName">
-              {(props) => (
-                <TextField
-                  label="Public Last Name"
-                  placeholder="Enter Public Last Name"
-                  required
-                  {...props}
-                />
-              )}
-            </SecuredField>
-          </Grid>
-        </Grid>
+      <Stack>
+        <Stack direction="row" spacing={2}>
+          <SecuredField obj={user} name="realFirstName">
+            {(props) => (
+              <TextField
+                label="First Name"
+                placeholder="Enter First Name"
+                required
+                {...props}
+              />
+            )}
+          </SecuredField>
+          <SecuredField obj={user} name="realLastName">
+            {(props) => (
+              <TextField
+                label="Last Name"
+                placeholder="Enter Last Name"
+                required
+                {...props}
+              />
+            )}
+          </SecuredField>
+        </Stack>
+        <Stack direction="row" spacing={2}>
+          <SecuredField obj={user} name="displayFirstName">
+            {(props) => (
+              <TextField
+                label="Public First Name"
+                placeholder="Enter Public First Name"
+                required
+                {...props}
+              />
+            )}
+          </SecuredField>
+          <SecuredField obj={user} name="displayLastName">
+            {(props) => (
+              <TextField
+                label="Public Last Name"
+                placeholder="Enter Public Last Name"
+                required
+                {...props}
+              />
+            )}
+          </SecuredField>
+        </Stack>
+        <SecuredField obj={user} name="gender">
+          {(props) => (
+            <EnumField
+              label="Gender"
+              options={GenderList}
+              getLabel={labelFrom(GenderLabels)}
+              {...props}
+            />
+          )}
+        </SecuredField>
+        <SecuredField obj={user} name="status">
+          {(props) => (
+            <EnumField
+              label="Status"
+              options={UserStatusList}
+              getLabel={labelFrom(UserStatusLabels)}
+              {...props}
+            />
+          )}
+        </SecuredField>
         <SecuredField obj={user} name="email">
           {(props) => <EmailField {...props} required={false} />}
         </SecuredField>
@@ -149,7 +164,7 @@ export const UserForm = <T, R = void>({
             />
           )}
         </SecuredField>
-      </FieldGroup>
+      </Stack>
     </DialogForm>
   );
 };

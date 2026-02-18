@@ -16,7 +16,7 @@ export const MethodologySection = ({
   accordionState,
 }: SectionProps) => {
   const { classes } = useStyles();
-  const { methodology } = values.product ?? {};
+  const { methodology } = values;
   return (
     <SecuredAccordion
       {...accordionState}

@@ -29,7 +29,9 @@ export const useUpdatePeriodicReport = () => {
         variables: {
           input: {
             id,
-            ...(uploadId && name ? { reportFile: { uploadId, name } } : {}),
+            ...(uploadId && name
+              ? { reportFile: { upload: uploadId, name } }
+              : {}),
             receivedDate,
             skippedReason,
           },

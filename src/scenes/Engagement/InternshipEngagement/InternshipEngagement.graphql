@@ -11,6 +11,9 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     value {
       id
       fullName
+      gender {
+        value
+      }
     }
   }
   position {
@@ -27,6 +30,16 @@ fragment InternshipEngagementDetail on InternshipEngagement {
     canEdit
   }
   disbursementCompleteDate {
+    value
+    canRead
+    canEdit
+  }
+  marketable {
+    value
+    canRead
+    canEdit
+  }
+  webId {
     value
     canRead
     canEdit
@@ -51,5 +64,6 @@ fragment InternshipEngagementDetail on InternshipEngagement {
   methodologies {
     ...MethodologiesCard
   }
+  ...EngagementDescription
   ...EditEngagement
 }

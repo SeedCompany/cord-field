@@ -24,9 +24,7 @@ import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
-  engagement: {
-    languageId: LanguageLookupItem;
-  };
+  language: LanguageLookupItem;
 }
 
 type CreateLanguageEngagementProps = Except<
@@ -199,16 +197,14 @@ export const CreateLanguageEngagement = ({
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     const languageRef = {
       __typename: 'Language',
-      id: engagement.languageId.id,
+      id: language.id,
     } as const;
 
     await createEngagement({
       variables: {
         input: {
-          engagement: {
-            projectId: project.id,
-            languageId: engagement.languageId.id,
-          },
+          project: project.id,
+          language: language.id,
           changeset: project.changeset?.id,
         },
       },

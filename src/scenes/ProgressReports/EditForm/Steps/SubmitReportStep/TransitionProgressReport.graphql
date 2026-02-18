@@ -1,6 +1,4 @@
-mutation TransitionProgressReport(
-  $input: ExecuteProgressReportTransitionInput!
-) {
+mutation TransitionProgressReport($input: ExecuteProgressReportTransition!) {
   transitionProgressReport(input: $input) {
     id
     status {

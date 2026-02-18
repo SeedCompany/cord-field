@@ -1,0 +1,22 @@
+fragment manageToolUsages on Resource {
+  __typename
+  id
+  tools {
+    items {
+      ...ToolUsageForm
+    }
+    canCreate
+  }
+}
+fragment ToolUsageForm on ToolUsage {
+  id
+  startDate {
+    canRead
+    canEdit
+    value
+  }
+  tool {
+    ...ToolLookupItem
+  }
+  canDelete
+}

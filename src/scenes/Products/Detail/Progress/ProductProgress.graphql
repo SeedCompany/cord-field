@@ -22,7 +22,7 @@ fragment StepProgress on StepProgress {
   }
 }
 
-mutation UpdateStepProgress($input: ProductProgressInput!) {
+mutation UpdateStepProgress($input: UpdateProductProgress!) {
   updateProductProgress(input: $input) {
     ...ProductProgress
   }

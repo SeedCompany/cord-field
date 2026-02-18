@@ -159,6 +159,7 @@ export const ProjectOverview = () => {
         input: projectId,
         changeset: changesetId,
       },
+      fetchPolicy: 'cache-and-network',
     }
   );
   useComments(projectId);
@@ -241,7 +242,7 @@ export const ProjectOverview = () => {
               <Tooltip title="Edit Project Name">
                 <IconButton
                   aria-label="edit project name"
-                  onClick={() => editField(['name'])}
+                  onClick={() => editField(['name', 'departmentId'])}
                   loading={!project}
                 >
                   <Edit />
@@ -418,7 +419,7 @@ export const ProjectOverview = () => {
                 secured={project?.primaryLocation}
                 redacted="You do not have permission to view primary location"
                 children={(location) => location.name.value}
-                onClick={() => editField('primaryLocationId')}
+                onClick={() => editField('primaryLocation')}
               />
             </Grid>
             <Grid item>
@@ -430,7 +431,7 @@ export const ProjectOverview = () => {
                 secured={project?.fieldRegion}
                 redacted="You do not have permission to view field region"
                 children={(location) => location.name.value}
-                onClick={() => editField('fieldRegionId')}
+                onClick={() => editField('fieldRegion')}
               />
             </Grid>
             <Grid item>
@@ -442,7 +443,7 @@ export const ProjectOverview = () => {
                 secured={project?.marketingLocation}
                 redacted="You do not have permission to view the marketing location"
                 children={(location) => location.name.value}
-                onClick={() => editField(['marketingLocationId'])}
+                onClick={() => editField(['marketingLocation'])}
               />
             </Grid>
           </Grid>
@@ -476,6 +477,7 @@ export const ProjectOverview = () => {
               <BudgetOverviewCard
                 budget={project?.budget.value}
                 loading={!project}
+                status={project?.projectStatus}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -506,7 +508,7 @@ export const ProjectOverview = () => {
           </Grid>
 
           <CardGroup horizontal="mdUp">
-            <ProjectMembersSummary members={project?.team} />
+            <ProjectMembersSummary project={project} />
             <PartnershipSummary partnerships={project?.partnerships} />
           </CardGroup>
 

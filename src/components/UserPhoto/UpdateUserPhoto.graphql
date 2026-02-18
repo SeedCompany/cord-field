@@ -1,0 +1,15 @@
+mutation UpdateUserPhoto($user: ID!, $photo: CreateDefinedFileVersion!) {
+  updateUser(input: { id: $user, photo: $photo }) {
+    user {
+      id
+      photo {
+        canRead
+        canEdit
+        value {
+          id
+          url
+        }
+      }
+    }
+  }
+}

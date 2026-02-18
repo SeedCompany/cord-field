@@ -2,6 +2,7 @@ import {
   ApolloCache,
   MutationUpdaterFunction,
   Reference,
+  Unmasked,
 } from '@apollo/client';
 import { isObjectLike, sortBy } from '@seedcompany/common';
 import { Except } from 'type-fest';
@@ -44,9 +45,12 @@ import { sortingFromArgs } from './util';
  */
 export const addItemToList =
   <
+    MutationOutput,
+    TVariables,
+    TContext,
+    TCache extends ApolloCache<any>,
     OwningObj extends Entity,
     Item extends Entity,
-    MutationOutput,
     Args = InputArg<SortableListInput>
   >({
     listId,
@@ -54,13 +58,8 @@ export const addItemToList =
     outputToItem,
   }: Except<ModifyListOptions<OwningObj, Args>, 'cache' | 'modifier'> & {
     // A function describing how to get to the item from the mutation's result
-    outputToItem: (out: MutationOutput) => Item;
-  }): MutationUpdaterFunction<
-    MutationOutput,
-    unknown,
-    unknown,
-    ApolloCache<unknown>
-  > =>
+    outputToItem: (out: Unmasked<MutationOutput> & {}) => Item;
+  }): MutationUpdaterFunction<MutationOutput, TVariables, TContext, TCache> =>
   (cache, { data }) => {
     if (!data) {
       return;

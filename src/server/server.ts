@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import * as path from 'path';
@@ -18,6 +19,10 @@ const PUBLIC_DIR = path.resolve(
 const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
 const BASE_PATH = withoutTrailingSlash(basePathOfUrl(PUBLIC_URL));
 
+// getting 'canonizeResults' false positive, maybe this:
+// https://github.com/apollographql/apollo-client/issues/12917
+(global as any)[Symbol.for('apollo.deprecations')] = true;
+
 export const create = async () => {
   const app = express();
   const router: express.Router = BASE_PATH ? express.Router() : app;
@@ -32,6 +37,13 @@ export const create = async () => {
   );
   router.use(bodyParser.json());
   router.use(cookieParser());
+
+  // Allow images to be served from anywhere.
+  // Emails reference these images, and they can be rendered anywhere.
+  router.use('/images/*', cors(), (req, res, next) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  });
 
   // Serve static assets
   router.use(

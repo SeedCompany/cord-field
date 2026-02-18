@@ -1,4 +1,4 @@
-mutation UpdateProjectMember($input: UpdateProjectMemberInput!) {
+mutation UpdateProjectMember($input: UpdateProjectMember!) {
   updateProjectMember(input: $input) {
     projectMember {
       ...ProjectMemberCard
@@ -10,8 +10,7 @@ query GetUserRoles($userId: ID!) {
   user(id: $userId) {
     id
     roles {
-      canRead
-      value
+      availableForProjects
     }
   }
 }

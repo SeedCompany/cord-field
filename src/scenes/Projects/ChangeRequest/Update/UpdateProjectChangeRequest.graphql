@@ -1,4 +1,4 @@
-mutation UpdateProjectChangeRequest($input: UpdateProjectChangeRequestInput!) {
+mutation UpdateProjectChangeRequest($input: UpdateProjectChangeRequest!) {
   updateProjectChangeRequest(input: $input) {
     projectChangeRequest {
       ...ProjectChangeRequestListItem

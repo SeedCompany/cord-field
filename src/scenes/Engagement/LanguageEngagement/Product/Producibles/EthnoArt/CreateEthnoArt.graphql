@@ -1,4 +1,4 @@
-mutation CreateEthnoArt($input: CreateEthnoArtInput!) {
+mutation CreateEthnoArt($input: CreateEthnoArt!) {
   createEthnoArt(input: $input) {
     ethnoArt {
       id

@@ -1,4 +1,4 @@
-import { CreateOrganizationInput } from '~/api/schema.graphql';
+import { CreateOrganization } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -6,7 +6,7 @@ import {
 import { SubmitError, TextField } from '../../../components/form';
 
 export type CreateOrganizationFormProps<R> = DialogFormProps<
-  CreateOrganizationInput,
+  CreateOrganization,
   R
 >;
 
@@ -16,7 +16,7 @@ export const CreateOrganizationForm = <R extends any>(
   <DialogForm {...props} title="Create Organization">
     <SubmitError />
     <TextField
-      name="organization.name"
+      name="name"
       label="Name"
       placeholder="Enter organization name"
       required

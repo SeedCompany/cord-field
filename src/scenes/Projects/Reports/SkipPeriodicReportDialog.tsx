@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdatePeriodicReportInput } from '~/api/schema.graphql';
+import { UpdatePeriodicReport as UpdatePeriodicReportInput } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,

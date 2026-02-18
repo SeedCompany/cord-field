@@ -11,13 +11,13 @@ export const useProcessEngagementUpdate = () =>
       variables: {
         input: {
           id: row.id,
-          milestoneReached: row.milestoneReached.value,
+          milestonePlanned: row.milestonePlanned.value,
           usingAIAssistedTranslation: row.usingAIAssistedTranslation.value,
         },
       },
       optimisticResponse: {
         updateLanguageEngagement: {
-          __typename: 'UpdateLanguageEngagementOutput',
+          __typename: 'LanguageEngagementUpdated',
           engagement: row,
         },
       },

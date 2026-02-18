@@ -1,4 +1,4 @@
-mutation UpdatePost($input: UpdatePostInput!) {
+mutation UpdatePost($input: UpdatePost!) {
   updatePost(input: $input) {
     post {
       ...PostListItemCard

@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
-import { UpdateLanguageEngagementInput as UpdateEngagementInput } from '~/api/schema.graphql';
+import { UpdateLanguageEngagement as UpdateEngagementInput } from '~/api/schema.graphql';
 import { DateField, Form, SecuredField } from '../../../../components/form';
 import { UpdateLanguageEngagementDocument as UpdateEngagement } from '../../EditEngagement/EditEngagementDialog.graphql';
 import { LanguageEngagementDatesFormFragment as Engagement } from './DatesForm.graphql';
@@ -10,11 +10,9 @@ export const DatesForm = ({ engagement }: { engagement: Engagement }) => {
 
   const initialValues = useMemo(
     () => ({
-      engagement: {
-        id: engagement.id,
-        completeDate: engagement.completeDate.value,
-        disbursementCompleteDate: engagement.disbursementCompleteDate.value,
-      },
+      id: engagement.id,
+      completeDate: engagement.completeDate.value,
+      disbursementCompleteDate: engagement.disbursementCompleteDate.value,
     }),
     [engagement]
   );
@@ -26,7 +24,6 @@ export const DatesForm = ({ engagement }: { engagement: Engagement }) => {
         await updateEngagement({ variables: { input } });
       }}
       autoSubmit
-      fieldsPrefix="engagement"
     >
       <SecuredField obj={engagement} name="completeDate">
         {(props) => <DateField {...props} label="Translation Complete Date" />}

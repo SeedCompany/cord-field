@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreatePostInput } from '~/api/schema.graphql';
+import { CreatePost as CreatePostInput } from '~/api/schema.graphql';
 import { PostableIdFragment } from '../PostableId.graphql';
 import { PostForm, PostFormProps } from '../PostForm';
 import { CreatePostDocument } from './CreatePost.graphql';
@@ -30,16 +30,14 @@ export const CreatePost = ({
       title="Add Post"
       {...props}
       includeMembership={includeMembership}
-      onSubmit={async ({ post }) => {
+      onSubmit={async (values) => {
         await createPost({
           variables: {
             input: {
-              post: {
-                parentId: parent.id,
-                body: post.body,
-                type: post.type,
-                shareability: post.shareability,
-              },
+              parent: parent.id,
+              body: values.body,
+              type: values.type,
+              shareability: values.shareability,
             },
           },
         });

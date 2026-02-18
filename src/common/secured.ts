@@ -47,9 +47,9 @@ export const unwrapSecuredEdge = <T>(
     value.__typename.startsWith('Secured')
   ) {
     return 'value' in value
-      ? value.value
+      ? (value.value as any)
       : 'items' in value && Array.isArray(value.items)
-      ? value.items
+      ? (value.items as any)
       : (value as any);
   }
   return value as any;

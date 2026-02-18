@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdatePostInput } from '~/api/schema.graphql';
+import { UpdatePost as UpdatePostInput } from '~/api/schema.graphql';
 import { PostForm, PostFormProps } from '../PostForm';
 import { UpdatePostDocument } from './EditPost.graphql';
 
@@ -11,19 +11,17 @@ export type EditPostProps = Except<
 > & { includeMembership: boolean };
 
 export const EditPost = (props: EditPostProps) => {
-  const [updateUser] = useMutation(UpdatePostDocument);
+  const [updatePost] = useMutation(UpdatePostDocument);
   const post = props.post;
 
   const initialValues = useMemo(
     () =>
       post
         ? {
-            post: {
-              id: post.id,
-              body: post.body.value || '',
-              shareability: post.shareability,
-              type: post.type,
-            },
+            id: post.id,
+            body: post.body.value || '',
+            shareability: post.shareability,
+            type: post.type,
           }
         : undefined,
     [post]
@@ -34,13 +32,9 @@ export const EditPost = (props: EditPostProps) => {
       {...props}
       initialValues={initialValues}
       includeMembership={props.includeMembership}
-      onSubmit={async ({ post }) => {
-        await updateUser({
-          variables: {
-            input: {
-              post,
-            },
-          },
+      onSubmit={async (input) => {
+        await updatePost({
+          variables: { input },
         });
       }}
     />

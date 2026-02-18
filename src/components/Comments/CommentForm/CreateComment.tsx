@@ -35,8 +35,8 @@ export const CreateComment = ({
         await createOrReplyComment({
           variables: {
             input: {
-              resourceId,
-              threadId,
+              resource: resourceId,
+              thread: threadId,
               body: values.body,
             },
           },

@@ -5,7 +5,7 @@ mutation UpdatePartnership(
   $projectId: ID!
   $period: PeriodType
 ) {
-  updatePartnership(input: { partnership: $changes, changeset: $changeset }) {
+  updatePartnership(input: $changes) {
     partnership {
       ...PartnershipCard
       ...PartnershipForm
@@ -15,7 +15,8 @@ mutation UpdatePartnership(
 
   updateProject(
     input: {
-      project: { id: $projectId, financialReportPeriod: $period }
+      id: $projectId
+      financialReportPeriod: $period
       changeset: $changeset
     }
   ) @include(if: $financialReportPeriodChanged) {

@@ -1,8 +1,8 @@
 import { many, Many } from '@seedcompany/common';
 import { pick } from 'lodash';
 import { useMemo } from 'react';
-import { Except } from 'type-fest';
-import { UpdatePeriodicReportInput } from '~/api/schema.graphql';
+import { Except, Merge } from 'type-fest';
+import { UpdatePeriodicReport as UpdatePeriodicReportInput } from '~/api/schema.graphql';
 import { ExtractStrict } from '~/common';
 import {
   DialogForm,
@@ -22,12 +22,12 @@ export type EditablePeriodicReportField = ExtractStrict<
   'receivedDate' | 'reportFile' | 'skippedReason'
 >;
 
-interface UpdatePeriodicReportFormValues {
-  // report.file does not have a type of CreateDefinedFileInput until the upload step has taken place
-  report: Omit<UpdatePeriodicReportInput, 'reportFile'> & {
+type UpdatePeriodicReportFormValues = Merge<
+  UpdatePeriodicReportInput,
+  {
     reportFile?: File[];
-  };
-}
+  }
+>;
 
 type UpdatePeriodicReportDialogProps = Except<
   DialogFormProps<UpdatePeriodicReportFormValues>,
@@ -55,7 +55,7 @@ export const UpdatePeriodicReportDialog = ({
   const initialValues = useMemo(() => {
     const receivedDate = report.receivedDate.value ?? null;
     const fullInitialValuesFields: Except<
-      UpdatePeriodicReportFormValues['report'],
+      UpdatePeriodicReportFormValues,
       'id'
     > = {
       reportFile: report.reportFile,
@@ -68,10 +68,8 @@ export const UpdatePeriodicReportDialog = ({
       editFields
     );
     return {
-      report: {
-        id: report.id,
-        ...filteredInitialValuesFields,
-      },
+      id: report.id,
+      ...filteredInitialValuesFields,
     };
   }, [editFields, report.receivedDate, report.reportFile, report.id]);
 
@@ -81,11 +79,10 @@ export const UpdatePeriodicReportDialog = ({
       closeLabel="Close"
       submitLabel="Save"
       {...props}
-      fieldsPrefix="report"
       initialValues={initialValues}
       // the only time this form will have an initial value for the file field is when adding a new version
-      sendIfClean={Boolean(initialValues.report.reportFile)}
-      onSubmit={async ({ report: { id, reportFile, receivedDate } }) =>
+      sendIfClean={Boolean(initialValues.reportFile)}
+      onSubmit={async ({ id, reportFile, receivedDate }) =>
         await updatePeriodicReport(id, reportFile, receivedDate)
       }
     >

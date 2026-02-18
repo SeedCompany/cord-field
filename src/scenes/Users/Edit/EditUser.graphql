@@ -1,4 +1,4 @@
-mutation UpdateUser($input: UpdateUserInput!) {
+mutation UpdateUser($input: UpdateUser!) {
   updateUser(input: $input) {
     user {
       ...DisplayUser

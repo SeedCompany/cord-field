@@ -10,7 +10,7 @@ query FileVersions($id: ID!) {
   }
 }
 
-mutation CreateFileVersion($input: CreateFileVersionInput!) {
+mutation CreateFileVersion($input: CreateFileVersion!) {
   createFileVersion(input: $input) {
     id
     ...FileNodeInfo
@@ -22,7 +22,7 @@ mutation CreateFileVersion($input: CreateFileVersionInput!) {
   }
 }
 
-mutation RenameFileNode($input: RenameFileInput!) {
+mutation RenameFileNode($input: RenameFile!) {
   renameFileNode(input: $input) {
     id
     name

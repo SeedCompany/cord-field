@@ -1,4 +1,4 @@
-mutation CreateStory($input: CreateStoryInput!) {
+mutation CreateStory($input: CreateStory!) {
   createStory(input: $input) {
     story {
       id

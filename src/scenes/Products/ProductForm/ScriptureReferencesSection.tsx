@@ -32,9 +32,9 @@ export const ScriptureReferencesSection = ({
   const { classes } = useStyles();
 
   const { scriptureReferences, book, bookSelection, unspecifiedScripture } =
-    values.product ?? {};
+    values;
 
-  if (values.product?.productType === 'Other') {
+  if (values.productType === 'Other') {
     return null;
   }
 
@@ -90,7 +90,7 @@ export const ScriptureReferencesSection = ({
               options={[
                 'full',
                 'partialKnown',
-                ...(values.product?.productType === 'DirectScriptureProduct'
+                ...(values.productType === 'DirectScriptureProduct'
                   ? ['partialUnknown']
                   : []),
               ]}

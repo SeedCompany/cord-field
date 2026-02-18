@@ -23,7 +23,7 @@ const useStyles = makeStyles()(({ spacing }) => ({
 export const CompletionSection = ({ values, accordionState }: SectionProps) => {
   const { classes } = useStyles();
 
-  if (!values.product?.methodology) {
+  if (!values.methodology) {
     return null;
   }
 
@@ -34,14 +34,14 @@ export const CompletionSection = ({ values, accordionState }: SectionProps) => {
       title="Completion Description"
       renderCollapsed={() => (
         <Typography className={classes.collapsed}>
-          {values.product?.describeCompletion}
+          {values.describeCompletion}
         </Typography>
       )}
     >
       {(props) => (
         <CompletionDescriptionField
           label="Completion means..."
-          methodology={values.product?.methodology}
+          methodology={values.methodology}
           {...props}
         />
       )}

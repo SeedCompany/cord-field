@@ -2,6 +2,7 @@ import {
   ApolloCache,
   MutationUpdaterFunction,
   StoreObject,
+  Unmasked,
 } from '@apollo/client';
 import {
   getFragmentName,
@@ -17,8 +18,8 @@ export interface UpdateFragmentOptions<
 > extends ReadFragmentOptions<FragmentType, TVariables, Partial> {
   broadcast?: boolean;
   updater: (
-    data: MaybePartial<FragmentType, Partial>
-  ) => MaybePartial<FragmentType, Partial> | undefined | void;
+    data: Unmasked<MaybePartial<FragmentType, Partial>>
+  ) => Unmasked<MaybePartial<FragmentType, Partial>> | undefined | void;
 }
 
 /**

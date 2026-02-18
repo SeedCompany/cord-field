@@ -1,4 +1,4 @@
-import { CreateFilmInput } from '~/api/schema.graphql';
+import { CreateFilm as CreateFilmInput } from '~/api/schema.graphql';
 import { LookupField } from '../..';
 import { CreateFilm } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/Film/CreateFilm';
 import {
@@ -12,9 +12,5 @@ export const FilmField = LookupField.createFor<Film, CreateFilmInput>({
   label: 'Film',
   placeholder: 'Search for a film by name',
   CreateDialogForm: CreateFilm,
-  getInitialValues: (value) => ({
-    film: {
-      name: value,
-    },
-  }),
+  getInitialValues: (name) => ({ name }),
 });

@@ -89,8 +89,8 @@ const useUpdateSteps = () => {
     void update({
       variables: {
         input: {
-          productId: product.id,
-          reportId: report.id,
+          product: product.id,
+          report: report.id,
           variant: variant.key,
           steps: steps
             .filter(({ step }) => newRow[step]?.value !== oldRow[step]?.value)

@@ -6,7 +6,7 @@ import {
   ProjectChangeRequestStatusList,
   ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
-  UpdateProjectChangeRequestInput,
+  UpdateProjectChangeRequest as UpdateProjectChangeRequestInput,
 } from '~/api/schema.graphql';
 import { callAll, labelFrom } from '~/common';
 import { ProjectIdFragment } from '~/common/fragments';
@@ -66,12 +66,10 @@ export const UpdateProjectChangeRequest = ({
       sendIfClean="delete"
       disableChangesetWarning
       initialValues={{
-        projectChangeRequest: {
-          id: changeRequest.id,
-          status: changeRequest.status.value!,
-          types: changeRequest.types.value,
-          summary: changeRequest.summary.value!,
-        },
+        id: changeRequest.id,
+        status: changeRequest.status.value!,
+        types: changeRequest.types.value,
+        summary: changeRequest.summary.value!,
       }}
       onSubmit={async (input) => {
         if (input.submitAction === 'delete') {
@@ -89,8 +87,8 @@ export const UpdateProjectChangeRequest = ({
         });
         // Change Request is approved
         if (
-          input.projectChangeRequest.status === 'Approved' &&
-          changeRequest.status.value !== input.projectChangeRequest.status
+          input.status === 'Approved' &&
+          changeRequest.status.value !== input.status
         ) {
           closeChangeset();
           // A change request approval can have such wide-spread implications,
@@ -99,7 +97,6 @@ export const UpdateProjectChangeRequest = ({
           await client.resetStore();
         }
       }}
-      fieldsPrefix="projectChangeRequest"
       leftAction={
         <SubmitButton
           action="delete"
