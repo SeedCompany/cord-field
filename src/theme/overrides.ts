@@ -26,9 +26,6 @@ export const appComponents = ({
           backgroundColor: palette.background.default,
           color: palette.text.primary,
         },
-        h1: {
-          color: palette.text.primary,
-        },
         '#root': {
           minHeight: '100vh',
           display: 'flex',

@@ -1,9 +1,10 @@
-import { CssBaseline, GlobalStyles, useMediaQuery } from '@mui/material';
+import { CssBaseline, useMediaQuery } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
-import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
+import type { ChildrenProp } from '~/common';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
@@ -48,7 +49,7 @@ export const ColorModeContext = createContext<{ toggleColorMode: () => void }>({
   toggleColorMode: () => undefined,
 });
 
-const ThemeProviderWithDarkMode = ({ children }: { children?: ReactNode }) => {
+const ThemeProviderWithDarkMode = ({ children }: ChildrenProp) => {
   // Detect system/browser dark mode preference
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {
     noSsr: true,
@@ -75,12 +76,6 @@ const ThemeProviderWithDarkMode = ({ children }: { children?: ReactNode }) => {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline enableColorScheme />
-        <GlobalStyles
-          styles={(theme) => ({
-            html: { backgroundColor: theme.palette.background.default },
-            body: { backgroundColor: theme.palette.background.default },
-          })}
-        />
         {children}
       </ThemeProvider>
     </ColorModeContext.Provider>

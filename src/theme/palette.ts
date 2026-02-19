@@ -1,5 +1,6 @@
 import { PaletteColor, PaletteColorOptions } from '@mui/material';
 import { PaletteOptions } from '@mui/material/styles';
+import type { Role } from '../api/schema.graphql';
 
 /**
  * Seed Company Brand Colors
@@ -16,7 +17,7 @@ const brandColors = {
   /** #EBEBEC - Very light gray used for secondary color and primary text in dark mode */
   lightGray: '#EBEBEC',
   /** #636466 - Dark gray used for secondary color in light mode and paper background in dark mode */
-  darkGray: '#414141',
+  darkGray: '#636466',
   /** #323232 - Very dark gray (almost black) used for dark mode default background and primary text in light mode */
   black: '#323232',
 };
@@ -53,12 +54,11 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       secondary: dark ? brandColors.stone : brandColors.darkGray,
     },
 
-    // TODO theme.palette.augmentColor()
     roles: {
-      FieldPartner: { main: `hsl(187deg, 71%, ${roleLuminance}%)` }, // #B2EBF2 / hsl(187deg, 71%, 82%)
-      Translator: { main: `hsl(36deg, 100%, ${roleLuminance}%)` }, // #FFE0B2 / hsl(36deg, 100%, 85%)
-      ProjectManager: { main: `hsl(291deg, 46%, ${roleLuminance}%)` }, // #E1BEE7 / hsl(291deg, 46%, 83%)
-      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // '#DCEDC8 / hsl(88deg, 51%, 86%)
+      FieldPartner: { main: `hsl(187deg, 71%, ${roleLuminance}%)` }, // #B2EBF2
+      Translator: { main: `hsl(36deg, 100%, ${roleLuminance}%)` }, // #FFE0B2
+      ProjectManager: { main: `hsl(291deg, 46%, ${roleLuminance}%)` }, // #E1BEE7
+      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // '#DCEDC8
     },
   };
 
@@ -68,10 +68,10 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
 declare module '@mui/material/styles' {
   interface Palette {
     create: Palette['primary'];
-    roles: Partial<Record<string, Pick<PaletteColor, 'main'>>>;
+    roles: Partial<Record<Role, Pick<PaletteColor, 'main'>>>;
   }
   interface PaletteOptions {
     create: PaletteOptions['primary'];
-    roles: Partial<Record<string, PaletteColorOptions>>;
+    roles: Partial<Record<Role, PaletteColorOptions>>;
   }
 }
