@@ -11,6 +11,7 @@ export const DashboardLayout = ({ children }: ChildrenProp) => (
       mb: 2,
       gap: 2,
       overflowY: 'scroll',
+      backgroundColor: 'background.default',
     }}
   >
     <Helmet title="My Dashboard" />
@@ -19,8 +20,8 @@ export const DashboardLayout = ({ children }: ChildrenProp) => (
       component="h1"
       variant="h3"
       sx={{
-        backgroundColor: (theme) =>
-          theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#E3F0F4',
+        backgroundColor: 'background.paper',
+        color: 'text.primary',
         p: 4,
         borderRadius: 1,
       }}

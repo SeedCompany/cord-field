@@ -1,5 +1,4 @@
 import loadable from '@loadable/component';
-import { CssBaseline } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes } from 'react-router-dom';
 import { Error, NotFoundRoute } from '../../components/Error';
@@ -101,7 +100,6 @@ export const Root = () => {
 
   return (
     <>
-      <CssBaseline />
       <AppMetadata />
       <ErrorBoundary fallback={<Error show page />}>{routes}</ErrorBoundary>
     </>

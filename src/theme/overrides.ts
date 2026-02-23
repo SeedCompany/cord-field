@@ -18,26 +18,24 @@ export const appComponents = ({
       },
     },
     MuiCssBaseline: {
-      styleOverrides: {
+      styleOverrides: (theme) => ({
         html: {
-          backgroundColor: palette.background.default,
+          backgroundColor: theme.palette.background.default,
         },
         body: {
-          backgroundColor: palette.background.default,
-          color: palette.text.primary,
+          backgroundColor: theme.palette.background.default,
+          color: theme.palette.text.primary,
         },
         '#root': {
           minHeight: '100vh',
           display: 'flex',
         },
-        // Idk what this iframe is, but it's overlaying over everything and showing nothing.
-        // Disable pointer events so DevTools will select through it.
         ...(process.env.NODE_ENV !== 'production' && {
           'body > iframe': {
             pointerEvents: 'none',
           },
         }),
-      },
+      }),
     },
     MuiButton: {
       styleOverrides: {

@@ -3,7 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useMemo, useState } from 'react';
 import type { ChildrenProp } from '~/common';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
@@ -54,24 +54,26 @@ const ThemeProviderWithDarkMode = ({ children }: ChildrenProp) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {
     noSsr: true,
   });
-
-  const [mode, setMode] = useState<'light' | 'dark'>('light');
-
-  useEffect(() => {
-    setMode(prefersDarkMode ? 'dark' : 'light');
-  }, [prefersDarkMode]);
+  const [userOverride, setUserOverride] = useState<'light' | 'dark' | null>(
+    null
+  );
+  const mode: 'light' | 'dark' =
+    userOverride ?? (prefersDarkMode ? 'dark' : 'light');
 
   const colorMode = useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+        setUserOverride((prev) => {
+          const current = prev ?? (prefersDarkMode ? 'dark' : 'light');
+          return current === 'light' ? 'dark' : 'light';
+        });
       },
     }),
-    []
+    [prefersDarkMode]
   );
 
+  // Key fix: depend on the reactive values that determine mode
   const theme = useMemo(() => createTheme({ dark: mode === 'dark' }), [mode]);
-
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>

@@ -55,10 +55,10 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     },
 
     roles: {
-      FieldPartner: { main: `hsl(187deg, 71%, ${roleLuminance}%)` }, // #B2EBF2
-      Translator: { main: `hsl(36deg, 100%, ${roleLuminance}%)` }, // #FFE0B2
-      ProjectManager: { main: `hsl(291deg, 46%, ${roleLuminance}%)` }, // #E1BEE7
-      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // '#DCEDC8
+      FieldPartner: { main: `hsl(187deg, 71%, ${roleLuminance}%)` }, // `#B2EBF2` (light mode)
+      Translator: { main: `hsl(36deg, 100%, ${roleLuminance}%)` }, // `#FFE0B2` (light mode)
+      ProjectManager: { main: `hsl(291deg, 46%, ${roleLuminance}%)` }, // `#E1BEE7` (light mode)
+      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // `#DCEDC8` (light mode)
     },
   };
 
