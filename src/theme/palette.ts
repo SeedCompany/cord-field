@@ -7,7 +7,7 @@ import type { Role } from '../api/schema.graphql';
  * These colors are used throughout the application to maintain brand consistency
  * across both light and dark modes.
  */
-const brandColors = {
+export const brandColors = {
   /** #F7F1E7 - Light beige used for light mode default background */
   natural: '#F7F1E7',
   /** #CDC3B0 - Medium beige used for secondary text in dark mode */
@@ -24,7 +24,7 @@ const brandColors = {
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';
-  const roleLuminance = dark ? 32 : 84;
+  const roleLuminance = dark ? 50 : 32;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
     background: {

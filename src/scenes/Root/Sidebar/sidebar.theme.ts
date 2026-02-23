@@ -1,4 +1,5 @@
 import { alpha, createTheme as createMuiTheme } from '@mui/material/styles';
+import { brandColors } from '~/theme/palette';
 import { createTheme } from '../../../theme';
 
 const listItemColor = '#fff';
@@ -10,7 +11,7 @@ export const sidebarTheme = createMuiTheme({
     ...base.palette,
     background: {
       ...base.palette.background,
-      paper: '#636466', // Dark Gray from Seed Company brand colors
+      paper: brandColors.darkGray, // Dark Gray from Seed Company brand colors
     },
   },
   components: {
