@@ -1,6 +1,6 @@
-import { PaletteColor, PaletteColorOptions } from '@mui/material';
-import { PaletteOptions } from '@mui/material/styles';
-import type { Role } from '../api/schema.graphql';
+import type { PaletteColor, PaletteColorOptions } from '@mui/material';
+import type { PaletteOptions } from '@mui/material/styles';
+import type { Role } from '~/api/schema.graphql';
 
 export const brandColors = {
   // #F7F1E7 - Light beige used for light mode default background
@@ -19,6 +19,7 @@ export const brandColors = {
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';
+  // Using HSL allows us to easily adjust the lightness for dark and light modes while keeping the hue and saturation consistent.
   const roleLuminance = dark ? 50 : 32;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
