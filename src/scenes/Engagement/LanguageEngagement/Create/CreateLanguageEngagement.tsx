@@ -18,7 +18,7 @@ import {
 } from '../../../../components/form/Lookup';
 import {
   CreateLanguageEngagementDocument,
-  CreateLanguageEngagementMutation,
+  type CreateLanguageEngagementMutation,
 } from './CreateLanguageEngagement.graphql';
 import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
@@ -77,8 +77,8 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
   },
   columnHeaderCode: {
     flexShrink: 0,
-    width: 52, // must match optionCode width for column alignment
-    fontSize: '0.7rem', // compact size for column header labels
+    width: 52, // must match optionCode width for column alignment // ai design-alignment
+    fontSize: '0.7rem', // compact size for column header labels // ai design-alignment
     fontWeight: 600,
     textAlign: 'right',
     color: palette.text.secondary,
@@ -99,7 +99,7 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
   },
   optionCode: {
     flexShrink: 0,
-    width: 52, // must match columnHeaderCode width for column alignment
+    width: 52, // must match columnHeaderCode width for column alignment // ai design-alignment
     textAlign: 'right',
     color: palette.text.secondary,
   },
@@ -222,9 +222,10 @@ export const CreateLanguageEngagement = ({
   );
 
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
-    // languageId is guaranteed by form validation (`required` on the field).
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const language = engagement!.languageId!;
+    // Guard: `required` validation prevents submit without a selection, but we
+    // narrow the type here to avoid non-null assertions. // ai type-safety
+    const language = engagement?.languageId;
+    if (!language) return;
     const languageRef = {
       __typename: 'Language',
       id: language.id,
