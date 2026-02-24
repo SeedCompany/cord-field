@@ -20,6 +20,9 @@ export const brandColors = {
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';
   // Using HSL allows us to easily adjust the lightness for dark and light modes while keeping the hue and saturation consistent.
+  // ai: roleLuminance 32% in light mode keeps role colors muted against the light background (#F7F1E7),
+  // while 50% in dark mode lifts them to mid-tone so they remain visible against the dark background (#323232).
+  // These are decorative swatches (not text), so the target is perceptual balance rather than WCAG text contrast.
   const roleLuminance = dark ? 50 : 32;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
