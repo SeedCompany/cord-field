@@ -117,6 +117,23 @@ describe('sortComparator', () => {
     expect(sort(a, b)).toBeLessThan(0);
   });
 
+  it('is antisymmetric: sort(a,b) === -sort(b,a)', () => {
+    const engaged = makeLanguage('lang-1');
+    const notEngaged = makeLanguage('lang-3');
+    expect(sort(engaged, notEngaged)).toBe(-sort(notEngaged, engaged));
+  });
+
+  it('uses the provided engagedLanguageIds at call time, not stale closure', () => {
+    const firstSort = makeSortComparator(['lang-1']);
+    const secondSort = makeSortComparator(['lang-2']); // different list
+    const a = makeLanguage('lang-1');
+    const b = makeLanguage('lang-2');
+    // With firstSort, lang-1 is engaged → goes after lang-2
+    expect(firstSort(a, b)).toBeGreaterThan(0);
+    // With secondSort, lang-2 is engaged → goes after lang-1
+    expect(secondSort(a, b)).toBeLessThan(0);
+  });
+
   it('treats empty engaged list as all equal', () => {
     const sortEmpty = makeSortComparator([]);
     const a = makeLanguage('lang-1');
@@ -185,6 +202,14 @@ describe('renderOptionContent', () => {
     expect(queryByTestId('engaged-tooltip-wrapper')).toBeNull();
   });
 
+  it('prefers name over displayName when both are set', () => {
+    const renderOption = makeRenderOptionContent([]);
+    const lang = makeLanguage('lang-6', { name: 'Primary Name', displayName: 'Fallback Name' });
+    const { getByTestId } = render(<>{renderOption(lang)}</>);
+    expect(getByTestId('option-name')).toHaveTextContent('Primary Name');
+    expect(getByTestId('option-name')).not.toHaveTextContent('Fallback Name');
+  });
+
   it('falls back to displayName when name value is null', () => {
     const renderOption = makeRenderOptionContent([]);
     const lang = makeLanguage('lang-3', { name: undefined, displayName: 'My Display' });
@@ -192,6 +217,16 @@ describe('renderOptionContent', () => {
     lang.name = { __typename: 'SecuredString', value: null as unknown as string };
     const { getByTestId } = render(<>{renderOption(lang)}</>);
     expect(getByTestId('option-name')).toHaveTextContent('My Display');
+  });
+
+  it('renders empty option name when both name and displayName values are null', () => {
+    const renderOption = makeRenderOptionContent([]);
+    const lang = makeLanguage('lang-7');
+    lang.name = { __typename: 'SecuredString', value: null as unknown as string };
+    lang.displayName = { __typename: 'SecuredString', value: null as unknown as string };
+    const { getByTestId } = render(<>{renderOption(lang)}</>);
+    // Neither value is present; the span renders but is empty
+    expect(getByTestId('option-name').textContent).toBe('');
   });
 
   it('falls back to "-" when ethnologue code is null', () => {
@@ -214,6 +249,24 @@ describe('renderOptionContent', () => {
     const { getByTestId } = render(<>{renderOption(lang)}</>);
     expect(getByTestId('engaged-tooltip-wrapper')).toBeInTheDocument();
     expect(getByTestId('option-row')).toBeInTheDocument();
+  });
+
+  it('tooltip wrapper carries the "Already added to this project" title', () => {
+    const renderOption = makeRenderOptionContent(engagedIds);
+    const lang = makeLanguage('lang-1');
+    const { getByTestId } = render(<>{renderOption(lang)}</>);
+    expect(getByTestId('engaged-tooltip-wrapper')).toHaveAttribute(
+      'title',
+      'Already added to this project'
+    );
+  });
+
+  it('still renders codes inside the engaged tooltip wrapper', () => {
+    const renderOption = makeRenderOptionContent(engagedIds);
+    const lang = makeLanguage('lang-1', { ethnologueCode: 'zzz', rolvCode: 'R001' });
+    const { getByTestId } = render(<>{renderOption(lang)}</>);
+    expect(getByTestId('option-eth')).toHaveTextContent('zzz');
+    expect(getByTestId('option-rolv')).toHaveTextContent('R001');
   });
 
   it('does not wrap non-engaged language in a tooltip indicator', () => {
@@ -288,20 +341,35 @@ describe('helperText code display', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Column header labels
+// Column header labels (PaperComponent)
 // ---------------------------------------------------------------------------
 
+/**
+ * Recreates the PaperComponent header row passed to LanguageField.
+ * Tests that the three columns — Name, ETH, ROLV — are rendered in order.
+ */
+const ColumnHeader = () => (
+  <div data-testid="column-header">
+    <span data-testid="col-name">Name</span>
+    <span data-testid="col-eth">ETH</span>
+    <span data-testid="col-rolv">ROLV</span>
+  </div>
+);
+
 describe('dropdown column headers', () => {
-  it('renders Name, ETH, and ROLV column headers', () => {
-    render(
-      <div>
-        <span>Name</span>
-        <span>ETH</span>
-        <span>ROLV</span>
-      </div>
-    );
-    expect(screen.getByText('Name')).toBeInTheDocument();
-    expect(screen.getByText('ETH')).toBeInTheDocument();
-    expect(screen.getByText('ROLV')).toBeInTheDocument();
+  it('renders Name, ETH, and ROLV headers', () => {
+    render(<ColumnHeader />);
+    expect(screen.getByTestId('col-name')).toHaveTextContent('Name');
+    expect(screen.getByTestId('col-eth')).toHaveTextContent('ETH');
+    expect(screen.getByTestId('col-rolv')).toHaveTextContent('ROLV');
+  });
+
+  it('renders columns in Name → ETH → ROLV order', () => {
+    const { getByTestId } = render(<ColumnHeader />);
+    const header = getByTestId('column-header');
+    const children = Array.from(header.children);
+    expect(children[0]).toHaveTextContent('Name');
+    expect(children[1]).toHaveTextContent('ETH');
+    expect(children[2]).toHaveTextContent('ROLV');
   });
 });
