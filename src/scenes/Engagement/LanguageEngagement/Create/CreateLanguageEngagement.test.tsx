@@ -1,6 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { Form } from 'react-final-form';
 import type { LanguageLookupItem } from '../../../../components/form/Lookup';
+import {
+  createGetOptionDisabled,
+  createSortComparator,
+} from './CreateLanguageEngagement';
 
 /* eslint-disable react/display-name */
 
@@ -46,30 +50,110 @@ const makeLanguage = (
   },
 });
 
-/**
- * Recreates the sortComparator produced inside CreateLanguageEngagement so
- * the tests exercise the pure logic directly, without mounting the component.
- */
-const makeSortComparator =
-  (engagedLanguageIds: readonly string[]) =>
-  (a: LanguageLookupItem, b: LanguageLookupItem): number => {
-    const aEngaged = engagedLanguageIds.includes(a.id);
-    const bEngaged = engagedLanguageIds.includes(b.id);
-    if (aEngaged === bEngaged) return 0;
-    return aEngaged ? 1 : -1;
-  };
+// ---------------------------------------------------------------------------
+// Sort comparator  (createSortComparator from CreateLanguageEngagement)
+// ---------------------------------------------------------------------------
 
-/**
- * Recreates getOptionDisabled.
- */
-const makeGetOptionDisabled =
-  (engagedLanguageIds: readonly string[]) =>
-  (lang: LanguageLookupItem): boolean =>
-    engagedLanguageIds.includes(lang.id);
+describe('sortComparator', () => {
+  const engaged = ['lang-1', 'lang-2'];
+  const sort = createSortComparator(engaged);
 
-/**
- * Recreates renderOptionContent (pure render function, no hooks).
- */
+  it('returns 0 for two non-engaged languages', () => {
+    const a = makeLanguage('lang-3');
+    const b = makeLanguage('lang-4');
+    expect(sort(a, b)).toBe(0);
+  });
+
+  it('returns 0 for two engaged languages', () => {
+    const a = makeLanguage('lang-1');
+    const b = makeLanguage('lang-2');
+    expect(sort(a, b)).toBe(0);
+  });
+
+  it('sorts engaged language after non-engaged (a engaged)', () => {
+    const a = makeLanguage('lang-1'); // engaged
+    const b = makeLanguage('lang-3'); // not engaged
+    expect(sort(a, b)).toBeGreaterThan(0);
+  });
+
+  it('sorts engaged language after non-engaged (b engaged)', () => {
+    const a = makeLanguage('lang-3'); // not engaged
+    const b = makeLanguage('lang-1'); // engaged
+    expect(sort(a, b)).toBeLessThan(0);
+  });
+
+  it('is antisymmetric: sort(a,b) === -sort(b,a)', () => {
+    const engagedLang = makeLanguage('lang-1');
+    const notEngaged = makeLanguage('lang-3');
+    expect(sort(engagedLang, notEngaged)).toBe(-sort(notEngaged, engagedLang));
+  });
+
+  it('uses the provided engagedLanguageIds at call time, not stale closure', () => {
+    const firstSort = createSortComparator(['lang-1']);
+    const secondSort = createSortComparator(['lang-2']); // different list
+    const a = makeLanguage('lang-1');
+    const b = makeLanguage('lang-2');
+    // With firstSort, lang-1 is engaged → goes after lang-2
+    expect(firstSort(a, b)).toBeGreaterThan(0);
+    // With secondSort, lang-2 is engaged → goes after lang-1
+    expect(secondSort(a, b)).toBeLessThan(0);
+  });
+
+  it('treats empty engaged list as all equal', () => {
+    const sortEmpty = createSortComparator([]);
+    const a = makeLanguage('lang-1');
+    const b = makeLanguage('lang-2');
+    expect(sortEmpty(a, b)).toBe(0);
+  });
+
+  it('stable-sorts a mixed list with engaged languages at the end', () => {
+    const sortFn = createSortComparator(['lang-2', 'lang-4']);
+    const langs = [
+      makeLanguage('lang-1'),
+      makeLanguage('lang-2'), // engaged
+      makeLanguage('lang-3'),
+      makeLanguage('lang-4'), // engaged
+    ];
+    const sorted = [...langs].sort(sortFn);
+    const ids = sorted.map((l) => l.id);
+    expect(ids.indexOf('lang-2')).toBeGreaterThan(ids.indexOf('lang-1'));
+    expect(ids.indexOf('lang-2')).toBeGreaterThan(ids.indexOf('lang-3'));
+    expect(ids.indexOf('lang-4')).toBeGreaterThan(ids.indexOf('lang-1'));
+    expect(ids.indexOf('lang-4')).toBeGreaterThan(ids.indexOf('lang-3'));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// getOptionDisabled  (createGetOptionDisabled from CreateLanguageEngagement)
+// ---------------------------------------------------------------------------
+
+describe('getOptionDisabled', () => {
+  const engagedIds = ['lang-1', 'lang-2'];
+  const isDisabled = createGetOptionDisabled(engagedIds);
+
+  it('returns true for an already-engaged language', () => {
+    expect(isDisabled(makeLanguage('lang-1'))).toBe(true);
+  });
+
+  it('returns true for a second engaged language', () => {
+    expect(isDisabled(makeLanguage('lang-2'))).toBe(true);
+  });
+
+  it('returns false for a non-engaged language', () => {
+    expect(isDisabled(makeLanguage('lang-3'))).toBe(false);
+  });
+
+  it('returns false when engagedLanguageIds is empty', () => {
+    const isDisabledEmpty = createGetOptionDisabled([]);
+    expect(isDisabledEmpty(makeLanguage('lang-1'))).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// renderOptionContent  (re-implemented locally with data-testid attributes
+// rather than CSS classes; tests structural/logic behaviour not styling)
+// ---------------------------------------------------------------------------
+
 const makeRenderOptionContent =
   (engagedLanguageIds: readonly string[]) => (option: LanguageLookupItem) => {
     const row = (
@@ -98,109 +182,6 @@ const makeRenderOptionContent =
     }
     return row;
   };
-
-// ---------------------------------------------------------------------------
-// Sort comparator
-// ---------------------------------------------------------------------------
-
-describe('sortComparator', () => {
-  const engaged = ['lang-1', 'lang-2'];
-  const sort = makeSortComparator(engaged);
-
-  it('returns 0 for two non-engaged languages', () => {
-    const a = makeLanguage('lang-3');
-    const b = makeLanguage('lang-4');
-    expect(sort(a, b)).toBe(0);
-  });
-
-  it('returns 0 for two engaged languages', () => {
-    const a = makeLanguage('lang-1');
-    const b = makeLanguage('lang-2');
-    expect(sort(a, b)).toBe(0);
-  });
-
-  it('sorts engaged language after non-engaged (a engaged)', () => {
-    const a = makeLanguage('lang-1'); // engaged
-    const b = makeLanguage('lang-3'); // not engaged
-    expect(sort(a, b)).toBeGreaterThan(0);
-  });
-
-  it('sorts engaged language after non-engaged (b engaged)', () => {
-    const a = makeLanguage('lang-3'); // not engaged
-    const b = makeLanguage('lang-1'); // engaged
-    expect(sort(a, b)).toBeLessThan(0);
-  });
-
-  it('is antisymmetric: sort(a,b) === -sort(b,a)', () => {
-    const engaged = makeLanguage('lang-1');
-    const notEngaged = makeLanguage('lang-3');
-    expect(sort(engaged, notEngaged)).toBe(-sort(notEngaged, engaged));
-  });
-
-  it('uses the provided engagedLanguageIds at call time, not stale closure', () => {
-    const firstSort = makeSortComparator(['lang-1']);
-    const secondSort = makeSortComparator(['lang-2']); // different list
-    const a = makeLanguage('lang-1');
-    const b = makeLanguage('lang-2');
-    // With firstSort, lang-1 is engaged → goes after lang-2
-    expect(firstSort(a, b)).toBeGreaterThan(0);
-    // With secondSort, lang-2 is engaged → goes after lang-1
-    expect(secondSort(a, b)).toBeLessThan(0);
-  });
-
-  it('treats empty engaged list as all equal', () => {
-    const sortEmpty = makeSortComparator([]);
-    const a = makeLanguage('lang-1');
-    const b = makeLanguage('lang-2');
-    expect(sortEmpty(a, b)).toBe(0);
-  });
-
-  it('stable-sorts a mixed list with engaged languages at the end', () => {
-    const sortFn = makeSortComparator(['lang-2', 'lang-4']);
-    const langs = [
-      makeLanguage('lang-1'),
-      makeLanguage('lang-2'), // engaged
-      makeLanguage('lang-3'),
-      makeLanguage('lang-4'), // engaged
-    ];
-    const sorted = [...langs].sort(sortFn);
-    const ids = sorted.map((l) => l.id);
-    expect(ids.indexOf('lang-2')).toBeGreaterThan(ids.indexOf('lang-1'));
-    expect(ids.indexOf('lang-2')).toBeGreaterThan(ids.indexOf('lang-3'));
-    expect(ids.indexOf('lang-4')).toBeGreaterThan(ids.indexOf('lang-1'));
-    expect(ids.indexOf('lang-4')).toBeGreaterThan(ids.indexOf('lang-3'));
-  });
-});
-
-// ---------------------------------------------------------------------------
-// getOptionDisabled
-// ---------------------------------------------------------------------------
-
-describe('getOptionDisabled', () => {
-  const engagedIds = ['lang-1', 'lang-2'];
-  const isDisabled = makeGetOptionDisabled(engagedIds);
-
-  it('returns true for an already-engaged language', () => {
-    expect(isDisabled(makeLanguage('lang-1'))).toBe(true);
-  });
-
-  it('returns true for a second engaged language', () => {
-    expect(isDisabled(makeLanguage('lang-2'))).toBe(true);
-  });
-
-  it('returns false for a non-engaged language', () => {
-    expect(isDisabled(makeLanguage('lang-3'))).toBe(false);
-  });
-
-  it('returns false when engagedLanguageIds is empty', () => {
-    const isDisabledEmpty = makeGetOptionDisabled([]);
-    expect(isDisabledEmpty(makeLanguage('lang-1'))).toBe(false);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// renderOptionContent
-// ---------------------------------------------------------------------------
 
 describe('renderOptionContent', () => {
   const engagedIds = ['lang-1'];

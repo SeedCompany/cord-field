@@ -24,7 +24,8 @@ import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
-  engagement: {
+  // engagement may be undefined on initial render or after form.reset()
+  engagement?: {
     // Optional because the field starts undefined before the user makes a selection.
     languageId?: LanguageLookupItem;
   };
@@ -38,6 +39,28 @@ type CreateLanguageEngagementProps = Except<
   /** IDs of languages that already have an engagement on this project. */
   engagedLanguageIds: readonly string[];
 };
+
+/**
+ * Returns a comparator that sorts already-engaged languages to the bottom.
+ * Exported for unit testing.
+ */
+export const createSortComparator =
+  (engagedLanguageIds: readonly string[]) =>
+  (a: LanguageLookupItem, b: LanguageLookupItem): number => {
+    const aEngaged = engagedLanguageIds.includes(a.id);
+    const bEngaged = engagedLanguageIds.includes(b.id);
+    if (aEngaged === bEngaged) return 0;
+    return aEngaged ? 1 : -1;
+  };
+
+/**
+ * Returns a predicate that disables languages already engaged on the project.
+ * Exported for unit testing.
+ */
+export const createGetOptionDisabled =
+  (engagedLanguageIds: readonly string[]) =>
+  (lang: LanguageLookupItem): boolean =>
+    engagedLanguageIds.includes(lang.id);
 
 const useStyles = makeStyles()(({ palette, spacing }) => ({
   columnHeader: {
@@ -107,7 +130,7 @@ const FormContent = ({
   const { values } = useFormState<CreateLanguageEngagementFormValues>({
     subscription: { values: true },
   });
-  const currentLanguage = values.engagement.languageId ?? null;
+  const currentLanguage = values.engagement?.languageId ?? null;
 
   const renderOptionContent = (option: LanguageLookupItem) => {
     const row = (
@@ -142,20 +165,27 @@ const FormContent = ({
         name="engagement.languageId"
         label="Language"
         required
-        PaperComponent={({ children }) => (
-          <Paper>
-            <Box className={classes.columnHeader}>
-              <Typography className={classes.columnHeaderName}>Name</Typography>
-              <Typography className={classes.columnHeaderCode}>ETH</Typography>
-              <Typography className={classes.columnHeaderCode}>ROLV</Typography>
-            </Box>
-            {children}
-          </Paper>
-        )}
+        PaperComponent={(paperProps) => {
+          const { children, ...rest } = paperProps;
+          return (
+            <Paper {...rest}>
+              <Box className={classes.columnHeader}>
+                <Typography className={classes.columnHeaderName}>
+                  Name
+                </Typography>
+                <Typography className={classes.columnHeaderCode}>
+                  ETH
+                </Typography>
+                <Typography className={classes.columnHeaderCode}>
+                  ROLV
+                </Typography>
+              </Box>
+              {children}
+            </Paper>
+          );
+        }}
         sortComparator={sortComparator}
-        getOptionDisabled={(lang: LanguageLookupItem) =>
-          engagedLanguageIds.includes(lang.id)
-        }
+        getOptionDisabled={createGetOptionDisabled(engagedLanguageIds)}
         renderOptionContent={renderOptionContent}
         helperText={
           <Box className={classes.helperRow}>
@@ -187,20 +217,14 @@ export const CreateLanguageEngagement = ({
 
   // Push already-engaged languages to the bottom of the dropdown list
   const sortComparator = useMemo(
-    () =>
-      (a: LanguageLookupItem, b: LanguageLookupItem): number => {
-        const aEngaged = engagedLanguageIds.includes(a.id);
-        const bEngaged = engagedLanguageIds.includes(b.id);
-        if (aEngaged === bEngaged) return 0;
-        return aEngaged ? 1 : -1;
-      },
+    () => createSortComparator(engagedLanguageIds),
     [engagedLanguageIds]
   );
 
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
     // languageId is guaranteed by form validation (`required` on the field).
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const language = engagement.languageId!;
+    const language = engagement!.languageId!;
     const languageRef = {
       __typename: 'Language',
       id: language.id,
