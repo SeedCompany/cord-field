@@ -25,7 +25,8 @@ import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
   engagement: {
-    languageId: LanguageLookupItem;
+    // Optional because the field starts undefined before the user makes a selection.
+    languageId?: LanguageLookupItem;
   };
 }
 
@@ -93,18 +94,20 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
  * Inner form content — rendered inside DialogForm's Form context so that
  * useFormState can subscribe to live field values.
  */
+interface FormContentProps {
+  engagedLanguageIds: readonly string[];
+  sortComparator: (a: LanguageLookupItem, b: LanguageLookupItem) => number;
+}
+
 const FormContent = ({
   engagedLanguageIds,
   sortComparator,
-}: {
-  engagedLanguageIds: readonly string[];
-  sortComparator: (a: LanguageLookupItem, b: LanguageLookupItem) => number;
-}) => {
+}: FormContentProps) => {
   const { classes } = useStyles();
   const { values } = useFormState<CreateLanguageEngagementFormValues>({
     subscription: { values: true },
   });
-  const currentLanguage = values.engagement.languageId;
+  const currentLanguage = values.engagement.languageId ?? null;
 
   const renderOptionContent = (option: LanguageLookupItem) => {
     const row = (
@@ -160,13 +163,13 @@ const FormContent = ({
               ETH
             </Typography>
             <Typography variant="caption">
-              {currentLanguage.ethnologue.code.value ?? '-'}
+              {currentLanguage?.ethnologue.code.value ?? '-'}
             </Typography>
             <Typography variant="caption" className={classes.helperKey}>
               ROLV
             </Typography>
             <Typography variant="caption">
-              {currentLanguage.registryOfLanguageVarietiesCode.value ?? '-'}
+              {currentLanguage?.registryOfLanguageVarietiesCode.value ?? '-'}
             </Typography>
           </Box>
         }
@@ -195,7 +198,9 @@ export const CreateLanguageEngagement = ({
   );
 
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
-    const language = engagement.languageId;
+    // languageId is guaranteed by form validation (`required` on the field).
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const language = engagement.languageId!;
     const languageRef = {
       __typename: 'Language',
       id: language.id,

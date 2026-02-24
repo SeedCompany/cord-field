@@ -9,8 +9,14 @@
 
 /* eslint-disable react/display-name */
 import { render } from '@testing-library/react';
-import { camelCase, uniqBy, upperFirst } from 'lodash';
 import { isEqualBy, isListEqualBy } from '../util';
+import {
+  applyFilterOptionsCustomLogic,
+  computeIsOpen,
+  computeLookupDisplayName,
+  mergeOptions,
+  resolveOptionContent,
+} from './LookupField';
 
 // ---------------------------------------------------------------------------
 // Helpers shared across test suites
@@ -102,87 +108,34 @@ describe('selectedText', () => {
 });
 
 // ---------------------------------------------------------------------------
-// open logic
+// open logic  (computeIsOpen from LookupField)
 // ---------------------------------------------------------------------------
-
-/**
- * Recreates:
- *   const open =
- *     !!meta.active &&
- *     ((input && input !== selectedText) || (!input && !!initialOptions));
- */
-const computeOpen = (
-  active: boolean,
-  input: string,
-  selectedText: string,
-  hasInitialOptions: boolean
-): boolean =>
-  active &&
-  ((!!input && input !== selectedText) || (!input && hasInitialOptions));
 
 describe('open logic', () => {
   it('is false when field is not active', () => {
-    expect(computeOpen(false, 'Eng', '', false)).toBe(false);
+    expect(computeIsOpen(false, 'Eng', '', false)).toBe(false);
   });
 
   it('is true when active and input differs from selectedText (searching)', () => {
-    expect(computeOpen(true, 'Eng', '', false)).toBe(true);
+    expect(computeIsOpen(true, 'Eng', '', false)).toBe(true);
   });
 
   it('is false when active but input equals selectedText (item already selected)', () => {
-    expect(computeOpen(true, 'English', 'English', false)).toBe(false);
+    expect(computeIsOpen(true, 'English', 'English', false)).toBe(false);
   });
 
   it('is true when active and input is empty but initialOptions exist', () => {
-    expect(computeOpen(true, '', '', true)).toBe(true);
+    expect(computeIsOpen(true, '', '', true)).toBe(true);
   });
 
   it('is false when active and input is empty and no initialOptions', () => {
-    expect(computeOpen(true, '', '', false)).toBe(false);
+    expect(computeIsOpen(true, '', '', false)).toBe(false);
   });
 });
 
 // ---------------------------------------------------------------------------
-// options merging
+// options merging  (mergeOptions from LookupField)
 // ---------------------------------------------------------------------------
-
-/**
- * Recreates the useMemo inside LookupField that merges and deduplicates
- * search results, initial items, and the currently selected value(s).
- */
-const mergeOptions = ({
-  multiple,
-  value,
-  searchResults,
-  initialItems,
-  compareBy,
-}: {
-  multiple: boolean;
-  value: Item | readonly Item[] | null;
-  searchResults?: readonly Item[];
-  initialItems?: readonly Item[];
-  compareBy: (item: Item) => any;
-}): Item[] => {
-  const selected = multiple
-    ? Array.isArray(value)
-      ? value.slice()
-      : []
-    : value
-    ? [value as Item]
-    : [];
-
-  if (!searchResults?.length && !initialItems?.length) {
-    return selected;
-  }
-
-  const merged = [
-    ...(searchResults ?? []),
-    ...(initialItems ?? []),
-    ...selected,
-  ];
-
-  return uniqBy(merged, compareBy);
-};
 
 describe('options merging', () => {
   it('returns only selected items when there are no search results or initial items', () => {
@@ -267,46 +220,10 @@ describe('options merging', () => {
 });
 
 // ---------------------------------------------------------------------------
-// filterOptions — sort + freeSolo append
+// filterOptions — sort + freeSolo append  (applyFilterOptionsCustomLogic from LookupField)
 // ---------------------------------------------------------------------------
 //
-// We only test the logic LookupField itself owns: applying sortComparator and
-// conditionally appending the raw input string as a freeSolo option. MUI's
-// own createFilterOptions text-filtering is intentionally not re-tested here.
-
-/**
- * Recreates the two custom steps inside filterOptions:
- *   1. Apply sortComparator (if provided) to an already-filtered list.
- *   2. Append the raw inputValue as a string when freeSolo conditions are met.
- */
-const applyFilterOptionsCustomLogic = ({
-  options,
-  inputValue,
-  freeSolo = false,
-  searchResultsLoading = false,
-  sortComparator,
-  getOptionLabel,
-}: {
-  options: Item[];
-  inputValue: string;
-  freeSolo?: boolean;
-  searchResultsLoading?: boolean;
-  sortComparator?: (a: Item, b: Item) => number;
-  getOptionLabel: (val: Item | string) => string;
-}): Array<Item | string> => {
-  const sorted = sortComparator ? [...options].sort(sortComparator) : options;
-
-  if (
-    !freeSolo ||
-    searchResultsLoading ||
-    inputValue === '' ||
-    sorted.map(getOptionLabel).includes(inputValue)
-  ) {
-    return sorted;
-  }
-
-  return [...sorted, inputValue];
-};
+// MUI's own createFilterOptions text-filtering is intentionally not re-tested here.
 
 describe('filterOptions custom logic', () => {
   const getOptionLabel = makeGetOptionLabel((item) => item.label);
@@ -404,33 +321,14 @@ describe('filterOptions custom logic', () => {
 });
 
 // ---------------------------------------------------------------------------
-// renderOption content selection
+// renderOption content selection  (resolveOptionContent from LookupField)
 // ---------------------------------------------------------------------------
-
-/**
- * Recreates the logic inside renderOption's <li>:
- *   typeof option === 'string'
- *     ? `Create "${option}"`
- *     : renderOptionContent
- *     ? renderOptionContent(option)
- *     : getOptionLabel(option)
- */
-const resolveOptionContent = (
-  option: Item | string,
-  getOptionLabel: (val: Item | string) => string,
-  renderOptionContent?: (option: Item) => React.ReactNode
-  // ai example Recreating renderOption content logic for unit-testable isolation
-): React.ReactNode => {
-  if (typeof option === 'string') return `Create "${option}"`;
-  if (renderOptionContent) return renderOptionContent(option);
-  return getOptionLabel(option);
-};
 
 describe('renderOption content', () => {
   const getOptionLabel = makeGetOptionLabel((item) => item.label);
 
   it('shows Create "X" label for a string option (freeSolo new item)', () => {
-    const content = resolveOptionContent('NewLang', getOptionLabel);
+    const content = resolveOptionContent<Item>('NewLang', getOptionLabel);
     expect(content).toBe('Create "NewLang"');
   });
 
@@ -440,40 +338,37 @@ describe('renderOption content', () => {
     );
     const item = makeItem('1', 'English');
     const { getByTestId } = render(
-      <>{resolveOptionContent(item, getOptionLabel, renderOptionContent)}</>
+      <>
+        {resolveOptionContent<Item>(item, getOptionLabel, renderOptionContent)}
+      </>
     );
     expect(getByTestId('custom')).toHaveTextContent('English');
   });
 
   it('falls back to getOptionLabel when renderOptionContent is not provided', () => {
     const item = makeItem('1', 'Spanish');
-    const content = resolveOptionContent(item, getOptionLabel);
+    const content = resolveOptionContent<Item>(item, getOptionLabel);
     expect(content).toBe('Spanish');
   });
 });
 
 // ---------------------------------------------------------------------------
-// LookupField.createFor — displayName convention
+// LookupField.createFor — displayName convention  (computeLookupDisplayName from LookupField)
 // ---------------------------------------------------------------------------
-
-/**
- * Recreates LookupField.createFor's displayName derivation:
- *   `Lookup(${upperFirst(camelCase(resource))})`
- */
-const computeDisplayName = (resource: string) =>
-  `Lookup(${upperFirst(camelCase(resource))})`;
 
 describe('LookupField.createFor displayName', () => {
   it('produces Lookup(Language) for resource "Language"', () => {
-    expect(computeDisplayName('Language')).toBe('Lookup(Language)');
+    expect(computeLookupDisplayName('Language')).toBe('Lookup(Language)');
   });
 
   it('camelCases multi-word resources', () => {
-    expect(computeDisplayName('field-region')).toBe('Lookup(FieldRegion)');
+    expect(computeLookupDisplayName('field-region')).toBe(
+      'Lookup(FieldRegion)'
+    );
   });
 
   it('handles already-camelCased resource names', () => {
-    expect(computeDisplayName('fieldZone')).toBe('Lookup(FieldZone)');
+    expect(computeLookupDisplayName('fieldZone')).toBe('Lookup(FieldZone)');
   });
 });
 
