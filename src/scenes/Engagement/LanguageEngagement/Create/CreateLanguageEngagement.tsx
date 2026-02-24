@@ -77,8 +77,8 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
   },
   columnHeaderCode: {
     flexShrink: 0,
-    width: 52,
-    fontSize: '0.7rem',
+    width: 52, // must match optionCode width for column alignment
+    fontSize: '0.7rem', // compact size for column header labels
     fontWeight: 600,
     textAlign: 'right',
     color: palette.text.secondary,
@@ -99,7 +99,7 @@ const useStyles = makeStyles()(({ palette, spacing }) => ({
   },
   optionCode: {
     flexShrink: 0,
-    width: 52,
+    width: 52, // must match columnHeaderCode width for column alignment
     textAlign: 'right',
     color: palette.text.secondary,
   },
