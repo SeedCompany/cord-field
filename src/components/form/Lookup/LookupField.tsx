@@ -50,6 +50,7 @@ export type LookupFieldProps<
     'helperText' | 'label' | 'autoFocus' | 'variant' | 'margin'
   > & {
     lookupDocument: DocumentNode<QueryResult<T>, { query: string }>;
+    initialOptions?: { options?: readonly T[] };
     ChipProps?: ChipProps;
     CreateDialogForm?: ComponentType<
       Except<DialogFormProps<CreateFormValues, T>, 'onSubmit'>
@@ -86,6 +87,7 @@ export function LookupField<
   multiple,
   defaultValue,
   lookupDocument,
+  initialOptions,
   ChipProps,
   autoFocus,
   helperText,
@@ -148,7 +150,7 @@ export function LookupField<
   });
   // Not just for the first load, but every network request
   const searchResultsLoading = isNetworkRequestInFlight(networkStatus);
-  const initialOptionsLoading = initial && !initial.options;
+  const initialOptionsLoading = !!initialOptions && !initialOptions.options;
 
   const [createDialogState, createDialogItem, createInitialValues] =
     useDialog<Partial<CreateFormValues>>();
@@ -176,7 +178,7 @@ export function LookupField<
   // (searching for an item or have initial options).
   const open =
     !!meta.active &&
-    ((input && input !== selectedText) || (!input && !!initial));
+    ((input && input !== selectedText) || (!input && !!initialOptions));
 
   // Augment results with currently selected items to indicate that
   // they are still valid (and to prevent MUI warning)
@@ -187,7 +189,7 @@ export function LookupField<
       ? [field.value as T]
       : [];
     const searchResults = data?.search.items;
-    const initialItems = initial?.options;
+    const initialItems = initialOptions?.options;
 
     if (!searchResults?.length && !initialItems?.length) {
       return selected; // optimization for no results
@@ -201,7 +203,13 @@ export function LookupField<
 
     // Filter out duplicates caused by selected items also appearing in search results.
     return uniqBy(merged, compareBy);
-  }, [data?.search.items, initial?.options, field.value, compareBy, multiple]);
+  }, [
+    data?.search.items,
+    initialOptions?.options,
+    field.value,
+    compareBy,
+    multiple,
+  ]);
 
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>

@@ -24,7 +24,9 @@ import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
 
 interface CreateLanguageEngagementFormValues {
-  language: LanguageLookupItem;
+  engagement: {
+    languageId: LanguageLookupItem;
+  };
 }
 
 type CreateLanguageEngagementProps = Except<
@@ -111,10 +113,10 @@ const FormContent = ({
           {option.name.value ?? option.displayName.value}
         </span>
         <span className={classes.optionCode}>
-          {option.ethnologue?.code?.value ?? '-'}
+          {option.ethnologue.code.value ?? '-'}
         </span>
         <span className={classes.optionCode}>
-          {option.registryOfLanguageVarietiesCode?.value ?? '-'}
+          {option.registryOfLanguageVarietiesCode.value ?? '-'}
         </span>
       </span>
     );
@@ -153,22 +155,20 @@ const FormContent = ({
         }
         renderOptionContent={renderOptionContent}
         helperText={
-          currentLanguage ? (
-            <Box className={classes.helperRow}>
-              <Typography variant="caption" className={classes.helperKey}>
-                ETH
-              </Typography>
-              <Typography variant="caption">
-                {currentLanguage.ethnologue?.code?.value ?? '-'}
-              </Typography>
-              <Typography variant="caption" className={classes.helperKey}>
-                ROLV
-              </Typography>
-              <Typography variant="caption">
-                {currentLanguage.registryOfLanguageVarietiesCode?.value ?? '-'}
-              </Typography>
-            </Box>
-          ) : undefined
+          <Box className={classes.helperRow}>
+            <Typography variant="caption" className={classes.helperKey}>
+              ETH
+            </Typography>
+            <Typography variant="caption">
+              {currentLanguage.ethnologue.code.value ?? '-'}
+            </Typography>
+            <Typography variant="caption" className={classes.helperKey}>
+              ROLV
+            </Typography>
+            <Typography variant="caption">
+              {currentLanguage.registryOfLanguageVarietiesCode.value ?? '-'}
+            </Typography>
+          </Box>
         }
       />
     </>
@@ -195,6 +195,7 @@ export const CreateLanguageEngagement = ({
   );
 
   const submit = async ({ engagement }: CreateLanguageEngagementFormValues) => {
+    const language = engagement.languageId;
     const languageRef = {
       __typename: 'Language',
       id: language.id,
