@@ -7,9 +7,10 @@
  * function and test it in isolation.
  */
 
-import React from 'react';
+/* eslint-disable react/display-name */
 import { render } from '@testing-library/react';
 import { camelCase, uniqBy, upperFirst } from 'lodash';
+import { isEqualBy, isListEqualBy } from '../util';
 
 // ---------------------------------------------------------------------------
 // Helpers shared across test suites
@@ -74,14 +75,15 @@ const computeSelectedText = (
   multiple: boolean,
   value: Item | null | undefined,
   getOptionLabel: (val: Item | string) => string
-): string =>
-  multiple || !value ? '' : getOptionLabel(value);
+): string => (multiple || !value ? '' : getOptionLabel(value));
 
 describe('selectedText', () => {
   const getOptionLabel = makeGetOptionLabel((item) => item.label);
 
   it('is empty string when multiple=true even with a value', () => {
-    expect(computeSelectedText(true, makeItem('1', 'English'), getOptionLabel)).toBe('');
+    expect(
+      computeSelectedText(true, makeItem('1', 'English'), getOptionLabel)
+    ).toBe('');
   });
 
   it('is empty string when value is null', () => {
@@ -162,13 +164,15 @@ const mergeOptions = ({
   compareBy: (item: Item) => any;
 }): Item[] => {
   const selected = multiple
-    ? (value as readonly Item[]) ?? []
+    ? Array.isArray(value)
+      ? value.slice()
+      : []
     : value
     ? [value as Item]
     : [];
 
   if (!searchResults?.length && !initialItems?.length) {
-    return selected as Item[];
+    return selected;
   }
 
   const merged = [
@@ -177,7 +181,7 @@ const mergeOptions = ({
     ...selected,
   ];
 
-  return uniqBy(merged, compareBy) as Item[];
+  return uniqBy(merged, compareBy);
 };
 
 describe('options merging', () => {
@@ -415,7 +419,7 @@ const resolveOptionContent = (
   option: Item | string,
   getOptionLabel: (val: Item | string) => string,
   renderOptionContent?: (option: Item) => React.ReactNode
-// ai example Recreating renderOption content logic for unit-testable isolation
+  // ai example Recreating renderOption content logic for unit-testable isolation
 ): React.ReactNode => {
   if (typeof option === 'string') return `Create "${option}"`;
   if (renderOptionContent) return renderOptionContent(option);
@@ -473,12 +477,6 @@ describe('LookupField.createFor displayName', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// isEqualBy / isListEqualBy (used by LookupField.createFor)
-// ---------------------------------------------------------------------------
-
-import { isEqualBy, isListEqualBy } from '../util';
-
 describe('isEqualBy', () => {
   const isEqual = isEqualBy(compareById);
 
@@ -502,13 +500,19 @@ describe('isListEqualBy', () => {
 
   it('returns true for lists with the same ids in any order', () => {
     expect(
-      isListEqual([makeItem('1'), makeItem('2')], [makeItem('2'), makeItem('1')])
+      isListEqual(
+        [makeItem('1'), makeItem('2')],
+        [makeItem('2'), makeItem('1')]
+      )
     ).toBe(true);
   });
 
   it('returns false when lists differ by one item', () => {
     expect(
-      isListEqual([makeItem('1'), makeItem('2')], [makeItem('1'), makeItem('3')])
+      isListEqual(
+        [makeItem('1'), makeItem('2')],
+        [makeItem('1'), makeItem('3')]
+      )
     ).toBe(false);
   });
 

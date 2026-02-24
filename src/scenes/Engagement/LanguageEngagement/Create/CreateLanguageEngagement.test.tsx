@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { Form } from 'react-final-form';
 import type { LanguageLookupItem } from '../../../../components/form/Lookup';
 
+/* eslint-disable react/display-name */
+
 // ---------------------------------------------------------------------------
 // Test helpers
 // ---------------------------------------------------------------------------
@@ -9,25 +11,33 @@ import type { LanguageLookupItem } from '../../../../components/form/Lookup';
 const makeLanguage = (
   id: string,
   overrides: {
-    name?: string;
-    displayName?: string;
+    name?: string | null;
+    displayName?: string | null;
     ethnologueCode?: string | null;
     rolvCode?: string | null;
   } = {}
 ): LanguageLookupItem => ({
   __typename: 'Language' as const,
   id,
-  name: { __typename: 'SecuredString', value: overrides.name ?? `Language ${id}` },
+  name: {
+    __typename: 'SecuredString',
+    value: overrides.name === undefined ? `Language ${id}` : overrides.name!,
+  },
   displayName: {
     __typename: 'SecuredString',
-    value: overrides.displayName ?? `Display ${id}`,
+    value:
+      overrides.displayName === undefined
+        ? `Display ${id}`
+        : overrides.displayName!,
   },
   ethnologue: {
     __typename: 'EthnologueLanguage',
     code: {
       __typename: 'SecuredStringNullable',
       value:
-        overrides.ethnologueCode === undefined ? `eth${id}` : overrides.ethnologueCode,
+        overrides.ethnologueCode === undefined
+          ? `eth${id}`
+          : overrides.ethnologueCode,
     },
   },
   registryOfLanguageVarietiesCode: {
@@ -61,14 +71,15 @@ const makeGetOptionDisabled =
  * Recreates renderOptionContent (pure render function, no hooks).
  */
 const makeRenderOptionContent =
-  (engagedLanguageIds: readonly string[]) =>
-  (option: LanguageLookupItem) => {
+  (engagedLanguageIds: readonly string[]) => (option: LanguageLookupItem) => {
     const row = (
       <span data-testid="option-row">
         <span data-testid="option-name">
           {option.name.value ?? option.displayName.value}
         </span>
-        <span data-testid="option-eth">{option.ethnologue.code.value ?? '-'}</span>
+        <span data-testid="option-eth">
+          {option.ethnologue.code.value ?? '-'}
+        </span>
         <span data-testid="option-rolv">
           {option.registryOfLanguageVarietiesCode.value ?? '-'}
         </span>
@@ -77,7 +88,10 @@ const makeRenderOptionContent =
 
     if (engagedLanguageIds.includes(option.id)) {
       return (
-        <span title="Already added to this project" data-testid="engaged-tooltip-wrapper">
+        <span
+          title="Already added to this project"
+          data-testid="engaged-tooltip-wrapper"
+        >
           {row}
         </span>
       );
@@ -193,7 +207,10 @@ describe('renderOptionContent', () => {
 
   it('renders name and codes for a non-engaged language', () => {
     const renderOption = makeRenderOptionContent(engagedIds);
-    const lang = makeLanguage('lang-2', { ethnologueCode: 'abc', rolvCode: 'R123' });
+    const lang = makeLanguage('lang-2', {
+      ethnologueCode: 'abc',
+      rolvCode: 'R123',
+    });
     const { getByTestId, queryByTestId } = render(<>{renderOption(lang)}</>);
 
     expect(getByTestId('option-name')).toHaveTextContent('Language lang-2');
@@ -204,7 +221,10 @@ describe('renderOptionContent', () => {
 
   it('prefers name over displayName when both are set', () => {
     const renderOption = makeRenderOptionContent([]);
-    const lang = makeLanguage('lang-6', { name: 'Primary Name', displayName: 'Fallback Name' });
+    const lang = makeLanguage('lang-6', {
+      name: 'Primary Name',
+      displayName: 'Fallback Name',
+    });
     const { getByTestId } = render(<>{renderOption(lang)}</>);
     expect(getByTestId('option-name')).toHaveTextContent('Primary Name');
     expect(getByTestId('option-name')).not.toHaveTextContent('Fallback Name');
@@ -212,18 +232,17 @@ describe('renderOptionContent', () => {
 
   it('falls back to displayName when name value is null', () => {
     const renderOption = makeRenderOptionContent([]);
-    const lang = makeLanguage('lang-3', { name: undefined, displayName: 'My Display' });
-    // set name.value to null to trigger the fallback
-    lang.name = { __typename: 'SecuredString', value: null as unknown as string };
+    const lang = makeLanguage('lang-3', {
+      name: null,
+      displayName: 'My Display',
+    });
     const { getByTestId } = render(<>{renderOption(lang)}</>);
     expect(getByTestId('option-name')).toHaveTextContent('My Display');
   });
 
   it('renders empty option name when both name and displayName values are null', () => {
     const renderOption = makeRenderOptionContent([]);
-    const lang = makeLanguage('lang-7');
-    lang.name = { __typename: 'SecuredString', value: null as unknown as string };
-    lang.displayName = { __typename: 'SecuredString', value: null as unknown as string };
+    const lang = makeLanguage('lang-7', { name: null, displayName: null });
     const { getByTestId } = render(<>{renderOption(lang)}</>);
     // Neither value is present; the span renders but is empty
     expect(getByTestId('option-name').textContent).toBe('');
@@ -263,7 +282,10 @@ describe('renderOptionContent', () => {
 
   it('still renders codes inside the engaged tooltip wrapper', () => {
     const renderOption = makeRenderOptionContent(engagedIds);
-    const lang = makeLanguage('lang-1', { ethnologueCode: 'zzz', rolvCode: 'R001' });
+    const lang = makeLanguage('lang-1', {
+      ethnologueCode: 'zzz',
+      rolvCode: 'R001',
+    });
     const { getByTestId } = render(<>{renderOption(lang)}</>);
     expect(getByTestId('option-eth')).toHaveTextContent('zzz');
     expect(getByTestId('option-rolv')).toHaveTextContent('R001');
@@ -286,13 +308,11 @@ describe('renderOptionContent', () => {
  * the ETH / ROLV display and null-fallback logic without mounting the full
  * DialogForm (which requires Apollo, routing, etc.).
  */
-const HelperTextPreview = ({
-  language,
-}: {
-  language: LanguageLookupItem;
-}) => (
+const HelperTextPreview = ({ language }: { language: LanguageLookupItem }) => (
   <span>
-    <span data-testid="helper-eth">{language.ethnologue.code.value ?? '-'}</span>
+    <span data-testid="helper-eth">
+      {language.ethnologue.code.value ?? '-'}
+    </span>
     <span data-testid="helper-rolv">
       {language.registryOfLanguageVarietiesCode.value ?? '-'}
     </span>
@@ -312,28 +332,40 @@ const renderHelperText = (language: LanguageLookupItem) =>
 
 describe('helperText code display', () => {
   it('shows ETH and ROLV codes for the selected language', () => {
-    const lang = makeLanguage('lang-1', { ethnologueCode: 'xyz', rolvCode: 'RV99' });
+    const lang = makeLanguage('lang-1', {
+      ethnologueCode: 'xyz',
+      rolvCode: 'RV99',
+    });
     const { getByTestId } = renderHelperText(lang);
     expect(getByTestId('helper-eth')).toHaveTextContent('xyz');
     expect(getByTestId('helper-rolv')).toHaveTextContent('RV99');
   });
 
   it('falls back to "-" for a null ETH code', () => {
-    const lang = makeLanguage('lang-2', { ethnologueCode: null, rolvCode: 'RV01' });
+    const lang = makeLanguage('lang-2', {
+      ethnologueCode: null,
+      rolvCode: 'RV01',
+    });
     const { getByTestId } = renderHelperText(lang);
     expect(getByTestId('helper-eth')).toHaveTextContent('-');
     expect(getByTestId('helper-rolv')).toHaveTextContent('RV01');
   });
 
   it('falls back to "-" for a null ROLV code', () => {
-    const lang = makeLanguage('lang-3', { ethnologueCode: 'abc', rolvCode: null });
+    const lang = makeLanguage('lang-3', {
+      ethnologueCode: 'abc',
+      rolvCode: null,
+    });
     const { getByTestId } = renderHelperText(lang);
     expect(getByTestId('helper-eth')).toHaveTextContent('abc');
     expect(getByTestId('helper-rolv')).toHaveTextContent('-');
   });
 
   it('falls back to "-" for both null codes', () => {
-    const lang = makeLanguage('lang-4', { ethnologueCode: null, rolvCode: null });
+    const lang = makeLanguage('lang-4', {
+      ethnologueCode: null,
+      rolvCode: null,
+    });
     const { getByTestId } = renderHelperText(lang);
     expect(getByTestId('helper-eth')).toHaveTextContent('-');
     expect(getByTestId('helper-rolv')).toHaveTextContent('-');
