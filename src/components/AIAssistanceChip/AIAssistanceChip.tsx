@@ -6,9 +6,9 @@ import { SecuredProp } from '~/common';
 export const AIAssistanceLabelMap: Record<AiAssistedTranslation, string> = {
   Unknown: 'Unknown',
   None: 'None',
-  Draft: 'AI-Enabled Drafting',
-  Check: 'AI-Enabled Checking',
-  DraftAndCheck: 'AI-Enabled Drafting & Checking',
+  Draft: 'AI-Assisted Drafting',
+  Check: 'AI-Assisted Checking',
+  DraftAndCheck: 'AI-Assisted Drafting & Checking',
   Other: 'Other AI Assistance',
 };
 export interface AIAssistanceChipProps {
