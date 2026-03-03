@@ -171,6 +171,7 @@ export const UpdateProjectDialog = ({
     project.marketingLocation.value,
     project.id,
     project.departmentId.value,
+    project.__typename,
     project.usesRev79.value,
     project.rev79ProjectId.value,
     displayFieldsArray,
