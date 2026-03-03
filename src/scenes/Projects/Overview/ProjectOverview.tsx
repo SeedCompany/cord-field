@@ -445,7 +445,7 @@ export const ProjectOverview = () => {
                   label="Rev79 Project ID"
                   empty="None"
                   loading={!project}
-                  secured={project.usesRev79}
+                  secured={project.rev79ProjectId}
                   redacted="You do not have permission to view Rev79 project ID"
                   children={() => project.rev79ProjectId.value}
                   onClick={() => editField('rev79ProjectId')}

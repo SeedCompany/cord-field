@@ -92,7 +92,7 @@ const fieldMapping: Record<
     <CheckboxField
       name="usesRev79"
       label="Uses Rev79"
-      disabled={!project.rev79ProjectId.canEdit}
+      disabled={!project.usesRev79.canEdit}
     />
   ),
   departmentId: ({ props, project }) => {
