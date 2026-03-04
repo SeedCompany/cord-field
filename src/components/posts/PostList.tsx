@@ -32,6 +32,7 @@ export const PostList = ({
 }: PostListProps) => {
   const { classes } = useStyles();
   const [createPostState, createPost] = useDialog();
+  const canCreate = rest.data?.canCreate;
 
   return (
     <div>
@@ -41,7 +42,13 @@ export const PostList = ({
         </Grid>
         <Grid item>
           <Tooltip title="Add Post">
-            <Fab color="error" onClick={createPost}>
+            <Fab
+              sx={{
+                visibility: canCreate ? 'visible' : 'hidden',
+              }}
+              color="error"
+              onClick={createPost}
+            >
               <Add />
             </Fab>
           </Tooltip>
