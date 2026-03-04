@@ -1,15 +1,15 @@
-import { PaletteColor, PaletteColorOptions } from '@mui/material';
+import type { PaletteColor, PaletteColorOptions } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { PaletteOptions } from '@mui/material/styles';
-import { Role } from '~/api/schema/schema.graphql';
+import type { PaletteOptions } from '@mui/material/styles';
+import type { Role } from '~/api/schema.graphql';
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';
-  const roleLuminance = dark ? 32 : 84;
+  const roleLuminance = dark ? 50 : 32;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
     background: {
-      default: dark ? '#303030' : grey[50], // MUI v4 default
+      default: dark ? '#303030' : grey[50],
     },
     primary: {
       main: mainGreen,
@@ -30,19 +30,15 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       main: '#f2994a',
     },
     text: {
-      // Close to #3c444e while still using alpha
+      // Close to #3c44e while still using alpha
       ...(!dark ? { primary: 'rgba(0, 0, 0, 0.75)' } : {}),
-      // Close to #8f928b while still using alpha
-      // Still it looks so contrast-less for form labels
-      // secondary: 'rgba(0, 0, 0, 0.45)',
     },
 
-    // TODO theme.palette.augmentColor()
     roles: {
       FieldPartner: { main: `hsl(187deg, 71%, ${roleLuminance}%)` }, // #B2EBF2 / hsl(187deg, 71%, 82%)
       Translator: { main: `hsl(36deg, 100%, ${roleLuminance}%)` }, // #FFE0B2 / hsl(36deg, 100%, 85%)
       ProjectManager: { main: `hsl(291deg, 46%, ${roleLuminance}%)` }, // #E1BEE7 / hsl(291deg, 46%, 83%)
-      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // '#DCEDC8 / hsl(88deg, 51%, 86%)
+      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // #DCEDC8 / hsl(88deg, 51%, 86%)
     },
   };
 
