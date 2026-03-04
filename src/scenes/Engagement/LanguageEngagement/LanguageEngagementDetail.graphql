@@ -11,6 +11,12 @@ fragment LanguageEngagementDetail on LanguageEngagement {
   ceremony {
     ...CeremonyCard
   }
+  parent {
+    ...Id
+    name {
+      value
+    }
+  }
   products {
     # grab first page of products with engagement
     # if we'd rather wait until after engagement is loaded to start fetching this

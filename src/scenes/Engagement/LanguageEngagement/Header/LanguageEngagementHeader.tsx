@@ -10,6 +10,7 @@ import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton'
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { DataButton } from '../../../../components/DataButton';
 import { useDialog } from '../../../../components/Dialog';
+import { DisplaySimpleProperty } from '../../../../components/DisplaySimpleProperty';
 import { EngagementBreadcrumb } from '../../../../components/EngagementBreadcrumb';
 import { Fab } from '../../../../components/Fab';
 import {
@@ -53,6 +54,7 @@ export const LanguageEngagementHeader = ({
   const language = engagement.language.value;
   const langName = language?.name.value ?? language?.displayName.value;
   const ptRegistryId = engagement.paratextRegistryId;
+  const rev79CommunityId = engagement.rev79CommunityId;
   const editable = canEditAny(engagement);
 
   return (
@@ -133,6 +135,14 @@ export const LanguageEngagementHeader = ({
           </Grid>
         </Grid>
       </Grid>
+      <Grid item>
+        <DisplaySimpleProperty
+          label="ID"
+          value={engagement.id}
+          LabelProps={{ color: 'textSecondary' }}
+          ValueProps={{ color: 'textPrimary' }}
+        />
+      </Grid>
       <Grid item container spacing={1} alignItems="center">
         <Grid item>
           <DataButton
@@ -163,6 +173,20 @@ export const LanguageEngagementHeader = ({
             empty="Enter Paratext ID"
           />
         </Grid>
+        {engagement.parent.usesRev79.value && (
+          <Grid item>
+            <DataButton
+              onClick={() => show(['rev79CommunityId'])}
+              secured={rev79CommunityId}
+              redacted="You do not have permission to view Rev79 Community ID"
+              children={
+                rev79CommunityId.value &&
+                `Rev79 Community ID: ${rev79CommunityId.value}`
+              }
+              empty="Enter Rev79 Community ID"
+            />
+          </Grid>
+        )}
         <Grid item>
           <AIAssistanceChip
             aiAssistance={engagement.usingAIAssistedTranslation}

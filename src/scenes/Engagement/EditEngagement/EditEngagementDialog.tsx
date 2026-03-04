@@ -63,6 +63,7 @@ export type EditableEngagementField = ExtractStrict<
   | 'firstScripture'
   | 'lukePartnership'
   | 'paratextRegistryId'
+  | 'rev79CommunityId'
   | 'openToInvestorVisit'
   | 'usingAIAssistedTranslation'
   | 'marketable'
@@ -158,6 +159,9 @@ const fieldMapping: Record<
   paratextRegistryId: ({ props }) => (
     <TextField {...props} label="Paratext ID" />
   ),
+  rev79CommunityId: ({ props }) => (
+    <TextField {...props} label="Rev79 Community ID" />
+  ),
   usingAIAssistedTranslation: ({ props }) => (
     <EnumField
       label="AI Assisted Translation"
@@ -223,6 +227,7 @@ export const EditEngagementDialog = ({
             lukePartnership: engagement.lukePartnership.value,
             firstScripture: engagement.firstScripture.value,
             paratextRegistryId: engagement.paratextRegistryId.value,
+            rev79CommunityId: engagement.rev79CommunityId.value,
             openToInvestorVisit: engagement.openToInvestorVisit.value,
             usingAIAssistedTranslation:
               engagement.usingAIAssistedTranslation.value,
