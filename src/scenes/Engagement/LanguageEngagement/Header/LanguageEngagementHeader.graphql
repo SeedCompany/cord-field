@@ -41,6 +41,18 @@ fragment LanguageEngagementHeader on LanguageEngagement {
     canEdit
     value
   }
+  parent {
+    usesRev79 {
+      value
+    }
+  }
+  ... on LanguageEngagement {
+    rev79CommunityId {
+      canRead
+      canEdit
+      value
+    }
+  }
   ...EditEngagement
   ...EngagementToDelete
 }

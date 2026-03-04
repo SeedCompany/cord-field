@@ -14,11 +14,13 @@ import {
   DisplayLocationFragment,
   ExtractStrict,
 } from '~/common';
+import { Link } from '~/components/Routing';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import {
+  CheckboxField,
   DateField,
   EnumField,
   SecuredField,
@@ -28,7 +30,6 @@ import {
 import { LocationField } from '../../../components/form/Lookup';
 import { FieldRegionField } from '../../../components/form/Lookup/FieldRegion';
 import { FormattedDate } from '../../../components/Formatters';
-import { Link } from '../../../components/Routing';
 import {
   updateEngagementDateRanges,
   updatePartnershipsDateRanges,
@@ -47,7 +48,9 @@ export type EditableProjectField = ExtractStrict<
   | 'primaryLocation'
   | 'sensitivity'
   | 'marketingLocation'
+  | 'rev79ProjectId'
 >;
+export type ProjectFieldName = EditableProjectField | 'usesRev79';
 
 interface ProjectFieldProps {
   props: {
@@ -57,7 +60,7 @@ interface ProjectFieldProps {
 }
 
 const fieldMapping: Record<
-  EditableProjectField,
+  ProjectFieldName,
   ComponentType<ProjectFieldProps>
 > = {
   name: ({ props }) => <TextField {...props} label="Project Name" />,
@@ -82,6 +85,16 @@ const fieldMapping: Record<
   marketingLocation: ({ props }) => (
     <LocationField {...props} label="Marketing Location" />
   ),
+  rev79ProjectId: ({ props }) => (
+    <TextField {...props} label="Rev79 Project ID" />
+  ),
+  usesRev79: ({ project }) => (
+    <CheckboxField
+      name="usesRev79"
+      label="Uses Rev79"
+      disabled={!project.usesRev79.canEdit}
+    />
+  ),
   departmentId: ({ props, project }) => {
     // deviate from canEdit=false standard UX, since this is tacked onto name edit
     if (!project.departmentId.canEdit) return null;
@@ -94,6 +107,7 @@ type UpdateProjectFormValues = Merge<
   {
     primaryLocation?: DisplayLocationFragment | null;
     fieldRegion?: DisplayFieldRegionFragment | null;
+    usesRev79?: boolean;
     marketingLocation?: DisplayLocationFragment | null;
   }
 >;
@@ -103,7 +117,7 @@ type UpdateProjectDialogProps = Except<
   'onSubmit' | 'initialValues'
 > & {
   project: ProjectOverviewFragment;
-  editFields?: Many<EditableProjectField>;
+  editFields?: Many<ProjectFieldName>;
   planChangeId?: string;
 };
 
@@ -112,8 +126,8 @@ export const UpdateProjectDialog = ({
   editFields: editFieldsProp,
   ...props
 }: UpdateProjectDialogProps) => {
-  const editFields = useMemo(
-    () => many(editFieldsProp ?? []),
+  const displayFieldsArray = useMemo(
+    () => many(editFieldsProp ?? []) as ProjectFieldName[],
     [editFieldsProp]
   );
 
@@ -130,15 +144,17 @@ export const UpdateProjectDialog = ({
       sensitivity: project.sensitivity,
       marketingLocation: project.marketingLocation.value,
       departmentId: project.departmentId.value,
+      ...(project.__typename === 'MomentumTranslationProject' && {
+        rev79ProjectId: project.rev79ProjectId.value,
+        usesRev79: Boolean(project.usesRev79.value),
+      }),
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
-    const filteredInitialValuesFields = pick(
-      fullInitialValuesFields,
-      editFields.flatMap((field) =>
-        field === 'mouRange' ? ['mouStart', 'mouEnd'] : field
-      )
+    const keys = displayFieldsArray.flatMap((field) =>
+      field === 'mouRange' ? ['mouStart', 'mouEnd'] : field
     );
+    const filteredInitialValuesFields = pick(fullInitialValuesFields, keys);
 
     return {
       id: project.id,
@@ -154,8 +170,11 @@ export const UpdateProjectDialog = ({
     project.sensitivity,
     project.marketingLocation.value,
     project.id,
-    project.departmentId,
-    editFields,
+    project.departmentId.value,
+    project.__typename,
+    project.usesRev79.value,
+    project.rev79ProjectId.value,
+    displayFieldsArray,
   ]);
 
   return (
@@ -165,7 +184,9 @@ export const UpdateProjectDialog = ({
       submitLabel="Save"
       {...props}
       // Only simple properties are changeset aware, relationships are not.
-      changesetAware={editFields.every((field) => !field.endsWith('Id'))}
+      changesetAware={displayFieldsArray.every(
+        (field) => !field.endsWith('Id')
+      )}
       initialValues={initialValues}
       validate={(values) => {
         const start = values.mouStart;
@@ -182,18 +203,28 @@ export const UpdateProjectDialog = ({
       }}
       onSubmit={async (data, form) => {
         const { dirtyFields } = form.getState();
+        const {
+          primaryLocation,
+          fieldRegion,
+          marketingLocation,
+          ...inputData
+        } = data;
+
         await updateProject({
           variables: {
             input: {
-              ...data,
+              ...inputData,
               primaryLocation: dirtyFields.primaryLocation
-                ? data.primaryLocation?.id ?? null
+                ? primaryLocation?.id ?? null
                 : undefined,
               fieldRegion: dirtyFields.fieldRegion
-                ? data.fieldRegion?.id ?? null
+                ? fieldRegion?.id ?? null
                 : undefined,
               marketingLocation: dirtyFields.marketingLocation
-                ? data.marketingLocation?.id ?? null
+                ? marketingLocation?.id ?? null
+                : undefined,
+              usesRev79: dirtyFields.usesRev79
+                ? inputData.usesRev79
                 : undefined,
               changeset: project.changeset?.id,
             },
@@ -284,9 +315,12 @@ export const UpdateProjectDialog = ({
       }}
     >
       <SubmitError />
-      {editFields.map((name) => {
+      {displayFieldsArray.map((name) => {
         const Field = fieldMapping[name];
         if (name === 'sensitivity') {
+          return <Field props={{ name }} project={project} key={name} />;
+        }
+        if (name === 'usesRev79') {
           return <Field props={{ name }} project={project} key={name} />;
         }
         return (

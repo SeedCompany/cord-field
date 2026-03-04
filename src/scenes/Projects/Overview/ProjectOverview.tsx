@@ -54,7 +54,7 @@ import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Cr
 import { DeleteProject } from '../Delete';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
 import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
-import { EditableProjectField, UpdateProjectDialog } from '../Update';
+import { ProjectFieldName, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
 import { WorkflowEventsDrawer, WorkflowEventsIcon } from '../WorkflowEvents';
@@ -123,7 +123,7 @@ export const ProjectOverview = () => {
   const [workflowDrawerState, openWorkflowEvents] = useDialog();
 
   const [editState, editField, fieldsBeingEdited] =
-    useDialog<Many<EditableProjectField>>();
+    useDialog<Many<ProjectFieldName>>();
   const [workflowState, openWorkflow, workflowProject] =
     useDialog<ProjectOverviewFragment>();
 
@@ -233,7 +233,9 @@ export const ProjectOverview = () => {
               <Tooltip title="Edit Project Name">
                 <IconButton
                   aria-label="edit project name"
-                  onClick={() => editField(['name', 'departmentId'])}
+                  onClick={() =>
+                    editField(['name', 'departmentId', 'usesRev79'])
+                  }
                   loading={!project}
                 >
                   <Edit />
@@ -437,6 +439,19 @@ export const ProjectOverview = () => {
                 onClick={() => editField(['marketingLocation'])}
               />
             </Grid>
+            {project?.usesRev79.value === true && (
+              <Grid item>
+                <DataButton
+                  label="Rev79 Project ID"
+                  empty="None"
+                  loading={!project}
+                  secured={project.rev79ProjectId}
+                  redacted="You do not have permission to view Rev79 project ID"
+                  children={() => project.rev79ProjectId.value}
+                  onClick={() => editField('rev79ProjectId')}
+                />
+              </Grid>
+            )}
           </Grid>
 
           <Grid container spacing={1} alignItems="center">
