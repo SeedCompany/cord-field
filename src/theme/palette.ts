@@ -4,7 +4,7 @@ import type { Role } from '~/api/schema.graphql';
 
 export const brandColors = {
   // #F7F1E7 - Light beige used for light mode default background
-  natural: '#F7F1E7',
+  natural: '#FAFAFA',
   // #CDC3B0 - Medium beige used for secondary text in dark mode
   stone: '#CDC3B0',
   // #FFFFFF - Pure white used for paper backgrounds in light mode and contrast text
@@ -15,6 +15,8 @@ export const brandColors = {
   darkGray: '#636466',
   // #323232 - Very dark gray (almost black) used for dark mode default background and primary text in light mode
   black: '#323232',
+  // #E3F0F4 - Light blue used for light mode header background
+  lightBlue: '#E3F0F4',
 };
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
@@ -29,6 +31,7 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     background: {
       default: dark ? brandColors.black : brandColors.natural,
       paper: dark ? brandColors.darkGray : brandColors.white,
+      lightBlue: brandColors.lightBlue,
     },
     primary: {
       main: mainGreen,
@@ -65,6 +68,9 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
 };
 
 declare module '@mui/material/styles' {
+  interface TypeBackground {
+    lightBlue: string;
+  }
   interface Palette {
     create: Palette['primary'];
     roles: Partial<Record<Role, Pick<PaletteColor, 'main'>>>;

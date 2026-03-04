@@ -20,7 +20,10 @@ export const DashboardLayout = ({ children }: ChildrenProp) => (
       component="h1"
       variant="h3"
       sx={{
-        backgroundColor: 'background.paper',
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'dark'
+            ? theme.palette.background.paper
+            : theme.palette.background.lightBlue,
         color: 'text.primary',
         p: 4,
         borderRadius: 1,
