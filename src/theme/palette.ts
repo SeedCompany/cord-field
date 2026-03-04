@@ -1,66 +1,44 @@
 import type { PaletteColor, PaletteColorOptions } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import type { PaletteOptions } from '@mui/material/styles';
 import type { Role } from '~/api/schema.graphql';
 
-export const brandColors = {
-  // #F7F1E7 - Light beige used for light mode default background
-  natural: '#FAFAFA',
-  // #CDC3B0 - Medium beige used for secondary text in dark mode
-  stone: '#CDC3B0',
-  // #FFFFFF - Pure white used for paper backgrounds in light mode and contrast text
-  white: '#FFFFFF',
-  // #EBEBEC - Very light gray used for secondary color and primary text in dark mode
-  lightGray: '#EBEBEC',
-  // #636466 - Dark gray used for secondary color in light mode and paper background in dark mode
-  darkGray: '#636466',
-  // #323232 - Very dark gray (almost black) used for dark mode default background and primary text in light mode
-  black: '#323232',
-  // #E3F0F4 - Light blue used for light mode header background
-  lightBlue: '#E3F0F4',
-};
-
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';
-  // Using HSL allows us to easily adjust the lightness for dark and light modes while keeping the hue and saturation consistent.
-  // ai: roleLuminance 32% in light mode keeps role colors muted against the light background (#F7F1E7),
-  // while 50% in dark mode lifts them to mid-tone so they remain visible against the dark background (#323232).
-  // These are decorative swatches (not text), so the target is perceptual balance rather than WCAG text contrast.
   const roleLuminance = dark ? 50 : 32;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
     background: {
-      default: dark ? brandColors.black : brandColors.natural,
-      paper: dark ? brandColors.darkGray : brandColors.white,
-      lightBlue: brandColors.lightBlue,
+      default: dark ? '#303030' : grey[50],
     },
     primary: {
       main: mainGreen,
-      contrastText: brandColors.white,
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: dark ? brandColors.lightGray : brandColors.darkGray,
+      main: dark ? grey[50] : '#3c444e',
     },
     error: {
       main: '#ff5a5f',
-      contrastText: brandColors.white,
+      contrastText: '#ffffff',
     },
     create: {
       main: '#ff5a5f',
-      contrastText: brandColors.white,
+      contrastText: '#ffffff',
     },
     warning: {
       main: '#f2994a',
     },
     text: {
-      primary: dark ? brandColors.lightGray : brandColors.black,
-      secondary: dark ? brandColors.stone : brandColors.darkGray,
+      // Close to #3c44e while still using alpha
+      ...(!dark ? { primary: 'rgba(0, 0, 0, 0.75)' } : {}),
     },
 
     roles: {
-      FieldPartner: { main: `hsl(187deg, 71%, ${roleLuminance}%)` }, // `#B2EBF2` (light mode)
-      Translator: { main: `hsl(36deg, 100%, ${roleLuminance}%)` }, // `#FFE0B2` (light mode)
-      ProjectManager: { main: `hsl(291deg, 46%, ${roleLuminance}%)` }, // `#E1BEE7` (light mode)
-      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // `#DCEDC8` (light mode)
+      FieldPartner: { main: `hsl(187deg, 71%, ${roleLuminance}%)` }, // #B2EBF2 / hsl(187deg, 71%, 82%)
+      Translator: { main: `hsl(36deg, 100%, ${roleLuminance}%)` }, // #FFE0B2 / hsl(36deg, 100%, 85%)
+      ProjectManager: { main: `hsl(291deg, 46%, ${roleLuminance}%)` }, // #E1BEE7 / hsl(291deg, 46%, 83%)
+      Marketing: { main: `hsl(88deg, 51%, ${roleLuminance}%)` }, // #DCEDC8 / hsl(88deg, 51%, 86%)
     },
   };
 
@@ -68,9 +46,6 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
 };
 
 declare module '@mui/material/styles' {
-  interface TypeBackground {
-    lightBlue: string;
-  }
   interface Palette {
     create: Palette['primary'];
     roles: Partial<Record<Role, Pick<PaletteColor, 'main'>>>;

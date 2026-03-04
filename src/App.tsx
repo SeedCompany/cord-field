@@ -1,10 +1,6 @@
-import { CssBaseline, useMediaQuery } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
-import { createContext, useMemo, useState } from 'react';
-import type { ChildrenProp } from '~/common';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
@@ -14,7 +10,7 @@ import { SessionProvider } from './components/Session';
 import { SnackbarProvider } from './components/Snackbar';
 import { UploadProvider as FileUploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
-import { createTheme } from './theme';
+import { ThemeProvider } from './theme/ThemeProvider';
 
 const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
 if (logRocketAppId) {
@@ -45,45 +41,6 @@ if (logRocketAppId) {
 
 MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
 
-export const ColorModeContext = createContext<{ toggleColorMode: () => void }>({
-  toggleColorMode: () => undefined,
-});
-
-const ThemeProviderWithDarkMode = ({ children }: ChildrenProp) => {
-  // Detect system/browser dark mode preference
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {
-    noSsr: true,
-  });
-  const [userOverride, setUserOverride] = useState<'light' | 'dark' | null>(
-    null
-  );
-  const mode: 'light' | 'dark' =
-    userOverride ?? (prefersDarkMode ? 'dark' : 'light');
-
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () => {
-        setUserOverride((prev) => {
-          const current = prev ?? (prefersDarkMode ? 'dark' : 'light');
-          return current === 'light' ? 'dark' : 'light';
-        });
-      },
-    }),
-    [prefersDarkMode]
-  );
-
-  // Key fix: depend on the reactive values that determine mode
-  const theme = useMemo(() => createTheme({ dark: mode === 'dark' }), [mode]);
-  return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline enableColorScheme />
-        {children}
-      </ThemeProvider>
-    </ColorModeContext.Provider>
-  );
-};
-
 /**
  * Register all app providers here in a flat list.
  * These are used client-side, server-side, and in storybook.
@@ -91,7 +48,7 @@ const ThemeProviderWithDarkMode = ({ children }: ChildrenProp) => {
  * Order still matters (the first is the outer most component)
  */
 export const appProviders = [
-  <ThemeProviderWithDarkMode key="theme" />,
+  <ThemeProvider key="theme" />,
   <LocalizationProvider key="i10n" dateAdapter={LuxonCalenderDateUtils} />,
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,

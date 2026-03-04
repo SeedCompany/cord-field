@@ -51,7 +51,9 @@ export const UserDetail = () => {
     >
       <Helmet title={user?.fullName ?? undefined} />
       {error ? (
-        <Typography variant="h4">Error loading person</Typography>
+        <Typography variant="h4" color="text.primary">
+          Error loading person
+        </Typography>
       ) : (
         <>
           <Box

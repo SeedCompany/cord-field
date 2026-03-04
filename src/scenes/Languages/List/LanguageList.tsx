@@ -7,7 +7,7 @@ export const LanguageList = () => {
     <Stack sx={{ flex: 1, padding: 4, pt: 2 }}>
       <Helmet title="Languages" />
       <Stack component="main" sx={{ flex: 1 }}>
-        <Typography variant="h2" paragraph>
+        <Typography variant="h2" paragraph color="text.primary">
           Languages
         </Typography>
         <Stack sx={{ flex: 1, containerType: 'size' }}>

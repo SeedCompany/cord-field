@@ -23,7 +23,7 @@ export const DashboardLayout = ({ children }: ChildrenProp) => (
         backgroundColor: (theme) =>
           theme.palette.mode === 'dark'
             ? theme.palette.background.paper
-            : theme.palette.background.lightBlue,
+            : '#E3F0F4',
         color: 'text.primary',
         p: 4,
         borderRadius: 1,

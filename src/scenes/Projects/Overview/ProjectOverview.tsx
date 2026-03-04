@@ -207,6 +207,7 @@ export const ProjectOverview = () => {
           <header className={classes.header}>
             <Typography
               variant="h2"
+              color="text.primary"
               className={cx(classes.name, project ? null : classes.nameLoading)}
             >
               {!project ? (
@@ -258,7 +259,7 @@ export const ProjectOverview = () => {
           </header>
 
           <div className={classes.subheader}>
-            <Typography variant="h4">
+            <Typography variant="h4" color="text.primary">
               {project ? 'Project Overview' : <Skeleton width={200} />}
             </Typography>
             {project && (
@@ -456,7 +457,7 @@ export const ProjectOverview = () => {
               </span>
             </Grid>
             <Grid item>
-              <Typography variant="h4">
+              <Typography variant="h4" color="text.primary">
                 {project ? 'Upload Files' : <Skeleton width="12ch" />}
               </Typography>
             </Grid>
@@ -512,7 +513,7 @@ export const ProjectOverview = () => {
 
           <Grid container spacing={2} alignItems="center">
             <Grid item>
-              <Typography variant="h3">
+              <Typography variant="h3" color="text.primary">
                 {project && engagements.data ? (
                   !engagements.data.canRead ? (
                     <Redacted

@@ -7,7 +7,7 @@ export const UserList = () => {
     <Stack sx={{ flex: 1, padding: 4, pt: 2 }}>
       <Helmet title="People" />
       <Stack component="main" sx={{ flex: 1 }}>
-        <Typography variant="h2" paragraph>
+        <Typography variant="h2" paragraph color="text.primary">
           People
         </Typography>
         <Stack sx={{ flex: 1, containerType: 'size' }}>

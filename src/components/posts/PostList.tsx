@@ -37,7 +37,9 @@ export const PostList = ({
     <div>
       <Grid container spacing={2} alignItems="center">
         <Grid item>
-          <Typography variant="h3">Posts</Typography>
+          <Typography variant="h3" color="text.primary">
+            Posts
+          </Typography>
         </Grid>
         <Grid item>
           <Tooltip title="Add Post">
