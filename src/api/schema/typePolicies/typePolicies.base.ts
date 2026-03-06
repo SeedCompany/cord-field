@@ -85,10 +85,19 @@ export const typePolicies: TypePolicies = {
       engagements: {},
     },
   },
+  FieldRegion: {
+    fields: {
+      projects: {}, // no page merging (infinite scroll)
+    },
+  },
+  FieldZone: {
+    fields: {
+      projects: {}, // no page merging (infinite scroll)
+    },
+  },
   Query: {
     fields: {
       projects: {},
-      engagements: {},
       progressReports: {},
       partners: {},
       users: {},
