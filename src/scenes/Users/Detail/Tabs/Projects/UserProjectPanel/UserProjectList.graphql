@@ -1,0 +1,23 @@
+query UserProjects($userId: ID!, $input: ProjectListInput) {
+  user(id: $userId) {
+    id
+    projects(input: $input) {
+      canRead
+      hasMore
+      total
+      items {
+        ...userProjectDataGridRow
+      }
+    }
+  }
+}
+
+fragment userProjectDataGridRow on Project {
+  membership(user: $userId) {
+    id
+    roles {
+      value
+    }
+  }
+  ...projectDataGridRow
+}
