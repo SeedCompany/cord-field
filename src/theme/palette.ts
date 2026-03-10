@@ -5,7 +5,7 @@ import type { Role } from '~/api/schema.graphql';
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';
-  const roleLuminance = dark ? 32 : 84;
+  const roleLuminance = dark ? 50 : 84;
   const palette: PaletteOptions = {
     mode: dark ? 'dark' : 'light',
     background: {

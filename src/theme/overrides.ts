@@ -244,6 +244,11 @@ export const appComponents = ({
         margin: 'dense',
       },
     },
+    MuiTypography: {
+      defaultProps: {
+        color: 'text.primary',
+      },
+    },
     MuiTooltip: {
       defaultProps: {
         arrow: true,
