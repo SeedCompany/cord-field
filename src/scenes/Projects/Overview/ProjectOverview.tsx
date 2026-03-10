@@ -234,7 +234,13 @@ export const ProjectOverview = () => {
                 <IconButton
                   aria-label="edit project name"
                   onClick={() =>
-                    editField(['name', 'departmentId', 'usesRev79'])
+                    editField([
+                      'name',
+                      'departmentId',
+                      ...(project?.__typename === 'MomentumTranslationProject'
+                        ? ['usesRev79' as const]
+                        : []),
+                    ])
                   }
                   loading={!project}
                 >
