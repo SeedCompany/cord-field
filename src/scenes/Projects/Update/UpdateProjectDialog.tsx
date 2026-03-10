@@ -317,10 +317,7 @@ export const UpdateProjectDialog = ({
       <SubmitError />
       {displayFieldsArray.map((name) => {
         const Field = fieldMapping[name];
-        if (name === 'sensitivity') {
-          return <Field props={{ name }} project={project} key={name} />;
-        }
-        if (name === 'usesRev79') {
+        if (name === 'usesRev79' || name === 'sensitivity') {
           return <Field props={{ name }} project={project} key={name} />;
         }
         return (
