@@ -84,10 +84,10 @@ export const LoginForm = (props: LoginFormProps) => {
       <div>
         <div className={classes.header}>
           <CordIcon className={classes.icon} />
-          <Typography variant="h4" gutterBottom={true}>
+          <Typography variant="h4" color="text.primary" gutterBottom={true}>
             CORD FIELD
           </Typography>
-          <Typography color="textSecondary">
+          <Typography color="text.primary">
             Accelerating Bible Translation
           </Typography>
         </div>

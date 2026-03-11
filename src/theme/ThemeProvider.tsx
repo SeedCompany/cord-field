@@ -1,10 +1,10 @@
 import { CssBaseline, useMediaQuery } from '@mui/material';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { createTheme } from './createTheme';
 
 export const ThemeProvider = ({ children }: { children?: ReactNode }) => {
-  const isDark = useMediaQuery('(prefers-color-scheme: dark)');
+  const isDark = useMediaQuery('(prefers-color-scheme: dark)', { noSsr: true });
 
   const theme = useMemo(() => createTheme({ dark: isDark }), [isDark]);
 
