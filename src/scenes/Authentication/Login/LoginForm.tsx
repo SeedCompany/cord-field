@@ -124,11 +124,11 @@ const Footer = ({
   const { classes, cx } = useStyles();
   return (
     <footer {...props} className={cx(classes.footer, props.className)}>
-      <Typography color="textSecondary" className={classes.verse}>
+      <Typography color="text.primary" className={classes.verse}>
         “{quote}”
       </Typography>
       <Typography
-        color="textSecondary"
+        color="text.secondary"
         variant="h4"
         className={classes.reference}
       >
