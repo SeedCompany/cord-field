@@ -9,13 +9,13 @@ export interface AvatarProps extends MuiAvatarProps {
   loading?: boolean;
 }
 
-export const Avatar = ({ loading, ...props }: AvatarProps) => {
+export const Avatar = ({ loading, sx, ...props }: AvatarProps) => {
   const { alt, src, srcSet, sizes, children, ...rest } = props;
   return (
     <MuiAvatar
       sx={[
         ...(loading ? [{ backgroundColor: 'transparent' }] : []),
-        ...extendSx(props.sx),
+        ...extendSx(sx),
       ]}
       {...(loading ? rest : props)}
     >

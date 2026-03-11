@@ -37,11 +37,7 @@ export const MethodologiesCard = ({
         sx={{ display: 'flex', alignItems: 'center' }}
       >
         {methodology && (
-          <Grid
-            item
-            wrap="nowrap"
-            sx={{ display: 'flex', color: 'text.secondary', mr: 0.5 }}
-          >
+          <Grid item sx={{ display: 'flex', color: 'text.secondary', mr: 0.5 }}>
             {ApproachIcons[MethodologyToApproach[methodology]]}
           </Grid>
         )}
