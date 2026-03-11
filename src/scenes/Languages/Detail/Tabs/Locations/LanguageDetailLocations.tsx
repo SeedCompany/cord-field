@@ -51,39 +51,37 @@ export const LanguageDetailLocations = ({
     },
   });
 
-  const actionsCol: GridColDef<LanguageLocation> = {
-    field: 'actions',
-    headerName: '',
-    width: 60,
-    align: 'center',
-    sortable: false,
-    filterable: false,
-    disableColumnMenu: true,
-    hideable: false,
-    renderCell: ({ row: location }) => (
-      <Tooltip title="Remove Location">
-        <IconButton
-          size="small"
-          onClick={() =>
-            void removeLocation({
-              variables: {
-                language: id,
-                location: location.id,
-              },
-              refetchQueries: [LanguageLocationsDocument],
-            })
-          }
-        >
-          <DeleteIcon fontSize="small" color="error" />
-        </IconButton>
-      </Tooltip>
-    ),
-  };
-
-  const columns = useMemo(
-    () => [...LocationColumns, ...(locations.canCreate ? [actionsCol] : [])],
-    [locations.canCreate, removeLocation, language, actionsCol]
-  );
+  const columns = useMemo(() => {
+    const actionsCol: GridColDef<LanguageLocation> = {
+      field: 'actions',
+      headerName: '',
+      width: 60,
+      align: 'center',
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      hideable: false,
+      renderCell: ({ row: location }) => (
+        <Tooltip title="Remove Location">
+          <IconButton
+            size="small"
+            onClick={() =>
+              void removeLocation({
+                variables: {
+                  language: id,
+                  location: location.id,
+                },
+                refetchQueries: [LanguageLocationsDocument],
+              })
+            }
+          >
+            <DeleteIcon fontSize="small" color="error" />
+          </IconButton>
+        </Tooltip>
+      ),
+    };
+    return [...LocationColumns, ...(locations.canCreate ? [actionsCol] : [])];
+  }, [locations.canCreate, id, removeLocation]);
 
   const LocationFooter = useMemo(
     () =>
