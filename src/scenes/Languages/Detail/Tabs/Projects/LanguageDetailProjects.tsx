@@ -19,7 +19,7 @@ import {
 } from '~/components/ProjectDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
 import {
-  LanguageProjectDataGridRowFragment as LanguageProject,
+  type LanguageProjectDataGridRowFragment as LanguageProject,
   LanguageProjectsDocument,
 } from './LanguageProjects.graphql';
 
