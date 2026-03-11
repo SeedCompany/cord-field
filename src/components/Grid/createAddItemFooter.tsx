@@ -31,35 +31,39 @@ export const createAddItemFooter = ({
   tooltipTitle,
   disabled = false,
 }: AddItemFooterOptions) => {
-  const Footer = () => (
-    <Stack
-      sx={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        background: 'var(--DataGrid-containerBackground)',
-        p: 1,
-        borderTop: 'thin solid var(--DataGrid-rowBorderColor)',
-        borderBottomLeftRadius: 'inherit',
-        borderBottomRightRadius: 'inherit',
-      }}
-    >
-      <Tooltip title={tooltipTitle || label}>
-        <span>
-          {/* span is needed to wrap disabled button for tooltip to work */}
-          <Button
-            onClick={addItem}
-            disabled={disabled}
-            variant="outlined"
-            color="primary"
-            size="small"
-            sx={{ minWidth: 'auto', px: 1 }}
-          >
-            <Add />
-          </Button>
-        </span>
-      </Tooltip>
-    </Stack>
-  );
+  const Footer = () => {
+    const title = tooltipTitle ?? label;
+    const button = (
+      <span>
+        {/* span is needed to wrap disabled button for tooltip to work */}
+        <Button
+          onClick={addItem}
+          disabled={disabled}
+          variant="outlined"
+          color="primary"
+          size="small"
+          sx={{ minWidth: 'auto', px: 1 }}
+        >
+          <Add />
+        </Button>
+      </span>
+    );
+    return (
+      <Stack
+        sx={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          background: 'var(--DataGrid-containerBackground)',
+          p: 1,
+          borderTop: 'thin solid var(--DataGrid-rowBorderColor)',
+          borderBottomLeftRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
+        }}
+      >
+        {title ? <Tooltip title={title}>{button}</Tooltip> : button}
+      </Stack>
+    );
+  };
   Footer.displayName = 'AddItemFooter';
   return Footer;
 };
