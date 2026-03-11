@@ -1,4 +1,3 @@
-import { ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
@@ -11,7 +10,7 @@ import { SessionProvider } from './components/Session';
 import { SnackbarProvider } from './components/Snackbar';
 import { UploadProvider as FileUploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
-import { createTheme } from './theme';
+import { ThemeProvider } from './theme/ThemeProvider';
 
 const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
 if (logRocketAppId) {
@@ -49,7 +48,7 @@ MuiXLicense.setLicenseKey(process.env.MUI_X_LICENSE_KEY!);
  * Order still matters (the first is the outer most component)
  */
 export const appProviders = [
-  <ThemeProvider key="theme" theme={createTheme()} />,
+  <ThemeProvider key="theme" />,
   <LocalizationProvider key="i10n" dateAdapter={LuxonCalenderDateUtils} />,
   <SnackbarProvider key="snackbar" />, // needed by apollo
   <ApolloProvider key="apollo" />,
