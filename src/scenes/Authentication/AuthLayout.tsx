@@ -2,18 +2,19 @@ import { CssBaseline } from '@mui/material';
 import { styled, ThemeProvider } from '@mui/material/styles';
 import { Outlet } from 'react-router-dom';
 import { ChildrenProp } from '~/common';
+import { createTheme } from '~/theme';
 import { Picture } from '../../components/Picture';
-import { createTheme } from '../../theme';
 import backgroundImg from './background.png';
 
-const Root = styled('div')({
+const Root = styled('div')(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-evenly',
   alignItems: 'center',
-  position: 'relative', // for background
-});
+  position: 'relative',
+  backgroundColor: theme.palette.background.default,
+}));
 
 const authTheme = createTheme({ dark: true });
 
