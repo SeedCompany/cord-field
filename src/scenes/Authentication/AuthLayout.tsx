@@ -1,6 +1,8 @@
-import { styled } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import { styled, ThemeProvider } from '@mui/material/styles';
 import { Outlet } from 'react-router-dom';
 import { ChildrenProp } from '~/common';
+import { createTheme } from '~/theme';
 import { Picture } from '../../components/Picture';
 import backgroundImg from './background.png';
 
@@ -14,17 +16,14 @@ const Root = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
 }));
 
-const Content = styled('div')({
-  position: 'relative',
-  zIndex: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-});
+const authTheme = createTheme({ dark: true });
 
 export const AuthLayout = ({ children }: ChildrenProp) => (
-  <Root>
-    <Picture background source={backgroundImg} />
-    <Content>{children ?? <Outlet />}</Content>
-  </Root>
+  <ThemeProvider theme={authTheme}>
+    <CssBaseline />
+    <Root>
+      <Picture lazy background source={backgroundImg} />
+      {children ?? <Outlet />}
+    </Root>
+  </ThemeProvider>
 );

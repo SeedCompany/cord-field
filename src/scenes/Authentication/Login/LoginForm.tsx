@@ -87,7 +87,9 @@ export const LoginForm = (props: LoginFormProps) => {
           <Typography variant="h4" gutterBottom={true}>
             CORD FIELD
           </Typography>
-          <Typography>Accelerating Bible Translation</Typography>
+          <Typography color="textSecondary">
+            Accelerating Bible Translation
+          </Typography>
         </div>
         <Form
           {...props}
@@ -122,7 +124,9 @@ const Footer = ({
   const { classes, cx } = useStyles();
   return (
     <footer {...props} className={cx(classes.footer, props.className)}>
-      <Typography className={classes.verse}>“{quote}”</Typography>
+      <Typography color="textSecondary" className={classes.verse}>
+        “{quote}”
+      </Typography>
       <Typography
         color="textSecondary"
         variant="h4"

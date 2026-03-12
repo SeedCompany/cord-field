@@ -1,6 +1,6 @@
 import { CssBaseline, useMediaQuery } from '@mui/material';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { type ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { createTheme } from './createTheme';
 
 export const ThemeProvider = ({ children }: { children?: ReactNode }) => {
