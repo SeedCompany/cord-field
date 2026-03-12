@@ -84,12 +84,10 @@ export const LoginForm = (props: LoginFormProps) => {
       <div>
         <div className={classes.header}>
           <CordIcon className={classes.icon} />
-          <Typography variant="h4" color="text.primary" gutterBottom={true}>
+          <Typography variant="h4" gutterBottom={true}>
             CORD FIELD
           </Typography>
-          <Typography color="text.primary">
-            Accelerating Bible Translation
-          </Typography>
+          <Typography>Accelerating Bible Translation</Typography>
         </div>
         <Form
           {...props}
@@ -124,11 +122,9 @@ const Footer = ({
   const { classes, cx } = useStyles();
   return (
     <footer {...props} className={cx(classes.footer, props.className)}>
-      <Typography color="text.primary" className={classes.verse}>
-        “{quote}”
-      </Typography>
+      <Typography className={classes.verse}>“{quote}”</Typography>
       <Typography
-        color="text.secondary"
+        color="textSecondary"
         variant="h4"
         className={classes.reference}
       >
