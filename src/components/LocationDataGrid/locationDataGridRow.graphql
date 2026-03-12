@@ -1,0 +1,20 @@
+fragment locationDataGridRow on Location {
+  id
+  name {
+    canRead
+    value
+  }
+  type {
+    canRead
+    value
+  }
+  defaultFieldRegion {
+    canRead
+    value {
+      id
+      name {
+        value
+      }
+    }
+  }
+}

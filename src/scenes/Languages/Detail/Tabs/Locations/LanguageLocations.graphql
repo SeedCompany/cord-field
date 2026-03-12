@@ -1,0 +1,24 @@
+query LanguageLocations($languageId: ID!, $input: LocationListInput) {
+  language(id: $languageId) {
+    id
+    locations(input: $input) {
+      canRead
+      hasMore
+      total
+      items {
+        ...languageLocationDataGridRow
+      }
+    }
+  }
+}
+
+fragment languageLocationDataGridRow on Location {
+  ...locationDataGridRow
+}
+
+mutation RemoveLocationFromLanguage($language: ID!, $location: ID!) {
+  removeLocationFromLanguage(language: $language, location: $location) {
+    ...LanguageDetail
+    ...LanguageForm
+  }
+}
