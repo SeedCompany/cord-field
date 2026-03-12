@@ -4,22 +4,14 @@ import { ChildrenProp } from '~/common';
 import { Picture } from '../../components/Picture';
 import backgroundImg from './background.png';
 
-const Root = styled('div')({
+const Root = styled('div')(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-evenly',
   alignItems: 'center',
   position: 'relative',
-});
-
-// Darkens background image in dark mode; transparent in light mode
-const Scrim = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  inset: 0,
-  backgroundColor:
-    theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.65)' : 'transparent',
-  zIndex: 1,
+  backgroundColor: theme.palette.background.default,
 }));
 
 const Content = styled('div')({
@@ -33,7 +25,6 @@ const Content = styled('div')({
 export const AuthLayout = ({ children }: ChildrenProp) => (
   <Root>
     <Picture background source={backgroundImg} />
-    <Scrim />
     <Content>{children ?? <Outlet />}</Content>
   </Root>
 );
