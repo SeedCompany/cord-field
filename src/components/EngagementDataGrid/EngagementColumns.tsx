@@ -4,6 +4,7 @@ import {
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
+import { pick } from 'lodash';
 import {
   AiAssistedTranslationLabels,
   AiAssistedTranslationList,
@@ -40,18 +41,18 @@ import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
-export const EngagementColumns: Array<GridColDef<Engagement>> = [
-  ProjectNameColumn({
+export const EngagementColumnMap: Record<string, GridColDef<Engagement>> = {
+  'project.name': ProjectNameColumn({
     field: 'project.name',
     valueGetter: (_, engagement) => engagement.project,
   }),
-  LinkColumn({
+  Engagement: LinkColumn({
     field: 'Engagement',
     headerName: '',
     valueGetter: (_, engagement) => engagement,
     destination: (id) => `/engagements/${id}`,
   }),
-  {
+  nameProjectLast: {
     headerName: 'Language / Intern',
     field: 'nameProjectLast',
     ...textColumn(),
@@ -73,7 +74,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     hideable: false,
     serverFilter: (value): EngagementFilters => ({ engagedName: value }),
   },
-  {
+  milestonePlanned: {
     headerName: 'Milestone',
     description: 'Completion of milestone translation goals within this MOU',
     field: 'milestonePlanned',
@@ -92,7 +93,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
         ? { ...row, milestonePlanned: { ...row.milestonePlanned, value } }
         : row,
   },
-  {
+  usingAIAssistedTranslation: {
     headerName: 'AI Assistance',
     description: 'Is using AI assistance in translation?',
     field: 'usingAIAssistedTranslation',
@@ -118,14 +119,14 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
           }
         : row,
   },
-  {
+  'project.type': {
     headerName: 'Type',
     field: 'project.type',
     ...enumColumn(ProjectTypeList, ProjectTypeLabels),
     width: 130,
     valueGetter: (_, row) => row.project.type,
   },
-  {
+  'project.status': {
     field: 'project.status',
     ...enumColumn(ProjectStatusList, ProjectStatusLabels, {
       orderByIndex: true,
@@ -134,7 +135,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     headerName: 'Project Status',
     width: 160,
   },
-  {
+  'project.step': {
     headerName: 'Project Step',
     field: 'project.step',
     width: 250,
@@ -143,7 +144,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       orderByIndex: true,
     }),
   },
-  {
+  status: {
     headerName: 'Engagement Status',
     field: 'status',
     ...enumColumn(EngagementStatusList, EngagementStatusLabels, {
@@ -152,13 +153,13 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     width: 190,
     valueGetter: (_, row) => row.status.value,
   },
-  {
+  'project.primaryLocation.name': {
     headerName: 'Country',
     field: 'project.primaryLocation.name',
     ...textColumn(),
     valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
   },
-  {
+  'language.ethnologue.code': {
     headerName: 'ISO',
     description: 'Ethnologue Code',
     field: 'language.ethnologue.code',
@@ -169,7 +170,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
         ? row.language.value?.ethnologue.code.value?.toUpperCase()
         : null,
   },
-  {
+  'language.registryOfLanguageVarietiesCode': {
     headerName: 'ROLV',
     description: 'Registry of Language Varieties Code',
     field: 'language.registryOfLanguageVarietiesCode',
@@ -180,19 +181,19 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
         ? row.language.value?.registryOfLanguageVarietiesCode.value
         : null,
   },
-  {
+  startDate: {
     headerName: 'MOU Start',
     field: 'startDate',
     ...dateColumn(),
     filterable: false,
   },
-  {
+  endDate: {
     headerName: 'MOU End',
     field: 'endDate',
     ...dateColumn(),
     filterable: false,
   },
-  {
+  'currentProgressReportDue.status': {
     headerName: 'QR Status',
     description: 'Status of Quarterly Report Currently Due',
     field: 'currentProgressReportDue.status',
@@ -216,11 +217,11 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     },
     filterable: false,
   },
-  SensitivityColumn({
+  'project.sensitivity': SensitivityColumn({
     field: 'project.sensitivity',
     valueGetter: (_, engagement) => engagement.project,
   }),
-  {
+  files: {
     headerName: 'Files',
     field: 'files',
     sortable: false,
@@ -229,19 +230,43 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
       <Link to={`/projects/${row.project.id}/files`}>View Files</Link>
     ),
   },
-  {
+  'project.isMember': {
     field: 'project.isMember',
     ...booleanColumn(),
     valueGetter: (_, row) => row.project.isMember,
     headerName: 'Member',
   },
-  {
+  'project.pinned': {
     field: 'project.pinned',
     ...booleanColumn(),
     valueGetter: (_, row) => row.project.pinned,
     headerName: 'Pinned',
   },
-];
+};
+
+export const EngagementColumns: Array<GridColDef<Engagement>> = Object.values(
+  pick(EngagementColumnMap, [
+    'project.name',
+    'Engagement',
+    'nameProjectLast',
+    'milestonePlanned',
+    'usingAIAssistedTranslation',
+    'project.type',
+    'project.status',
+    'project.step',
+    'status',
+    'project.primaryLocation.name',
+    'language.ethnologue.code',
+    'language.registryOfLanguageVarietiesCode',
+    'startDate',
+    'endDate',
+    'currentProgressReportDue.status',
+    'project.sensitivity',
+    'files',
+    'project.isMember',
+    'project.pinned',
+  ] as const)
+);
 
 export const EngagementInitialState = {
   pinnedColumns: {
