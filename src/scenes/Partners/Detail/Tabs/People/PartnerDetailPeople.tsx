@@ -30,7 +30,7 @@ export const PartnerDetailPeople = ({ partner, editPartner: edit }: Props) => {
         content={
           !partner?.pointOfContact.value ? (
             <CardActionArea
-              onClick={() => edit('partner.pointOfContactId')}
+              onClick={() => edit('partner.pointOfContact')}
               sx={{
                 flex: 1,
                 display: 'flex',
