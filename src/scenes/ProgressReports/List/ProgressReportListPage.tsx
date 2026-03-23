@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import { PeriodicReportsTable } from '~/components/PeriodicReports/PeriodicReportsTable';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
@@ -33,6 +34,9 @@ export const ProgressReportListPage = () => {
       ? data.engagement
       : undefined;
 
+  const isMultiplication =
+    engagement?.project.__typename === 'MultiplicationTranslationProject';
+
   return (
     <PeriodicReportListLayout
       type="Progress"
@@ -42,13 +46,19 @@ export const ProgressReportListPage = () => {
         <EngagementBreadcrumb key="engagement" data={engagement} />,
       ]}
       TableCardProps={{
-        sx: { maxWidth: 400 },
+        sx: {
+          maxWidth: !isMultiplication ? 400 : undefined,
+        },
       }}
     >
-      <ProgressReportsTable
-        loading={!engagement}
-        rows={engagement?.progressReports.items ?? []}
-      />
+      {isMultiplication ? (
+        <PeriodicReportsTable data={engagement.progressReports.items} />
+      ) : (
+        <ProgressReportsTable
+          loading={!engagement}
+          rows={engagement?.progressReports.items ?? []}
+        />
+      )}
     </PeriodicReportListLayout>
   );
 };

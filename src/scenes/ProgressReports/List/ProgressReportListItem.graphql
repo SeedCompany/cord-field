@@ -1,5 +1,6 @@
 fragment ProgressReportListItem on ProgressReport {
   ...Id
+  type
   start
   end
   due
@@ -7,6 +8,18 @@ fragment ProgressReportListItem on ProgressReport {
     value
     canEdit
     canRead
+  }
+  reportFile {
+    canEdit
+    canRead
+    value {
+      ...FileNodeInfo
+    }
+  }
+  receivedDate {
+    canRead
+    canEdit
+    value
   }
   status {
     value
