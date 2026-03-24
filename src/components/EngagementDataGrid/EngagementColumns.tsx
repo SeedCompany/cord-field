@@ -34,6 +34,7 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
+import { FieldRegionNameColumn } from '../Grid/Columns/FieldRegionNameColumn';
 import { LinkColumn } from '../Grid/Columns/LinkColumn';
 import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
@@ -159,22 +160,10 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     width: 250,
     valueGetter: (_, row) => row.project.primaryLocation.value?.name.value,
   },
-  {
+  FieldRegionNameColumn({
     field: 'project.fieldRegion.name',
-    headerName: 'Field Region',
-    ...textColumn(),
-    width: 250,
-    valueGetter: (_, { project }) => project.fieldRegion.value?.name.value,
-    renderCell: ({ row: engagement }) => {
-      const { fieldRegion } = engagement.project;
-
-      return fieldRegion.value ? (
-        <Link to={`/field-regions/${fieldRegion.value.id}`}>
-          {fieldRegion.value.name.value}
-        </Link>
-      ) : null;
-    },
-  },
+    valueGetter: (_, { project }) => project.fieldRegion.value,
+  }),
   {
     headerName: 'ISO',
     description: 'Ethnologue Code',
