@@ -34,7 +34,8 @@ export const LanguageDetailProfile = ({
       sx={(theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
-        width: theme.breakpoints.values.md,
+        maxWidth: theme.breakpoints.values.md,
+        width: '100%',
       })}
     >
       <Stack

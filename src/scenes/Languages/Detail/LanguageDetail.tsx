@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
@@ -55,6 +56,22 @@ export const LanguageDetail = () => {
   } = language ?? {};
 
   const canEditAnyFields = canEditAny(language) || canEditAny(ethnologue);
+  const canReadLocations = language?.locations.canRead !== false;
+  const canReadProjects = language?.projects.canRead !== false;
+  const canReadPosts = language?.posts.canRead !== false;
+
+  const readableTabs = [
+    'profile',
+    ...(canReadLocations ? ['locations'] : []),
+    ...(canReadProjects ? ['projects'] : []),
+    ...(canReadPosts ? ['posts'] : []),
+  ];
+
+  useEffect(() => {
+    if (!readableTabs.includes(filters.tab)) {
+      setFilters({ tab: 'profile' });
+    }
+  }, [filters.tab, readableTabs, setFilters]);
 
   return (
     <Box
@@ -128,25 +145,37 @@ export const LanguageDetail = () => {
             />
           </Grid>
           <TabsContainer>
-            <TabContext value={filters.tab}>
+            <TabContext
+              value={
+                readableTabs.includes(filters.tab) ? filters.tab : 'profile'
+              }
+            >
               <TabList onChange={(_, next) => setFilters({ tab: next })}>
                 <Tab label="Profile" value="profile" />
-                <Tab label="Locations" value="locations" />
-                <Tab label="Projects" value="projects" />
-                <Tab label="Posts" value="posts" />
+                {canReadLocations && (
+                  <Tab label="Locations" value="locations" />
+                )}
+                {canReadProjects && <Tab label="Projects" value="projects" />}
+                {canReadPosts && <Tab label="Posts" value="posts" />}
               </TabList>
               <TabPanel value="profile">
                 <LanguageDetailProfile language={language} />
               </TabPanel>
-              <TabPanel value="locations">
-                {language && <LanguageDetailLocations language={language} />}
-              </TabPanel>
-              <TabPanel value="projects">
-                <LanguageDetailProjects />
-              </TabPanel>
-              <TabPanel value="posts">
-                {language && <LanguageDetailPosts language={language} />}
-              </TabPanel>
+              {canReadLocations && (
+                <TabPanel value="locations">
+                  {language && <LanguageDetailLocations language={language} />}
+                </TabPanel>
+              )}
+              {canReadProjects && (
+                <TabPanel value="projects">
+                  <LanguageDetailProjects />
+                </TabPanel>
+              )}
+              {canReadPosts && (
+                <TabPanel value="posts">
+                  {language && <LanguageDetailPosts language={language} />}
+                </TabPanel>
+              )}
             </TabContext>
           </TabsContainer>
 

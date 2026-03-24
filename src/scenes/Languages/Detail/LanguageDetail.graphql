@@ -72,6 +72,12 @@ fragment LanguageDetail on Language {
     canRead
     canCreate
   }
+  projects {
+    canRead
+  }
+  posts {
+    canRead
+  }
   ...FirstScripture
   ...TogglePin
 }
