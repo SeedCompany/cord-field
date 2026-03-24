@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
@@ -60,12 +60,15 @@ export const LanguageDetail = () => {
   const canReadProjects = language?.projects.canRead !== false;
   const canReadPosts = language?.posts.canRead !== false;
 
-  const readableTabs = [
-    'profile',
-    ...(canReadLocations ? ['locations'] : []),
-    ...(canReadProjects ? ['projects'] : []),
-    ...(canReadPosts ? ['posts'] : []),
-  ];
+  const readableTabs = useMemo(
+    () => [
+      'profile',
+      ...(canReadLocations ? ['locations'] : []),
+      ...(canReadProjects ? ['projects'] : []),
+      ...(canReadPosts ? ['posts'] : []),
+    ],
+    [canReadLocations, canReadProjects, canReadPosts]
+  );
 
   useEffect(() => {
     if (!readableTabs.includes(filters.tab)) {
