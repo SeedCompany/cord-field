@@ -28,8 +28,6 @@ export const PostList = ({
   ...rest
 }: PostListProps) => {
   const [createPostState, createPost] = useDialog();
-  const canCreate = rest.data?.canCreate;
-
   return (
     <div>
       <Grid container spacing={2} alignItems="center" sx={{ maxWidth: 600 }}>
@@ -47,13 +45,7 @@ export const PostList = ({
           }}
         >
           <Tooltip title="Add Post">
-            <Fab
-              sx={{
-                visibility: canCreate ? 'visible' : 'hidden',
-              }}
-              color="error"
-              onClick={createPost}
-            >
+            <Fab color="error" onClick={createPost} aria-label="Add post">
               <Add />
             </Fab>
           </Tooltip>
