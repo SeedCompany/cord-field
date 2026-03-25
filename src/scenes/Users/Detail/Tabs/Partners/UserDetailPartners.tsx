@@ -1,10 +1,14 @@
 import { TabPanelContent } from '~/components/Tabs';
 import { UserPartnersPanel } from './UserPartnerPanel/UserPartnersPanel';
 
-export const UserDetailPartners = () => {
+interface UserDetailPartnersProps {
+  canCreate: boolean;
+}
+
+export const UserDetailPartners = ({ canCreate }: UserDetailPartnersProps) => {
   return (
     <TabPanelContent>
-      <UserPartnersPanel />
+      <UserPartnersPanel canCreate={canCreate} />
     </TabPanelContent>
   );
 };

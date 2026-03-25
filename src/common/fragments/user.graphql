@@ -39,6 +39,7 @@ fragment DisplayUser on User {
     value
   }
   partners {
+    canCreate
     items {
       id
       ...PartnerListItem

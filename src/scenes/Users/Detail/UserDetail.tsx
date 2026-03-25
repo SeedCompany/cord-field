@@ -101,9 +101,7 @@ export const UserDetail = () => {
               >
                 <Tab label="Profile" value="profile" />
                 <Tab label="Projects" value="projects" />
-                {!!user?.partners.items.length && (
-                  <Tab label="Partners" value="partners" />
-                )}
+                <Tab label="Partners" value="partners" />
               </TabList>
               <TabPanel value="profile">
                 {user && <UserDetailProfile user={user} />}
@@ -111,11 +109,11 @@ export const UserDetail = () => {
               <TabPanel value="projects">
                 <UserDetailProjects />
               </TabPanel>
-              {!!user?.partners.items.length && (
-                <TabPanel value="partners">
-                  <UserDetailPartners />
-                </TabPanel>
-              )}
+              <TabPanel value="partners">
+                {user && (
+                  <UserDetailPartners canCreate={user.partners.canCreate} />
+                )}
+              </TabPanel>
             </TabContext>
           </TabsContainer>
         </>

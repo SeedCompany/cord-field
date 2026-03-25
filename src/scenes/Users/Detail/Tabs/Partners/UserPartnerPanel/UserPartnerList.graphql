@@ -11,3 +11,19 @@ query UserPartners($userId: ID!, $input: PartnerListInput) {
     }
   }
 }
+
+mutation AssignOrganizationToUser($user: ID!, $org: ID!) {
+  assignOrganizationToUser(user: $user, org: $org) {
+    user {
+      id
+    }
+  }
+}
+
+mutation RemoveOrganizationFromUser($user: ID!, $org: ID!) {
+  removeOrganizationFromUser(user: $user, org: $org) {
+    user {
+      id
+    }
+  }
+}
