@@ -117,17 +117,23 @@ const NodeCard = forwardRef<
       ref={ref}
       elevation={selected ? 4 : 1}
       sx={[
-        (theme) => ({
-          transition: theme.transitions.create(['box-shadow', 'border-color'], {
-            duration: theme.transitions.duration.shorter,
-          }),
-          borderColor: selected ? `${color}.dark` : 'transparent',
-          borderWidth: 1,
-          borderStyle: 'solid',
-          p: 2,
-          bgcolor: `${color}.main`,
-          color: `${color}.contrastText`,
-        }),
+        (theme) => {
+          const pal = color ? (theme.palette as any)[color] : null;
+          return {
+            transition: theme.transitions.create(
+              ['box-shadow', 'border-color'],
+              {
+                duration: theme.transitions.duration.shorter,
+              }
+            ),
+            borderColor: selected ? pal?.dark ?? 'transparent' : 'transparent',
+            borderWidth: 1,
+            borderStyle: 'solid',
+            p: 2,
+            backgroundColor: pal?.main,
+            color: pal?.contrastText,
+          };
+        },
         ...extendSx(sx),
       ]}
     >
