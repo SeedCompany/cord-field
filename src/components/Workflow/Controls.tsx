@@ -58,7 +58,7 @@ export const Controls = (props: ControlsProps) => {
     <Panel position="bottom-left">
       <ButtonGroup
         orientation="vertical"
-        color="secondary"
+        color="inherit"
         variant="text"
         sx={(theme) => ({
           x: theme.transitions.duration.complex,
