@@ -1,24 +1,21 @@
-import {
-  DataGridPro as DataGrid,
-  DataGridProProps as DataGridProps,
-  GridColDef,
-} from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
-import { useMemo } from 'react';
+import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useParams } from 'react-router-dom';
 import { RoleLabels, RoleList } from '~/api/schema.graphql';
-import { unmatchedIndexThrow } from '~/common';
 import {
   DefaultDataGridStyles,
   flexLayout,
   multiEnumColumn,
   noFooter,
   noHeaderFilterButtons,
+  useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
 import {
+  insertProjectColumnAfterField,
+  ProjectDataGridRowFragment as Project,
   ProjectColumns,
   ProjectInitialState,
+  ProjectNameField,
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
 import {
@@ -38,18 +35,9 @@ export const UserProjectsPanel = () => {
     },
   });
 
-  const slots = useMemo(
-    () =>
-      merge({}, DefaultDataGridStyles.slots, dataGridProps.slots, {
-        toolbar: ProjectToolbar,
-      } satisfies DataGridProps['slots']),
-    [dataGridProps.slots]
-  );
-
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
-    [dataGridProps.slotProps]
-  );
+  const { slots, slotProps } = useDataGridSlots(dataGridProps, {
+    slots: { toolbar: ProjectToolbar },
+  });
 
   return (
     <DataGrid<UserProject>
@@ -74,9 +62,13 @@ const UserProjectRoleColumn: GridColDef<UserProject> = {
   valueGetter: (_, { membership }) => membership.roles.value,
 };
 
-const indexAfterName =
-  unmatchedIndexThrow(ProjectColumns.findIndex((c) => c.field === 'name')) + 1;
+const UserProjectColumns = insertProjectColumnAfterField(
+  // MUI DataGrid column defs are invariant in row type due to callback signatures.
+  // The runtime usage is safe because UserProject includes all fields consumed below.
+  ProjectColumns as Array<GridColDef<UserProject>>,
+  ProjectNameField,
+  UserProjectRoleColumn
+);
 
-const UserProjectColumns = (ProjectColumns as Array<GridColDef<UserProject>>)
-  // Add roles' column after name
-  .toSpliced(indexAfterName, 0, UserProjectRoleColumn);
+const _EnforceUserProjectIsSupersetOfProject: Project =
+  undefined as unknown as UserProject;

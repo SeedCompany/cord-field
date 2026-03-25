@@ -1,9 +1,4 @@
-import {
-  DataGridPro as DataGrid,
-  DataGridProProps as DataGridProps,
-} from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
-import { useMemo } from 'react';
+import { DataGridPro as DataGrid } from '@mui/x-data-grid-pro';
 import { useParams } from 'react-router-dom';
 import {
   EngagementDataGridRowFragment as Engagement,
@@ -17,6 +12,7 @@ import {
   flexLayout,
   noFooter,
   noHeaderFilterButtons,
+  useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
 import { TabPanelContent } from '~/components/Tabs';
@@ -34,17 +30,9 @@ export const PartnerDetailEngagements = () => {
     },
   });
 
-  const slots = useMemo(
-    () =>
-      merge({}, DefaultDataGridStyles.slots, props.slots, {
-        toolbar: EngagementToolbar,
-      } satisfies DataGridProps['slots']),
-    [props.slots]
-  );
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, props.slotProps),
-    [props.slotProps]
-  );
+  const { slots, slotProps } = useDataGridSlots(props, {
+    slots: { toolbar: EngagementToolbar },
+  });
 
   const processEngagementUpdate = useProcessEngagementUpdate();
 
