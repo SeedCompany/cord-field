@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import {
   DataGridPro,
+  DataGridProProps as DataGridProps,
   GridColDef,
   GridRenderCellParams as RenderCellParams,
 } from '@mui/x-data-grid-pro';

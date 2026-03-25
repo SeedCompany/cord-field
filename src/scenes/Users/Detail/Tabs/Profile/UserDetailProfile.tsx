@@ -45,30 +45,16 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
           gap: 2,
         }}
       >
-        <DisplayProperty
-          label="Status"
-          value={user.status.value}
-          loading={!user}
-        />
+        <DisplayProperty label="Status" value={user.status.value} />
         <DisplayProperty
           label="Gender"
           value={labelFrom(GenderLabels)(user.gender.value)}
-          loading={!user}
         />
-        <DisplayProperty
-          label="Email"
-          value={user.email.value}
-          loading={!user}
-        />
-        <DisplayProperty
-          label="Title"
-          value={user.title.value}
-          loading={!user}
-        />
+        <DisplayProperty label="Email" value={user.email.value} />
+        <DisplayProperty label="Title" value={user.title.value} />
         <DisplayProperty
           label="Roles"
           value={labelsFrom(RoleLabels)(user.roles.value)}
-          loading={!user}
         />
         <DisplayProperty
           label="Local Time"
@@ -77,18 +63,9 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
               <LocalTime timezone={user.timezone.value.name} />
             ) : null
           }
-          loading={!user}
         />
-        <DisplayProperty
-          label="Phone"
-          value={user.phone.value}
-          loading={!user}
-        />
-        <DisplayProperty
-          label="About"
-          value={user.about.value}
-          loading={!user}
-        />
+        <DisplayProperty label="Phone" value={user.phone.value} />
+        <DisplayProperty label="About" value={user.about.value} />
       </Stack>
       <Box sx={{ p: 1 }}>
         {canEditAnyFields ? (

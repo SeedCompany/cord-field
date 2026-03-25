@@ -13,7 +13,7 @@ import {
   PartnerInitialState,
   PartnerToolbar,
 } from '~/components/PartnersDataGrid/PartnerColumns';
-import { PartnerDataGridRowFragment as UserPartner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql';
+import type { PartnerDataGridRowFragment as UserPartner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql';
 import { UserPartnersDocument } from './UserPartnerList.graphql';
 
 export const UserPartnersPanel = () => {
