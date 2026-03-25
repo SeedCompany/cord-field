@@ -16,7 +16,8 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
       contrastText: '#ffffff',
     },
     secondary: {
-      main: dark ? grey[50] : '#3c444e',
+      main: dark ? '#3c444e' : grey[50],
+      contrastText: dark ? '#ffffff' : 'rgba(0, 0, 0, 0.87)',
     },
     error: {
       main: '#ff5a5f',
