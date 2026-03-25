@@ -12,6 +12,7 @@ import {
   ProjectTypeLabels,
   ProjectTypeList,
 } from '~/api/schema.graphql';
+import { unmatchedIndexThrow } from '~/common';
 import {
   booleanColumn,
   dateColumn,
@@ -114,6 +115,18 @@ export const ProjectInitialState = {
     },
   },
 } satisfies DataGridProps['initialState'];
+
+export const ProjectNameField = 'name' as const;
+
+export const insertProjectColumnAfterField = <T extends Project>(
+  columns: Array<GridColDef<T>>,
+  field: string,
+  column: GridColDef<T>
+): Array<GridColDef<T>> => {
+  const index =
+    unmatchedIndexThrow(columns.findIndex((c) => c.field === field)) + 1;
+  return columns.toSpliced(index, 0, column);
+};
 
 export const ProjectToolbar = () => (
   <Toolbar sx={{ justifyContent: 'flex-start', gap: 2 }}>
