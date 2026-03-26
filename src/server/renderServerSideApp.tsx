@@ -157,6 +157,17 @@ const ServerApp = ({
   </Nest>
 );
 
+const BROWSER_SAFE_RAZZLE_KEYS = new Set([
+  'RAZZLE_API_BASE_URL',
+  'RAZZLE_GIT_HASH',
+  'RAZZLE_LOG_ROCKET_APP_ID',
+  'RAZZLE_NON_PROD_WARNING',
+  'RAZZLE_OPEN_SEARCH',
+  'RAZZLE_POSTHOG_ALL_FLAGS',
+  'RAZZLE_POSTHOG_HOST',
+  'RAZZLE_POSTHOG_KEY',
+]);
+
 const clientEnv: NodeJS.ProcessEnv = {
   NODE_ENV: process.env.NODE_ENV,
   PUBLIC_URL: trailingSlash(process.env.PUBLIC_URL),
@@ -164,8 +175,7 @@ const clientEnv: NodeJS.ProcessEnv = {
   ...pickBy(
     process.env,
     (val, key) =>
-      key.startsWith('RAZZLE_') &&
-      key !== 'RAZZLE_SEED_API_SECRET' &&
-      key !== 'RAZZLE_SEED_API_HOST'
+      BROWSER_SAFE_RAZZLE_KEYS.has(key) ||
+      key.startsWith('RAZZLE_POSTHOG_FLAG_')
   ),
 };

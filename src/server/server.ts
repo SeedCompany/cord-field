@@ -76,12 +76,21 @@ export const create = async () => {
   }
 
   // Proxy for Rev79 Seed API — keeps RAZZLE_SEED_API_SECRET server-side only
+  const SEED_ALLOWED_OPS = new Set(['Rev79Projects']);
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   router.post('/api/seed-proxy', async (req, res, next) => {
     const host = process.env.RAZZLE_SEED_API_HOST;
     const secret = process.env.RAZZLE_SEED_API_SECRET;
     if (!host || !secret) {
       res.sendStatus(503);
+      return;
+    }
+    const { operationName } = req.body as { operationName?: unknown };
+    if (
+      typeof operationName !== 'string' ||
+      !SEED_ALLOWED_OPS.has(operationName)
+    ) {
+      res.sendStatus(400);
       return;
     }
     try {
@@ -92,6 +101,7 @@ export const create = async () => {
           Authorization: secret,
         },
         body: JSON.stringify(req.body),
+        signal: AbortSignal.timeout(10_000),
       });
       const data = await upstream.json();
       res.json(data);
