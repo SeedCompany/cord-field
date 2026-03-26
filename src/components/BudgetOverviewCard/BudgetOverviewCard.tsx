@@ -15,7 +15,6 @@ export interface BudgetOverviewCardProps extends FieldOverviewCardProps {
 }
 
 export const BudgetOverviewCard = ({
-  className,
   budget,
   loading,
   status,
@@ -24,7 +23,6 @@ export const BudgetOverviewCard = ({
 
   return (
     <FieldOverviewCard
-      className={className}
       title={
         <Box display="flex" alignItems="center" gap={1}>
           <Typography variant="h4">
