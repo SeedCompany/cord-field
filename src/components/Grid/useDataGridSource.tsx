@@ -132,10 +132,10 @@ export const useDataGridSource = <
   const queryForItemRef = useRef(
     (() => {
       const q = structuredClone(query);
-      const listNode = getFieldPath(
-        getOperationAST(q)!.selectionSet,
-        [...listAt.split('.'), 'items']
-      );
+      const listNode = getFieldPath(getOperationAST(q)!.selectionSet, [
+        ...listAt.split('.'),
+        'items',
+      ]);
       listNode.selections = keyArgs.map((field) => ({
         kind: Kind.FIELD,
         name: { kind: Kind.NAME, value: field },
@@ -340,15 +340,16 @@ export const useDataGridSource = <
   // the skip→active transition where prevFirstPage is unavailable (e.g.
   // switching from a fully-cached filter to an uncached one).
   const prevListRef = useRef<typeof freshList>(undefined);
-  const list =
-    freshList ??
+  const list = freshList ??
     listFrom(prevFirstPage) ??
-    (loading ? prevListRef.current : undefined) ??
-    { items: emptyList, total: undefined };
+    (loading ? prevListRef.current : undefined) ?? {
+      items: emptyList,
+      total: undefined,
+    };
   if (freshList != null) prevListRef.current = freshList;
 
-  const rows = list?.items ?? emptyList;
-  const total = list?.total && list.total >= 0 ? list.total : undefined;
+  const rows = list.items ?? emptyList;
+  const total = list.total && list.total >= 0 ? list.total : undefined;
 
   // Load additional pages imperatively as needed based on scrolling
   // This is debounced to mostly to reduce the client side load.
@@ -462,7 +463,7 @@ export const useDataGridSource = <
     apiRef,
     rows,
     loading,
-    rowCount: isCacheComplete ? (filteredRowCount ?? rows.length) : total,
+    rowCount: isCacheComplete ? filteredRowCount ?? rows.length : total,
     sortModel: view.sortModel,
     filterModel: view.filterModel,
     hideFooterPagination: true,

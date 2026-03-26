@@ -9,18 +9,14 @@ import { MutableRefObject, useSyncExternalStore } from 'react';
  */
 export function useGridFilteredRowCount(apiRef: MutableRefObject<GridApiPro>) {
   return useSyncExternalStore(
-    (callback) =>
-      apiRef.current.subscribeEvent
-        ? apiRef.current.subscribeEvent('stateChange', callback)
-        : () => {},
+    (callback) => apiRef.current.subscribeEvent('stateChange', callback),
     () => {
       try {
-        if (!apiRef.current.instanceId) return undefined;
         return gridFilteredTopLevelRowCountSelector(apiRef);
       } catch {
         return undefined;
       }
     },
-    () => undefined as number | undefined,
+    () => undefined as number | undefined
   );
 }
