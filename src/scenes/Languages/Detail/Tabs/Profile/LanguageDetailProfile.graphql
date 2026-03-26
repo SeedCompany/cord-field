@@ -54,6 +54,11 @@ fragment DisplayLanguage on Language {
     canEdit
     value
   }
+  usesAIAssistance {
+    canRead
+    canEdit
+    value
+  }
   sensitivity
   avatarLetters
   population {
