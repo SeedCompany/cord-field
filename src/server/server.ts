@@ -104,7 +104,7 @@ export const create = async () => {
         signal: AbortSignal.timeout(10_000),
       });
       const data = await upstream.json();
-      res.json(data);
+      res.status(upstream.status).json(data);
     } catch (err) {
       next(err);
     }
