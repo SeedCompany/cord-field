@@ -36,12 +36,13 @@ import {
   type SelectionSetNode,
 } from 'graphql';
 import { get, merge, pick, set, uniqBy } from 'lodash';
-import { MutableRefObject, useEffect, useMemo, useState } from 'react';
+import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
 import type { Get, Paths, SetNonNullable } from 'type-fest';
 import { type PaginatedListInput, type SortableListInput } from '~/api';
 import type { Order } from '~/api/schema/schema.graphql';
 import { lowerCase, upperCase } from '~/common';
 import { convertMuiFiltersToApi, FilterShape } from './convertMuiFiltersToApi';
+import { useGridFilteredRowCount } from './useGridFilteredRowCount';
 
 type ListInput = SetNonNullable<
   Required<
@@ -82,6 +83,9 @@ type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
   apiSortModel: DataGridProps['sortModel'];
 };
 
+// The built-in NoInfer<T> (TS 5.4+) is an intrinsic that TypeScript doesn't
+// resolve through when accessing properties on constrained generics.
+// This identity-type variant works correctly in that context.
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
 export const useDataGridSource = <
@@ -113,6 +117,8 @@ export const useDataGridSource = <
   // eslint-disable-next-line react-hooks/rules-of-hooks -- we'll assume this doesn't change between renders
   const apiRef = apiRefInput ?? useGridApiRef();
 
+  const filteredRowCount = useGridFilteredRowCount(apiRef);
+
   const opName = useMemo(
     () =>
       query.definitions.find(
@@ -120,19 +126,23 @@ export const useDataGridSource = <
       )!.name!.value,
     [query]
   );
-  const queryForItemRef = useMemo(() => {
-    const queryForItemRef = structuredClone(query);
-    const listNode = getFieldPath(
-      getOperationAST(queryForItemRef)!.selectionSet,
-      [...listAt.split('.'), 'items']
-    );
-    listNode.selections = keyArgs.map((field) => ({
-      kind: Kind.FIELD,
-      name: { kind: Kind.NAME, value: field },
-    }));
-    return queryForItemRef;
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- these deps should not be changing between renders
-  }, []);
+
+  // Computed once: strip the query down to only keyArgs fields so the
+  // cache-accumulation entries written by updateAllPagesQuery stay small.
+  const queryForItemRef = useRef(
+    (() => {
+      const q = structuredClone(query);
+      const listNode = getFieldPath(
+        getOperationAST(q)!.selectionSet,
+        [...listAt.split('.'), 'items']
+      );
+      listNode.selections = keyArgs.map((field) => ({
+        kind: Kind.FIELD,
+        name: { kind: Kind.NAME, value: field },
+      }));
+      return q;
+    })()
+  );
 
   function listFrom(data: Unmasked<Output> | MaybeMasked<Output>): List;
   function listFrom(
@@ -170,7 +180,7 @@ export const useDataGridSource = <
   ) => {
     client.cache.updateQuery(
       {
-        query: queryForItemRef,
+        query: queryForItemRef.current,
         variables,
       },
       (prev) => {
@@ -283,12 +293,12 @@ export const useDataGridSource = <
     return merge({}, variables, { input: rest });
   }, [variables, input]);
 
-  const addToAllPagesCache = (next: MaybeMasked<Output>) => {
+  const addToAllPagesCache = useMemoizedFn((next: MaybeMasked<Output>) => {
     updateAllPagesQuery(variables, next as Unmasked<Output>, !hasFilter);
     if (hasFilter) {
       updateAllPagesQuery(variablesWithFilter, next as Unmasked<Output>, true);
     }
-  };
+  });
 
   const { data: allFilteredPagesData } = useQuery(query, {
     variables: variablesWithFilter,
@@ -301,7 +311,11 @@ export const useDataGridSource = <
     allPages?.isComplete || allFilteredPages?.isComplete || false;
 
   // Grab the first page from cache/network on mount and when view changes
-  const { data: firstPage, loading } = useQuery(query, {
+  const {
+    data: firstPage,
+    loading,
+    previousData: prevFirstPage,
+  } = useQuery(query, {
     skip: isCacheComplete,
     variables: useMemo(
       () => merge({}, variables, { input: { ...input, page: 1 } }),
@@ -310,16 +324,29 @@ export const useDataGridSource = <
   });
   useEffect(() => {
     firstPage && addToAllPagesCache(firstPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firstPage]);
+  }, [firstPage, addToAllPagesCache]);
 
-  const list = loading
-    ? { items: emptyList, total: undefined }
+  const freshList = loading
+    ? undefined
     : allPages?.isComplete
     ? allPages
     : allFilteredPages?.isComplete
     ? allFilteredPages
     : listFrom(firstPage);
+
+  // While loading (filter change, sort change, etc.) fall back to the most
+  // recently known list so the grid stays populated instead of going blank.
+  // prevFirstPage covers the normal Apollo refetch case; prevListRef covers
+  // the skip→active transition where prevFirstPage is unavailable (e.g.
+  // switching from a fully-cached filter to an uncached one).
+  const prevListRef = useRef<typeof freshList>(undefined);
+  const list =
+    freshList ??
+    listFrom(prevFirstPage) ??
+    (loading ? prevListRef.current : undefined) ??
+    { items: emptyList, total: undefined };
+  if (freshList != null) prevListRef.current = freshList;
+
   const rows = list?.items ?? emptyList;
   const total = list?.total && list.total >= 0 ? list.total : undefined;
 
@@ -334,11 +361,11 @@ export const useDataGridSource = <
       }
 
       const { firstRowToRender, lastRowToRender } = params;
-      const firstPage = Math.ceil((firstRowToRender + 1) / input.count);
-      const lastPage = Math.ceil((lastRowToRender + 1) / input.count);
+      const startPage = Math.ceil((firstRowToRender + 1) / input.count);
+      const endPage = Math.ceil((lastRowToRender + 1) / input.count);
       const pages = Array.from(
-        { length: lastPage - firstPage + 1 },
-        (_, i) => firstPage + i
+        { length: endPage - startPage + 1 },
+        (_, i) => startPage + i
       )
         // skip the first page always loaded first by useQuery hook
         .filter((page) => page > 1);
@@ -429,11 +456,13 @@ export const useDataGridSource = <
     }
   }, [apiRef, isCacheComplete]);
 
+  const mode = isCacheComplete ? 'client' : 'server';
+
   const dataGridProps = {
     apiRef,
     rows,
     loading,
-    rowCount: total,
+    rowCount: isCacheComplete ? (filteredRowCount ?? rows.length) : total,
     sortModel: view.sortModel,
     filterModel: view.filterModel,
     hideFooterPagination: true,
@@ -441,9 +470,9 @@ export const useDataGridSource = <
     onSortModelChange,
     onFilterModelChange,
     paginationMode: total != null ? 'server' : 'client', // Not used, but prevents row count warning.
-    rowsLoadingMode: isCacheComplete ? 'client' : 'server',
-    sortingMode: isCacheComplete ? 'client' : 'server',
-    filterMode: isCacheComplete ? 'client' : 'server',
+    rowsLoadingMode: mode,
+    sortingMode: mode,
+    filterMode: mode,
     slots: apiSlots,
     slotProps: apiSlotProps,
   } satisfies Partial<DataGridProps>;
