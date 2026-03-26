@@ -165,6 +165,22 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     valueGetter: (_, { project }) => project.fieldRegion.value,
   }),
   {
+    field: 'project.fieldRegion.name',
+    headerName: 'Field Region',
+    ...textColumn(),
+    width: 250,
+    valueGetter: (_, { project }) => project.fieldRegion.value?.name.value,
+    renderCell: ({ row: engagement }) => {
+      const { fieldRegion } = engagement.project;
+
+      return fieldRegion.value ? (
+        <Link to={`/field-regions/${fieldRegion.value.id}`}>
+          {fieldRegion.value.name.value}
+        </Link>
+      ) : null;
+    },
+  },
+  {
     headerName: 'ISO',
     description: 'Ethnologue Code',
     field: 'language.ethnologue.code',

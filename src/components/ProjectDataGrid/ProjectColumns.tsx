@@ -28,6 +28,7 @@ import {
 import { FieldRegionNameColumn } from '../Grid/Columns/FieldRegionNameColumn';
 import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
+import { Link } from '../Routing';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
 
 export const ProjectColumns: Array<GridColDef<Project>> = [
@@ -48,6 +49,21 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     field: 'fieldRegion.name',
     valueGetter: (_, { fieldRegion }) => fieldRegion.value,
   }),
+  {
+    field: 'fieldRegion.name',
+    headerName: 'Field Region',
+    ...textColumn(),
+    width: 250,
+    valueGetter: (_, { fieldRegion }) => fieldRegion.value?.name.value,
+    renderCell: ({ row: project }) => {
+      const { fieldRegion } = project;
+      return fieldRegion.value ? (
+        <Link to={`/field-regions/${fieldRegion.value.id}`}>
+          {fieldRegion.value.name.value}
+        </Link>
+      ) : null;
+    },
+  },
   {
     field: 'step',
     ...enumColumn(ProjectStepList, ProjectStepLabels, {
