@@ -45,6 +45,11 @@ fragment LanguageEngagementHeader on LanguageEngagement {
     usesRev79 {
       value
     }
+    ... on MomentumTranslationProject {
+      rev79ProjectId {
+        value
+      }
+    }
   }
   ... on LanguageEngagement {
     rev79CommunityId {

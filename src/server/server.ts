@@ -75,6 +75,31 @@ export const create = async () => {
     });
   }
 
+  // Proxy for Rev79 Seed API — keeps RAZZLE_SEED_API_SECRET server-side only
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  router.post('api/seed-proxy', async (req, res, next) => {
+    const host = process.env.RAZZLE_SEED_API_HOST;
+    const secret = process.env.RAZZLE_SEED_API_SECRET;
+    if (!host || !secret) {
+      res.sendStatus(503);
+      return;
+    }
+    try {
+      const upstream = await fetch(`${host}/graphql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: secret,
+        },
+        body: JSON.stringify(req.body),
+      });
+      const data = await upstream.json();
+      res.json(data);
+    } catch (err) {
+      next(err);
+    }
+  });
+
   router.get('logout', (req, res, next) => {
     createApollo({ ssr: { req, res } })
       .mutate({

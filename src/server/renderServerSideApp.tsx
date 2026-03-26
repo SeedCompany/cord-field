@@ -161,5 +161,11 @@ const clientEnv: NodeJS.ProcessEnv = {
   NODE_ENV: process.env.NODE_ENV,
   PUBLIC_URL: trailingSlash(process.env.PUBLIC_URL),
   VERSION: process.env.VERSION,
-  ...pickBy(process.env, (val, key) => key.startsWith('RAZZLE_')),
+  ...pickBy(
+    process.env,
+    (val, key) =>
+      key.startsWith('RAZZLE_') &&
+      key !== 'RAZZLE_SEED_API_SECRET' &&
+      key !== 'RAZZLE_SEED_API_HOST'
+  ),
 };
