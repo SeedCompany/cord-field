@@ -1,11 +1,10 @@
-query Language($languageId: ID!) @live {
-  language(id: $languageId) {
-    ...LanguageDetail
-    ...LanguageForm
-  }
+fragment LanguageProfile on Language {
+  ...DisplayLanguage
+  ...LanguageForm
+  ...FirstScripture
 }
 
-fragment LanguageDetail on Language {
+fragment DisplayLanguage on Language {
   id
   createdAt
   name {
@@ -28,7 +27,6 @@ fragment LanguageDetail on Language {
     canEdit
     value
   }
-  ...LeastOfThese
   ethnologue {
     code {
       canRead
@@ -56,11 +54,6 @@ fragment LanguageDetail on Language {
     canEdit
     value
   }
-  usesAIAssistance {
-    canRead
-    canEdit
-    value
-  }
   sensitivity
   avatarLetters
   population {
@@ -68,16 +61,4 @@ fragment LanguageDetail on Language {
     canEdit
     value
   }
-  locations {
-    canRead
-    canCreate
-  }
-  projects {
-    canRead
-  }
-  posts {
-    canRead
-  }
-  ...FirstScripture
-  ...TogglePin
 }
