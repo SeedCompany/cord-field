@@ -25,6 +25,7 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
+import { FieldRegionNameColumn } from '../Grid/Columns/FieldRegionNameColumn';
 import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
@@ -43,6 +44,10 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     headerName: 'Country',
     width: 300,
   },
+  FieldRegionNameColumn({
+    field: 'fieldRegion.name',
+    valueGetter: (_, { fieldRegion }) => fieldRegion.value,
+  }),
   {
     field: 'step',
     ...enumColumn(ProjectStepList, ProjectStepLabels, {
