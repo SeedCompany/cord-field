@@ -36,13 +36,6 @@ export const FlowchartStyles = styled(Box)(({ theme }) => ({
     '.react-flow__node, .react-flow__panel': {
       color: theme.palette.text.primary,
     },
-    // In dark mode, transition node cards have custom dark backgrounds
-    // and always need white text regardless of contrastText calculation
-    ...(theme.palette.mode === 'dark' && {
-      '.react-flow__node-transition .MuiCard-root': {
-        color: '#fff',
-      },
-    }),
     '.react-flow__edge-textbg': {
       fill: theme.palette.background.paper,
     },
@@ -248,6 +241,7 @@ const LabelContainer = ({
       sx={{
         position: 'absolute',
         bgcolor: 'background.paper',
+        color: 'text.primary',
         p: 1,
         borderRadius: 1,
         fontSize: 12,
