@@ -10,14 +10,15 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     mode: dark ? 'dark' : 'light',
     background: {
       default: dark ? '#303030' : grey[50],
+      paper: dark ? '#424242' : '#ffffff',
     },
     primary: {
       main: mainGreen,
       contrastText: '#ffffff',
     },
     secondary: {
-      main: dark ? '#3c444e' : grey[50],
-      contrastText: dark ? '#ffffff' : 'rgba(0, 0, 0, 0.87)',
+      main: dark ? grey[50] : '#3c444e',
+      contrastText: dark ? 'rgba(0, 0, 0, 0.87)' : '#ffffff',
     },
     error: {
       main: '#ff5a5f',

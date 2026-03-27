@@ -31,6 +31,18 @@ type Node = N<State | Transition, NodeTypes>;
 export const FlowchartStyles = styled(Box)(({ theme }) => ({
   height: '100%',
   '& .react-flow': {
+    // Override reactflow's own color defaults so MUI theme colors win
+    // regardless of CSS import order on page load
+    '.react-flow__node, .react-flow__panel': {
+      color: theme.palette.text.primary,
+    },
+    // In dark mode, transition node cards have custom dark backgrounds
+    // and always need white text regardless of contrastText calculation
+    ...(theme.palette.mode === 'dark' && {
+      '.react-flow__node-transition .MuiCard-root': {
+        color: '#fff',
+      },
+    }),
     '.react-flow__edge-textbg': {
       fill: theme.palette.background.paper,
     },
@@ -119,6 +131,17 @@ const NodeCard = forwardRef<
       sx={[
         (theme) => {
           const pal = color ? (theme.palette as any)[color] : null;
+          // secondary.main is light in dark mode (for text button visibility),
+          // but node card backgrounds need a darker neutral color on the canvas.
+          const isDark = theme.palette.mode === 'dark';
+          const cardBg =
+            isDark && color === 'secondary' ? '#3c444e' : pal?.main;
+          // Derive text color from the actual background rather than relying on
+          // contrastText, which may mismatch when cardBg diverges from pal.main.
+          const cardText =
+            cardBg != null
+              ? theme.palette.getContrastText(cardBg)
+              : pal?.contrastText;
           return {
             transition: theme.transitions.create(
               ['box-shadow', 'border-color'],
@@ -130,8 +153,8 @@ const NodeCard = forwardRef<
             borderWidth: 1,
             borderStyle: 'solid',
             p: 2,
-            backgroundColor: pal?.main,
-            color: pal?.contrastText,
+            backgroundColor: cardBg,
+            color: cardText,
           };
         },
         ...extendSx(sx),
