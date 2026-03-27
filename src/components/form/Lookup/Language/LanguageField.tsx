@@ -1,5 +1,4 @@
-import { Paper, PaperProps } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box, Paper, PaperProps } from '@mui/material';
 import { CreateLanguage as CreateLanguageType } from '~/api/schema.graphql';
 import { CreateLanguage } from '../../../../scenes/Languages/Create';
 import { LanguageFormValues } from '../../../../scenes/Languages/LanguageForm';
@@ -9,7 +8,8 @@ import {
   LanguageLookupDocument,
 } from './LanguageLookup.graphql';
 
-const columnWidths = { eth: 48, rolv: 72 };
+const ETH_COLUMN_WIDTH = 48; // includes right padding
+const ROLV_COLUMN_WIDTH = 72; // includes right padding
 
 const LanguageDropdownPaper = (props: PaperProps) => (
   <Paper {...props} sx={{ ...props.sx, minWidth: 480 }}>
@@ -27,8 +27,8 @@ const LanguageDropdownPaper = (props: PaperProps) => (
       }}
     >
       <Box sx={{ flex: 1 }}>Language</Box>
-      <Box sx={{ width: columnWidths.eth, textAlign: 'right' }}>ETH</Box>
-      <Box sx={{ width: columnWidths.rolv, textAlign: 'right', ml: 1 }}>
+      <Box sx={{ width: ETH_COLUMN_WIDTH, textAlign: 'right' }}>ETH</Box>
+      <Box sx={{ width: ROLV_COLUMN_WIDTH, textAlign: 'right', ml: 1 }}>
         ROLV
       </Box>
     </Box>
@@ -74,7 +74,7 @@ export const LanguageField = LookupField.createFor<
           </Box>
           <Box
             sx={{
-              width: columnWidths.eth,
+              width: ETH_COLUMN_WIDTH,
               textAlign: 'right',
               color: 'text.secondary',
               typography: 'body2',
@@ -84,7 +84,7 @@ export const LanguageField = LookupField.createFor<
           </Box>
           <Box
             sx={{
-              width: columnWidths.rolv,
+              width: ROLV_COLUMN_WIDTH,
               textAlign: 'right',
               ml: 1,
               color: 'text.secondary',

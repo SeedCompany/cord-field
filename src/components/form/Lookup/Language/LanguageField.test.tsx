@@ -39,7 +39,11 @@ const searchMock = (query: string, items = [makeLang()]): MockedResponse => ({
 const setup = (mocks: readonly MockedResponse[] = []) => {
   render(
     <MockedProvider mocks={mocks}>
-      <Form onSubmit={() => {}}>
+      <Form
+        onSubmit={() => {
+          // noop
+        }}
+      >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <LanguageField name="language" label="Language" />
