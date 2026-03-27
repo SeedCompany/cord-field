@@ -10,6 +10,7 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     mode: dark ? 'dark' : 'light',
     background: {
       default: dark ? '#303030' : grey[50],
+      paper: dark ? '#424242' : '#ffffff',
     },
     primary: {
       main: mainGreen,
@@ -17,6 +18,7 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     },
     secondary: {
       main: dark ? grey[50] : '#3c444e',
+      contrastText: dark ? 'rgba(0, 0, 0, 0.87)' : '#ffffff',
     },
     error: {
       main: '#ff5a5f',
