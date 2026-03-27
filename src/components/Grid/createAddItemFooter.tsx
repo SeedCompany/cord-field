@@ -18,7 +18,7 @@ export interface AddItemFooterOptions {
  *   () => ({
  *     footer: createAddItemFooter({
  *       addItem: handleAdd,
- *       label: 'Add Location',
+ *       label: 'Add Partner',
  *     }),
  *   }),
  *   [handleAdd]

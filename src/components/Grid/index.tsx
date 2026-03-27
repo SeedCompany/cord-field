@@ -15,3 +15,5 @@ export * from './ColumnTypes/dateColumn';
 export * from './isCellEditable';
 export * from './useGridMutation';
 export * from './createAddItemFooter';
+export * from './useDataGridSlots';
+export * from './createAddItemFooter';

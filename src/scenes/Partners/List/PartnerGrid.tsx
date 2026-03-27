@@ -1,14 +1,10 @@
-import {
-  DataGridPro as DataGrid,
-  DataGridProProps as DataGridProps,
-} from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
-import { useMemo } from 'react';
+import { DataGridPro as DataGrid } from '@mui/x-data-grid-pro';
 import {
   DefaultDataGridStyles,
   flexLayout,
   noFooter,
   noHeaderFilterButtons,
+  useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
 import {
@@ -30,18 +26,9 @@ export const PartnerGrid = () => {
     },
   });
 
-  const slots = useMemo(
-    () =>
-      merge({}, DefaultDataGridStyles.slots, dataGridProps.slots, {
-        toolbar: PartnerToolbar,
-      } satisfies DataGridProps['slots']),
-    [dataGridProps.slots]
-  );
-
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
-    [dataGridProps.slotProps]
-  );
+  const { slots, slotProps } = useDataGridSlots(dataGridProps, {
+    slots: { toolbar: PartnerToolbar },
+  });
 
   const processPartnerUpdate = useProcessPartnerUpdate();
 
