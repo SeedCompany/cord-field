@@ -96,6 +96,7 @@ export function LookupField<
   createPower,
   margin,
   initialOptions: initial,
+  renderOption: renderOptionOverride,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const { powers } = useSession();
@@ -228,13 +229,17 @@ export function LookupField<
       options={options}
       getOptionLabel={getOptionLabel}
       freeSolo={freeSolo}
-      renderOption={(props, option, _ownerState) => (
-        <li {...props}>
-          {typeof option === 'string'
-            ? `Create "${option}"`
-            : getOptionLabel(option)}
-        </li>
-      )}
+      renderOption={
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (renderOptionOverride as any) ??
+        ((props, option, _ownerState) => (
+          <li {...props}>
+            {typeof option === 'string'
+              ? `Create "${option}"`
+              : getOptionLabel(option)}
+          </li>
+        ))
+      }
       filterOptions={(options, params) => {
         // Apply default filtering. Even though the API filters for us, we add
         // the currently selected options back in because they are still valid
