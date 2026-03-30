@@ -18,6 +18,10 @@ export const createPalette = ({ dark }: { dark?: boolean }) => {
     },
     secondary: {
       main: dark ? grey[50] : '#3c444e',
+      // Pinned so node card backgrounds always get the dark navy regardless of mode.
+      // secondary.main is grey[50] in dark mode for text/icon button readability,
+      // but that's unusable as a canvas background color.
+      dark: '#3c444e',
       contrastText: dark ? 'rgba(0, 0, 0, 0.87)' : '#ffffff',
     },
     error: {

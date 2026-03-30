@@ -1,4 +1,4 @@
-import { Box, Card, CardProps } from '@mui/material';
+import { Box, Card, CardProps, PaletteColor } from '@mui/material';
 import { yellow } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import { forwardRef, useCallback } from 'react';
@@ -123,31 +123,25 @@ const NodeCard = forwardRef<
       elevation={selected ? 4 : 1}
       sx={[
         (theme) => {
-          const pal = color ? (theme.palette as any)[color] : null;
-          // secondary.main is light in dark mode (for text button visibility),
-          // but node card backgrounds need a darker neutral color on the canvas.
-          const isDark = theme.palette.mode === 'dark';
-          const cardBg =
-            isDark && color === 'secondary' ? '#3c444e' : pal?.main;
-          // Derive text color from the actual background rather than relying on
-          // contrastText, which may mismatch when cardBg diverges from pal.main.
-          const cardText =
-            cardBg != null
-              ? theme.palette.getContrastText(cardBg)
-              : pal?.contrastText;
+          const pal = color
+            ? (theme.palette[
+                color as keyof typeof theme.palette
+              ] as PaletteColor)
+            : null;
+          // In dark mode use .dark so node cards get the stable navy background.
+          // (.main is grey[50] in dark mode to keep text/icon buttons readable.)
+          const bg = theme.palette.mode === 'dark' ? pal?.dark : pal?.main;
           return {
             transition: theme.transitions.create(
               ['box-shadow', 'border-color'],
-              {
-                duration: theme.transitions.duration.shorter,
-              }
+              { duration: theme.transitions.duration.shorter }
             ),
-            borderColor: selected ? pal?.dark ?? 'transparent' : 'transparent',
+            borderColor: selected ? `${color}.dark` : 'transparent',
             borderWidth: 1,
             borderStyle: 'solid',
             p: 2,
-            backgroundColor: cardBg,
-            color: cardText,
+            backgroundColor: bg,
+            color: bg ? theme.palette.getContrastText(bg) : undefined,
           };
         },
         ...extendSx(sx),
