@@ -61,8 +61,8 @@ export const Controls = (props: ControlsProps) => {
         color="inherit"
         variant="text"
         sx={(theme) => ({
-          x: theme.transitions.duration.complex,
           backgroundColor: theme.palette.background.paper,
+          color: theme.palette.text.primary,
           boxShadow: theme.shadows[4],
           '.MuiButton-root': {
             minWidth: 'initial',
