@@ -6,6 +6,8 @@ import { MutableRefObject, useSyncExternalStore } from 'react';
  * Reactively reads the number of top-level rows that pass the DataGrid's
  * current client-side filter. Safe to call before the grid has mounted —
  * returns undefined until the grid initialises.
+ *
+ * See: docs/data-grid-source.md#row-count
  */
 export function useGridFilteredRowCount(apiRef: MutableRefObject<GridApiPro>) {
   return useSyncExternalStore(

@@ -26,10 +26,14 @@ export const defaultInitialInput = {
   order: 'ASC' as Order,
 };
 
+// Only singleSelect and boolean columns are persisted across sessions.
+// See: docs/data-grid-source.md#what-is-and-isnt-persisted
 const persistColumnTypes = setOf<GridColType>(['singleSelect', 'boolean']);
 
 export type StoredViewState = Pick<DataGridProps, 'filterModel'> & {
   sortModel: [GridSortItem];
+  // Pre-computed so it's available before the grid mounts on first render.
+  // See: docs/data-grid-source.md#the-apifiltermodel-field
   apiFilterModel?: FilterShape;
 };
 
@@ -37,6 +41,7 @@ export type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
   // The sorting state for the first page API query.
   // It could be the live sorting state, or a stale one,
   // based on pagination needs.
+  // See: docs/data-grid-source.md#apisortmodel-vs-sortmodel
   apiSortModel: DataGridProps['sortModel'];
 };
 
@@ -62,6 +67,8 @@ export function useViewState<Vars extends { input?: any }>({
 
   const { session } = useSession();
 
+  // Key format: `<userId>:<operationName>-data-grid-view`
+  // See: docs/data-grid-source.md#storage-key
   const [storedView, setStoredView] = useLocalStorageState<StoredViewState>(
     `${session?.id}:${opName}-data-grid-view`,
     {

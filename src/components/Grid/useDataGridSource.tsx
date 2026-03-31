@@ -116,9 +116,8 @@ function useCachedList<
     })()
   );
 
-  // Try to pull the complete list from the cache.
-  // This exists after all pages have been queried with the useQuery hook below.
-  // This allows us to do client-side filtering & sorting once we have the complete list.
+  // Two cache-only queries accumulate all pages without hitting the network.
+  // See: docs/data-grid-source.md#the-two-cache-queries
   const { data: allPagesData, client } = useQuery(query, {
     variables,
     fetchPolicy: 'cache-only',
@@ -176,6 +175,7 @@ function useCachedList<
   });
   const allFilteredPages = cacheInfo(allFilteredPagesData);
 
+  // See: docs/data-grid-source.md#iscachecomplete
   const isCacheComplete =
     allPages?.isComplete || allFilteredPages?.isComplete || false;
 
@@ -208,6 +208,7 @@ function useCachedList<
   // prevFirstPage covers the normal Apollo refetch case; prevListRef covers
   // the skip→active transition where prevFirstPage is unavailable (e.g.
   // switching from a fully-cached filter to an uncached one).
+  // See: docs/data-grid-source.md#row-stability-preventing-blank-flashes
   const prevListRef = useRef<typeof freshList>(undefined);
   const list = freshList ??
     listFrom(prevFirstPage) ??
@@ -245,7 +246,9 @@ function useCachedList<
             },
           })
           .then((res) => {
-            // Only apply to rows if the view hasn't changed
+            // Only apply to rows if the view hasn't changed since the request
+            // was fired — stale pages are discarded but still cached.
+            // See: docs/data-grid-source.md#virtual-scroll-fetching
             const isCurrent =
               params.sortModel === viewRef.current.sortModel &&
               params.filterModel === viewRef.current.filterModel;
@@ -372,6 +375,7 @@ export const useDataGridSource = <
   // sorting responsibility ('client').
   // Help it out by asking it to sort (again?) when we give it a different,
   // fully cached, unsorted list.
+  // See: docs/data-grid-source.md#applying-client-side-sort-after-cache-completion
   useEffect(() => {
     if (isCacheComplete) {
       apiRef.current.applySorting();
@@ -384,6 +388,7 @@ export const useDataGridSource = <
     apiRef,
     rows,
     loading,
+    // See: docs/data-grid-source.md#row-count
     rowCount: isCacheComplete ? filteredRowCount ?? rows.length : total,
     sortModel: view.sortModel,
     filterModel: view.filterModel,
@@ -391,7 +396,10 @@ export const useDataGridSource = <
     onFetchRows: onFetchRows.run,
     onSortModelChange,
     onFilterModelChange,
-    paginationMode: total != null ? 'server' : 'client', // Not used, but prevents row count warning.
+    // Not used for pagination; fixed to avoid MUI warning. Intentionally NOT
+    // switched on isCacheComplete — doing so causes an internal DataGrid reset.
+    // See: docs/data-grid-source.md#mode-switching
+    paginationMode: total != null ? 'server' : 'client',
     rowsLoadingMode: mode,
     sortingMode: mode,
     filterMode: mode,
