@@ -1,0 +1,18 @@
+query FieldRegionProjects($fieldRegionId: ID!, $input: ProjectListInput) {
+  fieldRegion(id: $fieldRegionId) {
+    id
+    projects(input: $input) {
+      canRead
+      canCreate
+      hasMore
+      total
+      items {
+        ...fieldRegionProjectDataGridRow
+      }
+    }
+  }
+}
+
+fragment fieldRegionProjectDataGridRow on Project {
+  ...projectDataGridRow
+}
