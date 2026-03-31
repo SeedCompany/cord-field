@@ -1,17 +1,22 @@
 import { useQuery } from '@apollo/client';
+import { Edit } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { Box, Skeleton, Stack, Typography } from '@mui/material';
+import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
+import { canEditAny } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
+import { useDialog } from '~/components/Dialog';
 import { Error } from '~/components/Error';
+import { IconButton } from '~/components/IconButton';
 import { Redacted } from '~/components/Redacted';
 import { Tab, TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { UserPhoto } from '~/components/UserPhoto';
 import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
+import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.graphql';
 import { ImpersonationToggle } from './ImpersonationToggle';
 import { UserDetailPartners } from './Tabs/Partners/UserDetailPartners';
@@ -31,6 +36,7 @@ export const UserDetail = () => {
   });
   useComments(userId);
   const [filters, setFilters] = useUserDetailsFilters();
+  const [editUserState, editUser] = useDialog();
   const user = data?.user;
 
   return (
@@ -78,6 +84,13 @@ export const UserDetail = () => {
                 )
               )}
             </Typography>
+            {canEditAny(user) ? (
+              <Tooltip title="Edit Person">
+                <IconButton aria-label="edit person" onClick={editUser}>
+                  <Edit />
+                </IconButton>
+              </Tooltip>
+            ) : null}
             <TogglePinButton
               object={user}
               label="Person"
@@ -116,6 +129,7 @@ export const UserDetail = () => {
               </TabPanel>
             </TabContext>
           </TabsContainer>
+          {user && <EditUser user={user} {...editUserState} />}
         </>
       )}
     </Stack>
