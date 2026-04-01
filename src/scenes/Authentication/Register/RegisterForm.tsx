@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Grid, Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { Form, FormProps } from 'react-final-form';
@@ -55,7 +56,8 @@ export type RegisterFormProps = Pick<
   'onSubmit' | 'initialValues'
 >;
 
-export const RegisterForm = (props: RegisterFormProps) => {
+// export const RegisterForm = (props: RegisterFormProps) => {
+export const RegisterForm = (_props: RegisterFormProps) => {
   const { classes } = useStyles();
   return (
     <AuthContent className={classes.root}>
@@ -68,8 +70,14 @@ export const RegisterForm = (props: RegisterFormProps) => {
           Accelerating Bible Translation
         </Typography>
       </div>
-      <Form
-        {...props}
+      {/* Temporary message */}
+      <Typography sx={{ mt: 4, mb: 2 }}>
+        User registration is currently disabled. Please request access through
+        IT Helpdesk / Cord Support.
+      </Typography>
+      {/* Temporary disabled registration form */}
+      {/* <Form
+        {..._props}
         validate={passwordMatching}
         decorators={decorators}
         mutators={{ markConfirmPasswordTouched }}
@@ -141,7 +149,7 @@ export const RegisterForm = (props: RegisterFormProps) => {
             <SubmitButton className={classes.submit}>Sign Up</SubmitButton>
           </form>
         )}
-      </Form>
+      </Form> */}
       <Link to="/login" className={classes.loginLink}>
         Already have an account? Login
       </Link>
