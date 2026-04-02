@@ -8,6 +8,7 @@ export * from './ColumnTypes/booleanNullableColumn';
 export * from './ColumnTypes/enumColumn';
 export * from './ColumnTypes/textColumn';
 export * from './useDataGridSource';
+export * from './useViewState';
 export * from './Toolbar';
 export * from './QuickFilters';
 export * from './ColumnTypes/multiEnumColumn';

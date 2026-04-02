@@ -7,10 +7,8 @@ import {
 import {
   FilterColumnsArgs,
   GetColumnForNewFilterArgs,
-  GridColType,
   GridLogicOperator,
   GridSlotProps,
-  GridSortItem,
 } from '@mui/x-data-grid';
 import {
   DataGridProProps as DataGridProps,
@@ -20,14 +18,8 @@ import {
   useGridApiContext,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { groupBy, Nil, setOf } from '@seedcompany/common';
-import {
-  useDebounceFn,
-  useLatest,
-  useLocalStorageState,
-  useMemoizedFn,
-  useTimeout,
-} from 'ahooks';
+import { groupBy, Nil } from '@seedcompany/common';
+import { useDebounceFn, useMemoizedFn, useTimeout } from 'ahooks';
 import {
   type FieldNode,
   getOperationAST,
@@ -36,18 +28,10 @@ import {
   type SelectionSetNode,
 } from 'graphql';
 import { get, merge, pick, set, uniqBy } from 'lodash';
-import { MutableRefObject, useEffect, useMemo, useState } from 'react';
-import type { Get, Paths, SetNonNullable } from 'type-fest';
-import { type PaginatedListInput, type SortableListInput } from '~/api';
-import type { Order } from '~/api/schema/schema.graphql';
-import { lowerCase, upperCase } from '~/common';
-import { convertMuiFiltersToApi, FilterShape } from './convertMuiFiltersToApi';
-
-type ListInput = SetNonNullable<
-  Required<
-    SortableListInput & PaginatedListInput & { filter?: Record<string, any> }
-  >
->;
+import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
+import type { Get, Paths } from 'type-fest';
+import { useGridFilteredRowCount } from './useGridFilteredRowCount';
+import { ListInput, useViewState, ViewState } from './useViewState';
 
 interface PaginatedListOutput<T> {
   items: readonly T[];
@@ -62,99 +46,78 @@ type PathsMatching<T, List> = {
     : never;
 }[Paths<T>];
 
-const defaultInitialInput = {
-  count: 25,
-  sort: 'id',
-  order: 'ASC' as Order,
-};
 const defaultKeyArgs = ['__typename', 'id'];
 
-const persistColumnTypes = setOf<GridColType>(['singleSelect', 'boolean']);
-
-type StoredViewState = Pick<DataGridProps, 'filterModel'> & {
-  sortModel: [GridSortItem];
-  apiFilterModel?: FilterShape;
-};
-type ViewState = Omit<StoredViewState, 'apiFilterModel'> & {
-  // The sorting state for the first page API query.
-  // It could be the live sorting state, or a stale one,
-  // based on pagination needs.
-  apiSortModel: DataGridProps['sortModel'];
-};
-
+// The built-in NoInfer<T> (TS 5.4+) is an intrinsic that TypeScript doesn't
+// resolve through when accessing properties on constrained generics.
+// This identity-type variant works correctly in that context.
 type NoInfer<T> = [T][T extends any ? 0 : never];
 
-export const useDataGridSource = <
+const emptyList = [] as const;
+
+// ─── useCachedList ──────────────────────────────────────────────────────────
+// Manages all Apollo cache accumulation, page fetching, and row stability.
+// Returns stable rows/total and an imperative onFetchRows for virtual scrolling.
+
+function useCachedList<
   Output extends Record<string, any>,
-  Vars,
-  Input extends Partial<ListInput>,
-  const Path extends PathsMatching<Output, PaginatedListOutput<any>> & string,
-  List extends PaginatedListOutput<any> = Get<Output, Path> extends infer U
-    ? U extends PaginatedListOutput<any>
-      ? U
-      : never
-    : never
+  Vars extends Record<string, any>
 >({
   query,
   variables,
+  variablesWithFilter,
   listAt,
-  initialInput,
-  keyArgs = defaultKeyArgs,
-  apiRef: apiRefInput,
+  keyArgs,
+  hasFilter,
+  input,
+  viewRef,
+  apiRef,
 }: {
   query: DocumentNode<Output, Vars>;
-  variables: NoInfer<Vars & { input?: Input }>;
-  listAt: Path;
-  initialInput?: Partial<Omit<NoInfer<Input>, 'page'>>;
-  keyArgs?: string[];
-  apiRef?: MutableRefObject<GridApiPro>;
-}) => {
-  const initialInputRef = useLatest(initialInput);
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- we'll assume this doesn't change between renders
-  const apiRef = apiRefInput ?? useGridApiRef();
-
-  const opName = useMemo(
-    () =>
-      query.definitions.find(
-        (d): d is OperationDefinitionNode => d.kind === 'OperationDefinition'
-      )!.name!.value,
-    [query]
-  );
-  const queryForItemRef = useMemo(() => {
-    const queryForItemRef = structuredClone(query);
-    const listNode = getFieldPath(
-      getOperationAST(queryForItemRef)!.selectionSet,
-      [...listAt.split('.'), 'items']
-    );
-    listNode.selections = keyArgs.map((field) => ({
-      kind: Kind.FIELD,
-      name: { kind: Kind.NAME, value: field },
-    }));
-    return queryForItemRef;
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- these deps should not be changing between renders
-  }, []);
-
-  function listFrom(data: Unmasked<Output> | MaybeMasked<Output>): List;
+  variables: Vars;
+  variablesWithFilter: Vars;
+  listAt: string;
+  keyArgs: string[];
+  hasFilter: boolean;
+  input: { count: number } & Record<string, any>;
+  viewRef: MutableRefObject<ViewState>;
+  apiRef: MutableRefObject<GridApiPro>;
+}) {
+  // Helper: extract the list from a query result
+  function listFrom(
+    data: Unmasked<Output> | MaybeMasked<Output>
+  ): PaginatedListOutput<any>;
   function listFrom(
     data: Unmasked<Output> | MaybeMasked<Output> | Nil
-  ): List | undefined;
+  ): PaginatedListOutput<any> | undefined;
   function listFrom(data: Unmasked<Output> | MaybeMasked<Output> | Nil) {
-    return data ? (get(data, listAt) as List) : undefined;
+    return data ? (get(data, listAt) as PaginatedListOutput<any>) : undefined;
   }
   function cacheInfo(data: MaybeMasked<Output> | Nil) {
-    if (!data) {
-      return undefined;
-    }
+    if (!data) return undefined;
     const list = listFrom(data);
-    return {
-      ...list,
-      isComplete: list.total === list.items.length,
-    };
+    return { ...list, isComplete: list.total === list.items.length };
   }
 
-  // Try to pull the complete list from the cache
-  // This exists after all pages have been queried with the useQuery hook below.
-  // This allows us to do client-side filtering & sorting once we have the complete list.
+  // Computed once: strip the query down to only keyArgs fields so the
+  // cache-accumulation entries written by updateAllPagesQuery stay small.
+  const queryForItemRef = useRef(
+    (() => {
+      const q = structuredClone(query);
+      const listNode = getFieldPath(getOperationAST(q)!.selectionSet, [
+        ...listAt.split('.'),
+        'items',
+      ]);
+      listNode.selections = keyArgs.map((field) => ({
+        kind: Kind.FIELD,
+        name: { kind: Kind.NAME, value: field },
+      }));
+      return q;
+    })()
+  );
+
+  // Two cache-only queries accumulate all pages without hitting the network.
+  // See: docs/data-grid-source.md#the-two-cache-queries
   const { data: allPagesData, client } = useQuery(query, {
     variables,
     fetchPolicy: 'cache-only',
@@ -162,17 +125,13 @@ export const useDataGridSource = <
   const allPages = cacheInfo(allPagesData);
 
   // Add a page to the "all pages" cache entry
-  // This is read back in the first useQuery hook, above.
   const updateAllPagesQuery = (
-    variables: Vars,
+    vars: Vars,
     next: Unmasked<Output>,
     updateTotal: boolean
   ) => {
     client.cache.updateQuery(
-      {
-        query: queryForItemRef,
-        variables,
-      },
+      { query: queryForItemRef.current, variables: vars },
       (prev) => {
         const prevList = listFrom(prev);
         const nextList = listFrom(next);
@@ -202,93 +161,12 @@ export const useDataGridSource = <
     );
   };
 
-  // State for current sorting & filtering
-  const [initialSort] = useState((): ViewState['sortModel'] => [
-    {
-      field: initialInput?.sort ?? defaultInitialInput.sort,
-      sort: lowerCase(initialInput?.order ?? defaultInitialInput.order),
-    },
-  ]);
-  const [storedView, setStoredView] = useLocalStorageState<StoredViewState>(
-    `${opName}-data-grid-view`,
-    {
-      defaultValue: () => ({
-        filterModel: { items: [] },
-        apiFilterModel: {},
-        sortModel: initialSort,
-      }),
-    }
-  );
-  const persist = useDebounceFn((next: ViewState) => {
-    const filterModel = {
-      // Strip out filters for columns that shouldn't be persisted
-      items:
-        next.filterModel?.items.filter((item) =>
-          persistColumnTypes.has(apiRef.current.getColumn(item.field).type!)
-        ) ?? [],
-    };
-    setStoredView({
-      sortModel: next.sortModel,
-      filterModel,
-      apiFilterModel: convertMuiFiltersToApi(
-        apiRef.current,
-        filterModel,
-        initialInputRef.current?.filter
-      ),
-    });
-  });
-  const [view, reallySetView] = useState((): ViewState => {
-    const { apiFilterModel: _, ...rest } = storedView!; // not null because we give a default value
-    return {
-      ...rest,
-      apiSortModel: rest.sortModel,
-    };
-  });
-  const setView = (setter: (prev: ViewState) => ViewState) => {
-    reallySetView((prev) => {
-      const next = setter(prev);
-      persist.run(next);
-      return next;
-    });
-  };
-
-  const viewRef = useLatest(view);
-  const hasFilter = !!view.filterModel && view.filterModel.items.length > 0;
-
-  // Convert the view state to the input for the GQL query
-  const input = useMemo(
-    () => ({
-      ...defaultInitialInput,
-      ...initialInputRef.current,
-      count: initialInputRef.current?.count ?? defaultInitialInput.count,
-      ...(view.apiSortModel?.[0] && {
-        sort: view.apiSortModel[0].field,
-        order: upperCase(view.apiSortModel[0].sort!),
-      }),
-      // eslint-disable-next-line no-extra-boolean-cast
-      filter: Boolean(apiRef.current.instanceId)
-        ? convertMuiFiltersToApi(
-            apiRef.current,
-            view.filterModel,
-            initialInputRef.current?.filter
-          )
-        : storedView?.apiFilterModel,
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [apiRef, initialInputRef, view.apiSortModel, view.filterModel]
-  );
-  const variablesWithFilter = useMemo(() => {
-    const { count, sort, order, ...rest } = input;
-
-    return merge({}, variables, { input: rest });
-  }, [variables, input]);
-
-  const addToAllPagesCache = (next: MaybeMasked<Output>) => {
+  const addToAllPagesCache = useMemoizedFn((next: MaybeMasked<Output>) => {
     updateAllPagesQuery(variables, next as Unmasked<Output>, !hasFilter);
     if (hasFilter) {
       updateAllPagesQuery(variablesWithFilter, next as Unmasked<Output>, true);
     }
-  };
+  });
 
   const { data: allFilteredPagesData } = useQuery(query, {
     variables: variablesWithFilter,
@@ -297,11 +175,16 @@ export const useDataGridSource = <
   });
   const allFilteredPages = cacheInfo(allFilteredPagesData);
 
+  // See: docs/data-grid-source.md#iscachecomplete
   const isCacheComplete =
     allPages?.isComplete || allFilteredPages?.isComplete || false;
 
   // Grab the first page from cache/network on mount and when view changes
-  const { data: firstPage, loading } = useQuery(query, {
+  const {
+    data: firstPage,
+    loading,
+    previousData: prevFirstPage,
+  } = useQuery(query, {
     skip: isCacheComplete,
     variables: useMemo(
       () => merge({}, variables, { input: { ...input, page: 1 } }),
@@ -310,37 +193,48 @@ export const useDataGridSource = <
   });
   useEffect(() => {
     firstPage && addToAllPagesCache(firstPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firstPage]);
+  }, [firstPage, addToAllPagesCache]);
 
-  const list = loading
-    ? { items: emptyList, total: undefined }
+  const freshList = loading
+    ? undefined
     : allPages?.isComplete
     ? allPages
     : allFilteredPages?.isComplete
     ? allFilteredPages
     : listFrom(firstPage);
-  const rows = list?.items ?? emptyList;
-  const total = list?.total && list.total >= 0 ? list.total : undefined;
 
-  // Load additional pages imperatively as needed based on scrolling
-  // This is debounced to mostly to reduce the client side load.
-  // It is theoretical as well that some pages could be scrolled past,
-  // and the debouncing would skip those page requests.
+  // While loading (filter change, sort change, etc.) fall back to the most
+  // recently known list so the grid stays populated instead of going blank.
+  // prevFirstPage covers the normal Apollo refetch case; prevListRef covers
+  // the skip→active transition where prevFirstPage is unavailable (e.g.
+  // switching from a fully-cached filter to an uncached one).
+  // See: docs/data-grid-source.md#row-stability-preventing-blank-flashes
+  const prevListRef = useRef<typeof freshList>(undefined);
+  const list = freshList ??
+    listFrom(prevFirstPage) ??
+    (loading ? prevListRef.current : undefined) ?? {
+      items: emptyList,
+      total: undefined,
+    };
+  if (freshList != null) prevListRef.current = freshList;
+
+  const rows = list.items;
+  const total = list.total && list.total >= 0 ? list.total : undefined;
+
+  // Load additional pages imperatively as needed based on scrolling.
+  // Debounced to reduce client-side load and skip fast-scrolled pages.
   const onFetchRows = useDebounceFn(
     (params: GridFetchRowsParams) => {
-      if (isCacheComplete) {
-        return;
-      }
+      if (isCacheComplete) return;
 
       const { firstRowToRender, lastRowToRender } = params;
-      const firstPage = Math.ceil((firstRowToRender + 1) / input.count);
-      const lastPage = Math.ceil((lastRowToRender + 1) / input.count);
+      const startPage = Math.ceil((firstRowToRender + 1) / input.count);
+      const endPage = Math.ceil((lastRowToRender + 1) / input.count);
       const pages = Array.from(
-        { length: lastPage - firstPage + 1 },
-        (_, i) => firstPage + i
+        { length: endPage - startPage + 1 },
+        (_, i) => startPage + i
       )
-        // skip the first page always loaded first by useQuery hook
+        // skip the first page always loaded by useQuery above
         .filter((page) => page > 1);
 
       for (const page of pages) {
@@ -352,26 +246,83 @@ export const useDataGridSource = <
             },
           })
           .then((res) => {
-            // Only apply to rows if the view hasn't changed
+            // Only apply to rows if the view hasn't changed since the request
+            // was fired — stale pages are discarded but still cached.
+            // See: docs/data-grid-source.md#virtual-scroll-fetching
             const isCurrent =
               params.sortModel === viewRef.current.sortModel &&
               params.filterModel === viewRef.current.filterModel;
             if (isCurrent) {
-              // Swap in real rows via the recommended process.
               const firstRowToReplace = (page - 1) * input.count;
               const list = listFrom(res.data).items.slice();
               apiRef.current.unstable_replaceRows(firstRowToReplace, list);
             }
-
             // Always try to complete the list in cache.
             addToAllPagesCache(res.data);
           });
       }
     },
-    {
-      wait: 500,
-    }
+    { wait: 500 }
   );
+
+  return { rows, total, loading, isCacheComplete, onFetchRows };
+}
+
+// ─── useDataGridSource ───────────────────────────────────────────────────────
+
+export const useDataGridSource = <
+  Output extends Record<string, any>,
+  Vars,
+  Input extends Partial<ListInput>,
+  const Path extends PathsMatching<Output, PaginatedListOutput<any>> & string
+>({
+  query,
+  variables,
+  listAt,
+  initialInput,
+  keyArgs = defaultKeyArgs,
+  apiRef: apiRefInput,
+}: {
+  query: DocumentNode<Output, Vars>;
+  variables: NoInfer<Vars & { input?: Input }>;
+  listAt: Path;
+  initialInput?: Partial<Omit<NoInfer<Input>, 'page'>>;
+  keyArgs?: string[];
+  apiRef?: MutableRefObject<GridApiPro>;
+}) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- we'll assume this doesn't change between renders
+  const apiRef = apiRefInput ?? useGridApiRef();
+  const filteredRowCount = useGridFilteredRowCount(apiRef);
+
+  const opName = useMemo(
+    () =>
+      query.definitions.find(
+        (d): d is OperationDefinitionNode => d.kind === 'OperationDefinition'
+      )!.name!.value,
+    [query]
+  );
+
+  const {
+    view,
+    setView,
+    viewRef,
+    hasFilter,
+    input,
+    variablesWithFilter,
+    initialSort,
+  } = useViewState({ opName, initialInput, apiRef, variables });
+
+  const { rows, total, loading, isCacheComplete, onFetchRows } = useCachedList({
+    query,
+    variables,
+    variablesWithFilter,
+    listAt,
+    keyArgs,
+    hasFilter,
+    input,
+    viewRef,
+    apiRef,
+  });
 
   const onSortModelChange: DataGridProps['onSortModelChange'] & {} =
     useMemoizedFn((next) => {
@@ -399,6 +350,7 @@ export const useDataGridSource = <
 
       apiRef.current.scrollToIndexes({ rowIndex: 0 });
     });
+
   const onFilterModelChange: DataGridProps['onFilterModelChange'] & {} =
     useMemoizedFn((filterModel) => {
       const next = {
@@ -423,27 +375,34 @@ export const useDataGridSource = <
   // sorting responsibility ('client').
   // Help it out by asking it to sort (again?) when we give it a different,
   // fully cached, unsorted list.
+  // See: docs/data-grid-source.md#applying-client-side-sort-after-cache-completion
   useEffect(() => {
     if (isCacheComplete) {
       apiRef.current.applySorting();
     }
   }, [apiRef, isCacheComplete]);
 
+  const mode = isCacheComplete ? 'client' : 'server';
+
   const dataGridProps = {
     apiRef,
     rows,
     loading,
-    rowCount: total,
+    // See: docs/data-grid-source.md#row-count
+    rowCount: isCacheComplete ? filteredRowCount ?? rows.length : total,
     sortModel: view.sortModel,
     filterModel: view.filterModel,
     hideFooterPagination: true,
     onFetchRows: onFetchRows.run,
     onSortModelChange,
     onFilterModelChange,
-    paginationMode: total != null ? 'server' : 'client', // Not used, but prevents row count warning.
-    rowsLoadingMode: isCacheComplete ? 'client' : 'server',
-    sortingMode: isCacheComplete ? 'client' : 'server',
-    filterMode: isCacheComplete ? 'client' : 'server',
+    // Not used for pagination; fixed to avoid MUI warning. Intentionally NOT
+    // switched on isCacheComplete — doing so causes an internal DataGrid reset.
+    // See: docs/data-grid-source.md#mode-switching
+    paginationMode: total != null ? 'server' : 'client',
+    rowsLoadingMode: mode,
+    sortingMode: mode,
+    filterMode: mode,
     slots: apiSlots,
     slotProps: apiSlotProps,
   } satisfies Partial<DataGridProps>;
@@ -451,7 +410,7 @@ export const useDataGridSource = <
   return [dataGridProps] as const;
 };
 
-const emptyList = [] as const;
+// ─── Utilities ───────────────────────────────────────────────────────────────
 
 const getFieldPath = (
   x: SelectionSetNode,

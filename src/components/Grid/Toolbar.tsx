@@ -24,7 +24,7 @@ export const Toolbar = (props: ChildrenProp & StyleProps) => {
       ]}
     >
       {props.children}
-      {rootProps.rowCount && (
+      {rootProps.rowCount != null && (
         <Typography>
           Total Rows: <FormattedNumber value={rootProps.rowCount} />
         </Typography>
