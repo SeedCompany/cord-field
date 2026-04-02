@@ -85,6 +85,27 @@ fragment partnerOwnDetails on Partner {
       ...DisplayLocation
     }
   }
+  languageOfReporting {
+    canRead
+    canEdit
+    value {
+      ...LanguageLookupItem
+    }
+  }
+  languageOfWiderCommunication {
+    canRead
+    canEdit
+    value {
+      ...LanguageLookupItem
+    }
+  }
+  languagesOfConsulting {
+    canRead
+    canEdit
+    value {
+      ...LanguageLookupItem
+    }
+  }
   ...TogglePin
 }
 

@@ -28,6 +28,7 @@ export const LanguageDetailProfile = ({
     sponsorStartDate,
     sponsorEstimatedEndDate,
     usesAIAssistance,
+    isAvailableForReporting,
   } = language ?? {};
 
   return (
@@ -101,6 +102,11 @@ export const LanguageDetailProfile = ({
         <DisplayProperty
           label="Uses AI assistance"
           value={usesAIAssistance?.value ? 'Yes' : 'No'}
+          loading={!language}
+        />
+        <DisplayProperty
+          label="Available for Reporting"
+          value={isAvailableForReporting?.value ? 'Yes' : 'No'}
           loading={!language}
         />
         {language && <FirstScripture data={language} />}
