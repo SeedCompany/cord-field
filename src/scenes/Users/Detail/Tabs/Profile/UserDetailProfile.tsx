@@ -1,24 +1,13 @@
-import { Edit } from '@mui/icons-material';
-import {
-  Box,
-  IconButton,
-  Paper,
-  Skeleton,
-  Stack,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Box, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
-import { canEditAny, labelFrom, labelsFrom } from '~/common';
-import { useDialog } from '~/components/Dialog';
+import { labelFrom, labelsFrom } from '~/common';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
-import { EditUser } from '../../../Edit';
 import { UserProfileFragment } from './UserDetailProfile.graphql';
 
 interface UserDetailProfileProps {
@@ -26,16 +15,10 @@ interface UserDetailProfileProps {
 }
 
 export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
-  const [editUserState, editUser] = useDialog();
-
-  const canEditAnyFields = canEditAny(user);
-
   return (
     <Box
       component={Paper}
       sx={(theme) => ({
-        display: 'flex',
-        justifyContent: 'space-between',
         width: theme.breakpoints.values.md,
       })}
     >
@@ -67,16 +50,6 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
         <DisplayProperty label="Phone" value={user.phone.value} />
         <DisplayProperty label="About" value={user.about.value} />
       </Stack>
-      <Box sx={{ p: 1 }}>
-        {canEditAnyFields ? (
-          <Tooltip title="Edit Person">
-            <IconButton aria-label="edit person" onClick={editUser}>
-              <Edit />
-            </IconButton>
-          </Tooltip>
-        ) : null}
-      </Box>
-      <EditUser user={user} {...editUserState} />
     </Box>
   );
 };
