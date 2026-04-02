@@ -43,6 +43,7 @@ import {
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
 import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql';
 import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql';
+import { Rev79CommunityField } from '../LanguageEngagement/Rev79CommunityField';
 import {
   UpdateInternshipEngagementDocument,
   UpdateLanguageEngagementDocument,
@@ -159,9 +160,14 @@ const fieldMapping: Record<
   paratextRegistryId: ({ props }) => (
     <TextField {...props} label="Paratext ID" />
   ),
-  rev79CommunityId: ({ props }) => (
-    <TextField {...props} label="Rev79 Community ID" />
-  ),
+  rev79CommunityId: ({ props, engagement }) =>
+    engagement.__typename === 'LanguageEngagement' ? (
+      <Rev79CommunityField
+        {...props}
+        label="Rev79 Community"
+        parent={engagement.parent}
+      />
+    ) : null,
   usingAIAssistedTranslation: ({ props }) => (
     <EnumField
       label="AI Assisted Translation"
