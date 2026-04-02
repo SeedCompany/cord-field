@@ -225,6 +225,17 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                       </Grid>
                     )}
                   </SecuredField>
+                  <SecuredField obj={language} name="isAvailableForReporting">
+                    {(props) => (
+                      <Grid item xs={12} sm={6}>
+                        <CheckboxField
+                          label="Is this language available for reporting?"
+                          margin="none"
+                          {...props}
+                        />
+                      </Grid>
+                    )}
+                  </SecuredField>
                   <Grid item xs={12} sm={6}>
                     <SelectField
                       label="Sensitivity"
