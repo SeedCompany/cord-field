@@ -99,6 +99,7 @@ export const create = async () => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: secret,
+          'apollo-require-preflight': '1',
         },
         body: JSON.stringify(req.body),
         signal: AbortSignal.timeout(10_000),
