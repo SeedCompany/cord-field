@@ -11,6 +11,7 @@ export const createHttpLink = () =>
     credentials: 'include',
     fetch,
     print: dedupeFragmentsPrinter,
+    headers: { 'apollo-require-preflight': '1' },
   });
 
 export const createSseLink = () =>
