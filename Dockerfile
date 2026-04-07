@@ -35,8 +35,6 @@ ARG API_BASE_URL
 ENV RAZZLE_API_BASE_URL=$API_BASE_URL
 ARG MUI_X_LICENSE_KEY
 ENV MUI_X_LICENSE_KEY=$MUI_X_LICENSE_KEY
-ARG RAZZLE_SEED_API_HOST
-ENV RAZZLE_SEED_API_HOST=$RAZZLE_SEED_API_HOST
 RUN yarn gql-gen -e && yarn razzle build --noninteractive
 
 # Clear all downloaded libraries to reduce image size
@@ -45,6 +43,9 @@ RUN yarn cache clean --all
 RUN yarn workspaces focus --all --production
 
 FROM node AS run
+
+ARG SEED_API_HOST
+ENV SEED_API_HOST=$SEED_API_HOST
 
 COPY --from=builder /app/.yarn ./.yarn
 COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
