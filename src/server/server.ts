@@ -79,8 +79,8 @@ export const create = async () => {
   const SEED_ALLOWED_OPS = new Set(['Rev79Projects']);
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   router.post('/api/seed-proxy', async (req, res, next) => {
-    const host = process.env.RAZZLE_SEED_API_HOST;
-    const secret = process.env.RAZZLE_SEED_API_SECRET;
+    const host = process.env.SEED_API_HOST;
+    const secret = process.env.SEED_API_SECRET;
     if (!host || !secret) {
       res.sendStatus(503);
       return;
@@ -99,6 +99,7 @@ export const create = async () => {
         headers: {
           'Content-Type': 'application/json',
           Authorization: secret,
+          'apollo-require-preflight': '1',
         },
         body: JSON.stringify(req.body),
         signal: AbortSignal.timeout(10_000),

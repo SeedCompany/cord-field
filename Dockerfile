@@ -44,6 +44,9 @@ RUN yarn workspaces focus --all --production
 
 FROM node AS run
 
+ARG SEED_API_HOST
+ENV SEED_API_HOST=$SEED_API_HOST
+
 COPY --from=builder /app/.yarn ./.yarn
 COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
 COPY --from=builder /app/build ./build
