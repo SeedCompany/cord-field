@@ -76,7 +76,7 @@ export const create = async () => {
   }
 
   // Proxy for Rev79 Seed API — keeps RAZZLE_SEED_API_SECRET server-side only
-  const SEED_ALLOWED_OPS = new Set(['Rev79Projects']);
+  const SEED_ALLOWED_OPS = new Set(['GetCommunitiesByProjectId']);
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   router.post('/api/seed-proxy', async (req, res, next) => {
     const host = process.env.SEED_API_HOST;
