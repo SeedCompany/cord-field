@@ -9,8 +9,8 @@ export interface Rev79Community {
 }
 
 const QUERY = gql`
-  query Rev79Projects($filter: JSONObject) {
-    rev79Projects(filter: $filter) {
+  query GetCommunitiesByProjectId($filter: JSONObject) {
+    getCommunitiesByProjectId(filter: $filter) {
       id
       communitiesInUse {
         id
@@ -21,7 +21,7 @@ const QUERY = gql`
 `;
 
 interface Rev79ProjectsData {
-  rev79Projects: Array<{
+  getCommunitiesByProjectId: Array<{
     id: string;
     communitiesInUse: Rev79Community[];
   }>;
@@ -52,7 +52,9 @@ export const useRev79Communities = (
       })
       .then(({ data }) => {
         if (!cancelled) {
-          setCommunities(data.rev79Projects[0]?.communitiesInUse ?? []);
+          setCommunities(
+            data.getCommunitiesByProjectId[0]?.communitiesInUse ?? []
+          );
         }
       })
       .catch((err: Error) => {
