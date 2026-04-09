@@ -10,5 +10,8 @@ query FieldZoneDetail($fieldZoneId: ID!) @live {
       }
     }
     ...FieldZoneForm
+    projects {
+      canRead
+    }
   }
 }

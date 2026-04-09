@@ -1,4 +1,4 @@
-import { Box, Card, CardProps } from '@mui/material';
+import { Box, Card, CardProps, PaletteColor } from '@mui/material';
 import { yellow } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 import { forwardRef, useCallback } from 'react';
@@ -31,6 +31,11 @@ type Node = N<State | Transition, NodeTypes>;
 export const FlowchartStyles = styled(Box)(({ theme }) => ({
   height: '100%',
   '& .react-flow': {
+    // Override reactflow's own color defaults so MUI theme colors win
+    // regardless of CSS import order on page load
+    '.react-flow__node, .react-flow__panel': {
+      color: theme.palette.text.primary,
+    },
     '.react-flow__edge-textbg': {
       fill: theme.palette.background.paper,
     },
@@ -117,17 +122,28 @@ const NodeCard = forwardRef<
       ref={ref}
       elevation={selected ? 4 : 1}
       sx={[
-        (theme) => ({
-          transition: theme.transitions.create(['box-shadow', 'border-color'], {
-            duration: theme.transitions.duration.shorter,
-          }),
-          borderColor: selected ? `${color}.dark` : 'transparent',
-          borderWidth: 1,
-          borderStyle: 'solid',
-          p: 2,
-          bgcolor: `${color}.main`,
-          color: `${color}.contrastText`,
-        }),
+        (theme) => {
+          const pal = color
+            ? (theme.palette[
+                color as keyof typeof theme.palette
+              ] as PaletteColor)
+            : null;
+          // In dark mode use .dark so node cards get the stable navy background.
+          // (.main is grey[50] in dark mode to keep text/icon buttons readable.)
+          const bg = theme.palette.mode === 'dark' ? pal?.dark : pal?.main;
+          return {
+            transition: theme.transitions.create(
+              ['box-shadow', 'border-color'],
+              { duration: theme.transitions.duration.shorter }
+            ),
+            borderColor: selected ? `${color}.dark` : 'transparent',
+            borderWidth: 1,
+            borderStyle: 'solid',
+            p: 2,
+            backgroundColor: bg,
+            color: bg ? theme.palette.getContrastText(bg) : undefined,
+          };
+        },
         ...extendSx(sx),
       ]}
     >
@@ -219,6 +235,7 @@ const LabelContainer = ({
       sx={{
         position: 'absolute',
         bgcolor: 'background.paper',
+        color: 'text.primary',
         p: 1,
         borderRadius: 1,
         fontSize: 12,

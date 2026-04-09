@@ -15,5 +15,8 @@ query FieldRegionDetail($fieldRegionId: ID!) @live {
       }
     }
     ...FieldRegionForm
+    projects {
+      canRead
+    }
   }
 }

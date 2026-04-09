@@ -1,10 +1,4 @@
-import {
-  DataGridPro as DataGrid,
-  DataGridProProps as DataGridProps,
-  GridColDef,
-} from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
-import { useMemo } from 'react';
+import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useParams } from 'react-router-dom';
 import { PartnerTypeLabels, PartnerTypeList } from '~/api/schema.graphql';
 import { unmatchedIndexThrow } from '~/common';
@@ -14,6 +8,7 @@ import {
   multiEnumColumn,
   noFooter,
   noHeaderFilterButtons,
+  useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
 import {
@@ -40,17 +35,9 @@ export const PartnerDetailProjects = () => {
     },
   });
 
-  const slots = useMemo(
-    () =>
-      merge({}, DefaultDataGridStyles.slots, props.slots, {
-        toolbar: ProjectToolbar,
-      } satisfies DataGridProps['slots']),
-    [props.slots]
-  );
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, props.slotProps),
-    [props.slotProps]
-  );
+  const { slots, slotProps } = useDataGridSlots(props, {
+    slots: { toolbar: ProjectToolbar },
+  });
 
   return (
     <TabPanelContent>

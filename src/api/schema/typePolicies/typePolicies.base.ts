@@ -36,6 +36,8 @@ export const typePolicies: TypePolicies = {
   Language: {
     fields: {
       ethnologue: { merge: true },
+      locations: {},
+      projects: {},
     },
   },
   EthnologueLanguage: { keyFields: false },
@@ -79,10 +81,26 @@ export const typePolicies: TypePolicies = {
       },
     },
   },
+  FieldRegion: {
+    fields: {
+      projects: {}, // no page merging (infinite scroll)
+    },
+  },
+  FieldZone: {
+    fields: {
+      projects: {}, // no page merging (infinite scroll)
+    },
+  },
   Partner: {
     fields: {
       projects: {}, // no page merging (infinite scroll)
       engagements: {},
+    },
+  },
+  User: {
+    fields: {
+      projects: {}, // no page merging (infinite scroll)
+      partners: {}, // no page merging (infinite scroll)
     },
   },
   Query: {

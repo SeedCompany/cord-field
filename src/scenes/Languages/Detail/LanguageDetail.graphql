@@ -56,6 +56,11 @@ fragment LanguageDetail on Language {
     canEdit
     value
   }
+  usesAIAssistance {
+    canRead
+    canEdit
+    value
+  }
   sensitivity
   avatarLetters
   population {
@@ -66,24 +71,13 @@ fragment LanguageDetail on Language {
   locations {
     canRead
     canCreate
-    items {
-      ...LocationCard
-    }
   }
   projects {
     canRead
-    canCreate
-    items {
-      ...ProjectListItem
-    }
+  }
+  posts {
+    canRead
   }
   ...FirstScripture
   ...TogglePin
-}
-
-mutation RemoveLocationFromLanguage($language: ID!, $location: ID!) {
-  removeLocationFromLanguage(language: $language, location: $location) {
-    ...LanguageDetail
-    ...LanguageForm
-  }
 }

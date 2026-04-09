@@ -12,6 +12,7 @@ import {
   ProjectTypeLabels,
   ProjectTypeList,
 } from '~/api/schema.graphql';
+import { unmatchedIndexThrow } from '~/common';
 import {
   booleanColumn,
   dateColumn,
@@ -25,6 +26,7 @@ import {
   useEnumListFilterToggle,
   useFilterToggle,
 } from '../Grid';
+import { FieldRegionNameColumn } from '../Grid/Columns/FieldRegionNameColumn';
 import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
@@ -43,6 +45,10 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     headerName: 'Country',
     width: 300,
   },
+  FieldRegionNameColumn({
+    field: 'fieldRegion.name',
+    valueGetter: (_, { fieldRegion }) => fieldRegion.value,
+  }),
   {
     field: 'step',
     ...enumColumn(ProjectStepList, ProjectStepLabels, {
@@ -109,6 +115,18 @@ export const ProjectInitialState = {
     },
   },
 } satisfies DataGridProps['initialState'];
+
+export const ProjectNameField = 'name' as const;
+
+export const insertProjectColumnAfterField = <T extends Project>(
+  columns: Array<GridColDef<T>>,
+  field: string,
+  column: GridColDef<T>
+): Array<GridColDef<T>> => {
+  const index =
+    unmatchedIndexThrow(columns.findIndex((c) => c.field === field)) + 1;
+  return columns.toSpliced(index, 0, column);
+};
 
 export const ProjectToolbar = () => (
   <Toolbar sx={{ justifyContent: 'flex-start', gap: 2 }}>

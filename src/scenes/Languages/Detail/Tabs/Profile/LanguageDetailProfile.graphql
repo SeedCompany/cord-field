@@ -1,0 +1,69 @@
+fragment LanguageProfile on Language {
+  ...DisplayLanguage
+  ...LanguageForm
+  ...FirstScripture
+}
+
+fragment DisplayLanguage on Language {
+  id
+  createdAt
+  name {
+    canRead
+    canEdit
+    value
+  }
+  displayName {
+    canRead
+    canEdit
+    value
+  }
+  displayNamePronunciation {
+    canRead
+    canEdit
+    value
+  }
+  isDialect {
+    canRead
+    canEdit
+    value
+  }
+  ethnologue {
+    code {
+      canRead
+      canEdit
+      value
+    }
+    provisionalCode {
+      canRead
+      canEdit
+      value
+    }
+    name {
+      canRead
+      canEdit
+      value
+    }
+  }
+  registryOfLanguageVarietiesCode {
+    canRead
+    canEdit
+    value
+  }
+  sponsorStartDate {
+    canRead
+    canEdit
+    value
+  }
+  usesAIAssistance {
+    canRead
+    canEdit
+    value
+  }
+  sensitivity
+  avatarLetters
+  population {
+    canRead
+    canEdit
+    value
+  }
+}

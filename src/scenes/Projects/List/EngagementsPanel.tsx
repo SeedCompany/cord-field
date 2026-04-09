@@ -1,9 +1,4 @@
-import {
-  DataGridPro as DataGrid,
-  DataGridProProps as DataGridProps,
-} from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
-import { useMemo } from 'react';
+import { DataGridPro as DataGrid } from '@mui/x-data-grid-pro';
 import {
   EngagementDataGridRowFragment as Engagement,
   EngagementColumns,
@@ -16,6 +11,7 @@ import {
   flexLayout,
   noFooter,
   noHeaderFilterButtons,
+  useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
 import { EngagementListDocument } from './EngagementList.graphql';
@@ -30,18 +26,9 @@ export const EngagementsPanel = () => {
     },
   });
 
-  const slots = useMemo(
-    () =>
-      merge({}, DefaultDataGridStyles.slots, dataGridProps.slots, {
-        toolbar: EngagementToolbar,
-      } satisfies DataGridProps['slots']),
-    [dataGridProps.slots]
-  );
-
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, dataGridProps.slotProps),
-    [dataGridProps.slotProps]
-  );
+  const { slots, slotProps } = useDataGridSlots(dataGridProps, {
+    slots: { toolbar: EngagementToolbar },
+  });
 
   const processEngagementUpdate = useProcessEngagementUpdate();
 

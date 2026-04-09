@@ -5,6 +5,7 @@ import { TabPanelContent } from '~/components/Tabs';
 import { EditablePartnerField } from '../../../Edit';
 import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
 import { PartnerContactSection } from './PartnerContactSection';
+import { PartnerLanguagesSection } from './PartnerLanguagesSection';
 import { PartnerLocationSection } from './PartnerLocationSection';
 import { PartnerOrgReachAndTypeSection } from './PartnerOrgReachAndTypeSection';
 import { PartnerTypesSection } from './PartnerTypesSection';
@@ -47,6 +48,18 @@ export const PartnerDetailProfile = ({ partner, editPartner: edit }: Props) => (
         <PartnerLocationSection
           partner={partner}
           onEdit={() => edit(['partner.fieldRegions', 'partner.countries'])}
+        />
+      </Grid>
+      <Grid xs={12}>
+        <PartnerLanguagesSection
+          partner={partner}
+          onEdit={() =>
+            edit([
+              'partner.languageOfReporting',
+              'partner.languageOfWiderCommunication',
+              'partner.languagesOfConsulting',
+            ])
+          }
         />
       </Grid>
     </Grid>

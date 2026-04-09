@@ -3,11 +3,26 @@ fragment ProgressReportOverviewItem on ProgressReport {
   start
   end
   due
+  type
+  reportFile {
+    canEdit
+    canRead
+    value {
+      ...FileNodeInfo
+    }
+  }
+  receivedDate {
+    canRead
+    canEdit
+    value
+  }
   status {
     value
   }
   skippedReason {
     value
+    canEdit
+    canRead
   }
 }
 

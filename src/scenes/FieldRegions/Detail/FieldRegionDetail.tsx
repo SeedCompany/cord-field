@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
+import { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { canEditAny } from '~/common';
@@ -11,13 +13,21 @@ import {
 } from '~/components/DisplaySimpleProperty';
 import { EditFieldRegion } from '~/components/FieldRegion';
 import { Link } from '~/components/Routing';
+import { Tab, TabsContainer } from '~/components/Tabs';
+import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { Error } from '../../../components/Error';
-import { Fab } from '../../../components/Fab';
+import { IconButton } from '../../../components/IconButton';
 import { Redacted } from '../../../components/Redacted';
 import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql';
+import { FieldRegionProjectsPanel } from './Tabs/Projects/FieldRegionProjectsPanel';
+
+const useFieldRegionDetailFilters = makeQueryHandler({
+  tab: withDefault(EnumParam(['profile', 'projects']), 'profile'),
+});
 
 export const FieldRegionDetail = () => {
   const { fieldRegionId = '' } = useParams();
+  const [filters, setFilters] = useFieldRegionDetailFilters();
 
   const [editRegionState, editRegion] = useDialog();
 
@@ -27,14 +37,31 @@ export const FieldRegionDetail = () => {
   });
 
   const fieldRegion = data?.fieldRegion;
+  const canReadProjects = fieldRegion?.projects.canRead !== false;
+
+  const readableTabs = useMemo(
+    () => ['profile', ...(canReadProjects ? ['projects'] : [])],
+    [canReadProjects]
+  );
+
+  useEffect(() => {
+    if (!readableTabs.includes(filters.tab)) {
+      setFilters({ tab: 'profile' });
+    }
+  }, [filters.tab, readableTabs, setFilters]);
 
   return (
     <Box
       component="main"
-      sx={{
+      sx={(theme) => ({
+        display: 'flex',
+        flexDirection: 'column',
         flex: 1,
-        p: 4,
-      }}
+        overflowY: 'auto',
+        padding: 4,
+        gap: 3,
+        maxWidth: theme.breakpoints.values.xl,
+      })}
     >
       <Helmet title={fieldRegion?.name.value || undefined} />
       <Error error={error}>
@@ -44,81 +71,83 @@ export const FieldRegionDetail = () => {
         }}
       </Error>
       {!error && (
-        <Box
-          sx={{
-            maxWidth: (theme) => theme.breakpoints.values.md,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 3,
-          }}
-        >
-          <Box
-            component="header"
-            sx={{
-              flex: 1,
-              display: 'flex',
-            }}
-          >
-            <Typography
-              variant="h2"
-              sx={{
-                mr: 4,
-                width: !fieldRegion?.name.value ? '40%' : undefined,
-              }}
-            >
+        <>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Typography variant="h2" sx={{ mr: 2, lineHeight: 'inherit' }}>
               {!fieldRegion ? (
-                <Skeleton width="100%" />
+                <Skeleton width="20ch" />
               ) : (
                 fieldRegion.name.value ?? (
                   <Redacted
                     info="You don't have permission to view this field region's name"
-                    width="40%"
+                    width="20ch"
                   />
                 )
               )}
             </Typography>
-            {canEditAny(fieldRegion, true) && (
-              <Fab
-                color="primary"
-                aria-label="edit region"
-                onClick={editRegion}
-                loading={!fieldRegion}
-              >
-                <Edit />
-              </Fab>
-            )}
+            {canEditAny(fieldRegion, true) ? (
+              <Tooltip title="Edit Field Region">
+                <IconButton aria-label="edit region" onClick={editRegion}>
+                  <Edit />
+                </IconButton>
+              </Tooltip>
+            ) : null}
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-            }}
-          >
-            <Typography variant="h4">
-              {fieldRegion ? 'Field Region' : <Skeleton width={200} />}
-            </Typography>
-          </Box>
-          <DisplayProperty
-            label="Field Zone"
-            value={
-              <Link to={`/field-zones/${fieldRegion?.fieldZone.value?.id}`}>
-                {fieldRegion?.fieldZone.value?.name.value}
-              </Link>
-            }
-            loading={!fieldRegion}
-          />
-          <DisplayProperty
-            label="Director"
-            value={
-              <Link to={`/users/${fieldRegion?.director.value?.id}`}>
-                {fieldRegion?.director.value?.fullName}
-              </Link>
-            }
-            loading={!fieldRegion}
-          />
-        </Box>
-      )}
-      {fieldRegion && (
-        <EditFieldRegion fieldRegion={fieldRegion} {...editRegionState} />
+
+          <TabsContainer>
+            <TabContext
+              value={
+                readableTabs.includes(filters.tab) ? filters.tab : 'profile'
+              }
+            >
+              <TabList onChange={(_, next) => setFilters({ tab: next })}>
+                <Tab label="Profile" value="profile" />
+                {canReadProjects && <Tab label="Projects" value="projects" />}
+              </TabList>
+              <TabPanel value="profile">
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                    py: 2,
+                    px: 1,
+                  }}
+                >
+                  <DisplayProperty
+                    label="Field Zone"
+                    value={
+                      <Link
+                        to={`/field-zones/${fieldRegion?.fieldZone.value?.id}`}
+                      >
+                        {fieldRegion?.fieldZone.value?.name.value}
+                      </Link>
+                    }
+                    loading={!fieldRegion}
+                  />
+                  <DisplayProperty
+                    label="Director"
+                    value={
+                      <Link to={`/users/${fieldRegion?.director.value?.id}`}>
+                        {fieldRegion?.director.value?.fullName}
+                      </Link>
+                    }
+                    loading={!fieldRegion}
+                  />
+                </Box>
+              </TabPanel>
+              {canReadProjects && (
+                <TabPanel value="projects">
+                  <FieldRegionProjectsPanel />
+                </TabPanel>
+              )}
+            </TabContext>
+          </TabsContainer>
+
+          {fieldRegion && (
+            <EditFieldRegion fieldRegion={fieldRegion} {...editRegionState} />
+          )}
+        </>
       )}
     </Box>
   );

@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
+import { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { canEditAny } from '~/common';
@@ -10,14 +12,22 @@ import {
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
 import { Link } from '~/components/Routing';
+import { Tab, TabsContainer } from '~/components/Tabs';
+import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
 import { Error } from '../../../components/Error';
-import { Fab } from '../../../components/Fab';
 import { EditFieldZone } from '../../../components/FieldZone';
+import { IconButton } from '../../../components/IconButton';
 import { Redacted } from '../../../components/Redacted';
 import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql';
+import { FieldZoneProjectsPanel } from './Tabs/Projects/FieldZoneProjectsPanel';
+
+const useFieldZoneDetailFilters = makeQueryHandler({
+  tab: withDefault(EnumParam(['profile', 'projects']), 'profile'),
+});
 
 export const FieldZoneDetail = () => {
   const { fieldZoneId = '' } = useParams();
+  const [filters, setFilters] = useFieldZoneDetailFilters();
 
   const [editZoneState, editZone] = useDialog();
 
@@ -27,14 +37,31 @@ export const FieldZoneDetail = () => {
   });
 
   const fieldZone = data?.fieldZone;
+  const canReadProjects = fieldZone?.projects.canRead !== false;
+
+  const readableTabs = useMemo(
+    () => ['profile', ...(canReadProjects ? ['projects'] : [])],
+    [canReadProjects]
+  );
+
+  useEffect(() => {
+    if (!readableTabs.includes(filters.tab)) {
+      setFilters({ tab: 'profile' });
+    }
+  }, [filters.tab, readableTabs, setFilters]);
 
   return (
     <Box
       component="main"
-      sx={{
+      sx={(theme) => ({
+        display: 'flex',
+        flexDirection: 'column',
         flex: 1,
-        p: 4,
-      }}
+        overflowY: 'auto',
+        padding: 4,
+        gap: 3,
+        maxWidth: theme.breakpoints.values.xl,
+      })}
     >
       <Helmet title={fieldZone?.name.value || undefined} />
       <Error error={error}>
@@ -44,74 +71,75 @@ export const FieldZoneDetail = () => {
         }}
       </Error>
       {!error && (
-        <Box
-          sx={{
-            maxWidth: (theme) => theme.breakpoints.values.md,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 3,
-          }}
-        >
-          <Box
-            component="header"
-            sx={{
-              flex: 1,
-              display: 'flex',
-            }}
-          >
-            <Typography
-              variant="h2"
-              sx={{
-                mr: 4,
-                width: !fieldZone?.name.value ? '40%' : undefined,
-              }}
-            >
+        <>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Typography variant="h2" sx={{ mr: 2, lineHeight: 'inherit' }}>
               {!fieldZone ? (
-                <Skeleton width="100%" />
+                <Skeleton width="20ch" />
               ) : (
                 fieldZone.name.value ?? (
                   <Redacted
                     info="You don't have permission to view this field zone's name"
-                    width="40%"
+                    width="20ch"
                   />
                 )
               )}
             </Typography>
-            {canEditAny(fieldZone, true) && (
-              <Fab
-                color="primary"
-                aria-label="edit zone"
-                onClick={editZone}
-                loading={!fieldZone}
-              >
-                <Edit />
-              </Fab>
-            )}
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-            }}
-          >
-            <Typography variant="h4">
-              {fieldZone ? 'Field Zone' : <Skeleton width={200} />}
-            </Typography>
+            {canEditAny(fieldZone, true) ? (
+              <Tooltip title="Edit Field Zone">
+                <IconButton aria-label="edit zone" onClick={editZone}>
+                  <Edit />
+                </IconButton>
+              </Tooltip>
+            ) : null}
           </Box>
 
-          <DisplayProperty
-            label="Director"
-            value={
-              fieldZone?.director.value && (
-                <Link to={`/users/${fieldZone.director.value.id}`}>
-                  {fieldZone.director.value.fullName}
-                </Link>
-              )
-            }
-            loading={!fieldZone}
-          />
-        </Box>
+          <TabsContainer>
+            <TabContext
+              value={
+                readableTabs.includes(filters.tab) ? filters.tab : 'profile'
+              }
+            >
+              <TabList onChange={(_, next) => setFilters({ tab: next })}>
+                <Tab label="Profile" value="profile" />
+                {canReadProjects && <Tab label="Projects" value="projects" />}
+              </TabList>
+              <TabPanel value="profile">
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                    py: 2,
+                    px: 1,
+                  }}
+                >
+                  <DisplayProperty
+                    label="Director"
+                    value={
+                      fieldZone?.director.value && (
+                        <Link to={`/users/${fieldZone.director.value.id}`}>
+                          {fieldZone.director.value.fullName}
+                        </Link>
+                      )
+                    }
+                    loading={!fieldZone}
+                  />
+                </Box>
+              </TabPanel>
+              {canReadProjects && (
+                <TabPanel value="projects">
+                  <FieldZoneProjectsPanel />
+                </TabPanel>
+              )}
+            </TabContext>
+          </TabsContainer>
+
+          {fieldZone && (
+            <EditFieldZone fieldZone={fieldZone} {...editZoneState} />
+          )}
+        </>
       )}
-      {fieldZone && <EditFieldZone fieldZone={fieldZone} {...editZoneState} />}
     </Box>
   );
 };

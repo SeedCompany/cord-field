@@ -5,7 +5,6 @@ import {
   GridColDef,
   GridRenderCellParams as RenderCellParams,
 } from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
 import {
@@ -21,6 +20,7 @@ import {
   DefaultDataGridStyles,
   enumColumn,
   noHeaderFilterButtons,
+  useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
 import { LanguageNameColumn } from '../../../components/Grid/Columns/LanguageNameColumn';
@@ -185,22 +185,10 @@ export const ProgressReportsGrid = ({
     apiRef: props.apiRef,
   });
 
-  const slots = useMemo(
-    () =>
-      merge({}, DefaultDataGridStyles.slots, dataGridProps.slots, props.slots),
-    [dataGridProps.slots, props.slots]
-  );
-
-  const slotProps = useMemo(
-    () =>
-      merge(
-        {},
-        DefaultDataGridStyles.slotProps,
-        dataGridProps.slotProps,
-        props.slotProps
-      ),
-    [dataGridProps.slotProps, props.slotProps]
-  );
+  const { slots, slotProps } = useDataGridSlots(dataGridProps, {
+    slots: props.slots,
+    slotProps: props.slotProps,
+  });
 
   return (
     <DataGridPro
