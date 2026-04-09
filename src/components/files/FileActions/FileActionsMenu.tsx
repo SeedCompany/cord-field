@@ -10,6 +10,7 @@ import {
   Event as UpdateDate,
 } from '@mui/icons-material';
 import {
+  Box,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -20,7 +21,6 @@ import { useTheme } from '@mui/material/styles';
 import { startCase } from 'lodash';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { makeStyles } from 'tss-react/mui';
 import { IconButton, IconButtonProps } from '../../IconButton';
 import { MenuItemLink } from '../../Routing';
 import { FileAction } from './FileAction.enum';
@@ -32,22 +32,6 @@ import {
   useFileActions,
   VersionActionItem,
 } from './FileActionsContext';
-
-const useStyles = makeStyles()(({ spacing }) => ({
-  newVersionItem: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: spacing(-2),
-    marginRight: spacing(-2),
-    paddingLeft: spacing(2),
-    paddingRight: spacing(2),
-    width: `calc(100% + (${spacing(2)} * 2))`,
-    '&:focus': {
-      outline: 'none',
-    },
-  },
-}));
 
 interface FileActionsList {
   actions: PermittedActions;
@@ -112,7 +96,6 @@ const isFileVersion = (
 ): props is VersionPopupProps => props.item.__typename === 'FileVersion';
 
 export const FileActionsMenu = (props: FileActionsMenuProps) => {
-  const { classes } = useStyles();
   const { spacing } = useTheme();
   const { item, actions, ...rest } = props;
 
@@ -237,10 +220,18 @@ export const FileActionsMenu = (props: FileActionsMenuProps) => {
             }
           >
             {action === FileAction.NewVersion ? (
-              <span {...getRootProps()} className={classes.newVersionItem}>
+              <Box
+                component="span"
+                {...getRootProps()}
+                sx={{
+                  display: 'flex',
+                  mx: -2,
+                  px: 2,
+                }}
+              >
                 <input {...getInputProps()} name="file-version-uploader" />
                 {menuItemContents(action)}
-              </span>
+              </Box>
             ) : (
               menuItemContents(action)
             )}
