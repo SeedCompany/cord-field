@@ -23,12 +23,13 @@ export const DisplaySimpleProperty = ({
 }: DisplaySimplePropertyProps) => {
   const shouldRenderElement = loading || (label && value);
   if (!shouldRenderElement) return null;
+  if (loading && loading !== true) {
+    return wrap ? wrap(loading as ReactElement) : <>{loading}</>;
+  }
   const property = (
     <Typography variant="body2" {...props}>
       {loading === true ? (
         <Skeleton width={loadingWidth} />
-      ) : loading ? (
-        loading
       ) : label && value ? (
         <>
           <Typography component="span" variant="inherit" {...LabelProps}>
