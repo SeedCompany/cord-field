@@ -1,11 +1,6 @@
 fragment LanguageListItem on Language {
   id
-  name {
-    value
-  }
-  displayName {
-    value
-  }
+  publicName
   ethnologue {
     code {
       value

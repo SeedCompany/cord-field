@@ -50,6 +50,7 @@ export const LanguageDetail = () => {
     ethnologue,
     displayName,
     name,
+    publicName,
     sensitivity,
     isDialect,
     isSignLanguage,
@@ -89,7 +90,7 @@ export const LanguageDetail = () => {
         maxWidth: theme.breakpoints.values.xl,
       })}
     >
-      <Helmet title={name?.value ?? displayName?.value ?? undefined} />
+      <Helmet title={publicName ?? undefined} />
       <Error error={error}>
         {{
           NotFound: 'Could not find language',
@@ -103,8 +104,8 @@ export const LanguageDetail = () => {
               {!language ? (
                 <Skeleton width="16ch" />
               ) : (
-                name?.value ??
-                displayName?.value ?? (
+                displayName?.value ??
+                name?.value ?? (
                   <Redacted
                     info="You don't have permission to view this language's name"
                     width="16ch"

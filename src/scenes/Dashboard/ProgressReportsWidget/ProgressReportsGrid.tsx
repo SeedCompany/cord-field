@@ -46,7 +46,7 @@ export const ProgressReportsColumnMap = {
     valueGetter: (_, report) => report.parent.project,
   }),
   language: LanguageNameColumn({
-    field: 'engagement.language.name',
+    field: 'engagement.language.displayName',
     valueGetter: (_, report) => report.parent.language.value!,
   }),
   viewReport: LinkColumn({

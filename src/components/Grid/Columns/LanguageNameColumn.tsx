@@ -23,7 +23,10 @@ export const LanguageNameColumn = <
     ...textColumn<Row>(),
     headerName: 'Language',
     width: 200,
-    valueGetter: (...args) => valueGetter(...args).name.value,
+    valueGetter: (...args) => {
+      const lang = valueGetter(...args);
+      return lang.publicName;
+    },
     renderCell: ({ value, row, colDef, api }) => {
       const apiRef = { current: api };
       const language = valueGetter(null as never, row, colDef, apiRef);

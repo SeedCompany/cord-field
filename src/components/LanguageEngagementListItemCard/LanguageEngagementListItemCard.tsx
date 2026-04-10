@@ -55,7 +55,7 @@ export const LanguageEngagementListItemCard = (
   const { classes, cx } = useStyles();
 
   const language = securedLanguage.value;
-  const name = language?.name.value ?? language?.displayName.value;
+  const name = language?.publicName;
   const population = language?.population.value;
   const registryOfLanguageVarietiesCode =
     language?.registryOfLanguageVarietiesCode.value;

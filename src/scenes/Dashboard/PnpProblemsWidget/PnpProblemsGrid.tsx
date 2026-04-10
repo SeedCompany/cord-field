@@ -42,7 +42,7 @@ export const PnpProblemsColumnMap = {
     valueGetter: (_, pnp) => pnp.parent.project,
   }),
   language: LanguageNameColumn({
-    field: 'engagement.language.name',
+    field: 'engagement.language.displayName',
     valueGetter: (_, pnp) => pnp.parent.language.value!,
   }),
   viewReport: LinkColumn({
