@@ -59,7 +59,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     width: 200,
     valueGetter: (_, row) => {
       return row.__typename === 'LanguageEngagement'
-        ? row.language.value?.name.value
+        ? row.language.value?.publicName
         : row.__typename === 'InternshipEngagement'
         ? row.intern.value?.fullName
         : null;

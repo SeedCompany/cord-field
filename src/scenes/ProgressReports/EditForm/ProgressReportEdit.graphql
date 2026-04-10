@@ -36,10 +36,7 @@ fragment ProgressReportEdit on ProgressReport {
     language {
       value {
         id
-        displayName {
-          canRead
-          value
-        }
+        publicName
       }
     }
     project {

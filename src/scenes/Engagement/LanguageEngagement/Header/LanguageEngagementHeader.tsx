@@ -52,7 +52,7 @@ export const LanguageEngagementHeader = ({
     useDialog<Engagement>();
 
   const language = engagement.language.value;
-  const langName = language?.name.value ?? language?.displayName.value;
+  const langName = language?.publicName;
   const ptRegistryId = engagement.paratextRegistryId;
   const rev79CommunityId = engagement.rev79CommunityId;
   const editable = canEditAny(engagement);

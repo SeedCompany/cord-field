@@ -44,6 +44,7 @@ export const LanguageDetailProfile = ({
         sx={{
           p: 2,
           gap: 2,
+          width: '100%',
         }}
       >
         <DisplayProperty

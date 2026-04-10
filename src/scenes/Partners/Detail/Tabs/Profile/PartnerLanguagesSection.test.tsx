@@ -5,11 +5,10 @@ import { PartnerLanguagesSection } from './PartnerLanguagesSection';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const makeLang = (name: string, displayName = name) => ({
+const makeLang = (publicName: string) => ({
   __typename: 'Language' as const,
-  id: `lang-${name}`,
-  name: { __typename: 'SecuredString' as const, value: name },
-  displayName: { __typename: 'SecuredString' as const, value: displayName },
+  id: `lang-${publicName}`,
+  publicName,
   ethnologue: {
     __typename: 'EthnologueLanguage' as const,
     code: { __typename: 'SecuredStringNullable' as const, value: null },
@@ -97,18 +96,6 @@ describe('PartnerLanguagesSection', () => {
     render(<PartnerLanguagesSection partner={partner} onEdit={jest.fn()} />);
     expect(screen.getByText('German')).toBeInTheDocument();
     expect(screen.getByText('Arabic')).toBeInTheDocument();
-  });
-
-  it('falls back to displayName when language name value is null', () => {
-    const lang = {
-      ...makeLang('ignored', 'Display-Only Name'),
-      name: { __typename: 'SecuredString' as const, value: null },
-    };
-    const partner = makePartner({
-      languageOfReporting: { canRead: true, canEdit: true, value: lang },
-    });
-    render(<PartnerLanguagesSection partner={partner} onEdit={jest.fn()} />);
-    expect(screen.getByText('Display-Only Name')).toBeInTheDocument();
   });
 
   it('calls onEdit when the edit button is clicked', async () => {

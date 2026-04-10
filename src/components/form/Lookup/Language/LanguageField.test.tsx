@@ -18,8 +18,7 @@ jest.mock('../../../../scenes/Languages/Create', () => ({
 const makeLang = (overrides?: object) => ({
   __typename: 'Language',
   id: 'lang-1',
-  name: { __typename: 'SecuredString', value: 'English' },
-  displayName: { __typename: 'SecuredString', value: 'English' },
+  publicName: 'English',
   ethnologue: {
     __typename: 'EthnologueLanguage',
     code: { __typename: 'SecuredStringNullable', value: 'eng' },
@@ -110,30 +109,13 @@ describe('LanguageField', () => {
       });
     });
 
-    it('falls back to displayName when name is null', async () => {
-      const lang = makeLang({
-        name: { __typename: 'SecuredString', value: null },
-        displayName: {
-          __typename: 'SecuredString',
-          value: 'Display-Only Name',
-        },
-      });
-      const input = setup([searchMock('Disp', [lang])]);
-      search(input, 'Disp');
-
-      await waitFor(() => {
-        expect(screen.getByText('Display-Only Name')).toBeInTheDocument();
-      });
-    });
-
     it('shows all results with their respective codes', async () => {
       // Both names contain 'Engl' so MUI's client-side filter passes them through
       const langs = [
         makeLang(),
         makeLang({
           id: 'lang-2',
-          name: { __typename: 'SecuredString', value: 'English Creole' },
-          displayName: { __typename: 'SecuredString', value: 'English Creole' },
+          publicName: 'English Creole',
           ethnologue: {
             __typename: 'EthnologueLanguage',
             code: { __typename: 'SecuredStringNullable', value: 'cpe' },

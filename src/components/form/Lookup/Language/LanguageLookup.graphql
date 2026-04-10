@@ -10,12 +10,7 @@ query LanguageLookup($query: String!) {
 
 fragment LanguageLookupItem on Language {
   id
-  name {
-    value
-  }
-  displayName {
-    value
-  }
+  publicName
   ethnologue {
     code {
       value
