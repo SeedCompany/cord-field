@@ -88,9 +88,7 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
           sx={{ gap: 2 }}
         >
           <Typography variant="h5">{project.name.value}</Typography>
-          <Typography variant="h5">
-            {language.value?.displayName.value}
-          </Typography>
+          <Typography variant="h5">{language.value?.publicName}</Typography>
         </Stack>
       </Box>
 

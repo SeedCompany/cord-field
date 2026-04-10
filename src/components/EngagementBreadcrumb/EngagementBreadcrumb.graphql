@@ -7,11 +7,8 @@ fragment EngagementBreadcrumb on Engagement {
     language {
       value {
         id
+        publicName
         name {
-          canRead
-          value
-        }
-        displayName {
           canRead
           value
         }

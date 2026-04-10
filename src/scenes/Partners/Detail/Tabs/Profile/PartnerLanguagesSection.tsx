@@ -57,8 +57,7 @@ export const PartnerLanguagesSection = ({
           ) : partner.languageOfReporting.canRead ? (
             <Typography component="p" variant="h4">
               {partner.languageOfReporting.value
-                ? partner.languageOfReporting.value.name.value ??
-                  partner.languageOfReporting.value.displayName.value
+                ? partner.languageOfReporting.value.publicName
                 : 'None'}
             </Typography>
           ) : (
@@ -82,8 +81,7 @@ export const PartnerLanguagesSection = ({
           ) : partner.languageOfWiderCommunication.canRead ? (
             <Typography component="p" variant="h4">
               {partner.languageOfWiderCommunication.value
-                ? partner.languageOfWiderCommunication.value.name.value ??
-                  partner.languageOfWiderCommunication.value.displayName.value
+                ? partner.languageOfWiderCommunication.value.publicName
                 : 'None'}
             </Typography>
           ) : (
@@ -114,7 +112,7 @@ export const PartnerLanguagesSection = ({
                     sx={{ listStyleType: 'none' }}
                     key={language.id}
                   >
-                    {language.name.value ?? language.displayName.value}
+                    {language.publicName}
                   </Typography>
                 ))}
               </Stack>
