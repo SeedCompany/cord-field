@@ -1,6 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { InfoOutlined as InfoIcon } from '@mui/icons-material';
-import { Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Button, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
@@ -57,14 +56,23 @@ export const ProjectWorkflowDialog = ({
           sx={{ mr: -1 }}
         >
           <span>Update Project</span>
-          <Tooltip title="View Workflow">
-            <IconButton
-              component={Link}
-              to={`/projects/workflow${step ? `?state=${step}` : ''}`}
-            >
-              <InfoIcon />
-            </IconButton>
-          </Tooltip>
+          <Button
+            component={Link}
+            to={`/projects/workflow${step ? `?state=${step}` : ''}`}
+            variant="outlined"
+            size="small"
+            sx={(theme) => ({
+              color: theme.palette.text.secondary,
+              borderColor: theme.palette.divider,
+              borderRadius: '999px',
+              '&:hover': {
+                borderColor: theme.palette.text.secondary,
+                backgroundColor: theme.palette.action.hover,
+              },
+            })}
+          >
+            View Workflow
+          </Button>
         </Stack>
       }
       closeLabel="Close"
