@@ -260,7 +260,32 @@ export class CalendarDate<IsValid extends boolean = DefaultValidity>
       : undefined;
 
   endOf(unit: DateTimeUnit): this {
-    return CalendarDate.fromDateTime(super.endOf(unit)) as this;
+    // We must NOT call super.endOf() here. Luxon's endOf() internally calls
+    // this.startOf(), this.plus(), this.minus() — and since `this` is a
+    // CalendarDate, those dispatch to our overridden versions which all strip
+    // time back to midnight via fromDateTime/startOf('day'). This causes
+    // super.endOf() to return midnight instead of 23:59:59.999.
+    //
+    // The @date-io/luxon getWeekArray computes grid size with:
+    //   Math.round(endOf('week').diff(startOf('week'), 'days'))
+    // When the month's last day is a Sunday (end of ISO week), endOf('week')
+    // lands on the same day as endOf('month'). With midnight timestamps the diff
+    // is an exact integer (e.g. 34), which Math.round doesn't round up — so the
+    // last day of the month is dropped from the calendar grid entirely.
+    //
+    // By using a plain DateTime (not CalendarDate), endOf() returns 23:59:59.999,
+    // making the diff fractional (34.9999...) so Math.round correctly gives 35.
+    const inst = DateTime.fromMillis(this.valueOf(), { zone: this.zone }).endOf(
+      unit
+    ) as any;
+    return new CalendarDate({
+      ts: inst.ts,
+      zone: inst.zone,
+      c: inst.c,
+      o: inst.o,
+      loc: inst.loc,
+      invalid: inst.invalid,
+    }) as this;
   }
 
   minus(duration: DurationLike): this {
