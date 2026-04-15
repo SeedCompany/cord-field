@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Button, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { Except } from 'type-fest';
 import {
@@ -9,6 +9,7 @@ import {
 } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
+import { ButtonLink } from '~/components/Routing/ButtonLink';
 import {
   DialogForm,
   DialogFormProps,
@@ -19,7 +20,6 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
-import { Link } from '../../../components/Routing';
 import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
 import { TransitionProjectDocument } from './TransitionProject.graphql';
 
@@ -56,23 +56,19 @@ export const ProjectWorkflowDialog = ({
           sx={{ mr: -1 }}
         >
           <span>Update Project</span>
-          <Button
-            component={Link}
+          <ButtonLink
             to={`/projects/workflow${step ? `?state=${step}` : ''}`}
             variant="outlined"
             size="small"
-            sx={(theme) => ({
-              color: theme.palette.text.secondary,
-              borderColor: theme.palette.divider,
+            color="inherit"
+            sx={{
+              color: 'text.secondary',
+              borderColor: 'divider',
               borderRadius: '999px',
-              '&:hover': {
-                borderColor: theme.palette.text.secondary,
-                backgroundColor: theme.palette.action.hover,
-              },
-            })}
+            }}
           >
             View Workflow
-          </Button>
+          </ButtonLink>
         </Stack>
       }
       closeLabel="Close"
