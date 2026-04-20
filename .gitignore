@@ -43,3 +43,4 @@ Thumbs.db
 *.graphql.ts
 
 bin/dist
+server_build/
