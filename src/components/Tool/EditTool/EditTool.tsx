@@ -19,6 +19,7 @@ export const EditTool = (props: EditToolProps) => {
     () => ({
       name: tool.name.value!,
       aiBased: tool.aiBased.value!,
+      description: tool.description.value ?? undefined,
     }),
     [tool]
   );
