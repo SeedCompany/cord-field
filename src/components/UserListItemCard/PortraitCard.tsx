@@ -6,41 +6,10 @@ import {
   Typography,
 } from '@mui/material';
 import { ReactNode } from 'react';
-import { makeStyles } from 'tss-react/mui';
 import { square } from '~/common';
 import { Avatar } from '../Avatar';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { UserListItemFragment } from './UserListItem.graphql';
-
-const useStyles = makeStyles()(({ spacing, typography }) => ({
-  root: {
-    maxWidth: 247,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  actionArea: {
-    flex: 1,
-    display: 'flex',
-  },
-  cardContent: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    textAlign: 'center',
-    padding: spacing(3),
-  },
-  personImage: {
-    alignSelf: 'center',
-    ...square(86),
-    fontSize: typography.h2.fontSize,
-    marginBottom: spacing(2),
-  },
-  personName: {
-    marginBottom: spacing(3),
-  },
-}));
 
 export interface UserListItemCardPortraitProps {
   user?: UserListItemFragment;
@@ -51,29 +20,53 @@ export interface UserListItemCardPortraitProps {
 
 export const UserListItemCardPortrait = ({
   user,
-  className,
   content,
   action,
 }: UserListItemCardPortraitProps) => {
-  const { classes, cx } = useStyles();
-
   const org = user?.organizations.items[0];
 
   return (
-    <Card className={cx(classes.root, className)}>
+    <Card
+      sx={{
+        maxWidth: 247,
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       {content !== undefined ? (
         content
       ) : (
         <CardActionAreaLink
           to={`/users/${user?.id}`}
           disabled={!user}
-          className={classes.actionArea}
+          sx={{
+            flex: 1,
+            display: 'flex',
+          }}
         >
-          <CardContent className={classes.cardContent}>
-            <Avatar loading={!user} className={classes.personImage}>
+          <CardContent
+            sx={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'stretch',
+              textAlign: 'center',
+              p: 3,
+            }}
+          >
+            <Avatar
+              loading={!user}
+              sx={(theme) => ({
+                alignSelf: 'center',
+                ...square(86),
+                fontSize: theme.typography.h2.fontSize,
+                mb: 2,
+              })}
+            >
               {user?.avatarLetters}
             </Avatar>
-            <Typography variant="h4" className={classes.personName}>
+            <Typography variant="h4" sx={{ mb: 3 }}>
               {!user ? (
                 <Skeleton width="100%" />
               ) : (
