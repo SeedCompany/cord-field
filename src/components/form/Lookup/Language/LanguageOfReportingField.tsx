@@ -40,51 +40,47 @@ export const LanguageOfReportingField = LookupField.createFor<Language>({
   PaperComponent: LanguageDropdownPaper,
   renderOption: (props, option) => (
     <li {...props}>
-      {typeof option === 'string' ? (
-        `Create "${option}"`
-      ) : (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          overflow: 'hidden',
+        }}
+      >
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
+            flex: 1,
+            minWidth: 0,
             overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Box
-            sx={{
-              flex: 1,
-              minWidth: 0,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {option.publicName}
-          </Box>
-          <Box
-            sx={{
-              width: ETH_COLUMN_WIDTH,
-              textAlign: 'right',
-              color: 'text.secondary',
-              typography: 'body2',
-            }}
-          >
-            {option.ethnologue.code.value}
-          </Box>
-          <Box
-            sx={{
-              width: ROLV_COLUMN_WIDTH,
-              textAlign: 'right',
-              ml: 1,
-              color: 'text.secondary',
-              typography: 'body2',
-            }}
-          >
-            {option.registryOfLanguageVarietiesCode.value}
-          </Box>
+          {option.publicName}
         </Box>
-      )}
+        <Box
+          sx={{
+            width: ETH_COLUMN_WIDTH,
+            textAlign: 'right',
+            color: 'text.secondary',
+            typography: 'body2',
+          }}
+        >
+          {option.ethnologue.code.value}
+        </Box>
+        <Box
+          sx={{
+            width: ROLV_COLUMN_WIDTH,
+            textAlign: 'right',
+            ml: 1,
+            color: 'text.secondary',
+            typography: 'body2',
+          }}
+        >
+          {option.registryOfLanguageVarietiesCode.value}
+        </Box>
+      </Box>
     </li>
   ),
 });
