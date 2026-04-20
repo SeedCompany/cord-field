@@ -37,6 +37,7 @@ import {
 import {
   FieldRegionField,
   LanguageField,
+  LanguageOfReportingField,
   LocationField,
   UserField,
   UserLookupItem,
@@ -134,7 +135,7 @@ const fieldMapping = {
     <LocationField {...props} label="Countries" multiple variant="outlined" />
   ),
   'partner.languageOfReporting': ({ props }) => (
-    <LanguageField {...props} label="Language of Reporting" />
+    <LanguageOfReportingField {...props} label="Language of Reporting" />
   ),
   'partner.languageOfWiderCommunication': ({ props }) => (
     <LanguageField {...props} label="Language of Wider Communication" />
