@@ -21,14 +21,14 @@ import {
 
 interface CreateToolUsageFormValues {
   startDate?: CalendarDateOrISO | null;
-  tool: ToolLookupItem;
+  tool?: ToolLookupItem;
 }
 
 const ToolDescription = () => {
   const { values } = useFormState<CreateToolUsageFormValues>({
     subscription: { values: true },
   });
-  const description = values.tool.description.value;
+  const description = values.tool?.description.value;
   if (!description) return null;
   return (
     <Box
