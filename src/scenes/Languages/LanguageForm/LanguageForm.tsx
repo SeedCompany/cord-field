@@ -229,7 +229,7 @@ export const LanguageForm = <Mutation extends LanguageMutation>({
                     {(props) => (
                       <Grid item xs={12} sm={6}>
                         <CheckboxField
-                          label="Is this language available for reporting?"
+                          label="Is this approved for Field Partner reporting?"
                           margin="none"
                           {...props}
                         />
