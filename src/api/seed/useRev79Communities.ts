@@ -9,8 +9,8 @@ export interface Rev79Community {
 }
 
 const QUERY = gql`
-  query GetCommunitiesByProjectId($filter: JSONObject) {
-    getCommunitiesByProjectId(filter: $filter) {
+  query GetCommunitiesByProjectId($projectId: ID!) {
+    getCommunitiesByProjectId(projectId: $projectId) {
       id
       communitiesInUse {
         id
@@ -48,7 +48,7 @@ export const useRev79Communities = (
     seedClient
       .query<Rev79ProjectsData>({
         query: QUERY,
-        variables: { filter: { id: rev79ProjectId } },
+        variables: { projectId: rev79ProjectId },
       })
       .then(({ data }) => {
         if (!cancelled) {
