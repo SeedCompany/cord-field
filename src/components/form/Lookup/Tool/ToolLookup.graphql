@@ -22,4 +22,8 @@ fragment ToolLookupItem on Tool {
     canRead
     value
   }
+  description {
+    canRead
+    value
+  }
 }
