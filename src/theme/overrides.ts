@@ -257,6 +257,10 @@ export const appComponents = ({
         tooltip: {
           fontSize: typography.pxToRem(12),
           backgroundColor: fade(palette.grey[700], 0.94),
+          color: palette.common.white,
+          '& .MuiTypography-root': {
+            color: 'inherit',
+          },
         },
       },
     },

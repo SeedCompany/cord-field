@@ -1,4 +1,4 @@
-import { Skeleton, Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { asDate } from '~/common';
 import {
   DisplaySimpleProperty,
@@ -19,6 +19,7 @@ export const LanguageDetailProfile = ({
   const formatNumber = useNumberFormatter();
 
   const {
+    id,
     ethnologue,
     signLanguageCode,
     isSignLanguage,
@@ -47,6 +48,7 @@ export const LanguageDetailProfile = ({
           width: '100%',
         }}
       >
+        <DisplayProperty label="ID" value={id} loading={!language} />
         <DisplayProperty
           label="Pronunciation Guide"
           value={displayNamePronunciation?.value}
@@ -106,7 +108,7 @@ export const LanguageDetailProfile = ({
           loading={!language}
         />
         <DisplayProperty
-          label="Available for Reporting"
+          label="Approved for Field Partner Reporting"
           value={isAvailableForReporting?.value ? 'Yes' : 'No'}
           loading={!language}
         />
@@ -122,18 +124,7 @@ const DisplayProperty = (props: DisplaySimplePropertyProps) =>
       variant="body1"
       {...{ component: 'div' }}
       {...props}
-      loading={
-        props.loading ? (
-          <>
-            <Typography variant="body2">
-              <Skeleton width="10%" />
-            </Typography>
-            <Typography variant="body1">
-              <Skeleton width="40%" />
-            </Typography>
-          </>
-        ) : null
-      }
+      loadingWidth="20ch"
       LabelProps={{
         color: 'textSecondary',
         variant: 'body2',

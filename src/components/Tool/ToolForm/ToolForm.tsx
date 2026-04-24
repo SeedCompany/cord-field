@@ -21,6 +21,17 @@ export const ToolForm = <R,>({ tool, ...rest }: ToolFormProps<R>) => (
         />
       )}
     </SecuredField>
+    <SecuredField obj={tool} name="description">
+      {(props) => (
+        <TextField
+          {...props}
+          label="Description"
+          placeholder="Brief description of this tool"
+          multiline
+          minRows={2}
+        />
+      )}
+    </SecuredField>
     <SecuredField obj={tool} name="aiBased">
       {(props) => (
         <CheckboxField

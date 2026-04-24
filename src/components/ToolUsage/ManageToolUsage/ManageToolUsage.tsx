@@ -2,6 +2,7 @@ import { ApolloError, Reference, useMutation } from '@apollo/client';
 import { Box, Chip, Divider, Stack, Typography } from '@mui/material';
 import { cmpBy } from '@seedcompany/common';
 import { useMemo, useState } from 'react';
+import { useFormState } from 'react-final-form';
 import { CalendarDate, CalendarDateOrISO, ISOString } from '~/common';
 import { readFragment } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
@@ -20,8 +21,30 @@ import {
 
 interface CreateToolUsageFormValues {
   startDate?: CalendarDateOrISO | null;
-  tool: ToolLookupItem;
+  tool?: ToolLookupItem;
 }
+
+const ToolDescription = () => {
+  const { values } = useFormState<CreateToolUsageFormValues>({
+    subscription: { values: true },
+  });
+  const description = values.tool?.description.value;
+  if (!description) return null;
+  return (
+    <Box
+      sx={{
+        px: 1.5,
+        py: 1,
+        borderRadius: 1,
+        bgcolor: 'background.default',
+      }}
+    >
+      <Typography variant="caption" color="text.secondary">
+        {description}
+      </Typography>
+    </Box>
+  );
+};
 
 export interface ManageToolUsageProps
   extends Pick<DialogFormProps<CreateToolUsageFormValues>, 'open' | 'onClose'> {
@@ -184,11 +207,15 @@ export const ManageToolUsage = ({
 
               <SubmitError />
 
-              <ToolField
-                name="tool"
-                label="Tool"
-                getOptionDisabled={(tool) => usedToolIds.has(tool.id)}
-              />
+              <Stack sx={{ mb: 2 }}>
+                <ToolField
+                  name="tool"
+                  label="Tool"
+                  margin="none"
+                  getOptionDisabled={(tool) => usedToolIds.has(tool.id)}
+                />
+                <ToolDescription />
+              </Stack>
               <DateField
                 name="startDate"
                 label="Start Date"

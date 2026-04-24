@@ -1,0 +1,9 @@
+query LanguageOfReportingLookup($query: String!) {
+  search: languages(
+    input: { filter: { name: $query, isAvailableForReporting: true } }
+  ) {
+    items {
+      ...LanguageLookupItem
+    }
+  }
+}

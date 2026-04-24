@@ -10,4 +10,9 @@ fragment ToolForm on Tool {
     canEdit
     value
   }
+  description {
+    canRead
+    canEdit
+    value
+  }
 }
