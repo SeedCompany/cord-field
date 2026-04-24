@@ -21,6 +21,8 @@ import {
   DisplayLocationFragment,
   labelFrom,
 } from '~/common';
+import { LanguageLookupItemFragment } from '~/components/form/Lookup/Language/LanguageLookup.graphql';
+import { LanguageOfReportingLookupDocument } from '~/components/form/Lookup/Language/LanguageOfReportingLookup.graphql';
 import {
   DialogForm,
   DialogFormProps,
@@ -41,7 +43,6 @@ import {
   UserField,
   UserLookupItem,
 } from '../../../components/form/Lookup';
-import { LanguageLookupItemFragment } from '../../../components/form/Lookup/Language/LanguageLookup.graphql';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
 import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
@@ -134,7 +135,11 @@ const fieldMapping = {
     <LocationField {...props} label="Countries" multiple variant="outlined" />
   ),
   'partner.languageOfReporting': ({ props }) => (
-    <LanguageField {...props} label="Language of Reporting" />
+    <LanguageField
+      {...props}
+      label="Language of Reporting"
+      lookupDocument={LanguageOfReportingLookupDocument}
+    />
   ),
   'partner.languageOfWiderCommunication': ({ props }) => (
     <LanguageField {...props} label="Language of Wider Communication" />
