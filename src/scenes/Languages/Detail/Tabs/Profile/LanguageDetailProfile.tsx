@@ -108,7 +108,7 @@ export const LanguageDetailProfile = ({
           loading={!language}
         />
         <DisplayProperty
-          label="Available for Reporting"
+          label="Approved for Field Partner Reporting"
           value={isAvailableForReporting?.value ? 'Yes' : 'No'}
           loading={!language}
         />
