@@ -19,6 +19,7 @@ export const LanguageDetailProfile = ({
   const formatNumber = useNumberFormatter();
 
   const {
+    id,
     ethnologue,
     signLanguageCode,
     isSignLanguage,
@@ -47,6 +48,7 @@ export const LanguageDetailProfile = ({
           width: '100%',
         }}
       >
+        <DisplayProperty label="ID" value={id} loading={!language} />
         <DisplayProperty
           label="Pronunciation Guide"
           value={displayNamePronunciation?.value}
