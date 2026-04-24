@@ -243,7 +243,7 @@ export function LookupField<
       filterOptions={(options, params) => {
         // Apply default filtering. Even though the API filters for us, we add
         // the currently selected options back in because they are still valid
-        // but we don't want to show these options if the don't match the
+        // but we don't want to show these options if they don't match the
         // current input text.
         // Note: `filterSelectedOptions` could still make sense either way
         // separate from this code below. It could be thought of as a "stricter"
@@ -394,7 +394,14 @@ LookupField.createFor = <
     props: Except<
       LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>,
       'lookupDocument' | 'compareBy' | 'getOptionLabel'
-    >
+    > & {
+      lookupDocument?: LookupFieldProps<
+        T,
+        Multiple,
+        DisableClearable,
+        CreateFormValues
+      >['lookupDocument'];
+    }
   ) {
     const initialOptions = useInitialOptions?.();
     return (
