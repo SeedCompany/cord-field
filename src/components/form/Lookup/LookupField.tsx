@@ -217,6 +217,17 @@ export function LookupField<
       // Helps represent that this is a valid object & makes it easier to replace
       // Works well with clearOnBlur
       selectOnFocus
+      // Default renderOption — callers can override by passing `renderOption`
+      // directly; since it comes before ...autocompleteProps it loses to the spread.
+      renderOption={(optionProps, option, _ownerState) => (
+        <li {...optionProps}>
+          {typeof option === 'string'
+            ? `Create "${option}"`
+            : renderOptionContent
+            ? renderOptionContent(option)
+            : getOptionLabel(option)}
+        </li>
+      )}
       {...autocompleteProps}
       disabled={meta.disabled}
       // FF also has multiple and defaultValue
@@ -235,15 +246,6 @@ export function LookupField<
       options={options}
       getOptionLabel={getOptionLabel}
       freeSolo={freeSolo}
-      renderOption={(props, option, _ownerState) => (
-        <li {...props}>
-          {typeof option === 'string'
-            ? `Create "${option}"`
-            : renderOptionContent
-            ? renderOptionContent(option)
-            : getOptionLabel(option)}
-        </li>
-      )}
       filterOptions={(options, params) => {
         // Apply default filtering. Even though the API filters for us, we add
         // the currently selected options back in because they are still valid
