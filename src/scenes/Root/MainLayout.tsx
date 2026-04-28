@@ -67,6 +67,9 @@ export const MainLayout = () => {
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
+          // Prevents the main flex child from overflowing as the sidebar
+          // resizes, and allows nested content to shrink/truncate instead
+          // of forcing overflow.
           minWidth: 0,
         }}
       >

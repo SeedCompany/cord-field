@@ -15,7 +15,7 @@ export interface SidebarProps {
 // React 18's HTMLAttributes don't yet declare `inert`; the DOM accepts it as
 // a boolean attribute (presence = true). Spread an extra-attributes record so
 // we don't widen the JSX type globally.
-const inertProps: Record<string, unknown> = { inert: '' };
+const inertProps: Record<string, unknown> = { inert: true };
 
 /**
  * Desktop sidebar — rendered inline in the main layout (md and up).
