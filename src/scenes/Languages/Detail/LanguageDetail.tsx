@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
@@ -11,7 +11,7 @@ import { BooleanProperty } from '~/components/BooleanProperty';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { Sensitivity } from '~/components/Sensitivity';
 import { Tab, TabsContainer } from '~/components/Tabs';
-import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
@@ -27,16 +27,8 @@ import { LanguageDetailPosts } from './Tabs/Posts/LanguageDetailPosts';
 import { LanguageDetailProfile } from './Tabs/Profile/LanguageDetailProfile';
 import { LanguageDetailProjects } from './Tabs/Projects/LanguageDetailProjects';
 
-const useLanguageDetailsFilters = makeQueryHandler({
-  tab: withDefault(
-    EnumParam(['profile', 'locations', 'projects', 'posts']),
-    'profile'
-  ),
-});
-
 export const LanguageDetail = () => {
   const { languageId = '' } = useParams();
-  const [filters, setFilters] = useLanguageDetailsFilters();
   const { data, error } = useQuery(LanguageDocument, {
     variables: { languageId },
     fetchPolicy: 'cache-and-network',
@@ -71,11 +63,7 @@ export const LanguageDetail = () => {
     [canReadLocations, canReadProjects, canReadPosts]
   );
 
-  useEffect(() => {
-    if (!readableTabs.includes(filters.tab)) {
-      setFilters({ tab: 'profile' });
-    }
-  }, [filters.tab, readableTabs, setFilters]);
+  const [activeTab, setTab] = useDetailTabs(readableTabs);
 
   return (
     <Box
@@ -149,12 +137,8 @@ export const LanguageDetail = () => {
             />
           </Grid>
           <TabsContainer>
-            <TabContext
-              value={
-                readableTabs.includes(filters.tab) ? filters.tab : 'profile'
-              }
-            >
-              <TabList onChange={(_, next) => setFilters({ tab: next })}>
+            <TabContext value={activeTab}>
+              <TabList onChange={(_, next) => setTab(next)}>
                 <Tab label="Profile" value="profile" />
                 {canReadLocations && (
                   <Tab label="Locations" value="locations" />

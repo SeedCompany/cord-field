@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { canEditAny } from '~/common';
@@ -12,18 +12,13 @@ import { IconButton } from '~/components/IconButton';
 import { Redacted } from '~/components/Redacted';
 import { Tab, TabsContainer } from '~/components/Tabs';
 import { EditTool } from '~/components/Tool';
-import { makeQueryHandler, StringParam, withDefault } from '~/hooks';
+import { useDetailTabs } from '~/hooks';
 import { ToolDetailProfile } from './Tabs/Profile/ToolDetailProfile';
 import { ToolDetailUsages, UsageTab } from './Tabs/Usages';
 import { ToolDetailDocument } from './ToolDetail.graphql';
 
-const useToolDetailFilters = makeQueryHandler({
-  tab: withDefault(StringParam, 'profile'),
-});
-
 export const ToolDetail = () => {
   const { toolId = '' } = useParams();
-  const [filters, setFilters] = useToolDetailFilters();
   const [editState, edit] = useDialog();
 
   const { data, error } = useQuery(ToolDetailDocument, {
@@ -43,16 +38,7 @@ export const ToolDetail = () => {
     [tool?.containerSummary]
   );
 
-  const readableTabs = useMemo(
-    () => ['profile', ...tabs.map((t) => t.value)],
-    [tabs]
-  );
-
-  useEffect(() => {
-    if (!readableTabs.includes(filters.tab)) {
-      setFilters({ tab: 'profile' });
-    }
-  }, [filters.tab, readableTabs, setFilters]);
+  const [activeTab, setTab] = useDetailTabs(tabs.map((t) => t.value));
 
   return (
     <Box
@@ -93,12 +79,8 @@ export const ToolDetail = () => {
           </Box>
 
           <TabsContainer>
-            <TabContext
-              value={
-                readableTabs.includes(filters.tab) ? filters.tab : 'profile'
-              }
-            >
-              <TabList onChange={(_, next) => setFilters({ tab: next })}>
+            <TabContext value={activeTab}>
+              <TabList onChange={(_, next) => setTab(next)}>
                 <Tab label="Profile" value="profile" />
                 {tabs.map((tab) => (
                   <Tab key={tab.value} label={tab.label} value={tab.value} />

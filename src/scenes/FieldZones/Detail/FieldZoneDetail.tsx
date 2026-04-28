@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { canEditAny } from '~/common';
@@ -13,7 +13,7 @@ import {
 } from '~/components/DisplaySimpleProperty';
 import { Link } from '~/components/Routing';
 import { Tab, TabsContainer } from '~/components/Tabs';
-import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { useDetailTabs } from '~/hooks';
 import { Error } from '../../../components/Error';
 import { EditFieldZone } from '../../../components/FieldZone';
 import { IconButton } from '../../../components/IconButton';
@@ -21,13 +21,8 @@ import { Redacted } from '../../../components/Redacted';
 import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql';
 import { FieldZoneProjectsPanel } from './Tabs/Projects/FieldZoneProjectsPanel';
 
-const useFieldZoneDetailFilters = makeQueryHandler({
-  tab: withDefault(EnumParam(['profile', 'projects']), 'profile'),
-});
-
 export const FieldZoneDetail = () => {
   const { fieldZoneId = '' } = useParams();
-  const [filters, setFilters] = useFieldZoneDetailFilters();
 
   const [editZoneState, editZone] = useDialog();
 
@@ -39,16 +34,12 @@ export const FieldZoneDetail = () => {
   const fieldZone = data?.fieldZone;
   const canReadProjects = fieldZone?.projects.canRead !== false;
 
-  const readableTabs = useMemo(
-    () => ['profile', ...(canReadProjects ? ['projects'] : [])],
-    [canReadProjects]
+  const [activeTab, setTab] = useDetailTabs(
+    useMemo(
+      () => ['profile', ...(canReadProjects ? ['projects'] : [])],
+      [canReadProjects]
+    )
   );
-
-  useEffect(() => {
-    if (!readableTabs.includes(filters.tab)) {
-      setFilters({ tab: 'profile' });
-    }
-  }, [filters.tab, readableTabs, setFilters]);
 
   return (
     <Box
@@ -95,12 +86,8 @@ export const FieldZoneDetail = () => {
           </Box>
 
           <TabsContainer>
-            <TabContext
-              value={
-                readableTabs.includes(filters.tab) ? filters.tab : 'profile'
-              }
-            >
-              <TabList onChange={(_, next) => setFilters({ tab: next })}>
+            <TabContext value={activeTab}>
+              <TabList onChange={(_, next) => setTab(next)}>
                 <Tab label="Profile" value="profile" />
                 {canReadProjects && <Tab label="Projects" value="projects" />}
               </TabList>
