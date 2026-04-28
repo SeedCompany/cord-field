@@ -5,6 +5,7 @@
  * full MainLayout (which depends on Apollo, auth, router, theme, etc.) —
  * matches the pattern used in LookupField.test.tsx.
  */
+import { useCallback, useEffect, useState } from 'react';
 
 export interface NavOpenState {
   /** Whether the persistent desktop sidebar is expanded (md and up). */
@@ -31,3 +32,33 @@ export const toggleNavOpen = (
   isDesktop
     ? { ...prev, desktopOpen: !prev.desktopOpen }
     : { ...prev, mobileOpen: !prev.mobileOpen };
+
+/**
+ * Owns the responsive nav state plus the resize-up dismiss guard.
+ * Returned actions are stable by viewport so they can be threaded through
+ * memoised props without forcing re-renders downstream.
+ */
+export const useNavOpenState = (isDesktop: boolean) => {
+  const [navState, setNavState] = useState(initialNavOpenState);
+
+  // If the viewport crosses up to desktop while the mobile drawer is open,
+  // dismiss it so the Modal's focus trap / scroll lock don't linger
+  // invisibly behind the desktop layout.
+  useEffect(() => {
+    if (isDesktop && navState.mobileOpen) {
+      setNavState((prev) => ({ ...prev, mobileOpen: false }));
+    }
+  }, [isDesktop, navState.mobileOpen]);
+
+  const handleToggle = useCallback(
+    () => setNavState((prev) => toggleNavOpen(prev, isDesktop)),
+    [isDesktop]
+  );
+
+  const closeMobile = useCallback(
+    () => setNavState((prev) => ({ ...prev, mobileOpen: false })),
+    []
+  );
+
+  return { navState, handleToggle, closeMobile };
+};

@@ -1,6 +1,5 @@
 import { Box, Drawer, useMediaQuery } from '@mui/material';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
-import { useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet } from 'react-router-dom';
 import { CommentsBar } from '~/components/Comments/CommentsBar';
@@ -8,38 +7,27 @@ import { Error } from '../../components/Error';
 import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
-import { initialNavOpenState, toggleNavOpen } from './navOpenState';
+import { useNavOpenState } from './navOpenState';
 import { Sidebar, SIDEBAR_WIDTH, SidebarContent } from './Sidebar';
 import { sidebarTheme } from './Sidebar/sidebar.theme';
+
+// Distinct ids per variant: both render simultaneously (Drawer keepMounted),
+// so a single shared id would produce duplicate DOM ids. The hamburger's
+// `aria-controls` swaps to whichever variant is currently active.
+const DESKTOP_NAV_ID = 'main-nav-desktop';
+const MOBILE_NAV_ID = 'main-nav-mobile';
 
 export const MainLayout = () => {
   useAuthRequired();
   const theme = useTheme();
   // Width-based — landscape phones (<900px wide) correctly use the mobile drawer.
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+  // `noSsr: true` defers evaluation to the client so we don't hydrate the
+  // mobile layout on a desktop session and then visibly snap to desktop.
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'), { noSsr: true });
 
   // Persistent on desktop (defaults open), temporary overlay on mobile (defaults closed).
-  const [navState, setNavState] = useState(initialNavOpenState);
+  const { navState, handleToggle, closeMobile } = useNavOpenState(isDesktop);
   const { desktopOpen, mobileOpen } = navState;
-
-  // If the viewport crosses up to desktop while the mobile drawer is open,
-  // dismiss it so the Modal's focus trap / scroll lock don't linger
-  // invisibly behind the desktop layout.
-  useEffect(() => {
-    if (isDesktop && mobileOpen) {
-      setNavState((prev) => ({ ...prev, mobileOpen: false }));
-    }
-  }, [isDesktop, mobileOpen]);
-
-  const handleToggle = useCallback(
-    () => setNavState((prev) => toggleNavOpen(prev, isDesktop)),
-    [isDesktop]
-  );
-
-  const closeMobile = useCallback(
-    () => setNavState((prev) => ({ ...prev, mobileOpen: false })),
-    []
-  );
 
   // Mirror what the user sees: hamburger reflects the active variant's open state.
   const navOpen = isDesktop ? desktopOpen : mobileOpen;
@@ -54,7 +42,7 @@ export const MainLayout = () => {
       }}
     >
       <CreateDialogProviders>
-        <Sidebar open={desktopOpen} />
+        <Sidebar open={desktopOpen} id={DESKTOP_NAV_ID} />
         <Drawer
           variant="temporary"
           // Defensive: never let the temporary Modal stay mounted-as-open on
@@ -63,6 +51,7 @@ export const MainLayout = () => {
           onClose={closeMobile}
           anchor="left"
           ModalProps={{ keepMounted: true }}
+          PaperProps={{ id: MOBILE_NAV_ID }}
           sx={{
             display: { xs: 'block', md: 'none' },
             '& .MuiDrawer-paper': { width: SIDEBAR_WIDTH },
@@ -81,7 +70,11 @@ export const MainLayout = () => {
           minWidth: 0,
         }}
       >
-        <Header onMenuClick={handleToggle} navOpen={navOpen} />
+        <Header
+          onMenuClick={handleToggle}
+          navOpen={navOpen}
+          navControlsId={isDesktop ? DESKTOP_NAV_ID : MOBILE_NAV_ID}
+        />
         <ErrorBoundary fallback={<Error show page />}>
           <Outlet />
         </ErrorBoundary>

@@ -8,13 +8,14 @@ export const SIDEBAR_WIDTH = 248;
 export interface SidebarProps {
   /** Whether the sidebar is expanded. When false, collapses to zero width. */
   open: boolean;
+  /** DOM id, exposed so the hamburger can reference it via `aria-controls`. */
+  id?: string;
 }
 
 // React 18's HTMLAttributes don't yet declare `inert`; the DOM accepts it as
 // a boolean attribute (presence = true). Spread an extra-attributes record so
 // we don't widen the JSX type globally.
 const inertProps: Record<string, unknown> = { inert: '' };
-const noProps: Record<string, unknown> = {};
 
 /**
  * Desktop sidebar — rendered inline in the main layout (md and up).
@@ -22,14 +23,15 @@ const noProps: Record<string, unknown> = {};
  * naturally reflows when toggled. Hidden entirely below `md`; mobile users
  * get a temporary drawer instead (see MainLayout).
  */
-export const Sidebar = ({ open }: SidebarProps) => (
+export const Sidebar = ({ open, id }: SidebarProps) => (
   <ThemeProvider theme={sidebarTheme}>
     <Paper
+      id={id}
       elevation={0}
       square
       // When collapsed, `inert` removes the subtree from the tab order and
       // accessibility tree, preventing keyboard focus on invisible controls.
-      {...(open ? noProps : inertProps)}
+      {...(open ? {} : inertProps)}
       sx={{
         flexShrink: 0,
         overflowX: 'hidden',

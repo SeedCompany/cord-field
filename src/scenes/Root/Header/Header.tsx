@@ -8,9 +8,15 @@ export interface HeaderProps {
   onMenuClick?: () => void;
   /** Whether the navigation is currently open — used for `aria-expanded`. */
   navOpen?: boolean;
+  /** DOM id of the nav region this button controls — for `aria-controls`. */
+  navControlsId?: string;
 }
 
-export const Header = ({ onMenuClick, navOpen }: HeaderProps) => (
+export const Header = ({
+  onMenuClick,
+  navOpen,
+  navControlsId,
+}: HeaderProps) => (
   <AppBar position="static" color="inherit" sx={{ zIndex: 1 }}>
     <Toolbar sx={{ gap: 3, justifyContent: 'space-between' }}>
       <IconButton
@@ -18,6 +24,7 @@ export const Header = ({ onMenuClick, navOpen }: HeaderProps) => (
         color="inherit"
         aria-label="toggle navigation menu"
         aria-expanded={navOpen}
+        aria-controls={navControlsId}
         onClick={onMenuClick}
       >
         <MenuIcon />
