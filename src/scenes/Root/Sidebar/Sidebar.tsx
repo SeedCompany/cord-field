@@ -1,86 +1,54 @@
-import { Dashboard, FolderOpen, Language, Person } from '@mui/icons-material';
-import {
-  List,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-  Paper,
-  SvgIconProps,
-} from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { ComponentType } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { PeopleJoinedIcon } from '../../../components/Icons';
-import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
-import { CreateButtonMenu } from '../Creates';
 import { sidebarTheme } from './sidebar.theme';
-import { SidebarHeader } from './SidebarHeader';
+import { SidebarContent } from './SidebarContent';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    width: 248,
-    overflowY: 'auto',
-    flexShrink: 0,
-  },
-  content: {
-    padding: spacing(0, 2),
-  },
-  createNewItem: {
-    margin: spacing(4, 2, 1),
-    width: `calc(100% - ${spacing(2 * 2)})`,
-  },
-}));
+export const SIDEBAR_WIDTH = 248;
 
-export const Sidebar = () => {
-  const { classes } = useStyles();
+export interface SidebarProps {
+  /** Whether the sidebar is expanded. When false, collapses to zero width. */
+  open: boolean;
+}
 
-  const navList = (
-    <List
-      component="nav"
-      aria-label="sidebar"
-      subheader={<ListSubheader component="div">MENU</ListSubheader>}
+// React 18's HTMLAttributes don't yet declare `inert`; the DOM accepts it as
+// a boolean attribute (presence = true). Spread an extra-attributes record so
+// we don't widen the JSX type globally.
+const inertProps: Record<string, unknown> = { inert: '' };
+const noProps: Record<string, unknown> = {};
+
+/**
+ * Desktop sidebar — rendered inline in the main layout (md and up).
+ * Width animates between 0 and `SIDEBAR_WIDTH` so the main content area
+ * naturally reflows when toggled. Hidden entirely below `md`; mobile users
+ * get a temporary drawer instead (see MainLayout).
+ */
+export const Sidebar = ({ open }: SidebarProps) => (
+  <ThemeProvider theme={sidebarTheme}>
+    <Paper
+      elevation={0}
+      square
+      // When collapsed, `inert` removes the subtree from the tab order and
+      // accessibility tree, preventing keyboard focus on invisible controls.
+      {...(open ? noProps : inertProps)}
+      sx={{
+        flexShrink: 0,
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        width: open ? SIDEBAR_WIDTH : 0,
+        transition: (theme) =>
+          theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: open
+              ? theme.transitions.duration.enteringScreen
+              : theme.transitions.duration.leavingScreen,
+          }),
+        display: { xs: 'none', md: 'block' },
+      }}
     >
-      <NavItem to="/dashboard" label="My Dashboard" icon={Dashboard} />
-      <NavItem
-        to="/projects"
-        label="Projects"
-        icon={FolderOpen}
-        active={[
-          { path: '/projects', end: false },
-          { path: '/engagements', end: false },
-        ]}
-      />
-      <NavItem to="/languages" label="Languages" icon={Language} />
-      <NavItem to="/users" label="People" icon={Person} />
-      <NavItem to="/partners" label="Partners" icon={PeopleJoinedIcon} />
-    </List>
-  );
-
-  return (
-    <ThemeProvider theme={sidebarTheme}>
-      <Paper elevation={0} square className={classes.root}>
-        <SidebarHeader />
-        <div className={classes.content}>
-          <CreateButtonMenu fullWidth className={classes.createNewItem} />
-          {navList}
-        </div>
-      </Paper>
-    </ThemeProvider>
-  );
-};
-
-const NavItem = ({
-  icon: Icon,
-  label,
-  ...props
-}: ListItemLinkProps & {
-  icon: ComponentType<SvgIconProps>;
-  label: string;
-}) => (
-  <ListItemLink {...props}>
-    <ListItemIcon>
-      <Icon />
-    </ListItemIcon>
-    <ListItemText>{label}</ListItemText>
-  </ListItemLink>
+      {/* Inner box keeps content at full width so it doesn't reflow during the collapse animation. */}
+      <Box sx={{ width: SIDEBAR_WIDTH }}>
+        <SidebarContent />
+      </Box>
+    </Paper>
+  </ThemeProvider>
 );
