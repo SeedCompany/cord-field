@@ -11,9 +11,10 @@ import { useNavOpenState } from './navOpenState';
 import { Sidebar, SIDEBAR_WIDTH, SidebarContent } from './Sidebar';
 import { sidebarTheme } from './Sidebar/sidebar.theme';
 
-// Distinct ids per variant: both render simultaneously (Drawer keepMounted),
-// so a single shared id would produce duplicate DOM ids. The hamburger's
-// `aria-controls` swaps to whichever variant is currently active.
+// Distinct ids per variant: both the persistent Sidebar and the temporary
+// Drawer can be in the DOM simultaneously (Sidebar is always rendered;
+// Drawer content mounts on open), so a single shared id would duplicate DOM
+// ids. The hamburger's `aria-controls` swaps to whichever variant is active.
 const DESKTOP_NAV_ID = 'main-nav-desktop';
 const MOBILE_NAV_ID = 'main-nav-mobile';
 
@@ -50,7 +51,6 @@ export const MainLayout = () => {
           open={!isDesktop && mobileOpen}
           onClose={closeMobile}
           anchor="left"
-          ModalProps={{ keepMounted: true }}
           PaperProps={{ id: MOBILE_NAV_ID }}
           sx={{
             display: { xs: 'block', md: 'none' },
