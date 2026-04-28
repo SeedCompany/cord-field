@@ -54,6 +54,9 @@ const SearchResults = loadable(() => import('../SearchResults'), {
 const FieldZones = loadable(() => import('../FieldZones/FieldZones'), {
   resolveComponent: (m) => m.FieldZones,
 });
+const Tools = loadable(() => import('../Tools'), {
+  resolveComponent: (m) => m.Tools,
+});
 const Dashboard = loadable(() => import('../Dashboard'), {
   resolveComponent: (m) => m.DashboardRoutes,
 });
@@ -86,6 +89,7 @@ export const Root = () => {
         <Route path="field-regions/*" element={<FieldRegions />} />
         <Route path="locations/*" element={<Locations />} />
         <Route path="field-zones/*" element={<FieldZones />} />
+        <Route path="tools/*" element={<Tools />} />
         {NotFoundRoute}
       </Route>
       <Route key="auth" element={<AuthLayout />}>

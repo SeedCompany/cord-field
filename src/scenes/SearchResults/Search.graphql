@@ -17,4 +17,5 @@ fragment SearchResultItem on SearchResult {
   ...PartnerListItem
   ...FieldRegionCard
   ...FieldZoneCard
+  ...ToolListItem
 }
