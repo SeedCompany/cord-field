@@ -1,86 +1,65 @@
-import { Dashboard, FolderOpen, Language, Person } from '@mui/icons-material';
-import {
-  List,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-  Paper,
-  SvgIconProps,
-} from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { ComponentType } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import { PeopleJoinedIcon } from '../../../components/Icons';
-import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
-import { CreateButtonMenu } from '../Creates';
 import { sidebarTheme } from './sidebar.theme';
-import { SidebarHeader } from './SidebarHeader';
+import { SidebarContent } from './SidebarContent';
 
-const useStyles = makeStyles()(({ spacing }) => ({
-  root: {
-    width: 248,
-    overflowY: 'auto',
-    flexShrink: 0,
-  },
-  content: {
-    padding: spacing(0, 2),
-  },
-  createNewItem: {
-    margin: spacing(4, 2, 1),
-    width: `calc(100% - ${spacing(2 * 2)})`,
-  },
-}));
+export const SIDEBAR_WIDTH = 248;
 
-export const Sidebar = () => {
-  const { classes } = useStyles();
+export interface SidebarProps {
+  /** Whether the sidebar is expanded. When false, collapses to zero width. */
+  open: boolean;
+}
 
-  const navList = (
-    <List
-      component="nav"
-      aria-label="sidebar"
-      subheader={<ListSubheader component="div">MENU</ListSubheader>}
+// React 18's HTMLAttributes don't yet declare `inert`; the DOM accepts it as
+// a boolean attribute (presence = true). Spread an extra-attributes record so
+// we don't have to widen the JSX type globally.
+const openProps: Record<string, unknown> = {};
+// Always emit `inert` so SSR and client markup stay aligned. Browsers that
+// don't support it simply ignore the attribute.
+const closedProps: Record<string, unknown> = { inert: '', 'aria-hidden': true };
+
+/**
+ * Desktop sidebar — rendered inline in the main layout (md and up).
+ * Width animates between 0 and `SIDEBAR_WIDTH` so the main content area
+ * naturally reflows when toggled. Hidden entirely below `md`; mobile users
+ * get a temporary drawer instead (see MainLayout).
+ */
+export const Sidebar = ({ open }: SidebarProps) => (
+  <ThemeProvider theme={sidebarTheme}>
+    <Paper
+      elevation={0}
+      square
+      // `inert` blocks focus/AT in modern browsers; visibility/pointer-events
+      // preserve equivalent behavior for older browsers.
+      {...(open ? openProps : closedProps)}
+      sx={{
+        flexShrink: 0,
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        // Keep content visible during width collapse; switch to hidden at
+        // the end of the close animation to avoid an empty panel slide.
+        visibility: open ? 'visible' : 'hidden',
+        pointerEvents: open ? 'auto' : 'none',
+        width: open ? SIDEBAR_WIDTH : 0,
+        transition: (theme) => {
+          const duration = open
+            ? theme.transitions.duration.enteringScreen
+            : theme.transitions.duration.leavingScreen;
+          const widthTransition = theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration,
+          });
+          const visibilityDelay = open ? 0 : duration;
+
+          return `${widthTransition}, visibility 0s linear ${visibilityDelay}ms`;
+        },
+        display: { xs: 'none', md: 'block' },
+      }}
     >
-      <NavItem to="/dashboard" label="My Dashboard" icon={Dashboard} />
-      <NavItem
-        to="/projects"
-        label="Projects"
-        icon={FolderOpen}
-        active={[
-          { path: '/projects', end: false },
-          { path: '/engagements', end: false },
-        ]}
-      />
-      <NavItem to="/languages" label="Languages" icon={Language} />
-      <NavItem to="/users" label="People" icon={Person} />
-      <NavItem to="/partners" label="Partners" icon={PeopleJoinedIcon} />
-    </List>
-  );
-
-  return (
-    <ThemeProvider theme={sidebarTheme}>
-      <Paper elevation={0} square className={classes.root}>
-        <SidebarHeader />
-        <div className={classes.content}>
-          <CreateButtonMenu fullWidth className={classes.createNewItem} />
-          {navList}
-        </div>
-      </Paper>
-    </ThemeProvider>
-  );
-};
-
-const NavItem = ({
-  icon: Icon,
-  label,
-  ...props
-}: ListItemLinkProps & {
-  icon: ComponentType<SvgIconProps>;
-  label: string;
-}) => (
-  <ListItemLink {...props}>
-    <ListItemIcon>
-      <Icon />
-    </ListItemIcon>
-    <ListItemText>{label}</ListItemText>
-  </ListItemLink>
+      {/* Inner box keeps content at full width so it doesn't reflow during the collapse animation. */}
+      <Box sx={{ width: SIDEBAR_WIDTH }}>
+        <SidebarContent />
+      </Box>
+    </Paper>
+  </ThemeProvider>
 );

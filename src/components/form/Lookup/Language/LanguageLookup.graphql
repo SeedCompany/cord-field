@@ -19,4 +19,20 @@ fragment LanguageLookupItem on Language {
   registryOfLanguageVarietiesCode {
     value
   }
+  ethnologue {
+    code {
+      value
+    }
+  }
+  registryOfLanguageVarietiesCode {
+    value
+  }
+  ethnologue {
+    code {
+      value
+    }
+  }
+  registryOfLanguageVarietiesCode {
+    value
+  }
 }

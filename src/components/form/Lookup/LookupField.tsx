@@ -17,6 +17,7 @@ import {
 import { camelCase, last, uniqBy, upperFirst } from 'lodash';
 import {
   ComponentType,
+  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -35,6 +36,97 @@ interface QueryResult<T> {
   search: { items: ReadonlyArray<T | any> };
 }
 
+// ---------------------------------------------------------------------------
+// Pure helpers — exported for unit testing in isolation
+// ---------------------------------------------------------------------------
+
+/** Returns true when the autocomplete popup should be open. */
+export const computeIsOpen = (
+  active: boolean,
+  input: string,
+  selectedText: string,
+  hasInitialOptions: boolean
+): boolean =>
+  active &&
+  ((!!input && input !== selectedText) || (!input && hasInitialOptions));
+
+/** Merges search results, initial items, and current selection, deduplicating by compareBy. */
+export const mergeOptions = <T,>({
+  multiple,
+  value,
+  searchResults,
+  initialItems,
+  compareBy,
+}: {
+  multiple: boolean;
+  value: T | readonly T[] | null;
+  searchResults?: readonly T[];
+  initialItems?: readonly T[];
+  compareBy: (item: T) => unknown;
+}): T[] => {
+  const selected = multiple
+    ? Array.isArray(value)
+      ? value.slice()
+      : ([] as T[])
+    : value
+    ? [value as T]
+    : [];
+
+  if (!searchResults?.length && !initialItems?.length) {
+    return selected;
+  }
+
+  return uniqBy(
+    [...(searchResults ?? []), ...(initialItems ?? []), ...selected],
+    compareBy
+  );
+};
+
+/** Applies caller-provided sort and optional freeSolo-append steps to an already-filtered option list. */
+export const applyFilterOptionsCustomLogic = <T,>({
+  options,
+  inputValue,
+  freeSolo = false,
+  searchResultsLoading = false,
+  sortComparator,
+  getOptionLabel,
+}: {
+  options: T[];
+  inputValue: string;
+  freeSolo?: boolean;
+  searchResultsLoading?: boolean;
+  sortComparator?: (a: T, b: T) => number;
+  getOptionLabel: (val: T | string) => string;
+}): Array<T | string> => {
+  const sorted = sortComparator ? [...options].sort(sortComparator) : options;
+
+  if (
+    !freeSolo ||
+    searchResultsLoading ||
+    inputValue === '' ||
+    sorted.map(getOptionLabel).includes(inputValue)
+  ) {
+    return sorted;
+  }
+
+  return [...sorted, inputValue];
+};
+
+/** Resolves what content to render inside a single Autocomplete option <li>. */
+export const resolveOptionContent = <T,>(
+  option: T | string,
+  getOptionLabel: (val: T | string) => string,
+  renderOptionContent?: (option: T) => ReactNode
+): ReactNode => {
+  if (typeof option === 'string') return `Create "${option}"`;
+  if (renderOptionContent) return renderOptionContent(option);
+  return getOptionLabel(option);
+};
+
+/** Derives the displayName used by LookupField.createFor. */
+export const computeLookupDisplayName = (resource: string): string =>
+  `Lookup(${upperFirst(camelCase(resource))})`;
+
 export type LookupFieldProps<
   T,
   Multiple extends boolean | undefined,
@@ -49,6 +141,7 @@ export type LookupFieldProps<
     'helperText' | 'label' | 'autoFocus' | 'variant' | 'margin'
   > & {
     lookupDocument: DocumentNode<QueryResult<T>, { query: string }>;
+    initialOptions?: { options?: readonly T[] };
     ChipProps?: ChipProps;
     CreateDialogForm?: ComponentType<
       Except<DialogFormProps<CreateFormValues, T>, 'onSubmit'>
@@ -57,7 +150,10 @@ export type LookupFieldProps<
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
     getOptionLabel: (option: T) => string | null | undefined;
     createPower?: Power;
-    initialOptions?: { options?: readonly T[] };
+    /** Render the content inside each option's <li> element instead of the default label. */
+    renderOptionContent?: (option: T) => ReactNode;
+    /** Sort visible options after filtering. Already-engaged items can be pushed to the bottom. */
+    sortComparator?: (a: T, b: T) => number;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, false>,
     | 'value'
@@ -82,6 +178,7 @@ export function LookupField<
   multiple,
   defaultValue,
   lookupDocument,
+  initialOptions,
   ChipProps,
   autoFocus,
   helperText,
@@ -95,8 +192,8 @@ export function LookupField<
   variant,
   createPower,
   margin,
-  initialOptions: initial,
-  renderOption: renderOptionOverride,
+  renderOptionContent,
+  sortComparator,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const { powers } = useSession();
@@ -144,7 +241,7 @@ export function LookupField<
   });
   // Not just for the first load, but every network request
   const searchResultsLoading = isNetworkRequestInFlight(networkStatus);
-  const initialOptionsLoading = initial && !initial.options;
+  const initialOptionsLoading = !!initialOptions && !initialOptions.options;
 
   const [createDialogState, createDialogItem, createInitialValues] =
     useDialog<Partial<CreateFormValues>>();
@@ -170,34 +267,32 @@ export function LookupField<
 
   // Only open the popup if focused and
   // (searching for an item or have initial options).
-  const open =
-    !!meta.active &&
-    ((input && input !== selectedText) || (!input && !!initial));
+  const open = computeIsOpen(
+    !!meta.active,
+    input,
+    selectedText,
+    !!initialOptions
+  );
 
   // Augment results with currently selected items to indicate that
   // they are still valid (and to prevent MUI warning)
-  const options = useMemo(() => {
-    const selected = multiple
-      ? (field.value as readonly T[])
-      : (field.value as T | null)
-      ? [field.value as T]
-      : [];
-    const searchResults = data?.search.items;
-    const initialItems = initial?.options;
-
-    if (!searchResults?.length && !initialItems?.length) {
-      return selected; // optimization for no results
-    }
-
-    const merged = [
-      ...(searchResults ?? []),
-      ...(initialItems ?? []),
-      ...selected,
-    ];
-
-    // Filter out duplicates caused by selected items also appearing in search results.
-    return uniqBy(merged, compareBy);
-  }, [data?.search.items, initial?.options, field.value, compareBy, multiple]);
+  const options = useMemo(
+    () =>
+      mergeOptions({
+        multiple: !!multiple,
+        value: field.value as T | readonly T[] | null,
+        searchResults: data?.search.items,
+        initialItems: initialOptions?.options,
+        compareBy,
+      }),
+    [
+      data?.search.items,
+      initialOptions?.options,
+      field.value,
+      compareBy,
+      multiple,
+    ]
+  );
 
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>
@@ -229,45 +324,25 @@ export function LookupField<
       options={options}
       getOptionLabel={getOptionLabel}
       freeSolo={freeSolo}
-      renderOption={
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (renderOptionOverride as any) ??
-        ((props, option, _ownerState) => (
-          <li {...props}>
-            {typeof option === 'string'
-              ? `Create "${option}"`
-              : getOptionLabel(option)}
-          </li>
-        ))
-      }
+      renderOption={(props, option, _ownerState) => (
+        <li {...props}>
+          {resolveOptionContent(option, getOptionLabel, renderOptionContent)}
+        </li>
+      )}
       filterOptions={(options, params) => {
-        // Apply default filtering. Even though the API filters for us, we add
-        // the currently selected options back in because they are still valid
-        // but we don't want to show these options if they don't match the
-        // current input text.
-        // Note: `filterSelectedOptions` could still make sense either way
-        // separate from this code below. It could be thought of as a "stricter"
-        // filter that not only removes unrelated results but also related
-        // results that have already been selected.
+        // Apply default MUI text filtering first. Even though the API filters for
+        // us, we add selected options back and need to hide unrelated ones.
         const filtered = createFilterOptions<T>()(options, params);
 
-        if (
-          !freeSolo ||
-          searchResultsLoading || // item could be returned with request in flight
-          params.inputValue === '' ||
-          filtered.map(getOptionLabel).includes(params.inputValue)
-        ) {
-          return filtered;
-        }
-
-        // If freeSolo is enabled and the input value doesn't match an existing
-        // or previously selected option, add it to the list. i.e. 'Add "X"'.
-        return [
-          ...filtered,
-          // We want to allow strings for new options,
-          // which may differ from T. We handle them in renderOption.
-          params.inputValue as T,
-        ];
+        // Apply sort + optional freeSolo-append via the extracted helper.
+        return applyFilterOptionsCustomLogic({
+          options: filtered,
+          inputValue: params.inputValue,
+          freeSolo,
+          searchResultsLoading,
+          sortComparator,
+          getOptionLabel,
+        }) as T[];
       }}
       // FF for some reason doesn't handle defaultValue correctly
       value={((field.value as Val | null) || meta.defaultValue) as Val}
@@ -394,14 +469,7 @@ LookupField.createFor = <
     props: Except<
       LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>,
       'lookupDocument' | 'compareBy' | 'getOptionLabel'
-    > & {
-      lookupDocument?: LookupFieldProps<
-        T,
-        Multiple,
-        DisableClearable,
-        CreateFormValues
-      >['lookupDocument'];
-    }
+    >
   ) {
     const initialOptions = useInitialOptions?.();
     return (
@@ -415,7 +483,7 @@ LookupField.createFor = <
       />
     );
   };
-  Comp.displayName = `Lookup(${upperFirst(camelCase(resource))})`;
+  Comp.displayName = computeLookupDisplayName(resource);
   Comp.isEqual = isEqualBy(compareBy);
   Comp.isListEqual = isListEqualBy(compareBy);
   return Comp;
