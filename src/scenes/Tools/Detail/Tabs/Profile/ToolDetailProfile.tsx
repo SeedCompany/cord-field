@@ -1,10 +1,10 @@
 import { Stack } from '@mui/material';
+import type { ToolProfileFragment } from '~/common/fragments/tool.graphql';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
 import { TabPanelContent } from '~/components/Tabs';
-import type { ToolProfileFragment } from '../../ToolDetail.graphql';
 
 interface ToolDetailProfileProps {
   tool?: ToolProfileFragment;
