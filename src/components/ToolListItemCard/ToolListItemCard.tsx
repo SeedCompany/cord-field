@@ -20,8 +20,8 @@ export const ToolListItemCard = ({
   sx,
   className,
 }: ToolListItemCardProps) => {
-  const title = tool?.name.value;
-  const description = tool?.description.value;
+  const title = tool?.name?.value;
+  const description = tool?.description?.value;
   const isAiBased = tool?.aiBased?.value;
 
   return (
