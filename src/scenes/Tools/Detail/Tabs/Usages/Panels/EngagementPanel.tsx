@@ -27,10 +27,9 @@ export const EngagementPanel = ({ toolId }: EngagementPanelProps) => {
     query: EngagementListDocument,
     variables: {
       input: {
-        // `tool` filter not yet in local schema types — cast until codegen catches up.
         filter: {
           tool: { id: toolId },
-        } as unknown as EngagementListInput['filter'],
+        },
       } satisfies EngagementListInput,
     },
     listAt: 'engagements',

@@ -26,10 +26,9 @@ export const ProjectPanel = ({ toolId }: ProjectPanelProps) => {
     query: ProjectListDocument,
     variables: {
       input: {
-        // `tool` filter not yet in local schema types — cast until codegen catches up.
         filter: {
           tool: { id: toolId },
-        } as unknown as ProjectListInput['filter'],
+        },
       } satisfies ProjectListInput,
     },
     listAt: 'projects',
