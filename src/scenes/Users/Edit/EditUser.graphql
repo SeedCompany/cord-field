@@ -6,3 +6,24 @@ mutation UpdateUser($input: UpdateUser!) {
     }
   }
 }
+
+mutation EditUserOrganization(
+  $userId: ID!
+  $newOrgId: ID!
+  $oldOrgId: ID!
+  $doAssign: Boolean!
+  $doRemove: Boolean!
+) {
+  removeOrganizationFromUser(user: $userId, org: $oldOrgId)
+    @include(if: $doRemove) {
+    user {
+      id
+    }
+  }
+  assignOrganizationToUser(user: $userId, org: $newOrgId)
+    @include(if: $doAssign) {
+    user {
+      id
+    }
+  }
+}

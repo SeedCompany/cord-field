@@ -20,6 +20,7 @@ import {
   TextField,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
+import { OrganizationField } from '../../../components/form/Lookup/Organization';
 import { useSession } from '../../../components/Session';
 import { UserFormFragment } from './UserForm.graphql';
 
@@ -164,6 +165,13 @@ export const UserForm = <T, R = void>({
             />
           )}
         </SecuredField>
+        {user?.organizations.canRead && (
+          <OrganizationField
+            name="organization"
+            label="Partner"
+            disabled={!user.organizations.canCreate}
+          />
+        )}
       </Stack>
     </DialogForm>
   );

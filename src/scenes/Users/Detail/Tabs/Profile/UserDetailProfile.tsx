@@ -8,6 +8,7 @@ import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
+import { Link } from '~/components/Routing';
 import { UserProfileFragment } from './UserDetailProfile.graphql';
 
 interface UserDetailProfileProps {
@@ -15,6 +16,15 @@ interface UserDetailProfileProps {
 }
 
 export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
+  const organization = user.organizations.items[0];
+  const partner = organization
+    ? user.partners.items.find(
+        (item) => item.organization.value?.id === organization.id
+      )
+    : user.partners.items[0];
+  const partnerName =
+    organization?.name.value ?? partner?.organization.value?.name.value;
+
   return (
     <Box
       component={Paper}
@@ -38,6 +48,14 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
         <DisplayProperty
           label="Roles"
           value={labelsFrom(RoleLabels)(user.roles.value)}
+        />
+        <DisplayProperty
+          label="Partner"
+          value={
+            partner && partnerName ? (
+              <Link to={`/partners/${partner.id}`}>{partnerName}</Link>
+            ) : null
+          }
         />
         <DisplayProperty
           label="Local Time"

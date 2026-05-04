@@ -3,4 +3,11 @@ fragment UserForm on User {
   roles {
     assignableRoles
   }
+  organizations {
+    canRead
+    canCreate
+    items {
+      ...OrganizationLookupItem
+    }
+  }
 }
