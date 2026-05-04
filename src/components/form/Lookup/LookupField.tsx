@@ -17,7 +17,6 @@ import {
 import { camelCase, last, uniqBy, upperFirst } from 'lodash';
 import {
   ComponentType,
-  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -59,10 +58,6 @@ export type LookupFieldProps<
     getOptionLabel: (option: T) => string | null | undefined;
     createPower?: Power;
     initialOptions?: { options?: readonly T[] };
-    /** Render the content inside each option's <li> element instead of the default label. */
-    renderOptionContent?: (option: T) => ReactNode;
-    /** Sort visible options after filtering. Already-engaged items can be pushed to the bottom. */
-    sortComparator?: (a: T, b: T) => number;
   } & Except<
     AutocompleteProps<T, Multiple, DisableClearable, false>,
     | 'value'
@@ -101,8 +96,7 @@ export function LookupField<
   createPower,
   margin,
   initialOptions: initial,
-  renderOptionContent,
-  sortComparator,
+  renderOption: renderOptionOverride,
   ...props
 }: LookupFieldProps<T, Multiple, DisableClearable, CreateFormValues>) {
   const { powers } = useSession();
@@ -217,17 +211,6 @@ export function LookupField<
       // Helps represent that this is a valid object & makes it easier to replace
       // Works well with clearOnBlur
       selectOnFocus
-      // Default renderOption — callers can override by passing `renderOption`
-      // directly; since it comes before ...autocompleteProps it loses to the spread.
-      renderOption={(optionProps, option, _ownerState) => (
-        <li {...optionProps}>
-          {typeof option === 'string'
-            ? `Create "${option}"`
-            : renderOptionContent
-            ? renderOptionContent(option)
-            : getOptionLabel(option)}
-        </li>
-      )}
       {...autocompleteProps}
       disabled={meta.disabled}
       // FF also has multiple and defaultValue
@@ -246,6 +229,17 @@ export function LookupField<
       options={options}
       getOptionLabel={getOptionLabel}
       freeSolo={freeSolo}
+      renderOption={
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (renderOptionOverride as any) ??
+        ((props, option, _ownerState) => (
+          <li {...props}>
+            {typeof option === 'string'
+              ? `Create "${option}"`
+              : getOptionLabel(option)}
+          </li>
+        ))
+      }
       filterOptions={(options, params) => {
         // Apply default filtering. Even though the API filters for us, we add
         // the currently selected options back in because they are still valid
@@ -257,24 +251,19 @@ export function LookupField<
         // results that have already been selected.
         const filtered = createFilterOptions<T>()(options, params);
 
-        // Apply caller-provided sort (e.g. push disabled/engaged items to bottom)
-        const sorted = sortComparator
-          ? [...filtered].sort(sortComparator)
-          : filtered;
-
         if (
           !freeSolo ||
           searchResultsLoading || // item could be returned with request in flight
           params.inputValue === '' ||
-          sorted.map(getOptionLabel).includes(params.inputValue)
+          filtered.map(getOptionLabel).includes(params.inputValue)
         ) {
-          return sorted;
+          return filtered;
         }
 
         // If freeSolo is enabled and the input value doesn't match an existing
         // or previously selected option, add it to the list. i.e. 'Add "X"'.
         return [
-          ...sorted,
+          ...filtered,
           // We want to allow strings for new options,
           // which may differ from T. We handle them in renderOption.
           params.inputValue as T,

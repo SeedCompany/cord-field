@@ -23,8 +23,8 @@ export const Header = ({
         edge="start"
         color="inherit"
         aria-label="toggle navigation menu"
-        aria-expanded={navOpen}
-        aria-controls={navControlsId}
+        aria-expanded={navOpen ? true : undefined}
+        aria-controls={navOpen ? navControlsId : undefined}
         onClick={onMenuClick}
       >
         <MenuIcon />
