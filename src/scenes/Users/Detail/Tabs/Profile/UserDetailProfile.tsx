@@ -52,8 +52,12 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
         <DisplayProperty
           label="Partner"
           value={
-            partner && partnerName ? (
-              <Link to={`/partners/${partner.id}`}>{partnerName}</Link>
+            partnerName ? (
+              partner ? (
+                <Link to={`/partners/${partner.id}`}>{partnerName}</Link>
+              ) : (
+                partnerName
+              )
             ) : null
           }
         />
