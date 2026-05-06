@@ -18,9 +18,9 @@ export interface SidebarProps {
 const inertProps: Record<string, unknown> = { inert: true };
 
 /**
- * Desktop sidebar — rendered inline in the main layout (md and up).
+ * Desktop sidebar — rendered inline in the main layout (mobile and up).
  * Width animates between 0 and `SIDEBAR_WIDTH` so the main content area
- * naturally reflows when toggled. Hidden entirely below `md`; mobile users
+ * naturally reflows when toggled. Hidden entirely below `mobile`; mobile users
  * get a temporary drawer instead (see MainLayout).
  */
 export const Sidebar = ({ open, id }: SidebarProps) => (
@@ -44,7 +44,10 @@ export const Sidebar = ({ open, id }: SidebarProps) => (
               ? theme.transitions.duration.enteringScreen
               : theme.transitions.duration.leavingScreen,
           }),
-        display: { xs: 'none', md: 'block' },
+        display: 'none',
+        '@media (min-width:756px)': {
+          display: 'block',
+        },
       }}
     >
       {/* Inner box keeps content at full width so it doesn't reflow during the collapse animation. */}

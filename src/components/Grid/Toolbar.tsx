@@ -12,20 +12,45 @@ export const Toolbar = (props: ChildrenProp & StyleProps) => {
       sx={[
         {
           flexDirection: 'row',
+          flexWrap: 'nowrap',
           justifyContent: 'space-between',
           alignItems: 'center',
+          columnGap: 2,
+          rowGap: 0,
           background: 'var(--DataGrid-containerBackground)',
           p: 1,
           borderBottom: 'thin solid var(--DataGrid-rowBorderColor)',
           borderTopLeftRadius: 'inherit',
           borderTopRightRadius: 'inherit',
+          '& > .GridQuickFilters': {
+            flex: '1 1 auto',
+            minWidth: 0,
+            order: 1,
+          },
+          '& > .GridToolbarRowCount': {
+            marginLeft: 'auto',
+            order: 2,
+            whiteSpace: 'nowrap',
+          },
+          '& > :not(.GridQuickFilters):not(.GridToolbarRowCount)': {
+            order: 1,
+          },
+          '@media (max-width:755px)': {
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            rowGap: 1,
+            '& > .GridQuickFilters': {
+              flex: '1 0 100%',
+              order: 3,
+            },
+          },
         },
         ...extendSx(props.sx),
       ]}
     >
       {props.children}
       {rootProps.rowCount != null && (
-        <Typography>
+        <Typography className="GridToolbarRowCount">
           Total Rows: <FormattedNumber value={rootProps.rowCount} />
         </Typography>
       )}
