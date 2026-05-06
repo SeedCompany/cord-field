@@ -50,8 +50,8 @@ export const Toolbar = (props: ChildrenProp & StyleProps) => {
     >
       {props.children}
       {rootProps.rowCount != null && (
-        <Typography className="GridToolbarRowCount">
-          Total Rows: <FormattedNumber value={rootProps.rowCount} />
+        <Typography className="GridToolbarRowCount" variant="body2">
+          Rows: <FormattedNumber value={rootProps.rowCount} />
         </Typography>
       )}
     </Stack>

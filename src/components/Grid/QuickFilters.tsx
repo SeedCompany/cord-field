@@ -19,19 +19,21 @@ export const QuickFilters = (props: ChildrenProp & StyleProps) => {
     <Stack
       direction="row"
       alignItems="center"
-      flexWrap="wrap"
       className={className}
       gap={1}
       sx={[
         {
           maxWidth: '100%',
-          rowGap: 0.5,
+          flexWrap: 'nowrap',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
           '.MuiTypography-root': {
             whiteSpace: 'nowrap',
           },
           '.MuiToggleButton-root:not(.MuiToggleButtonGroup-grouped)': {
             margin: 0,
             py: 0.5,
+            flexShrink: 0,
           },
         },
         ...extendSx(props.sx),

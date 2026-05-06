@@ -4,7 +4,6 @@ import {
   List,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
   SvgIconProps,
 } from '@mui/material';
 import { ComponentType } from 'react';
@@ -17,7 +16,7 @@ export interface SidebarContentProps {
   /**
    * Called when the user clicks any navigation item — used to dismiss the
    * mobile drawer after a route change. Not called when interacting with
-   * the Create button or the "MENU" subheader.
+   * the Create button or the sidebar subheader.
    */
   onNavigate?: () => void;
 }
@@ -34,11 +33,7 @@ export const SidebarContent = ({ onNavigate }: SidebarContentProps) => (
           width: `calc(100% - ${theme.spacing(2 * 2)})`,
         })}
       />
-      <List
-        component="nav"
-        aria-label="sidebar"
-        subheader={<ListSubheader component="div">MENU</ListSubheader>}
-      >
+      <List component="nav" aria-label="sidebar">
         <NavItem
           to="/dashboard"
           label="My Dashboard"
