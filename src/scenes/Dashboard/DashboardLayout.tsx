@@ -7,7 +7,7 @@ export const DashboardLayout = ({ children }: ChildrenProp) => (
     component="main"
     sx={{
       flex: 1,
-      p: 2,
+      p: { xs: 1, mobile: 2 },
       mb: 2,
       gap: 2,
       overflowY: 'scroll',
