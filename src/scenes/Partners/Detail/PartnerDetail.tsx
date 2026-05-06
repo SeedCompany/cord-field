@@ -19,7 +19,7 @@ import { IconButton } from '~/components/IconButton';
 import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
 import { Tab, TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
-import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
@@ -188,27 +188,21 @@ const PartnerDataButtons = ({
   </Box>
 );
 
-const usePartnerDetailsFilters = makeQueryHandler({
-  tab: withDefault(
-    EnumParam([
-      'profile',
-      'people',
-      'projects',
-      'finance',
-      'notes',
-      'engagements',
-    ]),
-    'profile'
-  ),
-});
 const PartnerTabs = (props: PartnerViewEditProps) => {
-  const [filters, setFilters] = usePartnerDetailsFilters();
+  const [activeTab, setTab] = useDetailTabs([
+    'profile',
+    'finance',
+    'people',
+    'projects',
+    'engagements',
+    'notes',
+  ]);
 
   return (
     <TabsContainer>
-      <TabContext value={filters.tab}>
+      <TabContext value={activeTab}>
         <TabList
-          onChange={(_e, tab) => setFilters({ ...filters, tab })}
+          onChange={(_e, tab) => setTab(tab)}
           aria-label="partner navigation tabs"
           variant="scrollable"
         >

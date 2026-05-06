@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { canEditAny } from '~/common';
@@ -14,20 +14,15 @@ import {
 import { EditFieldRegion } from '~/components/FieldRegion';
 import { Link } from '~/components/Routing';
 import { Tab, TabsContainer } from '~/components/Tabs';
-import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { useDetailTabs } from '~/hooks';
 import { Error } from '../../../components/Error';
 import { IconButton } from '../../../components/IconButton';
 import { Redacted } from '../../../components/Redacted';
 import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql';
 import { FieldRegionProjectsPanel } from './Tabs/Projects/FieldRegionProjectsPanel';
 
-const useFieldRegionDetailFilters = makeQueryHandler({
-  tab: withDefault(EnumParam(['profile', 'projects']), 'profile'),
-});
-
 export const FieldRegionDetail = () => {
   const { fieldRegionId = '' } = useParams();
-  const [filters, setFilters] = useFieldRegionDetailFilters();
 
   const [editRegionState, editRegion] = useDialog();
 
@@ -39,16 +34,12 @@ export const FieldRegionDetail = () => {
   const fieldRegion = data?.fieldRegion;
   const canReadProjects = fieldRegion?.projects.canRead !== false;
 
-  const readableTabs = useMemo(
-    () => ['profile', ...(canReadProjects ? ['projects'] : [])],
-    [canReadProjects]
+  const [activeTab, setTab] = useDetailTabs(
+    useMemo(
+      () => ['profile', ...(canReadProjects ? ['projects'] : [])],
+      [canReadProjects]
+    )
   );
-
-  useEffect(() => {
-    if (!readableTabs.includes(filters.tab)) {
-      setFilters({ tab: 'profile' });
-    }
-  }, [filters.tab, readableTabs, setFilters]);
 
   return (
     <Box
@@ -95,12 +86,8 @@ export const FieldRegionDetail = () => {
           </Box>
 
           <TabsContainer>
-            <TabContext
-              value={
-                readableTabs.includes(filters.tab) ? filters.tab : 'profile'
-              }
-            >
-              <TabList onChange={(_, next) => setFilters({ tab: next })}>
+            <TabContext value={activeTab}>
+              <TabList onChange={(_, next) => setTab(next)}>
                 <Tab label="Profile" value="profile" />
                 {canReadProjects && <Tab label="Projects" value="projects" />}
               </TabList>
