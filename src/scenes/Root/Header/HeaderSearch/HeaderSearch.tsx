@@ -55,7 +55,7 @@ export const HeaderSearch = ({
       <Form
         initialValues={{ search }}
         onSubmit={({ search: q }) => {
-          if (q) navigate(`/search?q=${q}`);
+          if (q) navigate(`/search?q=${encodeURIComponent(q)}`);
         }}
       >
         {({ handleSubmit }) => (
