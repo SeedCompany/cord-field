@@ -47,10 +47,7 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
           px={2}
           pb={1}
           sx={{
-            display: 'block',
-            '@media (min-width:756px)': {
-              display: 'none',
-            },
+            display: { xs: 'block', mobile: 'none' },
           }}
           {...skipAutoFocus}
         >

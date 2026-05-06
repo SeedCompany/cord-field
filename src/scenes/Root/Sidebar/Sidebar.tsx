@@ -44,10 +44,7 @@ export const Sidebar = ({ open, id }: SidebarProps) => (
               ? theme.transitions.duration.enteringScreen
               : theme.transitions.duration.leavingScreen,
           }),
-        display: 'none',
-        '@media (min-width:756px)': {
-          display: 'block',
-        },
+        display: { xs: 'none', mobile: 'block' },
       }}
     >
       {/* Inner box keeps content at full width so it doesn't reflow during the collapse animation. */}

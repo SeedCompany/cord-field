@@ -19,10 +19,7 @@ export const ProfileToolbar = () => {
           color="primary"
           sx={{
             fontWeight: 'medium',
-            display: 'none',
-            '@media (min-width:756px)': {
-              display: 'block',
-            },
+            display: { xs: 'none', mobile: 'block' },
           }}
         >
           {session?.fullName}

@@ -10,7 +10,7 @@ export const Toolbar = (props: ChildrenProp & StyleProps) => {
     <Stack
       {...props}
       sx={[
-        {
+        (theme) => ({
           flexDirection: 'row',
           flexWrap: 'nowrap',
           justifyContent: 'space-between',
@@ -35,7 +35,7 @@ export const Toolbar = (props: ChildrenProp & StyleProps) => {
           '& > :not(.GridQuickFilters):not(.GridToolbarRowCount)': {
             order: 1,
           },
-          '@media (max-width:755px)': {
+          [theme.breakpoints.down('mobile')]: {
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             rowGap: 1,
@@ -44,7 +44,7 @@ export const Toolbar = (props: ChildrenProp & StyleProps) => {
               order: 3,
             },
           },
-        },
+        }),
         ...extendSx(props.sx),
       ]}
     >

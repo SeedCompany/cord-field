@@ -40,9 +40,9 @@ export const HeaderSearch = ({
       {/* Collapsed icon — xs only, hidden once expanded or on mobile+ */}
       <IconButton
         sx={{
-          display: expanded ? 'none' : 'inline-flex',
-          '@media (min-width:756px)': {
-            display: 'none',
+          display: {
+            xs: expanded ? 'none' : 'inline-flex',
+            mobile: 'none',
           },
         }}
         onClick={() => onExpandedChange(true)}
@@ -67,11 +67,11 @@ export const HeaderSearch = ({
               if (e.key === 'Escape') onExpandedChange(false);
             }}
             sx={{
-              display: expanded ? 'flex' : 'none',
-              width: '100%',
-              '@media (min-width:756px)': {
-                display: 'flex',
+              display: {
+                xs: expanded ? 'flex' : 'none',
+                mobile: 'flex',
               },
+              width: '100%',
             }}
           >
             <TextField

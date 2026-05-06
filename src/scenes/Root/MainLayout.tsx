@@ -1,5 +1,5 @@
 import { Box, Drawer, useMediaQuery } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider, useTheme } from '@mui/material/styles';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet } from 'react-router-dom';
 import { CommentsBar } from '~/components/Comments/CommentsBar';
@@ -20,10 +20,13 @@ const MOBILE_NAV_ID = 'main-nav-mobile';
 
 export const MainLayout = () => {
   useAuthRequired();
+  const theme = useTheme();
   // Width-based — landscape phones (<900px wide) correctly use the mobile drawer.
   // `noSsr: true` defers evaluation to the client so we don't hydrate the
   // mobile layout on a desktop session and then visibly snap to desktop.
-  const isDesktop = useMediaQuery('(min-width:756px)', { noSsr: true });
+  const isDesktop = useMediaQuery(theme.breakpoints.up('mobile'), {
+    noSsr: true,
+  });
 
   // Persistent on desktop (defaults open), temporary overlay on mobile (defaults closed).
   const { navState, handleToggle, closeMobile } = useNavOpenState(isDesktop);
@@ -52,10 +55,7 @@ export const MainLayout = () => {
           anchor="left"
           PaperProps={{ id: MOBILE_NAV_ID }}
           sx={{
-            display: 'block',
-            '@media (min-width:756px)': {
-              display: 'none',
-            },
+            display: { xs: 'block', mobile: 'none' },
             '& .MuiDrawer-paper': { width: SIDEBAR_WIDTH },
           }}
         >

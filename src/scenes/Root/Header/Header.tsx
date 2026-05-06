@@ -76,8 +76,8 @@ export const Header = ({
           edge="start"
           color="inherit"
           aria-label="toggle navigation menu"
-          aria-expanded={navOpen ? true : undefined}
-          aria-controls={navOpen ? navControlsId : undefined}
+          aria-expanded={Boolean(navOpen)}
+          aria-controls={navControlsId}
           onClick={onMenuClick}
         >
           <MenuIcon />
@@ -102,11 +102,11 @@ export const Header = ({
           onExpandedChange={setSearchExpanded}
           sx={{
             minWidth: 0,
-            flex: searchExpanded ? '1 1 auto' : '0 0 auto',
-            maxWidth: 500,
-            '@media (min-width:756px)': {
-              flex: '1 1 auto',
+            flex: {
+              xs: searchExpanded ? '1 1 auto' : '0 0 auto',
+              mobile: '1 1 auto',
             },
+            maxWidth: 500,
           }}
         />
         <ProfileToolbar />

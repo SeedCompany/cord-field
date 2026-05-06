@@ -7,8 +7,8 @@ import {
   SvgIconProps,
 } from '@mui/material';
 import { ComponentType } from 'react';
-import { PeopleJoinedIcon } from '../../../components/Icons';
-import { ListItemLink, ListItemLinkProps } from '../../../components/Routing';
+import { PeopleJoinedIcon } from '~/components/Icons';
+import { ListItemLink, ListItemLinkProps } from '~/components/Routing';
 import { CreateButtonMenu } from '../Creates';
 import { SidebarHeader } from './SidebarHeader';
 
