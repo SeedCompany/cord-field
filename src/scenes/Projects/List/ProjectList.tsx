@@ -11,7 +11,7 @@ export const ProjectList = () => {
   const { pathname } = useLocation();
 
   return (
-    <ContentContainer sx={{ p: 4, pt: 2, overflow: 'initial' }}>
+    <ContentContainer sx={{ p: { xs: 1, sm: 4 }, pt: 2, overflow: 'initial' }}>
       <Helmet title={pathname === '/projects' ? 'Projects' : 'Engagements'} />
       <Stack component="main" sx={{ flex: 1 }}>
         <TabsContainer>

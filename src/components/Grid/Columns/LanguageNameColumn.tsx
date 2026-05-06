@@ -23,6 +23,7 @@ export const LanguageNameColumn = <
     ...textColumn<Row>(),
     headerName: 'Language',
     width: 200,
+    minWidth: 130,
     valueGetter: (...args) => {
       const lang = valueGetter(...args);
       return lang.publicName;
