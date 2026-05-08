@@ -4,6 +4,7 @@ import { Decorator } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { ComponentType, useMemo } from 'react';
 import { Except, Merge, Paths, Split } from 'type-fest';
+import { addItemToList } from '~/api';
 import {
   CoerceNonPrimitives,
   FinancialReportingTypeLabels,
@@ -44,6 +45,10 @@ import {
   UserLookupItem,
 } from '../../../components/form/Lookup';
 import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
+import {
+  AssignPersonToPartnerDocument,
+  PartnerPeopleDocument,
+} from '../Detail/Tabs/People/PartnerDetailsPeople.graphql';
 import { UpdatePartnerDocument } from './UpdatePartner.graphql';
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -202,6 +207,7 @@ export const EditPartner = ({
   ...props
 }: EditPartnerProps) => {
   const [updatePartner] = useMutation(UpdatePartnerDocument);
+  const [assignOrganization] = useMutation(AssignPersonToPartnerDocument);
 
   const initialValues = useMemo(() => {
     const organization = partner.organization.value!;
@@ -239,24 +245,39 @@ export const EditPartner = ({
       {...props}
       decorators={decorators}
       initialValues={initialValues}
-      onSubmit={async ({ partner, organization }) => {
+      onSubmit={async ({ partner: next, organization }) => {
+        const oldPocId = initialValues.partner.pointOfContact?.id ?? null;
+        const newPocId = next.pointOfContact?.id ?? null;
+        const orgId = organization.id;
+
         await updatePartner({
           variables: {
             partner: {
-              ...partner,
-              pointOfContact: partner.pointOfContact?.id ?? null,
-              fieldRegions: partner.fieldRegions.map((region) => region.id),
-              countries: partner.countries.map((country) => country.id),
-              languageOfReporting: partner.languageOfReporting?.id ?? null,
+              ...next,
+              pointOfContact: newPocId,
+              fieldRegions: next.fieldRegions.map((region) => region.id),
+              countries: next.countries.map((country) => country.id),
+              languageOfReporting: next.languageOfReporting?.id ?? null,
               languageOfWiderCommunication:
-                partner.languageOfWiderCommunication?.id ?? null,
-              languagesOfConsulting: partner.languagesOfConsulting.map(
+                next.languageOfWiderCommunication?.id ?? null,
+              languagesOfConsulting: next.languagesOfConsulting.map(
                 (l) => l.id
               ),
             },
             organization,
           },
         });
+
+        if (newPocId && newPocId !== oldPocId) {
+          await assignOrganization({
+            variables: { user: newPocId, org: orgId },
+            update: addItemToList({
+              listId: [partner, 'people'],
+              outputToItem: (data) => data.assignOrganizationToUser.user,
+            }),
+            refetchQueries: [PartnerPeopleDocument],
+          });
+        }
       }}
     >
       {({ values }) => (

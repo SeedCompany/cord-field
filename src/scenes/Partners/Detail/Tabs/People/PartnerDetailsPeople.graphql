@@ -1,9 +1,46 @@
 fragment partnerDetailPeople on Partner {
-  pointOfContact {
-    canRead
-    canEdit
+  id
+  organization {
     value {
-      ...UserListItem
+      id
+    }
+  }
+  pointOfContact {
+    value {
+      id
+    }
+  }
+  people {
+    canCreate
+  }
+}
+
+query PartnerPeople($id: ID!, $input: PartnerPeopleListInput) {
+  partner(id: $id) {
+    id
+    people(input: $input) {
+      canRead
+      hasMore
+      total
+      items {
+        ...userDataGridRow
+      }
+    }
+  }
+}
+
+mutation AssignPersonToPartner($user: ID!, $org: ID!) {
+  assignOrganizationToUser(user: $user, org: $org) {
+    user {
+      ...userDataGridRow
+    }
+  }
+}
+
+mutation RemovePersonFromPartner($user: ID!, $org: ID!) {
+  removeOrganizationFromUser(user: $user, org: $org) {
+    user {
+      id
     }
   }
 }
