@@ -18,8 +18,9 @@ export const GridFilterInputBoolean = (props: GridFilterInputBooleanProps) => {
     ...others
   } = props;
 
-  // TODO MUI produces warning with null value, handle somehow?
-  const value = item.value ?? null;
+  // Use empty string as the "Any" sentinel — passing null to Select renders
+  // a null value on the underlying <input>, which React warns about.
+  const value = item.value ?? '';
 
   const rootProps = useGridRootProps();
   const labelId = useId();
@@ -31,7 +32,9 @@ export const GridFilterInputBoolean = (props: GridFilterInputBooleanProps) => {
 
   const onFilterChange = useCallback(
     (event: SelectChangeEvent<unknown>) => {
-      const next = { ...item, value: event.target.value };
+      const raw = event.target.value;
+      const nextValue = raw === '' ? null : raw;
+      const next = { ...item, value: nextValue };
       // Not using applyValues here because it has a falsy check.
       // Replacing here with nil check, so we can use false as a filter value.
       // Also, only delete item if this is a header filter change,
@@ -88,7 +91,7 @@ export const GridFilterInputBoolean = (props: GridFilterInputBooleanProps) => {
           <rootProps.slots.baseSelectOption
             {...baseSelectOptionProps}
             native={false}
-            value={null}
+            value=""
           >
             <i>Any</i>
           </rootProps.slots.baseSelectOption>
@@ -113,5 +116,11 @@ export const GridFilterInputBoolean = (props: GridFilterInputBooleanProps) => {
   );
 };
 
-const renderValue = (value: boolean | null) =>
-  value == null ? <Box color="text.disabled">Any</Box> : value ? 'Yes' : 'No';
+const renderValue = (value: unknown) =>
+  value === '' || value == null ? (
+    <Box color="text.disabled">Any</Box>
+  ) : value ? (
+    'Yes'
+  ) : (
+    'No'
+  );
