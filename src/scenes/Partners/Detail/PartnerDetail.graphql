@@ -7,6 +7,7 @@ query Partner($input: ID!) @live {
 fragment partnerDetails on Partner {
   ...Id
   ...partnerOwnDetails
+  ...partnerDetailPeople
   organization {
     canRead
     canEdit
