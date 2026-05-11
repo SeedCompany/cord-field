@@ -56,6 +56,7 @@ export type LookupFieldProps<
     /** For create form. Poorly named. */
     getInitialValues?: (val: string) => Partial<CreateFormValues>;
     getOptionLabel: (option: T) => string | null | undefined;
+    resultFilter?: (option: T) => boolean;
     createPower?: Power;
     initialOptions?: { options?: readonly T[] };
   } & Except<
@@ -92,6 +93,7 @@ export function LookupField<
   getInitialValues,
   compareBy,
   getOptionLabel: getOptionLabelProp,
+  resultFilter,
   variant,
   createPower,
   margin,
@@ -177,27 +179,33 @@ export function LookupField<
   // Augment results with currently selected items to indicate that
   // they are still valid (and to prevent MUI warning)
   const options = useMemo(() => {
+    const canUseOption = resultFilter ?? (() => true);
     const selected = multiple
       ? (field.value as readonly T[])
       : (field.value as T | null)
       ? [field.value as T]
       : [];
-    const searchResults = data?.search.items;
-    const initialItems = initial?.options;
+    const searchResults = (data?.search.items ?? []).filter((item) =>
+      canUseOption(item as T)
+    );
+    const initialItems = (initial?.options ?? []).filter(canUseOption);
 
-    if (!searchResults?.length && !initialItems?.length) {
+    if (!searchResults.length && !initialItems.length) {
       return selected; // optimization for no results
     }
 
-    const merged = [
-      ...(searchResults ?? []),
-      ...(initialItems ?? []),
-      ...selected,
-    ];
+    const merged = [...searchResults, ...initialItems, ...selected];
 
     // Filter out duplicates caused by selected items also appearing in search results.
     return uniqBy(merged, compareBy);
-  }, [data?.search.items, initial?.options, field.value, compareBy, multiple]);
+  }, [
+    compareBy,
+    data?.search.items,
+    field.value,
+    initial?.options,
+    multiple,
+    resultFilter,
+  ]);
 
   const autocomplete = (
     <Autocomplete<T, Multiple, DisableClearable, typeof freeSolo>

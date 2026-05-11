@@ -30,6 +30,12 @@ fragment ProjectOverview on Project {
     canEdit
     value {
       ...DisplayLocation
+      defaultMarketingRegion {
+        canRead
+        value {
+          ...DisplayMarketingRegion
+        }
+      }
     }
   }
   fieldRegion {

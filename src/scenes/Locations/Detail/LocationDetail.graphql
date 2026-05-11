@@ -36,6 +36,13 @@ fragment LocationDetail on Location {
       ...DisplayFieldRegion
     }
   }
+  defaultMarketingRegion {
+    canRead
+    canEdit
+    value {
+      ...DisplayMarketingRegion
+    }
+  }
   mapImage {
     canRead
     canEdit

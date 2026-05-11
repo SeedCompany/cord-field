@@ -409,6 +409,18 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <DataButton
+                label="Marketing Location"
+                startIcon={<MapPinIcon color="info" />}
+                empty="None"
+                loading={!project}
+                secured={project?.marketingLocation}
+                redacted="You do not have permission to view marketing location"
+                children={(location) => location.name.value}
+                onClick={() => editField('marketingLocation')}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
                 label="Field Region"
                 startIcon={<GlobeIcon color="info" />}
                 empty="None"
@@ -421,14 +433,18 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <DataButton
-                label="Marketing Location"
+                label="Marketing Region"
                 startIcon={<GlobalSearchIcon color="info" />}
                 empty="None"
                 loading={!project}
-                secured={project?.marketingLocation}
-                redacted="You do not have permission to view the marketing location"
+                secured={
+                  project?.marketingLocation.canRead === false
+                    ? { canRead: false, value: undefined }
+                    : project?.marketingLocation.value?.defaultMarketingRegion
+                }
+                redacted="You do not have permission to view marketing region"
                 children={(location) => location.name.value}
-                onClick={() => editField(['marketingLocation'])}
+                onClick={() => editField('marketingLocation')}
               />
             </Grid>
             {project?.usesRev79.value === true && (

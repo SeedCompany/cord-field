@@ -1,0 +1,7 @@
+query MarketingRegionLookup($query: String!) {
+  search: locations(input: { filter: { name: $query, type: [Region] } }) {
+    items {
+      ...DisplayMarketingRegion
+    }
+  }
+}
