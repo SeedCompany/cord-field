@@ -15,9 +15,15 @@ import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { FormattedDateTime } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
+import { Link } from '../../../components/Routing';
 import { StyledRemoteSvg } from '../../../components/StyledRemoteSvg';
 import { EditLocation } from '../Edit';
 import { LocationDocument } from './LocationDetail.graphql';
+
+const locationTypeLabels: typeof LocationTypeLabels = {
+  ...LocationTypeLabels,
+  Region: 'Marketing Region',
+};
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
@@ -62,6 +68,8 @@ export const LocationDetail = () => {
   });
   const location = data?.location;
   const fundingAccount = location?.fundingAccount.value;
+  const defaultFieldRegion = location?.defaultFieldRegion.value;
+  const defaultMarketingRegion = location?.defaultMarketingRegion.value;
 
   return (
     <main className={classes.root}>
@@ -116,7 +124,7 @@ export const LocationDetail = () => {
           </div>
           <DisplayProperty
             label="Type"
-            value={labelFrom(LocationTypeLabels)(location?.type.value)}
+            value={labelFrom(locationTypeLabels)(location?.type.value)}
             loading={!location}
           />
           <DisplayProperty
@@ -131,6 +139,43 @@ export const LocationDetail = () => {
                 ? ` (${fundingAccount.accountNumber.value})`
                 : ''
             }`}
+            loading={!location}
+          />
+          <DisplayProperty
+            label="Default Field Region"
+            value={
+              location?.defaultFieldRegion.canRead === false ? (
+                <Redacted
+                  info="You don't have permission to view default field region"
+                  width="12ch"
+                />
+              ) : defaultFieldRegion ? (
+                <Link to={`/field-regions/${defaultFieldRegion.id}`}>
+                  {defaultFieldRegion.name.value ?? 'Unnamed Field Region'}
+                </Link>
+              ) : (
+                'None'
+              )
+            }
+            loading={!location}
+          />
+          <DisplayProperty
+            label="Default Marketing Region"
+            value={
+              location?.defaultMarketingRegion.canRead === false ? (
+                <Redacted
+                  info="You don't have permission to view default marketing region"
+                  width="12ch"
+                />
+              ) : defaultMarketingRegion ? (
+                <Link to={`/locations/${defaultMarketingRegion.id}`}>
+                  {defaultMarketingRegion.name.value ??
+                    'Unnamed Marketing Region'}
+                </Link>
+              ) : (
+                'None'
+              )
+            }
             loading={!location}
           />
           {location?.mapImage.value && (

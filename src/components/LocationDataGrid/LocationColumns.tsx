@@ -10,6 +10,11 @@ import { enumColumn, getInitialVisibility, textColumn, Toolbar } from '../Grid';
 import { Link } from '../Routing';
 import { LocationDataGridRowFragment as Location } from './locationDataGridRow.graphql';
 
+const locationTypeLabels: typeof LocationTypeLabels = {
+  ...LocationTypeLabels,
+  Region: 'Marketing Region',
+};
+
 export const LocationColumns: Array<GridColDef<Location>> = [
   {
     field: 'name',
@@ -23,7 +28,7 @@ export const LocationColumns: Array<GridColDef<Location>> = [
   },
   {
     field: 'type',
-    ...enumColumn(LocationTypeList, LocationTypeLabels),
+    ...enumColumn(LocationTypeList, locationTypeLabels),
     headerName: 'Type',
     width: 150,
     valueGetter: (_, row) => row.type.value || '',
