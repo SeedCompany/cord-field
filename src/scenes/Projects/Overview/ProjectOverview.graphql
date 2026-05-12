@@ -38,6 +38,13 @@ fragment ProjectOverview on Project {
       }
     }
   }
+  marketingRegionOverride {
+    canRead
+    canEdit
+    value {
+      ...DisplayMarketingRegion
+    }
+  }
   fieldRegion {
     canRead
     canEdit
