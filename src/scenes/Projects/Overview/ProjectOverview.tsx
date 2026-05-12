@@ -146,6 +146,15 @@ export const ProjectOverview = () => {
     ? CreateLanguageEngagement
     : CreateInternshipEngagement;
 
+  const marketingRegion =
+    project?.marketingRegionOverride.canRead === false
+      ? { canRead: false, value: undefined }
+      : project?.marketingRegionOverride.value
+      ? project.marketingRegionOverride
+      : project?.marketingLocation.canRead === false
+      ? { canRead: false, value: undefined }
+      : project?.marketingLocation.value?.defaultMarketingRegion;
+
   return (
     <Box component="main" sx={{ flex: 1, overflowY: 'auto', padding: 4 }}>
       <Helmet title={project?.name.value ?? undefined} />
@@ -409,18 +418,6 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <DataButton
-                label="Marketing Location"
-                startIcon={<MapPinIcon color="info" />}
-                empty="None"
-                loading={!project}
-                secured={project?.marketingLocation}
-                redacted="You do not have permission to view marketing location"
-                children={(location) => location.name.value}
-                onClick={() => editField('marketingLocation')}
-              />
-            </Grid>
-            <Grid item>
-              <DataButton
                 label="Field Region"
                 startIcon={<GlobeIcon color="info" />}
                 empty="None"
@@ -433,18 +430,26 @@ export const ProjectOverview = () => {
             </Grid>
             <Grid item>
               <DataButton
+                label="Marketing Location"
+                startIcon={<MapPinIcon color="info" />}
+                empty="None"
+                loading={!project}
+                secured={project?.marketingLocation}
+                redacted="You do not have permission to view marketing location"
+                children={(location) => location.name.value}
+                onClick={() => editField('marketingLocation')}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
                 label="Marketing Region"
                 startIcon={<GlobalSearchIcon color="info" />}
                 empty="None"
                 loading={!project}
-                secured={
-                  project?.marketingLocation.canRead === false
-                    ? { canRead: false, value: undefined }
-                    : project?.marketingLocation.value?.defaultMarketingRegion
-                }
+                secured={marketingRegion}
                 redacted="You do not have permission to view marketing region"
                 children={(location) => location.name.value}
-                onClick={() => editField('marketingLocation')}
+                onClick={() => editField('marketingRegionOverride')}
               />
             </Grid>
             {project?.usesRev79.value === true && (
