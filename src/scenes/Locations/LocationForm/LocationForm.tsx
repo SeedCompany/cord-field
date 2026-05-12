@@ -28,7 +28,7 @@ import {
   FundingAccountField,
   FundingAccountLookupItem,
 } from '../../../components/form/Lookup/FundingAccount';
-import { MarketingRegionField } from '../../../components/form/Lookup/Location';
+import { MarketingRegionField } from '../../../components/form/Lookup/Location/MarketingRegionField';
 import { LocationFormFragment } from './LocationForm.graphql';
 
 export type LocationFormValues<
