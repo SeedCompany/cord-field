@@ -144,6 +144,10 @@ export const UpdateProjectDialog = ({
     [editFieldsProp]
   );
 
+  const marketingLocation = project.marketingLocation.value;
+  const marketingLocationDefaultMarketingRegion =
+    marketingLocation?.defaultMarketingRegion.value;
+
   const [updateProject] = useMutation(UpdateProjectDocument);
 
   const initialValues = useMemo(() => {
@@ -155,10 +159,10 @@ export const UpdateProjectDialog = ({
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
-      marketingLocation: project.marketingLocation.value,
+      marketingLocation,
       marketingRegionOverride:
         project.marketingRegionOverride.value ??
-        project.marketingLocation.value?.defaultMarketingRegion.value,
+        marketingLocationDefaultMarketingRegion,
       departmentId: project.departmentId.value,
       ...(project.__typename === 'MomentumTranslationProject' && {
         rev79ProjectId: project.rev79ProjectId.value,
@@ -184,7 +188,8 @@ export const UpdateProjectDialog = ({
     project.mouRange.value.end,
     project.estimatedSubmission.value,
     project.sensitivity,
-    project.marketingLocation.value,
+    marketingLocation,
+    marketingLocationDefaultMarketingRegion,
     project.marketingRegionOverride.value,
     project.id,
     project.departmentId.value,

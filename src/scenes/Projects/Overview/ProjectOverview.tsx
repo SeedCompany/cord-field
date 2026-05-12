@@ -146,14 +146,20 @@ export const ProjectOverview = () => {
     ? CreateLanguageEngagement
     : CreateInternshipEngagement;
 
-  const marketingRegion =
-    project?.marketingRegionOverride.canRead === false
-      ? { canRead: false, value: undefined }
-      : project?.marketingRegionOverride.value
-      ? project.marketingRegionOverride
-      : project?.marketingLocation.canRead === false
-      ? { canRead: false, value: undefined }
-      : project?.marketingLocation.value?.defaultMarketingRegion;
+  const marketingRegion = (() => {
+    // Precedence: explicit override > marketing location default,
+    // while preserving redaction if either source cannot be read.
+    if (project?.marketingRegionOverride.canRead === false) {
+      return { canRead: false, value: undefined };
+    }
+    if (project?.marketingRegionOverride.value) {
+      return project.marketingRegionOverride;
+    }
+    if (project?.marketingLocation.canRead === false) {
+      return { canRead: false, value: undefined };
+    }
+    return project?.marketingLocation.value?.defaultMarketingRegion;
+  })();
 
   return (
     <Box component="main" sx={{ flex: 1, overflowY: 'auto', padding: 4 }}>
