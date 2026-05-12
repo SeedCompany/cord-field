@@ -9,6 +9,7 @@ import {
 import {
   DisplayFieldRegionFragment as FieldRegionLookupItem,
   labelFrom,
+  DisplayMarketingRegionFragment as MarketingRegionLookupItem,
 } from '~/common';
 import {
   DialogForm,
@@ -27,6 +28,7 @@ import {
   FundingAccountField,
   FundingAccountLookupItem,
 } from '../../../components/form/Lookup/FundingAccount';
+import { MarketingRegionField } from '../../../components/form/Lookup/Location/MarketingRegionField';
 import { LocationFormFragment } from './LocationForm.graphql';
 
 export type LocationFormValues<
@@ -35,6 +37,7 @@ export type LocationFormValues<
   CreateOrUpdateType,
   {
     defaultFieldRegion?: FieldRegionLookupItem | null;
+    defaultMarketingRegion?: MarketingRegionLookupItem | null;
     fundingAccount?: FundingAccountLookupItem | null;
     mapImage?: File[];
   }
@@ -45,6 +48,11 @@ export type LocationFormProps<CreateOrUpdateInput, R = void> = DialogFormProps<
   R
 > & {
   location?: LocationFormFragment;
+};
+
+const locationTypeLabels: typeof LocationTypeLabels = {
+  ...LocationTypeLabels,
+  Region: 'Marketing Region',
 };
 
 export const LocationForm = <CreateOrUpdateInput, R extends any>({
@@ -78,7 +86,7 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
             <SelectField
               label="Type"
               options={LocationTypeList}
-              getOptionLabel={labelFrom(LocationTypeLabels)}
+              getOptionLabel={labelFrom(locationTypeLabels)}
               defaultValue={LocationTypeList[0]}
               required
               margin="none"
@@ -111,6 +119,17 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
             <FieldRegionField
               margin="none"
               label="Default Field Region"
+              {...props}
+            />
+          )}
+        </SecuredField>
+      </Grid>
+      <Grid item xs={12}>
+        <SecuredField obj={location} name="defaultMarketingRegion">
+          {(props) => (
+            <MarketingRegionField
+              margin="none"
+              label="Default Marketing Region"
               {...props}
             />
           )}

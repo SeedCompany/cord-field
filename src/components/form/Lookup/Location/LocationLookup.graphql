@@ -2,6 +2,14 @@ query LocationLookup($query: String!) {
   search(input: { query: $query, type: [Location] }) {
     items {
       ...DisplayLocation
+      ... on Location {
+        defaultMarketingRegion {
+          canRead
+          value {
+            ...DisplayMarketingRegion
+          }
+        }
+      }
     }
   }
 }

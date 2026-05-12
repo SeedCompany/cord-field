@@ -146,6 +146,21 @@ export const ProjectOverview = () => {
     ? CreateLanguageEngagement
     : CreateInternshipEngagement;
 
+  const marketingRegion = (() => {
+    // Precedence: explicit override > marketing location default,
+    // while preserving redaction if either source cannot be read.
+    if (project?.marketingRegionOverride.canRead === false) {
+      return { canRead: false, value: undefined };
+    }
+    if (project?.marketingRegionOverride.value) {
+      return project.marketingRegionOverride;
+    }
+    if (project?.marketingLocation.canRead === false) {
+      return { canRead: false, value: undefined };
+    }
+    return project?.marketingLocation.value?.defaultMarketingRegion;
+  })();
+
   return (
     <Box component="main" sx={{ flex: 1, overflowY: 'auto', padding: 4 }}>
       <Helmet title={project?.name.value ?? undefined} />
@@ -422,13 +437,25 @@ export const ProjectOverview = () => {
             <Grid item>
               <DataButton
                 label="Marketing Location"
-                startIcon={<GlobalSearchIcon color="info" />}
+                startIcon={<MapPinIcon color="info" />}
                 empty="None"
                 loading={!project}
                 secured={project?.marketingLocation}
-                redacted="You do not have permission to view the marketing location"
+                redacted="You do not have permission to view marketing location"
                 children={(location) => location.name.value}
-                onClick={() => editField(['marketingLocation'])}
+                onClick={() => editField('marketingLocation')}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                label="Marketing Region"
+                startIcon={<GlobalSearchIcon color="info" />}
+                empty="None"
+                loading={!project}
+                secured={marketingRegion}
+                redacted="You do not have permission to view marketing region"
+                children={(location) => location.name.value}
+                onClick={() => editField('marketingRegionOverride')}
               />
             </Grid>
             {project?.usesRev79.value === true && (

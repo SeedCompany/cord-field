@@ -29,6 +29,7 @@ export const EditLocation = (props: EditLocationProps) => {
             isoAlpha3: location.isoAlpha3.value,
             fundingAccount: location.fundingAccount.value,
             defaultFieldRegion: location.defaultFieldRegion.value,
+            defaultMarketingRegion: location.defaultMarketingRegion.value,
           }
         : undefined,
     [location]
@@ -37,6 +38,7 @@ export const EditLocation = (props: EditLocationProps) => {
   const onSubmit: FormProps['onSubmit'] = async ({
     fundingAccount,
     defaultFieldRegion,
+    defaultMarketingRegion,
     mapImage: mapImages,
     ...rest
   }) => {
@@ -47,6 +49,7 @@ export const EditLocation = (props: EditLocationProps) => {
     const input: UpdateLocation = {
       ...rest,
       defaultFieldRegion: defaultFieldRegion?.id ?? null,
+      defaultMarketingRegion: defaultMarketingRegion?.id ?? null,
       fundingAccount: fundingAccount?.id ?? null,
       mapImage: uploadedImageInfo,
     };

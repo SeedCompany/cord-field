@@ -13,6 +13,11 @@ import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
 import { LocationCardFragment } from './LocationCard.graphql';
 
+const locationTypeLabels: typeof LocationTypeLabels = {
+  ...LocationTypeLabels,
+  Region: 'Marketing Region',
+};
+
 export interface LocationCardProps {
   loading?: boolean;
   location?: LocationCardFragment;
@@ -48,7 +53,7 @@ export const LocationCard = ({
             {loading ? (
               <Skeleton width="25%" />
             ) : locationType?.canRead === true ? (
-              labelFrom(LocationTypeLabels)(locationType.value)
+              labelFrom(locationTypeLabels)(locationType.value)
             ) : (
               <Redacted
                 info="You don't have permission to view this location's type"
