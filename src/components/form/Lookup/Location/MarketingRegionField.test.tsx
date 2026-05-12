@@ -50,6 +50,34 @@ const setup = (mocks: readonly MockedResponse[] = []) => {
   render(
     <MockedProvider mocks={mocks}>
       <Form
+        initialValues={{}}
+        onSubmit={() => {
+          // noop
+        }}
+      >
+        {({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <MarketingRegionField
+              name="marketingRegion"
+              label="Marketing Region"
+            />
+          </form>
+        )}
+      </Form>
+    </MockedProvider>
+  );
+
+  return screen.getByRole('combobox');
+};
+
+const setupWithInitialValues = (
+  initialValues: Record<string, unknown>,
+  mocks: readonly MockedResponse[] = []
+) => {
+  render(
+    <MockedProvider mocks={mocks}>
+      <Form
+        initialValues={initialValues}
         onSubmit={() => {
           // noop
         }}
@@ -105,6 +133,36 @@ describe('MarketingRegionField', () => {
     await waitFor(() => {
       expect(screen.getByText('Africa Region')).toBeInTheDocument();
       expect(screen.queryByText('Canada')).not.toBeInTheDocument();
+    });
+  });
+
+  it('keeps an already-selected non-region value visible', async () => {
+    const selectedCountry = makeLocation({
+      id: 'country-2',
+      name: {
+        __typename: 'SecuredString',
+        canRead: true,
+        canEdit: false,
+        value: 'Canada',
+      },
+      type: {
+        __typename: 'SecuredLocationType',
+        canRead: true,
+        value: 'Country',
+      },
+    });
+
+    const input = setupWithInitialValues({ marketingRegion: selectedCountry }, [
+      searchMock('Ca', [makeLocation()]),
+    ]);
+
+    // Starts with the selected value from form state.
+    expect(input).toHaveValue('Canada');
+
+    search(input, 'Ca');
+
+    await waitFor(() => {
+      expect(screen.getByText('Canada')).toBeInTheDocument();
     });
   });
 });
