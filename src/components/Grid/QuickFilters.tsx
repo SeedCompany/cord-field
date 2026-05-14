@@ -10,25 +10,40 @@ import { useMemoizedFn } from 'ahooks';
 import { useMemo } from 'react';
 import { ChildrenProp, extendSx, StyleProps } from '~/common';
 
-export const QuickFilters = (props: ChildrenProp & StyleProps) => (
-  <Stack
-    direction="row"
-    alignItems="center"
-    gap={1}
-    sx={[
-      {
-        '.MuiToggleButton-root:not(.MuiToggleButtonGroup-grouped)': {
-          margin: 0,
-          py: 0.5,
+export const QuickFilters = (props: ChildrenProp & StyleProps) => {
+  const className = ['GridQuickFilters', props.className]
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <Stack
+      direction="row"
+      alignItems="center"
+      className={className}
+      gap={1}
+      sx={[
+        {
+          maxWidth: '100%',
+          flexWrap: 'nowrap',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          '.MuiTypography-root': {
+            whiteSpace: 'nowrap',
+          },
+          '.MuiToggleButton-root:not(.MuiToggleButtonGroup-grouped)': {
+            margin: 0,
+            py: 0.5,
+            flexShrink: 0,
+          },
         },
-      },
-      ...extendSx(props.sx),
-    ]}
-  >
-    <Typography variant="body2">Quick Filters:</Typography>
-    {props.children}
-  </Stack>
-);
+        ...extendSx(props.sx),
+      ]}
+    >
+      <Typography variant="body2">Quick Filters:</Typography>
+      {props.children}
+    </Stack>
+  );
+};
 
 export const QuickFilterButton = (props: ToggleButtonProps) => (
   <ToggleButton color="info" size="small" {...props} />

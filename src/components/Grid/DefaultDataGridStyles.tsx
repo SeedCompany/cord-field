@@ -48,6 +48,21 @@ export const DefaultDataGridStyles = {
           .map((column) => column.field),
     },
     filterPanel: {
+      sx: {
+        maxWidth: 'calc(100vw - 16px)',
+        '& .MuiDataGrid-filterForm': {
+          flexWrap: 'wrap',
+          rowGap: 0.5,
+        },
+        '& .MuiDataGrid-filterFormColumnInput, & .MuiDataGrid-filterFormOperatorInput':
+          {
+            flex: '1 1 auto',
+            minWidth: 80,
+          },
+        '& .MuiDataGrid-filterFormValueInput': {
+          flex: '1 1 100%',
+        },
+      },
       filterFormProps: {
         valueInputProps: {
           InputComponentProps,

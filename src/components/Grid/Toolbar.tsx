@@ -10,23 +10,48 @@ export const Toolbar = (props: ChildrenProp & StyleProps) => {
     <Stack
       {...props}
       sx={[
-        {
+        (theme) => ({
           flexDirection: 'row',
+          flexWrap: 'nowrap',
           justifyContent: 'space-between',
           alignItems: 'center',
+          columnGap: 2,
+          rowGap: 0,
           background: 'var(--DataGrid-containerBackground)',
           p: 1,
           borderBottom: 'thin solid var(--DataGrid-rowBorderColor)',
           borderTopLeftRadius: 'inherit',
           borderTopRightRadius: 'inherit',
-        },
+          '& > .GridQuickFilters': {
+            flex: '1 1 auto',
+            minWidth: 0,
+            order: 1,
+          },
+          '& > .GridToolbarRowCount': {
+            marginLeft: 'auto',
+            order: 2,
+            whiteSpace: 'nowrap',
+          },
+          '& > :not(.GridQuickFilters):not(.GridToolbarRowCount)': {
+            order: 1,
+          },
+          [theme.breakpoints.down('mobile')]: {
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            rowGap: 1,
+            '& > .GridQuickFilters': {
+              flex: '1 0 100%',
+              order: 3,
+            },
+          },
+        }),
         ...extendSx(props.sx),
       ]}
     >
       {props.children}
       {rootProps.rowCount != null && (
-        <Typography>
-          Total Rows: <FormattedNumber value={rootProps.rowCount} />
+        <Typography className="GridToolbarRowCount" variant="body2">
+          Rows: <FormattedNumber value={rootProps.rowCount} />
         </Typography>
       )}
     </Stack>

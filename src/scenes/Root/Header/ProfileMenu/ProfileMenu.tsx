@@ -40,6 +40,20 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
       <Typography variant="h4" pt={1} p={2} {...skipAutoFocus}>
         Profile Info
       </Typography>
+      {session?.fullName && (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          px={2}
+          pb={1}
+          sx={{
+            display: { xs: 'block', mobile: 'none' },
+          }}
+          {...skipAutoFocus}
+        >
+          {session.fullName}
+        </Typography>
+      )}
       <Divider {...skipAutoFocus} />
       {userId && (
         <MenuItemLink to={`/users/${userId}`}>View Profile</MenuItemLink>
