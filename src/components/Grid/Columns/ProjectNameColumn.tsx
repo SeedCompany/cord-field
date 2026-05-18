@@ -23,6 +23,7 @@ export const ProjectNameColumn = <
     ...textColumn<Row>(),
     headerName: 'Project',
     width: 200,
+    minWidth: 130,
     valueGetter: (...args) => valueGetter(...args).name.value,
     renderCell: ({ value, row, colDef, api }) => {
       const project = valueGetter(null as never, row, colDef, { current: api });
