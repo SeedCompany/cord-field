@@ -7,6 +7,10 @@ import {
 } from './navOpenState';
 
 describe('navOpenState', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   describe('initialNavOpenState', () => {
     it('defaults the desktop sidebar to open and the mobile drawer to closed', () => {
       expect(initialNavOpenState).toEqual({
