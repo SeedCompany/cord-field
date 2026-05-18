@@ -19,8 +19,18 @@ export const DashboardRoutes = () => (
 
 const MainDashboard = () => (
   <WidgetGrid>
-    <ProgressReportsWidget colSpan={8} rowSpan={6} expanded={false} />
-    <PnpProblemsWidget colSpan={8} rowSpan={6} expanded={false} />
+    <ProgressReportsWidget
+      colSpan={8}
+      rowSpan={6}
+      expanded={false}
+      sx={{ gridColumn: { xs: 'span 12', mobile: 'span 8' } }}
+    />
+    <PnpProblemsWidget
+      colSpan={8}
+      rowSpan={6}
+      expanded={false}
+      sx={{ gridColumn: { xs: 'span 12', mobile: 'span 8' } }}
+    />
   </WidgetGrid>
 );
 
