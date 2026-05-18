@@ -25,7 +25,7 @@ export const LanguageNameColumn = <
     width: 200,
     valueGetter: (...args) => {
       const lang = valueGetter(...args);
-      return lang.publicName;
+      return lang.displayName.value;
     },
     renderCell: ({ value, row, colDef, api }) => {
       const apiRef = { current: api };

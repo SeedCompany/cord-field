@@ -57,7 +57,7 @@ export const StatusHistory = () => {
   const engagement = report?.parent;
 
   const reportTitle = getReportLabel(report);
-  const engagementTitle = engagement?.language.value?.publicName;
+  const engagementTitle = engagement?.language.value?.displayName.value;
 
   return (
     <Box

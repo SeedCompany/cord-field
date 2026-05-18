@@ -27,7 +27,7 @@ export const LanguageEngagementListItemCard = (
   const numberFormatter = useNumberFormatter();
 
   const language = securedLanguage.value;
-  const name = language?.publicName;
+  const name = language?.displayName.value;
   const population = language?.population.value;
   const registryOfLanguageVarietiesCode =
     language?.registryOfLanguageVarietiesCode.value;

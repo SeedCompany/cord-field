@@ -5,7 +5,9 @@ fragment LanguageEngagementHeader on LanguageEngagement {
   language {
     value {
       id
-      publicName
+      displayName {
+        value
+      }
     }
   }
   lukePartnership {

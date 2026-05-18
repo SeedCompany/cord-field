@@ -36,7 +36,9 @@ fragment ProgressReportEdit on ProgressReport {
     language {
       value {
         id
-        publicName
+        displayName {
+          value
+        }
       }
     }
     project {
