@@ -1,0 +1,10 @@
+mutation DeleteLanguage($id: ID!) {
+  deleteLanguage(id: $id) {
+    __typename
+  }
+}
+
+fragment CanDeleteLanguage on Language {
+  ...Id
+  canDelete
+}

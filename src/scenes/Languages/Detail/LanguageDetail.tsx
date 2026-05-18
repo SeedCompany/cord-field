@@ -18,6 +18,7 @@ import { Error } from '../../../components/Error';
 import { IconButton } from '../../../components/IconButton';
 import { Redacted } from '../../../components/Redacted';
 import { TogglePinButton } from '../../../components/TogglePinButton';
+import { DeleteLanguage } from '../Delete';
 import { EditLanguage } from '../Edit';
 import { LanguagesQueryVariables } from '../List/languages.graphql';
 import { LanguageDocument } from './LanguageDetail.graphql';
@@ -116,6 +117,7 @@ export const LanguageDetail = () => {
               }
             />
             <ToggleCommentsButton loading={!language} />
+            {language && <DeleteLanguage language={language} />}
           </Box>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
