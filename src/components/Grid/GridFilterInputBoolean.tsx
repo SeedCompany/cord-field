@@ -116,11 +116,8 @@ export const GridFilterInputBoolean = (props: GridFilterInputBooleanProps) => {
   );
 };
 
-const renderValue = (value: unknown) =>
-  value === '' || value == null ? (
-    <Box color="text.disabled">Any</Box>
-  ) : value ? (
-    'Yes'
-  ) : (
-    'No'
-  );
+const renderValue = (value: unknown) => {
+  if (value === '' || value == null)
+    return <Box color="text.disabled">Any</Box>;
+  return value === true ? 'Yes' : 'No';
+};
