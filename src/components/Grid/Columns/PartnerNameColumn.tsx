@@ -22,8 +22,7 @@ export const PartnerNameColumn = <
   columnWithDefaults<Row>()(overrides, {
     ...textColumn<Row>(),
     headerName: 'Partner',
-    width: 200,
-    minWidth: 130,
+    width: 300,
     valueGetter: (...args) =>
       valueGetter(...args).organization.value?.name.value,
     renderCell: ({ value, row, colDef, api }) => {

@@ -22,8 +22,7 @@ export const UserNameColumn = <
   columnWithDefaults<Row>()(overrides, {
     ...textColumn<Row>(),
     headerName: 'Name',
-    width: 200,
-    minWidth: 130,
+    width: 350,
     valueGetter: (...args) => valueGetter(...args).fullName,
     renderCell: ({ value, row, colDef, api }) => {
       const user = valueGetter(null as never, row, colDef, { current: api });

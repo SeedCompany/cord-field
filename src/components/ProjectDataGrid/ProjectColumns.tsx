@@ -36,6 +36,7 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     field: 'name',
     headerName: 'Name',
     valueGetter: (_, project) => project,
+    width: 300,
   }),
   {
     field: 'primaryLocation.name',

@@ -29,6 +29,7 @@ export const PartnerColumns: Array<GridColDef<Partner>> = [
     field: 'organization.name',
     headerName: 'Name',
     valueGetter: (_, partner) => partner,
+    width: 300,
   }),
   {
     field: 'organization.acronym',
