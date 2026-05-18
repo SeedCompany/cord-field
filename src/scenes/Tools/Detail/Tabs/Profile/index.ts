@@ -1,0 +1,1 @@
+export { ToolDetailProfile } from './ToolDetailProfile';

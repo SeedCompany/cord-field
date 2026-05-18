@@ -62,7 +62,9 @@ fragment engagementDataGridRow on Engagement {
     language {
       value {
         id
-        publicName
+        displayName {
+          value
+        }
         ethnologue {
           code {
             value

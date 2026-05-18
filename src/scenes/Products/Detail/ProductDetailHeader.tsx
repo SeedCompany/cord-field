@@ -25,7 +25,7 @@ export const ProductDetailHeader = ({ product }: { product?: Product }) => {
   const { classes } = useStyles();
 
   const language = product?.engagement.language.value;
-  const langName = language?.publicName;
+  const langName = language?.displayName.value;
   const project = product?.engagement.project;
 
   return (

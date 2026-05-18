@@ -5,7 +5,10 @@ runs:
   steps:
     - uses: actions/setup-node@v4
       with:
-        node-version: 24
+        # Pinned: Node 24.15+ hits EBADF in Yarn PnP's CJS-from-zip loader
+        # (yarnpkg/berry#7103 — HAS_BROKEN_FSTAT_FOR_ZIP_FDS gate misses 24.15
+        # backport of nodejs/node#61769). Unpin once Yarn ships the fix.
+        node-version: 24.14.1
 
     - name: Yarn cache
       uses: actions/cache@v4

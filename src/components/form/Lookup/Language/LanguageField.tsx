@@ -44,7 +44,7 @@ export const LanguageField = LookupField.createFor<
   lookupDocument: LanguageLookupDocument,
   label: 'Language',
   placeholder: 'Search for a language by name',
-  getOptionLabel: (option) => option.publicName ?? '',
+  getOptionLabel: (option) => option.displayName.value ?? '',
   CreateDialogForm: CreateLanguage,
   getInitialValues: (name) => ({ name, displayName: name }),
   PaperComponent: LanguageDropdownPaper,
@@ -70,7 +70,7 @@ export const LanguageField = LookupField.createFor<
               whiteSpace: 'nowrap',
             }}
           >
-            {option.publicName}
+            {option.displayName.value}
           </Box>
           <Box
             sx={{
