@@ -8,7 +8,6 @@ query Language($languageId: ID!) @live {
 fragment LanguageDetail on Language {
   id
   createdAt
-  publicName
   name {
     canRead
     canEdit

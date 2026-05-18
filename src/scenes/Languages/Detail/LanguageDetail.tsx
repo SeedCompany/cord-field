@@ -42,7 +42,6 @@ export const LanguageDetail = () => {
     ethnologue,
     displayName,
     name,
-    publicName,
     sensitivity,
     isDialect,
     isSignLanguage,
@@ -78,7 +77,7 @@ export const LanguageDetail = () => {
         maxWidth: theme.breakpoints.values.xl,
       })}
     >
-      <Helmet title={publicName ?? undefined} />
+      <Helmet title={displayName?.value ?? undefined} />
       <Error error={error}>
         {{
           NotFound: 'Could not find language',
