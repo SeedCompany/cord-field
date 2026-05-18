@@ -1,9 +1,17 @@
-import { Dashboard, FolderOpen, Language, Person } from '@mui/icons-material';
+import {
+  Close,
+  Dashboard,
+  FolderOpen,
+  Language,
+  Person,
+} from '@mui/icons-material';
 import {
   Box,
+  IconButton,
   List,
   ListItemIcon,
   ListItemText,
+  Stack,
   SvgIconProps,
 } from '@mui/material';
 import { ComponentType } from 'react';
@@ -19,11 +27,32 @@ export interface SidebarContentProps {
    * the Create button or the sidebar subheader.
    */
   onNavigate?: () => void;
+  /**
+   * Called when the user taps the close button. Only rendered in the mobile
+   * full-screen drawer; omit for the desktop sidebar.
+   */
+  onClose?: () => void;
 }
 
-export const SidebarContent = ({ onNavigate }: SidebarContentProps) => (
+export const SidebarContent = ({
+  onNavigate,
+  onClose,
+}: SidebarContentProps) => (
   <>
-    <SidebarHeader />
+    <Stack direction="row" alignItems="flex-start">
+      <Box sx={{ flex: 1 }}>
+        <SidebarHeader />
+      </Box>
+      {onClose && (
+        <IconButton
+          onClick={onClose}
+          aria-label="close navigation menu"
+          sx={{ m: 1 }}
+        >
+          <Close />
+        </IconButton>
+      )}
+    </Stack>
     <Box sx={{ px: 2 }}>
       <CreateButtonMenu
         sx={(theme) => ({

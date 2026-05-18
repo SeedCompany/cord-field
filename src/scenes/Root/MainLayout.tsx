@@ -8,7 +8,7 @@ import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';
 import { Header } from './Header';
 import { useNavOpenState } from './navOpenState';
-import { Sidebar, SIDEBAR_WIDTH, SidebarContent } from './Sidebar';
+import { Sidebar, SidebarContent } from './Sidebar';
 import { sidebarTheme } from './Sidebar/sidebar.theme';
 
 // Distinct ids per variant: both the persistent Sidebar and the temporary
@@ -54,13 +54,10 @@ export const MainLayout = () => {
           onClose={closeMobile}
           anchor="left"
           PaperProps={{ id: MOBILE_NAV_ID }}
-          sx={{
-            display: { xs: 'block', mobile: 'none' },
-            '& .MuiDrawer-paper': { width: SIDEBAR_WIDTH },
-          }}
+          sx={{ display: { xs: 'block', mobile: 'none' } }}
         >
           <ThemeProvider theme={sidebarTheme}>
-            <SidebarContent onNavigate={closeMobile} />
+            <SidebarContent onNavigate={closeMobile} onClose={closeMobile} />
           </ThemeProvider>
         </Drawer>
       </CreateDialogProviders>
