@@ -40,7 +40,7 @@ export const DeleteLanguage = (props: DeleteLanguageProps) => {
   return (
     <>
       <Tooltip title="Delete Language">
-        <IconButton color="error" {...rest} onClick={ask}>
+        <IconButton aria-label="delete language" color="error" {...rest} onClick={ask}>
           <DeleteOutline />
         </IconButton>
       </Tooltip>
