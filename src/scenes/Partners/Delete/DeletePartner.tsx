@@ -40,7 +40,7 @@ export const DeletePartner = (props: DeletePartnerProps) => {
   return (
     <>
       <Tooltip title="Delete Partner">
-        <IconButton color="error" {...rest} onClick={ask}>
+        <IconButton aria-label="delete partner" color="error" {...rest} onClick={ask}>
           <DeleteOutline />
         </IconButton>
       </Tooltip>
