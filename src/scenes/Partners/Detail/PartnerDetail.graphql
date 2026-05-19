@@ -18,6 +18,7 @@ fragment partnerDetails on Partner {
 
 # Seperated for UpdatePartner mutation
 fragment partnerOwnDetails on Partner {
+  canDelete
   ...Id
   createdAt
   pointOfContact {

@@ -16,6 +16,7 @@ import { TogglePinButton } from '~/components/TogglePinButton';
 import { UserPhoto } from '~/components/UserPhoto';
 import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
+import { DeleteUser } from '../Delete';
 import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.graphql';
 import { ImpersonationToggle } from './ImpersonationToggle';
@@ -96,6 +97,7 @@ export const UserDetail = () => {
             />
             <ToggleCommentsButton loading={!user} />
             <ImpersonationToggle user={user} />
+            {user && <DeleteUser user={user} />}
           </Box>
 
           {user && <UserPhoto user={user} sx={{ alignSelf: 'start' }} />}

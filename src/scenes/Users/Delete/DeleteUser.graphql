@@ -1,0 +1,10 @@
+mutation DeleteUser($id: ID!) {
+  deleteUser(id: $id) {
+    __typename
+  }
+}
+
+fragment CanDeleteUser on User {
+  ...Id
+  canDelete
+}

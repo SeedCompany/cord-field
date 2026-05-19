@@ -21,6 +21,7 @@ import { Tab, TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
+import { DeletePartner } from '../Delete';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
 import {
@@ -133,6 +134,7 @@ const PartnerHeader = ({
           }
         />
         <ToggleCommentsButton loading={!partner} />
+        {partner && <DeletePartner partner={partner} />}
       </Stack>
       {acronym && (
         <Typography variant="h4" gutterBottom>

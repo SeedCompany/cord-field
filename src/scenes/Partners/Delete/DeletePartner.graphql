@@ -1,0 +1,10 @@
+mutation DeletePartner($id: ID!) {
+  deletePartner(id: $id) {
+    __typename
+  }
+}
+
+fragment CanDeletePartner on Partner {
+  ...Id
+  canDelete
+}
