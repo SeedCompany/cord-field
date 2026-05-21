@@ -118,10 +118,8 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
     [actions]
   );
 
-  const deleteRefetches =
-    fileNodeToDelete?.__typename === 'FileVersion'
-      ? GQLOperations.Query.FileVersions
-      : GQLOperations.Query.ProjectDirectory;
+  const isDeletingVersion = fileNodeToDelete?.__typename === 'FileVersion';
+  const versionParentFile = isDeletingVersion ? versionToView?.item : undefined;
 
   const context = useMemo(
     () => ({
@@ -137,7 +135,12 @@ export const FileActionsContextProvider = (props: ChildrenProp) => {
         <RenameFile item={fileNodeToRename} {...renameState} />
         <DeleteFile
           item={fileNodeToDelete}
-          refetchQueries={[deleteRefetches]}
+          parentFile={versionParentFile}
+          refetchQueries={
+            isDeletingVersion
+              ? undefined
+              : [GQLOperations.Query.ProjectDirectory]
+          }
           {...deleteState}
         />
         <FileVersions
