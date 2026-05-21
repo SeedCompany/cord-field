@@ -35,7 +35,7 @@ export const Toolbar = (props: ChildrenProp & StyleProps) => {
           '& > :not(.GridQuickFilters):not(.GridToolbarRowCount)': {
             order: 1,
           },
-          [theme.breakpoints.down('mobile')]: {
+          [theme.breakpoints.down('sm')]: {
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             rowGap: 1,
