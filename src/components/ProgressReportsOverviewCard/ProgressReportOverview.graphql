@@ -11,7 +11,19 @@ fragment ProgressReportOverviewItem on ProgressReport {
       ...FileNodeInfo
     }
   }
+  narrativeFile {
+    canEdit
+    canRead
+    value {
+      ...FileNodeInfo
+    }
+  }
   receivedDate {
+    canRead
+    canEdit
+    value
+  }
+  narrativeReceivedDate {
     canRead
     canEdit
     value

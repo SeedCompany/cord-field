@@ -13,19 +13,28 @@ import {
   DropzoneField,
   SubmitError,
 } from '../../../components/form';
-import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.graphql';
+import {
+  dateFieldFor,
+  PeriodicReportEditShape,
+  PeriodicReportFileField,
+} from '../../../components/PeriodicReports/PeriodicReportsTable';
 import { useUpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/useUpdatePeriodicReport';
 
 export type EditablePeriodicReportField = ExtractStrict<
   keyof UpdatePeriodicReportInput,
   // Add more fields here as needed
-  'receivedDate' | 'reportFile' | 'skippedReason'
+  | 'receivedDate'
+  | 'narrativeReceivedDate'
+  | 'reportFile'
+  | 'narrativeFile'
+  | 'skippedReason'
 >;
 
 type UpdatePeriodicReportFormValues = Merge<
   UpdatePeriodicReportInput,
   {
     reportFile?: File[];
+    narrativeFile?: File[];
   }
 >;
 
@@ -33,13 +42,15 @@ type UpdatePeriodicReportDialogProps = Except<
   DialogFormProps<UpdatePeriodicReportFormValues>,
   'onSubmit' | 'initialValues'
 > & {
-  report: Omit<PeriodicReportFragment, 'reportFile'> & { reportFile?: File[] };
+  report: PeriodicReportEditShape;
   editFields?: Many<EditablePeriodicReportField>;
+  fileField?: PeriodicReportFileField;
 };
 
 export const UpdatePeriodicReportDialog = ({
   report,
   editFields: editFieldsProp,
+  fileField = 'reportFile',
   ...props
 }: UpdatePeriodicReportDialogProps) => {
   const editFields = useMemo(
@@ -47,19 +58,26 @@ export const UpdatePeriodicReportDialog = ({
     [editFieldsProp]
   );
 
-  const updateReceivedDateOnly =
-    editFields.includes('receivedDate') && !editFields.includes('reportFile');
+  const dateField = dateFieldFor(fileField);
 
-  const updatePeriodicReport = useUpdatePeriodicReport();
+  const updateReceivedDateOnly =
+    editFields.includes(dateField) && !editFields.includes(fileField);
+
+  const updatePeriodicReport = useUpdatePeriodicReport(fileField);
 
   const initialValues = useMemo(() => {
-    const receivedDate = report.receivedDate.value ?? null;
+    const date = report[dateField].value ?? null;
     const fullInitialValuesFields: Except<
       UpdatePeriodicReportFormValues,
       'id'
     > = {
-      reportFile: report.reportFile,
-      receivedDate,
+      reportFile: Array.isArray(report.reportFile)
+        ? report.reportFile
+        : undefined,
+      narrativeFile: Array.isArray(report.narrativeFile)
+        ? report.narrativeFile
+        : undefined,
+      [dateField]: date,
     };
 
     // Filter out irrelevant initial values so they don't get added to the mutation
@@ -71,7 +89,9 @@ export const UpdatePeriodicReportDialog = ({
       id: report.id,
       ...filteredInitialValuesFields,
     };
-  }, [editFields, report.receivedDate, report.reportFile, report.id]);
+  }, [editFields, dateField, report]);
+
+  const incomingFile = initialValues[fileField];
 
   return (
     <DialogForm<UpdatePeriodicReportFormValues>
@@ -81,15 +101,17 @@ export const UpdatePeriodicReportDialog = ({
       {...props}
       initialValues={initialValues}
       // the only time this form will have an initial value for the file field is when adding a new version
-      sendIfClean={Boolean(initialValues.reportFile)}
-      onSubmit={async ({ id, reportFile, receivedDate }) =>
-        await updatePeriodicReport(id, reportFile, receivedDate)
-      }
+      sendIfClean={Boolean(incomingFile)}
+      onSubmit={async (values) => {
+        const file = values[fileField];
+        const date = values[dateField];
+        await updatePeriodicReport(values.id, file, date);
+      }}
     >
       <SubmitError />
-      {!updateReceivedDateOnly ? <DropzoneField name="reportFile" /> : null}
+      {!updateReceivedDateOnly ? <DropzoneField name={fileField} /> : null}
       <DateField
-        name="receivedDate"
+        name={dateField}
         label="Received Date"
         required={!updateReceivedDateOnly}
         openTo="day"

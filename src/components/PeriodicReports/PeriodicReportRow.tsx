@@ -1,10 +1,29 @@
 import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
+import { createContext, ReactNode, useContext } from 'react';
 import { PaperTooltip } from '../PaperTooltip';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
+import type { PeriodicReportFileField } from './PeriodicReportsTable';
+
+const PeriodicReportFileFieldContext =
+  createContext<PeriodicReportFileField>('reportFile');
+
+export const PeriodicReportFileFieldProvider = ({
+  fileField,
+  children,
+}: {
+  fileField: PeriodicReportFileField;
+  children: ReactNode;
+}) => (
+  <PeriodicReportFileFieldContext.Provider value={fileField}>
+    {children}
+  </PeriodicReportFileFieldContext.Provider>
+);
 
 export const PeriodicReportRow = (props: GridRowProps) => {
+  const fileField = useContext(PeriodicReportFileFieldContext);
   const report = props.row as PeriodicReportFragment;
   const skipped = report.skippedReason.value;
+  const file = report[fileField];
   return (
     <PaperTooltip
       title={skipped ? <>Skipped&mdash;{skipped}</> : ''}
@@ -17,9 +36,7 @@ export const PeriodicReportRow = (props: GridRowProps) => {
           css={(theme) => ({
             color: skipped ? theme.palette.text.disabled : undefined,
             cursor:
-              skipped || (report.reportFile.canRead && !report.reportFile.value)
-                ? undefined
-                : 'pointer',
+              skipped || (file.canRead && !file.value) ? undefined : 'pointer',
           })}
         />
       </div>
