@@ -32,6 +32,15 @@ fragment projectDataGridRow on Project {
   mouEnd {
     value
   }
+  primaryPartnership {
+    value {
+      partner {
+        value {
+          ...PartnerLookupItem
+        }
+      }
+    }
+  }
 
   isMember
   pinned
