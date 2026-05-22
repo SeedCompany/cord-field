@@ -30,19 +30,19 @@ fragment ProjectOverview on Project {
     canEdit
     value {
       ...DisplayLocation
-      defaultMarketingRegion {
-        canRead
-        value {
-          ...DisplayMarketingRegion
-        }
-      }
+    }
+  }
+  marketingRegion {
+    canRead
+    value {
+      ...DisplayLocation
     }
   }
   marketingRegionOverride {
     canRead
     canEdit
     value {
-      ...DisplayMarketingRegion
+      ...DisplayLocation
     }
   }
   fieldRegion {

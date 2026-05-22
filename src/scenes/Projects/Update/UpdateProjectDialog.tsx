@@ -12,7 +12,6 @@ import {
   CalendarDate,
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
-  DisplayMarketingRegionFragment,
   ExtractStrict,
 } from '~/common';
 import { Link } from '~/components/Routing';
@@ -110,18 +109,14 @@ const fieldMapping: Record<
   },
 };
 
-type MarketingLocationValue = NonNullable<
-  ProjectOverviewFragment['marketingLocation']['value']
->;
-
 type UpdateProjectFormValues = Merge<
   UpdateProject,
   {
     primaryLocation?: DisplayLocationFragment | null;
     fieldRegion?: DisplayFieldRegionFragment | null;
     usesRev79?: boolean;
-    marketingLocation?: MarketingLocationValue | null;
-    marketingRegionOverride?: DisplayMarketingRegionFragment | null;
+    marketingLocation?: DisplayLocationFragment | null;
+    marketingRegionOverride?: DisplayLocationFragment | null;
   }
 >;
 
@@ -144,10 +139,6 @@ export const UpdateProjectDialog = ({
     [editFieldsProp]
   );
 
-  const marketingLocation = project.marketingLocation.value;
-  const marketingLocationDefaultMarketingRegion =
-    marketingLocation?.defaultMarketingRegion.value;
-
   const [updateProject] = useMutation(UpdateProjectDocument);
 
   const initialValues = useMemo(() => {
@@ -159,10 +150,9 @@ export const UpdateProjectDialog = ({
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
-      marketingLocation,
+      marketingLocation: project.marketingLocation.value,
       marketingRegionOverride:
-        project.marketingRegionOverride.value ??
-        marketingLocationDefaultMarketingRegion,
+        project.marketingRegionOverride.value ?? project.marketingRegion.value,
       departmentId: project.departmentId.value,
       ...(project.__typename === 'MomentumTranslationProject' && {
         rev79ProjectId: project.rev79ProjectId.value,
@@ -188,8 +178,8 @@ export const UpdateProjectDialog = ({
     project.mouRange.value.end,
     project.estimatedSubmission.value,
     project.sensitivity,
-    marketingLocation,
-    marketingLocationDefaultMarketingRegion,
+    project.marketingLocation.value,
+    project.marketingRegion.value,
     project.marketingRegionOverride.value,
     project.id,
     project.departmentId.value,
@@ -224,7 +214,7 @@ export const UpdateProjectDialog = ({
         return undefined;
       }}
       onSubmit={async (data, form) => {
-        const { dirtyFields, modified } = form.getState();
+        const { dirtyFields } = form.getState();
         const {
           primaryLocation,
           fieldRegion,
@@ -232,17 +222,6 @@ export const UpdateProjectDialog = ({
           marketingRegionOverride,
           ...inputData
         } = data;
-
-        const userModifiedMarketingRegion = Boolean(
-          modified?.marketingRegionOverride
-        );
-
-        const marketingRegionOverrideValue =
-          dirtyFields.marketingRegionOverride || userModifiedMarketingRegion
-            ? marketingRegionOverride?.id ?? null
-            : dirtyFields.marketingLocation
-            ? marketingLocation?.defaultMarketingRegion.value?.id ?? null
-            : undefined;
 
         await updateProject({
           variables: {
@@ -257,7 +236,9 @@ export const UpdateProjectDialog = ({
               marketingLocation: dirtyFields.marketingLocation
                 ? marketingLocation?.id ?? null
                 : undefined,
-              marketingRegionOverride: marketingRegionOverrideValue,
+              marketingRegionOverride: dirtyFields.marketingRegionOverride
+                ? marketingRegionOverride?.id ?? null
+                : undefined,
               usesRev79: dirtyFields.usesRev79
                 ? inputData.usesRev79
                 : undefined,
