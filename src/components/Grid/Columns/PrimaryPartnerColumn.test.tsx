@@ -1,5 +1,5 @@
+import type { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { render, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { ProjectColumns } from '../../ProjectDataGrid/ProjectColumns';
 import { PrimaryPartnerColumn } from './PrimaryPartnerColumn';
@@ -18,17 +18,35 @@ interface TestRow {
 }
 
 const makeColumn = () =>
-  PrimaryPartnerColumn<TestRow>({
+  PrimaryPartnerColumn({
     field: 'primaryPartnership.partner.name',
-    valueGetter: (_, row) => row.primaryPartner,
+    valueGetter: (_value: never, row: TestRow) => row.primaryPartner,
   });
 
-type RenderCell = (params: {
-  value?: string;
-  row: TestRow;
-  colDef: ReturnType<typeof makeColumn>;
-  api: object;
-}) => ReactNode;
+type TestColumn = ReturnType<typeof makeColumn>;
+type RenderCellParams = GridRenderCellParams<
+  TestRow,
+  string | null | undefined
+>;
+
+const makeRenderCellParams = (
+  _column: TestColumn,
+  row: TestRow,
+  value?: string
+): RenderCellParams => ({
+  id: 'row-1',
+  field: 'primaryPartnership.partner.name',
+  value,
+  formattedValue: value,
+  row,
+  rowNode: null as never,
+  colDef: null as never,
+  cellMode: 'view',
+  hasFocus: false,
+  tabIndex: -1,
+  api: null as never,
+  isEditable: false,
+});
 
 const makeRow = (name = 'Seed Company'): TestRow => ({
   primaryPartner: {
@@ -46,12 +64,13 @@ const makeRow = (name = 'Seed Company'): TestRow => ({
 describe('PrimaryPartnerColumn', () => {
   it('extracts the partner organization name from the primary partnership', () => {
     const column = makeColumn();
+    const valueGetter = column.valueGetter;
 
     expect(
-      column.valueGetter(
+      valueGetter(
         undefined as never,
         makeRow(),
-        column,
+        undefined as never,
         undefined as never
       )
     ).toBe('Seed Company');
@@ -59,16 +78,12 @@ describe('PrimaryPartnerColumn', () => {
 
   it('renders the partner name as a link to the partner detail page', () => {
     const column = makeColumn();
-    const renderCell = column.renderCell as RenderCell;
 
     render(
       <MemoryRouter>
-        {renderCell({
-          value: 'Seed Company',
-          row: makeRow(),
-          colDef: column,
-          api: {},
-        })}
+        {column.renderCell(
+          makeRenderCellParams(column, makeRow(), 'Seed Company')
+        )}
       </MemoryRouter>
     );
 
@@ -80,18 +95,12 @@ describe('PrimaryPartnerColumn', () => {
 
   it('renders nothing when there is no primary partner', () => {
     const column = makeColumn();
-    const renderCell = column.renderCell as RenderCell;
 
     const emptyRow: TestRow = { primaryPartner: null };
 
     render(
       <MemoryRouter>
-        {renderCell({
-          value: undefined,
-          row: emptyRow,
-          colDef: column,
-          api: {},
-        })}
+        {column.renderCell(makeRenderCellParams(column, emptyRow))}
       </MemoryRouter>
     );
 
@@ -100,8 +109,9 @@ describe('PrimaryPartnerColumn', () => {
 
   it('creates the expected nested server filter', () => {
     const column = makeColumn();
+    const serverFilter = column.serverFilter;
 
-    expect(column.serverFilter('Seed Company')).toEqual({
+    expect(serverFilter('Seed Company')).toEqual({
       primaryPartnership: {
         partner: {
           organization: {
