@@ -17,40 +17,9 @@ interface TestRow {
   } | null;
 }
 
-const makeColumn = () =>
-  PrimaryPartnerColumn({
-    field: 'primaryPartnership.partner.name',
-    valueGetter: (_value: never, row: TestRow) => row.primaryPartner,
-  });
-
-type TestColumn = ReturnType<typeof makeColumn>;
-type RenderCellParams = GridRenderCellParams<
-  TestRow,
-  string | null | undefined
->;
-
-const makeRenderCellParams = (
-  _column: TestColumn,
-  row: TestRow,
-  value?: string
-): RenderCellParams => ({
-  id: 'row-1',
-  field: 'primaryPartnership.partner.name',
-  value,
-  formattedValue: value,
-  row,
-  rowNode: null as never,
-  colDef: null as never,
-  cellMode: 'view',
-  hasFocus: false,
-  tabIndex: -1,
-  api: null as never,
-  isEditable: false,
-});
-
-const makeRow = (name = 'Seed Company'): TestRow => ({
+const makeRow = (name = 'Seed Company', id = 'partner-1'): TestRow => ({
   primaryPartner: {
-    id: 'partner-1',
+    id,
     organization: {
       value: {
         name: {
@@ -61,57 +30,53 @@ const makeRow = (name = 'Seed Company'): TestRow => ({
   },
 });
 
-describe('PrimaryPartnerColumn', () => {
-  it('extracts the partner organization name from the primary partnership', () => {
-    const column = makeColumn();
-    const valueGetter = column.valueGetter;
-
-    expect(
-      valueGetter(
-        undefined as never,
-        makeRow(),
-        undefined as never,
-        undefined as never
-      )
-    ).toBe('Seed Company');
+const makeColumn = () =>
+  PrimaryPartnerColumn({
+    field: 'primaryPartnership.partner.name',
+    valueGetter: (_value: never, row: TestRow) => row.primaryPartner,
   });
 
+describe('PrimaryPartnerColumn', () => {
   it('renders the partner name as a link to the partner detail page', () => {
     const column = makeColumn();
+    const partner = makeRow('Seed Company', 'partner-123');
+    const partnerName = partner.primaryPartner?.organization.value.name.value;
 
-    render(
-      <MemoryRouter>
-        {column.renderCell(
-          makeRenderCellParams(column, makeRow(), 'Seed Company')
-        )}
-      </MemoryRouter>
-    );
+    const params: GridRenderCellParams<TestRow, string | undefined> = {
+      value: partnerName,
+      row: partner,
+      colDef: column,
+      api: { current: null },
+    };
+
+    render(<MemoryRouter>{column.renderCell(params)}</MemoryRouter>);
 
     expect(screen.getByRole('link', { name: 'Seed Company' })).toHaveAttribute(
       'href',
-      '/partners/partner-1'
+      '/partners/partner-123'
     );
   });
 
   it('renders nothing when there is no primary partner', () => {
     const column = makeColumn();
-
     const emptyRow: TestRow = { primaryPartner: null };
 
-    render(
-      <MemoryRouter>
-        {column.renderCell(makeRenderCellParams(column, emptyRow))}
-      </MemoryRouter>
-    );
+    const params: GridRenderCellParams<TestRow, undefined> = {
+      value: undefined,
+      row: emptyRow,
+      colDef: column,
+      api: { current: null },
+    };
+
+    render(<MemoryRouter>{column.renderCell(params)}</MemoryRouter>);
 
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
   it('creates the expected nested server filter', () => {
     const column = makeColumn();
-    const serverFilter = column.serverFilter;
 
-    expect(serverFilter('Seed Company')).toEqual({
+    expect(column.serverFilter('Seed Company')).toEqual({
       primaryPartnership: {
         partner: {
           organization: {
@@ -122,12 +87,12 @@ describe('PrimaryPartnerColumn', () => {
     });
   });
 
-  it('is included in the project grid columns', () => {
-    expect(
-      ProjectColumns.find(
-        (column) => column.field === 'primaryPartnership.partner.name'
-      )
-    ).toMatchObject({
+  it('is included in the project grid columns with correct metadata', () => {
+    const column = ProjectColumns.find(
+      (col) => col.field === 'primaryPartnership.partner.name'
+    );
+
+    expect(column).toMatchObject({
       headerName: 'Primary Partner',
       width: 300,
     });
