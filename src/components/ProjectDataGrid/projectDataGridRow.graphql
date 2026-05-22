@@ -34,9 +34,18 @@ fragment projectDataGridRow on Project {
   }
   primaryPartnership {
     value {
+      id
       partner {
         value {
-          ...PartnerLookupItem
+          id
+          organization {
+            value {
+              id
+              name {
+                value
+              }
+            }
+          }
         }
       }
     }

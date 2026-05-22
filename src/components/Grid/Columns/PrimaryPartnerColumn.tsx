@@ -1,6 +1,5 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { Merge } from 'type-fest';
-import { PartnerLookupItem } from '../../form/Lookup';
 import { Link } from '../../Routing';
 import {
   columnWithDefaults,
@@ -9,10 +8,24 @@ import {
 } from '../ColumnTypes/definition.types';
 import { textColumn } from '../ColumnTypes/textColumn';
 
+interface PrimaryPartnerColumnPartner {
+  readonly id: string;
+  readonly organization: {
+    readonly value?: {
+      readonly name: {
+        readonly value?: string | null;
+      };
+    } | null;
+  };
+}
+
 export const PrimaryPartnerColumn = <
   const Input extends Merge<
     Partial<GridColDef<Row>>,
-    WithValueGetterReturning<PartnerLookupItem | null | undefined, Row>
+    WithValueGetterReturning<
+      PrimaryPartnerColumnPartner | null | undefined,
+      Row
+    >
   >,
   Row extends RowLike
 >({
