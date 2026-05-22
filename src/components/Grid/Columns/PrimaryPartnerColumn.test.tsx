@@ -42,12 +42,12 @@ describe('PrimaryPartnerColumn', () => {
     const partner = makeRow('Seed Company', 'partner-123');
     const partnerName = partner.primaryPartner?.organization.value.name.value;
 
-    const params: GridRenderCellParams<TestRow, string | undefined> = {
+    const params = {
       value: partnerName,
       row: partner,
       colDef: column,
-      api: { current: null },
-    };
+      api: null,
+    } as unknown as GridRenderCellParams<TestRow, string | undefined>;
 
     render(<MemoryRouter>{column.renderCell(params)}</MemoryRouter>);
 
@@ -61,12 +61,12 @@ describe('PrimaryPartnerColumn', () => {
     const column = makeColumn();
     const emptyRow: TestRow = { primaryPartner: null };
 
-    const params: GridRenderCellParams<TestRow, undefined> = {
+    const params = {
       value: undefined,
       row: emptyRow,
       colDef: column,
-      api: { current: null },
-    };
+      api: null,
+    } as unknown as GridRenderCellParams<TestRow, undefined>;
 
     render(<MemoryRouter>{column.renderCell(params)}</MemoryRouter>);
 
