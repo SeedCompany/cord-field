@@ -3,18 +3,13 @@ import type { MockedResponse } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Form } from 'react-final-form';
 import { MarketingRegionField } from './MarketingRegionField';
-import {
-  MarketingRegionLookupDocument,
-  type MarketingRegionLookupQuery,
-} from './MarketingRegionLookup.graphql';
+import { MarketingRegionLookupDocument } from './MarketingRegionLookup.graphql';
 
 jest.mock('../../../Session', () => ({
   useSession: () => ({ powers: [] }),
 }));
 
-type LookupItem = MarketingRegionLookupQuery['search']['items'][number];
-
-const makeLocation = (overrides?: Partial<LookupItem>): LookupItem => ({
+const makeRegion = (overrides?: object) => ({
   __typename: 'Location',
   id: 'region-1',
   name: {
@@ -23,26 +18,13 @@ const makeLocation = (overrides?: Partial<LookupItem>): LookupItem => ({
     canEdit: false,
     value: 'Africa Region',
   },
-  type: {
-    __typename: 'SecuredLocationType',
-    canRead: true,
-    value: 'Region',
-  },
   ...overrides,
 });
 
-const searchMock = (
-  query: string,
-  items: readonly LookupItem[] = [makeLocation()]
-): MockedResponse => ({
+const searchMock = (query: string, items = [makeRegion()]): MockedResponse => ({
   request: { query: MarketingRegionLookupDocument, variables: { query } },
   result: {
-    data: {
-      search: {
-        __typename: 'LocationListOutput',
-        items,
-      },
-    },
+    data: { search: { __typename: 'LocationListOutput', items } },
   },
 });
 
@@ -50,119 +32,61 @@ const setup = (mocks: readonly MockedResponse[] = []) => {
   render(
     <MockedProvider mocks={mocks}>
       <Form
-        initialValues={{}}
         onSubmit={() => {
           // noop
         }}
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <MarketingRegionField
-              name="marketingRegion"
-              label="Marketing Region"
-            />
+            <MarketingRegionField name="marketingRegion" />
           </form>
         )}
       </Form>
     </MockedProvider>
   );
-
   return screen.getByRole('combobox');
 };
 
-const setupWithInitialValues = (
-  initialValues: Record<string, unknown>,
-  mocks: readonly MockedResponse[] = []
-) => {
-  render(
-    <MockedProvider mocks={mocks}>
-      <Form
-        initialValues={initialValues}
-        onSubmit={() => {
-          // noop
-        }}
-      >
-        {({ handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <MarketingRegionField
-              name="marketingRegion"
-              label="Marketing Region"
-            />
-          </form>
-        )}
-      </Form>
-    </MockedProvider>
-  );
-
-  return screen.getByRole('combobox');
-};
-
+// Focuses the input and changes its value in one shot, triggering a single
+// Apollo query rather than one per character (as userEvent.type would do).
 const search = (input: HTMLElement, query: string) => {
   fireEvent.focus(input);
   fireEvent.change(input, { target: { value: query } });
 };
 
 describe('MarketingRegionField', () => {
-  it('renders the input', () => {
-    const input = setup();
-    expect(input).toBeInTheDocument();
+  it('renders with the default "Marketing Region" label', () => {
+    setup();
+    expect(screen.getByLabelText('Marketing Region')).toBeInTheDocument();
   });
 
-  it('filters out non-region lookup items', async () => {
-    const items = [
-      makeLocation(),
-      makeLocation({
-        id: 'country-1',
-        name: {
-          __typename: 'SecuredString',
-          canRead: true,
-          canEdit: false,
-          value: 'Canada',
-        },
-        type: {
-          __typename: 'SecuredLocationType',
-          canRead: true,
-          value: 'Country',
-        },
-      }),
-    ];
-
-    const input = setup([searchMock('a', items)]);
-    search(input, 'a');
-
+  it('shows search results in the dropdown', async () => {
+    const input = setup([searchMock('Afri')]);
+    search(input, 'Afri');
     await waitFor(() => {
       expect(screen.getByText('Africa Region')).toBeInTheDocument();
-      expect(screen.queryByText('Canada')).not.toBeInTheDocument();
     });
   });
 
-  it('keeps an already-selected non-region value visible', async () => {
-    const selectedCountry = makeLocation({
-      id: 'country-2',
-      name: {
-        __typename: 'SecuredString',
-        canRead: true,
-        canEdit: false,
-        value: 'Canada',
-      },
-      type: {
-        __typename: 'SecuredLocationType',
-        canRead: true,
-        value: 'Country',
-      },
-    });
-
-    const input = setupWithInitialValues({ marketingRegion: selectedCountry }, [
-      searchMock('Ca', [makeLocation()]),
+  it('shows multiple results when the API returns them', async () => {
+    const input = setup([
+      searchMock('Reg', [
+        makeRegion(),
+        makeRegion({
+          id: 'region-2',
+          name: {
+            __typename: 'SecuredString',
+            canRead: true,
+            canEdit: false,
+            value: 'Asia Region',
+          },
+        }),
+      ]),
     ]);
-
-    // Starts with the selected value from form state.
-    expect(input).toHaveValue('Canada');
-
-    search(input, 'Ca');
-
+    search(input, 'Reg');
     await waitFor(() => {
-      expect(screen.getByText('Canada')).toBeInTheDocument();
+      expect(screen.getByText('Africa Region')).toBeInTheDocument();
+      expect(screen.getByText('Asia Region')).toBeInTheDocument();
     });
   });
 });

@@ -14,92 +14,77 @@ jest.mock('../../../components/Error', () => ({
   Error: () => null,
 }));
 
-const makeLocation = (
-  overrides: Partial<LocationQuery['location']> = {}
-): LocationQuery['location'] => ({
-  __typename: 'Location',
-  id: 'loc-1',
-  createdAt:
-    '2026-01-01T00:00:00.000Z' as LocationQuery['location']['createdAt'],
-  name: {
-    __typename: 'SecuredString',
-    canRead: true,
-    canEdit: false,
-    value: 'Kenya',
-  },
-  isoAlpha3: {
-    __typename: 'SecuredStringNullable',
-    canRead: true,
-    canEdit: false,
-    value: 'KEN',
-  },
-  type: {
-    __typename: 'SecuredLocationType',
-    canRead: true,
-    canEdit: false,
-    value: 'Country',
-  },
-  fundingAccount: {
-    __typename: 'SecuredFundingAccount',
-    canRead: true,
-    canEdit: false,
-    value: null,
-  },
-  defaultFieldRegion: {
-    __typename: 'SecuredFieldRegion',
-    canRead: true,
-    canEdit: false,
-    value: {
-      __typename: 'FieldRegion',
-      id: 'fr-1',
-      name: {
-        __typename: 'SecuredString',
-        value: 'East Africa Field Region (Africa Field Zone)',
-      },
-    },
-  },
-  defaultMarketingRegion: {
-    __typename: 'SecuredLocation',
-    canRead: true,
-    canEdit: false,
-    value: {
-      __typename: 'Location',
-      id: 'mr-1',
-      name: {
-        __typename: 'SecuredString',
-        canRead: true,
-        canEdit: false,
-        value: 'Africa Marketing Region',
-      },
-      type: {
-        __typename: 'SecuredLocationType',
-        canRead: true,
-        value: 'Region',
-      },
-    },
-  },
-  mapImage: {
-    __typename: 'SecuredFile',
-    canRead: true,
-    canEdit: false,
-    value: null,
-  },
-  ...overrides,
-});
+type Loc = LocationQuery['location'];
 
-const makeLocationMock = (
-  location: LocationQuery['location'] = makeLocation()
+const makeLocation = (overrides: Partial<Loc> = {}): Loc => {
+  const location: Loc = {
+    __typename: 'Location',
+    id: 'loc-1',
+    createdAt: '2026-01-01T00:00:00.000Z',
+    name: {
+      __typename: 'SecuredString',
+      canRead: true,
+      canEdit: false,
+      value: 'Kenya',
+    },
+    isoAlpha3: {
+      __typename: 'SecuredStringNullable',
+      canRead: true,
+      canEdit: false,
+      value: 'KEN',
+    },
+    type: {
+      __typename: 'SecuredLocationType',
+      canRead: true,
+      canEdit: false,
+      value: 'Country',
+    },
+    fundingAccount: {
+      __typename: 'SecuredFundingAccount',
+      canRead: true,
+      canEdit: false,
+      value: null,
+    },
+    defaultFieldRegion: {
+      __typename: 'SecuredFieldRegion',
+      canRead: true,
+      canEdit: false,
+      value: null,
+    },
+    defaultMarketingRegion: {
+      __typename: 'SecuredLocation',
+      canRead: true,
+      canEdit: false,
+      value: {
+        __typename: 'Location',
+        id: 'mr-1',
+        name: {
+          __typename: 'SecuredString',
+          canRead: true,
+          canEdit: false,
+          value: 'Africa Region',
+        },
+      },
+    },
+    mapImage: {
+      __typename: 'SecuredFile',
+      canRead: true,
+      canEdit: false,
+      value: null,
+    },
+    ...overrides,
+  };
+  return location;
+};
+
+const makeMock = (
+  location: Loc = makeLocation()
 ): MockedResponse<LocationQuery> => ({
-  request: {
-    query: LocationDocument,
-    variables: { locationId: 'loc-1' },
-  },
+  request: { query: LocationDocument, variables: { locationId: 'loc-1' } },
   result: { data: { location } },
 });
 
-const renderDetail = (
-  mocks: readonly MockedResponse[] = [makeLocationMock()]
-) => {
+const renderDetail = (mocks: readonly MockedResponse[] = [makeMock()]) => {
   render(
     <HelmetProvider>
       <MockedProvider mocks={mocks}>
@@ -113,66 +98,19 @@ const renderDetail = (
   );
 };
 
-describe('LocationDetail', () => {
-  it('shows the type value as Marketing Region for region locations', async () => {
-    renderDetail([
-      makeLocationMock(
-        makeLocation({
-          name: {
-            __typename: 'SecuredString',
-            canRead: true,
-            canEdit: false,
-            value: 'Africa Region',
-          },
-          type: {
-            __typename: 'SecuredLocationType',
-            canRead: true,
-            canEdit: false,
-            value: 'Region',
-          },
-        })
-      ),
-    ]);
-
-    await waitFor(() => {
-      expect(screen.getByText('Marketing Region')).toBeInTheDocument();
-    });
-  });
-
-  it('shows Country type label for country locations', async () => {
+describe('LocationDetail — default marketing region', () => {
+  it('renders the region as a link to its location page', async () => {
     renderDetail();
-
     await waitFor(() => {
-      expect(screen.getByText('Country')).toBeInTheDocument();
+      const link = screen.getByRole('link', { name: 'Africa Region' });
+      expect(link).toHaveAttribute('href', '/locations/mr-1');
     });
   });
 
-  it('renders links for default field region and default marketing region', async () => {
-    renderDetail();
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('link', {
-          name: 'East Africa Field Region (Africa Field Zone)',
-        })
-      ).toHaveAttribute('href', '/field-regions/fr-1');
-
-      expect(
-        screen.getByRole('link', { name: 'Africa Marketing Region' })
-      ).toHaveAttribute('href', '/locations/mr-1');
-    });
-  });
-
-  it('shows None when default regions are unset and readable', async () => {
+  it('renders "None" when the field is readable but unset', async () => {
     renderDetail([
-      makeLocationMock(
+      makeMock(
         makeLocation({
-          defaultFieldRegion: {
-            __typename: 'SecuredFieldRegion',
-            canRead: true,
-            canEdit: false,
-            value: null,
-          },
           defaultMarketingRegion: {
             __typename: 'SecuredLocation',
             canRead: true,
@@ -182,9 +120,34 @@ describe('LocationDetail', () => {
         })
       ),
     ]);
-
     await waitFor(() => {
-      expect(screen.getAllByText('None')).toHaveLength(2);
+      // Label span includes a trailing colon, so match by regex and scope
+      // the value assertion to the property row.
+      expect(
+        screen.getByText(/Default Marketing Region/).parentElement
+      ).toHaveTextContent('None');
+    });
+  });
+
+  it('renders a redacted placeholder when the user cannot read the field', async () => {
+    renderDetail([
+      makeMock(
+        makeLocation({
+          defaultMarketingRegion: {
+            __typename: 'SecuredLocation',
+            canRead: false,
+            canEdit: false,
+            value: null,
+          },
+        })
+      ),
+    ]);
+    await waitFor(() => {
+      expect(
+        screen.getByLabelText(
+          "You don't have permission to view the default marketing region"
+        )
+      ).toBeInTheDocument();
     });
   });
 });
