@@ -9,7 +9,7 @@ import {
 import {
   DisplayFieldRegionFragment as FieldRegionLookupItem,
   labelFrom,
-  DisplayMarketingRegionFragment as MarketingRegionLookupItem,
+  DisplayLocationFragment as MarketingRegionLookupItem,
 } from '~/common';
 import {
   DialogForm,
@@ -28,7 +28,7 @@ import {
   FundingAccountField,
   FundingAccountLookupItem,
 } from '../../../components/form/Lookup/FundingAccount';
-import { MarketingRegionField } from '../../../components/form/Lookup/Location/MarketingRegionField';
+import { MarketingRegionField } from '../../../components/form/Lookup/Location';
 import { LocationFormFragment } from './LocationForm.graphql';
 
 export type LocationFormValues<
@@ -48,11 +48,6 @@ export type LocationFormProps<CreateOrUpdateInput, R = void> = DialogFormProps<
   R
 > & {
   location?: LocationFormFragment;
-};
-
-const locationTypeLabels: typeof LocationTypeLabels = {
-  ...LocationTypeLabels,
-  Region: 'Marketing Region',
 };
 
 export const LocationForm = <CreateOrUpdateInput, R extends any>({
@@ -86,7 +81,7 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
             <SelectField
               label="Type"
               options={LocationTypeList}
-              getOptionLabel={labelFrom(locationTypeLabels)}
+              getOptionLabel={labelFrom(LocationTypeLabels)}
               defaultValue={LocationTypeList[0]}
               required
               margin="none"
@@ -129,7 +124,7 @@ export const LocationForm = <CreateOrUpdateInput, R extends any>({
           {(props) => (
             <MarketingRegionField
               margin="none"
-              label="Default Marketing Region"
+              label="Marketing Region"
               {...props}
             />
           )}

@@ -40,7 +40,7 @@ fragment LocationDetail on Location {
     canRead
     canEdit
     value {
-      ...DisplayMarketingRegion
+      ...DisplayLocation
     }
   }
   mapImage {

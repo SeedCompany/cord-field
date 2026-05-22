@@ -20,11 +20,6 @@ import { StyledRemoteSvg } from '../../../components/StyledRemoteSvg';
 import { EditLocation } from '../Edit';
 import { LocationDocument } from './LocationDetail.graphql';
 
-const locationTypeLabels: typeof LocationTypeLabels = {
-  ...LocationTypeLabels,
-  Region: 'Marketing Region',
-};
-
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
     flex: 1,
@@ -68,7 +63,6 @@ export const LocationDetail = () => {
   });
   const location = data?.location;
   const fundingAccount = location?.fundingAccount.value;
-  const defaultFieldRegion = location?.defaultFieldRegion.value;
   const defaultMarketingRegion = location?.defaultMarketingRegion.value;
 
   return (
@@ -124,7 +118,7 @@ export const LocationDetail = () => {
           </div>
           <DisplayProperty
             label="Type"
-            value={labelFrom(locationTypeLabels)(location?.type.value)}
+            value={labelFrom(LocationTypeLabels)(location?.type.value)}
             loading={!location}
           />
           <DisplayProperty
@@ -142,35 +136,16 @@ export const LocationDetail = () => {
             loading={!location}
           />
           <DisplayProperty
-            label="Default Field Region"
-            value={
-              location?.defaultFieldRegion.canRead === false ? (
-                <Redacted
-                  info="You don't have permission to view default field region"
-                  width="12ch"
-                />
-              ) : defaultFieldRegion ? (
-                <Link to={`/field-regions/${defaultFieldRegion.id}`}>
-                  {defaultFieldRegion.name.value ?? 'Unnamed Field Region'}
-                </Link>
-              ) : (
-                'None'
-              )
-            }
-            loading={!location}
-          />
-          <DisplayProperty
-            label="Default Marketing Region"
+            label="Marketing Region"
             value={
               location?.defaultMarketingRegion.canRead === false ? (
                 <Redacted
-                  info="You don't have permission to view default marketing region"
+                  info="You don't have permission to view the default marketing region"
                   width="12ch"
                 />
               ) : defaultMarketingRegion ? (
                 <Link to={`/locations/${defaultMarketingRegion.id}`}>
-                  {defaultMarketingRegion.name.value ??
-                    'Unnamed Marketing Region'}
+                  {defaultMarketingRegion.name.value}
                 </Link>
               ) : (
                 'None'

@@ -7,14 +7,6 @@ fragment DisplayLocation on Location {
   }
 }
 
-fragment DisplayMarketingRegion on Location {
-  ...DisplayLocation
-  type {
-    canRead
-    value
-  }
-}
-
 fragment DisplayFieldRegion on FieldRegion {
   id
   name {
