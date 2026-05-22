@@ -7,7 +7,7 @@ import { CalendarDateOrISO } from '~/common';
 import { useUploadFiles } from '../../files/hooks';
 import { IconButton } from '../../IconButton';
 import { Link, useNavigate } from '../../Routing';
-import { dateFieldFor, PeriodicReportFileField } from '../PeriodicReportsTable';
+import { dateFieldFor, PeriodicReportFileField } from '../fileField';
 import {
   ProductLabelDocument,
   UpdatePeriodicReportDocument,

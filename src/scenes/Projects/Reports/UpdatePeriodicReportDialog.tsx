@@ -17,7 +17,7 @@ import {
   dateFieldFor,
   PeriodicReportEditShape,
   PeriodicReportFileField,
-} from '../../../components/PeriodicReports/PeriodicReportsTable';
+} from '../../../components/PeriodicReports/fileField';
 import { useUpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/useUpdatePeriodicReport';
 
 export type EditablePeriodicReportField = ExtractStrict<
