@@ -1,0 +1,8 @@
+query Tools($input: ToolListInput!) {
+  tools(input: $input) {
+    items {
+      ...toolDataGridRow
+    }
+    ...Pagination
+  }
+}
