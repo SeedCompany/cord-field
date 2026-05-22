@@ -20,7 +20,8 @@ const makeLocation = (overrides: Partial<Loc> = {}): Loc => {
   const location: Loc = {
     __typename: 'Location',
     id: 'loc-1',
-    createdAt: '2026-01-01T00:00:00.000Z',
+    createdAt:
+      '2026-01-01T00:00:00.000Z' as LocationQuery['location']['createdAt'],
     name: {
       __typename: 'SecuredString',
       canRead: true,
