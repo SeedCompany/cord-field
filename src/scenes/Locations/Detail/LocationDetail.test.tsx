@@ -125,7 +125,7 @@ describe('LocationDetail — default marketing region', () => {
       // Label span includes a trailing colon, so match by regex and scope
       // the value assertion to the property row.
       expect(
-        screen.getByText(/Default Marketing Region/).parentElement
+        screen.getByText(/Marketing Region/).parentElement
       ).toHaveTextContent('None');
     });
   });
