@@ -19,6 +19,7 @@ import { useComments } from '../../../components/Comments/CommentsContext';
 import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.graphql';
 import { ImpersonationToggle } from './ImpersonationToggle';
+import { UserDetailPartners } from './Tabs/Partners/UserDetailPartners';
 import { UserDetailProfile } from './Tabs/Profile/UserDetailProfile';
 import { UserDetailProjects } from './Tabs/Projects/UserDetailProjects';
 import { UserDocument } from './UserDetail.graphql';
@@ -30,7 +31,11 @@ export const UserDetail = () => {
     fetchPolicy: 'cache-and-network',
   });
   useComments(userId);
-  const [activeTab, setTab] = useDetailTabs(['profile', 'projects']);
+  const [activeTab, setTab] = useDetailTabs([
+    'profile',
+    'projects',
+    'partners',
+  ]);
   const [editUserState, editUser] = useDialog();
   const user = data?.user;
 
@@ -109,12 +114,18 @@ export const UserDetail = () => {
               >
                 <Tab label="Profile" value="profile" />
                 <Tab label="Projects" value="projects" />
+                <Tab label="Partners" value="partners" />
               </TabList>
               <TabPanel value="profile">
                 {user && <UserDetailProfile user={user} />}
               </TabPanel>
               <TabPanel value="projects">
                 <UserDetailProjects />
+              </TabPanel>
+              <TabPanel value="partners">
+                {user && (
+                  <UserDetailPartners canCreate={user.partners.canCreate} />
+                )}
               </TabPanel>
             </TabContext>
           </TabsContainer>

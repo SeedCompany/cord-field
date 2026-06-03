@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import {
   Edit,
   Event as EventIcon,
+  Person as PersonIcon,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -185,6 +186,16 @@ const PartnerDataButtons = ({
       children={(date) => <FormattedDate date={date} />}
       loading={!partner}
     />
+    <DataButton
+      label="Point of Contact"
+      onClick={() => edit('partner.pointOfContact')}
+      secured={partner?.pointOfContact}
+      startIcon={<PersonIcon color="info" />}
+      empty="None"
+      redacted="You do not have permission to view point of contact"
+      children={(user) => user.fullName}
+      loading={!partner}
+    />
   </Box>
 );
 
@@ -220,7 +231,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
           <PartnerDetailFinance {...props} />
         </TabPanel>
         <TabPanel value="people">
-          <PartnerDetailPeople {...props} />
+          <PartnerDetailPeople partner={props.partner} />
         </TabPanel>
         <TabPanel value="projects">
           <PartnerDetailProjects />
