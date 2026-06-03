@@ -271,3 +271,9 @@ export const appComponents = ({
     },
   };
 };
+
+declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    mobile: true;
+  }
+}

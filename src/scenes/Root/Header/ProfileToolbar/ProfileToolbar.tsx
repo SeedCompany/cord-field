@@ -15,7 +15,13 @@ export const ProfileToolbar = () => {
     <>
       <Stack direction="row" spacing={1} alignItems="center">
         <Notifications />
-        <Typography color="primary" sx={{ fontWeight: 'medium' }}>
+        <Typography
+          color="primary"
+          sx={{
+            fontWeight: 'medium',
+            display: { xs: 'none', mobile: 'block' },
+          }}
+        >
           {session?.fullName}
         </Typography>
         <IconButton
