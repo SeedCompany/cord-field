@@ -27,6 +27,7 @@ import {
   useFilterToggle,
 } from '../Grid';
 import { FieldRegionNameColumn } from '../Grid/Columns/FieldRegionNameColumn';
+import { PrimaryPartnerColumn } from '../Grid/Columns/PrimaryPartnerColumn';
 import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
@@ -91,6 +92,11 @@ export const ProjectColumns: Array<GridColDef<Project>> = [
     ...dateColumn(),
   },
   SensitivityColumn({}),
+  PrimaryPartnerColumn({
+    field: 'primaryPartnership.partner.name',
+    valueGetter: (_, { primaryPartnership }) =>
+      primaryPartnership.value?.partner.value ?? null,
+  }),
   {
     field: 'isMember',
     ...booleanColumn(),
