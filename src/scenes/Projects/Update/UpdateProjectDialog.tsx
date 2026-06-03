@@ -27,7 +27,10 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { LocationField } from '../../../components/form/Lookup';
+import {
+  LocationField,
+  MarketingRegionField,
+} from '../../../components/form/Lookup';
 import { FieldRegionField } from '../../../components/form/Lookup/FieldRegion';
 import { FormattedDate } from '../../../components/Formatters';
 import {
@@ -48,6 +51,7 @@ export type EditableProjectField = ExtractStrict<
   | 'primaryLocation'
   | 'sensitivity'
   | 'marketingLocation'
+  | 'marketingRegionOverride'
   | 'rev79ProjectId'
 >;
 export type ProjectFieldName = EditableProjectField | 'usesRev79';
@@ -85,6 +89,9 @@ const fieldMapping: Record<
   marketingLocation: ({ props }) => (
     <LocationField {...props} label="Marketing Location" />
   ),
+  marketingRegionOverride: ({ props }) => (
+    <MarketingRegionField {...props} label="Marketing Region" />
+  ),
   rev79ProjectId: ({ props }) => (
     <TextField {...props} label="Rev79 Project ID" />
   ),
@@ -109,6 +116,7 @@ type UpdateProjectFormValues = Merge<
     fieldRegion?: DisplayFieldRegionFragment | null;
     usesRev79?: boolean;
     marketingLocation?: DisplayLocationFragment | null;
+    marketingRegionOverride?: DisplayLocationFragment | null;
   }
 >;
 
@@ -143,6 +151,8 @@ export const UpdateProjectDialog = ({
       estimatedSubmission: project.estimatedSubmission.value,
       sensitivity: project.sensitivity,
       marketingLocation: project.marketingLocation.value,
+      marketingRegionOverride:
+        project.marketingRegionOverride.value ?? project.marketingRegion.value,
       departmentId: project.departmentId.value,
       ...(project.__typename === 'MomentumTranslationProject' && {
         rev79ProjectId: project.rev79ProjectId.value,
@@ -169,6 +179,8 @@ export const UpdateProjectDialog = ({
     project.estimatedSubmission.value,
     project.sensitivity,
     project.marketingLocation.value,
+    project.marketingRegion.value,
+    project.marketingRegionOverride.value,
     project.id,
     project.departmentId.value,
     project.__typename,
@@ -207,6 +219,7 @@ export const UpdateProjectDialog = ({
           primaryLocation,
           fieldRegion,
           marketingLocation,
+          marketingRegionOverride,
           ...inputData
         } = data;
 
@@ -222,6 +235,9 @@ export const UpdateProjectDialog = ({
                 : undefined,
               marketingLocation: dirtyFields.marketingLocation
                 ? marketingLocation?.id ?? null
+                : undefined,
+              marketingRegionOverride: dirtyFields.marketingRegionOverride
+                ? marketingRegionOverride?.id ?? null
                 : undefined,
               usesRev79: dirtyFields.usesRev79
                 ? inputData.usesRev79

@@ -15,6 +15,7 @@ import { Error } from '../../../components/Error';
 import { Fab } from '../../../components/Fab';
 import { FormattedDateTime } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
+import { Link } from '../../../components/Routing';
 import { StyledRemoteSvg } from '../../../components/StyledRemoteSvg';
 import { EditLocation } from '../Edit';
 import { LocationDocument } from './LocationDetail.graphql';
@@ -62,6 +63,7 @@ export const LocationDetail = () => {
   });
   const location = data?.location;
   const fundingAccount = location?.fundingAccount.value;
+  const defaultMarketingRegion = location?.defaultMarketingRegion.value;
 
   return (
     <main className={classes.root}>
@@ -131,6 +133,24 @@ export const LocationDetail = () => {
                 ? ` (${fundingAccount.accountNumber.value})`
                 : ''
             }`}
+            loading={!location}
+          />
+          <DisplayProperty
+            label="Marketing Region"
+            value={
+              location?.defaultMarketingRegion.canRead === false ? (
+                <Redacted
+                  info="You don't have permission to view the default marketing region"
+                  width="12ch"
+                />
+              ) : defaultMarketingRegion ? (
+                <Link to={`/locations/${defaultMarketingRegion.id}`}>
+                  {defaultMarketingRegion.name.value}
+                </Link>
+              ) : (
+                'None'
+              )
+            }
             loading={!location}
           />
           {location?.mapImage.value && (
