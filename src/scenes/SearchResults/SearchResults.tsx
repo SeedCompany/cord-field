@@ -5,6 +5,7 @@ import { ReactElement } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { FieldRegionCard } from '~/components/FieldRegionCard';
 import { FieldZoneCard } from '~/components/FieldZoneCard';
+import { ToolListItemCard } from '~/components/ToolListItemCard';
 import { Error } from '../../components/Error';
 import { LanguageListItemCard } from '../../components/LanguageListItemCard';
 import { LocationCard } from '../../components/LocationCard';
@@ -35,6 +36,7 @@ export const SearchResults = () => {
           'Story',
           'FieldRegion',
           'FieldZone',
+          'Tool',
         ],
       },
     },
@@ -63,6 +65,7 @@ export const SearchResults = () => {
             <ProjectListItemCard />
             <UserListItemCardLandscape />
             <PartnerListItemCard />
+            <ToolListItemCard />
             <ProjectListItemCard />
             <PartnerListItemCard />
             <UserListItemCardLandscape />
@@ -127,6 +130,11 @@ const displayItem = (
       return [
         <Navigate replace to={`/field-zones/${item.id}`} />,
         <FieldZoneCard key={item.id} fieldZone={item} />,
+      ];
+    case 'Tool':
+      return [
+        <Navigate replace to={`/tools/${item.id}`} />,
+        <ToolListItemCard key={item.id} tool={item} />,
       ];
     case 'Film':
     case 'Story':

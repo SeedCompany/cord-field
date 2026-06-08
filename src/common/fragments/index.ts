@@ -11,6 +11,7 @@ export * from './lists.graphql';
 export * from './prompt.graphql';
 export * from './promptResponse.graphql';
 export * from './variant.graphql';
+export * from './tool.graphql';
 
 export type ProjectIdFragment =
   | MomentumProjectIdFragment

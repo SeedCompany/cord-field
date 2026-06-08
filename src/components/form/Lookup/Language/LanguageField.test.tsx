@@ -18,7 +18,7 @@ jest.mock('../../../../scenes/Languages/Create', () => ({
 const makeLang = (overrides?: object) => ({
   __typename: 'Language',
   id: 'lang-1',
-  publicName: 'English',
+  displayName: { __typename: 'SecuredString', value: 'English' },
   ethnologue: {
     __typename: 'EthnologueLanguage',
     code: { __typename: 'SecuredStringNullable', value: 'eng' },
@@ -115,7 +115,10 @@ describe('LanguageField', () => {
         makeLang(),
         makeLang({
           id: 'lang-2',
-          publicName: 'English Creole',
+          displayName: {
+            __typename: 'SecuredString',
+            value: 'English Creole',
+          },
           ethnologue: {
             __typename: 'EthnologueLanguage',
             code: { __typename: 'SecuredStringNullable', value: 'cpe' },

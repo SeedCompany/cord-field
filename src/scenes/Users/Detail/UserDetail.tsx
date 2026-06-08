@@ -14,18 +14,15 @@ import { Redacted } from '~/components/Redacted';
 import { Tab, TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { UserPhoto } from '~/components/UserPhoto';
-import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { EditUser } from '../Edit';
 import { UsersQueryVariables } from '../List/users.graphql';
 import { ImpersonationToggle } from './ImpersonationToggle';
+import { UserDetailPartners } from './Tabs/Partners/UserDetailPartners';
 import { UserDetailProfile } from './Tabs/Profile/UserDetailProfile';
 import { UserDetailProjects } from './Tabs/Projects/UserDetailProjects';
 import { UserDocument } from './UserDetail.graphql';
-
-const useUserDetailsFilters = makeQueryHandler({
-  tab: withDefault(EnumParam(['profile', 'projects']), 'profile'),
-});
 
 export const UserDetail = () => {
   const { userId = '' } = useParams();
@@ -34,7 +31,11 @@ export const UserDetail = () => {
     fetchPolicy: 'cache-and-network',
   });
   useComments(userId);
-  const [filters, setFilters] = useUserDetailsFilters();
+  const [activeTab, setTab] = useDetailTabs([
+    'profile',
+    'projects',
+    'partners',
+  ]);
   const [editUserState, editUser] = useDialog();
   const user = data?.user;
 
@@ -105,20 +106,26 @@ export const UserDetail = () => {
           {user && <UserPhoto user={user} sx={{ alignSelf: 'start' }} />}
 
           <TabsContainer>
-            <TabContext value={filters.tab}>
+            <TabContext value={activeTab}>
               <TabList
-                onChange={(_e, tab) => setFilters({ ...filters, tab })}
+                onChange={(_e, tab) => setTab(tab)}
                 aria-label="user navigation tabs"
                 variant="scrollable"
               >
                 <Tab label="Profile" value="profile" />
                 <Tab label="Projects" value="projects" />
+                <Tab label="Partners" value="partners" />
               </TabList>
               <TabPanel value="profile">
                 {user && <UserDetailProfile user={user} />}
               </TabPanel>
               <TabPanel value="projects">
                 <UserDetailProjects />
+              </TabPanel>
+              <TabPanel value="partners">
+                {user && (
+                  <UserDetailPartners canCreate={user.partners.canCreate} />
+                )}
               </TabPanel>
             </TabContext>
           </TabsContainer>

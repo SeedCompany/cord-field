@@ -265,7 +265,17 @@ function useCachedList<
     { wait: 500 }
   );
 
-  return { rows, total, loading, isCacheComplete, onFetchRows };
+  // Imperatively push a row into the DataGrid so the visible list updates
+  // immediately. The Apollo cache update is the caller's responsibility
+  // (typically via addItemToList in the mutation's update callback) — that
+  // keeps the cache correct for future reads. This sidesteps the prop-vs-
+  // internal row state drift caused by unstable_replaceRows during paged
+  // loads, where cache reactivity alone doesn't reach the grid.
+  const addRow = useMemoizedFn((item: { id: string }) => {
+    apiRef.current.updateRows([item]);
+  });
+
+  return { rows, total, loading, isCacheComplete, onFetchRows, addRow };
 }
 
 // ─── useDataGridSource ───────────────────────────────────────────────────────
@@ -312,17 +322,18 @@ export const useDataGridSource = <
     initialSort,
   } = useViewState({ opName, initialInput, apiRef, variables });
 
-  const { rows, total, loading, isCacheComplete, onFetchRows } = useCachedList({
-    query,
-    variables,
-    variablesWithFilter,
-    listAt,
-    keyArgs,
-    hasFilter,
-    input,
-    viewRef,
-    apiRef,
-  });
+  const { rows, total, loading, isCacheComplete, onFetchRows, addRow } =
+    useCachedList({
+      query,
+      variables,
+      variablesWithFilter,
+      listAt,
+      keyArgs,
+      hasFilter,
+      input,
+      viewRef,
+      apiRef,
+    });
 
   const onSortModelChange: DataGridProps['onSortModelChange'] & {} =
     useMemoizedFn((next) => {
@@ -407,7 +418,7 @@ export const useDataGridSource = <
     slotProps: apiSlotProps,
   } satisfies Partial<DataGridProps>;
 
-  return [dataGridProps] as const;
+  return [dataGridProps, { addRow }] as const;
 };
 
 // ─── Utilities ───────────────────────────────────────────────────────────────

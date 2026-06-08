@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import {
   Edit,
   Event as EventIcon,
+  Person as PersonIcon,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -19,7 +20,7 @@ import { IconButton } from '~/components/IconButton';
 import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
 import { Tab, TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
-import { EnumParam, makeQueryHandler, withDefault } from '~/hooks';
+import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { EditablePartnerField, EditPartner } from '../Edit';
 import { PartnersQueryVariables } from '../List/PartnerList.graphql';
@@ -185,30 +186,34 @@ const PartnerDataButtons = ({
       children={(date) => <FormattedDate date={date} />}
       loading={!partner}
     />
+    <DataButton
+      label="Point of Contact"
+      onClick={() => edit('partner.pointOfContact')}
+      secured={partner?.pointOfContact}
+      startIcon={<PersonIcon color="info" />}
+      empty="None"
+      redacted="You do not have permission to view point of contact"
+      children={(user) => user.fullName}
+      loading={!partner}
+    />
   </Box>
 );
 
-const usePartnerDetailsFilters = makeQueryHandler({
-  tab: withDefault(
-    EnumParam([
-      'profile',
-      'people',
-      'projects',
-      'finance',
-      'notes',
-      'engagements',
-    ]),
-    'profile'
-  ),
-});
 const PartnerTabs = (props: PartnerViewEditProps) => {
-  const [filters, setFilters] = usePartnerDetailsFilters();
+  const [activeTab, setTab] = useDetailTabs([
+    'profile',
+    'finance',
+    'people',
+    'projects',
+    'engagements',
+    'notes',
+  ]);
 
   return (
     <TabsContainer>
-      <TabContext value={filters.tab}>
+      <TabContext value={activeTab}>
         <TabList
-          onChange={(_e, tab) => setFilters({ ...filters, tab })}
+          onChange={(_e, tab) => setTab(tab)}
           aria-label="partner navigation tabs"
           variant="scrollable"
         >
@@ -226,7 +231,7 @@ const PartnerTabs = (props: PartnerViewEditProps) => {
           <PartnerDetailFinance {...props} />
         </TabPanel>
         <TabPanel value="people">
-          <PartnerDetailPeople {...props} />
+          <PartnerDetailPeople partner={props.partner} />
         </TabPanel>
         <TabPanel value="projects">
           <PartnerDetailProjects />

@@ -1,0 +1,29 @@
+fragment ToolListItem on Tool {
+  ...Id
+  name {
+    value
+  }
+  description {
+    value
+  }
+  aiBased {
+    value
+  }
+}
+
+fragment ToolProfile on Tool {
+  ...Id
+  name {
+    value
+  }
+  description {
+    value
+  }
+  aiBased {
+    value
+  }
+  containerSummary {
+    containerType
+    total
+  }
+}

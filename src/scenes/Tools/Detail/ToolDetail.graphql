@@ -1,0 +1,6 @@
+query ToolDetail($id: ID!) {
+  tool(id: $id) {
+    ...ToolProfile
+    ...ToolForm
+  }
+}

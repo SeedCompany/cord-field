@@ -5,10 +5,13 @@ import { PartnerLanguagesSection } from './PartnerLanguagesSection';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const makeLang = (publicName: string) => ({
+const makeLang = (displayName: string) => ({
   __typename: 'Language' as const,
-  id: `lang-${publicName}`,
-  publicName,
+  id: `lang-${displayName}`,
+  displayName: {
+    __typename: 'SecuredString' as const,
+    value: displayName,
+  },
   ethnologue: {
     __typename: 'EthnologueLanguage' as const,
     code: { __typename: 'SecuredStringNullable' as const, value: null },

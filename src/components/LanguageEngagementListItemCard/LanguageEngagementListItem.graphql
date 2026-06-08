@@ -7,7 +7,9 @@ fragment LanguageEngagementListItem on LanguageEngagement {
   language {
     value {
       id
-      publicName
+      displayName {
+        value
+      }
       population {
         value
       }

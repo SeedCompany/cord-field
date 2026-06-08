@@ -49,7 +49,7 @@ export const LanguageListItemCard = ({
                 {!language ? (
                   <Skeleton width="50%" variant="text" />
                 ) : (
-                  language.publicName
+                  language.displayName.value
                 )}
               </Typography>
             </Grid>
