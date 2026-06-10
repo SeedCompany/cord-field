@@ -1,0 +1,29 @@
+query EngagementUsingAIList($input: EngagementListInput) {
+  engagements(input: $input) {
+    items {
+      ...engagementUsingAIDataGridRow
+    }
+    total
+    hasMore
+  }
+}
+
+fragment engagementUsingAIDataGridRow on Engagement {
+  ...engagementBaseDataGridRow
+  tools {
+    items {
+      tool {
+        name {
+          value
+        }
+        aiBased {
+          value
+        }
+      }
+    }
+  }
+
+  ... on LanguageEngagement {
+    ...aiAssistedTranslation
+  }
+}
