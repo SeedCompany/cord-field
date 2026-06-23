@@ -1,4 +1,3 @@
-import { useMutation, useSubscription } from '@apollo/client';
 import { NotificationsNone } from '@mui/icons-material';
 import {
   Badge,
@@ -6,91 +5,20 @@ import {
   Divider,
   IconButton,
   Popover,
-  Stack,
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
-import {
-  useFeatureEnabled,
-  VisibilityAndClickTracker,
-} from '~/components/Feature';
-import { useListQuery } from '~/components/List';
-import { ProgressButton } from '~/components/ProgressButton';
-import { Notification } from './Notification';
-import { NotificationAddedDocument } from './NotificationAdded.graphql';
-import { NotificationListDocument } from './NotificationList.graphql';
-import { ReadNotificationDocument } from './ReadNotification.graphql';
-import { NotificationFragment } from './Views';
-import { BaseView } from './Views/Base';
+import { VisibilityAndClickTracker } from '~/components/Feature';
+import { NotificationList } from './NotificationList';
+import { useNotifications } from './useNotifications';
 
 export const Notifications = () => {
-  const enabled = useFeatureEnabled('notifications');
-
   const { spacing } = useTheme();
-
-  const { data, loadMore, loading } = useListQuery(NotificationListDocument, {
-    listAt: (data) => data.notifications,
-    skip: !enabled,
-  });
-  useSubscription(NotificationAddedDocument, {
-    skip: !enabled,
-    onData: ({ data, client }) => {
-      const added = data.data?.notificationAdded;
-      if (!added) {
-        return;
-      }
-      client.cache.updateQuery(
-        {
-          query: NotificationListDocument,
-        },
-        (prev) => {
-          if (!prev) {
-            return;
-          }
-          return {
-            notifications: {
-              ...prev.notifications,
-              total: prev.notifications.total + 1,
-              totalUnread: prev.notifications.totalUnread + 1,
-              items: [added.notification, ...prev.notifications.items],
-            },
-          };
-        }
-      );
-    },
-  });
-
-  const [markAsRead] = useMutation(ReadNotificationDocument, {
-    update: (cache, { data: updated }) => {
-      cache.updateQuery(
-        {
-          query: NotificationListDocument,
-        },
-        (prev) => ({
-          notifications: {
-            ...prev!.notifications,
-            totalUnread:
-              prev!.notifications.totalUnread +
-              (updated!.readNotification.unread ? 1 : -1),
-          },
-        })
-      );
-    },
-  });
-  const onReadToggle = (notification: NotificationFragment) => () => {
-    const next = !notification.unread;
-    void markAsRead({
-      variables: { id: notification.id, unread: next },
-      optimisticResponse: {
-        readNotification: { ...notification, unread: next },
-      },
-    });
-  };
-
+  const notifications = useNotifications();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  if (!enabled) {
+  if (!notifications.enabled) {
     return null;
   }
 
@@ -101,7 +29,7 @@ export const Notifications = () => {
           aria-label="notifications"
           onClick={(event) => setAnchorEl(event.currentTarget)}
         >
-          <Badge color="primary" badgeContent={data?.totalUnread ?? 0}>
+          <Badge color="primary" badgeContent={notifications.totalUnread}>
             <NotificationsNone />
           </Badge>
         </IconButton>
@@ -140,30 +68,7 @@ export const Notifications = () => {
           </Typography>
           <Divider sx={{ mx: 1 }} />
         </Box>
-        <Stack divider={<Divider />} sx={{ p: 1, pt: 0.5, gap: 0.5 }}>
-          {loading && !data
-            ? Array.from({ length: 5 }).map((_, i) => (
-                <BaseView key={i} notification="loading" />
-              ))
-            : null}
-          {data?.items.map((notification) => (
-            <Notification
-              key={notification.id}
-              notification={notification}
-              onReadToggle={onReadToggle(notification)}
-            />
-          ))}
-          {data && data.items.length === 0 && (
-            <Typography align="center" color="text.secondary" my={3}>
-              None yet!
-            </Typography>
-          )}
-          {data?.hasMore && (
-            <ProgressButton progress={loading} onClick={() => loadMore()}>
-              Load more
-            </ProgressButton>
-          )}
-        </Stack>
+        <NotificationList notifications={notifications} />
       </Popover>
     </>
   );

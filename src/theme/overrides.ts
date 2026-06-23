@@ -53,6 +53,24 @@ export const appComponents = ({
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        // Ensure comfortable tap targets on touch devices without enlarging
+        // the intentionally-dense `size="small"` buttons.
+        sizeMedium: {
+          '@media (pointer: coarse)': {
+            minWidth: 44,
+            minHeight: 44,
+          },
+        },
+        sizeLarge: {
+          '@media (pointer: coarse)': {
+            minWidth: 48,
+            minHeight: 48,
+          },
+        },
+      },
+    },
     MuiFab: {
       defaultProps: {
         size: 'small',
