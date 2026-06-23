@@ -15,10 +15,12 @@ import {
   GridToolbarContainer,
   GridToolbarProps,
 } from '@mui/x-data-grid-pro';
+import { useMemo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { useResponsiveColumnVisibility } from '~/components/Grid';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
 import {
@@ -131,79 +133,89 @@ const ProjectFilesListWrapped = () => {
     isFileVersion(item) ? [] : { ...item, parent: data!.directory }
   );
 
-  const columns: Array<GridColDef<FileRow>> = [
-    {
-      headerName: 'Name',
-      field: 'name',
-      flex: 1,
-      renderCell: ({ row, value }) => {
-        const { Icon } = isDirectory(row)
-          ? getDirectoryComponents()
-          : getFileComponents(row.mimeType);
-        return (
-          <span className={classes.fileName}>
-            <Icon className={classes.fileIcon} />
-            {parseFileNameAndExtension(value).displayName}
-          </span>
-        );
+  const columns = useMemo<Array<GridColDef<FileRow>>>(
+    () => [
+      {
+        headerName: 'Name',
+        field: 'name',
+        flex: 1,
+        renderCell: ({ row, value }) => {
+          const { Icon } = isDirectory(row)
+            ? getDirectoryComponents()
+            : getFileComponents(row.mimeType);
+          return (
+            <span className={classes.fileName}>
+              <Icon className={classes.fileIcon} />
+              {parseFileNameAndExtension(value).displayName}
+            </span>
+          );
+        },
       },
-    },
-    {
-      headerName: 'Modified',
-      field: 'modifiedAt',
-      width: 150,
-      valueGetter: (_, row) =>
-        row.__typename === 'File' ? row.modifiedAt : row.createdAt,
-      renderCell: ({ value }) => <FormattedDateTime date={value} />,
-    },
-    {
-      headerName: 'Modified By',
-      field: 'modifiedBy',
-      width: 150,
-      valueGetter: (_, row) =>
-        row.__typename === 'File'
-          ? row.modifiedBy.fullName
-          : row.createdBy.fullName,
-    },
-    {
-      headerName: 'File Size',
-      field: 'size',
-      valueGetter: (_, row) => (isDirectory(row) ? undefined : row.size),
-      renderCell: ({ row: { type }, value: size }) =>
-        type === 'Directory' ? '–' : formatFileSize(size),
-    },
-    {
-      headerName: '',
-      field: 'item',
-      width: 55,
-      align: 'center',
-      renderCell: ({ row }) => {
-        const permittedActions = getPermittedFileActions(
-          !!canReadRootDirectory,
-          !!canReadRootDirectory
-        );
-        const directoryActions = permittedActions.filter(
-          (action) =>
-            action === FileAction.Rename || action === FileAction.Delete
-        );
-        return (
-          <ActionsMenu
-            IconButtonProps={{ size: 'small' }}
-            actions={isDirectory(row) ? directoryActions : permittedActions}
-            item={row}
-            onVersionUpload={(files) =>
-              uploadProjectFiles({
-                action: 'version',
-                files,
-                parentId: row.id,
-              })
-            }
-          />
-        );
+      {
+        headerName: 'Modified',
+        field: 'modifiedAt',
+        width: 150,
+        mobileHidden: true,
+        valueGetter: (_, row) =>
+          row.__typename === 'File' ? row.modifiedAt : row.createdAt,
+        renderCell: ({ value }) => <FormattedDateTime date={value} />,
       },
-      sortable: false,
-    },
-  ];
+      {
+        headerName: 'Modified By',
+        field: 'modifiedBy',
+        width: 150,
+        mobileHidden: true,
+        valueGetter: (_, row) =>
+          row.__typename === 'File'
+            ? row.modifiedBy.fullName
+            : row.createdBy.fullName,
+      },
+      {
+        headerName: 'File Size',
+        field: 'size',
+        mobileHidden: true,
+        valueGetter: (_, row) => (isDirectory(row) ? undefined : row.size),
+        renderCell: ({ row: { type }, value: size }) =>
+          type === 'Directory' ? '–' : formatFileSize(size),
+      },
+      {
+        headerName: '',
+        field: 'item',
+        width: 55,
+        align: 'center',
+        renderCell: ({ row }) => {
+          const permittedActions = getPermittedFileActions(
+            !!canReadRootDirectory,
+            !!canReadRootDirectory
+          );
+          const directoryActions = permittedActions.filter(
+            (action) =>
+              action === FileAction.Rename || action === FileAction.Delete
+          );
+          return (
+            <ActionsMenu
+              IconButtonProps={{ size: 'small' }}
+              actions={isDirectory(row) ? directoryActions : permittedActions}
+              item={row}
+              onVersionUpload={(files) =>
+                uploadProjectFiles({
+                  action: 'version',
+                  files,
+                  parentId: row.id,
+                })
+              }
+            />
+          );
+        },
+        sortable: false,
+      },
+    ],
+    [classes, canReadRootDirectory, uploadProjectFiles]
+  );
+
+  const initialState = useResponsiveColumnVisibility(columns, undefined, {
+    pinnedLeft: ['name'],
+  });
 
   const handleRowClick = ({ row }: GridRowParams<FileRow>) => {
     if (isDirectory(row)) {
@@ -276,6 +288,7 @@ const ProjectFilesListWrapped = () => {
                   loading={loading}
                   rows={rowData}
                   columns={columns}
+                  initialState={initialState}
                   onRowClick={handleRowClick}
                   slots={{
                     row: FileRowComponent,

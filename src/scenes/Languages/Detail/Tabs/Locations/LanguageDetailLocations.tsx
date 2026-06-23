@@ -1,22 +1,20 @@
 import { useMutation } from '@apollo/client';
 import { Delete as DeleteIcon } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
-import {
-  DataGridPro as DataGrid,
-  DataGridProProps as DataGridProps,
-  GridColDef,
-} from '@mui/x-data-grid-pro';
-import { merge } from 'lodash';
+import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useMemo } from 'react';
+import { useIsMobile } from '~/common';
 import { useDialog } from '~/components/Dialog';
 import {
   DefaultDataGridStyles,
   flexLayout,
   noFooter,
   noHeaderFilterButtons,
+  useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
 import { createAddItemFooter } from '~/components/Grid/createAddItemFooter';
+import { EntityList as LanguagesLocationsList } from '~/components/List';
 import {
   LocationColumns,
   LocationInitialState,
@@ -38,6 +36,26 @@ interface LanguageDetailLocationProps {
 export const LanguageDetailLocations = ({
   language,
 }: LanguageDetailLocationProps) => {
+  const isMobile = useIsMobile();
+  return isMobile ? (
+    <LanguagesLocationsList
+      query={LanguageLocationsDocument}
+      listAt={(data) => data.language.locations}
+      variables={{ languageId: language.id }}
+      columns={LocationColumns}
+      sortDefault={{ field: 'name', direction: 'ASC' }}
+      defaultSecondaryField="type"
+      primary={(location) => location.name.value}
+      to={(location) => `/locations/${location.id}`}
+    />
+  ) : (
+    // The grid (and its `useDataGridSource`) must only mount on desktop — that
+    // hook drives a `GridApiPro` ref and would crash if run without a grid.
+    <LanguageLocationsGrid language={language} />
+  );
+};
+
+const LanguageLocationsGrid = ({ language }: LanguageDetailLocationProps) => {
   const { id, locations } = language;
   const [locationFormState, addLocation] = useDialog();
 
@@ -92,19 +110,9 @@ export const LanguageDetailLocations = ({
     [addLocation]
   );
 
-  const slots = useMemo(
-    () =>
-      merge({}, DefaultDataGridStyles.slots, props.slots, {
-        toolbar: LocationToolbar,
-        footer: LocationFooter,
-      } satisfies DataGridProps['slots']),
-    [props.slots, LocationFooter]
-  );
-
-  const slotProps = useMemo(
-    () => merge({}, DefaultDataGridStyles.slotProps, props.slotProps),
-    [props.slotProps]
-  );
+  const { slots, slotProps } = useDataGridSlots(props, {
+    slots: { toolbar: LocationToolbar, footer: LocationFooter },
+  });
 
   return (
     <TabPanelContent>

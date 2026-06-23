@@ -4,6 +4,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { useIsMobile } from '~/common';
 import { useDialog } from '~/components/Dialog';
 import {
   createAddItemFooter,
@@ -14,12 +15,15 @@ import {
   useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
+import { EntityList as UsersPartnersList } from '~/components/List';
 import {
   PartnerColumns,
   PartnerInitialState,
   PartnerToolbar,
 } from '~/components/PartnersDataGrid/PartnerColumns';
 import type { PartnerDataGridRowFragment as UserPartner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql';
+import { renderPartnerRow } from '~/components/PartnersDataGrid/renderPartnerRow';
+import { TabPanelContent } from '~/components/Tabs';
 import { AddOrganizationToUserForm } from '../AddOrganizationToUserForm';
 import {
   RemoveOrganizationFromUserDocument,
@@ -31,6 +35,25 @@ interface UserPartnersPanelProps {
 }
 
 export const UserPartnersPanel = ({ canCreate }: UserPartnersPanelProps) => {
+  const { userId = '' } = useParams();
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
+    <UsersPartnersList
+      query={UserPartnersDocument}
+      listAt={(data) => data.user.partners}
+      variables={{ userId }}
+      columns={PartnerColumns}
+      sortDefault={{ field: 'organization.name', direction: 'ASC' }}
+      renderItem={renderPartnerRow}
+    />
+  ) : (
+    // The grid (and its `useDataGridSource`) must only mount on desktop.
+    <UserPartnersGrid canCreate={canCreate} />
+  );
+};
+
+const UserPartnersGrid = ({ canCreate }: UserPartnersPanelProps) => {
   const { userId = '' } = useParams();
   const [addPartnerState, openAddPartner] = useDialog();
 
@@ -94,7 +117,7 @@ export const UserPartnersPanel = ({ canCreate }: UserPartnersPanelProps) => {
   });
 
   return (
-    <>
+    <TabPanelContent>
       <DataGrid<UserPartner>
         {...DefaultDataGridStyles}
         {...dataGridProps}
@@ -109,6 +132,6 @@ export const UserPartnersPanel = ({ canCreate }: UserPartnersPanelProps) => {
       {canCreate && (
         <AddOrganizationToUserForm userId={userId} {...addPartnerState} />
       )}
-    </>
+    </TabPanelContent>
   );
 };
