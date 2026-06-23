@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 import { Box, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -10,7 +10,7 @@ import { canEditAny } from '~/common';
 import { BooleanProperty } from '~/components/BooleanProperty';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { Sensitivity } from '~/components/Sensitivity';
-import { Tab, TabsContainer } from '~/components/Tabs';
+import { Tab, TabList, TabsContainer } from '~/components/Tabs';
 import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { useDialog } from '../../../components/Dialog';
