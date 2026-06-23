@@ -14,6 +14,7 @@ export * from './sensitivity';
 export * from './styles';
 export * from './sx';
 export * from './types';
+export * from './useIsMobile';
 export * from './urls';
 export * from './use-styles.types';
 export * from './unmatchedIndex';
