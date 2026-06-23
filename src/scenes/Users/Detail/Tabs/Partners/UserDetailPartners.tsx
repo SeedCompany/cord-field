@@ -1,14 +1,11 @@
-import { TabPanelContent } from '~/components/Tabs';
 import { UserPartnersPanel } from './UserPartnerPanel/UserPartnersPanel';
 
 interface UserDetailPartnersProps {
   canCreate: boolean;
 }
 
-export const UserDetailPartners = ({ canCreate }: UserDetailPartnersProps) => {
-  return (
-    <TabPanelContent>
-      <UserPartnersPanel canCreate={canCreate} />
-    </TabPanelContent>
-  );
-};
+// The Paper (TabPanelContent) lives in the panel's desktop grid branch so the
+// mobile row list renders bare.
+export const UserDetailPartners = ({ canCreate }: UserDetailPartnersProps) => (
+  <UserPartnersPanel canCreate={canCreate} />
+);

@@ -1,7 +1,7 @@
 import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useParams } from 'react-router-dom';
 import { PartnerTypeLabels, PartnerTypeList } from '~/api/schema.graphql';
-import { unmatchedIndexThrow } from '~/common';
+import { useIsMobile } from '~/common';
 import {
   DefaultDataGridStyles,
   flexLayout,
@@ -11,12 +11,15 @@ import {
   useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
+import { EntityList as PartnersProjectsList } from '~/components/List';
 import {
+  insertProjectColumnAfterField,
   ProjectDataGridRowFragment as Project,
   ProjectColumns,
   ProjectInitialState,
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
+import { SensitivityIcon } from '~/components/Sensitivity';
 import { TabPanelContent } from '~/components/Tabs';
 import {
   PartnerProjectDataGridRowFragment as PartnerProject,
@@ -24,6 +27,28 @@ import {
 } from './PartnerProjects.graphql';
 
 export const PartnerDetailProjects = () => {
+  const { partnerId = '' } = useParams();
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
+    <PartnersProjectsList
+      query={PartnerProjectsDocument}
+      listAt={(data) => data.partner.projects}
+      variables={{ partnerId }}
+      columns={PartnerProjectColumns}
+      sortDefault={{ field: 'name', direction: 'ASC' }}
+      defaultSecondaryField="primaryLocation.name"
+      primary={(project) => project.name.value}
+      to={(project) => `/projects/${project.id}`}
+      avatar={(project) => <SensitivityIcon value={project.sensitivity} />}
+    />
+  ) : (
+    // The grid (and its `useDataGridSource`) must only mount on desktop.
+    <PartnerProjectsGrid />
+  );
+};
+
+const PartnerProjectsGrid = () => {
   const { partnerId = '' } = useParams();
 
   const [props] = useDataGridSource({
@@ -64,18 +89,13 @@ const PartnershipTypesColumn: GridColDef<PartnerProject> = {
   valueGetter: (_, { partnership }) => partnership.types.value,
 };
 
-const indexAfterStatus =
-  unmatchedIndexThrow(ProjectColumns.findIndex((c) => c.field === 'status')) +
-  1;
-
-const PartnerProjectColumns =
-  // Avoid contravariance constraint on `row` parameter of `valueGetter`.
-  // This function is called for us, and we just want to enforce that
-  // the `row` is _at least_ a `Project`.
-  // The actual enforcement below.
-  (ProjectColumns as Array<GridColDef<PartnerProject>>)
-    // Add types' column after status
-    .toSpliced(indexAfterStatus, 0, PartnershipTypesColumn);
+const PartnerProjectColumns = insertProjectColumnAfterField(
+  // The helper only requires `row` to be _at least_ a `Project`; the superset
+  // constraint is enforced below.
+  ProjectColumns as Array<GridColDef<PartnerProject>>,
+  'status',
+  PartnershipTypesColumn
+);
 
 // Actually enforce superset constraint here, since we're ignoring above.
 const _EnforcePartnerProjectIsSupersetOfProject: Project =

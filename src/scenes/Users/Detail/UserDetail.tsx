@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { useDialog } from '~/components/Dialog';
 import { Error } from '~/components/Error';
 import { IconButton } from '~/components/IconButton';
 import { Redacted } from '~/components/Redacted';
-import { Tab, TabsContainer } from '~/components/Tabs';
+import { Tab, TabList, TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { UserPhoto } from '~/components/UserPhoto';
 import { useDetailTabs } from '~/hooks';
@@ -44,7 +44,7 @@ export const UserDetail = () => {
       component="main"
       sx={{
         overflowY: 'auto',
-        p: 4,
+        p: { xs: 2, md: 4 },
         gap: 3,
         flex: 1,
         maxWidth: (theme) => theme.breakpoints.values.xl,
@@ -63,6 +63,8 @@ export const UserDetail = () => {
           <Box
             sx={{
               display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
               gap: 1,
             }}
           >
@@ -71,6 +73,7 @@ export const UserDetail = () => {
               sx={{
                 mr: 2,
                 lineHeight: 'inherit',
+                minWidth: 0,
               }}
             >
               {!user ? (

@@ -1,5 +1,6 @@
 import { ChevronRight as CloseIcon } from '@mui/icons-material';
 import { Drawer, Stack, Tooltip, Typography } from '@mui/material';
+import { useIsMobile } from '~/common';
 import { IconButton } from '../IconButton';
 import { useCommentsContext } from './CommentsContext';
 import { CommentsThreadList } from './CommentsThreadList';
@@ -11,22 +12,20 @@ export const CommentsBar = () => {
   const { isCommentsBarOpen, toggleCommentsBar, resourceId } =
     useCommentsContext();
   const open = isCommentsBarOpen && !!resourceId;
+  // On mobile the bar overlays content (temporary) instead of squeezing the
+  // layout (persistent), and widens to be usable on a small screen.
+  const isMobile = useIsMobile();
 
   return (
     <Drawer
-      variant="persistent"
+      variant={isMobile ? 'temporary' : 'persistent'}
       open={open}
       anchor="right"
       elevation={0}
+      onClose={() => toggleCommentsBar(false)}
       PaperProps={{
         sx: (theme) => ({
-          width: CommentsDrawerWidth,
-          // Artificially position this below the app header
-          // Still up for consideration.
-          // And maybe doable in another way without magic numbers.
-          // top: 65,
-          // height: 'calc(100vh - 65px)',
-
+          width: isMobile ? 'min(360px, 90vw)' : CommentsDrawerWidth,
           '--gutter': theme.spacing(2),
           padding: 'var(--gutter)',
           '--gap': theme.spacing(1),
@@ -36,7 +35,7 @@ export const CommentsBar = () => {
       sx={[
         !open && { display: 'none' },
         { overflowY: 'auto', display: 'flex' },
-        open && { width: CommentsDrawerWidth, flexShrink: 0 },
+        open && !isMobile && { width: CommentsDrawerWidth, flexShrink: 0 },
       ]}
     >
       <Stack

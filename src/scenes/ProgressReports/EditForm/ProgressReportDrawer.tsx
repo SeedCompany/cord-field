@@ -1,8 +1,9 @@
 import { useQuery } from '@apollo/client';
+import { ArrowBack } from '@mui/icons-material';
 import { Box, Drawer } from '@mui/material';
 import { useMatch } from 'react-router-dom';
 import { ChildrenProp, flexColumn } from '~/common';
-import { useNavigate } from '~/components/Routing';
+import { ButtonLink, useNavigate } from '~/components/Routing';
 import { ProgressReportContextProvider } from './ProgressReportContext';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
 import { ProgressReportEditDocument } from './ProgressReportEdit.graphql';
@@ -72,17 +73,41 @@ const EditLayout = ({ report }: ReportProp) => {
   }
 
   return (
-    <Box sx={{ m: 4, mt: 2, display: 'flex', gap: 4 }}>
-      <Box css={flexColumn} sx={{ flex: 1, gap: 2 }}>
+    <Box
+      sx={{
+        m: { xs: 2, md: 4 },
+        mt: 2,
+        display: 'flex',
+        // Stack into one column on mobile; the sidebar can't sit beside the
+        // content on a narrow screen without squeezing/overflowing it.
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: { xs: 2, md: 4 },
+      }}
+    >
+      {/* Mobile only: the header's own "Back" sits in the content column, which
+          stacks below the sidebar on mobile — so surface a back link up top. */}
+      <ButtonLink
+        to=".."
+        color="secondary"
+        startIcon={<ArrowBack />}
+        sx={{ order: 0, alignSelf: 'start', display: { md: 'none' } }}
+      >
+        Back To Overview
+      </ButtonLink>
+      <Box css={flexColumn} sx={{ flex: 1, gap: 2, order: { xs: 2, md: 1 } }}>
         <ProgressReportDrawerHeader report={report} />
         <StepContainer report={report} />
       </Box>
       <ProgressReportSidebar
         report={report}
         sx={(theme) => ({
-          top: theme.spacing(2), // matches mt above
-          position: 'sticky',
-          alignSelf: 'start',
+          // Nav/status first on mobile (above the form), beside it on desktop.
+          order: { xs: 1, md: 2 },
+          [theme.breakpoints.up('md')]: {
+            top: theme.spacing(2), // matches mt above
+            position: 'sticky',
+            alignSelf: 'start',
+          },
         })}
       />
     </Box>

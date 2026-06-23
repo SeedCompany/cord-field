@@ -1,6 +1,7 @@
 import {
   createTheme as createMuiTheme,
   Theme as MuiTheme,
+  responsiveFontSizes,
 } from '@mui/material/styles';
 import { appComponents } from './overrides';
 import { createPalette } from './palette';
@@ -19,7 +20,9 @@ export const createTheme = ({ dark }: { dark?: boolean } = {}) => {
     components: appComponents(theme),
   });
 
-  return theme;
+  // Scale down large headings on smaller viewports so they don't dominate
+  // the screen on mobile (h1 44px / h2 32px are sized for desktop).
+  return responsiveFontSizes(theme);
 };
 
 // Communicate emotion's theme is MUI theme, which <ThemeProvider> does

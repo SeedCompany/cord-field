@@ -388,8 +388,14 @@ export const useDataGridSource = <
   // fully cached, unsorted list.
   // See: docs/data-grid-source.md#applying-client-side-sort-after-cache-completion
   useEffect(() => {
+    // `applySorting` is only present once the grid has mounted. When this source
+    // feeds a responsive view that renders a list (not the grid) on mobile, the
+    // grid never mounts — there's nothing to sort, so skip it rather than crash.
     if (isCacheComplete) {
-      apiRef.current.applySorting();
+      // The type says `applySorting` is always present, but `apiRef.current` is
+      // an empty object until the grid mounts (it may never, on mobile).
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      apiRef.current.applySorting?.();
     }
   }, [apiRef, isCacheComplete]);
 

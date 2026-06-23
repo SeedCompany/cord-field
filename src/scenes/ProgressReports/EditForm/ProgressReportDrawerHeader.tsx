@@ -18,11 +18,13 @@ export const ProgressReportDrawerHeader = ({ report }: ReportProp) => {
 
   return (
     <Box css={flexColumn}>
+      {/* Hidden on mobile — surfaced at the top of the layout instead, since
+          this header stacks below the step sidebar on a narrow screen. */}
       <ButtonLink
         to=".."
         color="secondary"
         startIcon={<ArrowBack />}
-        sx={{ alignSelf: 'start' }}
+        sx={{ alignSelf: 'start', display: { xs: 'none', md: 'inline-flex' } }}
       >
         Back To Overview
       </ButtonLink>

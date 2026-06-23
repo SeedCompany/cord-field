@@ -5,7 +5,7 @@ import {
   Person as PersonIcon,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import { Many, Nil } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
@@ -18,7 +18,7 @@ import { Error } from '~/components/Error';
 import { FormattedDate, FormattedDateTime } from '~/components/Formatters';
 import { IconButton } from '~/components/IconButton';
 import { InactiveStatusIcon } from '~/components/Icons/InactiveStatusIcon';
-import { Tab, TabsContainer } from '~/components/Tabs';
+import { Tab, TabList, TabsContainer } from '~/components/Tabs';
 import { TogglePinButton } from '~/components/TogglePinButton';
 import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
@@ -64,7 +64,7 @@ export const PartnerDetail = () => {
       component="main"
       sx={{
         flex: 1,
-        p: 4,
+        p: { xs: 2, md: 4 },
         overflowY: 'auto',
       }}
     >
@@ -102,13 +102,18 @@ const PartnerHeader = ({
   return (
     <>
       <Helmet title={acronym ?? name ?? undefined} />
-      <Stack direction="row" gap={1}>
+      <Stack direction="row" gap={1} flexWrap="wrap" alignItems="center">
         {!partner && (
           <Skeleton width={300}>
             <Typography variant="h2" lineHeight="inherit" mr={1} />
           </Skeleton>
         )}
-        <Typography variant="h2" lineHeight="inherit" mr={1}>
+        <Typography
+          variant="h2"
+          lineHeight="inherit"
+          mr={1}
+          sx={{ minWidth: 0 }}
+        >
           {acronym ?? name}
         </Typography>
         <Tooltip title="Edit Partner">
@@ -162,7 +167,7 @@ const PartnerDataButtons = ({
   partner,
   editPartner: edit,
 }: PartnerViewEditProps) => (
-  <Box mt={3} mb={2} display="flex" gap={2}>
+  <Box mt={3} mb={2} display="flex" gap={2} flexWrap="wrap">
     <DataButton
       label="Status"
       onClick={() => edit('partner.active')}

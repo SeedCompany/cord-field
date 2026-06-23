@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -12,7 +12,7 @@ import {
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
 import { Link } from '~/components/Routing';
-import { Tab, TabsContainer } from '~/components/Tabs';
+import { Tab, TabList, TabsContainer } from '~/components/Tabs';
 import { useDetailTabs } from '~/hooks';
 import { Error } from '../../../components/Error';
 import { EditFieldZone } from '../../../components/FieldZone';

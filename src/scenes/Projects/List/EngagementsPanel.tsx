@@ -30,7 +30,7 @@ export const EngagementsPanel = () => {
     slots: { toolbar: EngagementToolbar },
   });
 
-  const processEngagementUpdate = useProcessEngagementUpdate();
+  const processRowUpdate = useProcessEngagementUpdate();
 
   return (
     <DataGrid<Engagement>
@@ -40,7 +40,7 @@ export const EngagementsPanel = () => {
       slotProps={slotProps}
       columns={EngagementColumns}
       initialState={EngagementInitialState}
-      processRowUpdate={processEngagementUpdate}
+      processRowUpdate={processRowUpdate}
       headerFilters
       hideFooter
       sx={[flexLayout, noHeaderFilterButtons, noFooter]}
