@@ -4,7 +4,7 @@ import { useListQuery } from '~/components/List';
 import { NotificationAddedDocument } from './NotificationAdded.graphql';
 import { NotificationListDocument } from './NotificationList.graphql';
 import { ReadNotificationDocument } from './ReadNotification.graphql';
-import { NotificationFragment } from './Views';
+import type { NotificationFragment } from './Views';
 
 /**
  * Notifications data + actions, shared by the desktop bell ({@link Notifications})
@@ -51,14 +51,19 @@ export const useNotifications = () => {
 
   const [markAsRead] = useMutation(ReadNotificationDocument, {
     update: (cache, { data: updated }) => {
-      cache.updateQuery({ query: NotificationListDocument }, (prev) => ({
-        notifications: {
-          ...prev!.notifications,
-          totalUnread:
-            prev!.notifications.totalUnread +
-            (updated!.readNotification.unread ? 1 : -1),
-        },
-      }));
+      cache.updateQuery({ query: NotificationListDocument }, (prev) => {
+        if (!prev || !updated?.readNotification) {
+          return;
+        }
+        return {
+          notifications: {
+            ...prev.notifications,
+            totalUnread:
+              prev.notifications.totalUnread +
+              (updated.readNotification.unread ? 1 : -1),
+          },
+        };
+      });
     },
   });
 

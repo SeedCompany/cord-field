@@ -98,7 +98,7 @@ const displayItem = (
     case 'MultiplicationTranslationProject':
     case 'InternshipProject':
       return [
-        <Navigate replace to={`/projects/${item.id}`} />,
+        <Navigate key={item.id} replace to={`/projects/${item.id}`} />,
         <EntityListItem
           key={item.id}
           to={`/projects/${item.id}`}
@@ -109,7 +109,7 @@ const displayItem = (
       ];
     case 'Language':
       return [
-        <Navigate replace to={`/languages/${item.id}`} />,
+        <Navigate key={item.id} replace to={`/languages/${item.id}`} />,
         <EntityListItem
           key={item.id}
           to={`/languages/${item.id}`}
@@ -120,7 +120,7 @@ const displayItem = (
       ];
     case 'User':
       return [
-        <Navigate replace to={`/users/${item.id}`} />,
+        <Navigate key={item.id} replace to={`/users/${item.id}`} />,
         <EntityListItem
           key={item.id}
           to={`/users/${item.id}`}
@@ -133,7 +133,7 @@ const displayItem = (
       ];
     case 'Partner':
       return [
-        <Navigate replace to={`/partners/${item.id}`} />,
+        <Navigate key={item.id} replace to={`/partners/${item.id}`} />,
         <EntityListItem
           key={item.id}
           to={`/partners/${item.id}`}
@@ -151,7 +151,7 @@ const displayItem = (
       ];
     case 'Location':
       return [
-        <Navigate replace to={`/locations/${item.id}`} />,
+        <Navigate key={item.id} replace to={`/locations/${item.id}`} />,
         <EntityListItem
           key={item.id}
           to={`/locations/${item.id}`}
@@ -162,7 +162,7 @@ const displayItem = (
       ];
     case 'FieldRegion':
       return [
-        <Navigate replace to={`/field-regions/${item.id}`} />,
+        <Navigate key={item.id} replace to={`/field-regions/${item.id}`} />,
         <EntityListItem
           key={item.id}
           to={`/field-regions/${item.id}`}
@@ -173,7 +173,7 @@ const displayItem = (
       ];
     case 'FieldZone':
       return [
-        <Navigate replace to={`/field-zones/${item.id}`} />,
+        <Navigate key={item.id} replace to={`/field-zones/${item.id}`} />,
         <EntityListItem
           key={item.id}
           to={`/field-zones/${item.id}`}
@@ -184,7 +184,7 @@ const displayItem = (
       ];
     case 'Tool':
       return [
-        <Navigate replace to={`/tools/${item.id}`} />,
+        <Navigate key={item.id} replace to={`/tools/${item.id}`} />,
         <EntityListItem
           key={item.id}
           to={`/tools/${item.id}`}

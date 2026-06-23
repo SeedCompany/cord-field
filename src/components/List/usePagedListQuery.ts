@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { uniqBy } from 'lodash';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { InputArg, PaginatedListInput, PaginatedListOutput } from '../../api';
 import { ListQueryResult } from './useListQuery';
 
@@ -58,6 +58,9 @@ export const usePagedListQuery = <
     pages: [],
     page: 1,
   });
+  useEffect(() => {
+    setAcc((curr) => (curr.key === key ? curr : { key, pages: [], page: 1 }));
+  }, [key]);
   // Ignore (and effectively reset) accumulation when the base variables change.
   const active: Accumulated<Item> = useMemo(
     () => (acc.key === key ? acc : { key, pages: [], page: 1 }),
@@ -124,6 +127,7 @@ export const usePagedListQuery = <
           };
         });
       })
+      .catch(() => undefined)
       .finally(() => {
         loadingMoreRef.current = false;
       });

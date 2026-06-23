@@ -40,7 +40,7 @@ export const FieldRegionProjectsPanel = () => {
       avatar={(project) => <SensitivityIcon value={project.sensitivity} />}
     />
   ) : (
-    // The grid (and its `useDataGridSource`) must only mount on desktop.
+    // ai edge-case The grid (and its `useDataGridSource`) must only mount on desktop.
     <FieldRegionProjectsGrid />
   );
 };

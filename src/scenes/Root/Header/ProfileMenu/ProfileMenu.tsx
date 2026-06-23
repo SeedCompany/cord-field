@@ -1,10 +1,13 @@
-import { Box, Divider, Menu, MenuProps, Typography } from '@mui/material';
+import { Box, Divider, Menu, Typography } from '@mui/material';
+import type { MenuProps } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { UIEvent, useContext } from 'react';
+import type { UIEvent } from 'react';
+import { useContext } from 'react';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
-import { MenuItemLink } from '../../../../components/Routing';
-import { useSession } from '../../../../components/Session';
-import { NotificationList, UseNotifications } from '../../Notifications';
+import { MenuItemLink } from '~/components/Routing';
+import { useSession } from '~/components/Session';
+import { NotificationList } from '../../Notifications';
+import type { UseNotifications } from '../../Notifications';
 import { ChangePasswordMenuItem } from './ChangePasswordMenuItem';
 import { ImpersonationMenuItem } from './ImpersonationDialog';
 import { ToggleUploadManagerMenuItem } from './ToggleUploadManagerMenuItem';

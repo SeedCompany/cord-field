@@ -16,7 +16,7 @@ export const renderPartnerRow = (
   sort: string | undefined
 ) => {
   const org = partner.organization.value;
-  const acronym = org?.acronym.value;
+  const acronym = org?.acronym.value?.trim() || undefined;
   const name = org?.name.value;
   return (
     <EntityListItem

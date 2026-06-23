@@ -33,7 +33,7 @@ export const LanguageList = () => {
             )}
           />
         ) : (
-          // The grid (and its `useDataGridSource`) must only mount on desktop.
+          // ai edge-case The grid (and its `useDataGridSource`) must only mount on desktop.
           <Stack sx={{ flex: 1, containerType: 'size' }}>
             <Paper
               sx={{

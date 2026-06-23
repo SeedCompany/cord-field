@@ -58,7 +58,7 @@ export const ProjectList = () => {
                   )}
                 />
               ) : (
-                // The grid (and its `useDataGridSource`) only mounts on desktop.
+                // ai edge-case The grid (and its `useDataGridSource`) only mounts on desktop.
                 <TabPanelContent>
                   <ProjectsPanel />
                 </TabPanelContent>
@@ -82,7 +82,7 @@ export const ProjectList = () => {
                   )}
                 />
               ) : (
-                // The grid (and its `useDataGridSource`) only mounts on desktop.
+                // ai edge-case The grid (and its `useDataGridSource`) only mounts on desktop.
                 <TabPanelContent>
                   <EngagementsPanel />
                 </TabPanelContent>

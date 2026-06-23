@@ -33,11 +33,17 @@ export const useResponsiveColumnVisibility = (
         columnVisibilityModel[column.field] = false;
       }
     }
-    return merge({}, initialState, {
+    const merged = merge({}, initialState, {
       columns: { columnVisibilityModel },
-      ...(pinnedLeft.length > 0
-        ? { pinnedColumns: { left: [...pinnedLeft] } }
-        : {}),
     });
+    // Pin the primary column(s) left on mobile. Assign after the merge so the
+    // array is replaced wholesale — lodash `merge` merges arrays by index, which
+    // would otherwise leave stale trailing entries from `initialState`.
+    return pinnedLeft.length > 0
+      ? {
+          ...merged,
+          pinnedColumns: { ...merged.pinnedColumns, left: [...pinnedLeft] },
+        }
+      : merged;
   }, [isMobile, columns, initialState, pinnedLeft]);
 };

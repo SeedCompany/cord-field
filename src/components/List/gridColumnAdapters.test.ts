@@ -84,10 +84,11 @@ describe('columnsToFilterControls', () => {
     expect(control!.toFilter('Bob')).toEqual({ name: 'Bob' });
   });
 
-  it('skips date and non-filterable columns', () => {
+  it('skips date, dateTime, and non-filterable columns', () => {
     const controls = columnsToFilterControls(
       asColumns([
         { field: 'mouStart', headerName: 'MOU Start', type: 'date' },
+        { field: 'createdAt', headerName: 'Created At', type: 'dateTime' },
         { field: 'count', headerName: 'Count', filterable: false },
         { field: 'name', headerName: 'Name' },
       ])

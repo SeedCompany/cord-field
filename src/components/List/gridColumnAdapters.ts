@@ -20,11 +20,12 @@ import { DateTime } from 'luxon';
  * **Known limitation (intentional, not silent):** the grid additionally applies
  * filter-operator–specific conversions via `getAsApiInput` (e.g. date
  * after/before ranges). The mobile drawer does NOT replicate those, so columns
- * that depend on them are excluded — date columns are skipped here, and any new
- * column needing custom API mapping must express it via `serverFilter` (which
- * both the grid and these adapters honor). The `as any` casts below are confined
- * to invoking the column value pipeline without a grid `apiRef` (try/catch
- * guarded); column shape contracts are locked by gridColumnAdapters.test.ts.
+ * that depend on them are excluded — date/dateTime columns are skipped here,
+ * and any new column needing custom API mapping must express it via
+ * `serverFilter` (which both the grid and these adapters honor). The `as any`
+ * casts below are confined to invoking the column value pipeline without a grid
+ * `apiRef` (try/catch guarded); column shape contracts are locked by
+ * gridColumnAdapters.test.ts.
  */
 
 export interface EnumOption {
@@ -92,7 +93,12 @@ export const columnsToFilterControls = (
 ): FilterControl[] =>
   columns.flatMap((column): FilterControl[] => {
     const col = column as any;
-    if (col.filterable === false || !col.field || col.type === 'date') {
+    if (
+      col.filterable === false ||
+      !col.field ||
+      col.type === 'date' ||
+      col.type === 'dateTime'
+    ) {
       return [];
     }
     const field: string = col.field;
