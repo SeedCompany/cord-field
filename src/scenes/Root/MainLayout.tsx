@@ -25,6 +25,11 @@ export const MainLayout = () => {
       <Box
         sx={{
           flex: 1,
+          // Without this, this flex child keeps its default `min-width: auto` and
+          // grows to its content's width, cascading an over-wide layout down to
+          // the lists (their `noWrap` text then can't ellipsize). Pin it so the
+          // shell stays within the viewport and the constraint propagates down.
+          minWidth: 0,
           display: 'flex',
           height: '100vh',
           bgcolor: 'background.default',
