@@ -1,8 +1,9 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { ReactNode, useMemo } from 'react';
 import { Entity, PaginatedListOutput } from '~/api';
+import { FormattedNumber } from '../Formatters';
 import { EntityListItem } from './EntityListItem';
 import {
   columnsToFilterControls,
@@ -21,6 +22,12 @@ export interface EntityListProps<Data, Item extends Entity> {
   listAt: (data: Data) => PaginatedListOutput<Item> & { canCreate?: boolean };
   /** Query variables other than `input` (e.g. a parent id); `input` is supplied by the drawer. */
   variables?: Record<string, any>;
+  /**
+   * Optional heading rendered on one row with the total count (title left,
+   * "Total Rows" right), so the list reclaims the vertical space a separate
+   * page heading above the count would take.
+   */
+  title?: ReactNode;
   /** The grid's columns — drive the filter/sort drawer and the labeled secondary. */
   columns: readonly GridColDef[];
   sortDefault: SortState;
@@ -51,6 +58,7 @@ export function EntityList<Data, Item extends Entity>({
   query,
   listAt,
   variables,
+  title,
   columns,
   sortDefault,
   defaultSecondaryField,
@@ -94,9 +102,33 @@ export function EntityList<Data, Item extends Entity>({
         overflow: 'hidden',
       }}
     >
+      {(title || list.data) && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'baseline',
+            pl: 0,
+            pr: 2,
+            pb: 2,
+            flexShrink: 0,
+          }}
+        >
+          {title && <Typography variant="h2">{title}</Typography>}
+          {list.data && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              // `ml: auto` keeps the count right-aligned whether or not a title
+              // occupies the left of the row.
+              sx={{ ml: 'auto', whiteSpace: 'nowrap' }}
+            >
+              Total Rows: <FormattedNumber value={list.data.total} />
+            </Typography>
+          )}
+        </Box>
+      )}
       <List
         {...list}
-        showCount
         bleed={false}
         sx={{ flex: 1 }}
         spacing={0}

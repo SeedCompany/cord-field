@@ -13,11 +13,14 @@ export const LanguageList = () => {
     <Stack sx={{ flex: 1, padding: { xs: 2, md: 4 }, pt: 2 }}>
       <Helmet title="Languages" />
       <Stack component="main" sx={{ flex: 1 }}>
-        <Typography variant="h2" paragraph>
-          Languages
-        </Typography>
+        {!isMobile && (
+          <Typography variant="h2" paragraph>
+            Languages
+          </Typography>
+        )}
         {isMobile ? (
           <LanguagesList
+            title="Languages"
             query={LanguagesDocument}
             listAt={(data) => data.languages}
             columns={LanguageColumns}

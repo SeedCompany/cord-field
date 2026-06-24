@@ -12,11 +12,14 @@ export const UserList = () => {
     <Stack sx={{ flex: 1, padding: { xs: 2, md: 4 }, pt: 2 }}>
       <Helmet title="People" />
       <Stack component="main" sx={{ flex: 1 }}>
-        <Typography variant="h2" paragraph>
-          People
-        </Typography>
+        {!isMobile && (
+          <Typography variant="h2" paragraph>
+            People
+          </Typography>
+        )}
         {isMobile ? (
           <UsersList
+            title="People"
             query={UsersDocument}
             listAt={(data) => data.users}
             columns={UserColumns}

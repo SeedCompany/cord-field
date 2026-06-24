@@ -13,11 +13,14 @@ export const PartnerList = () => {
     <Stack sx={{ flex: 1, padding: { xs: 2, md: 4 }, pt: 2 }}>
       <Helmet title="Partners" />
       <Stack component="main" sx={{ flex: 1 }}>
-        <Typography variant="h2" paragraph>
-          Partners
-        </Typography>
+        {!isMobile && (
+          <Typography variant="h2" paragraph>
+            Partners
+          </Typography>
+        )}
         {isMobile ? (
           <PartnersList
+            title="Partners"
             query={PartnersDocument}
             listAt={(data) => data.partners}
             columns={PartnerColumns}
