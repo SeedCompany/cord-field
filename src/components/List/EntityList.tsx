@@ -1,9 +1,11 @@
+import { getOperationName } from '@apollo/client/utilities';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { Box, Typography } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { ReactNode, useMemo } from 'react';
 import { Entity, PaginatedListOutput } from '~/api';
 import { FormattedNumber } from '../Formatters';
+import { useSession } from '../Session/Session';
 import { EntityListItem } from './EntityListItem';
 import {
   columnsToFilterControls,
@@ -72,10 +74,20 @@ export function EntityList<Data, Item extends Entity>({
     [columns]
   );
   const sortOptions = useMemo(() => columnsToSortOptions(columns), [columns]);
-  const { filter, sort, order } = useRowListFilters(filterControls, {
-    options: sortOptions,
-    default: sortDefault,
-  });
+
+  // Persist filter/sort per user + list, mirroring the data grid's stored view.
+  const { session } = useSession();
+  const opName = useMemo(() => getOperationName(query), [query]);
+  const storageKey =
+    opName && session?.id
+      ? `${session.id}:${opName}-mobile-list-view`
+      : undefined;
+
+  const { filter, sort, order } = useRowListFilters(
+    filterControls,
+    { options: sortOptions, default: sortDefault },
+    storageKey
+  );
 
   // Merge the drawer's filter with any base scoping filter (e.g. a tool filter),
   // rather than overwriting it.
