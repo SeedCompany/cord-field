@@ -10,7 +10,15 @@ import {
   Publish,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
-import { Box, Chip, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  Chip,
+  Grid,
+  Skeleton,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Many } from '@seedcompany/common';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
@@ -19,7 +27,6 @@ import { ProjectStepLabels, ProjectTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
-import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { DataButton } from '../../../components/DataButton';
@@ -518,10 +525,18 @@ export const ProjectOverview = () => {
             </Grid>
           </Grid>
 
-          <CardGroup horizontal="mdUp">
-            <ProjectMembersSummary project={project} />
-            <PartnershipSummary partnerships={project?.partnerships} />
-          </CardGroup>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Card sx={{ height: '100%' }}>
+                <ProjectMembersSummary project={project} />
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Card sx={{ height: '100%' }}>
+                <PartnershipSummary partnerships={project?.partnerships} />
+              </Card>
+            </Grid>
+          </Grid>
 
           {beta.has('projectChangeRequests') && (
             <Grid container spacing={3}>

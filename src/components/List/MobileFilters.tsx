@@ -13,7 +13,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { useDebounce } from 'ahooks';
+import { useDebounce, useLatest, useLocalStorageState } from 'ahooks';
 import { mergeWith } from 'lodash';
 import {
   createContext,
@@ -35,6 +35,17 @@ import {
 
 type FilterValues = Record<string, unknown>;
 
+/**
+ * The persisted (localStorage) shape of a mobile list's view, mirroring the data
+ * grid's stored view. Free-text `search` filters are intentionally excluded on
+ * save (see {@link useRowListFilters}), matching the grid which only persists
+ * select/boolean columns.
+ */
+interface StoredMobileView {
+  values?: FilterValues;
+  sort?: SortState;
+}
+
 interface MobileFilterState {
   controls: readonly FilterControl[];
   values: FilterValues;
@@ -42,7 +53,8 @@ interface MobileFilterState {
   clearAll: () => void;
   register: (
     controls: readonly FilterControl[],
-    sort?: SortConfig & { key: string }
+    sort?: SortConfig & { key: string },
+    initial?: StoredMobileView
   ) => void;
   unregister: () => void;
   sortOptions: readonly SortOption[];
@@ -71,11 +83,13 @@ export const MobileFilterProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const register = useCallback<MobileFilterState['register']>(
-    (next, sortCfg) => {
+    (next, sortCfg, initial) => {
       setControls(next);
-      setValues({});
+      // Seed from the persisted view (if any) so filters/sort survive navigation
+      // and reloads, falling back to empty / the list's default sort.
+      setValues(initial?.values ?? {});
       setSortOptions(sortCfg?.options ?? []);
-      setSort(sortCfg?.default);
+      setSort(initial?.sort ?? sortCfg?.default);
       setDefaultSort(sortCfg?.default);
       setSortKey(sortCfg?.key ?? '');
     },
@@ -162,15 +176,20 @@ const buildFilter = (
  * Mobile filtering for a dense row list. Registers `controls` with the app shell
  * (so the header filter button can drive them) and returns the merged API `filter`
  * for `useListQuery`. Returns `undefined` when nothing is selected.
+ *
+ * When a `storageKey` is supplied, the active filter values and sort persist to
+ * localStorage (mirroring the data grid's view persistence) so they survive
+ * navigation and reloads. Free-text `search` filters are NOT persisted, matching
+ * the grid, which only persists select/boolean columns.
  */
 export const useRowListFilters = (
   controls: readonly FilterControl[],
-  sort?: SortConfig
+  sort?: SortConfig,
+  storageKey?: string
 ) => {
   const ctx = useContext(MobileFilterContext);
   const register = ctx?.register;
   const unregister = ctx?.unregister;
-  const values = ctx?.values;
 
   const keysSig = controls.map((c) => c.key).join('|');
   const optionsSig = sort?.options.map((o) => o.field).join('|') ?? '';
@@ -180,24 +199,56 @@ export const useRowListFilters = (
     ? `${optionsSig}#${sort.default.field}:${sort.default.direction}`
     : '';
 
+  const persistEnabled = !!storageKey;
+  const [storedView, setStoredView] = useLocalStorageState<StoredMobileView>(
+    storageKey ?? 'mobile-list-view:unscoped',
+    { defaultValue: {} }
+  );
+  const stored = persistEnabled ? storedView : undefined;
+  // Read the persisted view at register time without re-registering on every save.
+  const storedRef = useLatest(stored);
+
   useEffect(() => {
-    register?.(controls, sort ? { ...sort, key: sortKey } : undefined);
+    register?.(
+      controls,
+      sort ? { ...sort, key: sortKey } : undefined,
+      storedRef.current
+    );
     return () => unregister?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keysSig/sortKey capture the meaningful change
   }, [keysSig, sortKey, register, unregister]);
 
-  const filter = useMemo(
-    () => buildFilter(controls, values ?? {}),
+  // Persist filter/sort changes back to storage while THIS list is the active
+  // registration. `search` (free-text) values are stripped, matching the grid.
+  useEffect(() => {
+    if (!persistEnabled || ctx?.sortKey !== sortKey) {
+      return;
+    }
+    const persistable = Object.fromEntries(
+      Object.entries(ctx.values).filter(([key]) => {
+        const control = controls.find((c) => c.key === key);
+        return control && control.kind !== 'search';
+      })
+    );
+    setStoredView({ values: persistable, sort: ctx.sort });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keysSig captures the meaningful change
-    [keysSig, values]
+  }, [persistEnabled, ctx?.values, ctx?.sort, ctx?.sortKey, sortKey, keysSig]);
+
+  // Use the shared state only when it belongs to THIS list (matching sortKey).
+  // On first render — before this list registers — the context still holds the
+  // previous list's state, so fall back to the persisted view (then our own
+  // default) and never query with stale/foreign filters or sort.
+  const isActive = ctx?.sortKey === sortKey;
+  const activeValues = isActive ? ctx.values : stored?.values;
+
+  const filter = useMemo(
+    () => buildFilter(controls, activeValues ?? {}),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keysSig captures the meaningful change
+    [keysSig, activeValues]
   );
 
-  // Use the shared sort only when it belongs to THIS list (matching sortKey).
-  // On first render — before this list registers — the context still holds the
-  // previous list's sort, so fall back to our own default and never query with a
-  // stale/foreign sort.
   const effectiveSort =
-    ctx?.sortKey === sortKey && ctx.sort ? ctx.sort : sort?.default;
+    isActive && ctx.sort ? ctx.sort : stored?.sort ?? sort?.default;
 
   return {
     filter,
