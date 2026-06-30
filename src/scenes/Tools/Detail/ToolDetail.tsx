@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -10,7 +10,7 @@ import { useDialog } from '~/components/Dialog';
 import { Error } from '~/components/Error';
 import { IconButton } from '~/components/IconButton';
 import { Redacted } from '~/components/Redacted';
-import { Tab, TabsContainer } from '~/components/Tabs';
+import { Tab, TabList, TabsContainer } from '~/components/Tabs';
 import { EditTool } from '~/components/Tool';
 import { useDetailTabs } from '~/hooks';
 import { ToolDetailProfile } from './Tabs/Profile/ToolDetailProfile';

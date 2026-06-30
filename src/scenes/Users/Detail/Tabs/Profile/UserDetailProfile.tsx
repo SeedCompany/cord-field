@@ -19,7 +19,8 @@ export const UserDetailProfile = ({ user }: UserDetailProfileProps) => {
     <Box
       component={Paper}
       sx={(theme) => ({
-        width: theme.breakpoints.values.md,
+        width: '100%',
+        maxWidth: theme.breakpoints.values.md,
       })}
     >
       <Stack

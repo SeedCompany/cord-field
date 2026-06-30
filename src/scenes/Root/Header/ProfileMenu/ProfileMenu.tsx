@@ -1,18 +1,23 @@
-import { Divider, Menu, MenuProps, Typography } from '@mui/material';
+import { Box, Divider, Menu, Typography } from '@mui/material';
+import type { MenuProps } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { UIEvent, useContext } from 'react';
+import type { UIEvent } from 'react';
+import { useContext } from 'react';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
-import { MenuItemLink } from '../../../../components/Routing';
-import { useSession } from '../../../../components/Session';
+import { MenuItemLink } from '~/components/Routing';
+import { useSession } from '~/components/Session';
+import { NotificationList } from '../../Notifications';
+import type { UseNotifications } from '../../Notifications';
 import { ChangePasswordMenuItem } from './ChangePasswordMenuItem';
 import { ImpersonationMenuItem } from './ImpersonationDialog';
 import { ToggleUploadManagerMenuItem } from './ToggleUploadManagerMenuItem';
 
-// Menu looks for disabled prop to skip over when choosing
-// which item to auto focus first.
-const skipAutoFocus: any = { disabled: true };
+export interface ProfileMenuProps extends Partial<MenuProps> {
+  /** When provided (mobile), the menu shows the username header + notifications. */
+  notifications?: UseNotifications;
+}
 
-export const ProfileMenu = (props: Partial<MenuProps>) => {
+export const ProfileMenu = ({ notifications, ...props }: ProfileMenuProps) => {
   const { spacing } = useTheme();
   const { session } = useSession();
   const impersonation = useContext(ImpersonationContext);
@@ -33,14 +38,32 @@ export const ProfileMenu = (props: Partial<MenuProps>) => {
         horizontal: 'right',
       }}
       slotProps={{
-        paper: { sx: { minWidth: 200 } },
+        paper: { sx: { minWidth: notifications ? 'min(360px, 90vw)' : 200 } },
       }}
+      // The header rows below (title/divider/notifications) aren't menu items;
+      // don't auto-focus into the list so focus opens on the menu itself.
+      MenuListProps={{ autoFocusItem: false }}
       {...props}
     >
-      <Typography variant="h4" pt={1} p={2} {...skipAutoFocus}>
-        Profile Info
+      <Typography variant="h4" pt={1} p={2}>
+        {notifications && session?.fullName ? session.fullName : 'Profile Info'}
       </Typography>
-      <Divider {...skipAutoFocus} />
+      <Divider />
+      {notifications?.enabled && (
+        <Box>
+          <Typography
+            variant="overline"
+            color="text.secondary"
+            sx={{ display: 'block', px: 2, pt: 1 }}
+          >
+            Notifications
+          </Typography>
+          <Box sx={{ maxHeight: 320, overflowY: 'auto' }}>
+            <NotificationList notifications={notifications} />
+          </Box>
+          <Divider />
+        </Box>
+      )}
       {userId && (
         <MenuItemLink to={`/users/${userId}`}>View Profile</MenuItemLink>
       )}

@@ -1,7 +1,8 @@
-import { TabContext, TabList, TabPanel } from '@mui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 import { Box, Tab } from '@mui/material';
 import { groupToMapBy } from '@seedcompany/common';
 import { memo, ReactNode, useState } from 'react';
+import { TabList } from '../Tabs';
 import { ProblemTreeProps } from './PnPExtractionProblems';
 
 export const ProblemsWithSheetsAsTabs = memo(function ProblemsWithSheetsAsTabs({

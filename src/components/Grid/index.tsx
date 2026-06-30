@@ -1,5 +1,6 @@
 import './sorting';
 
+export * from './useResponsiveColumnVisibility';
 export * from './DefaultDataGridStyles';
 export * from './EditNumberCell';
 export * from './useCurrencyColumn';

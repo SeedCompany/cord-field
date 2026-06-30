@@ -165,5 +165,7 @@ export const getInitialVisibility = (columns: GridColDef[]) =>
 declare module '@mui/x-data-grid/internals' {
   interface GridBaseColDef {
     hidden?: boolean;
+    /** Hide this column on mobile viewports (see `useResponsiveColumnVisibility`). */
+    mobileHidden?: boolean;
   }
 }

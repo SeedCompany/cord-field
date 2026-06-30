@@ -10,7 +10,15 @@ import {
   Publish,
   Timeline as TimelineIcon,
 } from '@mui/icons-material';
-import { Box, Chip, Grid, Skeleton, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  Chip,
+  Grid,
+  Skeleton,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Many } from '@seedcompany/common';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
@@ -19,7 +27,6 @@ import { ProjectStepLabels, ProjectTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
-import { CardGroup } from '../../../components/CardGroup';
 import { ChangesetPropertyBadge } from '../../../components/Changeset';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { DataButton } from '../../../components/DataButton';
@@ -147,7 +154,10 @@ export const ProjectOverview = () => {
     : CreateInternshipEngagement;
 
   return (
-    <Box component="main" sx={{ flex: 1, overflowY: 'auto', padding: 4 }}>
+    <Box
+      component="main"
+      sx={{ flex: 1, overflowY: 'auto', padding: { xs: 2, md: 4 } }}
+    >
       <Helmet title={project?.name.value ?? undefined} />
       <Error error={error}>
         {{
@@ -159,6 +169,9 @@ export const ProjectOverview = () => {
         <Box
           sx={(theme) => ({
             maxWidth: theme.breakpoints.values.md,
+            // Guard against minor horizontal overhang (negative grid gutters,
+            // card shadows) causing a stray horizontal scroll on mobile.
+            overflowX: 'clip',
             '& > *:not(:last-child)': {
               mb: 3,
             },
@@ -167,81 +180,88 @@ export const ProjectOverview = () => {
           <Box
             component="header"
             sx={{
-              flex: 1,
               display: 'flex',
-              gap: 1,
-              alignItems: 'center',
+              gap: 2,
+              alignItems: 'flex-start',
             }}
           >
-            <Typography
-              variant="h2"
+            {/* Name + type chip stack vertically, so the action icons stay
+                pinned top-right, in line with the project name. */}
+            <Box
               sx={{
-                mr: 2, // a little extra between text and buttons
-                // centers text with buttons better
-                lineHeight: 'inherit',
-                alignSelf: 'flex-start',
-                ...(project
-                  ? {}
-                  : {
-                      width: '30%',
-                      alignSelf: 'initial',
-                    }),
+                flex: 1,
+                minWidth: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                gap: 1,
               }}
             >
-              {!project ? (
-                <Skeleton width="100%" />
-              ) : project.name.canRead ? (
-                <ChangesetPropertyBadge current={project} prop="name">
-                  {project.name.value}
-                </ChangesetPropertyBadge>
-              ) : (
-                <Redacted
-                  info="You do not have permission to view project's name"
-                  width="50%"
+              <Typography
+                variant="h2"
+                sx={{
+                  lineHeight: 'inherit',
+                  minWidth: 0, // allow the title to shrink/wrap instead of forcing width
+                  ...(project ? {} : { width: '30%' }),
+                }}
+              >
+                {!project ? (
+                  <Skeleton width="100%" />
+                ) : project.name.canRead ? (
+                  <ChangesetPropertyBadge current={project} prop="name">
+                    {project.name.value}
+                  </ChangesetPropertyBadge>
+                ) : (
+                  <Redacted
+                    info="You do not have permission to view project's name"
+                    width="50%"
+                  />
+                )}
+              </Typography>
+              {project && (
+                <Chip
+                  label={labelFrom(ProjectTypeLabels)(project.type)}
+                  variant="outlined"
                 />
               )}
-            </Typography>
-            {project && (
-              <Chip
-                label={labelFrom(ProjectTypeLabels)(project.type)}
-                variant="outlined"
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+              {(!project || project.name.canEdit) && (
+                <Tooltip title="Edit Project Name">
+                  <IconButton
+                    aria-label="edit project name"
+                    onClick={() =>
+                      editField([
+                        'name',
+                        'departmentId',
+                        ...(project?.__typename === 'MomentumTranslationProject'
+                          ? ['usesRev79' as const]
+                          : []),
+                      ])
+                    }
+                    loading={!project}
+                  >
+                    <Edit />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <TogglePinButton
+                object={project}
+                label="Project"
+                listId="projects"
+                listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
+                  args.input?.filter?.pinned ?? false
+                }
               />
-            )}
-            {(!project || project.name.canEdit) && (
-              <Tooltip title="Edit Project Name">
-                <IconButton
-                  aria-label="edit project name"
-                  onClick={() =>
-                    editField([
-                      'name',
-                      'departmentId',
-                      ...(project?.__typename === 'MomentumTranslationProject'
-                        ? ['usesRev79' as const]
-                        : []),
-                    ])
-                  }
+              <ToggleCommentsButton loading={!project} />
+              {project && <DeleteProject project={project} />}
+              {project && (
+                <WorkflowEventsIcon
+                  onClick={openWorkflowEvents}
                   loading={!project}
-                >
-                  <Edit />
-                </IconButton>
-              </Tooltip>
-            )}
-            <TogglePinButton
-              object={project}
-              label="Project"
-              listId="projects"
-              listFilter={(args: PartialDeep<ProjectListQueryVariables>) =>
-                args.input?.filter?.pinned ?? false
-              }
-            />
-            <ToggleCommentsButton loading={!project} />
-            {project && <DeleteProject project={project} />}
-            {project && (
-              <WorkflowEventsIcon
-                onClick={openWorkflowEvents}
-                loading={!project}
-              />
-            )}
+                />
+              )}
+            </Box>
           </Box>
 
           <Box
@@ -505,10 +525,18 @@ export const ProjectOverview = () => {
             </Grid>
           </Grid>
 
-          <CardGroup horizontal="mdUp">
-            <ProjectMembersSummary project={project} />
-            <PartnershipSummary partnerships={project?.partnerships} />
-          </CardGroup>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Card sx={{ height: '100%' }}>
+                <ProjectMembersSummary project={project} />
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Card sx={{ height: '100%' }}>
+                <PartnershipSummary partnerships={project?.partnerships} />
+              </Card>
+            </Grid>
+          </Grid>
 
           {beta.has('projectChangeRequests') && (
             <Grid container spacing={3}>

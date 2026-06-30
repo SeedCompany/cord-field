@@ -69,7 +69,7 @@ export const FieldOverviewCard = ({
           flex: 1,
           display: 'flex',
           justifyContent: 'space-evenly',
-          padding: theme.spacing(3, 4),
+          padding: { xs: theme.spacing(2), md: theme.spacing(3, 4) },
         })}
         onClick={onClick}
       >
@@ -78,7 +78,7 @@ export const FieldOverviewCard = ({
           sx={{
             flex: 1,
             alignSelf: 'flex-start',
-            pl: 4,
+            pl: { xs: 2, md: 4 },
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-evenly',

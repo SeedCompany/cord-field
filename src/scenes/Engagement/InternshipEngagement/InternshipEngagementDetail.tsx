@@ -41,6 +41,9 @@ const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
     flex: 1,
     overflowY: 'auto',
     padding: spacing(4),
+    [breakpoints.down('md')]: {
+      padding: spacing(2),
+    },
   },
   main: {
     maxWidth: breakpoints.values.md,
@@ -223,7 +226,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                 <EngagementDescription engagement={engagement} />
               </Grid>
               <Grid item container spacing={3}>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <FieldOverviewCard
                     title="Growth Plan Complete Date"
                     data={{
@@ -236,7 +239,7 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                     onButtonClick={() => show('completeDate')}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <FieldOverviewCard
                     title="Disbursement Complete Date"
                     data={{
@@ -252,11 +255,11 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                   />
                 </Grid>
                 <Grid item container spacing={3} alignItems="center">
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <Typography variant="h4">Growth Plan</Typography>
                   </Grid>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <MethodologiesCard
                     onClick={() => show('methodologies')}
                     data={engagement.methodologies}
@@ -264,13 +267,13 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                 </Grid>
               </Grid>
               <Grid item container spacing={3}>
-                <Grid item xs={6}>
+                <Grid item xs={12} md={6}>
                   <CeremonyCard {...engagement.ceremony} />
                 </Grid>
                 <MentorCard
                   data={engagement.mentor}
                   wrap={(node) => (
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       {node}
                     </Grid>
                   )}

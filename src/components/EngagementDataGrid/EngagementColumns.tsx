@@ -41,6 +41,14 @@ import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
 import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
 
+/** An engagement's display name: its language (language engagement) or intern (internship). */
+export const engagementName = (engagement: Engagement) =>
+  engagement.__typename === 'LanguageEngagement'
+    ? engagement.language.value?.displayName.value
+    : engagement.__typename === 'InternshipEngagement'
+    ? engagement.intern.value?.fullName
+    : undefined;
+
 export const EngagementColumns: Array<GridColDef<Engagement>> = [
   ProjectNameColumn({
     field: 'project.name',
@@ -57,13 +65,7 @@ export const EngagementColumns: Array<GridColDef<Engagement>> = [
     field: 'nameProjectLast',
     ...textColumn(),
     width: 200,
-    valueGetter: (_, row) => {
-      return row.__typename === 'LanguageEngagement'
-        ? row.language.value?.displayName.value
-        : row.__typename === 'InternshipEngagement'
-        ? row.intern.value?.fullName
-        : null;
-    },
+    valueGetter: (_, row) => engagementName(row) ?? null,
     renderCell: ({ value, row }) => {
       return row.__typename === 'LanguageEngagement' ? (
         <Link to={`/languages/${row.language.value!.id}`}>{value}</Link>

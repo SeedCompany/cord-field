@@ -1,6 +1,7 @@
 import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useParams } from 'react-router-dom';
 import { RoleLabels, RoleList } from '~/api/schema.graphql';
+import { useIsMobile } from '~/common';
 import {
   DefaultDataGridStyles,
   flexLayout,
@@ -10,6 +11,7 @@ import {
   useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
+import { EntityList as UsersProjectsList } from '~/components/List';
 import {
   insertProjectColumnAfterField,
   ProjectDataGridRowFragment as Project,
@@ -18,12 +20,36 @@ import {
   ProjectNameField,
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
+import { SensitivityIcon } from '~/components/Sensitivity';
+import { TabPanelContent } from '~/components/Tabs';
 import {
   UserProjectDataGridRowFragment as UserProject,
   UserProjectsDocument,
 } from './UserProjectList.graphql';
 
 export const UserProjectsPanel = () => {
+  const { userId = '' } = useParams();
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
+    <UsersProjectsList
+      query={UserProjectsDocument}
+      listAt={(data) => data.user.projects}
+      variables={{ userId }}
+      columns={UserProjectColumns}
+      sortDefault={{ field: 'name', direction: 'ASC' }}
+      defaultSecondaryField="primaryLocation.name"
+      primary={(project) => project.name.value}
+      to={(project) => `/projects/${project.id}`}
+      avatar={(project) => <SensitivityIcon value={project.sensitivity} />}
+    />
+  ) : (
+    // The grid (and its `useDataGridSource`) must only mount on desktop.
+    <UserProjectsGrid />
+  );
+};
+
+const UserProjectsGrid = () => {
   const { userId = '' } = useParams();
 
   const [dataGridProps] = useDataGridSource({
@@ -40,17 +66,19 @@ export const UserProjectsPanel = () => {
   });
 
   return (
-    <DataGrid<UserProject>
-      {...DefaultDataGridStyles}
-      {...dataGridProps}
-      slots={slots}
-      slotProps={slotProps}
-      columns={UserProjectColumns}
-      initialState={ProjectInitialState}
-      headerFilters
-      hideFooter
-      sx={[flexLayout, noHeaderFilterButtons, noFooter]}
-    />
+    <TabPanelContent>
+      <DataGrid<UserProject>
+        {...DefaultDataGridStyles}
+        {...dataGridProps}
+        slots={slots}
+        slotProps={slotProps}
+        columns={UserProjectColumns}
+        initialState={ProjectInitialState}
+        headerFilters
+        hideFooter
+        sx={[flexLayout, noHeaderFilterButtons, noFooter]}
+      />
+    </TabPanelContent>
   );
 };
 

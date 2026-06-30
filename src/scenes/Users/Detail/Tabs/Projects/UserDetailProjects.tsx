@@ -1,10 +1,5 @@
-import { TabPanelContent } from '~/components/Tabs';
 import { UserProjectsPanel } from './UserProjectPanel/UserProjectsPanel';
 
-export const UserDetailProjects = () => {
-  return (
-    <TabPanelContent>
-      <UserProjectsPanel />
-    </TabPanelContent>
-  );
-};
+// The Paper (TabPanelContent) lives in the panel's desktop grid branch so the
+// mobile row list renders bare.
+export const UserDetailProjects = () => <UserProjectsPanel />;

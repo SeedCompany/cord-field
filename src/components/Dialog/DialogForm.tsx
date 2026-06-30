@@ -19,7 +19,7 @@ import { ReactNode, useCallback, useMemo, useRef } from 'react';
 import { FormRenderProps, RenderableProps } from 'react-final-form';
 import { Except } from 'type-fest';
 import { inChangesetVar } from '~/api';
-import { callAll } from '~/common';
+import { callAll, useIsMobile } from '~/common';
 import { ChangesetModificationWarning } from '../Changeset/ChangesetModificationWarning';
 import {
   blurOnSubmit,
@@ -95,6 +95,7 @@ export function DialogForm<T, R = void>({
   ...FormProps
 }: DialogFormProps<T, R>) {
   const inChangeset = useReactiveVar(inChangesetVar);
+  const isMobile = useIsMobile();
   const formRef = useRef<FormApi<T> | undefined>();
 
   const mergedTransitionProps: TransitionProps = useMemo(() => {
@@ -134,6 +135,7 @@ export function DialogForm<T, R = void>({
           <Dialog
             fullWidth
             maxWidth="xs"
+            fullScreen={isMobile}
             {...DialogProps}
             open={open}
             onClose={(e, reason) => {

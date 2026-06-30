@@ -5,6 +5,7 @@ import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { removeItemFromList } from '~/api';
+import { useIsMobile } from '~/common';
 import { useDialog } from '~/components/Dialog';
 import {
   booleanColumn,
@@ -16,6 +17,7 @@ import {
   useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
+import { EntityList as PartnersPeopleList } from '~/components/List';
 import { TabPanelContent } from '~/components/Tabs';
 import {
   UserColumns,
@@ -35,6 +37,27 @@ interface Props {
 }
 
 export const PartnerDetailPeople = ({ partner }: Props) => {
+  const { partnerId = '' } = useParams();
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
+    <PartnersPeopleList
+      query={PartnerPeopleDocument}
+      listAt={(data) => data.partner.people}
+      variables={{ id: partnerId }}
+      columns={UserColumns}
+      sortDefault={{ field: 'fullName', direction: 'ASC' }}
+      defaultSecondaryField="title"
+      primary={(user) => user.fullName}
+      to={(user) => `/users/${user.id}`}
+    />
+  ) : (
+    // The grid (and its `useDataGridSource`) must only mount on desktop.
+    <PartnerPeopleGrid partner={partner} />
+  );
+};
+
+const PartnerPeopleGrid = ({ partner }: Props) => {
   const { partnerId = '' } = useParams();
   const orgId = partner?.organization.value?.id;
   const pocId = partner?.pointOfContact.value?.id;
