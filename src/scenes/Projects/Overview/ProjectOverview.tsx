@@ -516,13 +516,16 @@ export const ProjectOverview = () => {
                 dueNext={project?.nextFinancialReportDue}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <PeriodicReportCard
-                type="Narrative"
-                dueCurrently={project?.currentNarrativeReportDue}
-                dueNext={project?.nextNarrativeReportDue}
-              />
-            </Grid>
+            {project &&
+              project.__typename !== 'MultiplicationTranslationProject' && (
+                <Grid item xs={12} md={6}>
+                  <PeriodicReportCard
+                    type="Narrative"
+                    dueCurrently={project.currentNarrativeReportDue}
+                    dueNext={project.nextNarrativeReportDue}
+                  />
+                </Grid>
+              )}
           </Grid>
 
           <Grid container spacing={3}>

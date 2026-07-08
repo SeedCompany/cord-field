@@ -12,6 +12,9 @@ const CreateProduct = loadable(() => import('../Products'), {
 const ProgressReportsList = loadable(() => import('../ProgressReports'), {
   resolveComponent: (m) => m.ProgressReportListPage,
 });
+const NarrativeReportsList = loadable(() => import('../ProgressReports'), {
+  resolveComponent: (m) => m.NarrativeReportListPage,
+});
 
 export const Engagements = () => (
   <Routes>
@@ -31,6 +34,7 @@ const EngagementDetail = () => (
         path="reports/progress/:reportId"
         element={<OldProgressReportDetail />}
       />
+      <Route path="reports/narrative" element={<NarrativeReportsList />} />
       {NotFoundRoute}
     </Routes>
   </ChangesetContext>

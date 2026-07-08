@@ -47,7 +47,12 @@ export const FileVersions = (props: FileVersionsProps) => {
     : [];
 
   return !file ? null : (
-    <Dialog {...dialogProps} aria-labelledby="dialog-file-versions">
+    <Dialog
+      fullWidth
+      maxWidth="xs"
+      {...dialogProps}
+      aria-labelledby="dialog-file-versions"
+    >
       <DialogTitle id="dialog-file-versions">File History</DialogTitle>
       <List dense>
         {loading
