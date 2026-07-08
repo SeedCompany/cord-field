@@ -1,0 +1,16 @@
+fragment toolDataGridRow on Tool {
+  id
+  name {
+    value
+  }
+  description {
+    value
+  }
+  aiBased {
+    value
+  }
+  containerSummary {
+    containerType
+    total
+  }
+}
