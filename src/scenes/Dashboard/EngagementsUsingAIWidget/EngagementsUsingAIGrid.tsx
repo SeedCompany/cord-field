@@ -52,7 +52,7 @@ export const EngagementUsingAIColumns = Object.values({
     sortable: false,
     filterable: true,
     serverFilter: (value): EngagementFilters => ({
-      tools: {
+      tool: {
         name: value,
       },
     }),
