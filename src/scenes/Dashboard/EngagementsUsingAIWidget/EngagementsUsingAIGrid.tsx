@@ -36,8 +36,8 @@ export type EngagementUsingAIColumnMapShape = Record<
 export const EngagementUsingAIColumns = Object.values({
   ...pick(EngagementColumnMap, [
     'project.name',
-    'nameProjectLast',
     'Engagement',
+    'nameProjectLast',
     'usingAIAssistedTranslation',
   ]),
   tool: {
