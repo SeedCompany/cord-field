@@ -1,25 +1,27 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { Card, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { UpdateBudget as UpdateBudgetInput } from '~/api/schema.graphql';
+import { CalendarDateOrISO, Nullable } from '~/common';
 import {
   Form,
   NumberField,
   SecuredField,
   SelectField,
 } from '../../../components/form';
+import { FormattedDateRange } from '../../../components/Formatters/FormattedDate';
+import { Budget } from './budgetLineHelpers';
 import { BudgetReferenceCountriesDocument } from './BudgetReferenceCountry.graphql';
-import {
-  ProjectBudgetQuery,
-  UpdateBudgetAssumptionsDocument,
-} from './ProjectBudget.graphql';
-
-type Budget = NonNullable<
-  NonNullable<ProjectBudgetQuery['project']['budget']>['value']
->;
+import { UpdateBudgetAssumptionsDocument } from './ProjectBudget.graphql';
 
 interface BudgetAssumptionsFormProps {
   budget: Budget;
+  /** budget-line-items-poc (item 7): the *project's* MOU dates, shown
+   * read-only here for context -- distinct from any budget-specific field
+   * (this Budget resource has no dates of its own; fiscal years are derived
+   * from the project's mouStart/mouEnd). */
+  projectMouStart?: Nullable<CalendarDateOrISO>;
+  projectMouEnd?: Nullable<CalendarDateOrISO>;
 }
 
 const CURRENCY_MODES = ['USD', 'Local'] as const;
@@ -33,6 +35,8 @@ const CURRENCY_MODES = ['USD', 'Local'] as const;
  */
 export const BudgetAssumptionsForm = ({
   budget,
+  projectMouStart,
+  projectMouEnd,
 }: BudgetAssumptionsFormProps) => {
   const [updateBudget] = useMutation(UpdateBudgetAssumptionsDocument);
   const { data: countriesData } = useQuery(BudgetReferenceCountriesDocument);
@@ -65,6 +69,15 @@ export const BudgetAssumptionsForm = ({
         <Typography variant="h6" gutterBottom>
           Assumptions
         </Typography>
+        {projectMouStart || projectMouEnd ? (
+          <>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              Project Dates (MOU):{' '}
+              <FormattedDateRange start={projectMouStart} end={projectMouEnd} />
+            </Typography>
+            <Divider sx={{ mb: 2 }} />
+          </>
+        ) : null}
         <Form<UpdateBudgetInput>
           initialValues={initialValues}
           onSubmit={async (input) => {

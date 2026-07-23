@@ -44,6 +44,61 @@ query ProjectBudget($id: ID!, $changeset: ID) @live {
       canRead
       value
     }
+
+    # ── budget-line-items-poc additions (frontend-only, item 7) ──
+    # Project MOU dates, shown read-only near the top of the Budget page,
+    # distinct from anything budget-specific. Field-selection shape matches
+    # `projectDataGridRow.graphql`'s existing use of these same fields.
+    mouStart {
+      value
+    }
+    mouEnd {
+      value
+    }
+
+    # ── budget-line-items-poc additions (frontend-only, item 2) ──
+    # This project's own partnerships, scoped (not a global org search) --
+    # sourced for the Service Provider / Funder / Donor grid-column pickers.
+    partnerships {
+      items {
+        partner {
+          value {
+            organization {
+              value {
+                id
+                name {
+                  value
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    # ── budget-line-items-poc additions (frontend-only, item 4) ──
+    # Best-effort primary-funder name for the "Total cash — {funder}" stats
+    # row. `Project.primaryPartnership` already exists in the schema (no
+    # backend change), but resolves to null under the current
+    # Postgres/Drizzle path (see budget.resolver.ts's comment) -- the UI
+    # falls back to a generic "Primary Funder" label when this is null.
+    primaryPartnership {
+      value {
+        partner {
+          value {
+            organization {
+              value {
+                id
+                name {
+                  value
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     budget {
       canRead
       canEdit

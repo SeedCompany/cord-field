@@ -5,41 +5,39 @@ import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { sortBy } from '@seedcompany/common';
 import { useMemo } from 'react';
 import { invalidateProps, onUpdateInvalidateProps } from '~/api';
-import { SecuredProp } from '~/common';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import {
   createAddItemFooter,
   EditNumberCell,
   enumColumn,
   isCellEditable,
+  organizationColumn,
+  OrganizationOption,
   textColumn,
   useDataGridSlots,
 } from '../../../components/Grid';
+import {
+  Budget,
+  FiscalYearAmounts,
+  getAmounts,
+  getSecuredValue,
+  sumAmounts,
+  useFiscalYearColumns,
+} from './budgetLineHelpers';
 import {
   BudgetLineItemFragment as BudgetLineItem,
   CreateBudgetLineItemDocument,
   DeleteBudgetLineItemDocument,
   UpdateBudgetLineItemDocument,
 } from './BudgetLineItem.graphql';
-import { ProjectBudgetQuery } from './ProjectBudget.graphql';
-
-type Budget = NonNullable<
-  NonNullable<ProjectBudgetQuery['project']['budget']>['value']
->;
 
 interface ProjectBudgetLineItemsProps {
   budget: Budget | undefined;
   loading: boolean;
+  /** This project's partnership organizations, for the Service Provider /
+   * Funder column pickers -- scoped to the project, not a global org search. */
+  partnerOrganizations: readonly OrganizationOption[];
 }
-
-type FiscalYearAmounts = Record<string, number>;
-
-const getAmounts = (
-  secured: SecuredProp<any>
-): FiscalYearAmounts | null | undefined =>
-  secured.value as FiscalYearAmounts | null | undefined;
-
-const getSecuredValue = (secured: SecuredProp<any>) => secured.value;
 
 // budget-line-items-poc: known values ported from the calc engine's
 // regression fixture (cord-api-v3 budget-calculation.service.spec.ts /
@@ -70,13 +68,8 @@ const BUDGET_CATEGORY_LABELS = labelsOf(BUDGET_CATEGORIES);
 const ACTIVITIES = ['Bible Translation', 'Other Costs'] as const;
 const ACTIVITY_LABELS = labelsOf(ACTIVITIES);
 
-interface FiscalYearColumn {
-  year: number;
-  label: string;
-}
-
 export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
-  const { budget, loading } = props;
+  const { budget, loading, partnerOrganizations } = props;
   const formatCurrency = useCurrencyFormatter({ maximumFractionDigits: 2 });
 
   // budget-line-items-poc: `lineItems`/`calculationSummary` are plain (not
@@ -99,30 +92,7 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
 
   const [deleteLineItem] = useMutation(DeleteBudgetLineItemDocument);
 
-  const fiscalYearColumns: readonly FiscalYearColumn[] = useMemo(() => {
-    const fromSummary = budget?.calculationSummary?.fiscalYears.map((fy) => ({
-      year: fy.fiscalYear,
-      label: fy.label,
-    }));
-    if (fromSummary && fromSummary.length > 0) {
-      return fromSummary;
-    }
-    // Fall back to whatever years already have data, when the project's
-    // dates aren't set yet (calculationSummary is null in that case).
-    const years = new Set<number>();
-    for (const li of budget?.lineItems ?? []) {
-      const amounts = getAmounts(li.fiscalYearAmounts);
-      for (const key of Object.keys(amounts ?? {})) {
-        const year = Number(key);
-        if (!Number.isNaN(year)) {
-          years.add(year);
-        }
-      }
-    }
-    return Array.from(years)
-      .sort((a, b) => a - b)
-      .map((year) => ({ year, label: `FY${String(year).slice(-2)}` }));
-  }, [budget]);
+  const fiscalYearColumns = useFiscalYearColumns(budget);
 
   const rows = useMemo(
     () => sortBy(budget?.lineItems ?? [], (row) => row.createdAt),
@@ -178,6 +148,23 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
           cache.gc();
         },
       });
+    };
+
+    // budget-line-items-poc: rightmost data column, before row actions --
+    // client-side sum of this row's fiscalYearAmounts, matching the
+    // prototype's `sum(ln.fy)` per row (src/app.js's `renderLines()`).
+    const totalCol: GridColDef<BudgetLineItem> = {
+      field: 'total',
+      headerName: 'Total',
+      description: "Sum of this line's amounts across all fiscal years",
+      flex: 1,
+      minWidth: 120,
+      align: 'right',
+      headerAlign: 'right',
+      sortable: false,
+      filterable: false,
+      valueGetter: (_, row) => sumAmounts(getAmounts(row.fiscalYearAmounts)),
+      valueFormatter: (value: number) => formatCurrency(value),
     };
 
     const actionsCol: GridColDef<BudgetLineItem> = {
@@ -272,11 +259,52 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
         editable: true,
         isEditable: ({ row }) => row.activity.canEdit,
       },
+      {
+        field: 'serviceProvider',
+        headerName: 'Service Provider',
+        flex: 1,
+        minWidth: 180,
+        ...organizationColumn<BudgetLineItem>(partnerOrganizations),
+        valueGetter: (_, row) => row.serviceProvider.value?.id ?? null,
+        valueSetter: (value: string | null, row) => ({
+          ...row,
+          serviceProvider: {
+            ...row.serviceProvider,
+            value: buildOrganizationValue(value, partnerOrganizations),
+          },
+        }),
+        editable: true,
+        isEditable: ({ row }) => row.serviceProvider.canEdit,
+      },
+      {
+        field: 'funder',
+        headerName: 'Funder',
+        flex: 1,
+        minWidth: 180,
+        ...organizationColumn<BudgetLineItem>(partnerOrganizations),
+        valueGetter: (_, row) => row.funder.value?.id ?? null,
+        valueSetter: (value: string | null, row) => ({
+          ...row,
+          funder: {
+            ...row.funder,
+            value: buildOrganizationValue(value, partnerOrganizations),
+          },
+        }),
+        editable: true,
+        isEditable: ({ row }) => row.funder.canEdit,
+      },
       ...fyColumns,
+      totalCol,
       actionsCol,
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fiscalYearColumns, formatCurrency, deleteLineItem, budget]);
+  }, [
+    fiscalYearColumns,
+    formatCurrency,
+    deleteLineItem,
+    budget,
+    partnerOrganizations,
+  ]);
 
   const AddFooter = useMemo(
     () =>
@@ -354,6 +382,35 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
   );
 };
 
+// budget-line-items-poc: builds the local/optimistic `Organization`-shaped
+// value the grid renders between an edit and the mutation response landing
+// in the Apollo cache (which is what actually drives the row after that, via
+// normalized-entity merge on `id`). Shared by the Service Provider and
+// Funder columns.
+const buildOrganizationValue = (
+  id: string | null,
+  options: readonly OrganizationOption[]
+): BudgetLineItem['serviceProvider']['value'] => {
+  if (!id) return null;
+  const org = options.find((o) => o.id === id);
+  // `createdAt`'s branded `ISOString` type isn't structurally satisfiable by
+  // a plain string literal (see the `fiscalYearAmounts` valueSetter above for
+  // the same JSONObject-brand situation) -- this whole object is a
+  // synthetic, local-only value never sent to the server, so the cast is
+  // unavoidable rather than a real type hazard.
+  return {
+    __typename: 'Organization',
+    id,
+    createdAt: new Date().toISOString(),
+    name: {
+      __typename: 'SecuredString',
+      canRead: true,
+      canEdit: true,
+      value: org?.name ?? '',
+    },
+  } as unknown as BudgetLineItem['serviceProvider']['value'];
+};
+
 const getChanges = (original: BudgetLineItem, updated: BudgetLineItem) => {
   const changes: Record<string, unknown> = {};
   if (original.description.value !== updated.description.value) {
@@ -370,6 +427,14 @@ const getChanges = (original: BudgetLineItem, updated: BudgetLineItem) => {
   }
   if (original.activity.value !== updated.activity.value) {
     changes.activity = updated.activity.value ?? null;
+  }
+  if (
+    original.serviceProvider.value?.id !== updated.serviceProvider.value?.id
+  ) {
+    changes.serviceProvider = updated.serviceProvider.value?.id ?? null;
+  }
+  if (original.funder.value?.id !== updated.funder.value?.id) {
+    changes.funder = updated.funder.value?.id ?? null;
   }
   const originalAmounts = JSON.stringify(
     original.fiscalYearAmounts.value ?? {}

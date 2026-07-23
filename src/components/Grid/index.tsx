@@ -7,6 +7,7 @@ export * from './useCurrencyColumn';
 export * from './ColumnTypes/booleanColumn';
 export * from './ColumnTypes/booleanNullableColumn';
 export * from './ColumnTypes/enumColumn';
+export * from './ColumnTypes/organizationColumn';
 export * from './ColumnTypes/textColumn';
 export * from './useDataGridSource';
 export * from './useViewState';
