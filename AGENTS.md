@@ -183,3 +183,59 @@ This repository operates under **hard isolation** to exactly two repositories. T
 - Never mock or invent API response shapes — always derive from real API contracts.
 - Never install a package that duplicates existing functionality in `@seedcompany/common` or `@seedcompany/libs`.
 - Never modify `node_modules/`, `.yarn/patches/`, or vendored code without explicit approval.
+
+## Patterns — Domain Logic, Shared Infrastructure, Tests
+
+These patterns are codified after specific issues encountered in feature work. Follow them to keep PRs small and reviews fast.
+
+### Domain logic belongs on the BE (calculated fields)
+
+For override-or-inherited resolution, "effective value" computation, or any fallback/precedence chain, use a BE `@Calculated` field rather than computing on the FE. References: `engagement.dateRange`, `engagement.startDate`, `project.marketingRegion`.
+
+- The resolver computes the effective value server-side
+- The FE reads `entity.<calculatedField>` directly via standard `secured={...}` patterns on `DataButton`
+- `canEdit` is forced `false` on calculated fields — edit gating binds to the underlying `*Override` field via the standard `SecuredField` wrapping in the edit dialog
+- Single source of truth: any future consumer (mobile, reports, other scenes) inherits the rule for free
+
+If you find yourself writing FE code like `override.value ?? inherited.value ?? something.value`, stop. That logic belongs on the API. Coordinate with the BE owner first.
+
+### Don't extend shared infrastructure for one caller
+
+Before adding a parameter to a shared component (`LookupField`, `SecuredField`, `DataButton`, etc.):
+
+- Check whether the data layer (GraphQL/BE) can solve it instead (e.g., extend `SearchType`, add a calculated field, add a filter on an existing list endpoint)
+- Check whether the consumer can compose existing primitives
+- Adding generic API surface for a single consumer is almost always wrong — it introduces drift across all consumers and surface area to maintain
+
+### Establish existing patterns before introducing new ones
+
+- Grep before you invent: `grep -rn "DisplayLocation" src/common`, `find src/components/form/Lookup -type d`
+- If a new fragment differs from an existing one by a single field, prefer extending or composing rather than forking
+- Avoid inventing fragments named like GraphQL types they aren't (e.g. a `DisplayMarketingRegion` fragment **on type `Location`** confuses readers — a marketing region *is* a Location with `type === Region`, not a separate type)
+
+### Testing
+
+This codebase intentionally has very few test files (~10). Each new test sets norm-shifting precedent — err toward fewer, behavior-focused tests over many implementation-coupled ones.
+
+**Required pattern:**
+
+- Real `MockedProvider` for Apollo (do **not** `jest.mock('@apollo/client', ...)` to swap `useMutation` or other hooks)
+- Real `react-final-form`, real `components/form/*`, real `LookupField`
+- Mock only direct dependencies that can't reasonably run in jsdom: child `Edit*` dialogs, the `Error` component, sometimes `Session`
+
+**Anti-patterns to reject:**
+
+- Mocking `DialogForm`, `useMutation`, or the entire `components/form` module
+- Extracting `onSubmit` from a spied prop and invoking it manually with a hand-crafted `form.getState()` payload
+- Tests that pass even when the component is structurally disconnected from its inputs (the test-the-mock-not-the-behavior antipattern)
+- Casts like `as unknown as XFragment` over fixtures that hide missing required fields — prefer a `makeX` helper that returns a typed value, with a final acknowledged cast only if needed
+
+Reference shape: [`LanguageField.test.tsx`](src/components/form/Lookup/Language/LanguageField.test.tsx), [`FieldRegionDetail.test.tsx`](src/scenes/FieldRegions/Detail/FieldRegionDetail.test.tsx).
+
+### Scope discipline
+
+Stay inside the PR's stated scope:
+
+- No drive-by icon swaps, label normalizations, signature flips, copy nudges
+- Drive-by edits belong in separate commits or PRs so bisect stays meaningful
+- Generic refactors that touch shared code need their own justification — call them out in the PR description rather than burying them in a feature change
