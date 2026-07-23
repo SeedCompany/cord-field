@@ -4,7 +4,6 @@ import {
   DateRange as DateRangeIcon,
   Edit,
   Event as EventIcon,
-  TravelExplore as GlobalSearchIcon,
   Public as GlobeIcon,
   Place as MapPinIcon,
   Publish,
@@ -454,7 +453,7 @@ export const ProjectOverview = () => {
             <Grid item>
               <DataButton
                 label="Marketing Region"
-                startIcon={<GlobalSearchIcon color="info" />}
+                startIcon={<GlobeIcon color="info" />}
                 empty="None"
                 loading={!project}
                 secured={project?.marketingRegion}
