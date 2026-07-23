@@ -60,6 +60,105 @@ query ProjectBudget($id: ID!, $changeset: ID) @live {
             ...FileNodeInfo
           }
         }
+
+        # ── budget-line-items-poc additions ──
+        country {
+          canRead
+          canEdit
+          value {
+            ...BudgetReferenceCountry
+          }
+        }
+        entryCurrencyMode {
+          canRead
+          canEdit
+          value
+        }
+        displayCurrencyMode {
+          canRead
+          canEdit
+          value
+        }
+        exchangeRate {
+          canRead
+          canEdit
+          value
+        }
+        inflationRate {
+          canRead
+          canEdit
+          value
+        }
+        adminFeePercent {
+          canRead
+          canEdit
+          value
+        }
+        languageCount {
+          canRead
+          canEdit
+          value
+        }
+        lineItems {
+          ...BudgetLineItem
+        }
+        otherPartnerContributions {
+          ...OtherPartnerContribution
+        }
+        calculationSummary {
+          ...BudgetCalculationSummary
+        }
+      }
+    }
+  }
+}
+
+# budget-line-items-poc: separate mutation (rather than reusing
+# UpdateProjectBudgetUniversalTemplate) since it targets a distinct set of
+# fields (the assumptions form) with no file upload involved.
+mutation UpdateBudgetAssumptions($input: UpdateBudget!) {
+  updateBudget(input: $input) {
+    budget {
+      ...Id
+      country {
+        canRead
+        canEdit
+        value {
+          ...BudgetReferenceCountry
+        }
+      }
+      entryCurrencyMode {
+        canRead
+        canEdit
+        value
+      }
+      displayCurrencyMode {
+        canRead
+        canEdit
+        value
+      }
+      exchangeRate {
+        canRead
+        canEdit
+        value
+      }
+      inflationRate {
+        canRead
+        canEdit
+        value
+      }
+      adminFeePercent {
+        canRead
+        canEdit
+        value
+      }
+      languageCount {
+        canRead
+        canEdit
+        value
+      }
+      calculationSummary {
+        ...BudgetCalculationSummary
       }
     }
   }

@@ -1,0 +1,90 @@
+# budget-line-items-poc: BudgetLineItem is a new resource that does NOT
+# implement ChangesetAware (unlike BudgetRecord), so this fragment does not
+# spread the shared `...Id` fragment (which pulls in `...ChangesetId`, typed
+# `on ChangesetAware` -- that spread isn't valid on a type that doesn't
+# implement the interface). `id`/`createdAt`/`canDelete` are selected
+# directly instead, matching the `ToolUsageForm` fragment's precedent for
+# other non-changeset-aware resources.
+fragment BudgetLineItem on BudgetLineItem {
+  id
+  createdAt
+  canDelete
+  account {
+    canRead
+    canEdit
+    value
+  }
+  description {
+    canRead
+    canEdit
+    value
+  }
+  costType {
+    canRead
+    canEdit
+    value
+  }
+  budgetCategory {
+    canRead
+    canEdit
+    value
+  }
+  activity {
+    canRead
+    canEdit
+    value
+  }
+  serviceProvider {
+    canRead
+    canEdit
+    value {
+      id
+      createdAt
+      name {
+        canRead
+        canEdit
+        value
+      }
+    }
+  }
+  funder {
+    canRead
+    canEdit
+    value {
+      id
+      createdAt
+      name {
+        canRead
+        canEdit
+        value
+      }
+    }
+  }
+  fiscalYearAmounts {
+    canRead
+    canEdit
+    value
+  }
+}
+
+mutation CreateBudgetLineItem($input: CreateBudgetLineItem!) {
+  createBudgetLineItem(input: $input) {
+    budgetLineItem {
+      ...BudgetLineItem
+    }
+  }
+}
+
+mutation UpdateBudgetLineItem($input: UpdateBudgetLineItem!) {
+  updateBudgetLineItem(input: $input) {
+    budgetLineItem {
+      ...BudgetLineItem
+    }
+  }
+}
+
+mutation DeleteBudgetLineItem($id: ID!) {
+  deleteBudgetLineItem(id: $id) {
+    __typename
+  }
+}

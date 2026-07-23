@@ -10,10 +10,13 @@ import { useCurrencyFormatter } from '../../../components/Formatters/useCurrency
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { useProjectId } from '../useProjectId';
+import { BudgetAssumptionsForm } from './BudgetAssumptionsForm';
+import { BudgetSummaryPanel } from './BudgetSummaryPanel';
 import {
   ProjectBudgetDocument,
   UpdateProjectBudgetUniversalTemplateDocument,
 } from './ProjectBudget.graphql';
+import { ProjectBudgetLineItems } from './ProjectBudgetLineItems';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles()(({ breakpoints, spacing }) => ({
@@ -32,6 +35,14 @@ const useStyles = makeStyles()(({ breakpoints, spacing }) => ({
   },
   tableWrapper: {
     maxWidth: breakpoints.values.md,
+    margin: spacing(0, 4, 4, 0),
+  },
+  // budget-line-items-poc: the new sections (assumptions form, summary
+  // cards, line-item grid) have more columns/content than the original
+  // budget-records table, so they use the wider `lg` breakpoint instead of
+  // `md`.
+  pocWrapper: {
+    maxWidth: breakpoints.values.lg,
     margin: spacing(0, 4, 4, 0),
   },
 }));
@@ -105,6 +116,26 @@ export const ProjectBudget = () => {
               )}
             </Grid>
           </div>
+
+          {/* budget-line-items-poc additions */}
+          {budget?.value ? (
+            <div className={classes.pocWrapper}>
+              <Grid container direction="column" spacing={3}>
+                <Grid item>
+                  <BudgetAssumptionsForm budget={budget.value} />
+                </Grid>
+                <Grid item>
+                  <BudgetSummaryPanel budget={budget.value} />
+                </Grid>
+                <Grid item>
+                  <ProjectBudgetLineItems
+                    loading={loading}
+                    budget={budget.value}
+                  />
+                </Grid>
+              </Grid>
+            </div>
+          ) : null}
         </>
       )}
     </Content>

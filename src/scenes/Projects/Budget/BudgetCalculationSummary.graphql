@@ -1,0 +1,39 @@
+# budget-line-items-poc: computed-on-read rollup, never stored. Named
+# `calculationSummary` on Budget (not `summary` -- that field already exists
+# with an unrelated shape, see ProjectBudget.graphql's BudgetOverview usage).
+fragment BudgetCalculationFiscalYear on BudgetCalculationFiscalYear {
+  fiscalYear
+  label
+  cash
+  inKind
+  admin
+  grandTotal
+  totalCash
+  otherPartnerContributions
+  netToFunder
+  adminFeeCap
+}
+
+fragment BudgetCalculationTotals on BudgetCalculationTotals {
+  cash
+  inKind
+  admin
+  grandTotal
+  totalCash
+  otherPartnerContributions
+  netToFunder
+  adminFeeCap
+}
+
+fragment BudgetCalculationSummary on BudgetCalculationSummary {
+  bibleTranslationPercent
+  funderBibleTranslationPercent
+  costPerLanguage
+  capped
+  totals {
+    ...BudgetCalculationTotals
+  }
+  fiscalYears {
+    ...BudgetCalculationFiscalYear
+  }
+}

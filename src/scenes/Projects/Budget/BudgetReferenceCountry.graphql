@@ -1,0 +1,19 @@
+# budget-line-items-poc: BudgetReferenceCountry is a plain, ungated lookup
+# type (no Resource interface, no canRead/canEdit) -- see the SDL note that
+# every authenticated internal role can read the full list.
+fragment BudgetReferenceCountry on BudgetReferenceCountry {
+  id
+  name
+  region
+  keystoneCountryName
+  currencyCode
+  costOfLivingIndex
+  indexMethodology
+  adminFeeCap
+}
+
+query BudgetReferenceCountries {
+  budgetReferenceCountries {
+    ...BudgetReferenceCountry
+  }
+}

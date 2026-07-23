@@ -1,0 +1,63 @@
+# budget-line-items-poc: see BudgetLineItem.graphql for why `...Id` isn't
+# used here -- OtherPartnerContribution doesn't implement ChangesetAware
+# either.
+#
+# NOTE: the GraphQL layer for this resource is built out here (fragment +
+# create/update/delete mutations), but the Budget page's UI (grid, summary,
+# assumptions form) does not surface a way to add/edit these rows -- only
+# the line-item grid was in the frontend task's explicit UI scope. See the
+# open-issues note in the final report.
+fragment OtherPartnerContribution on OtherPartnerContribution {
+  id
+  createdAt
+  canDelete
+  donor {
+    canRead
+    canEdit
+    value {
+      id
+      createdAt
+      name {
+        canRead
+        canEdit
+        value
+      }
+    }
+  }
+  description {
+    canRead
+    canEdit
+    value
+  }
+  fiscalYearAmounts {
+    canRead
+    canEdit
+    value
+  }
+}
+
+mutation CreateOtherPartnerContribution(
+  $input: CreateOtherPartnerContribution!
+) {
+  createOtherPartnerContribution(input: $input) {
+    otherPartnerContribution {
+      ...OtherPartnerContribution
+    }
+  }
+}
+
+mutation UpdateOtherPartnerContribution(
+  $input: UpdateOtherPartnerContribution!
+) {
+  updateOtherPartnerContribution(input: $input) {
+    otherPartnerContribution {
+      ...OtherPartnerContribution
+    }
+  }
+}
+
+mutation DeleteOtherPartnerContribution($id: ID!) {
+  deleteOtherPartnerContribution(id: $id) {
+    __typename
+  }
+}
