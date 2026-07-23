@@ -2,12 +2,12 @@
  * HAND-WRITTEN in the style of this repo's graphql-codegen output
  * (near-operation-file preset + typescript-operations + typed-document-node
  * plugins). No live backend was reachable in this sandbox to run
- * `yarn gql-gen` for real -- see the frontend report's "codegen" section for
- * the full explanation and the deviations from literal codegen output (the
- * biggest being: Document consts are built here with `gql` parsed at
- * runtime rather than pre-computed JSON AST literals, which is what this
- * repo's actual patched typed-document-node output uses -- both produce an
- * equivalent DocumentNode for Apollo Client's purposes).
+ * `yarn gql-gen` for real, so this was written by hand and cross-checked
+ * field-by-field against the backend's actual resolver/DTO files. The main
+ * deviation from literal codegen output: Document consts are built here with
+ * `gql` parsed at runtime rather than pre-computed JSON AST literals, which
+ * is what this repo's actual patched typed-document-node output uses --
+ * both produce an equivalent DocumentNode for Apollo Client's purposes.
  */
 import { gql } from '@apollo/client';
 import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';

@@ -29,8 +29,7 @@ const CURRENCY_MODES = ['USD', 'Local'] as const;
  * currency modes, exchange rate, inflation rate, admin fee percent, and
  * language count. These live on `Budget` (not `Project`), so this is a new
  * form section on the Budget page rather than an addition to a pre-existing
- * "project assumptions" area (no such area exists in this codebase today --
- * see the frontend report for this deviation).
+ * "project assumptions" area -- no such area exists in this codebase today.
  */
 export const BudgetAssumptionsForm = ({
   budget,

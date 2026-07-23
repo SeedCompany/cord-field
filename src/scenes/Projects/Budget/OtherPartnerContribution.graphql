@@ -5,8 +5,8 @@
 # NOTE: the GraphQL layer for this resource is built out here (fragment +
 # create/update/delete mutations), but the Budget page's UI (grid, summary,
 # assumptions form) does not surface a way to add/edit these rows -- only
-# the line-item grid was in the frontend task's explicit UI scope. See the
-# open-issues note in the final report.
+# the line-item grid was in the frontend task's explicit UI scope. Adding a
+# UI for these rows is follow-up work, not part of this POC.
 fragment OtherPartnerContribution on OtherPartnerContribution {
   id
   createdAt
