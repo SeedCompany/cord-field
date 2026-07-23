@@ -1,0 +1,13 @@
+# budget-line-items-poc phase 3/frontend item 2: the benchmark/keystone
+# calculator's live-preview query. Server-side equivalent of the prototype's
+# `resolveCalcParams()` / `previewKeystone()` (src/app.js) -- see
+# `BudgetResolver.budgetBenchmark` (cord-api-v3) for the full math. Never
+# returns the underlying reference country/rate data itself, only the
+# computed figure -- sensitivity masking of that figure is a frontend-only
+# display decision (see `BudgetLineItemCalculatorDialog`).
+query BudgetBenchmark($input: BudgetBenchmarkInput!) {
+  budgetBenchmark(input: $input) {
+    weeklyOrAnnualFigure
+    fiscalYearAmounts
+  }
+}

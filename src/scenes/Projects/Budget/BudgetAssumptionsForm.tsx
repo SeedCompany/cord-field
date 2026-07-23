@@ -1,5 +1,12 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { useMutation } from '@apollo/client';
+import {
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useMemo } from 'react';
 import { UpdateBudget as UpdateBudgetInput } from '~/api/schema.graphql';
 import { CalendarDateOrISO, Nullable } from '~/common';
@@ -11,7 +18,6 @@ import {
 } from '../../../components/form';
 import { FormattedDateRange } from '../../../components/Formatters/FormattedDate';
 import { Budget } from './budgetLineHelpers';
-import { BudgetReferenceCountriesDocument } from './BudgetReferenceCountry.graphql';
 import { UpdateBudgetAssumptionsDocument } from './ProjectBudget.graphql';
 
 interface BudgetAssumptionsFormProps {
@@ -39,26 +45,22 @@ export const BudgetAssumptionsForm = ({
   projectMouEnd,
 }: BudgetAssumptionsFormProps) => {
   const [updateBudget] = useMutation(UpdateBudgetAssumptionsDocument);
-  const { data: countriesData } = useQuery(BudgetReferenceCountriesDocument);
-  const countries = useMemo(
-    () => countriesData?.budgetReferenceCountries ?? [],
-    [countriesData]
-  );
-  const countryLabels = useMemo(
-    () => new Map(countries.map((country) => [country.id, country.name])),
-    [countries]
-  );
 
+  // budget-line-items-poc (item 3): `country` and `languageCount` are no
+  // longer part of this form -- both are purely server-derived now (see
+  // `Budget.country`/`Budget.languageCount`'s doc comments) and were removed
+  // from `UpdateBudget` entirely, so they're intentionally absent from
+  // `initialValues` (an auto-submitting `Form` sends whatever's in `values`,
+  // and neither key exists on the input type anymore). They're rendered as
+  // plain read-only displays below instead.
   const initialValues = useMemo(
     () => ({
       id: budget.id,
-      country: budget.country.value?.id ?? null,
       entryCurrencyMode: budget.entryCurrencyMode.value,
       displayCurrencyMode: budget.displayCurrencyMode.value,
       exchangeRate: budget.exchangeRate.value,
       inflationRate: budget.inflationRate.value,
       adminFeePercent: budget.adminFeePercent.value,
-      languageCount: budget.languageCount.value,
     }),
     [budget]
   );
@@ -86,20 +88,31 @@ export const BudgetAssumptionsForm = ({
           autoSubmit
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-              <SecuredField obj={budget} name="country">
-                {(props) => (
-                  <SelectField
-                    {...props}
-                    label="Country"
-                    fullWidth
-                    defaultOption="None"
-                    options={countries.map((country) => country.id)}
-                    getOptionLabel={(id) => countryLabels.get(id) ?? id}
-                  />
-                )}
-              </SecuredField>
-            </Grid>
+            {budget.country.canRead ? (
+              <Grid item xs={12} sm={6} md={4}>
+                {/* budget-line-items-poc (item 3): read-only now -- Country
+                    is purely derived from the project's Primary Location and
+                    was removed from UpdateBudget entirely (see this
+                    component's earlier comment). */}
+                <TextField
+                  label="Country"
+                  value={
+                    budget.country.value?.name ??
+                    "Set the project's Primary Location (as a Country-type " +
+                      'location) to enable country-specific calculations'
+                  }
+                  helperText="From the project's Primary Location"
+                  fullWidth
+                  multiline={!budget.country.value}
+                  InputProps={{ readOnly: true }}
+                  sx={
+                    !budget.country.value
+                      ? { '& .MuiInputBase-input': { color: 'text.secondary' } }
+                      : undefined
+                  }
+                />
+              </Grid>
+            ) : null}
             <Grid item xs={6} sm={3} md={2}>
               <SecuredField obj={budget} name="entryCurrencyMode">
                 {(props) => (
@@ -163,13 +176,19 @@ export const BudgetAssumptionsForm = ({
                 )}
               </SecuredField>
             </Grid>
-            <Grid item xs={6} sm={3} md={2}>
-              <SecuredField obj={budget} name="languageCount">
-                {(props) => (
-                  <NumberField {...props} label="Language Count" fullWidth />
-                )}
-              </SecuredField>
-            </Grid>
+            {budget.languageCount.canRead ? (
+              <Grid item xs={6} sm={3} md={2}>
+                {/* budget-line-items-poc (item 3): read-only now -- see the
+                    Country field above for why. */}
+                <TextField
+                  label="Language Count"
+                  value={budget.languageCount.value ?? 0}
+                  helperText="From the project's Language Engagements"
+                  fullWidth
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+            ) : null}
           </Grid>
         </Form>
       </CardContent>

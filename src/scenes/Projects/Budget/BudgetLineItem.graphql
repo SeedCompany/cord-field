@@ -9,6 +9,21 @@ fragment BudgetLineItem on BudgetLineItem {
   id
   createdAt
   canDelete
+  # ── budget-line-items-poc additions (item 1) ──
+  # `type` distinguishes a normal calculation-bearing `line` row from a
+  # visual, description-only `header` (section-divider) row. `position` is
+  # the server-assigned stable ordering key (current-max-plus-one on
+  # create) -- both rows and grid sort now respect it instead of `createdAt`.
+  type {
+    canRead
+    canEdit
+    value
+  }
+  position {
+    canRead
+    canEdit
+    value
+  }
   account {
     canRead
     canEdit

@@ -106,11 +106,53 @@ export const catOf = (account: string | null | undefined): string => {
 };
 
 /**
- * A later phase adds a `type` field (line vs. header) to `BudgetLineItem`
- * once the backend's line-item type/position work lands (see this pass's
- * task notes). Nothing selects `type` today, so this is a no-op guard until
- * then -- but it costs nothing to have in place now, and the Breakdown /
- * Partner-Budgets tabs call it defensively before grouping lines.
+ * True if this line is a `header`-type row (a visual, description-only
+ * section-divider -- `account` is null and it contributes nothing to any
+ * calculated total). Backed by the real `BudgetLineItem.type` field now that
+ * the backend's line-item type/position work has landed (budget-line-items-
+ * poc phases 2/3). Structurally typed (rather than importing the generated
+ * `BudgetLineItemFragment` type) so every caller -- the grid rows, the
+ * Breakdown tab, the Partner-Budgets tab -- can pass either the full
+ * fragment or a lighter shape without a circular import.
  */
-export const isHeaderLine = (line: object): boolean =>
-  (line as { type?: string }).type === 'header';
+export const isHeaderLine = (line: {
+  type: { value?: string | null };
+}): boolean => line.type.value === 'header';
+
+/**
+ * Salary accounts the benchmark/keystone calculator (item 2) can compute a
+ * per-week rate for. Duplicated (not imported) from cord-api-v3's
+ * `budget-calculation.service.ts` exports (`SALARY_ACCTS`) -- cord-field and
+ * cord-api-v3 are separate repos/packages with no shared package for this
+ * POC's reference-data constants, so this is a deliberate, disclosed
+ * duplication. Keep in sync by hand if the backend's list ever changes.
+ */
+export const SALARY_ACCOUNTS = [
+  'Salary/Stipend - Translator',
+  'Salary/Stipend - Non Translator',
+  'Salary/Stipend - Consultant',
+] as const;
+
+/**
+ * The 7 accounts the benchmark/keystone calculator is relevant for -- the 3
+ * `SALARY_ACCOUNTS` plus the 4 `SERVICE_ACCOUNTS` above. Duplicated from
+ * cord-api-v3's `KEYSTONE_ACCTS` -- see `SALARY_ACCOUNTS`'s comment.
+ */
+export const KEYSTONE_ACCOUNTS = [
+  ...SALARY_ACCOUNTS,
+  ...SERVICE_ACCOUNTS,
+] as const;
+
+/** The one salary account with a consultant-subtype selector. Duplicated from cord-api-v3's `CONSULTANT_ACCOUNT`. */
+export const CONSULTANT_ACCOUNT = 'Salary/Stipend - Consultant';
+
+/** The 3 consultant sub-role labels. Duplicated from cord-api-v3's `ROLE_MAP` keys. */
+export const CONSULTANT_TYPES = [
+  'Sr. Translation Consultant',
+  'Independent Translation Consultant',
+  'Dependent Consultant (CiT)',
+] as const;
+
+/** Default consultant sub-role, matching the prototype's `<select>` default and cord-api-v3's `DEFAULT_CONSULTANT_TYPE`. */
+export const DEFAULT_CONSULTANT_TYPE: (typeof CONSULTANT_TYPES)[number] =
+  'Sr. Translation Consultant';

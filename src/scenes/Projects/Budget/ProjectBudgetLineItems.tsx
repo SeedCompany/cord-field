@@ -1,13 +1,24 @@
 import { useMutation } from '@apollo/client';
-import { Delete as DeleteIcon } from '@mui/icons-material';
-import { Card, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Add,
+  Calculate as CalculateIcon,
+  Delete as DeleteIcon,
+} from '@mui/icons-material';
+import {
+  Button,
+  Card,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { sortBy } from '@seedcompany/common';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { invalidateProps, onUpdateInvalidateProps } from '~/api';
+import { useDialog } from '../../../components/Dialog';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import {
-  createAddItemFooter,
   EditNumberCell,
   enumColumn,
   isCellEditable,
@@ -21,6 +32,8 @@ import {
   FiscalYearAmounts,
   getAmounts,
   getSecuredValue,
+  isHeaderLine,
+  KEYSTONE_ACCOUNTS,
   sumAmounts,
   useFiscalYearColumns,
 } from './budgetLineHelpers';
@@ -30,6 +43,7 @@ import {
   DeleteBudgetLineItemDocument,
   UpdateBudgetLineItemDocument,
 } from './BudgetLineItem.graphql';
+import { BudgetLineItemCalculatorDialog } from './BudgetLineItemCalculatorDialog';
 
 interface ProjectBudgetLineItemsProps {
   budget: Budget | undefined;
@@ -43,15 +57,24 @@ interface ProjectBudgetLineItemsProps {
 // regression fixture (cord-api-v3 budget-calculation.service.spec.ts /
 // ADMIN_FEE_ACCOUNT) -- a placeholder chart-of-accounts list. A real
 // reference-data admin UI for these is explicitly out of scope for this POC.
+//
+// (item 2 addition): 'Salary/Stipend - Consultant', 'HR Services', and
+// 'Program Mgt Support' were added to complete the full 7-account
+// `KEYSTONE_ACCOUNTS` set (see budgetLineHelpers) -- without them, 3 of the 7
+// benchmark-calculator-eligible accounts could never actually be selected in
+// this column, so the calculator would be unreachable for them.
 const ACCOUNTS = [
   'Salary/Stipend - Translator',
   'Salary/Stipend - Non Translator',
+  'Salary/Stipend - Consultant',
   'Travel Expense',
   'Meeting/Seminar Expense',
   'Printing',
   'Office Expense',
   'Financial Services',
+  'HR Services',
   'IT Services',
+  'Program Mgt Support',
   'Telecommunications',
   'Project Administration Fee',
 ] as const;
@@ -94,10 +117,18 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
 
   const fiscalYearColumns = useFiscalYearColumns(budget);
 
+  // budget-line-items-poc (item 1): rows -- both `line` and `header` --
+  // are now ordered by the server-assigned `position`, not `createdAt`.
   const rows = useMemo(
-    () => sortBy(budget?.lineItems ?? [], (row) => row.createdAt),
+    () => sortBy(budget?.lineItems ?? [], (row) => row.position.value ?? 0),
     [budget]
   );
+
+  // budget-line-items-poc (item 2): the benchmark/keystone calculator modal,
+  // one shared dialog instance opened against whichever row's calc icon was
+  // clicked.
+  const [calcDialogState, openCalcDialog, calcLineItem] =
+    useDialog<BudgetLineItem>();
 
   const columns: Array<GridColDef<BudgetLineItem>> = useMemo(() => {
     const fyColumns: Array<GridColDef<BudgetLineItem>> = fiscalYearColumns.map(
@@ -167,28 +198,71 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
       valueFormatter: (value: number) => formatCurrency(value),
     };
 
+    // budget-line-items-poc (item 1): number of columns (starting from
+    // `description`, inclusive) a `header` row's description cell should
+    // span -- covers every data column through `totalCol`, but NOT
+    // `actionsCol`, matching the prototype's `renderLines()` (`hcolspan`
+    // covers everything except the trailing `rowtools` cell, so the delete
+    // button still renders normally on header rows).
+    const dataColumnsBeforeFy = 6; // account, costType, budgetCategory, activity, serviceProvider, funder
+    const headerColSpan = 1 + dataColumnsBeforeFy + fyColumns.length + 1; // + description itself, + totalCol
+
+    // budget-line-items-poc (item 2): calc icon is only meaningful for
+    // `KEYSTONE_ACCOUNTS` (see budgetLineHelpers) -- shown (disabled, with
+    // an explanatory tooltip) for any other line account, and omitted
+    // entirely for `header` rows, matching the prototype's `rowtools`
+    // (header rows only ever show the trash icon).
     const actionsCol: GridColDef<BudgetLineItem> = {
       field: 'actions',
       headerName: '',
-      width: 60,
+      width: 88,
       align: 'center',
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
       hideable: false,
-      renderCell: ({ row }) => (
-        <Tooltip title="Delete Line Item">
-          <span>
-            <IconButton
-              size="small"
-              disabled={!row.canDelete}
-              onClick={() => handleDelete(row)}
-            >
-              <DeleteIcon fontSize="small" color="error" />
-            </IconButton>
-          </span>
-        </Tooltip>
-      ),
+      renderCell: ({ row }) => {
+        const isHeader = isHeaderLine(row);
+        const canBenchmark =
+          !isHeader &&
+          (KEYSTONE_ACCOUNTS as readonly string[]).includes(
+            getSecuredValue(row.account) ?? ''
+          );
+        return (
+          <Stack direction="row" spacing={0}>
+            {!isHeader ? (
+              <Tooltip
+                title={
+                  canBenchmark
+                    ? 'Benchmark calculator'
+                    : 'Benchmark calculator (only available for keystone salary/service accounts)'
+                }
+              >
+                <span>
+                  <IconButton
+                    size="small"
+                    disabled={!canBenchmark}
+                    onClick={() => openCalcDialog(row)}
+                  >
+                    <CalculateIcon fontSize="small" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            ) : null}
+            <Tooltip title={isHeader ? 'Delete Section' : 'Delete Line Item'}>
+              <span>
+                <IconButton
+                  size="small"
+                  disabled={!row.canDelete}
+                  onClick={() => handleDelete(row)}
+                >
+                  <DeleteIcon fontSize="small" color="error" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Stack>
+        );
+      },
     };
 
     return [
@@ -205,6 +279,22 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
         }),
         editable: true,
         isEditable: ({ row }) => row.description.canEdit,
+        // budget-line-items-poc (item 1): `header` rows render as a
+        // full-width section-divider label instead of a normal data cell,
+        // and their description cell spans across every other data column.
+        colSpan: (_value, row) =>
+          isHeaderLine(row) ? headerColSpan : undefined,
+        renderCell: (params) =>
+          isHeaderLine(params.row) ? (
+            <Typography
+              variant="subtitle2"
+              sx={{ fontWeight: 700, width: '100%' }}
+            >
+              {params.value || 'Untitled section'}
+            </Typography>
+          ) : (
+            params.value ?? ''
+          ),
       },
       {
         field: 'account',
@@ -304,33 +394,91 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
     deleteLineItem,
     budget,
     partnerOrganizations,
+    openCalcDialog,
   ]);
 
-  const AddFooter = useMemo(
-    () =>
-      createAddItemFooter({
-        label: 'Add Line Item',
-        tooltipTitle: 'Add a new budget line item',
-        addItem: () => {
-          if (!budget) {
-            return;
-          }
-          void createLineItem({
-            variables: {
-              input: {
-                budget: budget.id,
-                account: '',
-              },
-            },
-          });
+  const handleAddLine = useCallback(() => {
+    if (!budget) {
+      return;
+    }
+    void createLineItem({
+      variables: {
+        input: {
+          budget: budget.id,
+          account: '',
         },
-      }),
-    [budget, createLineItem]
-  );
+      },
+    });
+  }, [budget, createLineItem]);
+
+  // budget-line-items-poc (item 1): creates a `header`-type row (a visual
+  // section divider) -- `account` is omitted entirely (rather than sent as
+  // `''` like a normal line), matching the backend's "omit for header rows"
+  // guidance on `CreateBudgetLineItem.account`.
+  const handleAddSection = useCallback(() => {
+    if (!budget) {
+      return;
+    }
+    void createLineItem({
+      variables: {
+        input: {
+          budget: budget.id,
+          type: 'header',
+        },
+      },
+    });
+  }, [budget, createLineItem]);
+
+  // budget-line-items-poc (item 1): a custom two-button footer (line item +
+  // section), replacing the shared single-button `createAddItemFooter` --
+  // styled the same way (same background/border/padding), just with two
+  // labeled buttons instead of one bare "+" icon so the two actions are
+  // distinguishable.
+  const LineItemsFooter = useMemo(() => {
+    const Footer = () => (
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          alignItems: 'center',
+          background: 'var(--DataGrid-containerBackground)',
+          p: 1,
+          borderTop: 'thin solid var(--DataGrid-rowBorderColor)',
+          borderBottomLeftRadius: 'inherit',
+          borderBottomRightRadius: 'inherit',
+        }}
+      >
+        <Tooltip title="Add a new budget line item">
+          <Button
+            onClick={handleAddLine}
+            variant="outlined"
+            color="primary"
+            size="small"
+            startIcon={<Add />}
+          >
+            Add Line Item
+          </Button>
+        </Tooltip>
+        <Tooltip title="Add a new section heading">
+          <Button
+            onClick={handleAddSection}
+            variant="outlined"
+            color="secondary"
+            size="small"
+            startIcon={<Add />}
+          >
+            Section
+          </Button>
+        </Tooltip>
+      </Stack>
+    );
+    Footer.displayName = 'LineItemsFooter';
+    return Footer;
+  }, [handleAddLine, handleAddSection]);
 
   const { slots, slotProps } = useDataGridSlots(
     {},
-    { slots: { footer: AddFooter } }
+    { slots: { footer: LineItemsFooter } }
   );
 
   const handleRowSave = async (
@@ -367,6 +515,9 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
           rowSelection={false}
           isCellEditable={isCellEditable}
           processRowUpdate={handleRowSave}
+          getRowClassName={({ row }) =>
+            isHeaderLine(row) ? 'budget-line-header-row' : ''
+          }
           localeText={{
             noRowsLabel: 'No line items yet',
           }}
@@ -375,9 +526,22 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
               {
                 display: 'none',
               },
+            // budget-line-items-poc (item 1): a distinct background for
+            // `header` (section-divider) rows, matching the prototype's
+            // `.hdr-row` styling intent.
+            '& .budget-line-header-row': {
+              backgroundColor: 'action.hover',
+            },
           }}
         />
       </Card>
+      {budget ? (
+        <BudgetLineItemCalculatorDialog
+          {...calcDialogState}
+          budget={budget}
+          lineItem={calcLineItem}
+        />
+      ) : null}
     </Stack>
   );
 };

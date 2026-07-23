@@ -12,8 +12,8 @@ fragment BudgetReferenceCountry on BudgetReferenceCountry {
   adminFeeCap
 }
 
-query BudgetReferenceCountries {
-  budgetReferenceCountries {
-    ...BudgetReferenceCountry
-  }
-}
+# budget-line-items-poc item 3: the `budgetReferenceCountries` list query
+# (used only for the old editable Country picker) was removed here --
+# `Budget.country` is now purely server-derived and read-only on the
+# frontend, so nothing needs the full country list anymore. The fragment
+# above is still used (via `Budget.country.value`).
