@@ -18,6 +18,7 @@ import {
   amountForYear,
   Budget,
   catOf,
+  currencyConversionFactor,
   getAmounts,
   getSecuredValue,
   isHeaderLine,
@@ -69,6 +70,13 @@ export const BudgetBreakdown = ({ budget }: BudgetBreakdownProps) => {
   const [dimension, setDimension] = useState<Dimension>('cat');
   const fiscalYearColumns = useFiscalYearColumns(budget);
 
+  // budget-line-items-poc (item 5): matching the prototype's
+  // `renderBreakdown()`, which multiplies every summed amount by `k`
+  // (`convFactor()`) -- this tab is a display-only rollup computed fresh
+  // from `lineItems` (unlike `calculationSummary`, which the backend already
+  // converts), so it needs the same entry -> display currency conversion.
+  const conversionFactor = currencyConversionFactor(budget);
+
   const groups = useMemo(() => {
     const map = new Map<string, number[]>();
     for (const line of budget?.lineItems ?? []) {
@@ -79,12 +87,13 @@ export const BudgetBreakdown = ({ budget }: BudgetBreakdownProps) => {
       const amounts = getAmounts(line.fiscalYearAmounts);
       const totals = map.get(key) ?? fiscalYearColumns.map(() => 0);
       fiscalYearColumns.forEach((fy, i) => {
-        totals[i] = (totals[i] ?? 0) + amountForYear(amounts, fy.year);
+        totals[i] =
+          (totals[i] ?? 0) + amountForYear(amounts, fy.year) * conversionFactor;
       });
       map.set(key, totals);
     }
     return map;
-  }, [budget, dimension, fiscalYearColumns]);
+  }, [budget, dimension, fiscalYearColumns, conversionFactor]);
 
   const sortedKeys = useMemo(
     () => Array.from(groups.keys()).sort((a, b) => a.localeCompare(b)),

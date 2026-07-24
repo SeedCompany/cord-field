@@ -18,6 +18,7 @@ import { useCurrencyFormatter } from '../../../components/Formatters/useCurrency
 import {
   amountForYear,
   Budget,
+  currencyConversionFactor,
   getAmounts,
   getSecuredValue,
   isHeaderLine,
@@ -58,6 +59,12 @@ export const BudgetPartnerLedger = ({ budget }: BudgetPartnerLedgerProps) => {
   const formatCurrency = useCurrencyFormatter({ maximumFractionDigits: 2 });
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const fiscalYearColumns = useFiscalYearColumns(budget);
+  // budget-line-items-poc (item 6): matching the prototype's
+  // `renderPartners()`, which multiplies every summed amount by `k`
+  // (`convFactor()`) -- this tab is a display-only rollup computed fresh
+  // from `lineItems` (unlike `calculationSummary`, which the backend already
+  // converts), so it needs the same entry -> display currency conversion.
+  const conversionFactor = currencyConversionFactor(budget);
 
   const providers = useMemo(() => {
     const byId = new Map<string, string>();
@@ -95,12 +102,13 @@ export const BudgetPartnerLedger = ({ budget }: BudgetPartnerLedgerProps) => {
       const amounts = getAmounts(line.fiscalYearAmounts);
       const totals = bucket.get(key) ?? fiscalYearColumns.map(() => 0);
       fiscalYearColumns.forEach((fy, i) => {
-        totals[i] = (totals[i] ?? 0) + amountForYear(amounts, fy.year);
+        totals[i] =
+          (totals[i] ?? 0) + amountForYear(amounts, fy.year) * conversionFactor;
       });
       bucket.set(key, totals);
     }
     return result;
-  }, [lines, fiscalYearColumns]);
+  }, [lines, fiscalYearColumns, conversionFactor]);
 
   const funding = useMemo(() => {
     const totals = fiscalYearColumns.map(() => 0);
@@ -110,12 +118,13 @@ export const BudgetPartnerLedger = ({ budget }: BudgetPartnerLedgerProps) => {
       provides = true;
       const amounts = getAmounts(line.fiscalYearAmounts);
       fiscalYearColumns.forEach((fy, i) => {
-        totals[i] = (totals[i] ?? 0) + amountForYear(amounts, fy.year);
+        totals[i] =
+          (totals[i] ?? 0) + amountForYear(amounts, fy.year) * conversionFactor;
       });
     }
     const sum = totals.reduce((a, b) => a + b, 0);
     return provides && sum !== 0 ? totals : null;
-  }, [budget, providerId, fiscalYearColumns]);
+  }, [budget, providerId, fiscalYearColumns, conversionFactor]);
 
   if (!budget || fiscalYearColumns.length === 0) {
     return (

@@ -77,6 +77,44 @@ export const useFiscalYearColumns = (
   }, [budget]);
 
 /**
+ * Entry-currency -> effective-display-currency conversion factor for a
+ * budget's client-side aggregations. Ported from cord-api-v3's
+ * `BudgetCalculationService`'s private `currencyConversionFactor()` /
+ * `effectiveDisplayCurrency()`, itself ported from the prototype's
+ * `convFactor()` / `effectiveDisplay()` (src/app.js) -- at `High`
+ * sensitivity the entry currency is always used for display
+ * (`displayCurrencyMode` is ignored; see that field's doc comment on
+ * `Budget`), matching the backend/prototype exactly.
+ *
+ * The line-item and Other-Partner-Contributions grids intentionally do NOT
+ * apply this -- they always show/edit raw entry-currency amounts, matching
+ * the prototype's `renderLines()`/OPC grid (`sum(ln.fy)`, unconverted). Only
+ * the Breakdown and Partner Budgets tabs need it: unlike `calculationSummary`
+ * (already converted server-side), they sum `budget.lineItems` from scratch,
+ * client-side -- matching the prototype's `renderBreakdown()`/
+ * `renderPartners()`, which both multiply every summed amount by `k`
+ * (`convFactor()`) before displaying it.
+ */
+export const currencyConversionFactor = (
+  budget: Budget | undefined
+): number => {
+  if (!budget) return 1;
+  const entryMode = getSecuredValue(budget.entryCurrencyMode);
+  const displayMode =
+    budget.sensitivity === 'High'
+      ? entryMode
+      : getSecuredValue(budget.displayCurrencyMode);
+  const exchangeRate = getSecuredValue(budget.exchangeRate) || 1;
+  if (entryMode === 'USD' && displayMode === 'Local') {
+    return exchangeRate;
+  }
+  if (entryMode === 'Local' && displayMode === 'USD') {
+    return 1 / exchangeRate;
+  }
+  return 1;
+};
+
+/**
  * The Category-3 account name that carries the manually-entered admin fee.
  * Kept in sync with cord-api-v3's `ADMIN_FEE_ACCOUNT`
  * (`budget-calculation.service.ts`).
