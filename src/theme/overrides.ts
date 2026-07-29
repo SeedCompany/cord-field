@@ -208,6 +208,16 @@ export const appComponents = ({
             },
           },
 
+          // budget-line-items-poc: a BudgetRecord.amount cell driven by
+          // Field Budget line items (see `isRecordDrivenByLineItems`) --
+          // distinct from `cell-invalid` (that's an error state; this is
+          // just "not hand-editable here"), and distinct from a plain
+          // `canEdit: false` cell (which gets no styling at all).
+          '& .cell-locked': {
+            backgroundColor: fade(palette.action.disabled, 0.12),
+            cursor: 'not-allowed',
+          },
+
           // '--DataGrid-containerBackground': theme.palette.background.paper,
         },
         columnHeaderTitle: {

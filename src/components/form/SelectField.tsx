@@ -46,6 +46,7 @@ export function SelectField<T, Multiple extends boolean | undefined>({
   margin,
   size,
   variant,
+  sx,
 
   ...props
 }: SelectFieldProps<T, Multiple>) {
@@ -67,6 +68,7 @@ export function SelectField<T, Multiple extends boolean | undefined>({
       margin={margin}
       size={size}
       variant={variant}
+      sx={sx}
     >
       {label && <InputLabel>{label}</InputLabel>}
       <Select

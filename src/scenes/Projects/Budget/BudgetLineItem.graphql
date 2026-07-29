@@ -34,6 +34,17 @@ fragment BudgetLineItem on BudgetLineItem {
     canEdit
     value
   }
+  # ── budget-line-items-poc additions (item 4/Partner Account columns) ──
+  partnerAccountName {
+    canRead
+    canEdit
+    value
+  }
+  partnerAccountNumber {
+    canRead
+    canEdit
+    value
+  }
   costType {
     canRead
     canEdit

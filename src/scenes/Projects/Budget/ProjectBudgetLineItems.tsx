@@ -7,14 +7,23 @@ import {
 import {
   Button,
   Card,
+  FormControlLabel,
   IconButton,
   Stack,
+  Switch,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro as DataGrid,
+  getGridSingleSelectOperators,
+  GridCell,
+  GridColDef,
+  GridEditSingleSelectCell,
+} from '@mui/x-data-grid-pro';
 import { sortBy } from '@seedcompany/common';
-import { useCallback, useMemo } from 'react';
+import { useSnackbar } from 'notistack';
+import { useCallback, useMemo, useState } from 'react';
 import { invalidateProps, onUpdateInvalidateProps } from '~/api';
 import { useDialog } from '../../../components/Dialog';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
@@ -22,10 +31,11 @@ import {
   EditNumberCell,
   enumColumn,
   isCellEditable,
+  noFooter,
   organizationColumn,
   OrganizationOption,
   textColumn,
-  useDataGridSlots,
+  withEditTooltip,
 } from '../../../components/Grid';
 import {
   Budget,
@@ -33,7 +43,6 @@ import {
   getAmounts,
   getSecuredValue,
   isHeaderLine,
-  KEYSTONE_ACCOUNTS,
   sumAmounts,
   useFiscalYearColumns,
 } from './budgetLineHelpers';
@@ -44,6 +53,7 @@ import {
   UpdateBudgetLineItemDocument,
 } from './BudgetLineItem.graphql';
 import { BudgetLineItemCalculatorDialog } from './BudgetLineItemCalculatorDialog';
+import { SC_TO_SIL, SIL_NUM } from './chartOfAccounts';
 
 interface ProjectBudgetLineItemsProps {
   budget: Budget | undefined;
@@ -94,6 +104,7 @@ const ACTIVITY_LABELS = labelsOf(ACTIVITIES);
 export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
   const { budget, loading, partnerOrganizations } = props;
   const formatCurrency = useCurrencyFormatter({ maximumFractionDigits: 2 });
+  const { enqueueSnackbar } = useSnackbar();
 
   // budget-line-items-poc: `lineItems`/`calculationSummary` are plain (not
   // paginated Connection-shaped) fields, so the `addItemToList`/
@@ -129,6 +140,15 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
   // clicked.
   const [calcDialogState, openCalcDialog, calcLineItem] =
     useDialog<BudgetLineItem>();
+
+  // budget-line-items-poc: "Partner Account Columns" toggle -- ported from
+  // the prototype's `S.showPartnerCols`/`S.silMapping` (src/app.js). Showing
+  // the 2 Partner Account columns is independent from whether they're in
+  // mapped (SIL-constrained dropdowns) or manual (free text) mode; the mode
+  // toggle only matters -- and is only shown -- while the columns themselves
+  // are shown, matching `btnSilMap`'s `display: none` when `!showPartnerCols`.
+  const [showPartnerColumns, setShowPartnerColumns] = useState(false);
+  const [partnerColumnsMapped, setPartnerColumnsMapped] = useState(true);
 
   const columns: Array<GridColDef<BudgetLineItem>> = useMemo(() => {
     const fyColumns: Array<GridColDef<BudgetLineItem>> = fiscalYearColumns.map(
@@ -166,6 +186,7 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
     );
 
     const handleDelete = (row: BudgetLineItem) => {
+      const isSection = isHeaderLine(row);
       void deleteLineItem({
         variables: { id: row.id },
         update: (cache, { data }) => {
@@ -178,6 +199,10 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
           });
           cache.gc();
         },
+      }).then(() => {
+        enqueueSnackbar(isSection ? 'Section removed.' : 'Line item removed.', {
+          variant: 'success',
+        });
       });
     };
 
@@ -204,14 +229,20 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
     // `actionsCol`, matching the prototype's `renderLines()` (`hcolspan`
     // covers everything except the trailing `rowtools` cell, so the delete
     // button still renders normally on header rows).
-    const dataColumnsBeforeFy = 6; // account, costType, budgetCategory, activity, serviceProvider, funder
+    // budget-line-items-poc (Partner Account columns): +2 when shown,
+    // matching the prototype's `hcolspan`'s own `+(S.showPartnerCols?2:0)`.
+    const dataColumnsBeforeFy = 6 + (showPartnerColumns ? 2 : 0); // account, [partnerAccountName, partnerAccountNumber,] costType, budgetCategory, activity, serviceProvider, funder
     const headerColSpan = 1 + dataColumnsBeforeFy + fyColumns.length + 1; // + description itself, + totalCol
 
-    // budget-line-items-poc (item 2): calc icon is only meaningful for
-    // `KEYSTONE_ACCOUNTS` (see budgetLineHelpers) -- shown (disabled, with
-    // an explanatory tooltip) for any other line account, and omitted
-    // entirely for `header` rows, matching the prototype's `rowtools`
-    // (header rows only ever show the trash icon).
+    // budget-line-items-poc (calculator gaps fix): the calc icon is now
+    // enabled for every non-header line, regardless of account -- the
+    // calculator dialog itself now opens directly into "Spread an annual
+    // amount" mode for non-keystone accounts (rather than the benchmark
+    // lookup being unreachable for them), matching the prototype's
+    // `openCalc()` (src/app.js), which lets any line open the modal and
+    // only conditionally shows the keystone-vs-annual mode toggle inside
+    // it. Only `header` rows omit the icon entirely, matching the
+    // prototype's `rowtools` (header rows only ever show the trash icon).
     const actionsCol: GridColDef<BudgetLineItem> = {
       field: 'actions',
       headerName: '',
@@ -223,33 +254,28 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
       hideable: false,
       renderCell: ({ row }) => {
         const isHeader = isHeaderLine(row);
-        const canBenchmark =
-          !isHeader &&
-          (KEYSTONE_ACCOUNTS as readonly string[]).includes(
-            getSecuredValue(row.account) ?? ''
-          );
         return (
           <Stack direction="row" spacing={0}>
             {!isHeader ? (
-              <Tooltip
-                title={
-                  canBenchmark
-                    ? 'Benchmark calculator'
-                    : 'Benchmark calculator (only available for keystone salary/service accounts)'
-                }
-              >
+              <Tooltip title="Benchmark calculator">
                 <span>
-                  <IconButton
-                    size="small"
-                    disabled={!canBenchmark}
-                    onClick={() => openCalcDialog(row)}
-                  >
+                  <IconButton size="small" onClick={() => openCalcDialog(row)}>
                     <CalculateIcon fontSize="small" />
                   </IconButton>
                 </span>
               </Tooltip>
             ) : null}
-            <Tooltip title={isHeader ? 'Delete Section' : 'Delete Line Item'}>
+            <Tooltip
+              title={
+                !row.canDelete
+                  ? isHeader
+                    ? "You don't have permission to delete this section"
+                    : "You don't have permission to delete this line item"
+                  : isHeader
+                  ? 'Delete Section'
+                  : 'Delete Line Item'
+              }
+            >
               <span>
                 <IconButton
                   size="small"
@@ -264,6 +290,128 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
         );
       },
     };
+
+    // budget-line-items-poc (Partner Account columns): "Partner Account
+    // Name"/"Partner Account No." -- only included in the grid when
+    // `showPartnerColumns` is on (see the conditional splice below). In
+    // mapped mode each is a dropdown narrowed by the cascade (account -> SIL
+    // name -> SIL number); in manual mode both are plain free text, matching
+    // `partnerCells()` (src/app.js) exactly.
+    const partnerAccountNameCol: GridColDef<BudgetLineItem> =
+      partnerColumnsMapped
+        ? {
+            field: 'partnerAccountName',
+            headerName: 'Partner Account Name',
+            flex: 1,
+            minWidth: 220,
+            type: 'singleSelect',
+            filterOperators: getGridSingleSelectOperators().filter(
+              (op) => op.value !== 'not'
+            ),
+            valueOptions: ({ row }) =>
+              (
+                SC_TO_SIL[(row && getSecuredValue(row.account)) || ''] ?? []
+              ).slice(),
+            valueGetter: (_, row) => getSecuredValue(row.partnerAccountName),
+            valueSetter: (value: string | null, row) => {
+              const numberOptions = SIL_NUM[value ?? ''] ?? [];
+              const currentNumber = getSecuredValue(row.partnerAccountNumber);
+              const nextNumber =
+                numberOptions.length === 1
+                  ? numberOptions[0]
+                  : currentNumber && numberOptions.includes(currentNumber)
+                  ? currentNumber
+                  : null;
+              return {
+                ...row,
+                partnerAccountName: { ...row.partnerAccountName, value },
+                partnerAccountNumber: {
+                  ...row.partnerAccountNumber,
+                  value: nextNumber,
+                },
+              };
+            },
+            renderEditCell: (params) => (
+              <GridEditSingleSelectCell
+                {...params}
+                onValueChange={async (event, formatted) => {
+                  const { api, id, field } = params;
+                  await api.setEditCellValue(
+                    { id, field, value: formatted },
+                    event
+                  );
+                  api.stopCellEditMode({ id, field });
+                }}
+              />
+            ),
+            editable: true,
+            isEditable: ({ row }) => row.partnerAccountName.canEdit,
+          }
+        : {
+            field: 'partnerAccountName',
+            headerName: 'Partner Account Name',
+            flex: 1,
+            minWidth: 220,
+            ...textColumn<BudgetLineItem>(),
+            valueGetter: (_, row) => getSecuredValue(row.partnerAccountName),
+            valueSetter: (value: string | null, row) => ({
+              ...row,
+              partnerAccountName: { ...row.partnerAccountName, value },
+            }),
+            editable: true,
+            isEditable: ({ row }) => row.partnerAccountName.canEdit,
+          };
+
+    const partnerAccountNumberCol: GridColDef<BudgetLineItem> =
+      partnerColumnsMapped
+        ? {
+            field: 'partnerAccountNumber',
+            headerName: 'Partner Account No.',
+            width: 170,
+            type: 'singleSelect',
+            filterOperators: getGridSingleSelectOperators().filter(
+              (op) => op.value !== 'not'
+            ),
+            valueOptions: ({ row }) =>
+              (
+                SIL_NUM[
+                  (row && getSecuredValue(row.partnerAccountName)) || ''
+                ] ?? []
+              ).slice(),
+            valueGetter: (_, row) => getSecuredValue(row.partnerAccountNumber),
+            valueSetter: (value: string | null, row) => ({
+              ...row,
+              partnerAccountNumber: { ...row.partnerAccountNumber, value },
+            }),
+            renderEditCell: (params) => (
+              <GridEditSingleSelectCell
+                {...params}
+                onValueChange={async (event, formatted) => {
+                  const { api, id, field } = params;
+                  await api.setEditCellValue(
+                    { id, field, value: formatted },
+                    event
+                  );
+                  api.stopCellEditMode({ id, field });
+                }}
+              />
+            ),
+            editable: true,
+            isEditable: ({ row }) => row.partnerAccountNumber.canEdit,
+          }
+        : {
+            field: 'partnerAccountNumber',
+            headerName: 'Partner Account No.',
+            width: 170,
+            ...textColumn<BudgetLineItem>(),
+            valueGetter: (_, row) => getSecuredValue(row.partnerAccountNumber),
+            valueSetter: (value: string | null, row) => ({
+              ...row,
+              partnerAccountNumber: { ...row.partnerAccountNumber, value },
+            }),
+            editable: true,
+            isEditable: ({ row }) => row.partnerAccountNumber.canEdit,
+          };
 
     return [
       {
@@ -293,7 +441,10 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
               {params.value || 'Untitled section'}
             </Typography>
           ) : (
-            params.value ?? ''
+            // budget-line-items-poc (audit polish): a native `title`
+            // attribute so a value truncated by the grid's own ellipsis CSS
+            // is still readable on hover, without entering edit mode.
+            <span title={params.value ?? ''}>{params.value ?? ''}</span>
           ),
       },
       {
@@ -303,13 +454,30 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
         minWidth: 200,
         ...enumColumn(ACCOUNTS, ACCOUNT_LABELS),
         valueGetter: (_, row) => getSecuredValue(row.account),
-        valueSetter: (value: string, row) => ({
-          ...row,
-          account: { ...row.account, value },
-        }),
+        valueSetter: (value: string, row) => {
+          const nextRow = { ...row, account: { ...row.account, value } };
+          // budget-line-items-poc (Partner Account columns): mirrors the
+          // prototype's `syncPartnerFromAcct()`/`syncPartnerNo()` (src/app.js,
+          // "PARTNER ACCOUNTS" section) -- only runs in mapped mode (matching
+          // `onCellEdit`'s `if(S.showPartnerCols&&S.silMapping)` guard), and
+          // only reconciles forward (account -> name -> no.), never back --
+          // `silToSc` isn't bundled here (see chartOfAccounts.ts), so unlike
+          // the prototype this never back-fills `account` from a chosen
+          // partner name.
+          if (!showPartnerColumns || !partnerColumnsMapped) {
+            return nextRow;
+          }
+          return {
+            ...nextRow,
+            ...syncPartnerAccountFields(row, value),
+          };
+        },
         editable: true,
         isEditable: ({ row }) => row.account.canEdit,
       },
+      ...(showPartnerColumns
+        ? [partnerAccountNameCol, partnerAccountNumberCol]
+        : []),
       {
         field: 'costType',
         headerName: 'Cost Type',
@@ -395,6 +563,9 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
     budget,
     partnerOrganizations,
     openCalcDialog,
+    showPartnerColumns,
+    partnerColumnsMapped,
+    enqueueSnackbar,
   ]);
 
   const handleAddLine = useCallback(() => {
@@ -408,8 +579,10 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
           account: '',
         },
       },
+    }).then(() => {
+      enqueueSnackbar('Line item added.', { variant: 'success' });
     });
-  }, [budget, createLineItem]);
+  }, [budget, createLineItem, enqueueSnackbar]);
 
   // budget-line-items-poc (item 1): creates a `header`-type row (a visual
   // section divider) -- `account` is omitted entirely (rather than sent as
@@ -426,60 +599,10 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
           type: 'header',
         },
       },
+    }).then(() => {
+      enqueueSnackbar('Section heading added.', { variant: 'success' });
     });
-  }, [budget, createLineItem]);
-
-  // budget-line-items-poc (item 1): a custom two-button footer (line item +
-  // section), replacing the shared single-button `createAddItemFooter` --
-  // styled the same way (same background/border/padding), just with two
-  // labeled buttons instead of one bare "+" icon so the two actions are
-  // distinguishable.
-  const LineItemsFooter = useMemo(() => {
-    const Footer = () => (
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{
-          alignItems: 'center',
-          background: 'var(--DataGrid-containerBackground)',
-          p: 1,
-          borderTop: 'thin solid var(--DataGrid-rowBorderColor)',
-          borderBottomLeftRadius: 'inherit',
-          borderBottomRightRadius: 'inherit',
-        }}
-      >
-        <Tooltip title="Add a new budget line item">
-          <Button
-            onClick={handleAddLine}
-            variant="outlined"
-            color="primary"
-            size="small"
-            startIcon={<Add />}
-          >
-            Add Line Item
-          </Button>
-        </Tooltip>
-        <Tooltip title="Add a new section heading">
-          <Button
-            onClick={handleAddSection}
-            variant="outlined"
-            color="secondary"
-            size="small"
-            startIcon={<Add />}
-          >
-            Section
-          </Button>
-        </Tooltip>
-      </Stack>
-    );
-    Footer.displayName = 'LineItemsFooter';
-    return Footer;
-  }, [handleAddLine, handleAddSection]);
-
-  const { slots, slotProps } = useDataGridSlots(
-    {},
-    { slots: { footer: LineItemsFooter } }
-  );
+  }, [budget, createLineItem, enqueueSnackbar]);
 
   const handleRowSave = async (
     row: BudgetLineItem,
@@ -495,7 +618,88 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
 
   return (
     <Stack spacing={1}>
-      <Typography variant="h6">Line Items</Typography>
+      {/* budget-line-items-poc (item 6): title + "Add Line Item"/"Section"
+          buttons in one row (previously the buttons lived in the DataGrid's
+          own footer, below the rows -- see the removed `LineItemsFooter`).
+          `position: sticky` with no `top` offset works here because
+          `ProjectBudget.tsx`'s root `Content` (`classes.root`, `overflowY:
+          'auto'`) is genuinely this row's nearest scrolling ancestor --
+          nothing between here and there sets its own overflow, and nothing
+          else in that scroll region is fixed/sticky above this row. The
+          opaque background + z-index keep the grid's own rows from bleeding
+          through as they scroll underneath once this row has stuck. */}
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={1}
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          bgcolor: 'background.default',
+          py: 1,
+        }}
+      >
+        <Typography variant="h6">Line Items</Typography>
+        <Stack direction="row" spacing={2} alignItems="center">
+          {/* budget-line-items-poc (Partner Account columns): ported from
+              the prototype's `#chkPartnerCols`/`#btnSilMap` (src/index.html,
+              src/app.js) -- the mode switch only shows once the columns
+              themselves are shown, matching `btnSilMap`'s own
+              `display: none` when `!S.showPartnerCols`. */}
+          <FormControlLabel
+            label="Partner Account Columns"
+            sx={{ mr: 0 }}
+            control={
+              <Switch
+                size="small"
+                checked={showPartnerColumns}
+                onChange={(_, checked) => setShowPartnerColumns(checked)}
+              />
+            }
+          />
+          {showPartnerColumns ? (
+            <Tooltip title="Mapped: Partner Account Name/No. are dropdowns constrained to the SC <-> SIL chart-of-accounts mapping. Manual: both are free text.">
+              <FormControlLabel
+                label="Map to SIL Accounts"
+                sx={{ mr: 0 }}
+                control={
+                  <Switch
+                    size="small"
+                    checked={partnerColumnsMapped}
+                    onChange={(_, checked) => setPartnerColumnsMapped(checked)}
+                  />
+                }
+              />
+            </Tooltip>
+          ) : null}
+          <Stack direction="row" spacing={1}>
+            <Tooltip title="Add a new budget line item">
+              <Button
+                onClick={handleAddLine}
+                variant="outlined"
+                color="primary"
+                size="small"
+                startIcon={<Add />}
+              >
+                Add Line Item
+              </Button>
+            </Tooltip>
+            <Tooltip title="Add a new section heading">
+              <Button
+                onClick={handleAddSection}
+                variant="outlined"
+                color="secondary"
+                size="small"
+                startIcon={<Add />}
+              >
+                Section
+              </Button>
+            </Tooltip>
+          </Stack>
+        </Stack>
+      </Stack>
       {!budget?.calculationSummary && fiscalYearColumns.length === 0 ? (
         <Typography variant="body2" color="text.secondary">
           Set the project&apos;s start and end dates to enable fiscal-year
@@ -508,9 +712,8 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
           columns={columns}
           getRowId={(row) => row.id}
           loading={loading}
-          slots={slots}
-          slotProps={slotProps}
-          autoHeight
+          slots={{ cell: withEditTooltip(GridCell) }}
+          hideFooter
           disableColumnMenu
           rowSelection={false}
           isCellEditable={isCellEditable}
@@ -521,18 +724,26 @@ export const ProjectBudgetLineItems = (props: ProjectBudgetLineItemsProps) => {
           localeText={{
             noRowsLabel: 'No line items yet',
           }}
-          sx={{
-            '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
-              {
-                display: 'none',
+          sx={[
+            noFooter,
+            {
+              // budget-line-items-poc (item 6): bounded (not `autoHeight`)
+              // so the grid gets its own internal scroll, with DataGridPro's
+              // native sticky column headers, instead of growing to fit
+              // every row on the page.
+              height: 600,
+              '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
+                {
+                  display: 'none',
+                },
+              // budget-line-items-poc (item 1): a distinct background for
+              // `header` (section-divider) rows, matching the prototype's
+              // `.hdr-row` styling intent.
+              '& .budget-line-header-row': {
+                backgroundColor: 'action.hover',
               },
-            // budget-line-items-poc (item 1): a distinct background for
-            // `header` (section-divider) rows, matching the prototype's
-            // `.hdr-row` styling intent.
-            '& .budget-line-header-row': {
-              backgroundColor: 'action.hover',
             },
-          }}
+          ]}
         />
       </Card>
       {budget ? (
@@ -575,6 +786,40 @@ const buildOrganizationValue = (
   } as unknown as BudgetLineItem['serviceProvider']['value'];
 };
 
+// budget-line-items-poc (Partner Account columns): forward-only cascade sync
+// for mapped mode, ported from the prototype's `syncPartnerFromAcct()`/
+// `syncPartnerNo()` (src/app.js, "PARTNER ACCOUNTS" section) -- called from
+// the `account` column's `valueSetter` after the SC account changes. Narrows
+// each field to its mapped option set (`SC_TO_SIL[account]`, then
+// `SIL_NUM[partnerAccountName]`): auto-fills it when exactly one option
+// exists, clears it when the row's current value is no longer a valid
+// option, and otherwise leaves it as-is.
+const syncPartnerAccountFields = (
+  row: BudgetLineItem,
+  nextAccount: string
+): Pick<BudgetLineItem, 'partnerAccountName' | 'partnerAccountNumber'> => {
+  const nameOptions = SC_TO_SIL[nextAccount] ?? [];
+  const currentName = getSecuredValue(row.partnerAccountName);
+  const nextName =
+    nameOptions.length === 1
+      ? nameOptions[0]
+      : currentName && nameOptions.includes(currentName)
+      ? currentName
+      : null;
+  const numberOptions = SIL_NUM[nextName ?? ''] ?? [];
+  const currentNumber = getSecuredValue(row.partnerAccountNumber);
+  const nextNumber =
+    numberOptions.length === 1
+      ? numberOptions[0]
+      : currentNumber && numberOptions.includes(currentNumber)
+      ? currentNumber
+      : null;
+  return {
+    partnerAccountName: { ...row.partnerAccountName, value: nextName },
+    partnerAccountNumber: { ...row.partnerAccountNumber, value: nextNumber },
+  };
+};
+
 const getChanges = (original: BudgetLineItem, updated: BudgetLineItem) => {
   const changes: Record<string, unknown> = {};
   if (original.description.value !== updated.description.value) {
@@ -582,6 +827,14 @@ const getChanges = (original: BudgetLineItem, updated: BudgetLineItem) => {
   }
   if (original.account.value !== updated.account.value) {
     changes.account = updated.account.value ?? '';
+  }
+  if (original.partnerAccountName.value !== updated.partnerAccountName.value) {
+    changes.partnerAccountName = updated.partnerAccountName.value ?? null;
+  }
+  if (
+    original.partnerAccountNumber.value !== updated.partnerAccountNumber.value
+  ) {
+    changes.partnerAccountNumber = updated.partnerAccountNumber.value ?? null;
   }
   if (original.costType.value !== updated.costType.value) {
     changes.costType = updated.costType.value ?? undefined;

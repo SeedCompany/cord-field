@@ -59,10 +59,17 @@ query ProjectBudget($id: ID!, $changeset: ID) @live {
     # ── budget-line-items-poc additions (frontend-only, item 2) ──
     # This project's own partnerships, scoped (not a global org search) --
     # sourced for the Service Provider / Funder / Donor grid-column pickers.
+    # `partner.value.id` (added for the header's "Partners" popover, item 3)
+    # is the Partner entity's own id -- confirmed via PartnerNameColumn.tsx /
+    # PartnerListItemCard.tsx / ProductInfo.tsx that `/partners/:id` resolves
+    # against Partner, not Organization, so this is required for those links
+    # to actually work (Organization's `id` below is a different id space).
     partnerships {
       items {
+        id
         partner {
           value {
+            id
             organization {
               value {
                 id
@@ -84,6 +91,7 @@ query ProjectBudget($id: ID!, $changeset: ID) @live {
     # falls back to a generic "Primary Funder" label when this is null.
     primaryPartnership {
       value {
+        id
         partner {
           value {
             organization {
@@ -99,6 +107,33 @@ query ProjectBudget($id: ID!, $changeset: ID) @live {
       }
     }
 
+    # ── budget-line-items-poc additions (frontend-only, header "Language
+    # Engagements" hover list) ──
+    # Compact, purpose-built selection for the header's "Language
+    # Engagements: N" popover -- deliberately NOT the heavier
+    # `LanguageEngagementListItem` fragment (population/ethnologue
+    # code/avatar letters/product counts aren't needed for this list).
+    # `...Id` (rather than bare `id`) so each item satisfies `idForUrl`'s
+    # `IdFragment` type -- it needs `changeset.id` too, for linking to
+    # `/engagements/:id` (see LanguageEngagementsSummary.tsx).
+    engagements(input: { count: 50, filter: { type: "language" } }) {
+      items {
+        ... on LanguageEngagement {
+          ...Id
+          language {
+            value {
+              displayName {
+                value
+              }
+            }
+          }
+          status {
+            value
+          }
+        }
+      }
+    }
+
     budget {
       canRead
       canEdit
@@ -108,13 +143,6 @@ query ProjectBudget($id: ID!, $changeset: ID) @live {
           ...BudgetRecord
         }
         status
-        universalTemplateFile {
-          canEdit
-          canRead
-          value {
-            ...FileNodeInfo
-          }
-        }
 
         # ── budget-line-items-poc additions ──
         # `sensitivity` (item 2): drives the benchmark-calculator modal's
@@ -173,8 +201,8 @@ query ProjectBudget($id: ID!, $changeset: ID) @live {
 }
 
 # budget-line-items-poc: separate mutation (rather than reusing
-# UpdateProjectBudgetUniversalTemplate) since it targets a distinct set of
-# fields (the assumptions form) with no file upload involved.
+# updateBudget's other callers) since it targets a distinct set of fields
+# (the assumptions form) with no file upload involved.
 mutation UpdateBudgetAssumptions($input: UpdateBudget!) {
   updateBudget(input: $input) {
     budget {
@@ -218,27 +246,6 @@ mutation UpdateBudgetAssumptions($input: UpdateBudget!) {
       }
       calculationSummary {
         ...BudgetCalculationSummary
-      }
-    }
-  }
-}
-
-mutation UpdateProjectBudgetUniversalTemplate(
-  $id: ID!
-  $upload: CreateDefinedFileVersion!
-) {
-  updateBudget(input: { id: $id, universalTemplateFile: $upload }) {
-    budget {
-      ...Id
-      universalTemplateFile {
-        value {
-          ...FileNodeInfo
-          children {
-            items {
-              ...FileNodeInfo
-            }
-          }
-        }
       }
     }
   }

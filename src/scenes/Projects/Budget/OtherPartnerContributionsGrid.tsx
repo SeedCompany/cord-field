@@ -1,19 +1,32 @@
 import { useMutation } from '@apollo/client';
-import { Delete as DeleteIcon } from '@mui/icons-material';
-import { Card, IconButton, Stack, Tooltip, Typography } from '@mui/material';
-import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
+import { Add, Delete as DeleteIcon } from '@mui/icons-material';
+import {
+  Button,
+  Card,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import {
+  DataGridPro as DataGrid,
+  GridCell,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 import { sortBy } from '@seedcompany/common';
-import { useMemo } from 'react';
+import { useSnackbar } from 'notistack';
+import { useCallback, useMemo } from 'react';
 import { invalidateProps, onUpdateInvalidateProps } from '~/api';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import {
-  createAddItemFooter,
   EditNumberCell,
   isCellEditable,
+  noFooter,
   organizationColumn,
   OrganizationOption,
   textColumn,
   useDataGridSlots,
+  withEditTooltip,
 } from '../../../components/Grid';
 import {
   Budget,
@@ -50,6 +63,7 @@ export const OtherPartnerContributionsGrid = (
 ) => {
   const { budget, loading, partnerOrganizations } = props;
   const formatCurrency = useCurrencyFormatter({ maximumFractionDigits: 2 });
+  const { enqueueSnackbar } = useSnackbar();
 
   const [createContribution] = useMutation(
     CreateOtherPartnerContributionDocument,
@@ -156,6 +170,8 @@ export const OtherPartnerContributionsGrid = (
           });
           cache.gc();
         },
+      }).then(() => {
+        enqueueSnackbar('Contribution removed.', { variant: 'success' });
       });
     };
 
@@ -169,7 +185,13 @@ export const OtherPartnerContributionsGrid = (
       disableColumnMenu: true,
       hideable: false,
       renderCell: ({ row }) => (
-        <Tooltip title="Delete Contribution">
+        <Tooltip
+          title={
+            !row.canDelete
+              ? "You don't have permission to delete this contribution"
+              : 'Delete Contribution'
+          }
+        >
           <span>
             <IconButton
               size="small"
@@ -214,6 +236,12 @@ export const OtherPartnerContributionsGrid = (
         }),
         editable: true,
         isEditable: ({ row }) => row.description.canEdit,
+        // budget-line-items-poc (audit polish): see the identical
+        // `ProjectBudgetLineItems` Description column for why this native
+        // `title` attribute is here.
+        renderCell: (params) => (
+          <span title={params.value ?? ''}>{params.value ?? ''}</span>
+        ),
       },
       ...fyColumns,
       totalCol,
@@ -226,28 +254,28 @@ export const OtherPartnerContributionsGrid = (
     deleteContribution,
     budget,
     partnerOrganizations,
+    enqueueSnackbar,
   ]);
 
-  const AddFooter = useMemo(
-    () =>
-      createAddItemFooter({
-        label: 'Add Contribution',
-        tooltipTitle: 'Add another partner contribution',
-        addItem: () => {
-          if (!budget) {
-            return;
-          }
-          void createContribution({
-            variables: { input: { budget: budget.id } },
-          });
-        },
-      }),
-    [budget, createContribution]
-  );
+  // budget-line-items-poc (audit polish): moved off the grid's own footer
+  // (previously a bare icon-only "+" via `createAddItemFooter`, much
+  // lighter-weight than Line Items' prominent labeled button) onto a
+  // sticky title row, matching `ProjectBudgetLineItems`'s "Add Line Item"
+  // button convention/placement exactly.
+  const handleAddContribution = useCallback(() => {
+    if (!budget) {
+      return;
+    }
+    void createContribution({
+      variables: { input: { budget: budget.id } },
+    }).then(() => {
+      enqueueSnackbar('Contribution added.', { variant: 'success' });
+    });
+  }, [budget, createContribution, enqueueSnackbar]);
 
   const { slots, slotProps } = useDataGridSlots(
     {},
-    { slots: { footer: AddFooter } }
+    { slots: { cell: withEditTooltip(GridCell) } }
   );
 
   const handleRowSave = async (
@@ -266,7 +294,46 @@ export const OtherPartnerContributionsGrid = (
 
   return (
     <Stack spacing={1}>
-      <Typography variant="h6">Other Partner Contributions</Typography>
+      {/* budget-line-items-poc (audit polish): title + prominent "Add
+          Contribution" button in one sticky row, matching
+          `ProjectBudgetLineItems`'s title+buttons row exactly (see that
+          file's identical sticky-positioning comment for why `position:
+          sticky` with no `top` offset is safe here). */}
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={1}
+        sx={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          bgcolor: 'background.default',
+          py: 1,
+        }}
+      >
+        <Typography variant="h6">Other Partner Contributions</Typography>
+        <Tooltip title="Add another partner contribution">
+          <Button
+            onClick={handleAddContribution}
+            variant="outlined"
+            color="primary"
+            size="small"
+            startIcon={<Add />}
+          >
+            Add Contribution
+          </Button>
+        </Tooltip>
+      </Stack>
+      {/* budget-line-items-poc (audit polish): ported from the prototype's
+          sign-convention hint (src/index.html, the `.tbl-foot` note above
+          the OPC table) -- these amounts are entered as positive numbers
+          here but netted against the field budget total elsewhere, which
+          isn't otherwise obvious from this grid alone. */}
+      <Typography variant="body2" color="text.secondary">
+        Entered as positive amounts; counted as offsetting contributions against
+        the budget total.
+      </Typography>
       <Card>
         <DataGrid<OtherPartnerContribution>
           rows={rows}
@@ -276,6 +343,7 @@ export const OtherPartnerContributionsGrid = (
           slots={slots}
           slotProps={slotProps}
           autoHeight
+          hideFooter
           disableColumnMenu
           rowSelection={false}
           isCellEditable={isCellEditable}
@@ -283,12 +351,15 @@ export const OtherPartnerContributionsGrid = (
           localeText={{
             noRowsLabel: 'No other partner contributions yet',
           }}
-          sx={{
-            '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
-              {
-                display: 'none',
-              },
-          }}
+          sx={[
+            noFooter,
+            {
+              '& .MuiDataGrid-columnHeader:last-child .MuiDataGrid-columnSeparator--sideRight':
+                {
+                  display: 'none',
+                },
+            },
+          ]}
         />
       </Card>
     </Stack>

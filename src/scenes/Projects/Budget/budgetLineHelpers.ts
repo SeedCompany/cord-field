@@ -95,15 +95,31 @@ export const useFiscalYearColumns = (
  * `renderPartners()`, which both multiply every summed amount by `k`
  * (`convFactor()`) before displaying it.
  */
+/**
+ * budget-line-items-poc: the display-currency mode actually in effect for a
+ * budget, factoring in the same High-sensitivity override
+ * `currencyConversionFactor` (below) applies. Pulled out so the page
+ * header's currency indicator can show the mode that's *actually* in
+ * effect rather than the raw (possibly overridden) `displayCurrencyMode`
+ * field, which would otherwise disagree with what's on screen at High
+ * sensitivity.
+ */
+export const effectiveDisplayCurrencyMode = (
+  budget: Budget | undefined
+): string | null | undefined => {
+  if (!budget) return undefined;
+  const entryMode = getSecuredValue(budget.entryCurrencyMode);
+  return budget.sensitivity === 'High'
+    ? entryMode
+    : getSecuredValue(budget.displayCurrencyMode);
+};
+
 export const currencyConversionFactor = (
   budget: Budget | undefined
 ): number => {
   if (!budget) return 1;
   const entryMode = getSecuredValue(budget.entryCurrencyMode);
-  const displayMode =
-    budget.sensitivity === 'High'
-      ? entryMode
-      : getSecuredValue(budget.displayCurrencyMode);
+  const displayMode = effectiveDisplayCurrencyMode(budget);
   const exchangeRate = getSecuredValue(budget.exchangeRate) || 1;
   if (entryMode === 'USD' && displayMode === 'Local') {
     return exchangeRate;
@@ -194,3 +210,43 @@ export const CONSULTANT_TYPES = [
 /** Default consultant sub-role, matching the prototype's `<select>` default and cord-api-v3's `DEFAULT_CONSULTANT_TYPE`. */
 export const DEFAULT_CONSULTANT_TYPE: (typeof CONSULTANT_TYPES)[number] =
   'Sr. Translation Consultant';
+
+/**
+ * budget-line-items-poc: moved out of `BudgetSummaryPanel` so
+ * `ProjectBudget.tsx`'s header row (Bible Translation % / Funder Bible
+ * Translation %) can format the same `calculationSummary` percentages
+ * identically.
+ */
+export const formatPercent = (value: number): string =>
+  `${(value * 100).toFixed(1)}%`;
+
+/**
+ * budget-line-items-poc: replicates cord-api-v3's
+ * `SyncLineItemsToBudgetRecordsService.syncForBudget()` predicate exactly --
+ * a `BudgetRecord` for (organizationId, fiscalYear) is "driven by Field
+ * Budget" (and about to be overwritten by that sync on the next line-item
+ * save) if and only if at least one non-header line item has that
+ * organization as its explicit `funder` AND that line's `fiscalYearAmounts`
+ * has an OWN key equal to that fiscal year. Deliberately NOT "org appears as
+ * a funder anywhere" -- that's broader than what the backend actually syncs,
+ * since the sync is keyed per (org, fiscal year), not just per org.
+ */
+export const isRecordDrivenByLineItems = (
+  lineItems: Budget['lineItems'] | undefined,
+  organizationId: string | null | undefined,
+  fiscalYear: number | null | undefined
+): boolean => {
+  if (!organizationId || fiscalYear == null) {
+    return false;
+  }
+  const fiscalYearKey = String(fiscalYear);
+  return (lineItems ?? []).some(
+    (item) =>
+      !isHeaderLine(item) &&
+      item.funder.value?.id === organizationId &&
+      Object.prototype.hasOwnProperty.call(
+        getAmounts(item.fiscalYearAmounts) ?? {},
+        fiscalYearKey
+      )
+  );
+};

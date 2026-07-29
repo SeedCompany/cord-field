@@ -15,5 +15,18 @@ fragment BudgetReferenceCountry on BudgetReferenceCountry {
 # budget-line-items-poc item 3: the `budgetReferenceCountries` list query
 # (used only for the old editable Country picker) was removed here --
 # `Budget.country` is now purely server-derived and read-only on the
-# frontend, so nothing needs the full country list anymore. The fragment
-# above is still used (via `Budget.country.value`).
+# frontend.
+#
+# budget-line-items-poc (calculator gaps fix): re-added below for a
+# different purpose -- the benchmark calculator dialog's "Country for this
+# calculation" override select (`BudgetLineItemCalculatorDialog`), matching
+# the prototype's `countryPickBlock()` (src/app.js) escape hatch for when
+# the budget's own country doesn't resolve. This is a transient,
+# per-calculation override passed as `BudgetBenchmarkInput.countryId` --
+# never persisted to the budget, unlike the old picker this query
+# originally served.
+query BudgetReferenceCountries {
+  budgetReferenceCountries {
+    ...BudgetReferenceCountry
+  }
+}

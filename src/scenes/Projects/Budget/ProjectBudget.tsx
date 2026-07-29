@@ -1,29 +1,44 @@
 import { useQuery } from '@apollo/client';
+import { InfoOutlined, LockOutlined, WarningAmber } from '@mui/icons-material';
 import { TabContext, TabPanel } from '@mui/lab';
-import { Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Breadcrumbs,
+  Chip,
+  Divider,
+  Grid,
+  Skeleton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { sortBy } from '@seedcompany/common';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
-import { DefinedFileCard } from '../../../components/DefinedFileCard';
+import { DisplaySimpleProperty } from '../../../components/DisplaySimpleProperty';
 import { Error } from '../../../components/Error';
-import { FileActionsContextProvider } from '../../../components/files/FileActions';
+import { FormattedDateRange } from '../../../components/Formatters/FormattedDate';
 import { useCurrencyFormatter } from '../../../components/Formatters/useCurrencyFormatter';
 import { ContentContainer as Content } from '../../../components/Layout/ContentContainer';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Tab, TabList, TabsContainer } from '../../../components/Tabs';
 import { useDetailTabs } from '../../../hooks';
 import { useProjectId } from '../useProjectId';
-import { BudgetAssumptionsForm } from './BudgetAssumptionsForm';
+import { BudgetApprovalStatsTab } from './BudgetApprovalStatsTab';
+import { BudgetAssumptionsFields } from './BudgetAssumptionsFields';
 import { BudgetBreakdown } from './BudgetBreakdown';
-import { BudgetPartnerLedger } from './BudgetPartnerLedger';
-import { BudgetSummaryPanel } from './BudgetSummaryPanel';
-import { OtherPartnerContributionsGrid } from './OtherPartnerContributionsGrid';
 import {
-  ProjectBudgetDocument,
-  UpdateProjectBudgetUniversalTemplateDocument,
-} from './ProjectBudget.graphql';
+  effectiveDisplayCurrencyMode,
+  formatPercent,
+} from './budgetLineHelpers';
+import { BudgetPartnerLedger } from './BudgetPartnerLedger';
+import { LanguageEngagementsSummary } from './LanguageEngagementsSummary';
+import { OtherPartnerContributionsGrid } from './OtherPartnerContributionsGrid';
+import { PartnersSummary } from './PartnersSummary';
+import { ProjectBudgetDocument } from './ProjectBudget.graphql';
 import { ProjectBudgetLineItems } from './ProjectBudgetLineItems';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
@@ -35,20 +50,25 @@ const useStyles = makeStyles()(({ breakpoints, spacing }) => ({
     margin: spacing(3, 4, 3, 0),
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    maxWidth: breakpoints.values.md,
+    alignItems: 'flex-start',
+    // budget-line-items-poc: widened from `md` to `lg` (matches
+    // `pocWrapper` below) -- the two-totals cluster + caption need more
+    // room than the original single "Total: $X" did.
+    maxWidth: breakpoints.values.lg,
   },
   totalLoading: {
     width: '10%',
   },
-  tableWrapper: {
-    maxWidth: breakpoints.values.md,
-    margin: spacing(0, 4, 4, 0),
+  // budget-line-items-poc: this slot used to hold the always-visible
+  // ProjectBudgetRecords grid + Universal Template card (both now live in
+  // the "Funding Budget" tab) -- repurposed for the always-visible facts
+  // rows (MOU dates / Country / Currency / Primary Funding Partner /
+  // Partners, plus the Assumptions fields row) instead of introducing a
+  // new container.
+  factsRow: {
+    maxWidth: breakpoints.values.lg,
+    margin: spacing(0, 4, 3, 0),
   },
-  // budget-line-items-poc: the new sections (assumptions form, summary
-  // cards, line-item grid) have more columns/content than the original
-  // budget-records table, so they use the wider `lg` breakpoint instead of
-  // `md`.
   pocWrapper: {
     maxWidth: breakpoints.values.lg,
     margin: spacing(0, 4, 4, 0),
@@ -67,12 +87,18 @@ export const ProjectBudget = () => {
 
   const budget = data?.project.budget;
 
-  const template = budget?.value?.universalTemplateFile;
-
   const [activeTab, setTab] = useDetailTabs(
-    ['budget', 'breakdown', 'partners'],
+    ['budget', 'stats', 'breakdown', 'partners', 'funding'],
     'budget'
   );
+
+  // budget-line-items-poc (item 7): inner-tab state for the "Field Budget"
+  // tab's own Line Items / Other Partner Contributions split -- a plain
+  // local `useState` rather than a second URL-synced query param, since this
+  // is a secondary navigation level that doesn't need to survive a page
+  // refresh (see `useDetailTabs`, used for the outer tabs above, for the
+  // URL-synced convention this deliberately doesn't extend).
+  const [innerTab, setInnerTab] = useState('lineItems');
 
   // budget-line-items-poc (item 2 & 3): this project's own partnerships,
   // deduplicated by organization id -- sourced for the Service Provider /
@@ -93,10 +119,39 @@ export const ProjectBudget = () => {
     );
   }, [data]);
 
+  // budget-line-items-poc (item 3): partner orgs for the header's "Partners"
+  // popover -- deduped by organization like `partnerOrganizations` above,
+  // but kept as a separate memo since that one drives the grid pickers and
+  // intentionally omits the Partner entity's own id (`partnerId` here),
+  // which `/partners/:id` links actually need (see ProjectBudget.graphql's
+  // comment on `partnerships`).
+  const partnersForSummary = useMemo(() => {
+    const items = data?.project.partnerships.items ?? [];
+    const byOrgId = new Map<string, { name: string; partnerId: string }>();
+    for (const item of items) {
+      const partner = item.partner.value;
+      const org = partner?.organization.value;
+      if (partner && org) {
+        byOrgId.set(org.id, {
+          name: org.name.value ?? org.id,
+          partnerId: partner.id,
+        });
+      }
+    }
+    return sortBy(
+      Array.from(byOrgId, ([id, { name, partnerId }]) => ({
+        id,
+        name,
+        partnerId,
+      })),
+      (o) => o.name
+    );
+  }, [data]);
+
   // budget-line-items-poc (item 4): best-effort primary-funder name for the
   // "Total cash — {funder}" stats row. Resolves to null under the current
   // Postgres/Drizzle path (see ProjectBudget.graphql's comment) --
-  // BudgetSummaryPanel falls back to a generic label in that case.
+  // BudgetApprovalStatsTab falls back to a generic label in that case.
   const funderName =
     data?.project.primaryPartnership.value?.partner.value?.organization.value
       ?.name.value ?? null;
@@ -104,6 +159,27 @@ export const ProjectBudget = () => {
   // budget-line-items-poc (item 7): the project's MOU dates, read-only.
   const projectMouStart = data?.project.mouStart.value ?? null;
   const projectMouEnd = data?.project.mouEnd.value ?? null;
+
+  // Both totals shown in the always-visible header (see the header's
+  // `totalsCaption`/tooltip below for why these two can legitimately
+  // disagree).
+  const fieldBudgetTotal = budget?.value?.calculationSummary?.totals.grandTotal;
+  const fundingBudgetTotal = budget?.value?.total;
+  const totalsMismatch =
+    fieldBudgetTotal != null &&
+    fundingBudgetTotal != null &&
+    Math.abs(fundingBudgetTotal - fieldBudgetTotal) > 0.01;
+
+  const currencyMode = effectiveDisplayCurrencyMode(budget?.value ?? undefined);
+  const exchangeRate = budget?.value?.exchangeRate.value ?? null;
+  const currencyForced = budget?.value?.sensitivity === 'High';
+  const currencyTooltip = `Entry currency: ${
+    budget?.value?.entryCurrencyMode.value ?? '—'
+  }. Display currency: ${currencyMode ?? '—'}.${
+    currencyForced
+      ? ' Forced to the entry currency — this budget is High sensitivity.'
+      : ''
+  }`;
 
   return (
     <Content className={classes.root}>
@@ -126,40 +202,225 @@ export const ProjectBudget = () => {
             <Breadcrumb to=".">Field Budget</Breadcrumb>
           </Breadcrumbs>
           <header className={classes.header}>
-            <Typography variant="h2">Budget</Typography>
-            <Typography
-              variant="h3"
-              className={loading ? classes.totalLoading : undefined}
+            <Typography variant="h2">Field Budget</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: { xs: 'flex-start', sm: 'flex-end' },
+              }}
             >
-              {!loading && budget?.value?.total != null ? (
-                `Total: ${formatCurrency(budget.value.total)}`
-              ) : (
-                <Skeleton width="100%" />
-              )}
-            </Typography>
-          </header>
-          <div className={classes.tableWrapper}>
-            <Grid container direction="column" spacing={3}>
-              <Grid item>
-                <ProjectBudgetRecords loading={loading} budget={budget} />
-              </Grid>
-              {!budget?.value || !template || !template.canRead ? null : (
-                <FileActionsContextProvider>
-                  <Grid item xs={6}>
-                    <DefinedFileCard
-                      label="Universal Template"
-                      parentId={budget.value.id}
-                      uploadMutationDocument={
-                        UpdateProjectBudgetUniversalTemplateDocument
-                      }
-                      resourceType="budget"
-                      securedFile={template}
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={2}
+                alignItems={{ xs: 'flex-start', sm: 'baseline' }}
+              >
+                <Typography
+                  variant="h3"
+                  className={loading ? classes.totalLoading : undefined}
+                >
+                  {loading ? (
+                    <Skeleton width="100%" />
+                  ) : fieldBudgetTotal != null ? (
+                    `Field Budget Total: ${formatCurrency(fieldBudgetTotal)}`
+                  ) : (
+                    <Tooltip title="Set the project's MOU dates to calculate this">
+                      <span>Field Budget Total: —</span>
+                    </Tooltip>
+                  )}
+                </Typography>
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ display: { xs: 'none', sm: 'block' } }}
+                />
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <Typography
+                    variant="subtitle1"
+                    color="text.secondary"
+                    className={loading ? classes.totalLoading : undefined}
+                  >
+                    {loading ? (
+                      <Skeleton width="100%" />
+                    ) : (
+                      `Funding Budget Total: ${
+                        fundingBudgetTotal != null
+                          ? formatCurrency(fundingBudgetTotal)
+                          : '—'
+                      }`
+                    )}
+                  </Typography>
+                  {!loading ? (
+                    <Tooltip title="Funding Budget Total is Financial Services' officially tracked, per-partner approved funding amount (see the Funding Budget tab). Field Budget Total is the sum of this project's itemized line items — cash + in-kind + admin fee. A backend sync keeps them aligned automatically, but only for line items with an explicit funder assigned, so a partner that only contributes as an Other Partner Contribution donor can keep an independent, potentially stale Funding Budget amount.">
+                      <InfoOutlined fontSize="inherit" color="action" />
+                    </Tooltip>
+                  ) : null}
+                  {!loading && totalsMismatch ? (
+                    <Chip
+                      label="Review sync"
+                      size="small"
+                      color="warning"
+                      icon={<WarningAmber />}
+                      onClick={() => setTab('funding')}
                     />
-                  </Grid>
-                </FileActionsContextProvider>
-              )}
-            </Grid>
+                  ) : null}
+                </Stack>
+              </Stack>
+              {!loading ? (
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ mt: 0.5, textAlign: { xs: 'left', sm: 'right' } }}
+                >
+                  Two separate totals, tracked independently — hover ⓘ for why
+                  they can differ.
+                </Typography>
+              ) : null}
+            </Box>
+          </header>
+          {/* budget-line-items-poc: relocated from the top of the Field
+              Budget tab's stat-card row (now the "Budget Approval Stats"
+              tab's BudgetApprovalStatsTab) so these read on every tab, not
+              just Field Budget -- grouped with Language Engagements since
+              Cost Per Language's denominator IS that count. Guarded the same
+              way BudgetApprovalStatsTab itself guards this data: no
+              calculationSummary means the project has no MOU dates set yet,
+              so there's nothing to show. */}
+          {budget?.value?.calculationSummary ? (
+            <div className={classes.factsRow}>
+              <Stack
+                direction="row"
+                flexWrap="wrap"
+                spacing={3}
+                alignItems="center"
+              >
+                <DisplaySimpleProperty
+                  label="Bible Translation %"
+                  value={formatPercent(
+                    budget.value.calculationSummary.bibleTranslationPercent
+                  )}
+                />
+                <DisplaySimpleProperty
+                  label="Funder Bible Translation %"
+                  value={formatPercent(
+                    budget.value.calculationSummary
+                      .funderBibleTranslationPercent
+                  )}
+                />
+                <DisplaySimpleProperty
+                  label="Cost Per Language"
+                  value={formatCurrency(
+                    budget.value.calculationSummary.costPerLanguage
+                  )}
+                />
+                <LanguageEngagementsSummary
+                  count={budget.value.languageCount.value ?? 0}
+                  engagements={data?.project.engagements.items ?? []}
+                />
+              </Stack>
+            </div>
+          ) : null}
+          <div className={classes.factsRow}>
+            <Stack
+              direction="row"
+              flexWrap="wrap"
+              spacing={3}
+              alignItems="center"
+            >
+              <DisplaySimpleProperty
+                label="Project Dates (MOU)"
+                value={
+                  projectMouStart || projectMouEnd ? (
+                    <FormattedDateRange
+                      start={projectMouStart}
+                      end={projectMouEnd}
+                    />
+                  ) : undefined
+                }
+              />
+              {budget?.value?.country.canRead ? (
+                budget.value.sensitivity === 'High' ? (
+                  // budget-line-items-poc: matches the prototype's masking
+                  // model (app.js `buildCountrySelect()`/`displayCcy()`,
+                  // index.html's `.country-private`/`.privacy-chip`) -- a
+                  // frontend-only display convention, not real access
+                  // control. The real country name is still fetched by this
+                  // query same as before; this only changes what it renders
+                  // as. A persistent chip (not just a tooltip) so the
+                  // masking is obvious at a glance.
+                  <Stack direction="row" spacing={0.75} alignItems="center">
+                    <Typography variant="body2" color="text.secondary">
+                      Country:&nbsp;
+                    </Typography>
+                    <Tooltip title="This budget is High sensitivity — the country is masked in the UI.">
+                      <Chip
+                        icon={<LockOutlined fontSize="small" />}
+                        label="Private"
+                        size="small"
+                        variant="outlined"
+                      />
+                    </Tooltip>
+                  </Stack>
+                ) : (
+                  <DisplaySimpleProperty
+                    label="Country"
+                    value={budget.value.country.value?.name}
+                  />
+                )
+              ) : null}
+              {budget?.value?.entryCurrencyMode.canRead ? (
+                <DisplaySimpleProperty
+                  label="Currency"
+                  value={
+                    currencyMode === 'Local'
+                      ? currencyForced
+                        ? // budget-line-items-poc: never reveal the real
+                          // currency code or numeric exchange rate at High
+                          // sensitivity (matches the prototype's
+                          // `displayCcy()`, which always returns the generic
+                          // "Local currency" and never the ccy code, plus
+                          // `renderSummary()`'s cap-figure suppression for
+                          // the same reasoning) -- UI-only, same caveat as
+                          // the Country chip above.
+                          'Private (local currency)'
+                        : `Local · 1 USD = ${
+                            exchangeRate != null ? exchangeRate.toFixed(4) : '—'
+                          }`
+                      : currencyMode === 'USD'
+                      ? 'USD'
+                      : undefined
+                  }
+                  ValueProps={{
+                    color:
+                      currencyMode === 'Local' ? 'warning.main' : undefined,
+                    fontWeight: currencyMode === 'Local' ? 700 : undefined,
+                  }}
+                  wrap={(node) => (
+                    <Tooltip title={currencyTooltip}>{node}</Tooltip>
+                  )}
+                />
+              ) : null}
+              {funderName ? (
+                <DisplaySimpleProperty
+                  label="Primary Funding Partner"
+                  value={funderName}
+                />
+              ) : null}
+              <PartnersSummary
+                partners={partnersForSummary}
+                projectId={projectId}
+              />
+            </Stack>
           </div>
+          {/* budget-line-items-poc (item 4): the 5 editable Budget
+              assumption fields, relocated from a Card on the Field Budget
+              tab into this always-visible header row -- see
+              BudgetAssumptionsFields.tsx. */}
+          {budget?.value ? (
+            <div className={classes.factsRow}>
+              <BudgetAssumptionsFields budget={budget.value} />
+            </div>
+          ) : null}
 
           {/* budget-line-items-poc additions */}
           {budget?.value ? (
@@ -170,46 +431,81 @@ export const ProjectBudget = () => {
                     onChange={(_e, tab) => setTab(tab)}
                     aria-label="budget navigation tabs"
                   >
-                    <Tab label="Budget" value="budget" />
+                    <Tab label="Field Budget" value="budget" />
+                    <Tab label="Budget Approval Stats" value="stats" />
                     <Tab label="Breakdown" value="breakdown" />
                     <Tab label="Partner Budgets" value="partners" />
+                    <Tab label="Funding Budget" value="funding" />
                   </TabList>
                   <TabPanel value="budget">
-                    <Grid container direction="column" spacing={3}>
-                      <Grid item>
-                        <BudgetAssumptionsForm
-                          budget={budget.value}
-                          projectMouStart={projectMouStart}
-                          projectMouEnd={projectMouEnd}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <BudgetSummaryPanel
-                          budget={budget.value}
-                          funderName={funderName}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <ProjectBudgetLineItems
-                          loading={loading}
-                          budget={budget.value}
-                          partnerOrganizations={partnerOrganizations}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <OtherPartnerContributionsGrid
-                          loading={loading}
-                          budget={budget.value}
-                          partnerOrganizations={partnerOrganizations}
-                        />
-                      </Grid>
-                    </Grid>
+                    {/* budget-line-items-poc (item 7): Line Items / Other
+                        Partner Contributions as their own full-width inner
+                        tabs (previously two title+Card+grid blocks stacked
+                        vertically) -- the first nested-tabs precedent in this
+                        app, so this reuses the exact same Tab/TabList/
+                        TabsContainer components as the outer tabs, just with
+                        a second, independent TabContext nested in here. */}
+                    <TabsContainer>
+                      <TabContext value={innerTab}>
+                        <TabList
+                          onChange={(_e, tab) => setInnerTab(tab)}
+                          aria-label="field budget navigation tabs"
+                        >
+                          <Tab label="Line Items" value="lineItems" />
+                          <Tab
+                            label="Other Partner Contributions"
+                            value="otherPartnerContributions"
+                          />
+                        </TabList>
+                        <TabPanel value="lineItems">
+                          <ProjectBudgetLineItems
+                            loading={loading}
+                            budget={budget.value}
+                            partnerOrganizations={partnerOrganizations}
+                          />
+                        </TabPanel>
+                        <TabPanel value="otherPartnerContributions">
+                          <OtherPartnerContributionsGrid
+                            loading={loading}
+                            budget={budget.value}
+                            partnerOrganizations={partnerOrganizations}
+                          />
+                        </TabPanel>
+                      </TabContext>
+                    </TabsContainer>
+                  </TabPanel>
+                  <TabPanel value="stats">
+                    <BudgetApprovalStatsTab
+                      budget={budget.value}
+                      funderName={funderName}
+                      projectMouStart={projectMouStart}
+                      projectMouEnd={projectMouEnd}
+                    />
                   </TabPanel>
                   <TabPanel value="breakdown">
                     <BudgetBreakdown budget={budget.value} />
                   </TabPanel>
                   <TabPanel value="partners">
                     <BudgetPartnerLedger budget={budget.value} />
+                  </TabPanel>
+                  <TabPanel value="funding">
+                    <Grid container direction="column" spacing={3}>
+                      <Grid item>
+                        <Alert severity="info">
+                          This is Financial Services' approved per-partner
+                          funding ledger — tracked and maintained separately
+                          from the itemized Field Budget above. See the ⓘ next
+                          to Funding Budget Total in the page header for how the
+                          two relate.
+                        </Alert>
+                      </Grid>
+                      <Grid item>
+                        <ProjectBudgetRecords
+                          loading={loading}
+                          budget={budget}
+                        />
+                      </Grid>
+                    </Grid>
                   </TabPanel>
                 </TabContext>
               </TabsContainer>

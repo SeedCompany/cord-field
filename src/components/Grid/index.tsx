@@ -20,3 +20,4 @@ export * from './useGridMutation';
 export * from './createAddItemFooter';
 export * from './useDataGridSlots';
 export * from './createAddItemFooter';
+export * from './withEditTooltip';
