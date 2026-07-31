@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { sortBy } from '@seedcompany/common';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
 import { Breadcrumb } from '../../../components/Breadcrumb';
@@ -88,17 +88,16 @@ export const ProjectBudget = () => {
   const budget = data?.project.budget;
 
   const [activeTab, setTab] = useDetailTabs(
-    ['budget', 'stats', 'breakdown', 'partners', 'funding'],
+    [
+      'budget',
+      'otherContributions',
+      'stats',
+      'breakdown',
+      'partners',
+      'funding',
+    ],
     'budget'
   );
-
-  // budget-line-items-poc (item 7): inner-tab state for the "Field Budget"
-  // tab's own Line Items / Other Partner Contributions split -- a plain
-  // local `useState` rather than a second URL-synced query param, since this
-  // is a secondary navigation level that doesn't need to survive a page
-  // refresh (see `useDetailTabs`, used for the outer tabs above, for the
-  // URL-synced convention this deliberately doesn't extend).
-  const [innerTab, setInnerTab] = useState('lineItems');
 
   // budget-line-items-poc (item 2 & 3): this project's own partnerships,
   // deduplicated by organization id -- sourced for the Service Provider /
@@ -432,47 +431,28 @@ export const ProjectBudget = () => {
                     aria-label="budget navigation tabs"
                   >
                     <Tab label="Field Budget" value="budget" />
+                    <Tab
+                      label="Other Partner Contributions"
+                      value="otherContributions"
+                    />
                     <Tab label="Budget Approval Stats" value="stats" />
                     <Tab label="Breakdown" value="breakdown" />
                     <Tab label="Partner Budgets" value="partners" />
                     <Tab label="Funding Budget" value="funding" />
                   </TabList>
                   <TabPanel value="budget">
-                    {/* budget-line-items-poc (item 7): Line Items / Other
-                        Partner Contributions as their own full-width inner
-                        tabs (previously two title+Card+grid blocks stacked
-                        vertically) -- the first nested-tabs precedent in this
-                        app, so this reuses the exact same Tab/TabList/
-                        TabsContainer components as the outer tabs, just with
-                        a second, independent TabContext nested in here. */}
-                    <TabsContainer>
-                      <TabContext value={innerTab}>
-                        <TabList
-                          onChange={(_e, tab) => setInnerTab(tab)}
-                          aria-label="field budget navigation tabs"
-                        >
-                          <Tab label="Line Items" value="lineItems" />
-                          <Tab
-                            label="Other Partner Contributions"
-                            value="otherPartnerContributions"
-                          />
-                        </TabList>
-                        <TabPanel value="lineItems">
-                          <ProjectBudgetLineItems
-                            loading={loading}
-                            budget={budget.value}
-                            partnerOrganizations={partnerOrganizations}
-                          />
-                        </TabPanel>
-                        <TabPanel value="otherPartnerContributions">
-                          <OtherPartnerContributionsGrid
-                            loading={loading}
-                            budget={budget.value}
-                            partnerOrganizations={partnerOrganizations}
-                          />
-                        </TabPanel>
-                      </TabContext>
-                    </TabsContainer>
+                    <ProjectBudgetLineItems
+                      loading={loading}
+                      budget={budget.value}
+                      partnerOrganizations={partnerOrganizations}
+                    />
+                  </TabPanel>
+                  <TabPanel value="otherContributions">
+                    <OtherPartnerContributionsGrid
+                      loading={loading}
+                      budget={budget.value}
+                      partnerOrganizations={partnerOrganizations}
+                    />
                   </TabPanel>
                   <TabPanel value="stats">
                     <BudgetApprovalStatsTab
