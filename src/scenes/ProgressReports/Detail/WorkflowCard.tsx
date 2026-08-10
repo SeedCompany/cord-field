@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@mui/material';
 import { RelativeDateTime } from '~/components/Formatters';
-import { RichTextView } from '~/components/RichText';
+import { isDataEmpty, RichTextView } from '~/components/RichText';
 import { ButtonLink } from '~/components/Routing';
 import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
 import { StatusStepper } from './StatusStepper';
@@ -22,7 +22,7 @@ export const WorkflowCard = ({ report, ...rest }: WorkflowCardProps) => {
   const lastNotes = report?.workflowEvents
     .slice()
     .reverse()
-    .find((e) => e.notes.value)?.notes.value;
+    .find((e) => !isDataEmpty(e.notes.value))?.notes.value;
   return (
     <Card {...rest}>
       <Typography variant="h3" sx={{ pl: 2, pt: 2 }}>
