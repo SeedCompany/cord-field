@@ -1,0 +1,1 @@
+Playwright fixture file — used to exercise CreateFileVersion (upload) in tests/e2e/personas/administrator/project-files.spec.ts and defined-files.spec.ts.
