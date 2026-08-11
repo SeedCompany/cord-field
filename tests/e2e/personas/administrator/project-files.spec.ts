@@ -139,7 +139,11 @@ test.describe('project files (administrator)', () => {
       fileId,
       `failed to upload the file: ${JSON.stringify(createFileBody)}`
     ).toBeTruthy();
-    await expect(page.getByText('tiny', { exact: false })).toBeVisible();
+    // exact — a loose match also catches "tiny.txt" in the Upload Manager
+    // panel's own completed-uploads list (a race depending on how fast that
+    // panel renders relative to this check — the grid's stripped-extension
+    // display name is always exactly "tiny", never a substring collision).
+    await expect(page.getByText('tiny', { exact: true })).toBeVisible();
     await closeUploadManager(page);
 
     // The per-row "⋮" actions button has no Tooltip and no explicit
