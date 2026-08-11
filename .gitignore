@@ -3,6 +3,10 @@
 # compiled output
 /build
 /cache
+/playwright-report
+/tests/e2e/.auth
+/tests/e2e/.coverage
+/test-results
 
 # Yarn / NPM
 .yarn/cache
