@@ -1,5 +1,7 @@
 import { expect, test } from '../../support/test';
 
+const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
+
 test.describe('tools (administrator)', () => {
   test('list loads and a tool detail page opens', async ({ page }) => {
     await page.goto('/tools');
@@ -39,14 +41,29 @@ test.describe('tools (administrator)', () => {
   test('recording a tool usage shows up on the tool detail page, and removing it clears both', async ({
     page,
   }) => {
-    await page.goto('/projects');
-    const main = page.getByRole('main');
-    await main.getByRole('link').first().click();
-    await page.waitForURL(/\/projects\/[^/]+$/u);
+    // Not "click the first project in the list" — with `fullyParallel`
+    // workers, other specs' own throwaway projects can transiently sort
+    // before this suite's one seeded fixture project (alphabetical name
+    // sort), and may not have an engagement yet. Looking up the known
+    // seed project (see HANDOFF.md's seed-data section) by name directly
+    // avoids that race entirely.
+    const lookupRes = await page.request.post(`${API_BASE}/graphql`, {
+      data: {
+        query:
+          'query { projects(input:{filter:{name:"Playwright Seed Project"},count:1}) { items { engagements { items { id } } } } }',
+      },
+    });
+    const engagementId = (await lookupRes.json())?.data?.projects?.items?.[0]
+      ?.engagements?.items?.[0]?.id;
+    expect(
+      engagementId,
+      'expected the seeded fixture project to have at least one engagement'
+    ).toBeTruthy();
 
-    await page.getByRole('link', { name: 'View Details' }).first().click();
+    await page.goto(`/engagements/${engagementId}`);
     await page.waitForURL(/\/engagements\/[^/]+$/u);
     const engagementUrl = page.url();
+    const main = page.getByRole('main');
 
     const toolsHeading = page.getByRole('heading', {
       name: 'Tools',

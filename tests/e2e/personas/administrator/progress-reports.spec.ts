@@ -14,14 +14,28 @@ import { expect, test } from '../../support/test';
  * check (loads without error) rather than a claim of Postgres coverage.
  * Track RPT-1 as a backend code fact, not a UI assertion.
  */
+const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
+
 test.describe('progress reports (administrator)', () => {
   test("a project's reports tab loads without error", async ({ page }) => {
-    await page.goto('/projects');
+    // Not "click the first project in the list" — with `fullyParallel`
+    // workers, other specs' own throwaway projects (including Internship-
+    // type ones, which don't show "All Reports" the same way) can
+    // transiently sort before this suite's one seeded fixture project.
+    // Looking it up by name directly avoids that race.
+    const lookupRes = await page.request.post(`${API_BASE}/graphql`, {
+      data: {
+        query:
+          'query { projects(input:{filter:{name:"Playwright Seed Project"},count:1}) { items { id } } }',
+      },
+    });
+    const projectId = (await lookupRes.json())?.data?.projects?.items?.[0]?.id;
+    expect(
+      projectId,
+      'expected the seeded fixture project to exist'
+    ).toBeTruthy();
 
-    const main = page.getByRole('main');
-    const projectLink = main.getByRole('link').first();
-    await expect(projectLink).toBeVisible();
-    await projectLink.click();
+    await page.goto(`/projects/${projectId}`);
     await page.waitForURL(/\/projects\/[^/]+$/u);
 
     const allReportsLink = page
