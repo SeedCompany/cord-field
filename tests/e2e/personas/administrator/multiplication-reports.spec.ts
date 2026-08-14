@@ -120,7 +120,8 @@ test.describe('multiplication reports (administrator)', () => {
     await expect(
       page.getByText('This report has not yet been started')
     ).toBeVisible();
-    await page.getByRole('button').filter({ hasText: /.+/u }).first().click();
+    // Scope to the transition form specifically — a broad "any button with text" selector can match the account-menu button once real notifications accumulate there (e.g. from dashboard-and-notifications.spec.ts's ReadNotification test).
+    await page.locator('form').getByRole('button').first().click();
     await expect(
       page.getByRole('navigation', { name: 'Quarterly Report Steps' })
     ).toBeVisible();

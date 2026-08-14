@@ -1,0 +1,235 @@
+import { Page } from '@playwright/test';
+import { expect, test } from '../../support/test';
+
+const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
+
+const waitForOperation = (page: Page, name: string) =>
+  page.waitForResponse(async (res) => {
+    if (!res.url().includes(`/graphql/${name}`)) return false;
+    const body = await res.json().catch(() => null);
+    return !(
+      body?.errors?.length === 1 &&
+      body.errors[0]?.message === 'PersistedQueryNotFound'
+    );
+  });
+
+const gql = (page: Page, query: string) =>
+  page.request
+    .post(`${API_BASE}/graphql`, { data: { query } })
+    .then((res) => res.json());
+
+/**
+ * Round 9: `UpdateStepProgress` and `UpdateProjectBudgetRecord` — Round 8's
+ * two "deferred, with a real reason" items that got fully root-caused this
+ * round rather than attempted blind.
+ *
+ * `UpdateStepProgress` needs a Product whose `progressOfCurrentReportDue`
+ * resolves — i.e. a real progress report already generated for its
+ * engagement (the `mouStart`/`mouEnd` → `SyncProgressReportToEngagementDateRange`
+ * trick, same as every other report-dependent spec this round) — AND the
+ * product itself needs `progressStepMeasurement`/`progressTarget` set
+ * (confirmed via `StepList.tsx`: the edit dialog only renders when
+ * `measurement && target` are both truthy, even though the backend only
+ * "considers" `progressTarget` for `Number` measurement — `Percent` still
+ * needs a truthy `target` client-side to unlock the dialog at all).
+ *
+ * `UpdateProjectBudgetRecord` was a real, unresolved mystery at the end of
+ * Round 8 — a `Managing`-type partnership with `financialReportingTypes`
+ * granted, plus real project dates, left `budget.records` empty. Root cause
+ * (confirmed via `SyncBudgetRecordsToFundingPartners` handler,
+ * cord-api-v3): the gate is `partnership.types.includes('Funding')`, a
+ * DIFFERENT `PartnerType` value than `Managing` — the two are independent,
+ * and `financialReportingType` doesn't substitute for either. A `Funding`-
+ * type partnership created on a project that already has real
+ * `mouStart`/`mouEnd` fires `PartnershipCreatedHook`, which generates the
+ * `BudgetRecord` row for real.
+ */
+test.describe('product progress and budget records (administrator)', () => {
+  test('UpdateStepProgress on a product with a real due report', async ({
+    page,
+  }) => {
+    const suffix = Date.now().toString(36);
+    const langResp = await gql(
+      page,
+      'query { languages(input:{count:1}) { items { id } } }'
+    );
+    const languageId = langResp?.data?.languages?.items?.[0]?.id;
+    expect(
+      languageId,
+      'expected the seeded fixture language to exist'
+    ).toBeTruthy();
+
+    const projResp = await gql(
+      page,
+      `mutation { createProject(input:{name:"Playwright StepProgress ${suffix}", type:MomentumTranslation}) { project { id } } }`
+    );
+    const projectId = projResp?.data?.createProject?.project?.id;
+    expect(projectId, 'failed to create the throwaway project').toBeTruthy();
+
+    const engResp = await gql(
+      page,
+      `mutation { createLanguageEngagement(input:{project:"${projectId}", language:"${languageId}"}) { engagement { id } } }`
+    );
+    const engagementId =
+      engResp?.data?.createLanguageEngagement?.engagement?.id;
+    expect(
+      engagementId,
+      'failed to create the throwaway engagement'
+    ).toBeTruthy();
+
+    const dateResp = await gql(
+      page,
+      `mutation { updateProject(input:{id:"${projectId}", mouStart:"2025-01-01", mouEnd:"2026-12-31"}) { project { id } } }`
+    );
+    expect(
+      dateResp?.errors,
+      `expected setting mou dates to generate real reports: ${JSON.stringify(
+        dateResp
+      )}`
+    ).toBeFalsy();
+
+    const productResp = await gql(
+      page,
+      `mutation { createDirectScriptureProduct(input:{engagement:"${engagementId}", methodology:Paratext, progressStepMeasurement:Percent, progressTarget:100, steps:[ExegesisAndFirstDraft]}) { product { id } } }`
+    );
+    const productId =
+      productResp?.data?.createDirectScriptureProduct?.product?.id;
+    expect(
+      productId,
+      `failed to create the throwaway product: ${JSON.stringify(productResp)}`
+    ).toBeTruthy();
+
+    await page.goto(`/products/${productId}`);
+    await expect(page.getByText('Exegesis & First Draft')).toBeVisible();
+    await page.getByText('Exegesis & First Draft').click();
+
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByLabel('Progress')).toBeVisible();
+    await dialog.getByLabel('Progress').fill('50');
+    const [updateResponse] = await Promise.all([
+      waitForOperation(page, 'UpdateStepProgress'),
+      dialog.getByRole('button', { name: 'Submit' }).click(),
+    ]);
+    expect(
+      (await updateResponse.json())?.errors,
+      'expected UpdateStepProgress to succeed'
+    ).toBeFalsy();
+
+    await gql(
+      page,
+      `mutation { deleteEngagement(id: "${engagementId}") { __typename } }`
+    );
+    await gql(
+      page,
+      `mutation { deleteProject(id: "${projectId}") { __typename } }`
+    );
+  });
+
+  test('UpdateProjectBudgetRecord on a real BudgetRecord generated by a Funding-type partnership', async ({
+    page,
+  }) => {
+    const suffix = Date.now().toString(36);
+    const orgResp = await gql(
+      page,
+      `mutation { createOrganization(input:{name:"Playwright Budget Org ${suffix}"}) { organization { id } } }`
+    );
+    const orgId = orgResp?.data?.createOrganization?.organization?.id;
+    expect(orgId, 'failed to create the throwaway organization').toBeTruthy();
+
+    // `financialReportingTypes` must be granted on the Partner (in the same
+    // call as `types`, per Round 8's finding — setting it separately
+    // afterward silently no-ops) before a Partnership can use that same
+    // `financialReportingType`, or `createPartnership` rejects it outright.
+    // A real, second business rule surfaced live: `financialReportingTypes`
+    // "can only be applied to managing partners" — the Partner needs BOTH
+    // `Managing` and `Funding` in `types`, even though only the Partnership's
+    // own `Funding` type is what the budget-record sync hook actually checks.
+    const partnerResp = await gql(
+      page,
+      `mutation { createPartner(input:{organization:"${orgId}", types:[Funding, Managing], financialReportingTypes:[Funded]}) { partner { id } } }`
+    );
+    const partnerId = partnerResp?.data?.createPartner?.partner?.id;
+    expect(
+      partnerId,
+      `failed to create the throwaway partner: ${JSON.stringify(partnerResp)}`
+    ).toBeTruthy();
+
+    const projResp = await gql(
+      page,
+      `mutation { createProject(input:{name:"Playwright Budget ${suffix}", type:MomentumTranslation}) { project { id } } }`
+    );
+    const projectId = projResp?.data?.createProject?.project?.id;
+    expect(projectId, 'failed to create the throwaway project').toBeTruthy();
+
+    // Same rule, one level up: the Partnership's own `types` must ALSO
+    // include `Managing` for it to be allowed a `financialReportingType`.
+    const partnershipResp = await gql(
+      page,
+      `mutation { createPartnership(input:{project:"${projectId}", partner:"${partnerId}", types:[Funding, Managing], financialReportingType:Funded}) { partnership { id } } }`
+    );
+    const partnershipId =
+      partnershipResp?.data?.createPartnership?.partnership?.id;
+    expect(
+      partnershipId,
+      `failed to create the throwaway Funding partnership: ${JSON.stringify(
+        partnershipResp
+      )}`
+    ).toBeTruthy();
+
+    const dateResp = await gql(
+      page,
+      `mutation { updateProject(input:{id:"${projectId}", mouStart:"2025-01-01", mouEnd:"2026-12-31"}) { project { id } } }`
+    );
+    expect(
+      dateResp?.errors,
+      `expected setting mou dates to succeed: ${JSON.stringify(dateResp)}`
+    ).toBeFalsy();
+
+    const recordsResp = await gql(
+      page,
+      `query { project(id: "${projectId}") { budget { value { records { id fiscalYear { value } } } } } }`
+    );
+    const records = recordsResp?.data?.project?.budget?.value?.records ?? [];
+    expect(
+      records.length,
+      `expected SyncBudgetRecordsToFundingPartners to generate at least one BudgetRecord: ${JSON.stringify(
+        recordsResp
+      )}`
+    ).toBeGreaterThan(0);
+
+    await page.goto(`/projects/${projectId}/budget`);
+    // Multiple fiscal-year rows get generated for the same funding
+    // partner across a multi-year mou range — any one works for this test.
+    const row = page
+      .getByRole('row', {
+        name: new RegExp(`Playwright Budget Org ${suffix}`, 'u'),
+      })
+      .first();
+    await expect(row).toBeVisible();
+
+    const amountCell = row.locator('[data-field="amount"]');
+    await amountCell.dblclick();
+    await page.keyboard.type('1000');
+    const [updateResponse] = await Promise.all([
+      waitForOperation(page, 'UpdateProjectBudgetRecord'),
+      page.keyboard.press('Tab'),
+    ]);
+    expect(
+      (await updateResponse.json())?.errors,
+      'expected UpdateProjectBudgetRecord to succeed'
+    ).toBeFalsy();
+
+    await gql(
+      page,
+      `mutation { deletePartnership(id: "${partnershipId}") { __typename } }`
+    );
+    await gql(
+      page,
+      `mutation { deleteProject(id: "${projectId}") { __typename } }`
+    );
+    await gql(
+      page,
+      `mutation { deletePartner(id: "${partnerId}") { __typename } }`
+    );
+  });
+});
