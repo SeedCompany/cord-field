@@ -1,7 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
 import { authFileFor, PERSONAS } from './tests/e2e/support/personas';
 
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000';
+// `.env`'s `PORT=3001` is where the actual frontend dev server (`yarn start`,
+// launched by `webServer` below) binds — `RAZZLE_API_BASE_URL=http://localhost:3000`
+// is the API it proxies to, a separate process this config doesn't start.
+// Defaulting to :3000 here was a real bug, not a placeholder: with the API
+// already running on :3000 and no explicit override, Playwright would treat
+// the API's plain HTTP response as "the webServer is ready" and run every
+// test against the API directly — confirmed live, reproducing the exact
+// `Cannot GET /projects` JSON 404 an external review caught.
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3001';
 const isCi = Boolean(process.env.CI);
 const isLocalUrl = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?/u.test(
   baseURL

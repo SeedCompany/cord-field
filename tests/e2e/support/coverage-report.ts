@@ -87,8 +87,17 @@ const main = () => {
     return;
   }
 
-  const { exercised, errored } = summarize(rows);
+  const { exercised: allExercised, errored } = summarize(rows);
   const known = knownOperations();
+  // `allExercised` includes every operation name seen at all — subscriptions
+  // (e.g. `NotificationAdded`, fired continuously once the notifications
+  // feature flag is on) show up here too, but `known` deliberately excludes
+  // them (Query + Mutation only). Without this filter, a fired subscription
+  // silently inflates the numerator against a denominator that never
+  // included it in the first place — confirmed live: this was overcounting
+  // by exactly 1 (163 reported vs. 162 actual Query/Mutation coverage).
+  const knownSet = new Set(known);
+  const exercised = new Set([...allExercised].filter((op) => knownSet.has(op)));
   const unexercised = known.filter((op) => !exercised.has(op));
 
   console.log(`Coverage report for tag "${tag}"`);
