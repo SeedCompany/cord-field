@@ -174,6 +174,12 @@ test.describe('media and user photo (administrator)', () => {
     expect(userId, 'failed to create the throwaway user').toBeTruthy();
 
     await page.goto(`/users/${userId}`);
+    // `UserPhoto.tsx` renders a `PersonIcon` fallback (no `<img>` at all)
+    // while `user.photo.value` is unset, and only renders a real `<img>`
+    // once `Avatar`'s `src` prop becomes truthy — a fresh throwaway user has
+    // no photo yet, so this is a real "before" state, not an assumption.
+    await expect(page.locator('img')).toHaveCount(0);
+
     const photoInput = page.locator('input[name="user_photo_uploader"]');
     const [uploadResponse] = await Promise.all([
       waitForOperation(page, 'UpdateUserPhoto'),
@@ -183,6 +189,14 @@ test.describe('media and user photo (administrator)', () => {
       (await uploadResponse.json())?.errors,
       'expected UpdateUserPhoto to succeed'
     ).toBeFalsy();
+
+    // `errors: null` only proves the mutation was accepted, not that the
+    // photo actually rendered or persisted — confirm the fallback icon was
+    // really replaced by a real `<img>`, then reload (a fresh fetch, not
+    // Apollo's optimistic cache) and confirm it's still there.
+    await expect(page.locator('img')).toHaveCount(1);
+    await page.reload();
+    await expect(page.locator('img')).toHaveCount(1);
 
     await gql(page, `mutation { deleteUser(id: "${userId}") { __typename } }`);
   });

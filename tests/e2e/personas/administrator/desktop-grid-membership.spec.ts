@@ -121,12 +121,17 @@ test.describe('desktop-only grid membership (administrator)', () => {
       dialog.getByRole('button', { name: 'Submit' }).click(),
     ]);
     const addBody = await addResponse.json();
+    // Assert the machine-readable code, not the literal message — cord-api-v3's
+    // exception normalizer (`errorToCode`) derives `extensions.codes` from the
+    // exception class name (`NotImplementedException` → `'NotImplemented'`),
+    // so this survives a future wording change to the human-readable message
+    // without losing the regression signal.
     expect(
-      addBody?.errors?.[0]?.message,
+      addBody?.errors?.[0]?.extensions?.codes,
       `expected the real, temporary Postgres migration-todo block, got: ${JSON.stringify(
         addBody
       )}`
-    ).toBe('Not implemented');
+    ).toContain('NotImplemented');
 
     await gql(
       page,
@@ -191,7 +196,14 @@ test.describe('desktop-only grid membership (administrator)', () => {
       'expected AssignPersonToPartner to succeed'
     ).toBeFalsy();
 
-    const row = page.getByRole('row', { name: new RegExp(suffix, 'u') });
+    // Scoped by the full display-name prefix plus suffix, not the bare
+    // suffix — a bare `Date.now().toString(36)` suffix (millisecond
+    // precision) can collide with another test's row when this file's
+    // tests run in parallel (hit for real once already — see
+    // `UpdatePartnerGrid` below).
+    const row = page.getByRole('row', {
+      name: new RegExp(`Playwright GridPerson${suffix}`, 'u'),
+    });
     await expect(row).toBeVisible();
     const [removeResponse] = await Promise.all([
       waitForOperation(page, 'RemovePersonFromPartner'),
@@ -259,7 +271,11 @@ test.describe('desktop-only grid membership (administrator)', () => {
       'expected AssignOrganizationToUser to succeed'
     ).toBeFalsy();
 
-    const row = page.getByRole('row', { name: new RegExp(suffix, 'u') });
+    // Scoped by the full organization-name prefix plus suffix, not the bare
+    // suffix — same cross-test collision risk as above.
+    const row = page.getByRole('row', {
+      name: new RegExp(`Playwright Grid Org2 ${suffix}`, 'u'),
+    });
     await expect(row).toBeVisible();
     const [removeResponse] = await Promise.all([
       waitForOperation(page, 'RemoveOrganizationFromUser'),

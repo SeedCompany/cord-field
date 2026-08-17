@@ -101,6 +101,21 @@ test.describe('engagement grid and goal edits (administrator)', () => {
       (await updateResponse.json())?.errors,
       'expected UpdateLanguageEngagementGrid to succeed'
     ).toBeFalsy();
+    await expect(aiCell).toHaveText('Draft');
+
+    // `errors: null` only proves the mutation was accepted, not that the new
+    // value actually persisted server-side (the grid could be showing an
+    // optimistic local update that a refetch would silently revert). The tab
+    // is URL-synced (`useDetailTabs`), so a reload lands right back here —
+    // re-fetch from a clean cache and confirm the edit really stuck.
+    await page.reload();
+    const reloadedRow = page.getByRole('row', {
+      name: /Playwright Engagement Grid/u,
+    });
+    await expect(reloadedRow).toBeVisible();
+    await expect(
+      reloadedRow.locator('[data-field="usingAIAssistedTranslation"]')
+    ).toHaveText('Draft');
 
     await gql(
       page,
@@ -263,6 +278,11 @@ test.describe('engagement grid and goal edits (administrator)', () => {
     await page.getByText('Methodology').click();
     // This form (unlike the Media wizard step) doesn't `autoSubmit` — a
     // real "Save Goal" click is required after changing the field.
+    // `displayMethodology()` renders every enum value containing "Other"
+    // (`OtherWritten`/`OtherOralTranslation`/`OtherOralStories`/`OtherVisual`)
+    // as the same literal "Other" label, one per approach section — `.first()`
+    // picks Written's, i.e. `OtherWritten` (`entries(ApproachMethodologies)`
+    // iterates Written first).
     await page
       .getByRole('radio', { name: 'Other', exact: true })
       .first()
@@ -275,6 +295,21 @@ test.describe('engagement grid and goal edits (administrator)', () => {
       (await updateResponse.json())?.errors,
       'expected UpdateDerivativeScriptureProduct to succeed'
     ).toBeFalsy();
+
+    // `errors: null` only proves the mutation was accepted, not that the new
+    // methodology actually persisted — re-fetch the product directly rather
+    // than re-reading the UI, since all 4 "Other" methodologies render the
+    // same ambiguous "Other" label.
+    const verifyResp = await gql(
+      page,
+      `query { product(id: "${productId}") { ... on DerivativeScriptureProduct { methodology { value } } } }`
+    );
+    expect(
+      verifyResp?.data?.product?.methodology?.value,
+      `expected methodology to have persisted as OtherWritten: ${JSON.stringify(
+        verifyResp
+      )}`
+    ).toBe('OtherWritten');
 
     await gql(
       page,
