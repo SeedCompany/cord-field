@@ -34,6 +34,7 @@ import {
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.graphql';
 import { EngagementDescription } from '../LanguageEngagement/Description';
+import { GtlReportsCard } from './GtlReportsCard';
 import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
@@ -228,6 +229,9 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                 <EngagementDescription engagement={engagement} />
               </Grid>
               <Grid item container spacing={3}>
+                <Grid item xs={12}>
+                  <GtlReportsCard engagement={engagement} />
+                </Grid>
                 <Grid item xs={12} md={6}>
                   <FieldOverviewCard
                     title="Growth Plan Complete Date"

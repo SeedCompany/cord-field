@@ -1,6 +1,31 @@
 fragment InternshipEngagementDetail on InternshipEngagement {
   ...Id
   ...EngagementBreadcrumb
+  programProgress {
+    value
+  }
+  currentGtlReportDue {
+    value {
+      id
+      start
+      end
+      due
+      status {
+        value
+      }
+    }
+  }
+  nextGtlReportDue {
+    value {
+      id
+      start
+      end
+      due
+    }
+  }
+  gtlReports {
+    total
+  }
   createdAt
   status {
     value
