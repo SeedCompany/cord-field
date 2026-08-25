@@ -1,0 +1,173 @@
+query GtlReportDetail($id: ID!) {
+  periodicReport(id: $id) {
+    ...gtlReportDetail
+  }
+}
+
+fragment gtlReportDetail on GTLReport {
+  id
+  start
+  end
+  due
+  status {
+    canRead
+    value
+  }
+  parent {
+    id
+    ... on InternshipEngagement {
+      id
+      programProgress {
+        value
+      }
+      intern {
+        value {
+          id
+          fullName
+        }
+      }
+      project {
+        id
+        name {
+          value
+        }
+      }
+    }
+  }
+  transitions {
+    key
+    label
+    to
+    type
+    canExecute
+  }
+  workflowEvents {
+    id
+    to
+    at
+  }
+  previousQuarterGoals {
+    ...gtlGoal
+  }
+  goals {
+    ...gtlGoal
+  }
+  practicums {
+    id
+    involvement {
+      value
+      canEdit
+    }
+    outcomes {
+      value
+    }
+    mentor {
+      value {
+        id
+        fullName
+      }
+    }
+  }
+  communityImpact {
+    ...gtlProse
+  }
+  praises {
+    ...gtlProse
+  }
+  petitions {
+    ...gtlProse
+  }
+  progressExplanation {
+    status {
+      canRead
+      value
+    }
+    context {
+      value
+    }
+  }
+}
+
+fragment gtlGoal on GtlReportGoal {
+  id
+  goal {
+    value
+    canEdit
+  }
+  details {
+    value
+  }
+  met {
+    value
+  }
+  impact {
+    value
+  }
+}
+
+fragment gtlProse on PromptVariantResponseList {
+  canRead
+  canCreate
+  items {
+    id
+    prompt {
+      value {
+        id
+        shortLabel {
+          value
+        }
+      }
+    }
+    responses {
+      variant {
+        key
+        label
+      }
+      response {
+        value
+        canEdit
+      }
+    }
+  }
+  available {
+    prompts {
+      id
+      shortLabel {
+        value
+      }
+    }
+  }
+}
+
+mutation ExecuteGtlReportTransition($input: ExecuteGtlReportTransition!) {
+  executeGtlReportTransition(input: $input) {
+    ...gtlReportDetail
+  }
+}
+
+mutation CreateGtlReportGoal($input: CreateGtlReportGoal!) {
+  createGtlReportGoal(input: $input) {
+    gtlReportGoal {
+      ...gtlGoal
+    }
+  }
+}
+
+mutation ReviewGtlReportGoal($input: ReviewGtlReportGoal!) {
+  reviewGtlReportGoal(input: $input) {
+    gtlReportGoal {
+      ...gtlGoal
+    }
+  }
+}
+
+mutation ExplainGtlProgress($input: ExplainGtlProgress!) {
+  explainGtlProgress(input: $input) {
+    status {
+      value
+    }
+    context {
+      value
+    }
+  }
+}
