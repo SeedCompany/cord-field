@@ -28,9 +28,11 @@ import {
 export const ProgressExplanationCard = ({
   reportId,
   explanation,
+  editable = true,
 }: {
   reportId: string;
   explanation: GtlReportDetailFragment['progressExplanation'];
+  editable?: boolean;
 }) => {
   const [explain] = useMutation(ExplainGtlProgressDocument);
   const { status, context } = explanation;
@@ -48,7 +50,7 @@ export const ProgressExplanationCard = ({
           Operations.
         </Typography>
 
-        {!status.canEdit ? (
+        {!editable || !status.canEdit ? (
           status.value ? (
             <>
               <Typography variant="body1">

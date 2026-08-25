@@ -1,7 +1,5 @@
-import { ChevronRight } from '@mui/icons-material';
 import {
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   LinearProgress,
@@ -12,15 +10,20 @@ import { GtlReportStatusLabels } from '~/api/schema/enumLists';
 import { labelFrom } from '~/common';
 import { FormattedDate } from '../../../components/Formatters';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
-import { ButtonLink, Link } from '../../../components/Routing';
+import { ButtonLink } from '../../../components/Routing';
 import { type InternshipEngagementDetailFragment } from './InternshipEngagement.graphql';
+
+type Report = NonNullable<
+  InternshipEngagementDetailFragment['currentGtlReportDue']['value']
+>;
 
 /**
  * Quarterly reporting on the Global Translation Leader engagement page.
  *
- * Shows the report that is currently due — the period most recently completed —
- * because that is the one someone lands here to act on. The next period is
- * shown only as context.
+ * Same shape as Momentum's card: the period currently due and the one after
+ * it, a primary action that starts or opens the current report, and a way
+ * through to every report. The card is a summary — the list page is where
+ * someone goes to find an older quarter.
  */
 export const GtlReportsCard = ({
   engagement,
@@ -30,69 +33,76 @@ export const GtlReportsCard = ({
   const current = engagement.currentGtlReportDue.value;
   const next = engagement.nextGtlReportDue.value;
   const progress = engagement.programProgress.value;
-  const report = current ?? next;
 
   return (
-    <Card>
-      <CardActionArea
-        component={report ? Link : 'div'}
-        to={report ? `/gtl-reports/${report.id}` : undefined}
-        disabled={!report}
-      >
-        <CardContent>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography variant="h4">Quarterly Reports</Typography>
-            {report && <ChevronRight />}
-          </Stack>
+    <Card sx={{ width: 1 }}>
+      <CardContent>
+        <Typography variant="h4" paragraph>
+          Quarterly Reports
+        </Typography>
 
-          {report ? (
-            <>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {current ? 'Currently due' : 'Next period'} —{' '}
-                <ReportLabel report={report} />
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Due <FormattedDate date={report.due} />
-                {current?.status.value &&
-                  ` · ${labelFrom(GtlReportStatusLabels)(
-                    current.status.value
-                  )}`}
-              </Typography>
-            </>
-          ) : (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              No reports yet. They are generated from the engagement’s date
-              range.
-            </Typography>
-          )}
-
-          {progress != null && (
-            <>
-              <Typography variant="body2" sx={{ mt: 2 }}>
-                Program progress — {progress}%
-              </Typography>
-              <LinearProgress variant="determinate" value={progress} />
-            </>
-          )}
-
-          <Typography variant="caption" color="text.secondary">
-            {engagement.gtlReports.total} report
-            {engagement.gtlReports.total === 1 ? '' : 's'} in total
+        {!current && !next ? (
+          <Typography variant="body2" color="text.secondary">
+            No reports yet. They are generated from the engagement’s date range.
           </Typography>
-        </CardContent>
-      </CardActionArea>
-      <CardActions>
-        <ButtonLink
-          size="small"
-          to={`/engagements/${engagement.id}/reports/gtl`}
-        >
-          See all reports
+        ) : (
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={4}
+            sx={{ mb: 1 }}
+          >
+            {current && <ReportInfo title="Current" report={current} />}
+            {next && <ReportInfo title="Next" report={next} />}
+          </Stack>
+        )}
+
+        {progress != null && (
+          <>
+            <Typography variant="body2" sx={{ mt: 2 }}>
+              Program progress — {progress}%
+            </Typography>
+            <LinearProgress variant="determinate" value={progress} />
+            <Typography variant="caption" color="text.secondary">
+              Elapsed time in the program. End date subject to change.
+            </Typography>
+          </>
+        )}
+      </CardContent>
+
+      <CardActions sx={{ justifyContent: 'space-between' }}>
+        {current &&
+          (current.status.value === 'NotStarted' ? (
+            <ButtonLink color="primary" to={`/gtl-reports/${current.id}/edit`}>
+              Start Report
+            </ButtonLink>
+          ) : (
+            <ButtonLink color="primary" to={`/gtl-reports/${current.id}`}>
+              View Report
+            </ButtonLink>
+          ))}
+        <ButtonLink color="primary" to="reports/gtl">
+          All Reports
         </ButtonLink>
       </CardActions>
     </Card>
   );
 };
+
+const ReportInfo = ({ title, report }: { title: string; report: Report }) => (
+  <div>
+    <Typography variant="overline" color="text.secondary">
+      {title}
+    </Typography>
+    <Typography variant="h4">
+      <ReportLabel report={report} />
+    </Typography>
+    <Typography variant="body2" color="text.secondary">
+      Due <FormattedDate date={report.due} />
+    </Typography>
+    {report.status.value && (
+      <Typography variant="body2">
+        {labelFrom(GtlReportStatusLabels)(report.status.value)}
+      </Typography>
+    )}
+  </div>
+);

@@ -21,6 +21,9 @@ fragment InternshipEngagementDetail on InternshipEngagement {
       start
       end
       due
+      status {
+        value
+      }
     }
   }
   gtlReports {

@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
+import { Edit } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -17,6 +18,8 @@ import { GtlReportStatusLabels } from '~/api/schema/enumLists';
 import { labelFrom } from '~/common';
 import { Error } from '../../../components/Error';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
+import { ButtonLink } from '../../../components/Routing';
+import { GtlReportDrawer } from '../EditForm/GtlReportDrawer';
 import { GoalsCard } from './GoalsCard';
 import {
   ChangeGtlReportCommunityImpactPromptDocument,
@@ -97,8 +100,13 @@ export const GtlReportDetail = () => {
             reportId={report.id}
             previousQuarterGoals={report.previousQuarterGoals}
             goals={report.goals}
+            editable={false}
           />
-          <PracticumCard reportId={report.id} practicums={report.practicums} />
+          <PracticumCard
+            reportId={report.id}
+            practicums={report.practicums}
+            editable={false}
+          />
           <ProseSection
             title="Community Impact"
             instructions="Stories, testimonies or incidents from this quarter related to Bible translation and the internship."
@@ -107,6 +115,7 @@ export const GtlReportDetail = () => {
             createDoc={CreateGtlReportCommunityImpactDocument}
             changePromptDoc={ChangeGtlReportCommunityImpactPromptDocument}
             updateResponseDoc={UpdateGtlReportCommunityImpactResponseDocument}
+            editable={false}
           />
           <ProseSection
             title="Praises"
@@ -116,6 +125,7 @@ export const GtlReportDetail = () => {
             createDoc={CreateGtlReportPraiseDocument}
             changePromptDoc={ChangeGtlReportPraisePromptDocument}
             updateResponseDoc={UpdateGtlReportPraiseResponseDocument}
+            editable={false}
           />
           <ProseSection
             title="Prayer Requests"
@@ -125,13 +135,17 @@ export const GtlReportDetail = () => {
             createDoc={CreateGtlReportPetitionDocument}
             changePromptDoc={ChangeGtlReportPetitionPromptDocument}
             updateResponseDoc={UpdateGtlReportPetitionResponseDocument}
+            editable={false}
           />
           <ProgressExplanationCard
             reportId={report.id}
             explanation={report.progressExplanation}
+            editable={false}
           />
         </Stack>
       )}
+
+      <GtlReportDrawer reportId={reportId} />
     </Box>
   );
 };
@@ -184,6 +198,14 @@ const HeaderCard = ({
             </Typography>
           </Box>
         )}
+
+        <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
+          <ButtonLink variant="contained" to="edit" startIcon={<Edit />}>
+            {report.status.value === 'NotStarted'
+              ? 'Start Report'
+              : 'Edit Report'}
+          </ButtonLink>
+        </Stack>
 
         {report.transitions.length > 0 && (
           <>

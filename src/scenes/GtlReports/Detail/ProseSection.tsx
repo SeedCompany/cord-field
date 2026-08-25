@@ -1,11 +1,12 @@
 import { type TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Chip, Typography } from '@mui/material';
 import {
   type ChangePrompt,
   type ChoosePrompt,
   type UpdatePromptVariantResponse,
 } from '~/api/schema.graphql';
 import { type PromptResponseListFragment } from '~/common/fragments';
+import { RichTextView } from '../../../components/RichText';
 import {
   Prompt,
   VariantResponses,
@@ -22,6 +23,8 @@ interface ProseSectionProps {
     unknown,
     { input: UpdatePromptVariantResponse }
   >;
+  /** The overview page reads; the wizard edits. */
+  editable?: boolean;
 }
 
 /**
@@ -41,6 +44,7 @@ export const ProseSection = ({
   createDoc,
   changePromptDoc,
   updateResponseDoc,
+  editable = true,
 }: ProseSectionProps) => {
   if (!list.canRead) return null;
 
@@ -54,33 +58,60 @@ export const ProseSection = ({
           {instructions}
         </Typography>
 
-        {list.items.length === 0 && !list.canCreate && (
+        {list.items.length === 0 && (!list.canCreate || !editable) && (
           <Typography variant="body2" color="text.secondary">
             Nothing written yet.
           </Typography>
         )}
 
-        {/* An empty list still renders the chooser, which is how the first
-            response gets created. */}
-        {(list.items.length > 0 ? list.items : [undefined]).map(
-          (promptResponse, i) => (
-            <div key={promptResponse?.id ?? `new-${i}`}>
-              <Prompt
-                reportId={reportId}
-                promptResponse={promptResponse}
-                list={list}
-                createItemDocument={createDoc}
-                changePromptDocument={changePromptDoc}
-                promptInstructions={null}
-              />
-              <VariantResponses
-                promptResponse={promptResponse}
-                doc={updateResponseDoc}
-              />
-            </div>
-          )
-        )}
+        {editable
+          ? // An empty list still renders the chooser — that is how the first
+            // response gets created.
+            (list.items.length > 0 ? list.items : [undefined]).map(
+              (promptResponse, i) => (
+                <div key={promptResponse?.id ?? `new-${i}`}>
+                  <Prompt
+                    reportId={reportId}
+                    promptResponse={promptResponse}
+                    list={list}
+                    createItemDocument={createDoc}
+                    changePromptDocument={changePromptDoc}
+                    promptInstructions={null}
+                  />
+                  <VariantResponses
+                    promptResponse={promptResponse}
+                    doc={updateResponseDoc}
+                  />
+                </div>
+              )
+            )
+          : list.items.map((item) => (
+              <ReadOnlyResponse key={item.id} item={item} />
+            ))}
       </CardContent>
     </Card>
   );
 };
+
+/** How a response reads on the overview page: every variant that has words. */
+const ReadOnlyResponse = ({
+  item,
+}: {
+  item: PromptResponseListFragment['items'][number];
+}) => (
+  <Box sx={{ mb: 2 }}>
+    {item.prompt.value?.text.value && (
+      <Box sx={{ color: 'text.secondary', typography: 'body2', mb: 0.5 }}>
+        <RichTextView data={item.prompt.value.text.value} />
+      </Box>
+    )}
+    {item.responses
+      .filter((r) => r.response.value)
+      .map((r) => (
+        <Box key={r.variant.key} sx={{ mb: 1 }}>
+          <Chip size="small" label={r.variant.label} sx={{ mr: 1 }} />
+          <RichTextView data={r.response.value} />
+        </Box>
+      ))}
+  </Box>
+);

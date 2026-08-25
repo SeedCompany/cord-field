@@ -28,9 +28,11 @@ import {
 export const PracticumCard = ({
   reportId,
   practicums,
+  editable = true,
 }: {
   reportId: string;
   practicums: readonly GtlPracticumFragment[];
+  editable?: boolean;
 }) => {
   const [addState, add] = useDialog();
 
@@ -45,9 +47,11 @@ export const PracticumCard = ({
           <Typography variant="h4">
             Practicum &amp; Workshop Involvement
           </Typography>
-          <Button size="small" startIcon={<Add />} onClick={add}>
-            Add
-          </Button>
+          {editable && (
+            <Button size="small" startIcon={<Add />} onClick={add}>
+              Add
+            </Button>
+          )}
         </Stack>
         <Typography variant="body2" color="text.secondary" paragraph>
           Training and hands-on work from the past three months, and what came
@@ -59,16 +63,24 @@ export const PracticumCard = ({
             Nothing reported this quarter.
           </Typography>
         ) : (
-          practicums.map((p) => <PracticumRow key={p.id} practicum={p} />)
+          practicums.map((p) => (
+            <PracticumRow key={p.id} practicum={p} editable={editable} />
+          ))
         )}
 
-        <AddPracticumDialog {...addState} reportId={reportId} />
+        {editable && <AddPracticumDialog {...addState} reportId={reportId} />}
       </CardContent>
     </Card>
   );
 };
 
-const PracticumRow = ({ practicum }: { practicum: GtlPracticumFragment }) => {
+const PracticumRow = ({
+  practicum,
+  editable,
+}: {
+  practicum: GtlPracticumFragment;
+  editable: boolean;
+}) => {
   const [remove] = useMutation(DeleteGtlReportPracticumDocument, {
     variables: { id: practicum.id },
     refetchQueries: [GtlReportDetailDocument],
@@ -79,7 +91,7 @@ const PracticumRow = ({ practicum }: { practicum: GtlPracticumFragment }) => {
         <Typography variant="body1" sx={{ flex: 1 }}>
           {practicum.involvement.value}
         </Typography>
-        {practicum.involvement.canEdit && (
+        {editable && practicum.involvement.canEdit && (
           <IconButton size="small" onClick={() => void remove()}>
             <Delete fontSize="small" />
           </IconButton>

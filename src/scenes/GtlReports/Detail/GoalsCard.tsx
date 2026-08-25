@@ -41,10 +41,13 @@ export const GoalsCard = ({
   reportId,
   previousQuarterGoals,
   goals,
+  editable = true,
 }: {
   reportId: string;
   previousQuarterGoals: readonly GtlGoalFragment[];
   goals: readonly GtlGoalFragment[];
+  /** The overview page reads; the wizard edits. */
+  editable?: boolean;
 }) => {
   const [addState, addGoal] = useDialog();
 
@@ -57,9 +60,11 @@ export const GoalsCard = ({
           alignItems="center"
         >
           <Typography variant="h4">Goals</Typography>
-          <Button size="small" startIcon={<Add />} onClick={addGoal}>
-            Add goal
-          </Button>
+          {editable && (
+            <Button size="small" startIcon={<Add />} onClick={addGoal}>
+              Add goal
+            </Button>
+          )}
         </Stack>
 
         <Typography variant="overline" color="text.secondary">
@@ -69,7 +74,12 @@ export const GoalsCard = ({
           <Empty>No goals were carried forward into this quarter.</Empty>
         ) : (
           previousQuarterGoals.map((goal) => (
-            <GoalReview key={goal.id} goal={goal} reportId={reportId} />
+            <GoalReview
+              key={goal.id}
+              goal={goal}
+              reportId={reportId}
+              editable={editable}
+            />
           ))
         )}
 
@@ -81,10 +91,12 @@ export const GoalsCard = ({
         {goals.length === 0 ? (
           <Empty>No goals set yet.</Empty>
         ) : (
-          goals.map((goal) => <GoalRow key={goal.id} goal={goal} />)
+          goals.map((goal) => (
+            <GoalRow key={goal.id} goal={goal} editable={editable} />
+          ))
         )}
 
-        <AddGoalDialog {...addState} reportId={reportId} />
+        {editable && <AddGoalDialog {...addState} reportId={reportId} />}
       </CardContent>
     </Card>
   );
@@ -94,16 +106,18 @@ export const GoalsCard = ({
 const GoalReview = ({
   goal,
   reportId,
+  editable,
 }: {
   goal: GtlGoalFragment;
   reportId: string;
+  editable: boolean;
 }) => {
   const [review] = useMutation(ReviewGtlReportGoalDocument);
 
   return (
     <Box sx={{ mb: 3 }}>
       <Typography variant="body1">{goal.goal.value}</Typography>
-      {!goal.met.canEdit ? (
+      {!editable || !goal.met.canEdit ? (
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
           <Chip
             size="small"
@@ -146,7 +160,7 @@ const GoalReview = ({
           )}
         </Form>
       )}
-      {!goal.impact.canEdit && goal.impact.value && (
+      {(!editable || !goal.impact.canEdit) && goal.impact.value && (
         <RichTextView data={goal.impact.value} />
       )}
     </Box>
@@ -154,7 +168,13 @@ const GoalReview = ({
 };
 
 /** A goal this report is setting for the coming quarter. */
-const GoalRow = ({ goal }: { goal: GtlGoalFragment }) => {
+const GoalRow = ({
+  goal,
+  editable,
+}: {
+  goal: GtlGoalFragment;
+  editable: boolean;
+}) => {
   const [remove] = useMutation(DeleteGtlReportGoalDocument, {
     variables: { id: goal.id },
     refetchQueries: [GtlReportDetailDocument],
@@ -165,7 +185,7 @@ const GoalRow = ({ goal }: { goal: GtlGoalFragment }) => {
         <Typography variant="body1" sx={{ flex: 1 }}>
           {goal.goal.value}
         </Typography>
-        {goal.goal.canEdit && (
+        {editable && goal.goal.canEdit && (
           <IconButton size="small" onClick={() => void remove()}>
             <Delete fontSize="small" />
           </IconButton>
