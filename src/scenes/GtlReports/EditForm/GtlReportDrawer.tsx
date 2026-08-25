@@ -51,7 +51,7 @@ export const GtlReportDrawer = ({ reportId }: { reportId: string }) => {
     <Drawer
       anchor="right"
       open={open}
-      onClose={() => navigate('../')}
+      onClose={() => navigate(`/gtl-reports/${reportId}`)}
       sx={{ '& .MuiDrawer-paper': { width: '100%' } }}
     >
       {!report ? (
@@ -68,6 +68,10 @@ export const GtlReportDrawer = ({ reportId }: { reportId: string }) => {
 };
 
 const WizardLayout = ({ report }: { report: GtlReportDetailFragment }) => {
+  // Absolute, not `..`: this page is rendered by a `:reportId/*` route, so the
+  // relative base is already the report — `..` would land on /gtl-reports,
+  // which has no index route and 404s.
+  const overview = `/gtl-reports/${report.id}`;
   // A step whose section the viewer cannot reach is dropped entirely, so the
   // nav never offers a dead end.
   const steps = useMemo(
@@ -95,7 +99,7 @@ const WizardLayout = ({ report }: { report: GtlReportDetailFragment }) => {
       }}
     >
       <ButtonLink
-        to=".."
+        to={overview}
         color="secondary"
         startIcon={<ArrowBack />}
         sx={{ alignSelf: 'start', order: 0, display: { md: 'none' } }}
@@ -106,7 +110,7 @@ const WizardLayout = ({ report }: { report: GtlReportDetailFragment }) => {
       <Box css={flexColumn} sx={{ flex: 1, gap: 2, order: { xs: 2, md: 1 } }}>
         <Box>
           <ButtonLink
-            to=".."
+            to={overview}
             color="secondary"
             startIcon={<ArrowBack />}
             sx={{ display: { xs: 'none', md: 'inline-flex' }, mb: 1 }}

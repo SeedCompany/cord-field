@@ -17,6 +17,7 @@ fragment gtlReportDetail on GTLReport {
     id
     ... on InternshipEngagement {
       id
+      ...EngagementBreadcrumb
       programProgress {
         value
       }
@@ -27,7 +28,7 @@ fragment gtlReportDetail on GTLReport {
         }
       }
       project {
-        id
+        ...ProjectBreadcrumb
         name {
           value
         }

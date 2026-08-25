@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import {
   Box,
+  Breadcrumbs,
   Button,
   Card,
   CardContent,
@@ -16,8 +17,11 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { GtlReportStatusLabels } from '~/api/schema/enumLists';
 import { labelFrom } from '~/common';
+import { Breadcrumb } from '../../../components/Breadcrumb';
+import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
+import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { GtlReportDrawer } from '../EditForm/GtlReportDrawer';
 import { GoalsCard } from './GoalsCard';
@@ -74,6 +78,21 @@ export const GtlReportDetail = () => {
           engagement?.intern.value?.fullName ?? 'Global Translation Leader'
         }`}
       />
+
+      <Breadcrumbs sx={{ mb: 2 }}>
+        <ProjectBreadcrumb data={engagement?.project} />
+        <EngagementBreadcrumb data={engagement ?? undefined} />
+        <Breadcrumb
+          to={
+            engagement ? `/engagements/${engagement.id}/reports/gtl` : undefined
+          }
+        >
+          {engagement ? 'Quarterly Reports' : <Skeleton width={160} />}
+        </Breadcrumb>
+        <Breadcrumb>
+          {report ? <ReportLabel report={report} /> : <Skeleton width={80} />}
+        </Breadcrumb>
+      </Breadcrumbs>
 
       <Typography variant="h2" paragraph>
         {loading ? (
@@ -200,7 +219,11 @@ const HeaderCard = ({
         )}
 
         <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-          <ButtonLink variant="contained" to="edit" startIcon={<Edit />}>
+          <ButtonLink
+            variant="contained"
+            to={`/gtl-reports/${report.id}/edit`}
+            startIcon={<Edit />}
+          >
             {report.status.value === 'NotStarted'
               ? 'Start Report'
               : 'Edit Report'}
