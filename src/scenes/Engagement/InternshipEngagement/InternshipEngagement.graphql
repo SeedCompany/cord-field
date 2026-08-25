@@ -29,6 +29,27 @@ fragment InternshipEngagementDetail on InternshipEngagement {
   gtlReports {
     total
   }
+  goalProgress {
+    total
+    met
+    unmet
+    awaitingReview
+    goals {
+      id
+      goal {
+        value
+      }
+      details {
+        value
+      }
+      met {
+        value
+      }
+      impact {
+        value
+      }
+    }
+  }
   createdAt
   status {
     value
