@@ -2,6 +2,7 @@ import { ChevronRight } from '@mui/icons-material';
 import {
   Card,
   CardActionArea,
+  CardActions,
   CardContent,
   LinearProgress,
   Stack,
@@ -11,7 +12,7 @@ import { GtlReportStatusLabels } from '~/api/schema/enumLists';
 import { labelFrom } from '~/common';
 import { FormattedDate } from '../../../components/Formatters';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
-import { Link } from '../../../components/Routing';
+import { ButtonLink, Link } from '../../../components/Routing';
 import { type InternshipEngagementDetailFragment } from './InternshipEngagement.graphql';
 
 /**
@@ -84,6 +85,14 @@ export const GtlReportsCard = ({
           </Typography>
         </CardContent>
       </CardActionArea>
+      <CardActions>
+        <ButtonLink
+          size="small"
+          to={`/engagements/${engagement.id}/reports/gtl`}
+        >
+          See all reports
+        </ButtonLink>
+      </CardActions>
     </Card>
   );
 };

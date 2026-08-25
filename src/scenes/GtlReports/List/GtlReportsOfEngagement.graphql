@@ -1,0 +1,27 @@
+query GtlReportsOfEngagement($engagementId: ID!) {
+  engagement(id: $engagementId) {
+    id
+    ... on InternshipEngagement {
+      id
+      ...EngagementBreadcrumb
+      programProgress {
+        value
+      }
+      project {
+        ...ProjectBreadcrumb
+      }
+      gtlReports {
+        total
+        items {
+          id
+          start
+          end
+          due
+          status {
+            value
+          }
+        }
+      }
+    }
+  }
+}
