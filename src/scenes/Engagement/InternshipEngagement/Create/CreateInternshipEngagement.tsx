@@ -50,7 +50,7 @@ export const CreateInternshipEngagement = ({
     <DialogForm
       {...props}
       onSubmit={submit}
-      title="Create Intern Engagement"
+      title="Create Global Translation Leader Engagement"
       changesetAware
     >
       <SubmitError />

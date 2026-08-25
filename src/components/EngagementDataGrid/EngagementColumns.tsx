@@ -62,7 +62,7 @@ export const EngagementColumnMap: Record<string, GridColDef<Engagement>> = {
     destination: (id) => `/engagements/${id}`,
   }),
   nameProjectLast: {
-    headerName: 'Language / Intern',
+    headerName: 'Language / GTL',
     field: 'nameProjectLast',
     ...textColumn(),
     width: 200,

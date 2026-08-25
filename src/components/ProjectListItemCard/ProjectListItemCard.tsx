@@ -162,7 +162,7 @@ export const ProjectListItemCard = ({
                   </>
                 ) : (
                   <>
-                    {project.type === 'Internship' ? 'Internship' : 'Language'}
+                    {project.type === 'Internship' ? 'GTL' : 'Language'}
                     <br />
                     Engagements
                   </>

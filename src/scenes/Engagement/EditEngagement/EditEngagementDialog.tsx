@@ -129,7 +129,7 @@ const fieldMapping: Record<
     return (
       <AutocompleteField
         {...props}
-        label="Intern Position"
+        label="Position"
         options={options.map((o) => o.position)}
         groupBy={(p) => {
           const option = groups[p];

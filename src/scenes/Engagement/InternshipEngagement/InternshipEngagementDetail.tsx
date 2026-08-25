@@ -143,7 +143,9 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
               <Grid item>
                 <Grid item container spacing={3} alignItems="center">
                   <Grid item>
-                    <Typography variant="h4">Intern Engagement</Typography>
+                    <Typography variant="h4">
+                      Global Translation Leader Engagement
+                    </Typography>
                   </Grid>
 
                   <Grid item>
@@ -189,8 +191,8 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                 <Grid item>
                   <DataButton
                     secured={engagement.position}
-                    empty="Enter Intern Position"
-                    redacted="You do not have permission to view intern position"
+                    empty="Enter Position"
+                    redacted="You do not have permission to view position"
                     children={labelFrom(InternshipPositionLabels)}
                     onClick={() => show('position')}
                   />
