@@ -41,11 +41,6 @@ fragment gtlReportDetail on GTLReport {
     type
     canExecute
   }
-  workflowEvents {
-    id
-    to
-    at
-  }
   previousQuarterGoals {
     ...gtlGoal
   }
@@ -53,36 +48,26 @@ fragment gtlReportDetail on GTLReport {
     ...gtlGoal
   }
   practicums {
-    id
-    involvement {
-      value
-      canEdit
-    }
-    outcomes {
-      value
-    }
-    mentor {
-      value {
-        id
-        fullName
-      }
-    }
+    ...gtlPracticum
   }
   communityImpact {
-    ...gtlProse
+    ...promptResponseList
   }
   praises {
-    ...gtlProse
+    ...promptResponseList
   }
   petitions {
-    ...gtlProse
+    ...promptResponseList
   }
   progressExplanation {
     status {
       canRead
+      canEdit
       value
     }
     context {
+      canRead
+      canEdit
       value
     }
   }
@@ -96,45 +81,32 @@ fragment gtlGoal on GtlReportGoal {
   }
   details {
     value
+    canEdit
   }
   met {
     value
+    canEdit
   }
   impact {
     value
+    canEdit
   }
 }
 
-fragment gtlProse on PromptVariantResponseList {
-  canRead
-  canCreate
-  items {
-    id
-    prompt {
-      value {
-        id
-        shortLabel {
-          value
-        }
-      }
-    }
-    responses {
-      variant {
-        key
-        label
-      }
-      response {
-        value
-        canEdit
-      }
-    }
+fragment gtlPracticum on GtlReportPracticum {
+  id
+  involvement {
+    value
+    canEdit
   }
-  available {
-    prompts {
+  outcomes {
+    value
+    canEdit
+  }
+  mentor {
+    value {
       id
-      shortLabel {
-        value
-      }
+      fullName
     }
   }
 }
@@ -153,11 +125,47 @@ mutation CreateGtlReportGoal($input: CreateGtlReportGoal!) {
   }
 }
 
+mutation UpdateGtlReportGoal($input: UpdateGtlReportGoal!) {
+  updateGtlReportGoal(input: $input) {
+    gtlReportGoal {
+      ...gtlGoal
+    }
+  }
+}
+
 mutation ReviewGtlReportGoal($input: ReviewGtlReportGoal!) {
   reviewGtlReportGoal(input: $input) {
     gtlReportGoal {
       ...gtlGoal
     }
+  }
+}
+
+mutation DeleteGtlReportGoal($id: ID!) {
+  deleteGtlReportGoal(id: $id) {
+    __typename
+  }
+}
+
+mutation CreateGtlReportPracticum($input: CreateGtlReportPracticum!) {
+  createGtlReportPracticum(input: $input) {
+    gtlReportPracticum {
+      ...gtlPracticum
+    }
+  }
+}
+
+mutation UpdateGtlReportPracticum($input: UpdateGtlReportPracticum!) {
+  updateGtlReportPracticum(input: $input) {
+    gtlReportPracticum {
+      ...gtlPracticum
+    }
+  }
+}
+
+mutation DeleteGtlReportPracticum($id: ID!) {
+  deleteGtlReportPracticum(id: $id) {
+    __typename
   }
 }
 
@@ -169,5 +177,61 @@ mutation ExplainGtlProgress($input: ExplainGtlProgress!) {
     context {
       value
     }
+  }
+}
+
+mutation CreateGtlReportCommunityImpact($input: ChoosePrompt!) {
+  createGtlReportCommunityImpact(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation ChangeGtlReportCommunityImpactPrompt($input: ChangePrompt!) {
+  changeGtlReportCommunityImpactPrompt(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation UpdateGtlReportCommunityImpactResponse(
+  $input: UpdatePromptVariantResponse!
+) {
+  updateGtlReportCommunityImpactResponse(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation CreateGtlReportPraise($input: ChoosePrompt!) {
+  createGtlReportPraise(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation UpdateGtlReportPraiseResponse($input: UpdatePromptVariantResponse!) {
+  updateGtlReportPraiseResponse(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation ChangeGtlReportPraisePrompt($input: ChangePrompt!) {
+  changeGtlReportPraisePrompt(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation CreateGtlReportPetition($input: ChoosePrompt!) {
+  createGtlReportPetition(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation UpdateGtlReportPetitionResponse($input: UpdatePromptVariantResponse!) {
+  updateGtlReportPetitionResponse(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation ChangeGtlReportPetitionPrompt($input: ChangePrompt!) {
+  changeGtlReportPetitionPrompt(input: $input) {
+    ...promptResponse
   }
 }

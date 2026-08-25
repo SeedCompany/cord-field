@@ -13,19 +13,28 @@ import {
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
-import {
-  GtlProgressStatusLabels,
-  GtlReportStatusLabels,
-} from '~/api/schema/enumLists';
+import { GtlReportStatusLabels } from '~/api/schema/enumLists';
 import { labelFrom } from '~/common';
 import { Error } from '../../../components/Error';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
-import { RichTextView } from '../../../components/RichText';
+import { GoalsCard } from './GoalsCard';
 import {
+  ChangeGtlReportCommunityImpactPromptDocument,
+  ChangeGtlReportPetitionPromptDocument,
+  ChangeGtlReportPraisePromptDocument,
+  CreateGtlReportCommunityImpactDocument,
+  CreateGtlReportPetitionDocument,
+  CreateGtlReportPraiseDocument,
   ExecuteGtlReportTransitionDocument,
   GtlReportDetailDocument,
   type GtlReportDetailFragment,
+  UpdateGtlReportCommunityImpactResponseDocument,
+  UpdateGtlReportPetitionResponseDocument,
+  UpdateGtlReportPraiseResponseDocument,
 } from './GtlReportDetail.graphql';
+import { PracticumCard } from './PracticumCard';
+import { ProgressExplanationCard } from './ProgressExplanationCard';
+import { ProseSection } from './ProseSection';
 
 /**
  * The GTL quarterly narrative report.
@@ -84,12 +93,43 @@ export const GtlReportDetail = () => {
       ) : (
         <Stack spacing={3}>
           <HeaderCard report={report} engagement={engagement} />
-          <GoalsCard report={report} />
-          <PracticumCard report={report} />
-          <ProseCard title="Community Impact" list={report.communityImpact} />
-          <ProseCard title="Praises" list={report.praises} />
-          <ProseCard title="Prayer Requests" list={report.petitions} />
-          <ProgressExplanationCard report={report} />
+          <GoalsCard
+            reportId={report.id}
+            previousQuarterGoals={report.previousQuarterGoals}
+            goals={report.goals}
+          />
+          <PracticumCard reportId={report.id} practicums={report.practicums} />
+          <ProseSection
+            title="Community Impact"
+            instructions="Stories, testimonies or incidents from this quarter related to Bible translation and the internship."
+            reportId={report.id}
+            list={report.communityImpact}
+            createDoc={CreateGtlReportCommunityImpactDocument}
+            changePromptDoc={ChangeGtlReportCommunityImpactPromptDocument}
+            updateResponseDoc={UpdateGtlReportCommunityImpactResponseDocument}
+          />
+          <ProseSection
+            title="Praises"
+            instructions="What are you thankful for from the past three months?"
+            reportId={report.id}
+            list={report.praises}
+            createDoc={CreateGtlReportPraiseDocument}
+            changePromptDoc={ChangeGtlReportPraisePromptDocument}
+            updateResponseDoc={UpdateGtlReportPraiseResponseDocument}
+          />
+          <ProseSection
+            title="Prayer Requests"
+            instructions="What needs do you have that we can join you in praying for?"
+            reportId={report.id}
+            list={report.petitions}
+            createDoc={CreateGtlReportPetitionDocument}
+            changePromptDoc={ChangeGtlReportPetitionPromptDocument}
+            updateResponseDoc={UpdateGtlReportPetitionResponseDocument}
+          />
+          <ProgressExplanationCard
+            reportId={report.id}
+            explanation={report.progressExplanation}
+          />
         </Stack>
       )}
     </Box>
@@ -174,152 +214,3 @@ const HeaderCard = ({
     </Card>
   );
 };
-
-const GoalsCard = ({ report }: { report: GtlReportDetailFragment }) => (
-  <Card>
-    <CardContent>
-      <Typography variant="h4" gutterBottom>
-        Goals
-      </Typography>
-
-      <Typography variant="overline" color="text.secondary">
-        From the previous quarter
-      </Typography>
-      {report.previousQuarterGoals.length === 0 ? (
-        <Empty>No goals were carried forward into this quarter.</Empty>
-      ) : (
-        report.previousQuarterGoals.map((g) => (
-          <Box key={g.id} sx={{ mb: 2 }}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography variant="body1">{g.goal.value}</Typography>
-              <Chip
-                size="small"
-                label={g.met.value ? 'Met' : 'Not met'}
-                color={g.met.value ? 'success' : 'default'}
-              />
-            </Stack>
-            {g.impact.value && <RichTextView data={g.impact.value} />}
-          </Box>
-        ))
-      )}
-
-      <Divider sx={{ my: 2 }} />
-
-      <Typography variant="overline" color="text.secondary">
-        Set for next quarter
-      </Typography>
-      {report.goals.length === 0 ? (
-        <Empty>No goals set yet.</Empty>
-      ) : (
-        report.goals.map((g) => (
-          <Box key={g.id} sx={{ mb: 2 }}>
-            <Typography variant="body1">{g.goal.value}</Typography>
-            {g.details.value && <RichTextView data={g.details.value} />}
-          </Box>
-        ))
-      )}
-    </CardContent>
-  </Card>
-);
-
-const PracticumCard = ({ report }: { report: GtlReportDetailFragment }) => (
-  <Card>
-    <CardContent>
-      <Typography variant="h4" gutterBottom>
-        Practicum &amp; Workshop Involvement
-      </Typography>
-      {report.practicums.length === 0 ? (
-        <Empty>Nothing reported this quarter.</Empty>
-      ) : (
-        report.practicums.map((p) => (
-          <Box key={p.id} sx={{ mb: 2 }}>
-            <Typography variant="body1">{p.involvement.value}</Typography>
-            {p.mentor.value && (
-              <Typography variant="caption" color="text.secondary">
-                with {p.mentor.value.fullName}
-              </Typography>
-            )}
-            {p.outcomes.value && <RichTextView data={p.outcomes.value} />}
-          </Box>
-        ))
-      )}
-    </CardContent>
-  </Card>
-);
-
-const ProseCard = ({
-  title,
-  list,
-}: {
-  title: string;
-  list: GtlReportDetailFragment['communityImpact'];
-}) => {
-  if (!list.canRead) return null;
-  return (
-    <Card>
-      <CardContent>
-        <Typography variant="h4" gutterBottom>
-          {title}
-        </Typography>
-        {list.items.length === 0 ? (
-          <Empty>Nothing written yet.</Empty>
-        ) : (
-          list.items.map((item) => (
-            <Box key={item.id} sx={{ mb: 2 }}>
-              {item.prompt.value?.shortLabel.value && (
-                <Typography variant="overline" color="text.secondary">
-                  {item.prompt.value.shortLabel.value}
-                </Typography>
-              )}
-              {item.responses
-                .filter((r) => r.response.value)
-                .map((r) => (
-                  <Box key={r.variant.key} sx={{ mb: 1 }}>
-                    <Chip size="small" label={r.variant.label} sx={{ mr: 1 }} />
-                    <RichTextView data={r.response.value} />
-                  </Box>
-                ))}
-            </Box>
-          ))
-        )}
-      </CardContent>
-    </Card>
-  );
-};
-
-/** Field Operations only — the API redacts it for everyone else. */
-const ProgressExplanationCard = ({
-  report,
-}: {
-  report: GtlReportDetailFragment;
-}) => {
-  const { status, context } = report.progressExplanation;
-  if (!status.canRead) return null;
-  return (
-    <Card>
-      <CardContent>
-        <Typography variant="h4" gutterBottom>
-          Explanation of Progress
-        </Typography>
-        <Typography variant="caption" color="text.secondary" paragraph>
-          Completed by the Field Project Manager. Not shared outside Field
-          Operations.
-        </Typography>
-        {status.value ? (
-          <>
-            <Chip label={labelFrom(GtlProgressStatusLabels)(status.value)} />
-            {context.value && <RichTextView data={context.value} />}
-          </>
-        ) : (
-          <Empty>Not yet assessed.</Empty>
-        )}
-      </CardContent>
-    </Card>
-  );
-};
-
-const Empty = ({ children }: { children: React.ReactNode }) => (
-  <Typography variant="body2" color="text.secondary" paragraph>
-    {children}
-  </Typography>
-);
