@@ -117,8 +117,8 @@ export const GtlReportDetail = () => {
           <HeaderCard report={report} engagement={engagement} />
           <GoalsCard
             reportId={report.id}
-            previousQuarterGoals={report.previousQuarterGoals}
-            goals={report.goals}
+            goals={engagement?.goalSummary.goals ?? []}
+            progress={report.goalProgress}
             editable={false}
           />
           <PracticumCard

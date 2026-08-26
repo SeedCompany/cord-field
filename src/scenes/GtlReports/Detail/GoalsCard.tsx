@@ -6,50 +6,67 @@ import {
   Card,
   CardContent,
   Chip,
-  Divider,
+  LinearProgress,
   Stack,
   Typography,
 } from '@mui/material';
-import { type RichTextJson } from '~/common';
+import {
+  type GtlGoalMeasurement,
+  type GtlGoalStatus,
+} from '~/api/schema.graphql';
+import {
+  GtlGoalMeasurementLabels,
+  GtlGoalMeasurementList,
+  GtlGoalStatusLabels,
+  GtlGoalStatusList,
+} from '~/api/schema/enumLists';
+import { type CalendarDate, labelFrom, type RichTextJson } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import {
-  CheckboxField,
+  DateField,
+  EnumField,
+  EnumOption,
   Form,
+  NumberField,
   SavingStatus,
   SubmitError,
   TextField,
 } from '../../../components/form';
+import { FormattedDate } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { RichTextField, RichTextView } from '../../../components/RichText';
 import {
-  CreateGtlReportGoalDocument,
-  DeleteGtlReportGoalDocument,
+  CreateGtlGoalDocument,
+  DeleteGtlGoalDocument,
   type GtlGoalFragment,
+  type GtlGoalProgressFragment,
   GtlReportDetailDocument,
-  ReviewGtlReportGoalDocument,
+  ReportGtlGoalProgressDocument,
 } from './GtlReportDetail.graphql';
 
 /**
- * Goals on a GTL report — the section that spans two quarters.
+ * The growth plan, as worked on from one quarter's report.
  *
- * The top half reviews last quarter's goals in place; the bottom half sets the
- * goals this report is committing to. They are the same rows a quarter apart,
- * which is why reviewing writes back rather than creating anything.
+ * Goals belong to the engagement and usually outlive the quarter, so this shows
+ * every goal on the plan and lets the report say what moved on each. Adding a
+ * goal here records that it was first proposed in this report.
  */
 export const GoalsCard = ({
   reportId,
-  previousQuarterGoals,
+  engagementId,
   goals,
+  progress,
   editable = true,
 }: {
   reportId: string;
-  previousQuarterGoals: readonly GtlGoalFragment[];
+  engagementId?: string;
   goals: readonly GtlGoalFragment[];
-  /** The overview page reads; the wizard edits. */
+  progress: readonly GtlGoalProgressFragment[];
   editable?: boolean;
 }) => {
   const [addState, addGoal] = useDialog();
+  const progressByGoal = new Map(progress.map((p) => [p.goal.id, p]));
 
   return (
     <Card>
@@ -60,178 +77,268 @@ export const GoalsCard = ({
           alignItems="center"
         >
           <Typography variant="h4">Goals</Typography>
-          {editable && (
+          {editable && engagementId && (
             <Button size="small" startIcon={<Add />} onClick={addGoal}>
               Add goal
             </Button>
           )}
         </Stack>
-
-        <Typography variant="overline" color="text.secondary">
-          From the previous quarter
+        <Typography variant="body2" color="text.secondary" paragraph>
+          The leader’s growth plan. Say what moved on each goal this quarter.
         </Typography>
-        {previousQuarterGoals.length === 0 ? (
-          <Empty>No goals were carried forward into this quarter.</Empty>
+
+        {goals.length === 0 ? (
+          <Typography variant="body2" color="text.secondary">
+            No goals yet.
+          </Typography>
         ) : (
-          previousQuarterGoals.map((goal) => (
-            <GoalReview
+          goals.map((goal) => (
+            <GoalRow
               key={goal.id}
               goal={goal}
               reportId={reportId}
+              entry={progressByGoal.get(goal.id)}
               editable={editable}
             />
           ))
         )}
 
-        <Divider sx={{ my: 2 }} />
-
-        <Typography variant="overline" color="text.secondary">
-          Set for next quarter
-        </Typography>
-        {goals.length === 0 ? (
-          <Empty>No goals set yet.</Empty>
-        ) : (
-          goals.map((goal) => (
-            <GoalRow key={goal.id} goal={goal} editable={editable} />
-          ))
+        {editable && engagementId && (
+          <AddGoalDialog
+            {...addState}
+            engagementId={engagementId}
+            reportId={reportId}
+          />
         )}
-
-        {editable && <AddGoalDialog {...addState} reportId={reportId} />}
       </CardContent>
     </Card>
   );
 };
 
-/** Last quarter's goal, reviewed in place by this report. */
-const GoalReview = ({
+const GoalRow = ({
   goal,
   reportId,
+  entry,
   editable,
 }: {
   goal: GtlGoalFragment;
   reportId: string;
+  entry?: GtlGoalProgressFragment;
   editable: boolean;
 }) => {
-  const [review] = useMutation(ReviewGtlReportGoalDocument);
-
-  return (
-    <Box sx={{ mb: 3 }}>
-      <Typography variant="body1">{goal.goal.value}</Typography>
-      {!editable || !goal.met.canEdit ? (
-        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
-          <Chip
-            size="small"
-            label={goal.met.value ? 'Met' : 'Not met'}
-            color={goal.met.value ? 'success' : 'default'}
-          />
-        </Stack>
-      ) : (
-        <Form<{ met?: boolean; impact?: RichTextJson }>
-          onSubmit={async ({ met, impact }) => {
-            await review({
-              variables: {
-                input: {
-                  id: goal.id,
-                  reviewedInReport: reportId,
-                  // final-form leaves an untouched checkbox undefined.
-                  met: met ?? false,
-                  impact,
-                },
-              },
-            });
-          }}
-          initialValues={{
-            met: goal.met.value ?? false,
-            impact: goal.impact.value ?? undefined,
-          }}
-          autoSubmit
-          keepDirtyOnReinitialize
-        >
-          {({ handleSubmit, submitting }) => (
-            <form onSubmit={handleSubmit}>
-              <SubmitError />
-              <CheckboxField name="met" label="Goal was met" />
-              <RichTextField
-                name="impact"
-                label="Impact on the Global Leader and translation projects"
-                helperText={<SavingStatus submitting={submitting} />}
-              />
-            </form>
-          )}
-        </Form>
-      )}
-      {(!editable || !goal.impact.canEdit) && goal.impact.value && (
-        <RichTextView data={goal.impact.value} />
-      )}
-    </Box>
-  );
-};
-
-/** A goal this report is setting for the coming quarter. */
-const GoalRow = ({
-  goal,
-  editable,
-}: {
-  goal: GtlGoalFragment;
-  editable: boolean;
-}) => {
-  const [remove] = useMutation(DeleteGtlReportGoalDocument, {
+  const [report] = useMutation(ReportGtlGoalProgressDocument);
+  const [remove] = useMutation(DeleteGtlGoalDocument, {
     variables: { id: goal.id },
     refetchQueries: [GtlReportDetailDocument],
   });
+
+  const measurement = goal.measurement.value;
+  const target =
+    measurement === 'Number' ? goal.targetNumber.value ?? undefined : undefined;
+
   return (
-    <Box sx={{ mb: 2 }}>
-      <Stack direction="row" alignItems="center" spacing={1}>
+    <Box sx={{ mb: 3, pb: 2, borderBottom: 1, borderColor: 'divider' }}>
+      <Stack direction="row" spacing={1} alignItems="center">
         <Typography variant="body1" sx={{ flex: 1 }}>
           {goal.goal.value}
         </Typography>
+        <GoalStatusChip goal={goal} />
         {editable && goal.goal.canEdit && (
           <IconButton size="small" onClick={() => void remove()}>
             <Delete fontSize="small" />
           </IconButton>
         )}
       </Stack>
+
+      <Typography variant="caption" color="text.secondary">
+        {measurement === 'Number' && target
+          ? `${goal.progressValue.value ?? 0} of ${target}${
+              goal.targetDescription.value
+                ? ` ${goal.targetDescription.value}`
+                : ''
+            }`
+          : labelFrom(GtlGoalMeasurementLabels)(measurement)}
+        {goal.targetDate.value && (
+          <>
+            {' · due '}
+            <FormattedDate date={goal.targetDate.value} />
+          </>
+        )}
+      </Typography>
+
+      <LinearProgress
+        variant="determinate"
+        value={goal.percentComplete}
+        sx={{ my: 1, maxWidth: 320 }}
+      />
+
       {goal.details.value && <RichTextView data={goal.details.value} />}
+
+      {!editable ? (
+        entry?.notes.value && <RichTextView data={entry.notes.value} />
+      ) : (
+        <Form<{
+          status?: GtlGoalStatus;
+          progressValue?: number | null;
+          notes?: RichTextJson;
+        }>
+          onSubmit={async (values) => {
+            if (!values.status) return;
+            await report({
+              variables: {
+                input: {
+                  goal: goal.id,
+                  report: reportId,
+                  status: values.status,
+                  progressValue: values.progressValue,
+                  notes: values.notes,
+                },
+              },
+            });
+          }}
+          initialValues={{
+            status: entry?.status.value ?? goal.status.value ?? undefined,
+            progressValue: entry?.progressValue.value ?? undefined,
+            notes: entry?.notes.value ?? undefined,
+          }}
+          autoSubmit
+          keepDirtyOnReinitialize
+        >
+          {({ handleSubmit, submitting }) => (
+            <form onSubmit={handleSubmit}>
+              <Stack direction="row" spacing={2} alignItems="flex-start">
+                <EnumField name="status" label="This quarter" required>
+                  {GtlGoalStatusList.map((option) => (
+                    <EnumOption
+                      key={option}
+                      value={option}
+                      label={labelFrom(GtlGoalStatusLabels)(option)}
+                    />
+                  ))}
+                </EnumField>
+                {measurement !== 'Boolean' && (
+                  <NumberField
+                    name="progressValue"
+                    label={measurement === 'Percent' ? 'Percent' : 'Count'}
+                    sx={{ maxWidth: 140 }}
+                  />
+                )}
+              </Stack>
+              <RichTextField
+                name="notes"
+                label="What happened"
+                helperText={<SavingStatus submitting={submitting} />}
+              />
+            </form>
+          )}
+        </Form>
+      )}
     </Box>
   );
 };
 
-const AddGoalDialog = ({
-  reportId,
-  ...props
-}: { reportId: string } & ReturnType<typeof useDialog>[0]) => {
-  const [create] = useMutation(CreateGtlReportGoalDocument, {
-    refetchQueries: [GtlReportDetailDocument],
-  });
+const GoalStatusChip = ({ goal }: { goal: GtlGoalFragment }) => {
+  const status = goal.status.value;
+  const behind = goal.scheduleStatus === 'Behind';
   return (
-    <DialogForm<{ goal: string; details?: RichTextJson }>
-      {...props}
-      title="Add a goal for next quarter"
-      onSubmit={async ({ goal, details }) => {
-        await create({
-          variables: { input: { report: reportId, goal, details } },
-        });
-      }}
-    >
-      <SubmitError />
-      <TextField
-        name="goal"
-        label="Goal"
-        placeholder="What will be achieved in the next three months?"
-        required
-        autoFocus
+    <Stack direction="row" spacing={0.5}>
+      <Chip
+        size="small"
+        label={status ? labelFrom(GtlGoalStatusLabels)(status) : '—'}
+        color={
+          status === 'Done'
+            ? 'success'
+            : status === 'AtRisk'
+            ? 'warning'
+            : 'default'
+        }
       />
-      <RichTextField
-        name="details"
-        label="Details"
-        helperText="Where, when and how."
-      />
-    </DialogForm>
+      {behind && <Chip size="small" label="Behind" color="error" />}
+    </Stack>
   );
 };
 
-const Empty = ({ children }: { children: React.ReactNode }) => (
-  <Typography variant="body2" color="text.secondary" paragraph>
-    {children}
-  </Typography>
-);
+const AddGoalDialog = ({
+  engagementId,
+  reportId,
+  ...props
+}: {
+  engagementId: string;
+  reportId: string;
+} & ReturnType<typeof useDialog>[0]) => {
+  const [create] = useMutation(CreateGtlGoalDocument, {
+    refetchQueries: [GtlReportDetailDocument],
+  });
+  return (
+    <DialogForm<{
+      goal: string;
+      details?: RichTextJson;
+      targetDate?: CalendarDate;
+      measurement?: GtlGoalMeasurement;
+      targetNumber?: number;
+      targetDescription?: string;
+    }>
+      {...props}
+      title="Add a goal"
+      initialValues={{ measurement: 'Boolean' }}
+      onSubmit={async (values) => {
+        const measurement = values.measurement ?? 'Boolean';
+        await create({
+          variables: {
+            input: {
+              engagement: engagementId,
+              setInReport: reportId,
+              goal: values.goal,
+              details: values.details,
+              targetDate: values.targetDate,
+              measurement,
+              // Only a counted goal carries a target; the API rejects the rest.
+              targetNumber:
+                measurement === 'Number' ? values.targetNumber : undefined,
+              targetDescription:
+                measurement === 'Number' ? values.targetDescription : undefined,
+            },
+          },
+        });
+      }}
+    >
+      {({ values }) => (
+        <>
+          <SubmitError />
+          <TextField
+            name="goal"
+            label="Goal"
+            placeholder="What is this leader working toward?"
+            required
+            autoFocus
+          />
+          <RichTextField
+            name="details"
+            label="Details"
+            helperText="Where, when and how."
+          />
+          <DateField name="targetDate" label="Target completion date" />
+          <EnumField name="measurement" label="Track progress by" required>
+            {GtlGoalMeasurementList.map((option) => (
+              <EnumOption
+                key={option}
+                value={option}
+                label={labelFrom(GtlGoalMeasurementLabels)(option)}
+              />
+            ))}
+          </EnumField>
+          {values.measurement === 'Number' && (
+            <>
+              <NumberField name="targetNumber" label="Target" required />
+              <TextField
+                name="targetDescription"
+                label="What is being counted"
+                placeholder="e.g. workshops facilitated"
+              />
+            </>
+          )}
+        </>
+      )}
+    </DialogForm>
+  );
+};

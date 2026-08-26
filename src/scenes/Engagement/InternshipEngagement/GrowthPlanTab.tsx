@@ -7,25 +7,33 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import {
+  GtlGoalMeasurementLabels,
+  GtlGoalStatusLabels,
+} from '~/api/schema/enumLists';
+import { labelFrom } from '~/common';
+import { FormattedDate } from '../../../components/Formatters';
 import { RichTextView } from '../../../components/RichText';
 import { type InternshipEngagementDetailFragment } from './InternshipEngagement.graphql';
+
+type GoalSummary = InternshipEngagementDetailFragment['goalSummary'];
+type Goal = GoalSummary['goals'][number];
 
 /**
  * The growth plan at a glance: every goal this Global Translation Leader has
  * set, and how they are tracking against them.
  *
- * Goals belong to the quarter that set them, so this reads across every report
- * — the API does that rollup. Reviewed goals show met or unmet; the rest are
- * still open, which is deliberately not the same as failed.
+ * A goal belongs to the engagement rather than to the quarter that proposed it,
+ * so this is the whole plan — the reports only record what moved. "Behind"
+ * compares progress against time left before the target date, which is why a
+ * goal can be in progress and behind at the same time.
  */
 export const GrowthPlanTab = ({
   engagement,
 }: {
   engagement: InternshipEngagementDetailFragment;
 }) => {
-  const plan = engagement.goalProgress;
-  const reviewed = plan.met + plan.unmet;
-  const pct = reviewed > 0 ? (plan.met / reviewed) * 100 : 0;
+  const plan = engagement.goalSummary;
 
   return (
     <Stack spacing={3} sx={{ maxWidth: 760 }}>
@@ -37,27 +45,26 @@ export const GrowthPlanTab = ({
 
           {plan.total === 0 ? (
             <Typography variant="body2" color="text.secondary">
-              No goals set yet. Goals are added on a quarterly report, and
-              reviewed on the one after it.
+              No goals set yet. Goals are added from a quarterly report and
+              tracked from every report after it.
             </Typography>
           ) : (
             <>
               <Stack direction="row" spacing={4} sx={{ mb: 2 }}>
-                <Stat label="Goals set" value={plan.total} />
-                <Stat label="Met" value={plan.met} />
-                <Stat label="Not met" value={plan.unmet} />
-                <Stat label="Awaiting review" value={plan.awaitingReview} />
+                <Stat label="Goals" value={plan.total} />
+                <Stat label="Done" value={plan.done} />
+                <Stat label="In progress" value={plan.active} />
+                <Stat label="Needs attention" value={plan.needsAttention} />
+                <Stat label="Behind schedule" value={plan.behindSchedule} />
               </Stack>
 
-              {reviewed > 0 && (
-                <>
-                  <Typography variant="body2" gutterBottom>
-                    {plan.met} of {reviewed} reviewed goals met —{' '}
-                    {Math.round(pct)}%
-                  </Typography>
-                  <LinearProgress variant="determinate" value={pct} />
-                </>
-              )}
+              <Typography variant="body2" gutterBottom>
+                {plan.percentComplete}% complete overall
+              </Typography>
+              <LinearProgress
+                variant="determinate"
+                value={plan.percentComplete}
+              />
             </>
           )}
         </CardContent>
@@ -70,39 +77,65 @@ export const GrowthPlanTab = ({
               The plan
             </Typography>
             {plan.goals.map((goal) => (
-              <Box key={goal.id} sx={{ mb: 2.5 }}>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Typography variant="body1" sx={{ flex: 1 }}>
-                    {goal.goal.value}
-                  </Typography>
-                  <Chip
-                    size="small"
-                    label={
-                      goal.met.value == null
-                        ? 'Awaiting review'
-                        : goal.met.value
-                        ? 'Met'
-                        : 'Not met'
-                    }
-                    color={
-                      goal.met.value == null
-                        ? 'default'
-                        : goal.met.value
-                        ? 'success'
-                        : 'warning'
-                    }
-                  />
-                </Stack>
-                {goal.details.value && (
-                  <RichTextView data={goal.details.value} />
-                )}
-                {goal.impact.value && <RichTextView data={goal.impact.value} />}
-              </Box>
+              <GoalRow key={goal.id} goal={goal} />
             ))}
           </CardContent>
         </Card>
       )}
     </Stack>
+  );
+};
+
+const GoalRow = ({ goal }: { goal: Goal }) => {
+  const measurement = goal.measurement.value;
+  const status = goal.status.value;
+
+  return (
+    <Box sx={{ mb: 2.5 }}>
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Typography variant="body1" sx={{ flex: 1 }}>
+          {goal.goal.value}
+        </Typography>
+        <Chip
+          size="small"
+          label={status ? labelFrom(GtlGoalStatusLabels)(status) : '—'}
+          color={
+            status === 'Done'
+              ? 'success'
+              : status === 'AtRisk'
+              ? 'warning'
+              : 'default'
+          }
+        />
+        {goal.scheduleStatus === 'Behind' && (
+          <Chip size="small" label="Behind" color="error" />
+        )}
+      </Stack>
+
+      <Typography variant="caption" color="text.secondary">
+        {measurement === 'Number' && goal.targetNumber.value
+          ? `${goal.progressValue.value ?? 0} of ${goal.targetNumber.value}${
+              goal.targetDescription.value
+                ? ` ${goal.targetDescription.value}`
+                : ''
+            }`
+          : labelFrom(GtlGoalMeasurementLabels)(measurement)}
+        {goal.targetDate.value && (
+          <>
+            {' · due '}
+            <FormattedDate date={goal.targetDate.value} />
+          </>
+        )}
+      </Typography>
+
+      <LinearProgress
+        variant="determinate"
+        value={goal.percentComplete}
+        sx={{ my: 1, maxWidth: 320 }}
+      />
+
+      {goal.details.value && <RichTextView data={goal.details.value} />}
+    </Box>
   );
 };
 

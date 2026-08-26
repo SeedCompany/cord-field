@@ -18,6 +18,11 @@ fragment gtlReportDetail on GTLReport {
     ... on InternshipEngagement {
       id
       ...EngagementBreadcrumb
+      goalSummary {
+        goals {
+          ...gtlGoal
+        }
+      }
       programProgress {
         value
       }
@@ -42,11 +47,11 @@ fragment gtlReportDetail on GTLReport {
     type
     canExecute
   }
-  previousQuarterGoals {
+  goalsSet {
     ...gtlGoal
   }
-  goals {
-    ...gtlGoal
+  goalProgress {
+    ...gtlGoalProgress
   }
   practicums {
     ...gtlPracticum
@@ -74,7 +79,7 @@ fragment gtlReportDetail on GTLReport {
   }
 }
 
-fragment gtlGoal on GtlReportGoal {
+fragment gtlGoal on GtlGoal {
   id
   goal {
     value
@@ -82,15 +87,45 @@ fragment gtlGoal on GtlReportGoal {
   }
   details {
     value
-    canEdit
   }
-  met {
+  targetDate {
     value
-    canEdit
   }
-  impact {
+  measurement {
     value
-    canEdit
+  }
+  targetNumber {
+    value
+  }
+  targetDescription {
+    value
+  }
+  progressValue {
+    value
+  }
+  status {
+    value
+  }
+  percentComplete
+  scheduleStatus
+}
+
+fragment gtlGoalProgress on GtlGoalProgress {
+  id
+  goal {
+    id
+  }
+  status {
+    value
+  }
+  progressValue {
+    value
+  }
+  notes {
+    value
+  }
+  progressDate {
+    value
   }
 }
 
@@ -115,36 +150,6 @@ fragment gtlPracticum on GtlReportPracticum {
 mutation ExecuteGtlReportTransition($input: ExecuteGtlReportTransition!) {
   executeGtlReportTransition(input: $input) {
     ...gtlReportDetail
-  }
-}
-
-mutation CreateGtlReportGoal($input: CreateGtlReportGoal!) {
-  createGtlReportGoal(input: $input) {
-    gtlReportGoal {
-      ...gtlGoal
-    }
-  }
-}
-
-mutation UpdateGtlReportGoal($input: UpdateGtlReportGoal!) {
-  updateGtlReportGoal(input: $input) {
-    gtlReportGoal {
-      ...gtlGoal
-    }
-  }
-}
-
-mutation ReviewGtlReportGoal($input: ReviewGtlReportGoal!) {
-  reviewGtlReportGoal(input: $input) {
-    gtlReportGoal {
-      ...gtlGoal
-    }
-  }
-}
-
-mutation DeleteGtlReportGoal($id: ID!) {
-  deleteGtlReportGoal(id: $id) {
-    __typename
   }
 }
 
@@ -276,5 +281,38 @@ mutation UpdateGtlReportPetitionResponse($input: UpdatePromptVariantResponse!) {
 mutation ChangeGtlReportPetitionPrompt($input: ChangePrompt!) {
   changeGtlReportPetitionPrompt(input: $input) {
     ...promptResponse
+  }
+}
+
+mutation CreateGtlGoal($input: CreateGtlGoal!) {
+  createGtlGoal(input: $input) {
+    gtlGoal {
+      ...gtlGoal
+    }
+  }
+}
+
+mutation UpdateGtlGoal($input: UpdateGtlGoal!) {
+  updateGtlGoal(input: $input) {
+    gtlGoal {
+      ...gtlGoal
+    }
+  }
+}
+
+mutation DeleteGtlGoal($id: ID!) {
+  deleteGtlGoal(id: $id) {
+    __typename
+  }
+}
+
+mutation ReportGtlGoalProgress($input: ReportGtlGoalProgress!) {
+  reportGtlGoalProgress(input: $input) {
+    progress {
+      ...gtlGoalProgress
+    }
+    gtlGoal {
+      ...gtlGoal
+    }
   }
 }

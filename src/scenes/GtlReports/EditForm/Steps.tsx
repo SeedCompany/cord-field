@@ -16,13 +16,19 @@ import { ProseSection } from '../Detail/ProseSection';
 import { type GroupedSteps, type GtlStepProps } from './stepTypes';
 import { SubmitStep } from './SubmitStep';
 
-const GoalsStep = ({ report }: GtlStepProps) => (
-  <GoalsCard
-    reportId={report.id}
-    previousQuarterGoals={report.previousQuarterGoals}
-    goals={report.goals}
-  />
-);
+const GoalsStep = ({ report }: GtlStepProps) => {
+  // A GTL report only ever hangs off an internship engagement, so the parent is
+  // already narrowed here — no __typename check to make.
+  const engagement = report.parent;
+  return (
+    <GoalsCard
+      reportId={report.id}
+      engagementId={engagement.id}
+      goals={engagement.goalSummary.goals}
+      progress={report.goalProgress}
+    />
+  );
+};
 
 const PracticumStep = ({ report }: GtlStepProps) => (
   <PracticumCard reportId={report.id} practicums={report.practicums} />

@@ -29,11 +29,13 @@ fragment InternshipEngagementDetail on InternshipEngagement {
   gtlReports {
     total
   }
-  goalProgress {
+  goalSummary {
     total
-    met
-    unmet
-    awaitingReview
+    done
+    active
+    needsAttention
+    behindSchedule
+    percentComplete
     goals {
       id
       goal {
@@ -42,12 +44,26 @@ fragment InternshipEngagementDetail on InternshipEngagement {
       details {
         value
       }
-      met {
+      targetDate {
         value
       }
-      impact {
+      measurement {
         value
       }
+      targetNumber {
+        value
+      }
+      targetDescription {
+        value
+      }
+      progressValue {
+        value
+      }
+      status {
+        value
+      }
+      percentComplete
+      scheduleStatus
     }
   }
   createdAt
