@@ -25,19 +25,14 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { GtlReportDrawer } from '../EditForm/GtlReportDrawer';
 import { GoalsCard } from './GoalsCard';
+import { GtlPrayerCard } from './GtlPrayerCard';
 import {
   ChangeGtlReportCommunityImpactPromptDocument,
-  ChangeGtlReportPetitionPromptDocument,
-  ChangeGtlReportPraisePromptDocument,
   CreateGtlReportCommunityImpactDocument,
-  CreateGtlReportPetitionDocument,
-  CreateGtlReportPraiseDocument,
   ExecuteGtlReportTransitionDocument,
   GtlReportDetailDocument,
   type GtlReportDetailFragment,
   UpdateGtlReportCommunityImpactResponseDocument,
-  UpdateGtlReportPetitionResponseDocument,
-  UpdateGtlReportPraiseResponseDocument,
 } from './GtlReportDetail.graphql';
 import { PracticumCard } from './PracticumCard';
 import { ProgressExplanationCard } from './ProgressExplanationCard';
@@ -136,26 +131,7 @@ export const GtlReportDetail = () => {
             updateResponseDoc={UpdateGtlReportCommunityImpactResponseDocument}
             editable={false}
           />
-          <ProseSection
-            title="Praises"
-            instructions="What are you thankful for from the past three months?"
-            reportId={report.id}
-            list={report.praises}
-            createDoc={CreateGtlReportPraiseDocument}
-            changePromptDoc={ChangeGtlReportPraisePromptDocument}
-            updateResponseDoc={UpdateGtlReportPraiseResponseDocument}
-            editable={false}
-          />
-          <ProseSection
-            title="Prayer Requests"
-            instructions="What needs do you have that we can join you in praying for?"
-            reportId={report.id}
-            list={report.petitions}
-            createDoc={CreateGtlReportPetitionDocument}
-            changePromptDoc={ChangeGtlReportPetitionPromptDocument}
-            updateResponseDoc={UpdateGtlReportPetitionResponseDocument}
-            editable={false}
-          />
+          <GtlPrayerCard reportId={report.id} editable={false} />
           <ProgressExplanationCard
             reportId={report.id}
             explanation={report.progressExplanation}

@@ -4,6 +4,7 @@ import {
   PostShareability,
   PostShareabilityLabels,
   PostShareabilityList,
+  PostType,
   PostTypeList,
 } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
@@ -24,6 +25,12 @@ export type PostFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing post to edit */
   post?: PostFormFragment;
   includeMembership?: boolean;
+  /**
+   * Lock the post to one category and drop the picker. For a list that only
+   * ever holds one kind — GTL's prayer section — asking is a way to get the
+   * wrong answer.
+   */
+  fixedType?: PostType;
 };
 
 const shareabilityList = (includeMembership: boolean) =>
@@ -35,6 +42,7 @@ const shareabilityList = (includeMembership: boolean) =>
 export const PostForm = <T, R = void>({
   post,
   includeMembership = false,
+  fixedType,
   ...rest
 }: PostFormProps<T, R>) => (
   <DialogForm<T, R>
@@ -45,15 +53,17 @@ export const PostForm = <T, R = void>({
   >
     <SubmitError />
     <Grid container spacing={2}>
-      <Grid item xs>
-        <SelectField
-          label="Category"
-          name="type"
-          options={PostTypeList}
-          variant="outlined"
-          defaultValue="Note"
-        />
-      </Grid>
+      {!fixedType && (
+        <Grid item xs>
+          <SelectField
+            label="Category"
+            name="type"
+            options={PostTypeList}
+            variant="outlined"
+            defaultValue="Note"
+          />
+        </Grid>
+      )}
       <Grid item xs>
         <SelectField
           label="Shareability"

@@ -1,0 +1,11 @@
+query GtlPrayerList($report: ID!, $input: PostListInput) {
+  periodicReport(id: $report) {
+    id
+    ... on GTLReport {
+      id
+      prayerRequests(input: $input) {
+        ...PostList
+      }
+    }
+  }
+}

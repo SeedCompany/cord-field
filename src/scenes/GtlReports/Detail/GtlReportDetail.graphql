@@ -59,12 +59,6 @@ fragment gtlReportDetail on GTLReport {
   communityImpact {
     ...promptResponseList
   }
-  praises {
-    ...promptResponseList
-  }
-  petitions {
-    ...promptResponseList
-  }
   progressExplanation {
     status {
       canRead
@@ -216,70 +210,6 @@ mutation UpdateGtlReportCommunityImpactResponse(
   $input: UpdatePromptVariantResponse!
 ) {
   updateGtlReportCommunityImpactResponse(input: $input) {
-    ...promptResponse
-  }
-}
-
-mutation CreateGtlReportPraise($input: ChoosePrompt!) {
-  createGtlReportPraise(input: $input) {
-    ...promptResponse
-    # Re-select the parent's list so the new response is linked into the
-    # cached GTLReport.praises — without this it exists on the server but the
-    # chooser never sees it, and every further click creates another row.
-    parent {
-      ... on GTLReport {
-        id
-        praises {
-          ...Pagination
-          items {
-            id
-          }
-        }
-      }
-    }
-  }
-}
-
-mutation UpdateGtlReportPraiseResponse($input: UpdatePromptVariantResponse!) {
-  updateGtlReportPraiseResponse(input: $input) {
-    ...promptResponse
-  }
-}
-
-mutation ChangeGtlReportPraisePrompt($input: ChangePrompt!) {
-  changeGtlReportPraisePrompt(input: $input) {
-    ...promptResponse
-  }
-}
-
-mutation CreateGtlReportPetition($input: ChoosePrompt!) {
-  createGtlReportPetition(input: $input) {
-    ...promptResponse
-    # Re-select the parent's list so the new response is linked into the
-    # cached GTLReport.petitions — without this it exists on the server but the
-    # chooser never sees it, and every further click creates another row.
-    parent {
-      ... on GTLReport {
-        id
-        petitions {
-          ...Pagination
-          items {
-            id
-          }
-        }
-      }
-    }
-  }
-}
-
-mutation UpdateGtlReportPetitionResponse($input: UpdatePromptVariantResponse!) {
-  updateGtlReportPetitionResponse(input: $input) {
-    ...promptResponse
-  }
-}
-
-mutation ChangeGtlReportPetitionPrompt($input: ChangePrompt!) {
-  changeGtlReportPetitionPrompt(input: $input) {
     ...promptResponse
   }
 }

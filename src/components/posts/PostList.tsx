@@ -1,6 +1,7 @@
 import { Add } from '@mui/icons-material';
 import { Grid, Tooltip, Typography } from '@mui/material';
 import { Except } from 'type-fest';
+import { PostType } from '~/api/schema.graphql';
 import { extendSx } from '~/common';
 import { useDialog } from '../Dialog';
 import { Fab } from '../Fab';
@@ -18,12 +19,24 @@ interface PostListProps
   parent: PostableIdFragment;
   includeMembership?: boolean;
   headless?: boolean; // hides title and right-aligns the add button, used when rendered inside a tab
+  /** Lock the list to one category. @see PostForm */
+  fixedType?: PostType;
+  /** The parent field this list came from, when it isn't `posts`. */
+  listField?: 'posts' | 'prayerRequests';
+  /** Defaults to "Posts". */
+  title?: string;
+  /** Drop the add button — the read-only view of a report. */
+  readOnly?: boolean;
 }
 
 export const PostList = ({
   includeMembership = false,
   headless = false,
   parent,
+  fixedType,
+  listField,
+  title = 'Posts',
+  readOnly = false,
   ContainerProps,
   ...rest
 }: PostListProps) => {
@@ -33,23 +46,25 @@ export const PostList = ({
       <Grid container spacing={2} alignItems="center" sx={{ maxWidth: 600 }}>
         {!headless && (
           <Grid item>
-            <Typography variant="h3">Posts</Typography>
+            <Typography variant="h3">{title}</Typography>
           </Grid>
         )}
-        <Grid
-          item
-          sx={{
-            display: 'flex',
-            justifyContent: headless ? 'flex-end' : 'inherit',
-            flex: 1,
-          }}
-        >
-          <Tooltip title="Add Post">
-            <Fab color="error" onClick={createPost} aria-label="Add post">
-              <Add />
-            </Fab>
-          </Tooltip>
-        </Grid>
+        {!readOnly && (
+          <Grid
+            item
+            sx={{
+              display: 'flex',
+              justifyContent: headless ? 'flex-end' : 'inherit',
+              flex: 1,
+            }}
+          >
+            <Tooltip title={`Add ${fixedType ?? 'Post'}`}>
+              <Fab color="error" onClick={createPost} aria-label="Add post">
+                <Add />
+              </Fab>
+            </Tooltip>
+          </Grid>
+        )}
       </Grid>
       <List
         {...rest}
@@ -70,6 +85,10 @@ export const PostList = ({
       />
       <CreatePost
         {...createPostState}
+        open={createPostState.open && !readOnly}
+        title={fixedType ? `Add ${fixedType}` : 'Add Post'}
+        fixedType={fixedType}
+        listField={listField}
         includeMembership={includeMembership}
         parent={parent}
       />

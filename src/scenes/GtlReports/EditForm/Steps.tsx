@@ -1,14 +1,9 @@
 import { GoalsCard } from '../Detail/GoalsCard';
+import { GtlPrayerCard } from '../Detail/GtlPrayerCard';
 import {
   ChangeGtlReportCommunityImpactPromptDocument,
-  ChangeGtlReportPetitionPromptDocument,
-  ChangeGtlReportPraisePromptDocument,
   CreateGtlReportCommunityImpactDocument,
-  CreateGtlReportPetitionDocument,
-  CreateGtlReportPraiseDocument,
   UpdateGtlReportCommunityImpactResponseDocument,
-  UpdateGtlReportPetitionResponseDocument,
-  UpdateGtlReportPraiseResponseDocument,
 } from '../Detail/GtlReportDetail.graphql';
 import { PracticumCard } from '../Detail/PracticumCard';
 import { ProgressExplanationCard } from '../Detail/ProgressExplanationCard';
@@ -49,29 +44,8 @@ CommunityImpactStep.enableWhen = (report: GtlStepProps['report']) =>
   report.communityImpact.canRead;
 
 const PrayerStep = ({ report }: GtlStepProps) => (
-  <>
-    <ProseSection
-      title="Praises"
-      instructions="What are you thankful for from the past three months?"
-      reportId={report.id}
-      list={report.praises}
-      createDoc={CreateGtlReportPraiseDocument}
-      changePromptDoc={ChangeGtlReportPraisePromptDocument}
-      updateResponseDoc={UpdateGtlReportPraiseResponseDocument}
-    />
-    <ProseSection
-      title="Prayer Requests"
-      instructions="What needs do you have that we can join you in praying for?"
-      reportId={report.id}
-      list={report.petitions}
-      createDoc={CreateGtlReportPetitionDocument}
-      changePromptDoc={ChangeGtlReportPetitionPromptDocument}
-      updateResponseDoc={UpdateGtlReportPetitionResponseDocument}
-    />
-  </>
+  <GtlPrayerCard reportId={report.id} />
 );
-PrayerStep.enableWhen = (report: GtlStepProps['report']) =>
-  report.praises.canRead || report.petitions.canRead;
 
 const ExplanationStep = ({ report }: GtlStepProps) => (
   <ProgressExplanationCard
