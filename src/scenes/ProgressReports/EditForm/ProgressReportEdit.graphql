@@ -16,6 +16,12 @@ fragment ProgressReportEdit on ProgressReport {
   communityStories {
     ...promptResponseList
   }
+  otherActivities {
+    ...promptResponseList
+  }
+  nextQuarterPlans {
+    ...promptResponseList
+  }
   progress {
     ...ProgressReportProgress
   }
