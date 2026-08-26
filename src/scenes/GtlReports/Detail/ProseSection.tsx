@@ -48,6 +48,8 @@ export const ProseSection = ({
 }: ProseSectionProps) => {
   if (!list.canRead) return null;
 
+  const response = list.items[0];
+
   return (
     <Card>
       <CardContent>
@@ -64,30 +66,29 @@ export const ProseSection = ({
           </Typography>
         )}
 
-        {editable
-          ? // An empty list still renders the chooser — that is how the first
-            // response gets created.
-            (list.items.length > 0 ? list.items : [undefined]).map(
-              (promptResponse, i) => (
-                <div key={promptResponse?.id ?? `new-${i}`}>
-                  <Prompt
-                    reportId={reportId}
-                    promptResponse={promptResponse}
-                    list={list}
-                    createItemDocument={createDoc}
-                    changePromptDocument={changePromptDoc}
-                    promptInstructions={null}
-                  />
-                  <VariantResponses
-                    promptResponse={promptResponse}
-                    doc={updateResponseDoc}
-                  />
-                </div>
-              )
-            )
-          : list.items.map((item) => (
-              <ReadOnlyResponse key={item.id} item={item} />
-            ))}
+        {editable ? (
+          // Exactly one response per section, as Momentum does — `Prompt`
+          // renders the chooser while this is undefined and the prompt text
+          // once it exists, so a second one can never be created.
+          <>
+            <Prompt
+              reportId={reportId}
+              promptResponse={response}
+              list={list}
+              createItemDocument={createDoc}
+              changePromptDocument={changePromptDoc}
+              promptInstructions={null}
+            />
+            <VariantResponses
+              promptResponse={response}
+              doc={updateResponseDoc}
+            />
+          </>
+        ) : (
+          list.items.map((item) => (
+            <ReadOnlyResponse key={item.id} item={item} />
+          ))
+        )}
       </CardContent>
     </Card>
   );
