@@ -56,6 +56,9 @@ fragment gtlReportDetail on GTLReport {
   practicums {
     ...gtlPracticum
   }
+  media {
+    ...gtlMedia
+  }
   communityImpact {
     ...promptResponseList
   }
@@ -120,6 +123,42 @@ fragment gtlGoalProgress on GtlGoalProgress {
   }
   progressDate {
     value
+  }
+}
+
+fragment gtlMedia on GtlReportMedia {
+  id
+  canDelete
+  caption {
+    canEdit
+    value
+  }
+  category {
+    canEdit
+    value
+  }
+  file {
+    value {
+      id
+      name
+      mimeType
+    }
+  }
+  media {
+    id
+    mimeType
+    url
+    ... on Image {
+      dimensions {
+        aspectRatio
+      }
+    }
+    ... on Video {
+      duration
+    }
+    ... on Audio {
+      duration
+    }
   }
 }
 
@@ -243,6 +282,36 @@ mutation ReportGtlGoalProgress($input: ReportGtlGoalProgress!) {
     }
     gtlGoal {
       ...gtlGoal
+    }
+  }
+}
+
+mutation UploadGtlReportMedia($input: UploadGtlReportMedia!) {
+  uploadGtlReportMedia(input: $input) {
+    id
+    ... on GTLReport {
+      id
+      media {
+        ...gtlMedia
+      }
+    }
+  }
+}
+
+mutation UpdateGtlReportMedia($input: UpdateGtlReportMedia!) {
+  updateGtlReportMedia(input: $input) {
+    ...gtlMedia
+  }
+}
+
+mutation DeleteGtlReportMedia($id: ID!) {
+  deleteGtlReportMedia(id: $id) {
+    id
+    ... on GTLReport {
+      id
+      media {
+        ...gtlMedia
+      }
     }
   }
 }

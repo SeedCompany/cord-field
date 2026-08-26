@@ -1,9 +1,8 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import {
   Box,
   Breadcrumbs,
-  Button,
   Card,
   CardContent,
   Chip,
@@ -29,11 +28,11 @@ import { GtlPrayerCard } from './GtlPrayerCard';
 import {
   ChangeGtlReportCommunityImpactPromptDocument,
   CreateGtlReportCommunityImpactDocument,
-  ExecuteGtlReportTransitionDocument,
   GtlReportDetailDocument,
   type GtlReportDetailFragment,
   UpdateGtlReportCommunityImpactResponseDocument,
 } from './GtlReportDetail.graphql';
+import { MediaCard } from './MediaCard';
 import { PracticumCard } from './PracticumCard';
 import { ProgressExplanationCard } from './ProgressExplanationCard';
 import { ProseSection } from './ProseSection';
@@ -132,6 +131,11 @@ export const GtlReportDetail = () => {
             editable={false}
           />
           <GtlPrayerCard reportId={report.id} editable={false} />
+          <MediaCard
+            reportId={report.id}
+            media={report.media}
+            editable={false}
+          />
           <ProgressExplanationCard
             reportId={report.id}
             explanation={report.progressExplanation}
@@ -155,9 +159,6 @@ const HeaderCard = ({
     { __typename?: 'InternshipEngagement' }
   > | null;
 }) => {
-  const [execute, { loading }] = useMutation(
-    ExecuteGtlReportTransitionDocument
-  );
   const progress = engagement?.programProgress.value ?? null;
 
   return (
@@ -209,24 +210,21 @@ const HeaderCard = ({
         {report.transitions.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />
+            {/* Links, not actions. Executing from here would silently drop the
+                report's "additional comments" — the wizard's submit step owns
+                both halves, so there is one place a report moves from. */}
             <Stack direction="row" spacing={1} flexWrap="wrap">
               {report.transitions.map((t) => (
-                <Button
+                <ButtonLink
                   key={t.key}
                   size="small"
                   variant={t.type === 'Approve' ? 'contained' : 'outlined'}
                   color={t.type === 'Reject' ? 'error' : 'primary'}
-                  disabled={!t.canExecute || loading}
-                  onClick={() =>
-                    void execute({
-                      variables: {
-                        input: { report: report.id, transition: t.key },
-                      },
-                    })
-                  }
+                  disabled={!t.canExecute}
+                  to={`/gtl-reports/${report.id}/edit?step=submit-report`}
                 >
                   {t.label}
-                </Button>
+                </ButtonLink>
               ))}
             </Stack>
           </>

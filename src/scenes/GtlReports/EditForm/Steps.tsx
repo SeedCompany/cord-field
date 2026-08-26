@@ -5,6 +5,7 @@ import {
   CreateGtlReportCommunityImpactDocument,
   UpdateGtlReportCommunityImpactResponseDocument,
 } from '../Detail/GtlReportDetail.graphql';
+import { MediaCard } from '../Detail/MediaCard';
 import { PracticumCard } from '../Detail/PracticumCard';
 import { ProgressExplanationCard } from '../Detail/ProgressExplanationCard';
 import { ProseSection } from '../Detail/ProseSection';
@@ -47,6 +48,10 @@ const PrayerStep = ({ report }: GtlStepProps) => (
   <GtlPrayerCard reportId={report.id} />
 );
 
+const MediaStep = ({ report }: GtlStepProps) => (
+  <MediaCard reportId={report.id} media={report.media} />
+);
+
 const ExplanationStep = ({ report }: GtlStepProps) => (
   <ProgressExplanationCard
     reportId={report.id}
@@ -66,6 +71,7 @@ export const GtlSteps: GroupedSteps = {
   'Investor Connection': [
     ['Community Impact', CommunityImpactStep],
     ['Prayer', PrayerStep],
+    ['Photos & Video', MediaStep],
   ],
   'Field Operations': [['Explanation of Progress', ExplanationStep]],
   'Final Details': [['Submit Report', SubmitStep]],
