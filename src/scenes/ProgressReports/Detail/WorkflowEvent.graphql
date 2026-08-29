@@ -16,7 +16,15 @@ fragment workflowEvent on ProgressReportWorkflowEvent {
     canEdit
     canRead
     value {
-      fullName
+      __typename
+      ... on User {
+        id
+        fullName
+      }
+      ... on SystemAgent {
+        id
+        name
+      }
     }
   }
 }
