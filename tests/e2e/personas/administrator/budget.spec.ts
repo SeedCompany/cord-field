@@ -13,17 +13,13 @@ const FIXTURES = join(__dirname, '../../fixtures');
  * disguised file download), rendered through the same generic
  * `DefinedFileCard` used everywhere else in this suite.
  *
- * `UpdateProjectBudgetRecord` is deliberately NOT covered here. A real
- * `BudgetRecord` row only exists per real fiscal year × Managing-type
- * partnership, and getting there needs more than the usual throwaway setup:
- * live investigation this round got the seeded fixture project's Partner to
- * `types: [Managing]` with a real `financialReportingTypes` grant, its
- * Partnership updated to match (`types: [Managing]`,
- * `financialReportingType: Funded`), and the project given real
- * `mouStart`/`mouEnd` dates — and `budget.records` still came back empty
- * afterward. Whatever actually triggers `BudgetRecord` generation isn't any
- * of the fields this suite's other specs already exercise; worth its own
- * investigation in a future round rather than more guessing here.
+ * `UpdateProjectBudgetRecord` is deliberately NOT covered here — Round 8
+ * couldn't trigger `BudgetRecord` generation (a `Managing`-type partnership
+ * with `financialReportingTypes` granted plus real project dates left
+ * `budget.records` empty). Round 9 root-caused it: the sync hook gates on
+ * `Funding` in the partnership's `types`, a different value than `Managing`.
+ * See product-progress-and-budget.spec.ts for the working recipe and
+ * budget-derivation.spec.ts (Round 11) for the fiscal-year math assertions.
  */
 test.describe('project budget (administrator)', () => {
   test("a project's budget page loads, and its Universal Template can be uploaded", async ({
