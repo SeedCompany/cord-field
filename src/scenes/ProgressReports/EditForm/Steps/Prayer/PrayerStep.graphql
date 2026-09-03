@@ -1,0 +1,39 @@
+query PrayerStepList($engagement: ID!, $input: PostListInput) {
+  engagement(id: $engagement) {
+    ... on LanguageEngagement {
+      id
+      ...PostableId
+      posts(input: $input) {
+        canRead
+        canCreate
+        items {
+          id
+          type
+          shareability
+          effectiveShareability
+          body {
+            value
+          }
+          report {
+            value {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation AttachPrayerToReport($input: UpdatePost!) {
+  updatePost(input: $input) {
+    post {
+      id
+      report {
+        value {
+          id
+        }
+      }
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { ExplanationOfProgress } from './ExplanationOfProgress/ExplanationOfProg
 import { MediaStep } from './Media';
 import { NextQuarterPlansStep } from './NextQuarterPlans';
 import { OtherActivitiesStep } from './OtherActivities';
+import { PrayerStep } from './Prayer';
 import { ProgressStep } from './ProgressStep';
 import { GroupedStepMapShape } from './step.types';
 import { SubmitReportStep } from './SubmitReportStep';
@@ -20,6 +21,7 @@ export const Steps: GroupedStepMapShape = {
   'Quarter in Review': [
     ['Other Activities', OtherActivitiesStep],
     ['Next Quarter', NextQuarterPlansStep],
+    ['Prayer', PrayerStep],
   ],
   'Project Management': [
     ['Progress', ProgressStep],
