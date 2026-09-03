@@ -10,10 +10,15 @@ import { SubmitReportStep } from './SubmitReportStep';
 import { TeamNewsStep } from './TeamNews';
 
 export const Steps: GroupedStepMapShape = {
+  // Prayer sits here rather than in Quarter in Review: like Team News and
+  // Story, it's investor-facing content with its own moderation/approval
+  // gate before it leaves Seed Company, not the partner's internal account of
+  // the quarter that the next group holds.
   'Investor Connection': [
     ['Team News', TeamNewsStep],
     ['Story', CommunityStoryStep],
     ['Media', MediaStep],
+    ['Prayer', PrayerStep],
   ],
   // Neither investor storytelling nor Seed Company's internal progress
   // assessment — this is the partner's account of the quarter, which is why it
@@ -21,7 +26,6 @@ export const Steps: GroupedStepMapShape = {
   'Quarter in Review': [
     ['Other Activities', OtherActivitiesStep],
     ['Next Quarter', NextQuarterPlansStep],
-    ['Prayer', PrayerStep],
   ],
   'Project Management': [
     ['Progress', ProgressStep],

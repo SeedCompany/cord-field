@@ -11,6 +11,10 @@ query PrayerStepList($engagement: ID!, $input: PostListInput) {
           type
           shareability
           effectiveShareability
+          approvedShareability {
+            value
+            canEdit
+          }
           body {
             value
           }
@@ -19,6 +23,7 @@ query PrayerStepList($engagement: ID!, $input: PostListInput) {
               id
             }
           }
+          ...PostForm
         }
       }
     }
@@ -34,6 +39,19 @@ mutation AttachPrayerToReport($input: UpdatePost!) {
           id
         }
       }
+    }
+  }
+}
+
+mutation ModeratePrayerRequest($input: ModeratePost!) {
+  moderatePost(input: $input) {
+    posts {
+      id
+      approvedShareability {
+        value
+        canEdit
+      }
+      effectiveShareability
     }
   }
 }

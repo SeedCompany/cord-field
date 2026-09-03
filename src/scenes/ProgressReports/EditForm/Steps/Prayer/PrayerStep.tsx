@@ -1,21 +1,50 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Add } from '@mui/icons-material';
+import { Add, Edit } from '@mui/icons-material';
 import {
   Box,
   Button,
   Card,
   CardContent,
   Chip,
+  IconButton,
+  MenuItem,
+  Select,
   Stack,
   Typography,
 } from '@mui/material';
+import { ReactNode, useState } from 'react';
+import {
+  PostShareability,
+  PostShareabilityLabels,
+  PostShareabilityList,
+} from '~/api/schema.graphql';
 import { useDialog } from '~/components/Dialog';
 import { CreatePost } from '~/components/posts/CreatePost';
+import { EditPost } from '~/components/posts/EditPost';
 import { StepComponent } from '../step.types';
 import {
   AttachPrayerToReportDocument as AttachToReport,
+  ModeratePrayerRequestDocument as ModeratePrayerRequest,
   PrayerStepListDocument as PrayerList,
+  PrayerStepListQuery,
 } from './PrayerStep.graphql';
+
+type PrayerPost = Extract<
+  PrayerStepListQuery['engagement'],
+  { __typename: 'LanguageEngagement' }
+>['posts']['items'][number];
+
+// Rank narrowest to widest — mirrors `reachRank` in shareability.dto.ts on the
+// API. Kept local rather than fetched: it only decides which options this one
+// control offers, and duplicating five stable enum ranks here is cheaper than
+// a schema round-trip to fetch them.
+const shareabilityRank: Record<PostShareability, number> = {
+  Membership: 0,
+  ProjectTeam: 0,
+  Internal: 1,
+  AskToShareExternally: 2,
+  External: 3,
+};
 
 /**
  * Prayer requests and updates, captured as part of submitting this report.
@@ -116,28 +145,15 @@ export const PrayerStep: StepComponent = ({ report }) => {
       ) : (
         <Stack spacing={1.5} sx={{ mb: 3 }}>
           {inThisReport.map((post) => (
-            <Card key={post.id} variant="outlined" elevation={0}>
-              <CardContent
-                sx={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: 2,
-                  '&:last-child': { pb: 2 },
-                }}
-              >
-                <Typography variant="body2" sx={{ flex: 1 }}>
-                  {post.body.value}
-                </Typography>
-                <Chip
-                  label={post.effectiveShareability}
-                  size="small"
-                  variant="outlined"
-                />
+            <PrayerCard
+              key={post.id}
+              post={post}
+              action={
                 <Button size="small" onClick={() => void detach(post.id, post)}>
                   Remove
                 </Button>
-              </CardContent>
-            </Card>
+              }
+            />
           ))}
         </Stack>
       )}
@@ -149,18 +165,10 @@ export const PrayerStep: StepComponent = ({ report }) => {
           </Typography>
           <Stack spacing={1.5}>
             {recentUnattached.map((post) => (
-              <Card key={post.id} variant="outlined" elevation={0}>
-                <CardContent
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 2,
-                    '&:last-child': { pb: 2 },
-                  }}
-                >
-                  <Typography variant="body2" sx={{ flex: 1 }}>
-                    {post.body.value}
-                  </Typography>
+              <PrayerCard
+                key={post.id}
+                post={post}
+                action={
                   <Button
                     size="small"
                     variant="outlined"
@@ -168,8 +176,8 @@ export const PrayerStep: StepComponent = ({ report }) => {
                   >
                     Include
                   </Button>
-                </CardContent>
-              </Card>
+                }
+              />
             ))}
           </Stack>
         </>
@@ -186,3 +194,98 @@ PrayerStep.isIncomplete = () => ({
   isIncomplete: false,
   severity: 'suggested',
 });
+
+/**
+ * One prayer request or update, with its two independent edit surfaces:
+ * content (the author, or a moderator doing light cleanup — see
+ * `PostForm`/ModeratePostsPolicy) and the shareability clearance (a
+ * moderator only). They're separate controls because they're separate
+ * decisions — editing wording never implies approving reach, and approving
+ * reach never rewrites wording.
+ */
+const PrayerCard = ({
+  post,
+  action,
+}: {
+  post: PrayerPost;
+  action: ReactNode;
+}) => {
+  const [editState, editPost] = useDialog();
+
+  return (
+    <Card variant="outlined" elevation={0}>
+      <CardContent sx={{ '&:last-child': { pb: 2 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+          <Typography variant="body2" sx={{ flex: 1 }}>
+            {post.body.value}
+          </Typography>
+          <Chip
+            label={post.effectiveShareability}
+            size="small"
+            variant="outlined"
+          />
+          {post.body.canEdit && (
+            <IconButton size="small" onClick={() => editPost()}>
+              <Edit fontSize="small" />
+            </IconButton>
+          )}
+          {action}
+        </Box>
+        {post.approvedShareability.canEdit && <ApprovalControl post={post} />}
+      </CardContent>
+      <EditPost post={post} includeMembership={false} {...editState} />
+    </Card>
+  );
+};
+
+const ApprovalControl = ({ post }: { post: PrayerPost }) => {
+  const [moderate, { loading }] = useMutation(ModeratePrayerRequest);
+  const [selected, setSelected] = useState<PostShareability>(
+    post.approvedShareability.value ?? post.shareability
+  );
+
+  const options = PostShareabilityList.filter(
+    (v) => shareabilityRank[v] <= shareabilityRank[post.shareability]
+  );
+  const dirty = selected !== post.approvedShareability.value;
+
+  return (
+    <Stack
+      direction="row"
+      spacing={1}
+      alignItems="center"
+      sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}
+    >
+      <Typography variant="caption" color="text.secondary">
+        Requested: {PostShareabilityLabels[post.shareability]} · Cleared:{' '}
+        {post.approvedShareability.value
+          ? PostShareabilityLabels[post.approvedShareability.value]
+          : 'Not yet reviewed'}
+      </Typography>
+      <Box sx={{ flex: 1 }} />
+      <Select
+        size="small"
+        value={selected}
+        onChange={(e) => setSelected(e.target.value as PostShareability)}
+      >
+        {options.map((value) => (
+          <MenuItem key={value} value={value}>
+            {PostShareabilityLabels[value]}
+          </MenuItem>
+        ))}
+      </Select>
+      <Button
+        size="small"
+        variant={dirty ? 'contained' : 'outlined'}
+        disabled={!dirty || loading}
+        onClick={() =>
+          void moderate({
+            variables: { input: { id: post.id, shareability: selected } },
+          })
+        }
+      >
+        {post.approvedShareability.value ? 'Update' : 'Approve'}
+      </Button>
+    </Stack>
+  );
+};

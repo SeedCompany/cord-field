@@ -1,6 +1,17 @@
 import { useMutation } from '@apollo/client';
-import { Add } from '@mui/icons-material';
-import { Box, Button, Chip, Divider, Stack, Typography } from '@mui/material';
+import { Add, ExpandMore } from '@mui/icons-material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { groupToMapBy } from '@seedcompany/common';
 import { useMemo, useState } from 'react';
 import { Sensitivity } from '~/api/schema.graphql';
@@ -13,6 +24,7 @@ import { MediaInfoForm, MediaInfoFormProps } from './MediaInfoForm';
 import {
   CreateMediaDocument,
   DeleteMediaDocument,
+  ReuseMediaDocument,
   UpdateMediaDocument,
 } from './MediaStep.graphql';
 import { ProgressReportMediaFragment } from './progressReportMedia.graphql';
@@ -38,41 +50,67 @@ export const MediaStep: StepComponent = ({ report }) => {
   }, [report.media.items]);
 
   const canAddGroup = report.media.availableVariants.some((v) => v.canCreate);
+  const totalVariantSlots = report.media.availableVariants.length;
 
   return (
     <Box sx={{ maxWidth: 'md' }}>
-      <Typography variant="h3" paragraph>
-        Upload images to go with your Report
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 2,
+          mb: 1,
+        }}
+      >
+        <Typography variant="h3">
+          Photos
+          {groups.length > 0 && (
+            <Typography
+              component="span"
+              variant="h3"
+              color="text.secondary"
+              sx={{ ml: 1 }}
+            >
+              ({groups.length})
+            </Typography>
+          )}
+        </Typography>
+        {canAddGroup && !addingGroup && (
+          <Button
+            variant="outlined"
+            startIcon={<Add />}
+            onClick={() => setAddingGroup(true)}
+          >
+            {groups.length === 0 ? 'Upload a Photo' : 'Upload Another Photo'}
+          </Button>
+        )}
+      </Box>
+      <Typography variant="body2" color="text.secondary" paragraph>
+        Each photo can carry a different version per role — collapsed here to
+        its furthest-along version. Expand one to see, edit, or add the rest.
       </Typography>
 
-      <Stack spacing={4} divider={<Divider />}>
+      <Stack spacing={2} divider={<Divider />}>
         {groups.map((group) => (
           <PhotoGroup
             key={group.variantGroup}
             report={report}
             variantGroup={group.variantGroup}
             items={group.items}
+            totalVariantSlots={totalVariantSlots}
           />
         ))}
 
-        {addingGroup ? (
+        {addingGroup && (
           <PhotoGroup
             report={report}
             variantGroup={undefined}
             items={[]}
+            totalVariantSlots={totalVariantSlots}
+            defaultExpanded
             onUploaded={() => setAddingGroup(false)}
           />
-        ) : (
-          canAddGroup && (
-            <Button
-              variant="outlined"
-              startIcon={<Add />}
-              onClick={() => setAddingGroup(true)}
-              sx={{ alignSelf: 'flex-start' }}
-            >
-              {groups.length === 0 ? 'Upload a Photo' : 'Upload Another Photo'}
-            </Button>
-          )
         )}
       </Stack>
     </Box>
@@ -98,13 +136,25 @@ const PhotoGroup = ({
   report,
   variantGroup,
   items,
+  totalVariantSlots,
+  defaultExpanded = false,
   onUploaded,
 }: {
   report: PhotoGroupReport;
   variantGroup: string | undefined;
   items: readonly ProgressReportMediaFragment[];
+  totalVariantSlots: number;
+  defaultExpanded?: boolean;
   onUploaded?: () => void;
 }) => {
+  const [expanded, setExpanded] = useState(defaultExpanded);
+
+  const orderIndex = useMemo(
+    () =>
+      new Map(report.media.availableVariants.map((v, i) => [v.variant.key, i])),
+    [report.media.availableVariants]
+  );
+
   const mediaItems = useMemo(() => {
     return report.media.availableVariants
       .slice()
@@ -120,9 +170,23 @@ const PhotoGroup = ({
   const [createMedia] = useMutation(CreateMediaDocument);
   const [updateMedia] = useMutation(UpdateMediaDocument);
   const [deleteMedia] = useMutation(DeleteMediaDocument);
+  const [reuseMedia] = useMutation(ReuseMediaDocument);
   const uploadFile = useUploadFileAsync();
 
   const published = items.find((m) => m.variant.key === PUBLISHED_VARIANT_KEY);
+
+  // The furthest-along version is what best represents this photo at a
+  // glance — usually what an investor would eventually see, or the closest
+  // thing to it uploaded so far.
+  const furthestAlong = [...items].sort(
+    (a, b) =>
+      (orderIndex.get(b.variant.key) ?? 0) -
+      (orderIndex.get(a.variant.key) ?? 0)
+  )[0];
+  const thumbnail =
+    furthestAlong?.media.__typename === 'Image'
+      ? furthestAlong.media.url
+      : undefined;
 
   const handleSubmit: MediaInfoFormProps['onSubmit'] = async (values) => {
     if (values.submitAction === 'delete') {
@@ -168,36 +232,122 @@ const PhotoGroup = ({
     });
   };
 
-  return (
-    <Box>
-      {items.length > 0 && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          {published ? (
-            <Chip
-              label="Included in Investor Report"
-              color="primary"
-              size="small"
-            />
-          ) : (
-            <Chip
-              label="Not yet in Investor Report"
-              variant="outlined"
-              size="small"
-            />
-          )}
-        </Box>
-      )}
-      {mediaItems.map(({ variant, existing }) => (
-        <VariantAccordion variant={variant} key={variant.key}>
-          <MediaInfoForm
-            variant={variant}
-            sensitivity={report.sensitivity}
-            existingMedia={existing}
-            isFirstUpload={items.length === 0}
-            onSubmit={handleSubmit}
+  const reuse = (sourceId: string, targetVariant: string) =>
+    reuseMedia({
+      variables: { input: { id: sourceId, variant: targetVariant } },
+    });
+
+  const filledCount = items.length;
+
+  const summary = (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        width: '100%',
+      }}
+    >
+      <Avatar
+        variant="rounded"
+        src={thumbnail}
+        sx={{ width: 56, height: 56 }}
+      />
+      <Box sx={{ flex: 1 }}>
+        <Typography variant="body2">
+          {filledCount} of {totalVariantSlots} roles uploaded
+        </Typography>
+        {published ? (
+          <Chip
+            label="Included in Investor Report"
+            color="primary"
+            size="small"
           />
-        </VariantAccordion>
-      ))}
+        ) : (
+          <Chip
+            label="Not yet in Investor Report"
+            variant="outlined"
+            size="small"
+          />
+        )}
+      </Box>
     </Box>
+  );
+
+  // A brand new group has nothing to summarize yet, so it always renders
+  // expanded straight to the upload form rather than a collapsed shell
+  // around zero photos.
+  if (items.length === 0) {
+    return (
+      <Box>
+        {mediaItems.map(({ variant, existing }) => (
+          <VariantAccordion variant={variant} key={variant.key} expanded>
+            <MediaInfoForm
+              variant={variant}
+              sensitivity={report.sensitivity}
+              existingMedia={existing}
+              isFirstUpload
+              onSubmit={handleSubmit}
+            />
+          </VariantAccordion>
+        ))}
+      </Box>
+    );
+  }
+
+  return (
+    <Accordion
+      expanded={expanded}
+      onChange={(_, next) => setExpanded(next)}
+      square
+      disableGutters
+      elevation={0}
+      sx={{ '&:before': { display: 'none' } }}
+    >
+      <AccordionSummary expandIcon={<ExpandMore />}>{summary}</AccordionSummary>
+      <AccordionDetails sx={{ px: 0 }}>
+        {mediaItems.map(({ variant, existing }) => {
+          const reuseSources = existing
+            ? []
+            : items.filter(
+                (i) =>
+                  (orderIndex.get(i.variant.key) ?? 0) <
+                  (orderIndex.get(variant.key) ?? 0)
+              );
+          return (
+            <VariantAccordion variant={variant} key={variant.key}>
+              {reuseSources.length > 0 && (
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Already uploaded for this photo — reuse it here instead of
+                    uploading again. The caption and category can still be
+                    edited separately once it's added.
+                  </Typography>
+                  <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+                    {reuseSources.map((source) => (
+                      <Button
+                        key={source.id}
+                        size="small"
+                        variant="outlined"
+                        onClick={() => void reuse(source.id, variant.key)}
+                      >
+                        Use {source.variant.label}'s photo
+                      </Button>
+                    ))}
+                  </Stack>
+                </Box>
+              )}
+              <MediaInfoForm
+                variant={variant}
+                sensitivity={report.sensitivity}
+                existingMedia={existing}
+                isFirstUpload={false}
+                onSubmit={handleSubmit}
+              />
+            </VariantAccordion>
+          );
+        })}
+      </AccordionDetails>
+    </Accordion>
   );
 };
