@@ -10,6 +10,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import { ReactNode, useState } from 'react';
@@ -27,6 +28,7 @@ import {
   ModeratePrayerRequestDocument as ModeratePrayerRequest,
   PrayerStepListDocument as PrayerList,
   PrayerStepListQuery,
+  UpdatePrayerFinalWordingDocument as UpdateFinalWording,
 } from './PrayerStep.graphql';
 
 type PrayerPost = Extract<
@@ -196,12 +198,14 @@ PrayerStep.isIncomplete = () => ({
 });
 
 /**
- * One prayer request or update, with its two independent edit surfaces:
- * content (the author, or a moderator doing light cleanup — see
- * `PostForm`/ModeratePostsPolicy) and the shareability clearance (a
- * moderator only). They're separate controls because they're separate
- * decisions — editing wording never implies approving reach, and approving
- * reach never rewrites wording.
+ * One prayer request or update, with three independent edit surfaces: the
+ * original content (the author only — see `PostForm`/
+ * UserCanManageOwnCommentsPolicy), the finalized wording shown externally (a
+ * translator or moderator — see FinalizePostWordingPolicy), and the
+ * shareability clearance (a moderator only). Three separate controls because
+ * they're three separate decisions: editing the original never implies a
+ * translation is done, finalizing wording never implies approving reach, and
+ * approving reach never rewrites wording.
  */
 const PrayerCard = ({
   post,
@@ -232,6 +236,9 @@ const PrayerCard = ({
           {action}
         </Box>
         {post.approvedShareability.canEdit && <ApprovalControl post={post} />}
+        {(post.finalBody.canEdit || post.finalBody.value) && (
+          <FinalWordingControl post={post} />
+        )}
       </CardContent>
       <EditPost post={post} includeMembership={false} {...editState} />
     </Card>
@@ -286,6 +293,76 @@ const ApprovalControl = ({ post }: { post: PrayerPost }) => {
       >
         {post.approvedShareability.value ? 'Update' : 'Approve'}
       </Button>
+    </Stack>
+  );
+};
+
+/**
+ * The wording actually shown once this leaves the author's hands — a
+ * translation, a moderator's touch-up, or both (see `Post.finalBody` on the
+ * API). Starts from a copy of the original as an editable starting point
+ * rather than blank, since a translator's job is rendering that text, not
+ * writing new text. Read-only for anyone who can see it but not edit it, so
+ * the finalized wording is never hidden behind a permission a reader lacks.
+ */
+const FinalWordingControl = ({ post }: { post: PrayerPost }) => {
+  const [update, { loading }] = useMutation(UpdateFinalWording);
+  const [value, setValue] = useState(
+    post.finalBody.value ?? post.body.value ?? ''
+  );
+
+  if (!post.finalBody.canEdit) {
+    return (
+      <Box sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}>
+        <Typography variant="caption" color="text.secondary">
+          Final wording
+        </Typography>
+        <Typography variant="body2">{post.finalBody.value}</Typography>
+      </Box>
+    );
+  }
+
+  const dirty = value !== (post.finalBody.value ?? '');
+
+  const save = () =>
+    update({
+      variables: {
+        input: {
+          id: post.id,
+          type: post.type,
+          shareability: post.shareability,
+          body: post.body.value ?? '',
+          finalBody: value || null,
+        },
+      },
+    });
+
+  return (
+    <Stack
+      spacing={1}
+      sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}
+    >
+      <Typography variant="caption" color="text.secondary">
+        Final wording
+        {!post.finalBody.value && ' — not yet set; starts from the original'}
+      </Typography>
+      <TextField
+        size="small"
+        multiline
+        minRows={2}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button
+          size="small"
+          variant={dirty ? 'contained' : 'outlined'}
+          disabled={!dirty || loading}
+          onClick={() => void save()}
+        >
+          Save
+        </Button>
+      </Box>
     </Stack>
   );
 };

@@ -18,6 +18,10 @@ query PrayerStepList($engagement: ID!, $input: PostListInput) {
           body {
             value
           }
+          finalBody {
+            value
+            canEdit
+          }
           report {
             value {
               id
@@ -52,6 +56,18 @@ mutation ModeratePrayerRequest($input: ModeratePost!) {
         canEdit
       }
       effectiveShareability
+    }
+  }
+}
+
+mutation UpdatePrayerFinalWording($input: UpdatePost!) {
+  updatePost(input: $input) {
+    post {
+      id
+      finalBody {
+        value
+        canEdit
+      }
     }
   }
 }
