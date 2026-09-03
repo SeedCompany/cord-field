@@ -1,5 +1,11 @@
 import { useMutation } from '@apollo/client';
-import { Add, ExpandMore } from '@mui/icons-material';
+import {
+  Add,
+  Audiotrack,
+  ExpandMore,
+  Image as ImageIcon,
+  Videocam,
+} from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -30,12 +36,12 @@ import {
 import { ProgressReportMediaFragment } from './progressReportMedia.graphql';
 
 // The last variant is Investor Communications — see highlights.dto.ts on the
-// API. A photo's published-variant row IS the selection: whoever can edit
-// that variant chooses which photos go to investors simply by uploading (or
-// not) into that row, the same act that already sends every other report
-// section to investors. No separate "select for publishing" control exists
-// because none is needed — this reuses the mechanism the rest of the report
-// already runs on.
+// API. An item's published-variant row IS the selection: whoever can edit
+// that variant chooses what goes to investors simply by uploading (or not)
+// into that row, the same act that already sends every other report section
+// to investors. No separate "select for publishing" control exists because
+// none is needed — this reuses the mechanism the rest of the report already
+// runs on.
 const PUBLISHED_VARIANT_KEY = 'published';
 
 export const MediaStep: StepComponent = ({ report }) => {
@@ -64,7 +70,7 @@ export const MediaStep: StepComponent = ({ report }) => {
         }}
       >
         <Typography variant="h3">
-          Photos
+          Media
           {groups.length > 0 && (
             <Typography
               component="span"
@@ -82,18 +88,19 @@ export const MediaStep: StepComponent = ({ report }) => {
             startIcon={<Add />}
             onClick={() => setAddingGroup(true)}
           >
-            {groups.length === 0 ? 'Upload a Photo' : 'Upload Another Photo'}
+            {groups.length === 0 ? 'Upload Media' : 'Upload Another Item'}
           </Button>
         )}
       </Box>
       <Typography variant="body2" color="text.secondary" paragraph>
-        Each photo can carry a different version per role — collapsed here to
-        its furthest-along version. Expand one to see, edit, or add the rest.
+        Photos, videos, or audio — each item can carry a different version per
+        role, collapsed here to its furthest-along version. Expand one to see,
+        edit, or add the rest.
       </Typography>
 
       <Stack spacing={2} divider={<Divider />}>
         {groups.map((group) => (
-          <PhotoGroup
+          <MediaGroup
             key={group.variantGroup}
             report={report}
             variantGroup={group.variantGroup}
@@ -103,7 +110,7 @@ export const MediaStep: StepComponent = ({ report }) => {
         ))}
 
         {addingGroup && (
-          <PhotoGroup
+          <MediaGroup
             report={report}
             variantGroup={undefined}
             items={[]}
@@ -121,18 +128,18 @@ MediaStep.enableWhen = ({ report }) =>
   report.media.availableVariants.length > 0;
 
 /**
- * One uploaded photo, across its whole editorial lane — draft through
- * Investor Communications — exactly as the single-photo step always rendered
- * it. The only thing new here is that a report can now hold several of these
- * side by side instead of exactly one.
+ * One uploaded item — photo, video, or audio — across its whole editorial
+ * lane — draft through Investor Communications — exactly as the
+ * single-item step always rendered it. The only thing new here is that a
+ * report can now hold several of these side by side instead of exactly one.
  */
-interface PhotoGroupReport {
+interface MediaGroupReport {
   id: string;
   sensitivity: Sensitivity;
   media: ReportProp['report']['media'];
 }
 
-const PhotoGroup = ({
+const MediaGroup = ({
   report,
   variantGroup,
   items,
@@ -140,7 +147,7 @@ const PhotoGroup = ({
   defaultExpanded = false,
   onUploaded,
 }: {
-  report: PhotoGroupReport;
+  report: MediaGroupReport;
   variantGroup: string | undefined;
   items: readonly ProgressReportMediaFragment[];
   totalVariantSlots: number;
@@ -175,7 +182,7 @@ const PhotoGroup = ({
 
   const published = items.find((m) => m.variant.key === PUBLISHED_VARIANT_KEY);
 
-  // The furthest-along version is what best represents this photo at a
+  // The furthest-along version is what best represents this item at a
   // glance — usually what an investor would eventually see, or the closest
   // thing to it uploaded so far.
   const furthestAlong = [...items].sort(
@@ -183,10 +190,6 @@ const PhotoGroup = ({
       (orderIndex.get(b.variant.key) ?? 0) -
       (orderIndex.get(a.variant.key) ?? 0)
   )[0];
-  const thumbnail =
-    furthestAlong?.media.__typename === 'Image'
-      ? furthestAlong.media.url
-      : undefined;
 
   const handleSubmit: MediaInfoFormProps['onSubmit'] = async (values) => {
     if (values.submitAction === 'delete') {
@@ -197,15 +200,12 @@ const PhotoGroup = ({
       return;
     }
 
-    const newFileForNewGroup =
+    const newFile =
       values.newFile && values.newFile.length > 0
         ? values.newFile[0]
-        : undefined;
-    const newFileForExistingGroup =
-      values.newVersion && values.newVersion.length > 0
+        : values.newVersion && values.newVersion.length > 0
         ? values.newVersion[0]
         : undefined;
-    const newFile = newFileForNewGroup || newFileForExistingGroup;
 
     if (!values.id) {
       if (!newFile) return;
@@ -214,7 +214,11 @@ const PhotoGroup = ({
         report: report.id,
         file: uploadedImageInfo,
         variant: values.variant.key,
-        variantGroup: newFileForExistingGroup ? variantGroup : undefined,
+        // Whichever of the two upload fields was used, the result belongs to
+        // this same item — `variantGroup` is undefined only when this whole
+        // group is itself being created from scratch (the "Upload Media"
+        // button's flow), never because of which field the file came through.
+        variantGroup,
       };
       await createMedia({ variables: { input } }).then(...finalizeUpload.tap);
       onUploaded?.();
@@ -248,11 +252,7 @@ const PhotoGroup = ({
         width: '100%',
       }}
     >
-      <Avatar
-        variant="rounded"
-        src={thumbnail}
-        sx={{ width: 56, height: 56 }}
-      />
+      <MediaThumbnail media={furthestAlong?.media} />
       <Box sx={{ flex: 1 }}>
         <Typography variant="body2">
           {filledCount} of {totalVariantSlots} roles uploaded
@@ -276,7 +276,7 @@ const PhotoGroup = ({
 
   // A brand new group has nothing to summarize yet, so it always renders
   // expanded straight to the upload form rather than a collapsed shell
-  // around zero photos.
+  // around zero items.
   if (items.length === 0) {
     return (
       <Box>
@@ -319,7 +319,7 @@ const PhotoGroup = ({
               {reuseSources.length > 0 && (
                 <Box sx={{ mb: 2 }}>
                   <Typography variant="caption" color="text.secondary">
-                    Already uploaded for this photo — reuse it here instead of
+                    Already uploaded for this item — reuse it here instead of
                     uploading again. The caption and category can still be
                     edited separately once it's added.
                   </Typography>
@@ -331,7 +331,7 @@ const PhotoGroup = ({
                         variant="outlined"
                         onClick={() => void reuse(source.id, variant.key)}
                       >
-                        Use {source.variant.label}'s photo
+                        Use {source.variant.label}'s file
                       </Button>
                     ))}
                   </Stack>
@@ -349,5 +349,37 @@ const PhotoGroup = ({
         })}
       </AccordionDetails>
     </Accordion>
+  );
+};
+
+/**
+ * A real thumbnail for a photo; for video/audio (and anything unrecognized)
+ * a type icon instead, since there's no static frame or waveform to show
+ * here without fetching and decoding the file itself.
+ */
+const MediaThumbnail = ({
+  media,
+}: {
+  media: ProgressReportMediaFragment['media'] | undefined;
+}) => {
+  if (media?.__typename === 'Image') {
+    return (
+      <Avatar
+        variant="rounded"
+        src={media.url}
+        sx={{ width: 56, height: 56 }}
+      />
+    );
+  }
+  const Icon =
+    media?.__typename === 'Video'
+      ? Videocam
+      : media?.__typename === 'Audio'
+      ? Audiotrack
+      : ImageIcon;
+  return (
+    <Avatar variant="rounded" sx={{ width: 56, height: 56 }}>
+      <Icon />
+    </Avatar>
   );
 };

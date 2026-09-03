@@ -7,19 +7,25 @@ fragment progressReportMedia on ProgressReportMedia {
   category
   media {
     id
-    ...visualMedia
+    ...anyMedia
   }
   canEdit
   canDelete
 }
 
-fragment visualMedia on VisualMedia {
+fragment anyMedia on Media {
   id
+  mimeType
   caption
   url
-  dimensions {
-    aspectRatio
-    height
-    width
+  ... on VisualMedia {
+    dimensions {
+      aspectRatio
+      height
+      width
+    }
+  }
+  ... on TemporalMedia {
+    duration
   }
 }

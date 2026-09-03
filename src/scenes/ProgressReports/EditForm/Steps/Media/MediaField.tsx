@@ -1,8 +1,8 @@
 import {
-  AddPhotoAlternate as AddPhotoIcon,
   Delete as DeleteIcon,
   Download as DownloadIcon,
   MoreVert as TripleDotIcon,
+  UploadFile as UploadFileIcon,
 } from '@mui/icons-material';
 import {
   Box,
@@ -19,18 +19,20 @@ import { Sensitivity } from '~/api/schema.graphql';
 import { extendSx, square, StyleProps } from '~/common';
 import { DropzoneField, useSubmitButton } from '~/components/form';
 import { SensitivityIcon } from '../../../../../components/Sensitivity';
-import { VisualMediaFragment as VisualMedia } from './progressReportMedia.graphql';
+import { AnyMediaFragment as AnyMedia } from './progressReportMedia.graphql';
 
-export interface ImageFieldProps extends StyleProps {
+export interface MediaFieldProps extends StyleProps {
   name: string;
   disabled?: boolean;
   sensitivity?: Sensitivity;
-  current?: VisualMedia;
+  current?: AnyMedia;
   canDelete: boolean;
   instructionMessage?: string;
 }
 
-export const ImageField = ({
+const ACCEPT = { 'image/*': [], 'video/*': [], 'audio/*': [] };
+
+export const MediaField = ({
   name,
   disabled,
   sensitivity,
@@ -38,14 +40,14 @@ export const ImageField = ({
   canDelete,
   instructionMessage,
   ...props
-}: ImageFieldProps) => {
+}: MediaFieldProps) => {
   return !current ? (
     <DropzoneField
       name={name}
       disabled={disabled}
       disableFileList
       {...props}
-      accept={{ 'image/*': [] }}
+      accept={ACCEPT}
       sx={[
         {
           m: 0,
@@ -64,8 +66,8 @@ export const ImageField = ({
       ]}
       label={
         <>
-          <AddPhotoIcon sx={square(48)} />
-          <div>{instructionMessage || 'Click or drop to add photo'}</div>
+          <UploadFileIcon sx={square(48)} />
+          <div>{instructionMessage || 'Click or drop to add media'}</div>
           {sensitivity && (
             <SensitivityIcon
               value={sensitivity}
@@ -91,31 +93,7 @@ export const ImageField = ({
         ...extendSx(props.sx),
       ]}
     >
-      {current.__typename === 'Image' ? (
-        <Box
-          component="img"
-          src={current.url}
-          crossOrigin="use-credentials"
-          sx={{
-            maxWidth: 1,
-            borderRadius: 1,
-          }}
-        />
-      ) : (
-        <Card
-          variant="outlined"
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            maxWidth: 1,
-            borderRadius: 1,
-            aspectRatio: current.dimensions.aspectRatio,
-          }}
-        >
-          <Typography variant="body1">Not an image</Typography>
-        </Card>
-      )}
+      <MediaPreview current={current} />
       {sensitivity && (
         <SensitivityIcon
           value={sensitivity}
@@ -156,6 +134,68 @@ export const ImageField = ({
         {canDelete && <DeleteImageMenuItem />}
       </MoreActionsButton>
     </Box>
+  );
+};
+
+const MediaPreview = ({ current }: { current: AnyMedia }) => {
+  if (current.__typename === 'Image') {
+    return (
+      <Box
+        component="img"
+        src={current.url}
+        crossOrigin="use-credentials"
+        sx={{
+          maxWidth: 1,
+          borderRadius: 1,
+        }}
+      />
+    );
+  }
+  if (current.__typename === 'Video') {
+    return (
+      <Box
+        component="video"
+        src={current.url}
+        controls
+        sx={{
+          maxWidth: 1,
+          borderRadius: 1,
+          aspectRatio: current.dimensions.aspectRatio,
+        }}
+      />
+    );
+  }
+  if (current.__typename === 'Audio') {
+    return (
+      <Card
+        variant="outlined"
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          maxWidth: 1,
+          borderRadius: 1,
+          p: 2,
+        }}
+      >
+        <Box component="audio" src={current.url} controls sx={{ width: 1 }} />
+      </Card>
+    );
+  }
+  return (
+    <Card
+      variant="outlined"
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        maxWidth: 1,
+        borderRadius: 1,
+        minHeight: 120,
+      }}
+    >
+      <Typography variant="body1">Unsupported media</Typography>
+    </Card>
   );
 };
 

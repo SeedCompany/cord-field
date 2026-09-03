@@ -18,7 +18,7 @@ import {
   SubmitError,
   TextField,
 } from '~/components/form';
-import { ImageField } from './ImageField';
+import { MediaField } from './MediaField';
 import { ProgressReportMediaFragment } from './progressReportMedia.graphql';
 
 interface MediaFormState extends SubmitAction<'delete'> {
@@ -47,12 +47,7 @@ export const MediaInfoForm = ({
   isFirstUpload,
   ...props
 }: MediaInfoFormProps) => {
-  const existingFile =
-    existingMedia?.media.__typename === 'Image'
-      ? existingMedia.media
-      : existingMedia?.media.__typename === 'Video'
-      ? existingMedia.media
-      : undefined;
+  const existingFile = existingMedia?.media;
 
   const initialValues = useMemo(
     () => ({
@@ -87,15 +82,15 @@ export const MediaInfoForm = ({
             }}
           >
             {!existingFile && !isFirstUpload && (
-              <ImageField
+              <MediaField
                 name="newVersion"
                 sensitivity={sensitivity}
                 canDelete={false}
                 sx={{ flex: 1, mt: 1, minWidth: 195 }}
-                instructionMessage="Click or drop to add an edited version of the previous role's image"
+                instructionMessage="Click or drop to add an edited version of the previous role's media"
               />
             )}
-            <ImageField
+            <MediaField
               name="newFile"
               current={existingFile}
               sensitivity={sensitivity}
@@ -103,16 +98,16 @@ export const MediaInfoForm = ({
               sx={{ flex: 1, mt: 1, minWidth: 195 }}
               instructionMessage={
                 isFirstUpload
-                  ? 'Click or drop to add an image'
-                  : 'Click or drop to add a completely different image, because the previous is not suitable'
+                  ? 'Click or drop to add media'
+                  : 'Click or drop to add a completely different file, because the previous is not suitable'
               }
             />
             {existingFile && (
               <Stack gap="inherit" flex={2} minWidth={270}>
                 <SelectField
-                  label="Photo Category"
+                  label="Category"
                   name="category"
-                  disabled={!existingMedia?.canEdit}
+                  disabled={!existingMedia.canEdit}
                   options={ProgressReportMediaCategoryList}
                   variant="outlined"
                   getOptionLabel={labelFrom(ProgressReportMediaCategoryLabels)}
@@ -123,8 +118,8 @@ export const MediaInfoForm = ({
                   multiline
                   name="caption"
                   label="Caption"
-                  disabled={!existingMedia?.canEdit}
-                  placeholder="Enter Photo Caption"
+                  disabled={!existingMedia.canEdit}
+                  placeholder="Enter Caption"
                   minRows={3}
                   margin="none"
                 />
