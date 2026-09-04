@@ -11,20 +11,11 @@ query PrayerStepList($engagement: ID!, $input: PostListInput) {
           type
           shareability
           effectiveShareability
-          approvedShareability {
-            value
-            canEdit
-          }
           body {
             value
           }
-          finalBody {
-            value
-            canEdit
-          }
           featured {
             value
-            canEdit
           }
           report {
             canRead
@@ -49,43 +40,6 @@ mutation AttachPrayerToReport($input: UpdatePost!) {
         value {
           id
         }
-      }
-    }
-  }
-}
-
-mutation ModeratePrayerRequest($input: ModeratePost!) {
-  moderatePost(input: $input) {
-    posts {
-      id
-      approvedShareability {
-        value
-        canEdit
-      }
-      effectiveShareability
-    }
-  }
-}
-
-mutation UpdatePrayerFinalWording($input: UpdatePost!) {
-  updatePost(input: $input) {
-    post {
-      id
-      finalBody {
-        value
-        canEdit
-      }
-    }
-  }
-}
-
-mutation ToggleFeaturedForInvestorReport($input: UpdatePost!) {
-  updatePost(input: $input) {
-    post {
-      id
-      featured {
-        value
-        canEdit
       }
     }
   }

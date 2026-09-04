@@ -7,18 +7,11 @@ import {
   CardContent,
   Chip,
   IconButton,
-  MenuItem,
-  Select,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
-import { ReactNode, useState } from 'react';
-import {
-  PostShareability,
-  PostShareabilityLabels,
-  PostShareabilityList,
-} from '~/api/schema.graphql';
+import { ReactNode } from 'react';
+import { canEditAny } from '~/common';
 import { useDialog } from '~/components/Dialog';
 import { CreatePost } from '~/components/posts/CreatePost';
 import { EditPost } from '~/components/posts/EditPost';
@@ -26,29 +19,14 @@ import { PostProvenance } from '~/components/posts/PostProvenance';
 import { StepComponent } from '../step.types';
 import {
   AttachPrayerToReportDocument as AttachToReport,
-  ModeratePrayerRequestDocument as ModeratePrayerRequest,
   PrayerStepListDocument as PrayerList,
   PrayerStepListQuery,
-  ToggleFeaturedForInvestorReportDocument as ToggleFeatured,
-  UpdatePrayerFinalWordingDocument as UpdateFinalWording,
 } from './PrayerStep.graphql';
 
 type PrayerPost = Extract<
   PrayerStepListQuery['engagement'],
   { __typename: 'LanguageEngagement' }
 >['posts']['items'][number];
-
-// Rank narrowest to widest — mirrors `reachRank` in shareability.dto.ts on the
-// API. Kept local rather than fetched: it only decides which options this one
-// control offers, and duplicating five stable enum ranks here is cheaper than
-// a schema round-trip to fetch them.
-const shareabilityRank: Record<PostShareability, number> = {
-  Membership: 0,
-  ProjectTeam: 0,
-  Internal: 1,
-  AskToShareExternally: 2,
-  External: 3,
-};
 
 /**
  * Prayer requests and updates, captured as part of submitting this report.
@@ -63,6 +41,12 @@ const shareabilityRank: Record<PostShareability, number> = {
  * report can be pulled in too, without retyping them. Attaching only sets the
  * report reference — nothing is copied or duplicated, and detaching later
  * leaves the request on the engagement rather than deleting it.
+ *
+ * Each card shows status at a glance (requested reach, provenance, whether
+ * it's going to investors); editing any of that — content, translation,
+ * clearance, or the Investor Report toggle — happens in the Edit dialog
+ * (PostForm), the same one used everywhere else a post appears, so a request
+ * manages the same way here as on the engagement's own Prayer tab.
  */
 export const PrayerStep: StepComponent = ({ report }) => {
   const engagementId = report.parent.id;
@@ -200,14 +184,12 @@ PrayerStep.isIncomplete = () => ({
 });
 
 /**
- * One prayer request or update, with four independent controls: the original
- * content (the author only — see `PostForm`/UserCanManageOwnCommentsPolicy),
- * the finalized wording shown externally (a translator or moderator — see
- * FinalizePostWordingPolicy), the shareability clearance (a moderator only),
- * and — only once attached to a report — whether it's curated into that
- * report's Investor Report (see FeaturePostForInvestorReportPolicy). Four
- * separate controls because they're four separate decisions: none of editing,
- * translating, clearing reach, or featuring implies any of the others.
+ * One prayer request or update. The card itself is a status glance — wording,
+ * requested reach, provenance, and whether it's going to investors; editing
+ * any of that (content, translation, clearance, the Investor Report toggle)
+ * happens in the Edit dialog behind the pencil, not here, so there's exactly
+ * one place each of those decisions gets made regardless of which list a
+ * request happens to be showing in.
  */
 const PrayerCard = ({
   post,
@@ -226,193 +208,27 @@ const PrayerCard = ({
             {post.body.value}
           </Typography>
           <PostProvenance post={post} />
+          {post.featured.value && (
+            <Chip
+              label="Published to Investor Report"
+              color="primary"
+              size="small"
+            />
+          )}
           <Chip
             label={post.effectiveShareability}
             size="small"
             variant="outlined"
           />
-          {post.body.canEdit && (
+          {canEditAny(post) && (
             <IconButton size="small" onClick={() => editPost()}>
               <Edit fontSize="small" />
             </IconButton>
           )}
           {action}
         </Box>
-        {post.approvedShareability.canEdit && <ApprovalControl post={post} />}
-        {(post.finalBody.canEdit || post.finalBody.value) && (
-          <FinalWordingControl post={post} />
-        )}
-        {!!post.report.value && <FeaturedControl post={post} />}
       </CardContent>
       <EditPost post={post} includeMembership={false} {...editState} />
     </Card>
-  );
-};
-
-const ApprovalControl = ({ post }: { post: PrayerPost }) => {
-  const [moderate, { loading }] = useMutation(ModeratePrayerRequest);
-  const [selected, setSelected] = useState<PostShareability>(
-    post.approvedShareability.value ?? post.shareability
-  );
-
-  const options = PostShareabilityList.filter(
-    (v) => shareabilityRank[v] <= shareabilityRank[post.shareability]
-  );
-  const dirty = selected !== post.approvedShareability.value;
-
-  return (
-    <Stack
-      direction="row"
-      spacing={1}
-      alignItems="center"
-      sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}
-    >
-      <Typography variant="caption" color="text.secondary">
-        Requested: {PostShareabilityLabels[post.shareability]} · Cleared:{' '}
-        {post.approvedShareability.value
-          ? PostShareabilityLabels[post.approvedShareability.value]
-          : 'Not yet reviewed'}
-      </Typography>
-      <Box sx={{ flex: 1 }} />
-      <Select
-        size="small"
-        value={selected}
-        onChange={(e) => setSelected(e.target.value as PostShareability)}
-      >
-        {options.map((value) => (
-          <MenuItem key={value} value={value}>
-            {PostShareabilityLabels[value]}
-          </MenuItem>
-        ))}
-      </Select>
-      <Button
-        size="small"
-        variant={dirty ? 'contained' : 'outlined'}
-        disabled={!dirty || loading}
-        onClick={() =>
-          void moderate({
-            variables: { input: { id: post.id, shareability: selected } },
-          })
-        }
-      >
-        {post.approvedShareability.value ? 'Update' : 'Approve'}
-      </Button>
-    </Stack>
-  );
-};
-
-/**
- * The wording actually shown once this leaves the author's hands — a
- * translation, a moderator's touch-up, or both (see `Post.finalBody` on the
- * API). Starts from a copy of the original as an editable starting point
- * rather than blank, since a translator's job is rendering that text, not
- * writing new text. Read-only for anyone who can see it but not edit it, so
- * the finalized wording is never hidden behind a permission a reader lacks.
- */
-const FinalWordingControl = ({ post }: { post: PrayerPost }) => {
-  const [update, { loading }] = useMutation(UpdateFinalWording);
-  const [value, setValue] = useState(
-    post.finalBody.value ?? post.body.value ?? ''
-  );
-
-  if (!post.finalBody.canEdit) {
-    return (
-      <Box sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}>
-        <Typography variant="caption" color="text.secondary">
-          Final wording
-        </Typography>
-        <Typography variant="body2">{post.finalBody.value}</Typography>
-      </Box>
-    );
-  }
-
-  const dirty = value !== (post.finalBody.value ?? '');
-
-  const save = () =>
-    update({
-      variables: {
-        input: {
-          id: post.id,
-          type: post.type,
-          shareability: post.shareability,
-          body: post.body.value ?? '',
-          finalBody: value || null,
-        },
-      },
-    });
-
-  return (
-    <Stack
-      spacing={1}
-      sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}
-    >
-      <Typography variant="caption" color="text.secondary">
-        Final wording
-        {!post.finalBody.value && ' — not yet set; starts from the original'}
-      </Typography>
-      <TextField
-        size="small"
-        multiline
-        minRows={2}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          size="small"
-          variant={dirty ? 'contained' : 'outlined'}
-          disabled={!dirty || loading}
-          onClick={() => void save()}
-        >
-          Save
-        </Button>
-      </Box>
-    </Stack>
-  );
-};
-
-/**
- * Whether this request is curated into this report's Investor Report — a
- * distinct decision from shareability (may it leave Seed Company at all).
- * Only rendered once a request is attached to a report (see the `report.value`
- * guard at the call site): a request between reports isn't part of any
- * specific investor-facing document to feature it in. The API also enforces
- * this, plus a minimum clearance, independent of what this button shows.
- */
-const FeaturedControl = ({ post }: { post: PrayerPost }) => {
-  const [update, { loading }] = useMutation(ToggleFeatured);
-
-  if (!post.featured.canEdit && !post.featured.value) {
-    return null;
-  }
-
-  const toggle = () =>
-    update({
-      variables: {
-        input: {
-          id: post.id,
-          type: post.type,
-          shareability: post.shareability,
-          body: post.body.value ?? '',
-          featured: !post.featured.value,
-        },
-      },
-    });
-
-  return (
-    <Box sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}>
-      <Chip
-        label={
-          post.featured.value
-            ? 'Published to Investor Report'
-            : 'Not in Investor Report'
-        }
-        color={post.featured.value ? 'primary' : 'default'}
-        variant={post.featured.value ? 'filled' : 'outlined'}
-        size="small"
-        disabled={loading}
-        onClick={post.featured.canEdit ? () => void toggle() : undefined}
-      />
-    </Box>
   );
 };
