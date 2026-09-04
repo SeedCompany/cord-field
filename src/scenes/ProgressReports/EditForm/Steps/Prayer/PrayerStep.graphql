@@ -22,9 +22,16 @@ query PrayerStepList($engagement: ID!, $input: PostListInput) {
             value
             canEdit
           }
+          featured {
+            value
+            canEdit
+          }
           report {
+            canRead
             value {
               id
+              start
+              end
             }
           }
           ...PostForm
@@ -65,6 +72,18 @@ mutation UpdatePrayerFinalWording($input: UpdatePost!) {
     post {
       id
       finalBody {
+        value
+        canEdit
+      }
+    }
+  }
+}
+
+mutation ToggleFeaturedForInvestorReport($input: UpdatePost!) {
+  updatePost(input: $input) {
+    post {
+      id
+      featured {
         value
         canEdit
       }

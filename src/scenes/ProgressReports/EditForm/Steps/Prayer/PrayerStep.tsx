@@ -22,12 +22,14 @@ import {
 import { useDialog } from '~/components/Dialog';
 import { CreatePost } from '~/components/posts/CreatePost';
 import { EditPost } from '~/components/posts/EditPost';
+import { PostProvenance } from '~/components/posts/PostProvenance';
 import { StepComponent } from '../step.types';
 import {
   AttachPrayerToReportDocument as AttachToReport,
   ModeratePrayerRequestDocument as ModeratePrayerRequest,
   PrayerStepListDocument as PrayerList,
   PrayerStepListQuery,
+  ToggleFeaturedForInvestorReportDocument as ToggleFeatured,
   UpdatePrayerFinalWordingDocument as UpdateFinalWording,
 } from './PrayerStep.graphql';
 
@@ -198,14 +200,14 @@ PrayerStep.isIncomplete = () => ({
 });
 
 /**
- * One prayer request or update, with three independent edit surfaces: the
- * original content (the author only — see `PostForm`/
- * UserCanManageOwnCommentsPolicy), the finalized wording shown externally (a
- * translator or moderator — see FinalizePostWordingPolicy), and the
- * shareability clearance (a moderator only). Three separate controls because
- * they're three separate decisions: editing the original never implies a
- * translation is done, finalizing wording never implies approving reach, and
- * approving reach never rewrites wording.
+ * One prayer request or update, with four independent controls: the original
+ * content (the author only — see `PostForm`/UserCanManageOwnCommentsPolicy),
+ * the finalized wording shown externally (a translator or moderator — see
+ * FinalizePostWordingPolicy), the shareability clearance (a moderator only),
+ * and — only once attached to a report — whether it's curated into that
+ * report's Investor Report (see FeaturePostForInvestorReportPolicy). Four
+ * separate controls because they're four separate decisions: none of editing,
+ * translating, clearing reach, or featuring implies any of the others.
  */
 const PrayerCard = ({
   post,
@@ -223,6 +225,7 @@ const PrayerCard = ({
           <Typography variant="body2" sx={{ flex: 1 }}>
             {post.body.value}
           </Typography>
+          <PostProvenance post={post} />
           <Chip
             label={post.effectiveShareability}
             size="small"
@@ -239,6 +242,7 @@ const PrayerCard = ({
         {(post.finalBody.canEdit || post.finalBody.value) && (
           <FinalWordingControl post={post} />
         )}
+        {!!post.report.value && <FeaturedControl post={post} />}
       </CardContent>
       <EditPost post={post} includeMembership={false} {...editState} />
     </Card>
@@ -364,5 +368,51 @@ const FinalWordingControl = ({ post }: { post: PrayerPost }) => {
         </Button>
       </Box>
     </Stack>
+  );
+};
+
+/**
+ * Whether this request is curated into this report's Investor Report — a
+ * distinct decision from shareability (may it leave Seed Company at all).
+ * Only rendered once a request is attached to a report (see the `report.value`
+ * guard at the call site): a request between reports isn't part of any
+ * specific investor-facing document to feature it in. The API also enforces
+ * this, plus a minimum clearance, independent of what this button shows.
+ */
+const FeaturedControl = ({ post }: { post: PrayerPost }) => {
+  const [update, { loading }] = useMutation(ToggleFeatured);
+
+  if (!post.featured.canEdit && !post.featured.value) {
+    return null;
+  }
+
+  const toggle = () =>
+    update({
+      variables: {
+        input: {
+          id: post.id,
+          type: post.type,
+          shareability: post.shareability,
+          body: post.body.value ?? '',
+          featured: !post.featured.value,
+        },
+      },
+    });
+
+  return (
+    <Box sx={{ mt: 1.5, pt: 1.5, borderTop: 1, borderColor: 'divider' }}>
+      <Chip
+        label={
+          post.featured.value
+            ? 'Published to Investor Report'
+            : 'Not in Investor Report'
+        }
+        color={post.featured.value ? 'primary' : 'default'}
+        variant={post.featured.value ? 'filled' : 'outlined'}
+        size="small"
+        disabled={loading}
+        onClick={post.featured.canEdit ? () => void toggle() : undefined}
+      />
+    </Box>
   );
 };
