@@ -21,6 +21,8 @@ import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink, FabLink, Navigate } from '../../../components/Routing';
 import { ProgressReportDrawer } from '../EditForm';
+import { MediaSummaryCard } from './MediaSummaryCard';
+import { PrayerSummaryCard } from './PrayerSummaryCard';
 import {
   ProgressReportDetailDocument,
   ProgressReportDetailFragment,
@@ -80,6 +82,14 @@ export const ProgressReportDetail = () => {
   }
 
   const engagement = report?.parent;
+
+  const stories = report?.communityStories.items ?? [];
+  const featuredStory = stories.find((s) => s.featured.value) ?? stories[0];
+
+  const prayerItems =
+    engagement?.__typename === 'LanguageEngagement'
+      ? engagement.posts.items.filter((p) => p.report.value?.id === report?.id)
+      : [];
 
   return (
     <div className={classes.root}>
@@ -170,13 +180,81 @@ export const ProgressReportDetail = () => {
               />
 
               <PromptResponseCard
-                title="Story"
+                title={
+                  stories.length > 1 ? `Story (${stories.length})` : 'Story'
+                }
                 showPrompt
-                promptResponse={report?.communityStories.items[0]}
+                promptResponse={featuredStory}
                 loading={!report}
                 placeholder="No response yet"
                 actions={
                   <ButtonLink to="edit?step=story">View Details</ButtonLink>
+                }
+              />
+            </Stack>
+
+            <Stack
+              direction={{ md: 'column', lg: 'row' }}
+              sx={{
+                gap: 3,
+                width: 1,
+                alignItems: { lg: 'flex-start' },
+                '& > *': {
+                  flex: { lg: 1 },
+                  maxWidth: 'sm',
+                },
+              }}
+            >
+              <MediaSummaryCard
+                items={report?.media.items}
+                loading={!report}
+                actions={
+                  <ButtonLink to="edit?step=media">View Details</ButtonLink>
+                }
+              />
+
+              <PrayerSummaryCard
+                items={prayerItems}
+                loading={!report}
+                actions={
+                  <ButtonLink to="edit?step=prayer">View Details</ButtonLink>
+                }
+              />
+            </Stack>
+
+            <Stack
+              direction={{ md: 'column', lg: 'row' }}
+              sx={{
+                gap: 3,
+                width: 1,
+                alignItems: { lg: 'flex-start' },
+                '& > *': {
+                  flex: { lg: 1 },
+                  maxWidth: 'sm',
+                },
+              }}
+            >
+              <PromptResponseCard
+                title="Other Activities"
+                promptResponse={report?.otherActivities.items[0]}
+                loading={!report}
+                placeholder="None yet"
+                actions={
+                  <ButtonLink to="edit?step=other-activities">
+                    View Details
+                  </ButtonLink>
+                }
+              />
+
+              <PromptResponseCard
+                title="Next Quarter"
+                promptResponse={report?.nextQuarterPlans.items[0]}
+                loading={!report}
+                placeholder="None yet"
+                actions={
+                  <ButtonLink to="edit?step=next-quarter">
+                    View Details
+                  </ButtonLink>
                 }
               />
             </Stack>
