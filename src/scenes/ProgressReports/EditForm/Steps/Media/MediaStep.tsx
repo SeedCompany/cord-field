@@ -10,6 +10,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Alert,
   Avatar,
   Box,
   Button,
@@ -177,7 +178,7 @@ const MediaGroup = ({
   const [createMedia] = useMutation(CreateMediaDocument);
   const [updateMedia] = useMutation(UpdateMediaDocument);
   const [deleteMedia] = useMutation(DeleteMediaDocument);
-  const [reuseMedia] = useMutation(ReuseMediaDocument);
+  const [reuseMedia, { error: reuseError }] = useMutation(ReuseMediaDocument);
   const uploadFile = useUploadFileAsync();
 
   const published = items.find((m) => m.variant.key === PUBLISHED_VARIANT_KEY);
@@ -306,6 +307,11 @@ const MediaGroup = ({
     >
       <AccordionSummary expandIcon={<ExpandMore />}>{summary}</AccordionSummary>
       <AccordionDetails sx={{ px: 0 }}>
+        {reuseError && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {reuseError.message}
+          </Alert>
+        )}
         {mediaItems.map(({ variant, existing }) => {
           const reuseSources = existing
             ? []
