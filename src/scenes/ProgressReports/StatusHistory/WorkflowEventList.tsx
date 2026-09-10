@@ -70,7 +70,10 @@ export const WorkFlowEventList = ({
               },
             }}
           >
-            {event.who.value?.fullName} <RelativeDateTime date={event.at} />
+            {event.who.value?.__typename === 'SystemAgent'
+              ? event.who.value.name
+              : event.who.value?.fullName}{' '}
+            <RelativeDateTime date={event.at} />
           </Typography>
           {showNotes && event.notes.value && (
             <Box
