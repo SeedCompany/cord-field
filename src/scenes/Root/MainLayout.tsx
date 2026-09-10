@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Outlet, useLocation } from 'react-router-dom';
 import { CommentsBar } from '~/components/Comments/CommentsBar';
 import { MobileFilterProvider } from '~/components/List';
+import { MaintenanceBanner } from '~/components/MaintenanceBanner';
 import { Error } from '../../components/Error';
 import { useAuthRequired } from '../Authentication';
 import { CreateDialogProviders } from './Creates';
@@ -47,6 +48,7 @@ export const MainLayout = () => {
           }}
         >
           <Header onMenuClick={() => setNavOpen(true)} />
+          <MaintenanceBanner />
           <ErrorBoundary fallback={<Error show page />}>
             <Outlet />
           </ErrorBoundary>
