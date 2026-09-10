@@ -1,5 +1,12 @@
-import { Card, CardActions, CardProps, Typography } from '@mui/material';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardProps,
+  Typography,
+} from '@mui/material';
 import { RelativeDateTime } from '~/components/Formatters';
+import { isDataEmpty, RichTextView } from '~/components/RichText';
 import { ButtonLink } from '~/components/Routing';
 import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
 import { StatusStepper } from './StatusStepper';
@@ -12,12 +19,24 @@ export const WorkflowCard = ({ report, ...rest }: WorkflowCardProps) => {
   const lastWorkflowEvent = report?.workflowEvents.at(
     report.workflowEvents.length - 1
   );
+  const lastNotes = report?.workflowEvents
+    .slice()
+    .reverse()
+    .find((e) => !isDataEmpty(e.notes.value))?.notes.value;
   return (
     <Card {...rest}>
       <Typography variant="h3" sx={{ pl: 2, pt: 2 }}>
         Status
       </Typography>
       <StatusStepper loading={!report} current={report?.status.value} />
+      {lastNotes && (
+        <CardContent>
+          <Typography variant="overline" color="text.secondary">
+            Final Notes
+          </Typography>
+          <RichTextView data={lastNotes} />
+        </CardContent>
+      )}
       {lastWorkflowEvent && (
         <CardActions
           sx={{
