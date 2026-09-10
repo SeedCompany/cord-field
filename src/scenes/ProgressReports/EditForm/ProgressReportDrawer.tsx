@@ -3,6 +3,7 @@ import { ArrowBack } from '@mui/icons-material';
 import { Box, Drawer } from '@mui/material';
 import { useMatch } from 'react-router-dom';
 import { ChildrenProp, flexColumn } from '~/common';
+import { MaintenanceBanner } from '~/components/MaintenanceBanner';
 import { ButtonLink, useNavigate } from '~/components/Routing';
 import { ProgressReportContextProvider } from './ProgressReportContext';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
@@ -62,6 +63,10 @@ const EditShell = ({ children }: ChildrenProp) => {
         },
       }}
     >
+      {/* This drawer covers the whole viewport, hiding the app shell's copy —
+          and a report is exactly the long-lived work someone can lose to an
+          unexpected read-only window. */}
+      <MaintenanceBanner layer="overlay" />
       {children}
     </Drawer>
   );

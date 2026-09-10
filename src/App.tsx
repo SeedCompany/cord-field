@@ -5,6 +5,7 @@ import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
 import { ConfettiProvider } from './components/Confetti';
+import { MaintenanceProvider } from './components/MaintenanceBanner';
 import { Nest } from './components/Nest';
 import { SessionProvider } from './components/Session';
 import { SnackbarProvider } from './components/Snackbar';
@@ -56,6 +57,7 @@ export const appProviders = [
   <FileUploadProvider key="files" />,
   <ConfettiProvider key="confetti" />,
   <CommentsProvider key="comments" />,
+  <MaintenanceProvider key="maintenance" />,
 ].filter(isNotFalsy);
 
 export const App = () => (
