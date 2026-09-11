@@ -12,10 +12,16 @@ import {
 import { useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
-import { canEditAny } from '~/common';
+import { canEditAny, isDateAfter, isDateBefore, Nullable } from '~/common';
+import { SecuredDateRangeFragment } from '~/common/fragments/secured.graphql';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
-import { DateField, SubmitError } from '../../../components/form';
+import {
+  DateField,
+  FieldWarning,
+  SubmitError,
+  WarningRule,
+} from '../../../components/form';
 import { FormattedDate } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import {
@@ -50,11 +56,46 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
   },
 }));
 
-type CeremonyCardProps = Partial<CeremonyCardFragment>;
+type CeremonyFormValues = UpdateCeremonyInput;
+
+/** The engagement's date range, which the ceremony dates are checked against */
+type EngagementDateRange = Nullable<SecuredDateRangeFragment>;
+
+type CeremonyFieldWarning = WarningRule<
+  CeremonyFormValues,
+  EngagementDateRange
+>;
+
+/**
+ * Ceremony dates that can be suspicious without being invalid.
+ *
+ * @remarks
+ * Each key is an ceremony field, and the value is a callback deriving that
+ * field's warning message.
+ */
+const CeremonyWarnings = {
+  actualDate: (values, dateRange) =>
+    isDateAfter(values.actualDate, dateRange?.value.end)
+      ? `After the engagement's end date — ensure this is correct.`
+      : undefined,
+  estimatedDate: (values, dateRange) =>
+    isDateAfter(values.estimatedDate, dateRange?.value.end)
+      ? `After the engagement's end date — ensure this is correct.`
+      : undefined,
+} satisfies Partial<Record<keyof CeremonyFormValues, CeremonyFieldWarning>>;
+
+type CeremonyCardProps = Partial<CeremonyCardFragment> & {
+  /**
+   * The engagement's date range, used to warn about ceremony dates that fall
+   * outside it. Omitted while loading.
+   */
+  engagementDateRange?: SecuredDateRangeFragment;
+};
 
 export const CeremonyCard = ({
   canRead,
   value: ceremony,
+  engagementDateRange,
 }: CeremonyCardProps) => {
   const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
@@ -167,12 +208,39 @@ export const CeremonyCard = ({
           )}
         </CardActions>
       </Card>
-      <DialogForm<UpdateCeremonyInput>
+      <DialogForm<CeremonyFormValues>
         title={`Update ${type}`}
         closeLabel="Close"
         submitLabel="Save"
         {...dialogState}
         initialValues={initialValues}
+        validate={(values) => {
+          return Object.keys(values).reduce((errors, key) => {
+            switch (key) {
+              case 'estimatedDate':
+                if (
+                  isDateBefore(values[key], engagementDateRange?.value.start)
+                ) {
+                  return {
+                    ...errors,
+                    estimatedDate: `Estimated date cannot precede project's start date`,
+                  };
+                }
+                return errors;
+              case 'actualDate':
+                if (
+                  isDateBefore(values[key], engagementDateRange?.value.start)
+                ) {
+                  return {
+                    ...errors,
+                    actualDate: `Actual date cannot precede project's start date`,
+                  };
+                }
+                return errors;
+            }
+            return errors;
+          }, {});
+        }}
         onSubmit={async (input) => {
           await updateCeremony({ variables: { input } });
         }}
@@ -181,8 +249,28 @@ export const CeremonyCard = ({
         }}
       >
         <SubmitError />
-        <DateField name="estimatedDate" label="Estimated Date" />
-        <DateField name="actualDate" label="Actual Date" />
+        <DateField
+          name="estimatedDate"
+          label="Estimated Date"
+          helperText={
+            <FieldWarning
+              name="estimatedDate"
+              rules={CeremonyWarnings}
+              context={engagementDateRange}
+            />
+          }
+        />
+        <DateField
+          name="actualDate"
+          label="Actual Date"
+          helperText={
+            <FieldWarning
+              name="actualDate"
+              rules={CeremonyWarnings}
+              context={engagementDateRange}
+            />
+          }
+        />
       </DialogForm>
     </div>
   );

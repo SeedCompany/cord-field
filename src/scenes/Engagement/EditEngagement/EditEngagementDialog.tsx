@@ -18,6 +18,8 @@ import {
   asDate,
   DisplayLocationFragment,
   ExtractStrict,
+  isDateAfter,
+  isDateBefore,
   labelFrom,
   MethodologyToApproach,
 } from '~/common';
@@ -29,10 +31,12 @@ import {
   CheckboxField,
   DateField,
   EnumField,
+  FieldWarning,
   SecuredEditableKeys,
   SecuredField,
   SubmitError,
   TextField,
+  WarningRule,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import {
@@ -108,8 +112,18 @@ const fieldMapping: Record<
       }
     />
   ),
-  disbursementCompleteDate: ({ props }) => (
-    <DateField {...props} label="Disbursement Complete Date" />
+  disbursementCompleteDate: ({ props, engagement }) => (
+    <DateField
+      {...props}
+      label="Disbursement Complete Date"
+      helperText={
+        <FieldWarning
+          name="disbursementCompleteDate"
+          rules={EngagementWarnings}
+          context={engagement}
+        />
+      }
+    />
   ),
   methodologies: ({ props }) => (
     <EnumField
@@ -180,6 +194,22 @@ const fieldMapping: Record<
   marketable: ({ props }) => <CheckboxField {...props} label="Marketable" />,
   webId: ({ props }) => <TextField {...props} label="Web ID" />,
 };
+
+type EngagementFieldWarning = WarningRule<EngagementFormValues, Engagement>;
+
+/**
+ * Engagement fields whose values can be suspicious without being invalid.
+ *
+ * @remarks
+ * Each key is an engagement field, and the value is a callback deriving that
+ * field's warning message.
+ */
+const EngagementWarnings = {
+  disbursementCompleteDate: (values, engagement) =>
+    isDateAfter(values.disbursementCompleteDate, engagement.dateRange.value.end)
+      ? `After the project's end date — double check this is right.`
+      : undefined,
+} satisfies Partial<Record<EditableEngagementField, EngagementFieldWarning>>;
 
 type EngagementFormValues = Merge<
   UpdateLanguageEngagement & UpdateInternshipEngagement,
@@ -308,6 +338,34 @@ export const EditEngagementDialog = ({
             endDateOverride: `End date should come after project's start date`,
           };
         }
+
+        // validate updates for complete date.
+        if (
+          isDateBefore(values.completeDate, engagement.dateRange.value.start)
+        ) {
+          return {
+            completeDate: `Complete date cannot precede project's start date`,
+          };
+        }
+        if (isDateAfter(values.completeDate, engagement.dateRange.value.end)) {
+          return {
+            completeDate: `Complete date cannot exceed project's end date`,
+          };
+        }
+
+        // validate updates for disbursement complete date.
+        if (
+          isDateBefore(
+            values.disbursementCompleteDate,
+            engagement.dateRange.value.start
+          )
+        ) {
+          return {
+            disbursementCompleteDate: `Disbursement complete date cannot precede project's start date`,
+          };
+        }
+
+        return undefined;
       }}
       onSubmit={async (values, form) => {
         await updateEngagement({
