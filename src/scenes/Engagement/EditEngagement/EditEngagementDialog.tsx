@@ -330,6 +330,23 @@ export const EditEngagementDialog = ({
           }
         }
 
+        // validate updates for disbursement complete date
+        if (values.disbursementCompleteDate) {
+          const disbursementCompleteDate = asDate(
+            values.disbursementCompleteDate
+          );
+          const engagementStart = asDate(engagement.dateRange.value.start);
+
+          // Ensure disbursement complete date is not before engagement start date
+          if (engagementStart && disbursementCompleteDate < engagementStart) {
+            return {
+              disbursementCompleteDate: `Disbursement complete date cannot precede project's start date`,
+            };
+          }
+
+          // No upper bound for disbursement complete date
+        }
+
         return undefined;
       }}
       onSubmit={async (values, form) => {
