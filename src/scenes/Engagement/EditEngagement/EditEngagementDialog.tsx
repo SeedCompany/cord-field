@@ -31,10 +31,12 @@ import {
   CheckboxField,
   DateField,
   EnumField,
+  FieldWarning,
   SecuredEditableKeys,
   SecuredField,
   SubmitError,
   TextField,
+  WarningRule,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import {
@@ -110,8 +112,18 @@ const fieldMapping: Record<
       }
     />
   ),
-  disbursementCompleteDate: ({ props }) => (
-    <DateField {...props} label="Disbursement Complete Date" />
+  disbursementCompleteDate: ({ props, engagement }) => (
+    <DateField
+      {...props}
+      label="Disbursement Complete Date"
+      helperText={
+        <FieldWarning
+          name="disbursementCompleteDate"
+          rules={EngagementWarnings}
+          context={engagement}
+        />
+      }
+    />
   ),
   methodologies: ({ props }) => (
     <EnumField
@@ -182,6 +194,22 @@ const fieldMapping: Record<
   marketable: ({ props }) => <CheckboxField {...props} label="Marketable" />,
   webId: ({ props }) => <TextField {...props} label="Web ID" />,
 };
+
+type EngagementFieldWarning = WarningRule<EngagementFormValues, Engagement>;
+
+/**
+ * Engagement fields whose values can be suspicious without being invalid.
+ *
+ * @remarks
+ * Each key is an engagement field, and the value is a callback deriving that
+ * field's warning message.
+ */
+const EngagementWarnings = {
+  disbursementCompleteDate: (values, engagement) =>
+    isDateAfter(values.disbursementCompleteDate, engagement.dateRange.value.end)
+      ? `After the project's end date — double check this is right.`
+      : undefined,
+} satisfies Partial<Record<EditableEngagementField, EngagementFieldWarning>>;
 
 type EngagementFormValues = Merge<
   UpdateLanguageEngagement & UpdateInternshipEngagement,

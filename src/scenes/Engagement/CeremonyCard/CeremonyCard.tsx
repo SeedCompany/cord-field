@@ -12,10 +12,16 @@ import {
 import { useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
-import { canEditAny, isDateBefore } from '~/common';
+import { canEditAny, isDateAfter, isDateBefore, Nullable } from '~/common';
+import { SecuredDateRangeFragment } from '~/common/fragments/secured.graphql';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
-import { DateField, SubmitError } from '../../../components/form';
+import {
+  DateField,
+  FieldWarning,
+  SubmitError,
+  WarningRule,
+} from '../../../components/form';
 import { FormattedDate } from '../../../components/Formatters';
 import { Redacted } from '../../../components/Redacted';
 import {
@@ -49,6 +55,34 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
     fontWeight: typography.weight.light,
   },
 }));
+
+type CeremonyFormValues = UpdateCeremonyInput;
+
+/** The engagement's date range, which the ceremony dates are checked against */
+type EngagementDateRange = Nullable<SecuredDateRangeFragment>;
+
+type CeremonyFieldWarning = WarningRule<
+  CeremonyFormValues,
+  EngagementDateRange
+>;
+
+/**
+ * Ceremony dates that can be suspicious without being invalid.
+ *
+ * @remarks
+ * Each key is an ceremony field, and the value is a callback deriving that
+ * field's warning message.
+ */
+const CeremonyWarnings = {
+  actualDate: (values, dateRange) =>
+    isDateAfter(values.actualDate, dateRange?.value.end)
+      ? `After the engagement's end date — ensure this is correct.`
+      : undefined,
+  estimatedDate: (values, dateRange) =>
+    isDateAfter(values.estimatedDate, dateRange?.value.end)
+      ? `After the engagement's end date — ensure this is correct.`
+      : undefined,
+} satisfies Partial<Record<keyof CeremonyFormValues, CeremonyFieldWarning>>;
 
 type CeremonyCardProps = Partial<CeremonyCardFragment> & {
   /**
@@ -174,7 +208,7 @@ export const CeremonyCard = ({
           )}
         </CardActions>
       </Card>
-      <DialogForm<UpdateCeremonyInput>
+      <DialogForm<CeremonyFormValues>
         title={`Update ${type}`}
         closeLabel="Close"
         submitLabel="Save"
@@ -215,8 +249,28 @@ export const CeremonyCard = ({
         }}
       >
         <SubmitError />
-        <DateField name="estimatedDate" label="Estimated Date" />
-        <DateField name="actualDate" label="Actual Date" />
+        <DateField
+          name="estimatedDate"
+          label="Estimated Date"
+          helperText={
+            <FieldWarning
+              name="estimatedDate"
+              rules={CeremonyWarnings}
+              context={engagementDateRange}
+            />
+          }
+        />
+        <DateField
+          name="actualDate"
+          label="Actual Date"
+          helperText={
+            <FieldWarning
+              name="actualDate"
+              rules={CeremonyWarnings}
+              context={engagementDateRange}
+            />
+          }
+        />
       </DialogForm>
     </div>
   );
