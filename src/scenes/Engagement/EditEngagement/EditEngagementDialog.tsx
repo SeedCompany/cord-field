@@ -18,6 +18,8 @@ import {
   asDate,
   DisplayLocationFragment,
   ExtractStrict,
+  isDateAfter,
+  isDateBefore,
   labelFrom,
   MethodologyToApproach,
 } from '~/common';
@@ -310,41 +312,29 @@ export const EditEngagementDialog = ({
         }
 
         // validate updates for complete date.
-        if (values.completeDate) {
-          const completeDate = asDate(values.completeDate);
-          const engagementStart = asDate(engagement.dateRange.value.start);
-
-          // Ensure complete date is not before engagement start date
-          if (engagementStart && completeDate < engagementStart) {
-            return {
-              completeDate: `Complete date cannot precede project's start date`,
-            };
-          }
-
-          // Ensure complete date is not after engagement end date
-          const engagementEnd = asDate(engagement.dateRange.value.end);
-          if (engagementEnd && completeDate > engagementEnd) {
-            return {
-              completeDate: `Complete date cannot exceed project's end date`,
-            };
-          }
+        if (
+          isDateBefore(values.completeDate, engagement.dateRange.value.start)
+        ) {
+          return {
+            completeDate: `Complete date cannot precede project's start date`,
+          };
+        }
+        if (isDateAfter(values.completeDate, engagement.dateRange.value.end)) {
+          return {
+            completeDate: `Complete date cannot exceed project's end date`,
+          };
         }
 
-        // validate updates for disbursement complete date
-        if (values.disbursementCompleteDate) {
-          const disbursementCompleteDate = asDate(
-            values.disbursementCompleteDate
-          );
-          const engagementStart = asDate(engagement.dateRange.value.start);
-
-          // Ensure disbursement complete date is not before engagement start date
-          if (engagementStart && disbursementCompleteDate < engagementStart) {
-            return {
-              disbursementCompleteDate: `Disbursement complete date cannot precede project's start date`,
-            };
-          }
-
-          // No upper bound for disbursement complete date
+        // validate updates for disbursement complete date.
+        if (
+          isDateBefore(
+            values.disbursementCompleteDate,
+            engagement.dateRange.value.start
+          )
+        ) {
+          return {
+            disbursementCompleteDate: `Disbursement complete date cannot precede project's start date`,
+          };
         }
 
         return undefined;

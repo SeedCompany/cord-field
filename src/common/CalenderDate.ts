@@ -25,6 +25,37 @@ export const asDateTime = <T extends DateTimeOrISO | Nil>(date: T) =>
 export const asDate = <T extends CalendarDateOrISO | Nil>(date: T) =>
   asLuxonInstance(date, CalendarDate) as T extends Nil ? null : CalendarDate;
 
+/**
+ * Whether `date` falls before `other`.
+ *
+ * @remarks
+ * Both sides are optional, so this can compare values the user has not filled
+ * in yet. A missing date on either side is not before anything, so the answer
+ * is `false` and the caller needs no null checks of its own.
+ */
+export const isDateBefore = (
+  date: CalendarDateOrISO | Nil,
+  other: CalendarDateOrISO | Nil
+) => {
+  const a = asDate(date);
+  const b = asDate(other);
+  return Boolean(a && b && a < b);
+};
+
+/**
+ * Whether `date` falls after `other`.
+ *
+ * @see {@link isDateBefore} for how missing dates are treated.
+ */
+export const isDateAfter = (
+  date: CalendarDateOrISO | Nil,
+  other: CalendarDateOrISO | Nil
+) => {
+  const a = asDate(date);
+  const b = asDate(other);
+  return Boolean(a && b && a > b);
+};
+
 function asLuxonInstance(
   date: ISOString | DateTime | null | undefined,
   cls: typeof DateTime
