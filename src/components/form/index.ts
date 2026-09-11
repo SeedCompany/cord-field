@@ -4,6 +4,7 @@ export * from './AutocompleteField';
 export * from './useAutocompleteQuery';
 export * from './Lookup/LookupField';
 export * from './CheckboxField';
+export * from './FieldWarnings';
 export * from './decorators';
 export * from './DateField';
 export * from './Dropzone';
