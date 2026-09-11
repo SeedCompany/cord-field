@@ -308,6 +308,29 @@ export const EditEngagementDialog = ({
             endDateOverride: `End date should come after project's start date`,
           };
         }
+
+        // validate updates for complete date.
+        if (values.completeDate) {
+          const completeDate = asDate(values.completeDate);
+          const engagementStart = asDate(engagement.dateRange.value.start);
+
+          // Ensure complete date is not before engagement start date
+          if (engagementStart && completeDate < engagementStart) {
+            return {
+              completeDate: `Complete date cannot precede project's start date`,
+            };
+          }
+
+          // Ensure complete date is not after engagement end date
+          const engagementEnd = asDate(engagement.dateRange.value.end);
+          if (engagementEnd && completeDate > engagementEnd) {
+            return {
+              completeDate: `Complete date cannot exceed project's end date`,
+            };
+          }
+        }
+
+        return undefined;
       }}
       onSubmit={async (values, form) => {
         await updateEngagement({
