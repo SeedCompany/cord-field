@@ -12,7 +12,7 @@ import {
 import { useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
-import { canEditAny } from '~/common';
+import { canEditAny, isDateBefore } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { DateField, SubmitError } from '../../../components/form';
@@ -50,11 +50,18 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
   },
 }));
 
-type CeremonyCardProps = Partial<CeremonyCardFragment>;
+type CeremonyCardProps = Partial<CeremonyCardFragment> & {
+  /**
+   * The engagement's date range, used to warn about ceremony dates that fall
+   * outside it. Omitted while loading.
+   */
+  engagementDateRange?: SecuredDateRangeFragment;
+};
 
 export const CeremonyCard = ({
   canRead,
   value: ceremony,
+  engagementDateRange,
 }: CeremonyCardProps) => {
   const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
@@ -173,6 +180,33 @@ export const CeremonyCard = ({
         submitLabel="Save"
         {...dialogState}
         initialValues={initialValues}
+        validate={(values) => {
+          return Object.keys(values).reduce((errors, key) => {
+            switch (key) {
+              case 'estimatedDate':
+                if (
+                  isDateBefore(values[key], engagementDateRange?.value.start)
+                ) {
+                  return {
+                    ...errors,
+                    estimatedDate: `Estimated date cannot precede project's start date`,
+                  };
+                }
+                return errors;
+              case 'actualDate':
+                if (
+                  isDateBefore(values[key], engagementDateRange?.value.start)
+                ) {
+                  return {
+                    ...errors,
+                    actualDate: `Actual date cannot precede project's start date`,
+                  };
+                }
+                return errors;
+            }
+            return errors;
+          }, {});
+        }}
         onSubmit={async (input) => {
           await updateCeremony({ variables: { input } });
         }}
