@@ -3,4 +3,3 @@
 build
 *.generated.ts
 *.graphql.ts
-*.stories.tsx

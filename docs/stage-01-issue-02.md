@@ -2,7 +2,7 @@
 title: 'Delete orphaned Storybook stories'
 stage: 1
 issue: 2
-status: open
+status: done
 type: cleanup
 ---
 
