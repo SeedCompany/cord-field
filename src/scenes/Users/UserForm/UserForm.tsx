@@ -109,6 +109,8 @@ export const UserForm = <T, R = void>({
               label="Status"
               options={UserStatusList}
               getLabel={labelFrom(UserStatusLabels)}
+              multiple={false}
+              defaultValue="Disabled"
               {...props}
             />
           )}
