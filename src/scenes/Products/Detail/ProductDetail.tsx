@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
 import { Grid, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import { useQuery } from '~/api';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,

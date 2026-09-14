@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Edit,
   Event as EventIcon,
@@ -11,6 +10,7 @@ import { Many, Nil } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { PartialDeep } from 'type-fest';
+import { useQuery } from '~/api';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { DataButton } from '~/components/DataButton';
 import { useDialog } from '~/components/Dialog';

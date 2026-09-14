@@ -1,9 +1,10 @@
-import { ApolloCache, useQuery } from '@apollo/client';
+import { ApolloCache } from '@apollo/client';
 import { useAsyncEffect } from 'ahooks';
 import { pickBy } from 'lodash';
 import { PostHog } from 'posthog-js';
 import { usePostHog } from 'posthog-js/react';
 import { createContext, useContext } from 'react';
+import { useQuery } from '~/api';
 import { SessionOutput } from '~/api/schema.graphql';
 import { ChildrenProp } from '~/common';
 import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';

@@ -2,7 +2,7 @@
 title: 'Replace the disableSsrByDefault Babel plugin with an explicit useQuery'
 stage: 1
 issue: 4
-status: open
+status: done
 type: refactor
 ---
 

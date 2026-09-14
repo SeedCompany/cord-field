@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import {
   Breadcrumbs,
@@ -12,6 +11,7 @@ import {
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
+import { useQuery } from '~/api';
 import { ProgressReportBreadcrumb } from '~/components/ProgressReportBreadcrumb';
 import { ProgressReportListBreadcrumb } from '~/components/ProgressReportListBreadcrumb';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';

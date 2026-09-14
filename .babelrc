@@ -21,7 +21,6 @@
       "absoluteRuntime": true
     }],
     "@babel/plugin-transform-numeric-separator",
-    "./src/server/disableSsrByDefault",
     "@loadable/babel-plugin",
     ["babel-plugin-transform-imports", {
       "lodash": {

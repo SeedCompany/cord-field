@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '~/api';
 import { ChildrenProp } from '~/common';
 import { inChangesetVar } from '../../api';
 import {

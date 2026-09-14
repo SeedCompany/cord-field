@@ -1,9 +1,9 @@
-import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { Skeleton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { useQuery } from '~/api';
 import { LocationTypeLabels } from '~/api/schema.graphql';
 import { canEditAny, labelFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';

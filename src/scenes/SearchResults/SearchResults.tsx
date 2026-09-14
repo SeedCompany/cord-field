@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Build,
   FolderOpen,
@@ -14,6 +13,7 @@ import { Box, List, Stack } from '@mui/material';
 import { startCase } from 'lodash';
 import { ReactElement } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useQuery } from '~/api';
 import { PeopleJoinedIcon } from '~/components/Icons';
 import { EntityListItem } from '~/components/List';
 import { Error } from '../../components/Error';

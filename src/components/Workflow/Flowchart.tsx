@@ -1,4 +1,4 @@
-import { TypedDocumentNode as DocumentNode, useQuery } from '@apollo/client';
+import { TypedDocumentNode as DocumentNode } from '@apollo/client';
 import { mapEntries } from '@seedcompany/common';
 import { useDebounceFn, useLocalStorageState } from 'ahooks';
 import { OperationDefinitionNode } from 'graphql';
@@ -14,6 +14,7 @@ import ReactFlow, {
   useNodesState,
   XYPosition,
 } from 'reactflow';
+import { useQuery } from '~/api';
 import { Controls } from './Controls';
 import {
   Edge as EdgeComponent,

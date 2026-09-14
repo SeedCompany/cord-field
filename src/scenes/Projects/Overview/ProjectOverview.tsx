@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Add,
   DateRange as DateRangeIcon,
@@ -22,6 +21,7 @@ import { Many } from '@seedcompany/common';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { PartialDeep } from 'type-fest';
+import { useQuery } from '~/api';
 import { ProjectStepLabels, ProjectTypeLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';

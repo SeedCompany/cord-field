@@ -1,5 +1,5 @@
-import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '~/api';
 import { useProjectId } from '../useProjectId';
 import { ProjectRootDirectoryDocument } from './ProjectFiles.graphql';
 

@@ -1,7 +1,7 @@
-import { useQuery } from '@apollo/client';
 import { ArrowBack } from '@mui/icons-material';
 import { Box, Drawer } from '@mui/material';
 import { useMatch } from 'react-router-dom';
+import { useQuery } from '~/api';
 import { ChildrenProp, flexColumn } from '~/common';
 import { ButtonLink, useNavigate } from '~/components/Routing';
 import { ProgressReportContextProvider } from './ProgressReportContext';

@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import {
   Skeleton,
 } from '@mui/material';
 import { Fragment } from 'react';
+import { useQuery } from '~/api';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,

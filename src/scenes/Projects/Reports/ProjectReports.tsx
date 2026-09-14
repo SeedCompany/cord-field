@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '~/api';
 import { ReportType } from '~/api/schema.graphql';
 import { Error } from '../../../components/Error';
 import { PeriodicReportsList } from '../../../components/PeriodicReports/PeriodicReportsList';

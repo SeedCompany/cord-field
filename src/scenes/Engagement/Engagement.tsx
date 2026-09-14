@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '~/api';
 import { useChangesetAwareIdFromUrl } from '../../components/Changeset';
 import { useComments } from '../../components/Comments/CommentsContext';
 import { NotFoundPage } from '../../components/Error';

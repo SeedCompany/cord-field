@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 import {
   Autocomplete,
@@ -23,7 +23,7 @@ import {
   useState,
 } from 'react';
 import { Except, SetOptional, SetRequired } from 'type-fest';
-import { isNetworkRequestInFlight, NoVars } from '~/api';
+import { isNetworkRequestInFlight, NoVars, useQuery } from '~/api';
 import { Power } from '~/api/schema.graphql';
 import { useDialog } from '../../Dialog';
 import { DialogFormProps } from '../../Dialog/DialogForm';

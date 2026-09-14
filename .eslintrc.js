@@ -61,6 +61,14 @@ const restrictedImports = [
     message: 'Import functions directly to enable tree-shaking at build time',
   },
 
+  // Our useQuery defaults `ssr: false`, replacing the disableSsrByDefault babel plugin
+  {
+    path: '@apollo/client',
+    importNames: ['useQuery'],
+    message: 'Use `useQuery` from `~/api`, which defaults `ssr: false`.',
+    replacement: { path: '~/api' },
+  },
+
   // Import css & keyframes straight from emotion (not any re-export from other libs)
   // This ensures their babel plugin works correctly.
   {

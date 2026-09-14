@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { CreateNewFolder, Publish } from '@mui/icons-material';
 import {
   Box,
@@ -20,6 +19,7 @@ import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { useQuery } from '~/api';
 import { useResponsiveColumnVisibility } from '~/components/Grid';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';

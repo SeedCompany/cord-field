@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
 import { ToggleButton } from '@mui/material';
 import { useEffect } from 'react';
+import { useQuery } from '~/api';
 import { ProductStepLabels } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';

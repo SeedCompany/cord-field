@@ -1,8 +1,9 @@
-import { ApolloError, useQuery } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
 import { NetworkStatus } from '@apollo/client/core';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { useMemo } from 'react';
+import { useQuery } from '~/api';
 import { InputArg, PaginatedListInput, PaginatedListOutput } from '../../api';
 import { ChangesetDiffItemFragment as DiffItem } from '../../common/fragments';
 import {
