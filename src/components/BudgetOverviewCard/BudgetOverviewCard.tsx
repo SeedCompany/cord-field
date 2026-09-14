@@ -1,13 +1,13 @@
 import { AccountBalance, Warning } from '@mui/icons-material';
 import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
-import { ProjectStatus } from '~/api/schema.graphql';
+import { ProjectStatus } from '~/api/schema.graphql.ts';
 import { Feature } from '../Feature';
 import {
   FieldOverviewCard,
   FieldOverviewCardProps,
 } from '../FieldOverviewCard';
 import { useCurrencyFormatter } from '../Formatters/useCurrencyFormatter';
-import { BudgetOverviewFragment } from './BudgetOverview.graphql';
+import { BudgetOverviewFragment } from './BudgetOverview.graphql.ts';
 
 export interface BudgetOverviewCardProps extends FieldOverviewCardProps {
   budget?: BudgetOverviewFragment | null;

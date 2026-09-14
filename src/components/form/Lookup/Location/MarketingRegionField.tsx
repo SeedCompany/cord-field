@@ -1,6 +1,6 @@
 import { DisplayLocationFragment as MarketingRegionLookupItem } from '~/common';
 import { LookupField } from '../LookupField';
-import { MarketingRegionLookupDocument } from './MarketingRegionLookup.graphql';
+import { MarketingRegionLookupDocument } from './MarketingRegionLookup.graphql.ts';
 
 export const MarketingRegionField =
   LookupField.createFor<MarketingRegionLookupItem>({

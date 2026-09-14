@@ -1,7 +1,7 @@
 import { Card, CardActions, CardProps, Typography } from '@mui/material';
 import { RelativeDateTime } from '~/components/Formatters';
 import { ButtonLink } from '~/components/Routing';
-import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
+import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql.ts';
 import { StatusStepper } from './StatusStepper';
 
 type WorkflowCardProps = {

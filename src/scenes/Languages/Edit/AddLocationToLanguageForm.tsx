@@ -7,8 +7,8 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
 import { LocationField } from '../../../components/form/Lookup';
-import { LanguageLocationsDocument } from '../Detail/Tabs/Locations/LanguageLocations.graphql';
-import { AddLocationToLanguageDocument } from './EditLanguage.graphql';
+import { LanguageLocationsDocument } from '../Detail/Tabs/Locations/LanguageLocations.graphql.ts';
+import { AddLocationToLanguageDocument } from './EditLanguage.graphql.ts';
 
 interface FormValues {
   location: DisplayLocationFragment;

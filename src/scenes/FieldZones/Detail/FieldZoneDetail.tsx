@@ -18,7 +18,7 @@ import { Error } from '../../../components/Error';
 import { EditFieldZone } from '../../../components/FieldZone';
 import { IconButton } from '../../../components/IconButton';
 import { Redacted } from '../../../components/Redacted';
-import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql';
+import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql.ts';
 import { FieldZoneProjectsPanel } from './Tabs/Projects/FieldZoneProjectsPanel';
 
 export const FieldZoneDetail = () => {

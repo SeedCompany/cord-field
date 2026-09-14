@@ -4,7 +4,10 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { LocationDetail } from './LocationDetail';
-import { LocationDocument, type LocationQuery } from './LocationDetail.graphql';
+import {
+  LocationDocument,
+  type LocationQuery,
+} from './LocationDetail.graphql.ts';
 
 vi.mock('../Edit', () => ({
   EditLocation: () => null,

@@ -5,6 +5,7 @@
     "target": "esnext",
     "lib": ["esnext", "dom", "dom.iterable"],
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
     "allowJs": true,

@@ -6,7 +6,7 @@ import { addItemToList } from '~/api';
 import {
   CreateProjectMember as CreateProjectMemberInput,
   RoleLabels,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -15,8 +15,8 @@ import {
 import { SubmitError } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
-import { ProjectMembersQuery } from '../List/ProjectMembers.graphql';
-import { CreateProjectMemberDocument } from './CreateProjectMember.graphql';
+import { ProjectMembersQuery } from '../List/ProjectMembers.graphql.ts';
+import { CreateProjectMemberDocument } from './CreateProjectMember.graphql.ts';
 
 type FormValues = Merge<
   Omit<CreateProjectMemberInput, 'project'>,

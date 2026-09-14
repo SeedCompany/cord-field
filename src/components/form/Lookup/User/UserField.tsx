@@ -1,10 +1,10 @@
-import { CreatePerson } from '~/api/schema.graphql';
+import { CreatePerson } from '~/api/schema.graphql.ts';
 import { CreateUser } from '../../../../scenes/Users/Create';
 import { LookupField } from '../../index';
 import {
   UserLookupDocument,
   UserLookupItemFragment,
-} from './UserLookup.graphql';
+} from './UserLookup.graphql.ts';
 
 export const UserField = LookupField.createFor<
   UserLookupItemFragment,

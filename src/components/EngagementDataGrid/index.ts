@@ -1,3 +1,3 @@
 export * from './EngagementColumns';
-export * from './engagementDataGridRow.graphql';
+export * from './engagementDataGridRow.graphql.ts';
 export * from './useProcessEngagementUpdate';

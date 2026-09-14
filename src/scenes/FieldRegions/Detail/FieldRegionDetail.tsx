@@ -18,7 +18,7 @@ import { useDetailTabs } from '~/hooks';
 import { Error } from '../../../components/Error';
 import { IconButton } from '../../../components/IconButton';
 import { Redacted } from '../../../components/Redacted';
-import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql';
+import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql.ts';
 import { FieldRegionProjectsPanel } from './Tabs/Projects/FieldRegionProjectsPanel';
 
 export const FieldRegionDetail = () => {

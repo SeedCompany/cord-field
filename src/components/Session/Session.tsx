@@ -5,15 +5,15 @@ import { PostHog } from 'posthog-js';
 import { usePostHog } from 'posthog-js/react';
 import { createContext, useContext } from 'react';
 import { useQuery } from '~/api';
-import { SessionOutput } from '~/api/schema.graphql';
+import { SessionOutput } from '~/api/schema.graphql.ts';
 import { ChildrenProp, env } from '~/common';
-import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
-import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
+import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql.ts';
+import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql.ts';
 import {
   FeaturesFragment as BetaFeatures,
   LoggedInUserFragment,
   SessionDocument,
-} from './session.graphql';
+} from './session.graphql.ts';
 
 const useSessionQuery = () =>
   useQuery(SessionDocument, {

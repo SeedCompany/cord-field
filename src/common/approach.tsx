@@ -6,7 +6,7 @@ import {
 } from '@mui/icons-material';
 import { entries, mapValues } from '@seedcompany/common';
 import { ReactNode } from 'react';
-import { ProductApproach, ProductMethodology } from '~/api/schema.graphql';
+import { ProductApproach, ProductMethodology } from '~/api/schema.graphql.ts';
 
 export const ApproachMethodologies: Record<
   ProductApproach,

@@ -12,7 +12,7 @@ import {
   listOrPlaceholders,
   MethodologyToApproach,
 } from '~/common';
-import { MethodologiesCardFragment } from './MethodologiesCard.graphql';
+import { MethodologiesCardFragment } from './MethodologiesCard.graphql.ts';
 
 export interface MethodologiesCardProps {
   data?: MethodologiesCardFragment;

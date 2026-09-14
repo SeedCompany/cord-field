@@ -12,12 +12,12 @@ import {
   ProductStep,
   ProductStepLabels,
   SecuredFloatNullable,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { isSecured } from '../../../common';
 import { bookIndexFromName } from '../../../common/biblejs';
 import { EditNumberCell } from '../../../components/Grid/EditNumberCell';
 import { Link } from '../../../components/Routing';
-import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
+import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql.ts';
 
 interface ProductTableProps {
   category: string;

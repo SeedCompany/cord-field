@@ -1,2 +1,2 @@
 export * from './LocationColumns';
-export * from './locationDataGridRow.graphql';
+export * from './locationDataGridRow.graphql.ts';

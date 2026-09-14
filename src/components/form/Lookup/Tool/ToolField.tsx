@@ -1,7 +1,7 @@
 import { CreateTool } from '../../../Tool';
 import { LookupField } from '../../index';
-import { InitialToolOptionsDocument as InitialTools } from './InitialToolOptions.graphql';
-import { ToolLookupDocument } from './ToolLookup.graphql';
+import { InitialToolOptionsDocument as InitialTools } from './InitialToolOptions.graphql.ts';
+import { ToolLookupDocument } from './ToolLookup.graphql.ts';
 
 export const ToolField = LookupField.createFor({
   resource: 'Tool',

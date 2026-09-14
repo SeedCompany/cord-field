@@ -1,7 +1,7 @@
 import { mapOf } from '@seedcompany/common';
 import { ComponentType } from 'react';
 import { Except } from 'type-fest';
-import { Power } from '~/api/schema.graphql';
+import { Power } from '~/api/schema.graphql.ts';
 import { DialogFormProps } from '../../../components/Dialog/DialogForm';
 import { CreateTool } from '../../../components/Tool/CreateTool/CreateTool';
 import { CreateLanguage } from '../../Languages/Create';

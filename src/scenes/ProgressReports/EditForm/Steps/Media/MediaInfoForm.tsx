@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import {
   ProgressReportMediaCategory as Category,
   Sensitivity,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   ProgressReportMediaCategoryLabels,
   ProgressReportMediaCategoryList,
@@ -19,7 +19,7 @@ import {
   TextField,
 } from '~/components/form';
 import { ImageField } from './ImageField';
-import { ProgressReportMediaFragment } from './progressReportMedia.graphql';
+import { ProgressReportMediaFragment } from './progressReportMedia.graphql.ts';
 
 interface MediaFormState extends SubmitAction<'delete'> {
   variant: VariantFragment;

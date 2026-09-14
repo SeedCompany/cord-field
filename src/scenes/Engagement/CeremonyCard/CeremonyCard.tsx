@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
+import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql.ts';
 import { canEditAny } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
@@ -21,7 +21,7 @@ import { Redacted } from '../../../components/Redacted';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
-} from './CeremonyCard.graphql';
+} from './CeremonyCard.graphql.ts';
 import { CeremonyPlanned } from './CeremonyPlanned';
 import { LargeDate } from './LargeDate';
 

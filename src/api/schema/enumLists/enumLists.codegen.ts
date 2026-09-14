@@ -13,7 +13,7 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
   file.addImportDeclaration({
     isTypeOnly: true,
     namespaceImport: 'Types',
-    moduleSpecifier: '../schema.graphql',
+    moduleSpecifier: '../schema.graphql.ts',
   });
 
   for (const type of Object.values(schema.getTypeMap())) {

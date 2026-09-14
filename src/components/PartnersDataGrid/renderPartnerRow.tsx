@@ -1,6 +1,6 @@
 import { EntityListItem, rowSecondary } from '../List';
 import { PartnerColumns } from './PartnerColumns';
-import { PartnerDataGridRowFragment as Partner } from './partnerDataGridRow.graphql';
+import { PartnerDataGridRowFragment as Partner } from './partnerDataGridRow.graphql.ts';
 
 const SORT_DEFAULT = 'organization.name';
 

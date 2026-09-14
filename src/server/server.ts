@@ -8,7 +8,7 @@ import * as path from 'path';
 import responseTime from 'response-time';
 import { createClient as createApollo } from '~/api/client/createClient';
 import { basePathOfUrl, withoutTrailingSlash } from '~/common';
-import { LogoutDocument } from '../scenes/Authentication/Logout/logout.graphql';
+import { LogoutDocument } from '../scenes/Authentication/Logout/logout.graphql.ts';
 import { renderServerSideApp } from './renderServerSideApp';
 
 /**

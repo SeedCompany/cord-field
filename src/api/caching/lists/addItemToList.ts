@@ -9,7 +9,7 @@ import { Except } from 'type-fest';
 import { unwrapSecuredEdge } from '~/common';
 import { modifyChangesetDiff } from '../../changesets';
 import type { Entity } from '../../schema';
-import type { Order } from '../../schema.graphql';
+import type { Order } from '../../schema.graphql.ts';
 import {
   argsFromStoreFieldName,
   defaultSortingForList,

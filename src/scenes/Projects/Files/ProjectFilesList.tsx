@@ -49,7 +49,7 @@ import { CreateProjectDirectory } from './CreateProjectDirectory';
 import { DirectoryBreadcrumb } from './DirectoryBreadcrumb';
 import { FileRow as FileRowComponent } from './FileRow';
 import { NodePreviewLayer } from './NodePreviewLayer';
-import { ProjectDirectoryDocument } from './ProjectFiles.graphql';
+import { ProjectDirectoryDocument } from './ProjectFiles.graphql.ts';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
 import { FileRowData as FileRow, isDirectory } from './util';

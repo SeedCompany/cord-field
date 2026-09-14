@@ -9,7 +9,7 @@ import { merge } from 'lodash';
 import { MutableRefObject, useMemo, useState } from 'react';
 import type { SetNonNullable } from 'type-fest';
 import type { PaginatedListInput, SortableListInput } from '~/api';
-import type { Order } from '~/api/schema/schema.graphql';
+import type { Order } from '~/api/schema/schema.graphql.ts';
 import { lowerCase, upperCase } from '~/common';
 import { useSession } from '../Session/Session';
 import { convertMuiFiltersToApi, FilterShape } from './convertMuiFiltersToApi';

@@ -1,6 +1,6 @@
 import { noop } from 'lodash';
 import { createContext } from 'react';
-import { Power } from '~/api/schema.graphql';
+import { Power } from '~/api/schema.graphql.ts';
 import { ChildrenProp } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { creates } from './Creates';

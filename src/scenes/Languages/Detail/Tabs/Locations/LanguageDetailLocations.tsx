@@ -22,12 +22,12 @@ import {
 } from '~/components/LocationDataGrid';
 import { TabPanelContent } from '~/components/Tabs';
 import { AddLocationToLanguageForm } from '../../../../Languages/Edit/AddLocationToLanguageForm';
-import { LanguageDetailFragment } from '../../LanguageDetail.graphql';
+import { LanguageDetailFragment } from '../../LanguageDetail.graphql.ts';
 import {
   LanguageLocationDataGridRowFragment as LanguageLocation,
   LanguageLocationsDocument,
   RemoveLocationFromLanguageDocument,
-} from './LanguageLocations.graphql';
+} from './LanguageLocations.graphql.ts';
 
 interface LanguageDetailLocationProps {
   language: LanguageDetailFragment;

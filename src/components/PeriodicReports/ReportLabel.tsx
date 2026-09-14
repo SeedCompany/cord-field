@@ -1,6 +1,6 @@
 import { asDate, isSecured, Nullable, SecuredProp } from '~/common';
 import { Redacted } from '../Redacted';
-import { PeriodicReportFragment } from './PeriodicReport.graphql';
+import { PeriodicReportFragment } from './PeriodicReport.graphql.ts';
 
 type Report = Pick<PeriodicReportFragment, 'start' | 'end'>;
 

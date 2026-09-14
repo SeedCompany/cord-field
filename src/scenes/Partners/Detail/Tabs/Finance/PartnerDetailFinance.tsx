@@ -1,7 +1,7 @@
 import { Many } from 'lodash';
 import { TabPanelContent } from '~/components/Tabs';
 import { EditablePartnerField } from '../../../Edit';
-import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { PartnerDetailsFragment } from '../../PartnerDetail.graphql.ts';
 import { PartnerFinanceSectionHeading } from './PartnerFinanceSectionHeading';
 
 interface Props {

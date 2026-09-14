@@ -3,7 +3,7 @@ import type { MockedResponse } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Form } from 'react-final-form';
 import { LanguageField } from './LanguageField';
-import { LanguageLookupDocument } from './LanguageLookup.graphql';
+import { LanguageLookupDocument } from './LanguageLookup.graphql.ts';
 
 vi.mock('../../../Session', () => ({
   useSession: () => ({ powers: [] }),

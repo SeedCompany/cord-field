@@ -13,7 +13,7 @@ import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../components/Redacted';
 import { FabLink } from '../../../components/Routing';
-import { ProductDetailFragment as Product } from './ProductDetail.graphql';
+import { ProductDetailFragment as Product } from './ProductDetail.graphql.ts';
 
 const useStyles = makeStyles()(() => ({
   nameRedacted: {

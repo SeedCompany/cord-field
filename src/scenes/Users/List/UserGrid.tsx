@@ -12,8 +12,8 @@ import {
   UserInitialState,
   UserToolbar,
 } from '~/components/UserDataGrid/UserColumns';
-import { UserDataGridRowFragment as People } from '~/components/UserDataGrid/userDataGridRow.graphql';
-import { UsersDocument } from './users.graphql';
+import { UserDataGridRowFragment as People } from '~/components/UserDataGrid/userDataGridRow.graphql.ts';
+import { UsersDocument } from './users.graphql.ts';
 
 export const UserGrid = () => {
   const [dataGridProps] = useDataGridSource({

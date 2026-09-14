@@ -14,7 +14,7 @@ import {
   useDataGridSlots,
   useDataGridSource,
 } from '~/components/Grid';
-import { EngagementListDocument } from './EngagementList.graphql';
+import { EngagementListDocument } from './EngagementList.graphql.ts';
 
 export const EngagementsPanel = () => {
   const [dataGridProps] = useDataGridSource({

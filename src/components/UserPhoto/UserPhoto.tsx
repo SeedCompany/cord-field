@@ -6,8 +6,8 @@ import { useDropzone } from 'react-dropzone';
 import { extendSx, square, StyleProps } from '~/common';
 import { useUploadFileAsync } from '../files/hooks';
 import { DropOverlay } from '../Upload/DropOverlay';
-import { UpdateUserPhotoDocument } from './UpdateUserPhoto.graphql';
-import { UserPhotoFragment } from './userPhoto.graphql';
+import { UpdateUserPhotoDocument } from './UpdateUserPhoto.graphql.ts';
+import { UserPhotoFragment } from './userPhoto.graphql.ts';
 
 const DEFAULT_SIZE = 150;
 const ACCEPTED_IMAGE_TYPES = {

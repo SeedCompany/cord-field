@@ -9,7 +9,7 @@ import { Due, SkippedText } from '../PeriodicReports/OverviewCard/ReportInfo';
 import { ReportInfoContainer } from '../PeriodicReports/OverviewCard/ReportInfoContainer';
 import { ReportLabel } from '../PeriodicReports/ReportLabel';
 import { ButtonLink, Link } from '../Routing';
-import { ProgressReportOverviewItemFragment as Report } from './ProgressReportOverview.graphql';
+import { ProgressReportOverviewItemFragment as Report } from './ProgressReportOverview.graphql.ts';
 
 const LastStatus = Statuses[Statuses.length - 1];
 

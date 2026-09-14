@@ -7,7 +7,7 @@ import { useHighlightedState } from './useHighlightedState';
 import {
   WorkflowStateFragment as State,
   WorkflowTransitionFragment as Transition,
-} from './workflow.graphql';
+} from './workflow.graphql.ts';
 
 export const useAutoLayout = (setNodes: Dispatch<Node[]>) => {
   const highlightedState = useHighlightedState();

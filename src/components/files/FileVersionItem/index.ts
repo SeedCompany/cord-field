@@ -1,2 +1,2 @@
 export * from './FileVersionItem';
-export * from './FileVersionItem.graphql';
+export * from './FileVersionItem.graphql.ts';

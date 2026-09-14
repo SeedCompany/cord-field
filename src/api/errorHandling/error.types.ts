@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client';
 import { assert } from 'ts-essentials';
 import { IdFragment } from '~/common';
 import { GqlTypeMapMain } from '../schema';
-import { ProductStep } from '../schema.graphql';
+import { ProductStep } from '../schema.graphql.ts';
 
 interface CordErrorExtensions {
   codes: readonly Code[];

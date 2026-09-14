@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { getErrorInfo, isErrorCode } from '~/api';
-import { ProductStepLabels } from '~/api/schema.graphql';
+import { ProductStepLabels } from '~/api/schema.graphql.ts';
 import { CalendarDateOrISO } from '~/common';
 import { useUploadFiles } from '../../files/hooks';
 import { IconButton } from '../../IconButton';
@@ -11,7 +11,7 @@ import { dateFieldFor, PeriodicReportFileField } from '../fileField';
 import {
   ProductLabelDocument,
   UpdatePeriodicReportDocument,
-} from './UpdatePeriodicReport.graphql';
+} from './UpdatePeriodicReport.graphql.ts';
 
 export const useUpdatePeriodicReport = (
   fileField: PeriodicReportFileField = 'reportFile'

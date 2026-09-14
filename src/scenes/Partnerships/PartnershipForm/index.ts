@@ -1,2 +1,2 @@
 export * from './PartnershipForm';
-export * from './PartnershipForm.graphql';
+export * from './PartnershipForm.graphql.ts';

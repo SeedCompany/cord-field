@@ -12,7 +12,7 @@ import { useNavigate } from '../../../components/Routing';
 import {
   CanDeleteFragment,
   DeleteProjectDocument,
-} from './DeleteProject.graphql';
+} from './DeleteProject.graphql.ts';
 
 interface DeleteProjectProps extends IconButtonProps {
   project: ProjectIdFragment & CanDeleteFragment;

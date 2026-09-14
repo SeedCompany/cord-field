@@ -11,7 +11,7 @@ import { ProjectMemberCard } from '../../../../components/ProjectMemberCard';
 import { useProjectId } from '../../useProjectId';
 import { CreateProjectMember } from '../Create/CreateProjectMember';
 import { UpdateProjectMember, UpdateProjectMemberProps } from '../Update';
-import { ProjectMembersDocument } from './ProjectMembers.graphql';
+import { ProjectMembersDocument } from './ProjectMembers.graphql.ts';
 
 export const ProjectMembersList = () => {
   const { projectId, changesetId } = useProjectId();

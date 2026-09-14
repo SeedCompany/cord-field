@@ -1,9 +1,9 @@
 import { StoreObject } from '@apollo/client/utilities';
 import { Storable } from '~/api';
-import { ProductProgress, StepProgress } from '~/api/schema.graphql';
+import { ProductProgress, StepProgress } from '~/api/schema.graphql.ts';
 import { IdFragment } from '~/common';
 import { modifyProgressRelatingToEngagement } from '../ProgressRefsRelatingToEngagement';
-import { CreateProductResultFragment } from './CreateProduct.graphql';
+import { CreateProductResultFragment } from './CreateProduct.graphql.ts';
 
 /**
  * For all related ProgressReports (via Engagement),

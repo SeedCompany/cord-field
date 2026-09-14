@@ -2,7 +2,7 @@ import { many, Many } from '@seedcompany/common';
 import { pick } from 'lodash';
 import { useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
-import { UpdatePeriodicReport as UpdatePeriodicReportInput } from '~/api/schema.graphql';
+import { UpdatePeriodicReport as UpdatePeriodicReportInput } from '~/api/schema.graphql.ts';
 import { ExtractStrict } from '~/common';
 import {
   DialogForm,

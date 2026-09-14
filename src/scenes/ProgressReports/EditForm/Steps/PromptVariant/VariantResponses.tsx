@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-import { UpdatePromptVariantResponse } from '~/api/schema/schema.graphql';
+import { UpdatePromptVariantResponse } from '~/api/schema/schema.graphql.ts';
 import { PromptResponseFragment as PromptResponse } from '~/common/fragments';
 import {
   VariantResponsesForm,

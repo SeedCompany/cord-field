@@ -6,7 +6,7 @@ import { IconButton, IconButtonProps } from '../IconButton';
 import {
   TogglePinFragment,
   TogglePinnedDocument,
-} from './TogglePinButton.graphql';
+} from './TogglePinButton.graphql.ts';
 
 export type TogglePinButtonProps = Except<IconButtonProps, 'children'> & {
   object?: TogglePinFragment;

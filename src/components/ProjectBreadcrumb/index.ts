@@ -1,2 +1,2 @@
 export * from './ProjectBreadcrumb';
-export * from './ProjectBreadcrumb.graphql';
+export * from './ProjectBreadcrumb.graphql.ts';

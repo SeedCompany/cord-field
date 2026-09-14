@@ -3,11 +3,11 @@ import { Stack, Tooltip } from '@mui/material';
 import {
   OrganizationReachLabels,
   OrganizationTypeLabels,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { canEditAny, labelFrom } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
 import { IconButton } from '~/components/IconButton';
-import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { PartnerDetailsFragment } from '../../PartnerDetail.graphql.ts';
 import { DisplaySecuredList } from './PartnerTypesSection';
 
 interface PartnerOrgReachAndTypeProps {

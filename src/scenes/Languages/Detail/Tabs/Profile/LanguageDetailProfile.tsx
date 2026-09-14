@@ -7,7 +7,7 @@ import {
 import { FormattedDate, useNumberFormatter } from '~/components/Formatters';
 import { TabPanelContent } from '~/components/Tabs';
 import { FirstScripture } from '../../FirstScripture';
-import { LanguageProfileFragment } from './LanguageDetailProfile.graphql';
+import { LanguageProfileFragment } from './LanguageDetailProfile.graphql.ts';
 
 interface LanguageDetailProfileProps {
   language?: LanguageProfileFragment;

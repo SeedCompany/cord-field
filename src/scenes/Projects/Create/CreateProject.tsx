@@ -3,9 +3,9 @@ import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
-import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
+import { ProjectListQueryVariables } from '../List/ProjectList.graphql.ts';
 import { getProjectUrl } from '../useProjectId';
-import { CreateProjectDocument } from './CreateProject.graphql';
+import { CreateProjectDocument } from './CreateProject.graphql.ts';
 import {
   CreateProjectForm,
   CreateProjectFormProps as Props,

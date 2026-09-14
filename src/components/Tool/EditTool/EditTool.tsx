@@ -2,8 +2,8 @@ import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except, SetRequired } from 'type-fest';
 import { ToolForm, ToolFormProps } from '../ToolForm/ToolForm';
-import { ToolFormFragment } from '../ToolForm/ToolForm.graphql';
-import { EditToolDocument } from './EditTool.graphql';
+import { ToolFormFragment } from '../ToolForm/ToolForm.graphql.ts';
+import { EditToolDocument } from './EditTool.graphql.ts';
 
 export type EditToolProps = SetRequired<
   Except<ToolFormProps<ToolFormFragment>, 'onSubmit' | 'initialValues'>,

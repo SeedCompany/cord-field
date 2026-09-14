@@ -4,7 +4,7 @@ import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { Breadcrumb, BreadcrumbProps } from '../Breadcrumb';
 import { Redacted } from '../Redacted';
 import { SensitivityIcon } from '../Sensitivity';
-import { ProjectBreadcrumbFragment } from './ProjectBreadcrumb.graphql';
+import { ProjectBreadcrumbFragment } from './ProjectBreadcrumb.graphql.ts';
 
 export interface ProjectBreadcrumbProps extends Partial<BreadcrumbProps> {
   data?: Nullable<ProjectBreadcrumbFragment>;

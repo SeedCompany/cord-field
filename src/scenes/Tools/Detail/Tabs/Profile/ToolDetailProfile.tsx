@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import type { ToolProfileFragment } from '~/common/fragments/tool.graphql';
+import type { ToolProfileFragment } from '~/common/fragments/tool.graphql.ts';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,

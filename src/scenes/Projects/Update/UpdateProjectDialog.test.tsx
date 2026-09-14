@@ -2,7 +2,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter } from 'react-router-dom';
-import type { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
+import type { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql.ts';
 import { UpdateProjectDialog } from './UpdateProjectDialog';
 
 vi.mock('../../../components/Session', () => ({

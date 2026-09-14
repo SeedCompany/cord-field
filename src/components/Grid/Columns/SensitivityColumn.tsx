@@ -8,7 +8,7 @@ import {
   Sensitivity,
   SensitivityLabels,
   SensitivityList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { SensitivityIcon } from '../../Sensitivity';
 import {
   columnWithDefaults,

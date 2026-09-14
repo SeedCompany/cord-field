@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import { startCase } from 'lodash';
 import { RichTextView } from '~/components/RichText';
-import { VarianceExplanationFragment } from './VarianceExplanation.graphql';
+import { VarianceExplanationFragment } from './VarianceExplanation.graphql.ts';
 
 export interface VarianceExplanationProps {
   data: VarianceExplanationFragment;

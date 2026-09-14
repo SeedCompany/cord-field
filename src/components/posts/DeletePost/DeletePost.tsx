@@ -4,8 +4,11 @@ import { Except } from 'type-fest';
 import { removeItemFromList } from '../../../api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';
-import { PostableIdFragment } from '../PostableId.graphql';
-import { DeletePostDocument, PostToDeleteFragment } from './DeletePost.graphql';
+import { PostableIdFragment } from '../PostableId.graphql.ts';
+import {
+  DeletePostDocument,
+  PostToDeleteFragment,
+} from './DeletePost.graphql.ts';
 
 interface DeletePostProps extends Except<DialogFormProps<any>, 'onSubmit'> {
   parent: PostableIdFragment;

@@ -6,7 +6,7 @@ import { extendSx } from '~/common';
 import { RelativeDateTime } from '~/components/Formatters';
 import { Link } from '~/components/Routing';
 import { TextChip } from '~/components/TextChip';
-import { ProjectWorkflowEventFragment as WorkflowEvent } from './projectWorkflowEvent.graphql';
+import { ProjectWorkflowEventFragment as WorkflowEvent } from './projectWorkflowEvent.graphql.ts';
 
 type WorkflowEventsListProps = {
   events: readonly WorkflowEvent[];

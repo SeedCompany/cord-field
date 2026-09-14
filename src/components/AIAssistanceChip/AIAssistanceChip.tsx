@@ -1,6 +1,6 @@
 import { Chip } from '@mui/material';
 import { Except } from 'type-fest';
-import { AiAssistedTranslation } from '~/api/schema.graphql';
+import { AiAssistedTranslation } from '~/api/schema.graphql.ts';
 import { SecuredProp } from '~/common';
 
 export const AIAssistanceLabelMap: Record<AiAssistedTranslation, string> = {

@@ -5,10 +5,10 @@ import {
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
-import { LocationTypeLabels, LocationTypeList } from '~/api/schema.graphql';
+import { LocationTypeLabels, LocationTypeList } from '~/api/schema.graphql.ts';
 import { enumColumn, getInitialVisibility, textColumn, Toolbar } from '../Grid';
 import { Link } from '../Routing';
-import { LocationDataGridRowFragment as Location } from './locationDataGridRow.graphql';
+import { LocationDataGridRowFragment as Location } from './locationDataGridRow.graphql.ts';
 
 export const LocationColumns: Array<GridColDef<Location>> = [
   {

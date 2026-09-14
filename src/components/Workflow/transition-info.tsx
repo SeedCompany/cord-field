@@ -17,7 +17,7 @@ import {
 import { forwardRef, ReactElement } from 'react';
 import { RoleLabels } from '~/api/schema/enumLists';
 import { PaperTooltip } from '../PaperTooltip';
-import { WorkflowTransitionFragment as Transition } from './workflow.graphql';
+import { WorkflowTransitionFragment as Transition } from './workflow.graphql.ts';
 
 import 'reactflow/dist/style.css';
 

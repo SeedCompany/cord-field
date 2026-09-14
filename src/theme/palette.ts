@@ -1,7 +1,7 @@
 import type { PaletteColor, PaletteColorOptions } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import type { PaletteOptions } from '@mui/material/styles';
-import type { Role } from '~/api/schema.graphql';
+import type { Role } from '~/api/schema.graphql.ts';
 
 export const createPalette = ({ dark }: { dark?: boolean }) => {
   const mainGreen = '#1EA973';

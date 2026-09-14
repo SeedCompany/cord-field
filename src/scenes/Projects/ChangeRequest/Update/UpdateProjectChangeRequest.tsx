@@ -7,7 +7,7 @@ import {
   ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
   UpdateProjectChangeRequest as UpdateProjectChangeRequestInput,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { callAll, labelFrom } from '~/common';
 import { ProjectIdFragment } from '~/common/fragments';
 import {
@@ -26,7 +26,7 @@ import { useProjectId } from '../../useProjectId';
 import {
   DeleteProjectChangeRequestDocument as DeleteRequest,
   UpdateProjectChangeRequestDocument as UpdateRequest,
-} from './UpdateProjectChangeRequest.graphql';
+} from './UpdateProjectChangeRequest.graphql.ts';
 
 export interface UpdateProjectChangeRequestFormParams {
   project: ProjectIdFragment;

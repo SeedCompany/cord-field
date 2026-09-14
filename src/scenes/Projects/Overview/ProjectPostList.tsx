@@ -1,7 +1,7 @@
 import { useListQuery } from '../../../components/List';
-import { PostableIdFragment } from '../../../components/posts/PostableId.graphql';
+import { PostableIdFragment } from '../../../components/posts/PostableId.graphql.ts';
 import { PostList } from '../../../components/posts/PostList';
-import { ProjectPostListDocument as PostListQuery } from './ProjectPostList.graphql';
+import { ProjectPostListDocument as PostListQuery } from './ProjectPostList.graphql.ts';
 
 interface ProjectPostListProps {
   project: PostableIdFragment;

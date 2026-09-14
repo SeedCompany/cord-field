@@ -2,11 +2,11 @@ import { ButtonProps, Divider, Tooltip } from '@mui/material';
 import { Fragment } from 'react';
 import { useForm, useFormState } from 'react-final-form';
 import { ProgressReportStatusLabels as StatusLabels } from '~/api/schema/enumLists';
-import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql';
+import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql.ts';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { SubmitButton } from '~/components/form';
 import { BypassButton } from './BypassButton';
-import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
+import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql.ts';
 
 interface TransitionButtonsProps extends Pick<ButtonProps, 'size' | 'onClick'> {
   status: ProgressReportStatusFragment;

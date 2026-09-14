@@ -3,7 +3,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 import { Edit } from '@mui/icons-material';
 import { Box, Stack, Tooltip, Typography } from '@mui/material';
 import { ReactNode, useMemo, useState } from 'react';
-import { ChangePrompt, ChoosePrompt } from '~/api/schema.graphql';
+import { ChangePrompt, ChoosePrompt } from '~/api/schema.graphql.ts';
 import {
   PromptResponseFragment as PromptResponse,
   PromptResponseListFragment as PromptResponseList,

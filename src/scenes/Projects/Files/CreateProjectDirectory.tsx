@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateDirectory } from '~/api/schema.graphql';
+import { CreateDirectory } from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
@@ -10,7 +10,7 @@ import {
 import { SubmitError, TextField } from '../../../components/form';
 import { ButtonLink } from '../../../components/Routing';
 import { useProjectId } from '../useProjectId';
-import { CreateProjectDirectoryDocument } from './CreateProjectDirectory.graphql';
+import { CreateProjectDirectoryDocument } from './CreateProjectDirectory.graphql.ts';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 
 export type CreateProjectDirectoryProps = DialogFormProps<CreateDirectory>;

@@ -13,7 +13,7 @@ import { useProjectId } from '../useProjectId';
 import {
   ProjectBudgetDocument,
   UpdateProjectBudgetUniversalTemplateDocument,
-} from './ProjectBudget.graphql';
+} from './ProjectBudget.graphql.ts';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles()(({ breakpoints, spacing }) => ({

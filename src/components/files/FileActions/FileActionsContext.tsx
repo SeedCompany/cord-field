@@ -8,7 +8,7 @@ import {
   FileNodeInfo_File_Fragment as File,
   FileNodeInfoFragment as FileNode,
   FileNodeInfo_FileVersion_Fragment as FileVersion,
-} from '../files.graphql';
+} from '../files.graphql.ts';
 import { DeleteFile } from './DeleteFile';
 import { FileAction } from './FileAction.enum';
 import { FileVersions } from './FileVersions';

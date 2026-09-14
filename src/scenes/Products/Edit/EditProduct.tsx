@@ -21,7 +21,7 @@ import {
   ProductFormProps,
   ProductFormValues,
 } from '../ProductForm';
-import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql';
+import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql.ts';
 import { ProductLoadError } from '../ProductLoadError';
 import {
   DeleteProductDocument,
@@ -29,7 +29,7 @@ import {
   UpdateDerivativeScriptureProductDocument,
   UpdateDirectScriptureProductDocument,
   UpdateOtherProductDocument,
-} from './EditProduct.graphql';
+} from './EditProduct.graphql.ts';
 import {
   deleteProductProgress,
   updateProgressSteps,

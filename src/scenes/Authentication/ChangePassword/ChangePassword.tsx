@@ -2,13 +2,13 @@ import { useMutation } from '@apollo/client';
 import { Mutator } from 'final-form';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
-import { MutationChangePasswordArgs } from '~/api/schema.graphql';
+import { MutationChangePasswordArgs } from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
 import { PasswordField, SubmitError } from '../../../components/form';
-import { ChangePasswordDocument } from './ChangePassword.graphql';
+import { ChangePasswordDocument } from './ChangePassword.graphql.ts';
 
 type ChangePasswordProps = Except<
   DialogFormProps<ChangePasswordFields>,

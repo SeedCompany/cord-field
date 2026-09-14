@@ -24,13 +24,13 @@ import {
   UserInitialState,
   UserToolbar,
 } from '~/components/UserDataGrid/UserColumns';
-import { UserDataGridRowFragment as User } from '~/components/UserDataGrid/userDataGridRow.graphql';
+import { UserDataGridRowFragment as User } from '~/components/UserDataGrid/userDataGridRow.graphql.ts';
 import { AddPersonToPartnerForm } from './AddPersonToPartnerForm';
 import {
   PartnerDetailPeopleFragment,
   PartnerPeopleDocument,
   RemovePersonFromPartnerDocument,
-} from './PartnerDetailsPeople.graphql';
+} from './PartnerDetailsPeople.graphql.ts';
 
 interface Props {
   partner?: PartnerDetailPeopleFragment;

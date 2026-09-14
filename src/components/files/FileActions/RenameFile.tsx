@@ -1,10 +1,10 @@
 import { MutationFunctionOptions, useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import { RenameFile as RenameFileInput } from '~/api/schema.graphql';
+import { RenameFile as RenameFileInput } from '~/api/schema.graphql.ts';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError, TextField } from '../../form';
 import { parseFileNameAndExtension } from '../../Formatters';
-import { RenameFileNodeDocument } from './FileActions.graphql';
+import { RenameFileNodeDocument } from './FileActions.graphql.ts';
 import { FilesActionItem } from './FileActionsContext';
 
 export type RenameFileProps = DialogFormProps<RenameFileInput> & {

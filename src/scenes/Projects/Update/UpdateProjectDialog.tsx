@@ -6,7 +6,7 @@ import { pick } from 'lodash';
 import { ComponentType, useMemo } from 'react';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
-import { SensitivityList, UpdateProject } from '~/api/schema.graphql';
+import { SensitivityList, UpdateProject } from '~/api/schema.graphql.ts';
 import {
   asDate,
   CalendarDate,
@@ -37,8 +37,8 @@ import {
   updateEngagementDateRanges,
   updatePartnershipsDateRanges,
 } from '../DateRangeCache';
-import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
-import { UpdateProjectDocument } from './UpdateProject.graphql';
+import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql.ts';
+import { UpdateProjectDocument } from './UpdateProject.graphql.ts';
 
 export type EditableProjectField = ExtractStrict<
   keyof UpdateProject | 'mouRange',

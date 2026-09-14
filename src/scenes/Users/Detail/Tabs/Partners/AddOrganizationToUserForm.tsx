@@ -9,7 +9,7 @@ import {
 import {
   AssignOrganizationToUserDocument,
   UserPartnersDocument,
-} from './UserPartnerPanel/UserPartnerList.graphql';
+} from './UserPartnerPanel/UserPartnerList.graphql.ts';
 
 interface FormValues {
   partner: PartnerLookupItem;

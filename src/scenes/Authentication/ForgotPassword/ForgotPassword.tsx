@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Except } from 'type-fest';
 import { handleFormError } from '../../../api';
-import { ForgotPasswordDocument } from './ForgotPassword.graphql';
+import { ForgotPasswordDocument } from './ForgotPassword.graphql.ts';
 import {
   ForgotPasswordForm,
   ForgotPasswordFormProps as Props,

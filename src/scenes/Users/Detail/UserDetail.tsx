@@ -17,12 +17,12 @@ import { UserPhoto } from '~/components/UserPhoto';
 import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { EditUser } from '../Edit';
-import { UsersQueryVariables } from '../List/users.graphql';
+import { UsersQueryVariables } from '../List/users.graphql.ts';
 import { ImpersonationToggle } from './ImpersonationToggle';
 import { UserDetailPartners } from './Tabs/Partners/UserDetailPartners';
 import { UserDetailProfile } from './Tabs/Profile/UserDetailProfile';
 import { UserDetailProjects } from './Tabs/Projects/UserDetailProjects';
-import { UserDocument } from './UserDetail.graphql';
+import { UserDocument } from './UserDetail.graphql.ts';
 
 export const UserDetail = () => {
   const { userId = '' } = useParams();

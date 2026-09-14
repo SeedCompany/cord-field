@@ -15,7 +15,7 @@ import { EditTool } from '~/components/Tool';
 import { useDetailTabs } from '~/hooks';
 import { ToolDetailProfile } from './Tabs/Profile/ToolDetailProfile';
 import { ToolDetailUsages, UsageTab } from './Tabs/Usages';
-import { ToolDetailDocument } from './ToolDetail.graphql';
+import { ToolDetailDocument } from './ToolDetail.graphql.ts';
 
 export const ToolDetail = () => {
   const { toolId = '' } = useParams();

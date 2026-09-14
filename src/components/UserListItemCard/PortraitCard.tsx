@@ -9,7 +9,7 @@ import { ReactNode } from 'react';
 import { square } from '~/common';
 import { Avatar } from '../Avatar';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { UserListItemFragment } from './UserListItem.graphql';
+import { UserListItemFragment } from './UserListItem.graphql.ts';
 
 export interface UserListItemCardPortraitProps {
   user?: UserListItemFragment;

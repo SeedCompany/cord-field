@@ -1,6 +1,6 @@
 import { Box, Chip, Tooltip, Typography } from '@mui/material';
 import { FormattedDate } from '../../Formatters';
-import { DisplayToolUsageFragment } from './displayToolUsage.graphql';
+import { DisplayToolUsageFragment } from './displayToolUsage.graphql.ts';
 
 interface Props {
   usage: DisplayToolUsageFragment;

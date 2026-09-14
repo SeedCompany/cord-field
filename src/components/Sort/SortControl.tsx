@@ -1,6 +1,6 @@
 import { RadioGroup } from '@mui/material';
 import { ReactNode } from 'react';
-import { Order } from '~/api/schema.graphql';
+import { Order } from '~/api/schema.graphql.ts';
 
 export interface SortValue<T> {
   sort: keyof T;

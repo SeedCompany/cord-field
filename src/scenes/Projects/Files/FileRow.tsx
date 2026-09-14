@@ -8,7 +8,7 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import { makeStyles } from 'tss-react/mui';
 import { addItemToList, removeItemFromList } from '~/api';
 import { callAll } from '~/common';
-import { MoveFileNodeDocument } from './MoveNode.graphql';
+import { MoveFileNodeDocument } from './MoveNode.graphql.ts';
 import { DndFileNode, DropOnDirResult, FileRowData, isDirectory } from './util';
 
 const useStyles = makeStyles<void, 'isOver'>()(

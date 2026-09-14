@@ -4,7 +4,7 @@ import { ProblemTree } from '../../../components/PnpValidation/PnPExtractionProb
 import { PnPValidation } from '../../../components/PnpValidation/PnpValidation';
 import { ProblemsWithSheetsAsTabs } from '../../../components/PnpValidation/ProblemsWithSheetsAsTabs';
 import { Link } from '../../../components/Routing';
-import { PnpProgressValidationFragment } from './pnpProgressValidation.graphql';
+import { PnpProgressValidationFragment } from './pnpProgressValidation.graphql.ts';
 
 export const PnpProgressValidation = ({
   report,

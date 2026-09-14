@@ -1,10 +1,10 @@
 import { Box, Breadcrumbs, Card, CardProps, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { ReportType } from '~/api/schema.graphql';
+import { ReportType } from '~/api/schema.graphql.ts';
 import { extendSx, StyleProps } from '~/common';
 import { Breadcrumb } from '../Breadcrumb';
-import { PeriodicReportFragment } from './PeriodicReport.graphql';
+import { PeriodicReportFragment } from './PeriodicReport.graphql.ts';
 import { PeriodicReportsTable } from './PeriodicReportsTable';
 
 export const PeriodicReportsList = ({

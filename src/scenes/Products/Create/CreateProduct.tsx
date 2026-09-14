@@ -15,7 +15,7 @@ import {
   ProductFormProps,
   ProductFormValues,
 } from '../ProductForm';
-import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql';
+import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql.ts';
 import { addProductProgress } from './addProductProgress';
 import {
   CreateDerivativeScriptureProductDocument as CreateDerivativeScriptureProduct,
@@ -23,7 +23,7 @@ import {
   CreateOtherProductDocument as CreateOtherProduct,
   CreateProductResultFragment,
   ProductInfoForCreateDocument,
-} from './CreateProduct.graphql';
+} from './CreateProduct.graphql.ts';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {

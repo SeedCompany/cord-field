@@ -8,7 +8,7 @@ import {
 import { merge } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
-import { ProgressReportListInput } from '~/api/schema.graphql';
+import { ProgressReportListInput } from '~/api/schema.graphql.ts';
 import { CalendarDate, extendSx } from '~/common';
 import {
   booleanColumn,
@@ -29,7 +29,7 @@ import { PnpProgressValidation } from '../../ProgressReports/PnpValidation/PnpPr
 import {
   PnpProblemDataGridRowFragment as PnpProblem,
   PnpProblemsDocument,
-} from './pnpProblemsDataGridRow.graphql';
+} from './pnpProblemsDataGridRow.graphql.ts';
 
 export type PnpProblemsColumnMapShape = Record<
   string,

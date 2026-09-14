@@ -1,2 +1,2 @@
 export * from './LanguageField';
-export type { LanguageLookupItemFragment as LanguageLookupItem } from './LanguageLookup.graphql';
+export type { LanguageLookupItemFragment as LanguageLookupItem } from './LanguageLookup.graphql.ts';

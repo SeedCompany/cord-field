@@ -4,7 +4,7 @@ import { useIsMobile } from '~/common';
 import { EntityList as ToolsList } from '~/components/List';
 import { ToolColumns } from '~/components/ToolDataGrid';
 import { ToolGrid } from './ToolGrid';
-import { ToolsDocument } from './tools.graphql';
+import { ToolsDocument } from './tools.graphql.ts';
 
 export const ToolList = () => {
   const isMobile = useIsMobile();

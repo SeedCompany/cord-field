@@ -1,6 +1,6 @@
 import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useParams } from 'react-router-dom';
-import { PartnerTypeLabels, PartnerTypeList } from '~/api/schema.graphql';
+import { PartnerTypeLabels, PartnerTypeList } from '~/api/schema.graphql.ts';
 import { useIsMobile } from '~/common';
 import {
   DefaultDataGridStyles,
@@ -24,7 +24,7 @@ import { TabPanelContent } from '~/components/Tabs';
 import {
   PartnerProjectDataGridRowFragment as PartnerProject,
   PartnerProjectsDocument,
-} from './PartnerProjects.graphql';
+} from './PartnerProjects.graphql.ts';
 
 export const PartnerDetailProjects = () => {
   const { partnerId = '' } = useParams();

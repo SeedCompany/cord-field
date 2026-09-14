@@ -1,5 +1,5 @@
 import { Box, LinearProgress, Typography } from '@mui/material';
-import { ProgressMeasurement } from '~/api/schema.graphql';
+import { ProgressMeasurement } from '~/api/schema.graphql.ts';
 
 interface LinearProgressBarProps {
   value: number;

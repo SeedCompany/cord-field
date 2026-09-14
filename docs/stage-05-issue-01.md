@@ -2,7 +2,7 @@
 title: 'Codemod .graphql imports to .graphql.ts'
 stage: 5
 issue: 1
-status: open
+status: done
 type: refactor
 depends_on: [stage-04-issue-02]
 ---

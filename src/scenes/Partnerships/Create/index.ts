@@ -1,2 +1,2 @@
 export * from './CreatePartnership';
-export * from './CreatePartnership.graphql';
+export * from './CreatePartnership.graphql.ts';

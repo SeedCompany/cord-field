@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import { CreateFundingAccount as CreateFundingAccountInput } from '~/api/schema.graphql';
+import { CreateFundingAccount as CreateFundingAccountInput } from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
@@ -12,7 +12,7 @@ import {
 } from '../../../../components/form';
 import { FundingAccountLookupItem } from '../../../../components/form/Lookup/FundingAccount';
 import { max, min, required } from '../../../../components/form/validators';
-import { CreateFundingAccountDocument } from './CreateFundingAccount.graphql';
+import { CreateFundingAccountDocument } from './CreateFundingAccount.graphql.ts';
 
 export type CreateFundingAccountProps = Except<
   DialogFormProps<CreateFundingAccountInput, FundingAccountLookupItem>,

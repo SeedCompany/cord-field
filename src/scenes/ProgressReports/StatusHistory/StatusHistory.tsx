@@ -22,7 +22,7 @@ import { Error } from '../../../components/Error';
 import {
   ProgressReportDetailDocument,
   ProgressReportDetailFragment,
-} from '../Detail/ProgressReportDetail.graphql';
+} from '../Detail/ProgressReportDetail.graphql.ts';
 import { WorkFlowEventList } from './WorkflowEventList';
 
 export const StatusHistory = () => {

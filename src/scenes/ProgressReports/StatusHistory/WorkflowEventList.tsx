@@ -7,7 +7,7 @@ import {
 } from '~/api/schema/enumLists';
 import { RelativeDateTime } from '~/components/Formatters';
 import { RichTextView } from '~/components/RichText';
-import { WorkflowEventFragment } from '../Detail/WorkflowEvent.graphql';
+import { WorkflowEventFragment } from '../Detail/WorkflowEvent.graphql.ts';
 
 interface WorkFlowEventListProps {
   events?: readonly WorkflowEventFragment[];

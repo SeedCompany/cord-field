@@ -20,7 +20,7 @@ import { TabPanelContent } from '~/components/Tabs';
 import {
   type LanguageProjectDataGridRowFragment as LanguageProject,
   LanguageProjectsDocument,
-} from './LanguageProjects.graphql';
+} from './LanguageProjects.graphql.ts';
 
 export const LanguageDetailProjects = () => {
   const { languageId = '' } = useParams();

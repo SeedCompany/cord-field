@@ -2,7 +2,7 @@ import { MenuItem, MenuItemProps } from '@mui/material';
 import { useContext } from 'react';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { RoleLabels, RoleList } from '~/api/schema/enumLists';
-import { Role } from '~/api/schema/schema.graphql';
+import { Role } from '~/api/schema/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { useDialog } from '../../../../components/Dialog';
 import {

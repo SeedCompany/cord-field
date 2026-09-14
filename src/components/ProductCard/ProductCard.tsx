@@ -10,7 +10,7 @@ import { Card, CardContent, Grid, Typography } from '@mui/material';
 import { idForUrl } from '../Changeset';
 import { HugeIcon } from '../Icons';
 import { CardActionAreaLink } from '../Routing';
-import { ProductCardFragment } from './ProductCard.graphql';
+import { ProductCardFragment } from './ProductCard.graphql.ts';
 
 interface ProductCardProps {
   product: ProductCardFragment;

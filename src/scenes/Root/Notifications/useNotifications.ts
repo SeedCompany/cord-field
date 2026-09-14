@@ -1,9 +1,9 @@
 import { useMutation, useSubscription } from '@apollo/client';
 import { useFeatureEnabled } from '~/components/Feature';
 import { useListQuery } from '~/components/List';
-import { NotificationAddedDocument } from './NotificationAdded.graphql';
-import { NotificationListDocument } from './NotificationList.graphql';
-import { ReadNotificationDocument } from './ReadNotification.graphql';
+import { NotificationAddedDocument } from './NotificationAdded.graphql.ts';
+import { NotificationListDocument } from './NotificationList.graphql.ts';
+import { ReadNotificationDocument } from './ReadNotification.graphql.ts';
 import type { NotificationFragment } from './Views';
 
 /**

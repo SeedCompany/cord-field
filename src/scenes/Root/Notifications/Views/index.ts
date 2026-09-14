@@ -8,4 +8,4 @@ export const views: Views = {
 };
 
 export type { NotificationProp } from './Base';
-export type { NotificationFragment } from './notification.graphql';
+export type { NotificationFragment } from './notification.graphql.ts';

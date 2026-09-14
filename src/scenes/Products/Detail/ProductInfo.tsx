@@ -9,14 +9,17 @@ import {
 import { mapEntries } from '@seedcompany/common';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
-import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
+import {
+  ProductMediumLabels,
+  ProductStepLabels,
+} from '~/api/schema.graphql.ts';
 import { displayMethodologyWithLabel } from '~/common';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '../../../components/DisplaySimpleProperty';
 import { Link } from '../../../components/Routing';
-import { ProductDetailFragment as Product } from './ProductDetail.graphql';
+import { ProductDetailFragment as Product } from './ProductDetail.graphql.ts';
 
 const useStyles = makeStyles()(() => ({
   listItem: {

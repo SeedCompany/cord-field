@@ -3,7 +3,7 @@ import { useRafInterval } from 'ahooks';
 import { DateTime, DateTimeFormatOptions } from 'luxon';
 import { memo, useState } from 'react';
 import { MergeExclusive } from 'type-fest';
-import { DateRange } from '~/api/schema.graphql';
+import { DateRange } from '~/api/schema.graphql.ts';
 import {
   asDate,
   asDateTime,

@@ -13,7 +13,7 @@ import {
   ProjectInitialState,
   ProjectToolbar,
 } from '~/components/ProjectDataGrid';
-import { ProjectListDocument } from './ProjectList.graphql';
+import { ProjectListDocument } from './ProjectList.graphql.ts';
 
 export const ProjectsPanel = () => {
   const [dataGridProps] = useDataGridSource({

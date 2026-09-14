@@ -2,7 +2,7 @@ import { Except } from 'type-fest';
 import { Nullable } from '~/common';
 import { SecuredBreadcrumb, SecuredBreadcrumbProps } from '../Breadcrumb';
 import { idForUrl } from '../Changeset';
-import { EngagementBreadcrumbFragment } from './EngagementBreadcrumb.graphql';
+import { EngagementBreadcrumbFragment } from './EngagementBreadcrumb.graphql.ts';
 
 export interface EngagementBreadcrumbProps
   extends Except<Partial<SecuredBreadcrumbProps>, 'data'> {

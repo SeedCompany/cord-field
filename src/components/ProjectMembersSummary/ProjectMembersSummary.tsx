@@ -1,6 +1,6 @@
 import { Group } from '@mui/icons-material';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
-import { ProjectMembersSummaryFragment as Project } from './ProjectMembersSummary.graphql';
+import { ProjectMembersSummaryFragment as Project } from './ProjectMembersSummary.graphql.ts';
 
 export interface ProjectMembersSummaryProps {
   project?: Project;

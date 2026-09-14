@@ -23,11 +23,11 @@ import { TogglePinButton } from '~/components/TogglePinButton';
 import { useDetailTabs } from '~/hooks';
 import { useComments } from '../../../components/Comments/CommentsContext';
 import { EditablePartnerField, EditPartner } from '../Edit';
-import { PartnersQueryVariables } from '../List/PartnerList.graphql';
+import { PartnersQueryVariables } from '../List/PartnerList.graphql.ts';
 import {
   PartnerDetailsFragment,
   PartnerDocument,
-} from './PartnerDetail.graphql';
+} from './PartnerDetail.graphql.ts';
 import { PartnerDetailEngagements } from './Tabs/Engagements/PartnerDetailEngagements';
 import { PartnerDetailFinance } from './Tabs/Finance/PartnerDetailFinance';
 import { PartnerDetailNotes } from './Tabs/Notes/PartnerDetailsNotes';

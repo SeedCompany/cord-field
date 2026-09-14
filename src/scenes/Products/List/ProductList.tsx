@@ -3,7 +3,7 @@ import { getChangeset } from '~/api';
 import { IdFragment } from '~/common';
 import { List, useListQuery } from '../../../components/List';
 import { ProductCard } from '../../../components/ProductCard';
-import { ProductListDocument } from './ProductList.graphql';
+import { ProductListDocument } from './ProductList.graphql.ts';
 
 export const ProductList = ({ engagement }: { engagement: IdFragment }) => {
   const list = useListQuery(ProductListDocument, {

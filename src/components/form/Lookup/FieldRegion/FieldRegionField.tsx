@@ -1,7 +1,7 @@
 import { CreateFieldRegion } from '../../../FieldRegion';
 import { LookupField } from '../LookupField';
-import { FieldRegionLookupDocument } from './FieldRegionLookup.graphql';
-import { InitialFieldRegionOptionsDocument as InitialFieldRegions } from './InitialFieldRegionOptions.graphql';
+import { FieldRegionLookupDocument } from './FieldRegionLookup.graphql.ts';
+import { InitialFieldRegionOptionsDocument as InitialFieldRegions } from './InitialFieldRegionOptions.graphql.ts';
 
 export const FieldRegionField = LookupField.createFor({
   resource: 'FieldRegion',

@@ -11,7 +11,7 @@ import {
   useFileActions,
 } from '../FileActions';
 import { getFileComponents } from '../fileTypes';
-import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.graphql';
+import { FileVersionItem_FileVersion_Fragment } from './FileVersionItem.graphql.ts';
 
 interface FileVersionItemProps {
   version: FileVersionItem_FileVersion_Fragment;

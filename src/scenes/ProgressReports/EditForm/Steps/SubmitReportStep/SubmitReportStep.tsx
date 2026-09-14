@@ -18,7 +18,7 @@ import {
   useExecuteTransition,
 } from '../../Steps/SubmitReportStep/useExecuteTransition';
 import { ConfirmIncompleteSubmissionDialog } from './ConfirmIncompleteSubmissionDialog';
-import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
+import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql.ts';
 
 export const SubmitReportStep: StepComponent = ({ report }) => {
   const navigate = useNavigate();

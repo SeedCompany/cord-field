@@ -8,7 +8,10 @@ import {
 import { merge, pick } from 'lodash';
 import { useMemo } from 'react';
 import { SetOptional } from 'type-fest';
-import { EngagementFilters, EngagementListInput } from '~/api/schema.graphql';
+import {
+  EngagementFilters,
+  EngagementListInput,
+} from '~/api/schema.graphql.ts';
 import { extendSx } from '~/common';
 import { EngagementColumnMap } from '~/components/EngagementDataGrid';
 import {
@@ -26,7 +29,7 @@ import {
 import {
   EngagementUsingAiDataGridRowFragment as EngagementUsingAI,
   EngagementUsingAiListDocument,
-} from './engagementsUsingAIDataGridRow.graphql';
+} from './engagementsUsingAIDataGridRow.graphql.ts';
 
 export type EngagementUsingAIColumnMapShape = Record<
   string,

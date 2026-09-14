@@ -1,2 +1,2 @@
 export * from './UserForm';
-export * from './UserForm.graphql';
+export * from './UserForm.graphql.ts';

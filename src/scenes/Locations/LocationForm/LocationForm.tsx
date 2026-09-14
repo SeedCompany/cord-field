@@ -5,7 +5,7 @@ import {
   LocationTypeLabels,
   LocationTypeList,
   UpdateLocation,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   DisplayFieldRegionFragment as FieldRegionLookupItem,
   labelFrom,
@@ -29,7 +29,7 @@ import {
   FundingAccountLookupItem,
 } from '../../../components/form/Lookup/FundingAccount';
 import { MarketingRegionField } from '../../../components/form/Lookup/Location/MarketingRegionField';
-import { LocationFormFragment } from './LocationForm.graphql';
+import { LocationFormFragment } from './LocationForm.graphql.ts';
 
 export type LocationFormValues<
   CreateOrUpdateType extends CreateLocation | UpdateLocation

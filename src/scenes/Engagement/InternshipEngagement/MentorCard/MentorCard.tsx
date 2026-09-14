@@ -4,7 +4,7 @@ import { ReactElement, ReactNode } from 'react';
 import { square } from '~/common';
 import { Avatar } from '../../../../components/Avatar';
 import { UserListItemCardPortrait as UserCard } from '../../../../components/UserListItemCard';
-import { MentorCardFragment } from './MentorCard.graphql';
+import { MentorCardFragment } from './MentorCard.graphql.ts';
 
 export interface MentorCardProps {
   data?: MentorCardFragment;

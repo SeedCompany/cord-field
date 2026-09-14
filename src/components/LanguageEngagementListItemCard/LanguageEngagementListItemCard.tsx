@@ -6,13 +6,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { EngagementStatusLabels } from '~/api/schema.graphql';
+import { EngagementStatusLabels } from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.graphql';
+import { LanguageEngagementListItemFragment } from './LanguageEngagementListItem.graphql.ts';
 
 export type LanguageEngagementListItemCardProps =
   LanguageEngagementListItemFragment & {

@@ -5,7 +5,7 @@ import { Due, SkippedText } from '../PeriodicReports/OverviewCard/ReportInfo';
 import { ReportInfoContainer } from '../PeriodicReports/OverviewCard/ReportInfoContainer';
 import { ReportLabel } from '../PeriodicReports/ReportLabel';
 import { ButtonLink } from '../Routing';
-import { ProgressReportOverviewItemFragment as Report } from './ProgressReportOverview.graphql';
+import { ProgressReportOverviewItemFragment as Report } from './ProgressReportOverview.graphql.ts';
 
 export interface NarrativeReportsOverviewCardProps extends StyleProps {
   dueCurrently?: SecuredProp<Report>;

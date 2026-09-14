@@ -3,14 +3,14 @@ import { setOf } from '@seedcompany/common';
 import { pick as lodashPick } from 'lodash';
 import { useMemo } from 'react';
 import { Except, PartialDeep, Paths, PickDeep } from 'type-fest';
-import { UpdateLanguage } from '~/api/schema.graphql';
+import { UpdateLanguage } from '~/api/schema.graphql.ts';
 import { asDate, CalendarDate } from '~/common';
 import {
   LanguageForm,
   LanguageFormProps,
   LanguageFormValues,
 } from '../LanguageForm';
-import { UpdateLanguageDocument } from './EditLanguage.graphql';
+import { UpdateLanguageDocument } from './EditLanguage.graphql.ts';
 
 const pick = lodashPick as any as <T, K extends Paths<T>>(
   obj: T,

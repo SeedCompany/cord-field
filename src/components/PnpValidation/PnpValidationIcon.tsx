@@ -1,9 +1,9 @@
 import { Check, Error, Warning } from '@mui/icons-material';
 import { Badge, IconButton, IconButtonProps, Tooltip } from '@mui/material';
 import { groupToMapBy } from '@seedcompany/common';
-import { PnpProblemSeverity as Severity } from '~/api/schema.graphql';
+import { PnpProblemSeverity as Severity } from '~/api/schema.graphql.ts';
 import { useNumberFormatter } from '../Formatters';
-import { PnpProblemFragment as Problem } from './pnpExtractionResult.graphql';
+import { PnpProblemFragment as Problem } from './pnpExtractionResult.graphql.ts';
 
 export const PnPValidationIcon = ({
   problems,

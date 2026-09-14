@@ -7,7 +7,7 @@ import { asDate, CalendarDateOrISO, StyleProps } from '~/common';
 import { FormattedDate, FormattedDateTime } from '../../Formatters';
 import { PaperTooltip } from '../../PaperTooltip';
 import { Redacted } from '../../Redacted';
-import { SecuredPeriodicReportFragment } from '../PeriodicReport.graphql';
+import { SecuredPeriodicReportFragment } from '../PeriodicReport.graphql.ts';
 import { ReportLabel } from '../ReportLabel';
 
 export const ReportInfo = ({

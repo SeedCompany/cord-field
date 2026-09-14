@@ -21,7 +21,7 @@ import {
   ProjectStepList,
   ProjectTypeLabels,
   ProjectTypeList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   booleanColumn,
   dateColumn,
@@ -40,7 +40,7 @@ import { LinkColumn } from '../Grid/Columns/LinkColumn';
 import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
 import { Link } from '../Routing';
-import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql';
+import { EngagementDataGridRowFragment as Engagement } from './engagementDataGridRow.graphql.ts';
 
 /** An engagement's display name: its language (language engagement) or intern (internship). */
 export const engagementName = (engagement: Engagement) =>

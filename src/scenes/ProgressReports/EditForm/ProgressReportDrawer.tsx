@@ -6,7 +6,7 @@ import { ChildrenProp, flexColumn } from '~/common';
 import { ButtonLink, useNavigate } from '~/components/Routing';
 import { ProgressReportContextProvider } from './ProgressReportContext';
 import { ProgressReportDrawerHeader } from './ProgressReportDrawerHeader';
-import { ProgressReportEditDocument } from './ProgressReportEdit.graphql';
+import { ProgressReportEditDocument } from './ProgressReportEdit.graphql.ts';
 import { ProgressReportSidebar } from './ProgressReportSidebar';
 import { ReportProp } from './ReportProp';
 import { StartReportPage } from './StartReportPage';

@@ -12,7 +12,7 @@ import { makeStyles } from 'tss-react/mui';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
-} from './CeremonyCard.graphql';
+} from './CeremonyCard.graphql.ts';
 
 const useStyles = makeStyles()(() => ({
   root: {

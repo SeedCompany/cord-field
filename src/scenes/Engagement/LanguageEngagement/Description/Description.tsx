@@ -9,8 +9,8 @@ import { RichTextField, RichTextView } from '../../../../components/RichText';
 import {
   UpdateInternshipEngagementDocument,
   UpdateLanguageEngagementDocument,
-} from '../../EditEngagement/EditEngagementDialog.graphql';
-import { EngagementDescriptionFragment } from './Description.graphql';
+} from '../../EditEngagement/EditEngagementDialog.graphql.ts';
+import { EngagementDescriptionFragment } from './Description.graphql.ts';
 
 interface Props {
   engagement: EngagementDescriptionFragment;

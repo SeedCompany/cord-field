@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { FieldZoneDetail } from './FieldZoneDetail';
-import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql';
+import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql.ts';
 
 vi.mock('./Tabs/Projects/FieldZoneProjectsPanel', () => ({
   FieldZoneProjectsPanel: () => <div data-testid="projects-panel" />,

@@ -3,7 +3,7 @@ import { Box, Chip, Skeleton, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { useTheme } from '@mui/material/styles';
 import { meanBy } from 'lodash';
-import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
+import { Sensitivity as SensitivityType } from '~/api/schema.graphql.ts';
 import { extendSx, StyleProps } from '~/common/sx';
 
 const possible: SensitivityType[] = ['Low', 'Medium', 'High'];

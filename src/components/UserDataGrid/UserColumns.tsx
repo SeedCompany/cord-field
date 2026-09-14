@@ -9,7 +9,7 @@ import {
   RoleList,
   UserStatusLabels,
   UserStatusList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   booleanColumn,
   enumColumn,
@@ -23,7 +23,7 @@ import {
   useFilterToggle,
 } from '../Grid';
 import { UserNameColumn } from '../Grid/Columns/UserNameColumn';
-import { UserDataGridRowFragment as User } from './userDataGridRow.graphql';
+import { UserDataGridRowFragment as User } from './userDataGridRow.graphql.ts';
 
 export const UserColumns: Array<GridColDef<User>> = [
   UserNameColumn({

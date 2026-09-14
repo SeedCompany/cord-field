@@ -1,5 +1,5 @@
 import { isEqual, sum } from 'lodash';
-import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
+import { UnspecifiedScripturePortion } from '~/api/schema.graphql.ts';
 import { ScriptureFragment } from '../fragments';
 import { Nullable } from '../types';
 import { books } from './bibleBooks';

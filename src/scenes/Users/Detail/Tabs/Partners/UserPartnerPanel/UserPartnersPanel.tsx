@@ -21,14 +21,14 @@ import {
   PartnerInitialState,
   PartnerToolbar,
 } from '~/components/PartnersDataGrid/PartnerColumns';
-import type { PartnerDataGridRowFragment as UserPartner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql';
+import type { PartnerDataGridRowFragment as UserPartner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql.ts';
 import { renderPartnerRow } from '~/components/PartnersDataGrid/renderPartnerRow';
 import { TabPanelContent } from '~/components/Tabs';
 import { AddOrganizationToUserForm } from '../AddOrganizationToUserForm';
 import {
   RemoveOrganizationFromUserDocument,
   UserPartnersDocument,
-} from './UserPartnerList.graphql';
+} from './UserPartnerList.graphql.ts';
 
 interface UserPartnersPanelProps {
   canCreate: boolean;

@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
-import { UpdateLanguageEngagement as UpdateEngagementInput } from '~/api/schema.graphql';
+import { UpdateLanguageEngagement as UpdateEngagementInput } from '~/api/schema.graphql.ts';
 import { DateField, Form, SecuredField } from '../../../../components/form';
-import { UpdateLanguageEngagementDocument as UpdateEngagement } from '../../EditEngagement/EditEngagementDialog.graphql';
-import { LanguageEngagementDatesFormFragment as Engagement } from './DatesForm.graphql';
+import { UpdateLanguageEngagementDocument as UpdateEngagement } from '../../EditEngagement/EditEngagementDialog.graphql.ts';
+import { LanguageEngagementDatesFormFragment as Engagement } from './DatesForm.graphql.ts';
 
 export const DatesForm = ({ engagement }: { engagement: Engagement }) => {
   const [updateEngagement] = useMutation(UpdateEngagement);

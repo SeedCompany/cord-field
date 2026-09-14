@@ -9,7 +9,7 @@ import { tsMorphPlugin } from '../codeGenUtil/ts.util';
 export const plugin = tsMorphPlugin(({ schema, file }) => {
   file.addImportDeclaration({
     namespaceImport: 'Types',
-    moduleSpecifier: '../schema.graphql',
+    moduleSpecifier: '../schema.graphql.ts',
     isTypeOnly: true,
   });
 

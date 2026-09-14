@@ -2,13 +2,13 @@ import { Box, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { useInterval } from 'ahooks';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { GenderLabels, RoleLabels } from '~/api/schema.graphql';
+import { GenderLabels, RoleLabels } from '~/api/schema.graphql.ts';
 import { labelFrom, labelsFrom } from '~/common';
 import {
   DisplaySimpleProperty,
   DisplaySimplePropertyProps,
 } from '~/components/DisplaySimpleProperty';
-import { UserProfileFragment } from './UserDetailProfile.graphql';
+import { UserProfileFragment } from './UserDetailProfile.graphql.ts';
 
 interface UserDetailProfileProps {
   user: UserProfileFragment;

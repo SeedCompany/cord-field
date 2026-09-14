@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import {
   ProductMethodology as Methodology,
   ProductApproachLabels,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   ApproachMethodologies,
   displayMethodology,
@@ -19,7 +19,7 @@ import { FileActionsContextProvider } from '../../../../components/files/FileAct
 import { HandleUploadCompletedFunction } from '../../../../components/files/hooks';
 import { EnumField, EnumOption } from '../../../../components/form';
 import { UploadLanguageEngagementPnpDocument as UploadPnp } from '../../Files';
-import { EngagementPlanningSpreadsheetFragment } from './PlanningSpreadsheet.graphql';
+import { EngagementPlanningSpreadsheetFragment } from './PlanningSpreadsheet.graphql.ts';
 import { PlanningSpreadsheetHeader } from './PlanningSpreadsheetHeader';
 
 const useStyles = makeStyles()(({ spacing, typography }) => ({

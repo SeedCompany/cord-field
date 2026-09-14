@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import { isObjectLike, Nil } from '@seedcompany/common';
 import { DateTime } from 'luxon';
-import { DateFilter } from '~/api/schema.graphql';
+import { DateFilter } from '~/api/schema.graphql.ts';
 import { CalendarDate, ISOString, unwrapSecured } from '~/common';
 import { GridHeaderAddFilterButton } from '../GridHeaderAddFilterButton';
 import { column, RowLike } from './definition.types';

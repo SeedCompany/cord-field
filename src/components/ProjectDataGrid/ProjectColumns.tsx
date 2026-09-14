@@ -11,7 +11,7 @@ import {
   ProjectStepList,
   ProjectTypeLabels,
   ProjectTypeList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { unmatchedIndexThrow } from '~/common';
 import {
   booleanColumn,
@@ -29,7 +29,7 @@ import {
 import { FieldRegionNameColumn } from '../Grid/Columns/FieldRegionNameColumn';
 import { ProjectNameColumn } from '../Grid/Columns/ProjectNameColumn';
 import { SensitivityColumn } from '../Grid/Columns/SensitivityColumn';
-import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql';
+import { ProjectDataGridRowFragment as Project } from './projectDataGridRow.graphql.ts';
 
 export const ProjectColumns: Array<GridColDef<Project>> = [
   ProjectNameColumn({

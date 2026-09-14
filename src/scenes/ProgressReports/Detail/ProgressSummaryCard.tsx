@@ -8,9 +8,9 @@ import {
 } from '@mui/material';
 import { ReactNode } from 'react';
 import { StyleProps } from '~/common';
-import { ProgressSummaryFragment } from './ProgressReportDetail.graphql';
+import { ProgressSummaryFragment } from './ProgressReportDetail.graphql.ts';
 import { VarianceExplanation } from './VarianceExplanation/VarianceExplanation';
-import { VarianceExplanationFragment } from './VarianceExplanation/VarianceExplanation.graphql';
+import { VarianceExplanationFragment } from './VarianceExplanation/VarianceExplanation.graphql.ts';
 
 interface ProgressSummaryCardProps extends StyleProps {
   summary: ProgressSummaryFragment | null;

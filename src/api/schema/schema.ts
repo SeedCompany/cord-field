@@ -1,2 +1,2 @@
 export * from './enumLists';
-export * from './schema.graphql';
+export * from './schema.graphql.ts';

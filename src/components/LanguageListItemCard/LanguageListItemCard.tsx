@@ -7,13 +7,13 @@ import {
   Typography,
 } from '@mui/material';
 import { PartialDeep } from 'type-fest';
-import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql';
+import { LanguagesQueryVariables } from '../../scenes/Languages/List/languages.graphql.ts';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { useNumberFormatter } from '../Formatters';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
-import { LanguageListItemFragment } from './LanguageListItem.graphql';
+import { LanguageListItemFragment } from './LanguageListItem.graphql.ts';
 
 export interface LanguageListItemCardProps {
   language?: LanguageListItemFragment;

@@ -5,7 +5,7 @@ import { useQuery } from '~/api';
 import { Feature } from '../Feature';
 import { IconButton, IconButtonProps } from '../IconButton';
 import { useCommentsContext } from './CommentsContext';
-import { ThreadCountDocument } from './ThreadCount.graphql';
+import { ThreadCountDocument } from './ThreadCount.graphql.ts';
 
 export type ToggleCommentsButtonProps = Except<IconButtonProps, 'children'>;
 

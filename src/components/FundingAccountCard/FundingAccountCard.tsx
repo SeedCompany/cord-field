@@ -1,7 +1,7 @@
 import { Card, CardActions, CardContent, Typography } from '@mui/material';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
-import { FundingAccountCardFragment } from './FundingAccountCard.graphql';
+import { FundingAccountCardFragment } from './FundingAccountCard.graphql.ts';
 
 interface FundingAccountCardProps {
   className?: string;

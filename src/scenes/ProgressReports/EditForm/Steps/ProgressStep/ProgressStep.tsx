@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 import { entries, groupToMapBy, mapEntries, sortBy } from '@seedcompany/common';
 import { useMemo, useState } from 'react';
 import { Error } from '../../../../../components/Error';
-import { UpdateStepProgressDocument } from '../../../../Products/Detail/Progress/ProductProgress.graphql';
+import { UpdateStepProgressDocument } from '../../../../Products/Detail/Progress/ProductProgress.graphql.ts';
 import {
   ProductTable,
   RowData as ProductTableRowData,

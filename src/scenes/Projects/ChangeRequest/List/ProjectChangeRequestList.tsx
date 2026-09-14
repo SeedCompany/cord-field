@@ -9,7 +9,7 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { ProjectChangeRequestListItem } from '../../../../components/ProjectChangeRequestListItem';
 import { useProjectId } from '../../useProjectId';
 import { CreateProjectChangeRequest } from '../Create';
-import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.graphql';
+import { ProjectChangeRequestListDocument as ChangeRequestList } from './ProjectChangeRequestList.graphql.ts';
 
 export const ProjectChangeRequestList = () => {
   const { projectId, changesetId } = useProjectId();

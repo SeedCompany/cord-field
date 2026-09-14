@@ -9,14 +9,14 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { PostShareabilityLabels } from '~/api/schema.graphql';
+import { PostShareabilityLabels } from '~/api/schema.graphql.ts';
 import { canEditAny, square } from '~/common';
 import { useDialog } from '../../Dialog';
 import { FormattedDateTime } from '../../Formatters';
 import { DeletePost } from '../DeletePost';
 import { EditPost } from '../EditPost';
-import { PostableIdFragment } from '../PostableId.graphql';
-import { PostListItemCardFragment } from './PostListItemCard.graphql';
+import { PostableIdFragment } from '../PostableId.graphql.ts';
+import { PostListItemCardFragment } from './PostListItemCard.graphql.ts';
 import { PostListItemMenu } from './PostListItemMenu';
 
 interface PostListItemCardProps {

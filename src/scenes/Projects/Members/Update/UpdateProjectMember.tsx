@@ -10,7 +10,7 @@ import {
   RoleLabels,
   RoleList,
   UpdateProjectMember as UpdateProjectMemberShape,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { callAll, labelFrom } from '~/common';
 import { ProjectIdFragment } from '~/common/fragments';
 import {
@@ -25,13 +25,13 @@ import {
   SubmitButton,
   SubmitError,
 } from '../../../../components/form';
-import { ProjectMemberCardFragment } from '../../../../components/ProjectMemberCard/ProjectMember.graphql';
+import { ProjectMemberCardFragment } from '../../../../components/ProjectMemberCard/ProjectMember.graphql.ts';
 import { useSession } from '../../../../components/Session';
 import {
   DeleteProjectMemberDocument,
   GetUserRolesDocument,
   UpdateProjectMemberDocument,
-} from './UpdateProjectMember.graphql';
+} from './UpdateProjectMember.graphql.ts';
 
 type FormShape = UpdateProjectMemberShape & SubmitAction<'delete'>;
 

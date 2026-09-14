@@ -1,12 +1,12 @@
 import { ApolloCache, MutationUpdaterFunction, Unmasked } from '@apollo/client';
 import { DateTime, Interval } from 'luxon';
 import { invalidateProps } from '~/api';
-import { Project as ProjectShape } from '~/api/schema.graphql';
+import { Project as ProjectShape } from '~/api/schema.graphql.ts';
 import { CalendarDate, SecuredProp } from '~/common';
 import {
   PartnershipToCheckBudgetChangeFragment,
   ProjectsBudgetForPartnershipChangeFragmentDoc as ProjectsBudget,
-} from './ProjectsBudget.graphql';
+} from './ProjectsBudget.graphql.ts';
 
 type Project = Pick<ProjectShape, 'id'>;
 type Partnership = PartnershipToCheckBudgetChangeFragment | undefined;

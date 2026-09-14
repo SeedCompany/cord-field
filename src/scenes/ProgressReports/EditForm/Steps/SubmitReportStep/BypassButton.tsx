@@ -2,7 +2,7 @@ import {
   ProgressReportStatusLabels as StatusLabels,
   ProgressReportStatusList as StatusList,
 } from '~/api/schema/enumLists';
-import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql';
+import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { SubmitButton } from '~/components/form';
 import { SplitButton, SplitButtonProps } from '~/components/SplitButton';

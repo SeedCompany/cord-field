@@ -3,7 +3,7 @@ import { Button, ButtonProps, Menu, MenuItem, MenuProps } from '@mui/material';
 import { entries } from '@seedcompany/common';
 import { startCase } from 'lodash';
 import { useContext, useMemo, useState } from 'react';
-import { Power } from '~/api/schema.graphql';
+import { Power } from '~/api/schema.graphql.ts';
 import { useSession } from '../../../components/Session';
 import { CreateItemContext } from './CreateDialogProviders';
 import { creates } from './Creates';

@@ -22,7 +22,7 @@ import { useSearch } from '../Root/Header/HeaderSearch';
 import {
   SearchDocument,
   SearchResultItemFragment as SearchResult,
-} from './Search.graphql';
+} from './Search.graphql.ts';
 
 export const SearchResults = () => {
   const [{ q: query }] = useSearch();

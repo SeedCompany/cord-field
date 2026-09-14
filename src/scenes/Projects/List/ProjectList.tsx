@@ -20,9 +20,9 @@ import {
   TabPanelContent,
   TabsContainer,
 } from '~/components/Tabs';
-import { EngagementListDocument } from './EngagementList.graphql';
+import { EngagementListDocument } from './EngagementList.graphql.ts';
 import { EngagementsPanel } from './EngagementsPanel';
-import { ProjectListDocument } from './ProjectList.graphql';
+import { ProjectListDocument } from './ProjectList.graphql.ts';
 import { ProjectsPanel } from './ProjectsPanel';
 
 export const ProjectList = () => {

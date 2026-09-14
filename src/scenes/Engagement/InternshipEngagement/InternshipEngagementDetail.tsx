@@ -6,7 +6,7 @@ import { makeStyles } from 'tss-react/mui';
 import {
   EngagementStatusLabels,
   InternshipPositionLabels,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { canEditAny, labelFrom } from '~/common';
 import { DisplaySimpleProperty } from '~/components/DisplaySimpleProperty';
 import { Fab } from '~/components/Fab';
@@ -32,7 +32,7 @@ import {
   Engagement,
 } from '../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
-import { EngagementQuery } from '../Engagement.graphql';
+import { EngagementQuery } from '../Engagement.graphql.ts';
 import { EngagementDescription } from '../LanguageEngagement/Description';
 import { MentorCard } from './MentorCard';
 

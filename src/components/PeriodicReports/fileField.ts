@@ -1,4 +1,4 @@
-import { PeriodicReportFragment } from './PeriodicReport.graphql';
+import { PeriodicReportFragment } from './PeriodicReport.graphql.ts';
 
 export type PeriodicReportFileField = 'reportFile' | 'narrativeFile';
 

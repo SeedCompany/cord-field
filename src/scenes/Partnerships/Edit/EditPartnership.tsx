@@ -6,7 +6,7 @@ import { onUpdateInvalidateProps, removeItemFromList } from '~/api';
 import {
   PeriodType,
   UpdatePartnership as UpdatePartnershipInput,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { asDate, callAll } from '~/common';
 import { SubmitAction, SubmitButton } from '../../../components/form';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
@@ -20,7 +20,7 @@ import {
   DeletePartnershipDocument,
   UpdatePartnershipDocument,
   UpdatePartnershipMutation,
-} from './EditPartnership.graphql';
+} from './EditPartnership.graphql.ts';
 import { updateOldPrimaryPartnership } from './UpdateOldPrimaryPartnership';
 
 export type EditPartnershipFormInput = Omit<

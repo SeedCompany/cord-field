@@ -1,12 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import { type CreateFieldRegion as CreateFieldRegionType } from '~/api/schema.graphql';
+import { type CreateFieldRegion as CreateFieldRegionType } from '~/api/schema.graphql.ts';
 import { DisplayFieldRegionFragment } from '~/common';
 import {
   FieldRegionForm,
   FieldRegionFormProps,
 } from '../FieldRegionForm/FieldRegionForm';
-import { CreateFieldRegionDocument } from './CreateFieldRegion.graphql';
+import { CreateFieldRegionDocument } from './CreateFieldRegion.graphql.ts';
 
 type SubmitResult = DisplayFieldRegionFragment;
 

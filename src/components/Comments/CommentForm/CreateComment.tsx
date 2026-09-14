@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { addItemToList } from '~/api';
 import { useCommentsContext } from '../CommentsContext';
 import { CommentForm, CommentFormProps } from './CommentForm';
-import { CreateCommentDocument } from './CreateComment.graphql';
+import { CreateCommentDocument } from './CreateComment.graphql.ts';
 
 export interface CreateCommentProps extends Omit<CommentFormProps, 'onSubmit'> {
   threadId?: string;

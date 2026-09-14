@@ -1,5 +1,8 @@
 import { ToggleButton } from '@mui/material';
-import { ProductMediumLabels, ProductMediumList } from '~/api/schema.graphql';
+import {
+  ProductMediumLabels,
+  ProductMediumList,
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
 import { SectionProps } from './ProductFormFields';

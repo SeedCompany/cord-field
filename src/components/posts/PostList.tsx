@@ -6,9 +6,9 @@ import { useDialog } from '../Dialog';
 import { Fab } from '../Fab';
 import { List, ListProps } from '../List';
 import { CreatePost } from './CreatePost';
-import { PostableIdFragment } from './PostableId.graphql';
+import { PostableIdFragment } from './PostableId.graphql.ts';
 import { PostListItemCard } from './PostListItemCard';
-import { PostListItemCardFragment } from './PostListItemCard/PostListItemCard.graphql';
+import { PostListItemCardFragment } from './PostListItemCard/PostListItemCard.graphql.ts';
 
 interface PostListProps
   extends Except<

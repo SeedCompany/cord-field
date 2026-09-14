@@ -1,14 +1,14 @@
-import { CreateFundingAccount as CreateFundingAccountInput } from '~/api/schema.graphql';
+import { CreateFundingAccount as CreateFundingAccountInput } from '~/api/schema.graphql.ts';
 import { LookupField } from '../..';
 import { CreateFundingAccount } from '../../../../scenes/Locations/LocationForm/FundingAccount/CreateFundingAccount';
 import {
   FundingAccountLookupItemFragment as FundingAccount,
   FundingAccountLookupDocument,
-} from './FundingAccountField.graphql';
+} from './FundingAccountField.graphql.ts';
 import {
   InitialFundingAccountOptionsQuery,
   InitialFundingAccountOptionsDocument as InitialFundingAccounts,
-} from './InitialFundingAccountOptions.graphql';
+} from './InitialFundingAccountOptions.graphql.ts';
 
 export const FundingAccountField = LookupField.createFor<
   FundingAccount,

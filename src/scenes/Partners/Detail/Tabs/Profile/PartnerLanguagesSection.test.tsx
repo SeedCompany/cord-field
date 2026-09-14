@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { PartnerDetailsFragment } from '../../PartnerDetail.graphql.ts';
 import { PartnerLanguagesSection } from './PartnerLanguagesSection';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

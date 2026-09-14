@@ -6,7 +6,7 @@ import onFieldChange from 'final-form-calculate';
 import { camelCase } from 'lodash';
 import { DateTime } from 'luxon';
 import { useMemo, useState } from 'react';
-import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql';
+import type { ProgressReportVarianceExplanationReasonOptions as ReasonOptions } from '~/api/schema.graphql.ts';
 import { canEditAny, RichTextJson } from '~/common';
 import {
   EnumField,
@@ -20,7 +20,7 @@ import {
 import { RichTextField } from '~/components/RichText';
 import { VarianceExplanation } from '../../../Detail/VarianceExplanation/VarianceExplanation';
 import { StepComponent } from '../step.types';
-import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql';
+import { ExplainProgressVarianceDocument } from './ExplanationOfProgress.graphql.ts';
 
 type OptionGroup = IterableItem<typeof groups>;
 

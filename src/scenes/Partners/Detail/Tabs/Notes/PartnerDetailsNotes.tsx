@@ -4,12 +4,12 @@ import { ActionableSection } from '~/components/ActionableSection';
 import { useDialog } from '~/components/Dialog';
 import { List, useListQuery } from '~/components/List';
 import { CreatePost } from '~/components/posts/CreatePost';
-import { PostableIdFragment } from '~/components/posts/PostableId.graphql';
+import { PostableIdFragment } from '~/components/posts/PostableId.graphql.ts';
 import { PostListItem } from '~/components/posts/PostListItemCard';
 import { ProgressButton } from '~/components/ProgressButton';
 import { TabPanelContent } from '~/components/Tabs';
 import { EditablePartnerField } from '../../../Edit';
-import { PartnerPostListDocument as PostListQuery } from '../../PartnerPostList.graphql';
+import { PartnerPostListDocument as PostListQuery } from '../../PartnerPostList.graphql.ts';
 
 interface Props {
   partner?: PostableIdFragment;

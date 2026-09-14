@@ -2,12 +2,12 @@ import { ApolloCache } from '@apollo/client';
 import { Modifier } from '@apollo/client/cache';
 import { DeepPartial } from 'ts-essentials';
 import { invalidateProps, updateFragment } from '~/api';
-import { Project as ProjectShape } from '~/api/schema.graphql';
+import { Project as ProjectShape } from '~/api/schema.graphql.ts';
 import { SecuredDateRangeFragment } from '~/common';
 import {
   ProjectCachedEngagementDateRangesFragmentDoc,
   ProjectCachedPartnershipDateRangesFragmentDoc,
-} from './CachedProjectDateRanges.graphql';
+} from './CachedProjectDateRanges.graphql.ts';
 
 type Project = Pick<ProjectShape, 'id'>;
 type SecuredDateRange = DeepPartial<SecuredDateRangeFragment>;

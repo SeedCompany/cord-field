@@ -21,7 +21,7 @@ import { TabPanelContent } from '~/components/Tabs';
 import {
   type FieldZoneProjectDataGridRowFragment as FieldZoneProject,
   FieldZoneProjectsDocument,
-} from './FieldZoneProjects.graphql';
+} from './FieldZoneProjects.graphql.ts';
 
 export const FieldZoneProjectsPanel = () => {
   const { fieldZoneId = '' } = useParams();

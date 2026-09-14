@@ -10,7 +10,7 @@ import {
 import { SubmitError } from '../../../../components/form';
 import { UserField, UserLookupItem } from '../../../../components/form/Lookup';
 import { invalidatePartnersEngagements } from '../../LanguageEngagement/Create/invalidatePartnersEngagements';
-import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.graphql';
+import { CreateInternshipEngagementDocument } from './CreateInternshipEngagement.graphql.ts';
 
 interface CreateInternshipEngagementFormValues {
   intern: UserLookupItem;

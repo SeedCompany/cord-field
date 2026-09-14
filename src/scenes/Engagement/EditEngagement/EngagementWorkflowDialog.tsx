@@ -7,7 +7,7 @@ import {
   EngagementStatusLabels,
   EngagementStatusList,
   TransitionType,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -24,7 +24,7 @@ import { Engagement } from './EditEngagementDialog';
 import {
   UpdateInternshipEngagementDocument,
   UpdateLanguageEngagementDocument,
-} from './EditEngagementDialog.graphql';
+} from './EditEngagementDialog.graphql.ts';
 
 const transitionTypeToColor: Record<
   TransitionType,

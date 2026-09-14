@@ -4,7 +4,7 @@ import { canEditAny } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
 import { IconButton } from '~/components/IconButton';
 import { Redacted } from '~/components/Redacted';
-import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { PartnerDetailsFragment } from '../../PartnerDetail.graphql.ts';
 
 interface PartnerLanguagesSectionProps {
   partner?: PartnerDetailsFragment;

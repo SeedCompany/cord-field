@@ -8,7 +8,7 @@ import {
   CreateLanguage,
   SensitivityList,
   UpdateLanguage,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { canReadAny, Nullable } from '~/common';
 import {
   DialogForm,
@@ -30,8 +30,8 @@ import {
 } from '../../../components/form';
 import { max, minLength, required } from '../../../components/form/validators';
 import { useNumberFormatter } from '../../../components/Formatters';
-import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.graphql';
-import { LanguageFormFragment } from './LangugeForm.graphql';
+import { LanguageListItemFragment } from '../../../components/LanguageListItemCard/LanguageListItem.graphql.ts';
+import { LanguageFormFragment } from './LangugeForm.graphql.ts';
 
 type LanguageMutation = UpdateLanguage | CreateLanguage;
 

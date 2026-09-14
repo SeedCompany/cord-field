@@ -2,16 +2,16 @@ import {
   Id_InternshipProject_Fragment as InternshipProjectIdFragment,
   Id_MomentumTranslationProject_Fragment as MomentumProjectIdFragment,
   Id_MultiplicationTranslationProject_Fragment as MultiplicationProjectIdFragment,
-} from './identity.graphql';
+} from './identity.graphql.ts';
 
 export * from './common';
-export * from './identity.graphql';
-export * from './changeset.graphql';
-export * from './lists.graphql';
-export * from './prompt.graphql';
-export * from './promptResponse.graphql';
-export * from './variant.graphql';
-export * from './tool.graphql';
+export * from './identity.graphql.ts';
+export * from './changeset.graphql.ts';
+export * from './lists.graphql.ts';
+export * from './prompt.graphql.ts';
+export * from './promptResponse.graphql.ts';
+export * from './variant.graphql.ts';
+export * from './tool.graphql.ts';
 
 export type ProjectIdFragment =
   | MomentumProjectIdFragment

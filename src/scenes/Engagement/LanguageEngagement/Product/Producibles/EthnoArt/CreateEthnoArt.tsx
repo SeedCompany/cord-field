@@ -1,14 +1,14 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateEthnoArt as CreateEthnoArtInput } from '~/api/schema.graphql';
+import { CreateEthnoArt as CreateEthnoArtInput } from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { EthnoArtLookupItem } from '../../../../../../components/form/Lookup/EthnoArt';
-import { CreateEthnoArtDocument } from './CreateEthnoArt.graphql';
+import { CreateEthnoArtDocument } from './CreateEthnoArt.graphql.ts';
 
 export type CreateEthnoArtProps = Except<
   DialogFormProps<CreateEthnoArtInput, EthnoArtLookupItem>,

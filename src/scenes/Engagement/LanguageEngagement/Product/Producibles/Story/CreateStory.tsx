@@ -1,14 +1,14 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateStory as CreateStoryInput } from '~/api/schema.graphql';
+import { CreateStory as CreateStoryInput } from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { StoryLookupItem } from '../../../../../../components/form/Lookup';
-import { CreateStoryDocument } from './CreateStory.graphql';
+import { CreateStoryDocument } from './CreateStory.graphql.ts';
 
 export type CreateStoryProps = Except<
   DialogFormProps<CreateStoryInput, StoryLookupItem>,

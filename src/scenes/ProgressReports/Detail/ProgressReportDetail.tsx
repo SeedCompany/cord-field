@@ -24,7 +24,7 @@ import { ProgressReportDrawer } from '../EditForm';
 import {
   ProgressReportDetailDocument,
   ProgressReportDetailFragment,
-} from './ProgressReportDetail.graphql';
+} from './ProgressReportDetail.graphql.ts';
 import { ProgressSummaryCard } from './ProgressSummaryCard';
 import { PromptResponseCard } from './PromptResponseCard';
 import { WorkflowCard } from './WorkflowCard';

@@ -5,7 +5,7 @@ import {
   CreateProjectChangeRequest as CreateProjectChangeRequestInput,
   ProjectChangeRequestTypeLabels,
   ProjectChangeRequestTypeList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -13,12 +13,12 @@ import {
 } from '../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../components/form';
 import { AutocompleteField } from '../../../../components/form/AutocompleteField';
-import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.graphql';
+import { ProjectOverviewQuery } from '../../Overview/ProjectOverview.graphql.ts';
 import { ProjectChangeRequestListQuery as ListQuery } from '../List';
 import {
   CreateProjectChangeRequestDocument as CreateChangeRequest,
   CreateProjectChangeRequestMutation as Mutation,
-} from './CreateProjectChangeRequest.graphql';
+} from './CreateProjectChangeRequest.graphql.ts';
 
 type CreateProjectChangeRequestProps = Except<
   DialogFormProps<

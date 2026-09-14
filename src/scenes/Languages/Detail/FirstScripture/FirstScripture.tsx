@@ -7,7 +7,7 @@ import { Skeleton, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
-import { FirstScriptureFragment } from './FirstScripture.graphql';
+import { FirstScriptureFragment } from './FirstScripture.graphql.ts';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {

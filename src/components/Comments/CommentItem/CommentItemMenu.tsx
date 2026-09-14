@@ -6,7 +6,7 @@ import {
   MenuItem,
   MenuProps,
 } from '@mui/material';
-import { CommentFragment } from './comment.graphql';
+import { CommentFragment } from './comment.graphql.ts';
 
 interface CommentItemMenuProps extends MenuProps {
   threadId?: string;

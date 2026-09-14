@@ -1,14 +1,14 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateFilm as CreateFilmInput } from '~/api/schema.graphql';
+import { CreateFilm as CreateFilmInput } from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../../../../components/Dialog/DialogForm';
 import { SubmitError, TextField } from '../../../../../../components/form';
 import { FilmLookupItem } from '../../../../../../components/form/Lookup';
-import { CreateFilmDocument } from './CreateFilm.graphql';
+import { CreateFilmDocument } from './CreateFilm.graphql.ts';
 
 export type CreateFilmProps = Except<
   DialogFormProps<CreateFilmInput, FilmLookupItem>,

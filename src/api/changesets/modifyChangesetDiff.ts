@@ -5,7 +5,7 @@ import { Entity } from '../schema';
 import {
   ModifyChangesetDiffOnUpdateFragment,
   ModifyChangesetDiffOnUpdateFragmentDoc,
-} from './ModifyChangesetDiffOnUpdate.graphql';
+} from './ModifyChangesetDiffOnUpdate.graphql.ts';
 
 interface ModifyChangesetDiff {
   added: readonly Entity[];

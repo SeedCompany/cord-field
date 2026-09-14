@@ -5,7 +5,7 @@ import { useDialog } from '../../Dialog';
 import { IconButton } from '../../IconButton';
 import { DisplayToolUsage } from '../DisplayToolUsage/DisplayToolUsage';
 import { ManageToolUsage } from '../ManageToolUsage';
-import { ToolsUsedListFragment } from './toolsUsedList.graphql';
+import { ToolsUsedListFragment } from './toolsUsedList.graphql.ts';
 
 interface Props {
   resource: ToolsUsedListFragment;

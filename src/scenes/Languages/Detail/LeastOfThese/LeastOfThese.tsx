@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import { BooleanProperty } from '../../../../components/BooleanProperty';
 import { PaperTooltip } from '../../../../components/PaperTooltip';
-import { LeastOfTheseFragment } from './LeastOfThese.graphql';
+import { LeastOfTheseFragment } from './LeastOfThese.graphql.ts';
 
 interface LeastOfTheseProps {
   language?: LeastOfTheseFragment;

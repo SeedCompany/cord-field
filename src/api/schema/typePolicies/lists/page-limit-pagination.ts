@@ -20,7 +20,7 @@ import {
   SortableListInput,
 } from '../../../caching';
 import { sortingFromArgs } from '../../../caching/lists/util';
-import { Order } from '../../schema.graphql';
+import { Order } from '../../schema.graphql.ts';
 
 type KeyArgs = KeySpecifier | false;
 
