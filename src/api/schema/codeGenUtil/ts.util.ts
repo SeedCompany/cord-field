@@ -37,6 +37,11 @@ export const tsMorphPlugin =
   async (schema, documents, config, info) => {
     const project = new Project({
       tsConfigFilePath: 'tsconfig.json',
+      // These plugins only manipulate syntax, never type-check. Skipping the
+      // automatic `node_modules/@types` sweep keeps the program small enough to
+      // fit the default heap now that deps are installed on disk.
+      compilerOptions: { types: [] },
+      skipFileDependencyResolution: true,
       manipulationSettings: {
         indentationText: IndentationText.TwoSpaces,
         quoteKind: QuoteKind.Single,

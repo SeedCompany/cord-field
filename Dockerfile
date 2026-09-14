@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:24.14.1-slim as node
+FROM public.ecr.aws/docker/library/node:24-slim as node
 
 RUN <<EOF
 set -e
@@ -48,7 +48,8 @@ ARG SEED_API_HOST
 ENV SEED_API_HOST=$SEED_API_HOST
 
 COPY --from=builder /app/.yarn ./.yarn
-COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
+COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml ./
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/build ./build
 
 RUN corepack install

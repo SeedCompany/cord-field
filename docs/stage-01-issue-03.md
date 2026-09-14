@@ -2,7 +2,7 @@
 title: 'Switch Yarn to the node-modules linker'
 stage: 1
 issue: 3
-status: open
+status: done
 type: chore
 ---
 
@@ -44,6 +44,14 @@ Then work the cascade:
 | [`.vscode/settings.json`](../.vscode/settings.json) | drop `eslint.nodePath`, `prettier.prettierPath`, `typescript.tsdk`, and the workspace-TSDK prompt; keep the `**/.yarn` search exclusion |
 | [`Dockerfile`](../Dockerfile) | `COPY --from=builder /app/.pnp.* ./` **will hard-fail** once no such files exist — replace with `COPY --from=builder /app/node_modules ./node_modules` |
 | [`.nvmrc`](../.nvmrc), [`Dockerfile`](../Dockerfile), [`.github/actions/setup/action.yml`](../.github/actions/setup/action.yml) | **un-pin Node from 24.14.1** |
+
+Two further cascade items surfaced during implementation — both are places where
+existing code was, without saying so, coupled to the PnP layout:
+
+| File | Change |
+| --- | --- |
+| [`razzle.config.js`](../razzle.config.js) | the force-transpile matcher `path.includes('/@mui-')` only ever matched PnP *archive* names (`@mui-x-data-grid-npm-7.8.0-….zip`). Under the node-modules linker nothing matches it and webpack 4 hard-fails on `?.`/`??` in `@mui/x-data-grid`. Widened to `/[/\\]@mui[-/]/`, which matches both layouts. |
+| [`src/api/schema/codeGenUtil/ts.util.ts`](../src/api/schema/codeGenUtil/ts.util.ts) | `new Project({ tsConfigFilePath: 'tsconfig.json' })` had no `node_modules/@types` to sweep under PnP. With deps on disk it loads all ~100 of them plus their file graphs, ×6 parallel generators — `yarn gql-gen` then OOMs at the default 4 GB heap. Added `compilerOptions: { types: [] }` and `skipFileDependencyResolution: true`; these plugins only manipulate syntax. Peak RSS 4.6 GB → 2.5 GB, matching the PnP baseline, and every generated file is byte-identical. |
 
 ### The Node pin
 

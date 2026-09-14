@@ -23,8 +23,10 @@ const modifyWebpackOptions = ({
   options.babelRule.include.push(
     require.resolve('@seedcompany/common').replace('.cjs', '.js'),
     require.resolve('@editorjs/editorjs').replace('.umd.js', '.mjs'),
+    // Match both linker layouts: PnP archive paths contain `/@mui-…zip/`,
+    // while the node-modules linker lays them out under `/@mui/`.
     (path) =>
-      path.includes('/@mui-') ||
+      /[/\\]@mui[-/]/.test(path) ||
       path.includes('reactflow') ||
       path.includes('dagrejs')
   );
