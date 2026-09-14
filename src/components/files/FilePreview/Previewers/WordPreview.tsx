@@ -31,6 +31,3 @@ export const WordPreview = ({ file }: PreviewerProps) => {
 
   return <div css={styles}>{html}</div>;
 };
-
-// eslint-disable-next-line import/no-default-export
-export default WordPreview;

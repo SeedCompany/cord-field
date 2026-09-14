@@ -17,10 +17,6 @@ export const RtfPreview = ({ file }: PreviewerProps) => {
 
   return <div style={{ width: '80ch' }}>{html}</div>;
 };
-
-// eslint-disable-next-line import/no-default-export
-export default RtfPreview;
-
 const parseRtlToHtml = async (
   rtfStr: string,
   options?: rtfToHTML.RtfToHtmlOptions

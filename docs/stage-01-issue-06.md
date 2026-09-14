@@ -2,7 +2,7 @@
 title: 'Give Previewers explicit resolveComponent and drop their default exports'
 stage: 1
 issue: 6
-status: open
+status: done
 type: refactor
 ---
 
