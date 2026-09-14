@@ -1,6 +1,6 @@
-import loadable from '@loadable/component';
 import { Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { splicePath } from '~/common';
+import { loadable } from '~/components/Loadable';
 import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { Navigate } from '../../components/Routing';

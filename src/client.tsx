@@ -1,5 +1,4 @@
 import { CacheProvider } from '@emotion/react';
-import { loadableReady } from '@loadable/component';
 import { isNotFalsy } from '@seedcompany/common';
 import Cookies from 'js-cookie';
 import { Settings, Zone } from 'luxon';
@@ -12,6 +11,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { TssCacheProvider } from 'tss-react';
 import { basePathOfUrl, env } from '~/common';
+import { loadableReady } from '~/components/Loadable';
 import { GqlSensitiveOperations } from './api';
 import { ImpersonationProvider } from './api/client/ImpersonationContext';
 import { App } from './App';

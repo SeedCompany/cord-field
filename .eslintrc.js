@@ -116,6 +116,16 @@ const restrictedImports = [
     replacement: { path: '~/api' },
   },
 
+  // @loadable/component is webpack-only; our wrapper replaces it.
+  {
+    pattern: '@loadable/component',
+    message: "Import `loadable` from '~/components/Loadable' instead",
+    replacement: ({ importName }) => ({
+      path: '~/components/Loadable',
+      importName: importName === 'default' ? 'loadable' : importName,
+    }),
+  },
+
   // Import css & keyframes straight from emotion (not any re-export from other libs)
   // This ensures their babel plugin works correctly.
   {

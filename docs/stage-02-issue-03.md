@@ -2,7 +2,7 @@
 title: 'Move call sites off @loadable/component'
 stage: 2
 issue: 3
-status: open
+status: done
 type: refactor
 depends_on: [stage-02-issue-01, stage-02-issue-02]
 ---

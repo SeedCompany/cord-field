@@ -1,4 +1,4 @@
-import loadable from '@loadable/component';
+import { loadable } from '../../../Loadable';
 import { HtmlPreview } from './HtmlPreview';
 import { NativePreview } from './NativePreview';
 import { NotSupportedPreview } from './NotSupportedPreview';
