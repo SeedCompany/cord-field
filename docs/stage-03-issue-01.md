@@ -2,7 +2,7 @@
 title: 'Add vite.config.ts'
 stage: 3
 issue: 1
-status: open
+status: done
 type: feature
 depends_on: [stage-00-issue-01, stage-01-issue-05, stage-01-issue-08]
 ---
