@@ -5,11 +5,11 @@ import { Form } from 'react-final-form';
 import { LanguageField } from './LanguageField';
 import { LanguageLookupDocument } from './LanguageLookup.graphql';
 
-jest.mock('../../../Session', () => ({
+vi.mock('../../../Session', () => ({
   useSession: () => ({ powers: [] }),
 }));
 
-jest.mock('../../../../scenes/Languages/Create', () => ({
+vi.mock('../../../../scenes/Languages/Create', () => ({
   CreateLanguage: () => null,
 }));
 

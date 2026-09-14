@@ -172,16 +172,6 @@ const modifyWebpackConfig = (opts) => {
   return config;
 };
 
-const modifyJestConfig = (opts) => {
-  /** @type {import('@jest/types').Config.InitialOptions} */
-  const config = opts.jestConfig;
-
-  config.moduleNameMapper['~/(.+)'] = '<rootDir>/src/$1';
-  config.snapshotSerializers = ['@emotion/jest/serializer'];
-
-  return config;
-};
-
 /**
  * @see import('razzle/config/createConfigAsync')
  */
@@ -193,7 +183,6 @@ module.exports = {
   },
   modifyWebpackOptions,
   modifyWebpackConfig,
-  modifyJestConfig,
 };
 
 // Disable "are you sure?" check for build command

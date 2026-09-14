@@ -2,7 +2,7 @@
 title: 'Migrate Jest to Vitest'
 stage: 1
 issue: 7
-status: open
+status: done
 type: test
 blocks: [stage-04-issue-02]
 ---

@@ -4,8 +4,6 @@ import {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express';
-import { Request } from 'jest-express/lib/request';
-import { Response } from 'jest-express/lib/response';
 import { useMemo, useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { StaticRouter } from 'react-router-dom/server';
@@ -15,10 +13,34 @@ import { App } from './App';
 import { Nest } from './components/Nest';
 import { RequestContext } from './hooks';
 
+/**
+ * Just enough of Express' Request for the tree under test: the router reads
+ * `originalUrl`, `useLocale` calls `acceptsLanguages()`, `useUserAgent` and the
+ * SSR Apollo link call `header()`, and `useDateFormatter` reads `cookies`.
+ */
+const fakeRequest = (url: string) =>
+  ({
+    originalUrl: url,
+    url,
+    method: 'GET',
+    headers: {},
+    cookies: {},
+    header: () => undefined,
+    get: () => undefined,
+    acceptsLanguages: () => [],
+    // Faked, not implemented — the real type is much wider.
+  } as unknown as ExpressRequest);
+
+/** Likewise for Response: the SSR Apollo link may call `setHeader`. */
+const fakeResponse = () =>
+  ({
+    setHeader: () => undefined,
+    getHeader: () => undefined,
+  } as unknown as ExpressResponse);
+
 const TestContext = ({ url, children }: { url: string } & ChildrenProp) => {
-  // @ts-expect-error yes the type doesn't match we are faking it.
-  const req: ExpressRequest = useMemo(() => new Request(url), [url]);
-  const res = new Response() as unknown as ExpressResponse;
+  const req = useMemo(() => fakeRequest(url), [url]);
+  const res = fakeResponse();
   const [client] = useState(() => createClient({ ssr: { req, res } }));
   return (
     <Nest

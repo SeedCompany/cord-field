@@ -337,6 +337,14 @@ const config = {
       return override;
     }),
 
+    // Vite and Vitest load their config from a default export.
+    {
+      files: ['./vite.config.ts', './vitest.config.ts'],
+      rules: {
+        'import/no-default-export': 'off',
+      },
+    },
+
     // Toolchain is still commonjs
     {
       files: ['**/*.js'],

@@ -6,11 +6,11 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { LocationDetail } from './LocationDetail';
 import { LocationDocument, type LocationQuery } from './LocationDetail.graphql';
 
-jest.mock('../Edit', () => ({
+vi.mock('../Edit', () => ({
   EditLocation: () => null,
 }));
 
-jest.mock('../../../components/Error', () => ({
+vi.mock('../../../components/Error', () => ({
   Error: () => null,
 }));
 

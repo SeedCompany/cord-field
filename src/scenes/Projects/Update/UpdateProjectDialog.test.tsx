@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import type { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
 import { UpdateProjectDialog } from './UpdateProjectDialog';
 
-jest.mock('../../../components/Session', () => ({
+vi.mock('../../../components/Session', () => ({
   useSession: () => ({ powers: [] }),
 }));
 

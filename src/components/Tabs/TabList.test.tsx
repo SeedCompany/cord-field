@@ -4,11 +4,11 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 import { useIsMobile } from '~/common';
 import { TabList } from './TabList';
 
-jest.mock('~/common', () => ({
-  ...jest.requireActual('~/common'),
-  useIsMobile: jest.fn(),
+vi.mock('~/common', async () => ({
+  ...(await vi.importActual<typeof import('~/common')>('~/common')),
+  useIsMobile: vi.fn(),
 }));
-const mockUseIsMobile = useIsMobile as jest.Mock;
+const mockUseIsMobile = vi.mocked(useIsMobile);
 
 // TabList reads value/label/to off its children's props (it doesn't render them
 // in mobile mode), so a props-only stand-in is sufficient.

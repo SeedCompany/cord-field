@@ -5,7 +5,7 @@ import { Form } from 'react-final-form';
 import { MarketingRegionField } from './MarketingRegionField';
 import { MarketingRegionLookupDocument } from './MarketingRegionLookup.graphql';
 
-jest.mock('../../../Session', () => ({
+vi.mock('../../../Session', () => ({
   useSession: () => ({ powers: [] }),
 }));
 

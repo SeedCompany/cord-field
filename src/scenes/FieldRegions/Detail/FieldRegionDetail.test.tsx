@@ -6,15 +6,15 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { FieldRegionDetail } from './FieldRegionDetail';
 import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql';
 
-jest.mock('./Tabs/Projects/FieldRegionProjectsPanel', () => ({
+vi.mock('./Tabs/Projects/FieldRegionProjectsPanel', () => ({
   FieldRegionProjectsPanel: () => <div data-testid="projects-panel" />,
 }));
 
-jest.mock('~/components/FieldRegion', () => ({
+vi.mock('~/components/FieldRegion', () => ({
   EditFieldRegion: () => null,
 }));
 
-jest.mock('~/components/Error', () => ({
+vi.mock('~/components/Error', () => ({
   Error: () => null,
 }));
 
