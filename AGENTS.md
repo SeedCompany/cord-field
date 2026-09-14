@@ -2,7 +2,7 @@
 
 ## Persona
 
-You are a senior frontend engineer on the SeedCompany platform team. You specialize in React 18, TypeScript (strict mode), Apollo Client 3, MUI v5, and server-side rendering with Razzle. You write production-quality code, never prototypes. You follow the organization's enterprise coding standards without exception.
+You are a senior frontend engineer on the SeedCompany platform team. You specialize in React 18, TypeScript (strict mode), Apollo Client 3, MUI v5, and server-side rendering with Vite. You write production-quality code, never prototypes. You follow the organization's enterprise coding standards without exception.
 
 ## Related Documents
 
@@ -12,18 +12,18 @@ You are a senior frontend engineer on the SeedCompany platform team. You special
 
 ## Project Overview
 
-**cord-field** is the primary management UI for CORD (the Collaboration on Resources and Development platform). It is a server-side rendered React app using Razzle, connecting to the CORD GraphQL API (`cord-api-v3`).
+**cord-field** is the primary management UI for CORD (the Collaboration on Resources and Development platform). It is a server-side rendered React app using Vite, connecting to the CORD GraphQL API (`cord-api-v3`).
 
 - **Language:** TypeScript 5 (strict mode, ESM target)
 - **Runtime:** Node.js ≥ 24
 - **Package Manager:** Yarn 4 (Berry)
-- **Framework:** React 18 + Razzle (SSR)
+- **Framework:** React 18 + Vite (custom SSR)
 - **Routing:** React Router v6
-- **Code-Splitting:** `@loadable/component`
+- **Code-Splitting:** `loadable` from `~/components/Loadable`
 - **Data Layer:** Apollo Client 3.7, GraphQL Codegen
 - **Styling:** Preferred: `sx` prop (MUI v5). Legacy: `tss-react/mui` (`makeStyles`) — avoid for new components.
 - **Forms:** Final Form + react-final-form
-- **Testing:** Jest + @testing-library/react
+- **Testing:** Vitest + @testing-library/react
 
 ## Project Structure
 
@@ -34,7 +34,7 @@ src/
 ├── components/   # Reusable UI components (each in own folder with index.ts barrel)
 │   └── form/     # Final Form field components
 ├── hooks/        # Shared custom React hooks
-├── scenes/       # Route-level page components (code-split via @loadable/component)
+├── scenes/       # Route-level page components (code-split via ~/components/Loadable)
 ├── server/       # Express SSR server
 └── theme/        # MUI theme configuration
 ```
@@ -45,7 +45,7 @@ Key config files:
 - `codegen.schema.yml` — generates schema types into `src/api/schema/`
 - `codegen.operations.yml` — generates operation types co-located with `.graphql` files
 - `.eslintrc.js` — ESLint config (TypeScript + React + Prettier + tss-unused-classes)
-- `razzle.config.js` — Webpack customization for SSR
+- `vite.config.ts` — Vite build/dev config; shared plugins in `vite/plugins.ts`
 
 ## Commands
 
@@ -74,7 +74,7 @@ yarn gql-gen:operations
 
 ```bash
 yarn start          # Runs SSR dev server + gql-gen in watch mode
-yarn start:server   # Razzle dev server only
+yarn start:server   # Vite SSR dev server only
 ```
 
 ### Build
@@ -99,13 +99,13 @@ yarn type-check     # tsc --noEmit
 ### Test
 
 ```bash
-yarn test           # Jest with jsdom environment
+yarn test           # Vitest with jsdom environment
 ```
 
 ### Clean
 
 ```bash
-yarn clean          # Removes build/, cache/, and all generated *.generated.ts / *.graphql.ts files
+yarn clean          # Removes build/, node_modules/.vite, and all generated *.generated.ts / *.graphql.ts files
 ```
 
 ## Validation Checklist — Run Before Every PR
@@ -126,7 +126,7 @@ yarn type-check
 yarn lint:check
 
 # 5. Run tests
-yarn test --watchAll=false --ci
+yarn test
 ```
 
 If any step fails, fix the issue before proceeding. Do not skip steps or suppress warnings.
@@ -219,7 +219,7 @@ This codebase intentionally has very few test files (~10). Each new test sets no
 
 **Required pattern:**
 
-- Real `MockedProvider` for Apollo (do **not** `jest.mock('@apollo/client', ...)` to swap `useMutation` or other hooks)
+- Real `MockedProvider` for Apollo (do **not** `vi.mock('@apollo/client', ...)` to swap `useMutation` or other hooks)
 - Real `react-final-form`, real `components/form/*`, real `LookupField`
 - Mock only direct dependencies that can't reasonably run in jsdom: child `Edit*` dialogs, the `Error` component, sometimes `Session`
 

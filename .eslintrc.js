@@ -138,7 +138,8 @@ const restrictedImports = [
     message: "Import from '@emotion/react' instead",
   },
 
-  // Our babel import transforms don't work with these exports
+  // `@mui/material/styles` is these exports' canonical home; the
+  // `@mui/material` barrel only re-exports them.
   {
     path: '@mui/material',
     importNames: ['styled', 'useTheme'],

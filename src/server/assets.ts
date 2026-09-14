@@ -1,6 +1,4 @@
-// Unprefixed, not `node:fs`: webpack 4 cannot resolve the `node:` scheme, and
-// this file is in the Razzle server bundle until stage 4 deletes it.
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 import { trailingSlash } from '~/common';
 
 /**
@@ -56,7 +54,7 @@ const CLIENT_ENTRY = 'src/client.tsx';
 
 /**
  * Where the two manifests live, passed in by the build rather than guessed,
- * mirroring what `process.env.LOADABLE_STATS_MANIFEST` did for webpack.
+ * mirroring what `process.env.LOADABLE_STATS_MANIFEST` did under Razzle.
  *
  * These are *build-time* paths — they say where files sit inside the image,
  * not how the deployment is configured — so unlike `PUBLIC_URL` they are fine

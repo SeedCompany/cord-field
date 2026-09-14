@@ -21,8 +21,9 @@ import { renderServerSideApp } from './renderServerSideApp';
  * Vite's ESM SSR graph. Hence the branch: `process.env.NODE_ENV` is
  * `'development'` there, so the `__dirname` arm is never reached.
  *
- * `import.meta.url` is not an option while Razzle still builds this file;
- * webpack 4 cannot parse `import.meta` at all.
+ * `import.meta.url` is not an option here: the server bundle is emitted as
+ * CommonJS, which is also what makes `__dirname` available in the first
+ * place.
  */
 const PUBLIC_DIR =
   process.env.NODE_ENV === 'production'

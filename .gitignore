@@ -2,6 +2,7 @@
 
 # compiled output
 /build
+# keep to hide cache output for now and not overwhelm git
 /cache
 
 # Yarn / NPM

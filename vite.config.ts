@@ -149,8 +149,8 @@ const keepExternal = (id: string) =>
  * `vite` (dev) serves the app end to end — one process, one port, SSR
  * included — and `vite build` now produces the whole production artifact in
  * two passes: `build:client` writes `build/public/`, then `build:server`
- * writes `build/server.js`. Nothing is wired into `yarn start`/`yarn build`
- * yet; that cutover is `stage-04-issue-01`.
+ * writes `build/server.js`. This is the only build chain — Razzle and webpack
+ * are gone.
  */
 export default defineConfig(({ isSsrBuild, mode }) => {
   const isProd = mode === 'production';
@@ -209,7 +209,7 @@ export default defineConfig(({ isSsrBuild, mode }) => {
 
     define: {
       // Exact keys only. `define: { 'process.env': 'window.env' }` — webpack's
-      // trick, and what `razzle.config.js` does — is NOT viable: stage 0
+      // trick, and what the old `razzle.config.js` did — is NOT viable: stage 0
       // measured it rewriting the member-chain prefix in `vite build` but
       // silently not in `vite dev`, where the surviving `process.env.*` reads
       // throw `ReferenceError: process is not defined`. Runtime env goes
@@ -384,7 +384,8 @@ export default defineConfig(({ isSsrBuild, mode }) => {
         // which means real cycles exist in this codebase and are being
         // actively held back. Rollup only warns, so without this the guard is
         // silently lost and SSR module-init-order bugs become possible.
-        // Server build only, same exclusions as razzle.config.js.
+        // Server build only, with the same exclusions Razzle's
+        // CircularDependencyPlugin had.
         ...(isProd && isSsrBuild
           ? {
               onwarn: (warning, defaultHandler) => {

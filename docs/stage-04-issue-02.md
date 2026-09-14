@@ -2,7 +2,7 @@
 title: 'Delete Razzle and webpack'
 stage: 4
 issue: 2
-status: open
+status: done
 type: chore
 depends_on: [stage-04-issue-01, stage-01-issue-05, stage-01-issue-07]
 ---

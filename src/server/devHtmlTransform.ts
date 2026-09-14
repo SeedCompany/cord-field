@@ -9,8 +9,8 @@
  * It cannot `import` Vite to get there. `src/` is compiled into the production
  * server bundle, where Vite is a devDependency that does not exist, so a
  * static import would break the prod build outright. Nor can this be gated on
- * `import.meta.env.DEV`: until stage 4 this same file is also compiled by
- * webpack 4, which cannot parse `import.meta` at all.
+ * `import.meta.env.DEV`: the server bundle is emitted as CommonJS, where
+ * `import.meta` is not available.
  *
  * So the dev server *pushes* its transform in here, through a
  * `Symbol.for`-keyed global. `Symbol.for` matters: `vite/plugins/devSsr.ts`

@@ -18,7 +18,7 @@ const HTML_TRANSFORM_KEY = Symbol.for('cord-field.devHtmlTransform');
  * Serves SSR in dev by mounting the Express app inside Vite's own connect
  * stack.
  *
- * This replaces the whole two-port dance in `razzle.config.js`:
+ * This replaced the whole two-port dance in the old `razzle.config.js`:
  * webpack-dev-server owning `PORT`, a catch-all proxy to Express on `PORT+1`,
  * and a monkey-patch on `http-proxy-middleware`'s logger to hide the
  * confusing startup line that resulted. One process, one port, no proxy.
