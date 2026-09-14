@@ -13,7 +13,7 @@ declare global {
 /**
  * Load every module the server rendered before the client renders, so the
  * first client render matches the server's markup without a fallback flash.
- * A drop-in for `@loadable/component`'s `loadableReady`.
+ * A drop-in for the `loadable-components` library's `loadableReady`.
  *
  * No manifest is read, deliberately: the server sends *source* ids, we look
  * each one up in the registry and call the `import()` it registered, and

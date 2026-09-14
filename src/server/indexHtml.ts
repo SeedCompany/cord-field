@@ -1,17 +1,17 @@
-import { ChunkExtractor } from '@loadable/server';
 import { HelmetServerState as HelmetData } from 'react-helmet-async';
 import { trailingSlash } from '~/common';
+import { RenderedAssets } from './assets';
 
 export const indexHtml = ({
   helmet,
   markup,
-  extractor,
+  assets,
   emotion,
   globals,
 }: {
   helmet: HelmetData;
   markup: string;
-  extractor: ChunkExtractor;
+  assets: RenderedAssets;
   emotion: string;
   globals: Record<string, any>;
 }) => `<!doctype html>
@@ -20,9 +20,8 @@ export const indexHtml = ({
   <base href="${trailingSlash(process.env.PUBLIC_URL)}">
   ${helmet.title.toString()}
   ${helmet.meta.toString()}
-  ${extractor.getLinkTags()}
+  ${assets.links}
   ${helmet.link.toString()}
-  ${extractor.getStyleTags()}
   ${helmet.style.toString()}
   ${emotion}
   ${helmet.noscript.toString()}
@@ -38,7 +37,7 @@ ${Object.entries(globals)
   )
   .join('\n')}
   </script>
-  ${extractor.getScriptTags()}
+  ${assets.scripts}
 </body>
 </html>
 `;

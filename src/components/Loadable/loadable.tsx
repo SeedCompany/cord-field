@@ -10,7 +10,7 @@ import {
 import { ChunkCollectorContext } from './ChunkCollector';
 
 /**
- * A replacement for `@loadable/component`, which is webpack-only.
+ * A replacement for the `loadable-components` library, which is webpack-only.
  *
  * Two facts shape this:
  * - The app renders with `createRoot`, never `hydrateRoot`, so preloading is a
@@ -271,7 +271,7 @@ const loadableComponent = <P extends object, M>(
 /**
  * Like {@link loadableComponent}, but yields the whole module to a children
  * function rather than rendering a component out of it — matching
- * `@loadable/component`'s `loadable.lib`, which `RichTextField` uses twice.
+ * the old library's `loadable.lib`, which `RichTextField` uses twice.
  */
 const loadableLib = <M,>(
   loader: Loader<M>,

@@ -2,7 +2,7 @@
 title: 'Emit SSR asset tags from Vite manifests'
 stage: 2
 issue: 4
-status: open
+status: done
 type: feature
 depends_on: [stage-02-issue-03]
 ---

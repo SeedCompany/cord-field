@@ -21,7 +21,6 @@
       "absoluteRuntime": true
     }],
     "@babel/plugin-transform-numeric-separator",
-    "@loadable/babel-plugin",
     ["babel-plugin-transform-imports", {
       "lodash": {
         "transform": "lodash/${member}"
