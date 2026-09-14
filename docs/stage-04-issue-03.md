@@ -2,7 +2,7 @@
 title: 'Restore the bundle analyzer'
 stage: 4
 issue: 3
-status: open
+status: done
 type: chore
 depends_on: [stage-04-issue-02]
 ---

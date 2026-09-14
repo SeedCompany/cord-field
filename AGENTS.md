@@ -81,6 +81,7 @@ yarn start:server   # Vite SSR dev server only
 
 ```bash
 yarn build          # Production build (runs gql-gen first)
+yarn analyze        # Client build + bundle treemap at build/report.html
 ```
 
 ### Lint
