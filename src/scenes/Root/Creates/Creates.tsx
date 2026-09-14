@@ -3,6 +3,7 @@ import { ComponentType } from 'react';
 import { Except } from 'type-fest';
 import { Power } from '~/api/schema.graphql';
 import { DialogFormProps } from '../../../components/Dialog/DialogForm';
+import { CreateTool } from '../../../components/Tool/CreateTool/CreateTool';
 import { CreateLanguage } from '../../Languages/Create';
 import { CreateLocation } from '../../Locations/Create';
 import { CreatePartner } from '../../Partners/Create';
@@ -20,4 +21,5 @@ export const creates = mapOf<Power, Create>([
   ['CreateUser', [CreateUser, 'Person']],
   ['CreatePartner', [CreatePartner]],
   ['CreateLocation', [CreateLocation]],
+  ['CreateTool', [CreateTool]],
 ]);

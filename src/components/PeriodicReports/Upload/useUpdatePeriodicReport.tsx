@@ -7,16 +7,24 @@ import { CalendarDateOrISO } from '~/common';
 import { useUploadFiles } from '../../files/hooks';
 import { IconButton } from '../../IconButton';
 import { Link, useNavigate } from '../../Routing';
+import { dateFieldFor, PeriodicReportFileField } from '../fileField';
 import {
   ProductLabelDocument,
   UpdatePeriodicReportDocument,
 } from './UpdatePeriodicReport.graphql';
 
-export const useUpdatePeriodicReport = () => {
+export const useUpdatePeriodicReport = (
+  fileField: PeriodicReportFileField = 'reportFile'
+) => {
   const uploadFiles = useUploadFiles();
-  const [uploadFile, { client }] = useMutation(UpdatePeriodicReportDocument);
+  const [updatePeriodicReport, { client }] = useMutation(
+    UpdatePeriodicReportDocument
+  );
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const navigate = useNavigate();
+
+  const dateField = dateFieldFor(fileField);
+  const isPnp = fileField === 'reportFile';
 
   return async (
     id: string,
@@ -25,72 +33,73 @@ export const useUpdatePeriodicReport = () => {
     skippedReason?: string | null
   ) => {
     const updateReport = async (uploadId?: string, name?: string) => {
-      await uploadFile({
+      await updatePeriodicReport({
         variables: {
           input: {
             id,
             ...(uploadId && name
-              ? { reportFile: { upload: uploadId, name } }
+              ? { [fileField]: { upload: uploadId, name } }
               : {}),
-            receivedDate,
+            [dateField]: receivedDate,
             skippedReason,
           },
-          refreshFromPnp: !!uploadId,
+          refreshFromPnp: isPnp && !!uploadId,
         },
-        onError: (err) => {
-          const showError = async () => {
-            const info = getErrorInfo(err);
-            if (!isErrorCode(info, 'StepNotPlanned')) {
-              return;
+        onError: isPnp
+          ? (err) => {
+              const showError = async () => {
+                const info = getErrorInfo(err);
+                if (!isErrorCode(info, 'StepNotPlanned')) {
+                  return;
+                }
+
+                const productInfo = await client.query({
+                  query: ProductLabelDocument,
+                  variables: { id: info.productId },
+                });
+
+                enqueueSnackbar(
+                  <>
+                    <i>{ProductStepLabels[info.step]}</i>&nbsp;step is not
+                    planned for goal&nbsp;
+                    <Link to={`/products/${info.productId}`} color="inherit">
+                      {productInfo.data.product.label}
+                    </Link>
+                  </>,
+                  {
+                    action: (key) => (
+                      <IconButton
+                        color="inherit"
+                        onClick={() => {
+                          closeSnackbar(key);
+                          navigate(`/products/${info.productId}/edit`);
+                        }}
+                      >
+                        <Edit />
+                      </IconButton>
+                    ),
+                    autoHideDuration: 15_000,
+                    variant: 'error',
+                  }
+                );
+              };
+              void showError();
+              throw err;
             }
-
-            const productInfo = await client.query({
-              query: ProductLabelDocument,
-              variables: { id: info.productId },
-            });
-
-            enqueueSnackbar(
-              <>
-                <i>{ProductStepLabels[info.step]}</i>&nbsp;step is not planned
-                for goal&nbsp;
-                <Link to={`/products/${info.productId}`} color="inherit">
-                  {productInfo.data.product.label}
-                </Link>
-              </>,
-              {
-                action: (key) => (
-                  <IconButton
-                    color="inherit"
-                    onClick={() => {
-                      closeSnackbar(key);
-                      navigate(`/products/${info.productId}/edit`);
-                    }}
-                  >
-                    <Edit />
-                  </IconButton>
-                ),
-                autoHideDuration: 15_000,
-                variant: 'error',
-              }
-            );
-          };
-          void showError();
-          throw err;
-        },
+          : undefined,
       });
     };
-    if (id) {
-      if (files) {
-        uploadFiles({
-          files,
-          handleUploadCompleted: async ({ uploadId, name }) => {
-            await updateReport(uploadId, name);
-          },
-          parentId: id,
-        });
-      } else {
-        await updateReport();
-      }
+    if (!id) return;
+    if (files) {
+      uploadFiles({
+        files,
+        handleUploadCompleted: async ({ uploadId, name }) => {
+          await updateReport(uploadId, name);
+        },
+        parentId: id,
+      });
+    } else {
+      await updateReport();
     }
   };
 };

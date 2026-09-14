@@ -1,4 +1,10 @@
-import { Dashboard, FolderOpen, Person, Translate } from '@mui/icons-material';
+import {
+  Build,
+  Dashboard,
+  FolderOpen,
+  Person,
+  Translate,
+} from '@mui/icons-material';
 import {
   Drawer,
   List,
@@ -93,6 +99,7 @@ const SidebarContent = ({
         <NavItem to="/languages" label="Languages" icon={Translate} />
         <NavItem to="/users" label="People" icon={Person} />
         <NavItem to="/partners" label="Partners" icon={PeopleJoinedIcon} />
+        <NavItem to="/tools" label="Tools" icon={Build} />
       </List>
     </div>
   </>

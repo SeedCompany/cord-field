@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client';
+import { PeriodicReportsTable } from '~/components/PeriodicReports/PeriodicReportsTable';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
 import { PeriodicReportsList as PeriodicReportListLayout } from '../../../components/PeriodicReports';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ProgressReportsOfEngagementDocument as ReportsOfEngagement } from './ProgressReportsOfEngagement.graphql';
-import { ProgressReportsTable } from './ProgressReportsTable';
 
-export const ProgressReportListPage = () => {
+export const NarrativeReportListPage = () => {
   const { id: engagementId, changesetId } =
     useChangesetAwareIdFromUrl('engagementId');
   const { data, error } = useQuery(ReportsOfEngagement, {
@@ -22,7 +22,7 @@ export const ProgressReportListPage = () => {
       <Error page error={error}>
         {{
           NotFound: 'Could not find engagement',
-          Default: 'Error loading progress reports',
+          Default: 'Error loading narrative reports',
         }}
       </Error>
     );
@@ -33,23 +33,31 @@ export const ProgressReportListPage = () => {
       ? data.engagement
       : undefined;
 
+  const isMultiplication =
+    engagement?.project.__typename === 'MultiplicationTranslationProject';
+
+  if (engagement && !isMultiplication) {
+    return (
+      <Error page>
+        {{
+          Default: 'Narrative reports are not available for this engagement',
+        }}
+      </Error>
+    );
+  }
+
   return (
     <PeriodicReportListLayout
-      type="Progress"
+      type="Narrative"
       pageTitleSuffix={engagement?.project.name.value ?? 'A Project'}
       breadcrumbs={[
         <ProjectBreadcrumb key="project" data={engagement?.project} />,
         <EngagementBreadcrumb key="engagement" data={engagement} />,
       ]}
-      TableCardProps={{
-        sx: {
-          maxWidth: 400,
-        },
-      }}
     >
-      <ProgressReportsTable
-        loading={!engagement}
-        rows={engagement?.progressReports.items ?? []}
+      <PeriodicReportsTable
+        fileField="narrativeFile"
+        data={engagement?.progressReports.items}
       />
     </PeriodicReportListLayout>
   );

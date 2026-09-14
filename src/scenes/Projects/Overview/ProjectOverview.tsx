@@ -4,7 +4,6 @@ import {
   DateRange as DateRangeIcon,
   Edit,
   Event as EventIcon,
-  TravelExplore as GlobalSearchIcon,
   Public as GlobeIcon,
   Place as MapPinIcon,
   Publish,
@@ -442,13 +441,25 @@ export const ProjectOverview = () => {
             <Grid item>
               <DataButton
                 label="Marketing Location"
-                startIcon={<GlobalSearchIcon color="info" />}
+                startIcon={<MapPinIcon color="info" />}
                 empty="None"
                 loading={!project}
                 secured={project?.marketingLocation}
                 redacted="You do not have permission to view the marketing location"
                 children={(location) => location.name.value}
                 onClick={() => editField(['marketingLocation'])}
+              />
+            </Grid>
+            <Grid item>
+              <DataButton
+                label="Marketing Region"
+                startIcon={<GlobeIcon color="info" />}
+                empty="None"
+                loading={!project}
+                secured={project?.marketingRegion}
+                redacted="You do not have permission to view the marketing region"
+                children={(region) => region.name.value}
+                onClick={() => editField('marketingRegionOverride')}
               />
             </Grid>
             {project?.usesRev79.value === true && (
@@ -516,13 +527,16 @@ export const ProjectOverview = () => {
                 dueNext={project?.nextFinancialReportDue}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <PeriodicReportCard
-                type="Narrative"
-                dueCurrently={project?.currentNarrativeReportDue}
-                dueNext={project?.nextNarrativeReportDue}
-              />
-            </Grid>
+            {project &&
+              project.__typename !== 'MultiplicationTranslationProject' && (
+                <Grid item xs={12} md={6}>
+                  <PeriodicReportCard
+                    type="Narrative"
+                    dueCurrently={project.currentNarrativeReportDue}
+                    dueNext={project.nextNarrativeReportDue}
+                  />
+                </Grid>
+              )}
           </Grid>
 
           <Grid container spacing={3}>

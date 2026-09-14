@@ -24,8 +24,16 @@ import {
   useFileActions,
 } from '../files/FileActions';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
+import {
+  dateFieldFor,
+  PeriodicReportEditShape,
+  PeriodicReportFileField,
+} from './fileField';
 import { PeriodicReportFragment } from './PeriodicReport.graphql';
-import { PeriodicReportRow } from './PeriodicReportRow';
+import {
+  PeriodicReportFileFieldProvider,
+  PeriodicReportRow,
+} from './PeriodicReportRow';
 import { ReportLabel } from './ReportLabel';
 import { useUpdatePeriodicReport } from './Upload/useUpdatePeriodicReport';
 
@@ -34,18 +42,19 @@ type PeriodicReportsTableProps = Except<
   'columns' | 'rows'
 > & {
   data?: readonly PeriodicReportFragment[];
+  fileField?: PeriodicReportFileField;
 };
 
 export const PeriodicReportsTableInContext = ({
   data,
+  fileField = 'reportFile',
   ...props
 }: PeriodicReportsTableProps) => {
-  const uploadFile = useUpdatePeriodicReport();
+  const uploadFile = useUpdatePeriodicReport(fileField);
+  const dateField = dateFieldFor(fileField);
   const { openFilePreview } = useFileActions();
   const { enqueueSnackbar } = useSnackbar();
-  const [reportBeingEdited, editReport] = useState<
-    Omit<PeriodicReportFragment, 'reportFile'> & { reportFile?: File[] }
-  >();
+  const [reportBeingEdited, editReport] = useState<PeriodicReportEditShape>();
 
   const [editState, editField, fieldsBeingEdited] =
     useDialog<Many<EditablePeriodicReportField>>();
@@ -67,7 +76,7 @@ export const PeriodicReportsTableInContext = ({
       headerName: 'Submitted By',
       field: 'modifiedBy',
       width: 200,
-      valueGetter: (_, row) => row.reportFile.value?.modifiedBy.fullName,
+      valueGetter: (_, row) => row[fileField].value?.modifiedBy.fullName,
       renderCell: ({ row: report, value }) =>
         report.skippedReason.value ? <>&mdash;</> : value,
     },
@@ -75,23 +84,23 @@ export const PeriodicReportsTableInContext = ({
       headerName: 'Submitted Date',
       field: 'modifiedAt',
       width: 150,
-      valueGetter: (_, row) => row.reportFile.value?.modifiedAt,
+      valueGetter: (_, row) => row[fileField].value?.modifiedAt,
       renderCell: ({ row: report }) =>
         report.skippedReason.value ? (
           <>&mdash;</>
         ) : (
-          <FormattedDateTime date={report.reportFile.value?.modifiedAt} />
+          <FormattedDateTime date={report[fileField].value?.modifiedAt} />
         ),
     },
     {
       headerName: 'Received Date',
-      field: 'receivedDate',
+      field: dateField,
       width: 150,
       renderCell: ({ row: report }) =>
         report.skippedReason.value ? (
           <>&mdash;</>
         ) : (
-          <FormattedDate date={report.receivedDate.value} />
+          <FormattedDate date={report[dateField].value} />
         ),
     },
     {
@@ -101,14 +110,14 @@ export const PeriodicReportsTableInContext = ({
       align: 'right',
       sortable: false,
       renderCell: ({ row: report }) => {
-        const reportFile = report.reportFile;
-        const fileActions = reportFile.value
+        const file = report[fileField];
+        const fileActions = file.value
           ? without(
-              getPermittedFileActions(reportFile.canRead, reportFile.canEdit),
+              getPermittedFileActions(file.canRead, file.canEdit),
               FileAction.Delete,
               FileAction.Rename
             )
-          : reportFile.canEdit && !report.skippedReason.value
+          : file.canEdit && !report.skippedReason.value
           ? [FileAction.NewVersion]
           : [];
 
@@ -118,10 +127,10 @@ export const PeriodicReportsTableInContext = ({
             actions={{
               file: [
                 ...fileActions,
-                ...(report.receivedDate.canEdit && !report.skippedReason.value
+                ...(report[dateField].canEdit && !report.skippedReason.value
                   ? [FileAction.UpdateReceivedDate]
                   : []),
-                ...(!report.receivedDate.value && !report.skippedReason.value
+                ...(!report[dateField].value && !report.skippedReason.value
                   ? [FileAction.Skip]
                   : []),
                 ...(report.skippedReason.value
@@ -130,13 +139,11 @@ export const PeriodicReportsTableInContext = ({
               ],
               version: [
                 FileAction.Download,
-                ...(reportFile.canEdit
-                  ? [FileAction.Rename, FileAction.Delete]
-                  : []),
+                ...(file.canEdit ? [FileAction.Rename, FileAction.Delete] : []),
               ],
             }}
             // @ts-expect-error refactor file functionality later to make all this easier
-            item={reportFile.value ?? { __typename: '' }}
+            item={file.value ?? { __typename: '' }}
             onVersionUpload={(files) =>
               reportBeingEdited
                 ? async () => {
@@ -150,20 +157,20 @@ export const PeriodicReportsTableInContext = ({
             onVersionAccepted={(files) => {
               editReport({
                 ...report,
-                reportFile: files,
+                [fileField]: files,
               });
-              editField(['reportFile', 'receivedDate']);
+              editField([fileField, dateField]);
             }}
             onUpdateReceivedDate={() => {
-              editReport({ ...report, reportFile: undefined });
-              editField('receivedDate');
+              editReport({ ...report, [fileField]: undefined });
+              editField(dateField);
             }}
             onSkip={() => {
-              editReport({ ...report, reportFile: undefined });
+              editReport({ ...report, [fileField]: undefined });
               editField('skippedReason');
             }}
             onEditSkipReason={() => {
-              editReport({ ...report, reportFile: undefined });
+              editReport({ ...report, [fileField]: undefined });
               editField('skippedReason');
             }}
           />
@@ -176,10 +183,11 @@ export const PeriodicReportsTableInContext = ({
     <>
       {reportBeingEdited && fieldsBeingEdited === 'skippedReason' ? (
         <SkipPeriodicReportDialog {...editState} report={reportBeingEdited} />
-      ) : reportBeingEdited?.receivedDate.canEdit ? (
+      ) : reportBeingEdited?.[dateField].canEdit ? (
         <UpdatePeriodicReportDialog
           {...editState}
           editFields={fieldsBeingEdited}
+          fileField={fileField}
           report={reportBeingEdited}
         />
       ) : null}
@@ -217,17 +225,18 @@ export const PeriodicReportsTableInContext = ({
             props.onRowClick(params, event, details);
           } else {
             const report = params.row as PeriodicReportFragment;
-            if (!report.reportFile.canRead) {
+            const file = report[fileField];
+            if (!file.canRead) {
               enqueueSnackbar(
                 `You don't have permission to view this report file`
               );
               return;
             }
-            if (report.reportFile.value) {
-              openFilePreview(report.reportFile.value);
+            if (file.value) {
+              openFilePreview(file.value);
               return;
             }
-            if (report.reportFile.canEdit) {
+            if (file.canEdit) {
               // TODO Upload
             }
           }
@@ -239,6 +248,10 @@ export const PeriodicReportsTableInContext = ({
 
 export const PeriodicReportsTable = (props: PeriodicReportsTableProps) => (
   <FileActionsContextProvider>
-    <PeriodicReportsTableInContext {...props} />
+    <PeriodicReportFileFieldProvider
+      fileField={props.fileField ?? 'reportFile'}
+    >
+      <PeriodicReportsTableInContext {...props} />
+    </PeriodicReportFileFieldProvider>
   </FileActionsContextProvider>
 );

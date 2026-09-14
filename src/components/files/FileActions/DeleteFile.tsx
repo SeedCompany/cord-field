@@ -1,18 +1,20 @@
 import { MutationFunctionOptions, useMutation } from '@apollo/client';
 import { Typography } from '@mui/material';
 import { Except } from 'type-fest';
+import { removeItemFromList } from '~/api';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SubmitError } from '../../form';
 import { DeleteFileNodeDocument } from './FileActions.graphql';
-import { FilesActionItem } from './FileActionsContext';
+import { FileActionItem, FilesActionItem } from './FileActionsContext';
 
 export type DeleteFileProps = DialogFormProps<{ id: string }> & {
   item: FilesActionItem | undefined;
+  parentFile?: FileActionItem;
   refetchQueries?: MutationFunctionOptions['refetchQueries'];
 };
 
 export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
-  const { item, refetchQueries } = props;
+  const { item, parentFile, refetchQueries } = props;
   const [deleteFile] = useMutation(DeleteFileNodeDocument);
 
   if (!item) return null;
@@ -23,6 +25,12 @@ export const DeleteFile = (props: Except<DeleteFileProps, 'onSubmit'>) => {
     await deleteFile({
       variables: { id },
       refetchQueries,
+      update: parentFile
+        ? removeItemFromList({
+            listId: [parentFile, 'children'],
+            item,
+          })
+        : undefined,
     });
   };
 
