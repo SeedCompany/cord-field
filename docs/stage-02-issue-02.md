@@ -2,7 +2,7 @@
 title: 'Add the loadableId Babel plugin'
 stage: 2
 issue: 2
-status: open
+status: done
 type: feature
 depends_on: [stage-02-issue-01]
 ---

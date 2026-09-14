@@ -205,6 +205,18 @@ const useLoadedModule = <M,>(holder: Holder<M>, skip: boolean) => {
 
 const register = <M,>(loader: Loader<M>, options: CommonOptions) => {
   const ssr = options.ssr !== false;
+  if (
+    options.loadableId === undefined &&
+    process.env.NODE_ENV !== 'production'
+  ) {
+    // The fallback id below is per-process and order-dependent, so it will not
+    // match between the client and the SSR build. Be loud: a mis-wired
+    // `loadableId` Babel plugin is otherwise a silent first-paint regression.
+    // eslint-disable-next-line no-console
+    console.warn(
+      'loadable() call site has no `loadableId` — is the loadableId Babel plugin wired up?'
+    );
+  }
   const id = options.loadableId ?? `anonymous-loadable-${++anonymousCount}`;
   const holder = holderFor(id, loader);
 

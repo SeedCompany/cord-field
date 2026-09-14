@@ -17,7 +17,9 @@ export default defineConfig({
     // react-intersection-observer's test-utils only installs its mocks when it
     // can see a global `vi`.
     globals: true,
-    include: ['src/**/*.test.{ts,tsx}'],
+    // `vite/` is included too: the toolchain's own units (the `loadableId`
+    // Babel plugin) are tested by the same runner.
+    include: ['src/**/*.test.{ts,tsx}', 'vite/**/*.test.ts'],
     setupFiles: ['./src/setupTests.ts'],
   },
 });
