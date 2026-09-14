@@ -1,6 +1,5 @@
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const _ = require('lodash');
 const path = require('path');
 const { TsconfigPathsPlugin } = require('tsconfig-paths-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -77,48 +76,14 @@ const modifyWebpackConfig = (opts) => {
     );
   }
 
-  // define server port to listen on that may be different than the actual exposed port
-  const port = process.env.PORT || 3000;
-  process.env.SERVER_PORT = port;
-  if (opts.env.dev) {
-    // WHAT: Configure webpack dev server to listen on exposed port and proxy to
-    // server port that's incremented by 1.
-    // WHY: This prevents cross-origin errors since the browser only uses a single port.
-    // NOTE: This configuration differs from examples by flipping the
-    // configured port and the proxied port, since I think it's confusing, for
-    // example, to set your port to 1234 but have to access in browser at 1235.
-    process.env.SERVER_PORT++;
-    config.output.publicPath = `http://localhost:${port}/`;
-    if (isClient) {
-      config.devServer.port = port;
-      config.devServer.proxy = {
-        context: () => true,
-        target: `http://localhost:${process.env.SERVER_PORT}`,
-      };
-      config.devServer.devMiddleware.index = '';
-      config.devServer.devMiddleware.stats = false;
-      _.set(config, ['infrastructureLogging', 'level'], 'warn');
-
-      // Ignore proxy created log message on start to reduce clutter & prevent
-      // confusion with ports.
-      const proxyLogger =
-        require('http-proxy-middleware/dist/logger').getInstance();
-      const origInfo = proxyLogger.info;
-      proxyLogger.info = function (...args) {
-        if (
-          typeof args[0] === 'string' &&
-          args[0].startsWith('[HPM] Proxy created:')
-        ) {
-          proxyLogger.debug(...args);
-        } else {
-          origInfo.call(proxyLogger, ...args);
-        }
-      };
-    }
-  } else if (isServer) {
-    // convert SERVER_PORT usage to just PORT since only a single port is used
-    define('process.env.SERVER_PORT', 'process.env.PORT');
-  }
+  // Dev is Vite's now (`vite/plugins/devSsr.ts`): one process on one port,
+  // with Express mounted inside Vite's connect stack. So the two-port dance
+  // that used to live here — `SERVER_PORT = PORT + 1`, webpack-dev-server on
+  // `PORT` with a catch-all proxy to Express, and the monkey-patch on
+  // `http-proxy-middleware`'s logger to hide the resulting confusing startup
+  // line — is gone, along with the `SERVER_PORT` -> `PORT` define that the
+  // production server no longer needs. `razzle build` is all this config is
+  // still for; stage 4 deletes it outright.
 
   // Change public path to be dynamic based on PUBLIC_URL env
   if (!opts.env.dev && isClient) {

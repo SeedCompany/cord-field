@@ -5714,13 +5714,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack-env@npm:^1.18.3":
-  version: 1.18.3
-  resolution: "@types/webpack-env@npm:1.18.3"
-  checksum: 10c0/4e29bef49ae5dbac0f9a14ffe27a493ac27c2eb38ac62a1d8dcad33195980cf7d9223ecc9c47b71a9e24cd2f0cf596acbb0350e067037c6801f974f98373885c
-  languageName: node
-  linkType: hard
-
 "@types/webpack-sources@npm:*":
   version: 3.2.2
   resolution: "@types/webpack-sources@npm:3.2.2"
@@ -5732,7 +5725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:^4, @types/webpack@npm:^4.41.35, @types/webpack@npm:^4.41.8":
+"@types/webpack@npm:^4, @types/webpack@npm:^4.41.8":
   version: 4.41.35
   resolution: "@types/webpack@npm:4.41.35"
   dependencies:
@@ -8743,8 +8736,6 @@ __metadata:
     "@types/seedrandom": "npm:^3.0.7"
     "@types/stylis": "npm:^4.2.2"
     "@types/validator": "npm:^13.11.5"
-    "@types/webpack": "npm:^4.41.35"
-    "@types/webpack-env": "npm:^1.18.3"
     "@typescript-eslint/eslint-plugin": "npm:^5.62.0"
     "@typescript-eslint/parser": "npm:^5.62.0"
     "@typescript-eslint/types": "npm:^5.62.0"
@@ -8784,7 +8775,6 @@ __metadata:
     history: "npm:^5.3.0"
     html-react-parser: "npm:^3.0.16"
     html-webpack-plugin: "npm:^4.0.0"
-    http-proxy-middleware: "npm:^2.0.6"
     husky: "npm:^9.1.7"
     js-cookie: "npm:^3.0.5"
     jsdom: "npm:^30.0.1"
@@ -12679,7 +12669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-proxy-middleware@npm:^2.0.3, http-proxy-middleware@npm:^2.0.6":
+"http-proxy-middleware@npm:^2.0.3":
   version: 2.0.6
   resolution: "http-proxy-middleware@npm:2.0.6"
   dependencies:

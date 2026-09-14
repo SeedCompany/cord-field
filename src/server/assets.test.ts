@@ -87,8 +87,11 @@ describe('renderAssets in development', () => {
     setEnv({ NODE_ENV: 'development' });
     const { links, scripts } = renderAssets([]);
     expect(links).toBe('');
-    expect(scripts).toContain('src="/@vite/client"');
     expect(scripts).toContain('src="/src/client.tsx"');
+    // `/@vite/client` is injected by `vite.transformIndexHtml` in
+    // `renderServerSideApp`, not here — emitting it in both places would load
+    // the HMR client twice.
+    expect(scripts).not.toContain('@vite/client');
   });
 
   it('needs no manifest', () => {

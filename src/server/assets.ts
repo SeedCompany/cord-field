@@ -189,17 +189,15 @@ const findEntry = (manifest: ClientManifest) => {
 
 const renderDevAssets = (): RenderedAssets => ({
   links: '',
-  // Vite serves and transforms both of these; there is nothing to preload
-  // because there are no built chunks yet. Dev FOUC on CSS-importing routes
-  // is expected.
+  // Only the entry. There is nothing to preload because there are no built
+  // chunks yet, so dev FOUC on CSS-importing routes is expected.
   //
-  // `stage-03-issue-02` also runs the page through `vite.transformIndexHtml`,
-  // which injects `/@vite/client` itself; if that lands, drop the first tag
-  // here rather than shipping it twice.
-  scripts: [
-    '<script type="module" src="/@vite/client"></script>',
-    `<script type="module" src="/${CLIENT_ENTRY}"></script>`,
-  ].join('\n  '),
+  // `/@vite/client` deliberately is *not* emitted here: `renderServerSideApp`
+  // runs the page through `vite.transformIndexHtml`, which injects that tag
+  // (plus the React Refresh preamble) itself. Emitting it here too would load
+  // the HMR client twice — two websockets, two copies of the refresh
+  // runtime — so the one injector wins and this stays the entry only.
+  scripts: `<script type="module" src="/${CLIENT_ENTRY}"></script>`,
 });
 
 const renderProdAssets = (moduleIds: readonly string[]): RenderedAssets => {

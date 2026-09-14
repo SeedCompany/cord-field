@@ -2,7 +2,7 @@
 title: 'Serve SSR through Vite in middleware mode'
 stage: 3
 issue: 2
-status: open
+status: done
 type: feature
 depends_on: [stage-03-issue-01]
 ---

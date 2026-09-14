@@ -33,6 +33,7 @@ import { ServerLocation } from '../components/Routing';
 import { RequestContext } from '../hooks';
 import { createMuiEmotionCache, createTssEmotionCache } from '../theme/emotion';
 import { renderAssets } from './assets';
+import { transformDevHtml } from './devHtmlTransform';
 import { indexHtml } from './indexHtml';
 
 const basePath = basePathOfUrl(process.env.PUBLIC_URL);
@@ -122,7 +123,12 @@ export const renderServerSideApp = async (
       __LOADABLE_IDS__: chunkIds,
     },
   });
-  res.status(location.statusCode ?? 200).send(fullMarkup);
+  // In dev this is where Vite gets its hands on the page: `transformIndexHtml`
+  // injects `/@vite/client` and `@vitejs/plugin-react`'s React Refresh
+  // preamble. Identity in production — see `devHtmlTransform.ts`.
+  const html = await transformDevHtml(req.originalUrl, fullMarkup);
+
+  res.status(location.statusCode ?? 200).send(html);
 };
 
 class SsrStyles {

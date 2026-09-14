@@ -11,11 +11,23 @@ import { basePathOfUrl, withoutTrailingSlash } from '~/common';
 import { LogoutDocument } from '../scenes/Authentication/Logout/logout.graphql';
 import { renderServerSideApp } from './renderServerSideApp';
 
-const PUBLIC_DIR = path.resolve(
-  __dirname,
-  process.env.NODE_ENV === 'production' ? '.' : '..',
-  'public'
-);
+/**
+ * Where the built client assets live, for `express.static` below.
+ *
+ * Only the production branch matters. In dev, Vite's `publicDir` middleware
+ * has already served `public/` by the time this Express app is reached (see
+ * `vite/plugins/devSsr.ts`), so `express.static` never matches anything —
+ * but the path still has to *evaluate*, and `__dirname` does not exist in
+ * Vite's ESM SSR graph. Hence the branch: `process.env.NODE_ENV` is
+ * `'development'` there, so the `__dirname` arm is never reached.
+ *
+ * `import.meta.url` is not an option while Razzle still builds this file;
+ * webpack 4 cannot parse `import.meta` at all.
+ */
+const PUBLIC_DIR =
+  process.env.NODE_ENV === 'production'
+    ? path.resolve(__dirname, 'public')
+    : path.resolve(process.cwd(), 'public');
 const PUBLIC_URL = withoutTrailingSlash(process.env.PUBLIC_URL || '');
 const BASE_PATH = withoutTrailingSlash(basePathOfUrl(PUBLIC_URL));
 

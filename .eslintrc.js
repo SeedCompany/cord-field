@@ -41,6 +41,9 @@ const noProcessEnvInClient = {
 // Node & toolchain code, which must read the real process.env.
 const serverSideFiles = [
   './bin/**/*',
+  // Toolchain: reads the real env to configure the dev server's port and to
+  // inline build-time constants.
+  './vite.config.ts',
   './src/server/**/*',
   './src/index.ts',
   './src/common/env.ts',
