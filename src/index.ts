@@ -1,6 +1,26 @@
 import 'source-map-support/register';
 import { createTerminus } from '@godaddy/terminus';
+import * as path from 'path';
 import { create } from './server/server';
+
+/**
+ * Where Vite wrote the two asset manifests, for `src/server/assets.ts`.
+ *
+ * This replaces the `process.env.LOADABLE_STATS_MANIFEST` define that
+ * `razzle.config.js` used to inject. It cannot be a `define`: `assets.ts`
+ * looks these up as `process.env[envVar]`, a *dynamic* key, and Vite's
+ * `define` only substitutes literal dotted member expressions. So they have
+ * to be real runtime values, and this is the one place that runs before any
+ * request is served.
+ *
+ * Derived from `__dirname` (i.e. `build/`) rather than `process.cwd()` so the
+ * server is startable from anywhere, and assigned with `??=` so a deployment
+ * can still override them. Get this wrong and the page silently renders with
+ * no `<script>` tag at all — `assets.ts` warns once and degrades to no tags.
+ */
+const manifestDir = path.resolve(__dirname, 'public', '.vite');
+process.env.CLIENT_MANIFEST_PATH ??= path.join(manifestDir, 'manifest.json');
+process.env.SSR_MANIFEST_PATH ??= path.join(manifestDir, 'ssr-manifest.json');
 
 /**
  * The production server entry, and only that.

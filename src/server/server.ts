@@ -57,6 +57,17 @@ export const create = async () => {
     next();
   });
 
+  // The manifests the client build writes into `build/public/.vite/` are
+  // build metadata, not public assets — `assets.ts` reads them off disk. This
+  // has to come *before* `express.static`, which serves them quite happily:
+  // its `dotfiles` default is no special treatment at all.
+  //
+  // `'/.vite'` and not `'.vite/*'`, matching the rule below: with an explicit
+  // `*` the matched prefix swallows the trailing slash, and `trim_prefix` then
+  // rejects the layer because the remainder does not start on a path
+  // separator. A plain prefix mount has no such problem.
+  router.use('/.vite', (req, res) => res.sendStatus(404));
+
   // Serve static assets
   router.use(
     express.static(PUBLIC_DIR, {

@@ -25,6 +25,24 @@ const src = fileURLToPath(new URL('./src', import.meta.url));
 const clientEntry = 'src/client.tsx';
 
 /**
+ * The SSR entry, owned here rather than on the command line so `build:server`
+ * stays `vite build --ssr` with no argument.
+ *
+ * It has to be given twice, and the second one is the one that actually
+ * decides: a bare `--ssr` sets the *inline* `build.ssr` to `true`, and inline
+ * config wins over the config file, so Vite's entry resolution
+ * (`typeof build.ssr === 'string' ? … : rollupOptions.input`) never sees the
+ * string below. `rollupOptions.input` is what it falls through to — absolute,
+ * because Rollup resolves a bare relative input against the cwd rather than
+ * through Vite's resolver. `build.ssr` is kept anyway so a programmatic
+ * `vite build` with `ssr: true` unset still finds the entry.
+ */
+const serverEntry = 'src/index.ts';
+const serverEntryPath = fileURLToPath(
+  new URL(`./${serverEntry}`, import.meta.url)
+);
+
+/**
  * The heavy barrels. `babel-plugin-transform-imports` used to rewrite the MUI
  * ones to deep paths; Rollup tree-shakes MUI's ESM without help, so the only
  * thing left to solve is dev cold-start, and prebundling — not a transform —
@@ -70,12 +88,69 @@ const ssrCjsInterop = [
   'react-dropzone',
 ];
 
+/** Everything bundled into the SSR graph rather than left to Node. */
+const ssrBundled = [
+  // Only reaches the SSR graph through the `lodash` alias above, so it has to
+  // be bundled rather than externalized.
+  'lodash-es',
+  ...ssrCjsInterop,
+];
+
 /**
- * `vite` (dev) now serves the app end to end — one process, one port, SSR
- * included. `vite build` still only produces the client bundle, and neither is
- * wired into `yarn start`/`yarn build` yet: the production build is
- * `stage-03-issue-03` and the script/CI/Dockerfile cutover is
- * `stage-04-issue-01`.
+ * A bare package specifier — `express`, `@mui/material/styles` — as opposed to
+ * a relative path, a `~/…` alias, a `virtual:…` id or one of Rollup's
+ * `\0`-prefixed internals. The leading character class is what excludes `~`.
+ */
+const packageImportRE = /^(?:@[a-z0-9][\w.-]*\/)?[a-z0-9][\w.-]*(?:\/.+)?$/i;
+
+/**
+ * Bare imports that are *not* JavaScript, and so must be bundled even though
+ * they name a package: `reactflow/dist/style.css`. `require()`ing one at
+ * runtime would throw.
+ */
+const nonJsImportRE =
+  /\.(css|less|sass|scss|styl|json|svg|png|jpe?g|gif|webp|avif|woff2?|ttf|otf|eot)(\?.*)?$/i;
+
+/**
+ * Whether to leave this import for Node to resolve, with its specifier
+ * untouched.
+ *
+ * This is the one deviation from letting Vite decide, and it exists because
+ * **Vite's externalization is written for an ESM bundle and this one is CJS.**
+ * Vite resolves an external itself and emits the file it landed on, choosing
+ * ESM: `@mui/material/styles` becomes `@mui/material/styles/index.js` (walking
+ * past the nested `styles/package.json` whose `main` is the CommonJS build) and
+ * `posthog-js/react` becomes `posthog-js/react/dist/esm/index.js` (ignoring its
+ * `main`). `require()`ing those ESM files is what fails — with a directory
+ * import Node's ESM resolver rejects:
+ *
+ *     Error: Directory import '…/@mui/utils/formatMuiErrorMessage' is not
+ *     supported resolving ES modules imported from …/@mui/material/styles/index.js
+ *
+ * or, worse, without an error at all: a second, ESM copy of a package the
+ * bundle also holds as CJS, so `posthog-js/react`'s provider and consumer end
+ * up on different React contexts.
+ *
+ * Rollup consults `external` with the *raw* specifier before any resolver
+ * runs, so returning `true` here is the only way to keep it bare — which is
+ * precisely what `webpack-node-externals` did under Razzle, leaving nested
+ * `main` fields and `require` conditions to Node. Returning `undefined` hands
+ * the id back to Vite, so `ssr.noExternal` and Vite's own builtin handling
+ * still apply to everything else.
+ */
+const keepExternal = (id: string) =>
+  packageImportRE.test(id) &&
+  !nonJsImportRE.test(id) &&
+  !ssrBundled.some((pkg) => id === pkg || id.startsWith(`${pkg}/`))
+    ? true
+    : undefined;
+
+/**
+ * `vite` (dev) serves the app end to end — one process, one port, SSR
+ * included — and `vite build` now produces the whole production artifact in
+ * two passes: `build:client` writes `build/public/`, then `build:server`
+ * writes `build/server.js`. Nothing is wired into `yarn start`/`yarn build`
+ * yet; that cutover is `stage-04-issue-01`.
  */
 export default defineConfig(({ isSsrBuild, mode }) => {
   const isProd = mode === 'production';
@@ -163,15 +238,30 @@ export default defineConfig(({ isSsrBuild, mode }) => {
     // JS-hosted — zero CSS files in `src/` and one asset import
     // (AuthLayout's background.png). `{ runtime }` cannot rewrite `url()`
     // inside emitted CSS, hence the `relative` fallback there.
-    experimental: {
-      renderBuiltUrl: (filename, { hostType }) =>
-        hostType === 'css'
-          ? { relative: true }
-          : // The helper lives next to `window.env` in `indexHtml.ts` so that
-            // PUBLIC_URL normalisation keeps one home (`src/common/urls.ts`)
-            // instead of being inlined into every chunk.
-            { runtime: `window.__assetUrl(${JSON.stringify(filename)})` },
-    },
+    //
+    // Client build only, and that is a correctness requirement, not tidiness:
+    // `AuthLayout` is in the SSR graph too, so a `window.__assetUrl(...)`
+    // expression in `server.js` would be a `ReferenceError` the moment
+    // `/login` renders. The SSR build therefore keeps Vite's default
+    // `base`-relative URL — which is exactly what Razzle did, since
+    // `DynamicPublicPathPlugin` was also applied to the client target only and
+    // the node target built with `publicPath: '/'`. Server-rendered asset URLs
+    // consequently ignore a sub-path `PUBLIC_URL` under both toolchains; the
+    // client re-render (the app does not hydrate) immediately corrects them.
+    ...(isSsrBuild
+      ? {}
+      : {
+          experimental: {
+            renderBuiltUrl: (filename, { hostType }) =>
+              hostType === 'css'
+                ? { relative: true }
+                : // The helper lives next to `window.env` in `indexHtml.ts` so
+                  // that PUBLIC_URL normalisation keeps one home
+                  // (`src/common/urls.ts`) instead of being inlined into every
+                  // chunk.
+                  { runtime: `window.__assetUrl(${JSON.stringify(filename)})` },
+          },
+        }),
 
     // `custom`, not `spa`/`mpa`: there is no `index.html` to serve or
     // transform. Vite must not install its own html-serving fallback
@@ -192,36 +282,104 @@ export default defineConfig(({ isSsrBuild, mode }) => {
     optimizeDeps: { include: prebundle },
 
     // Razzle does not bundle node_modules into the server either — its
-    // `buildType: 'iso'` uses webpack-node-externals — so leaving
-    // `noExternal` at its default preserves today's behavior. `lodash-es` is
-    // the one exception: it only reaches the SSR graph through the alias
-    // above, so it has to be bundled rather than externalized.
+    // `buildType: 'iso'` uses webpack-node-externals — so keeping this list
+    // short preserves today's behavior rather than changing it. See
+    // `keepExternal`, which is what actually holds the line for the CJS
+    // output.
     ssr: {
-      noExternal: [
-        // Only reaches the SSR graph through the `lodash` alias above, so it
-        // has to be bundled rather than externalized.
-        'lodash-es',
-        ...ssrCjsInterop,
-      ],
+      noExternal: ssrBundled,
     },
 
     build: {
-      outDir: 'build/public',
+      // False in *both* builds, and non-negotiable in the server one: its
+      // `outDir` is `build/`, the **parent** of the client's `build/public/`,
+      // so the default `true` would delete the client output that was just
+      // written. The clean slate comes from the `rimraf build` that runs
+      // before both builds instead (see `package.json`).
+      emptyOutDir: false,
       sourcemap: true,
-      // Both are consumed by `src/server/assets.ts`.
-      manifest: true,
-      ssrManifest: true,
+      // Matches the existing `static/*` 404 rule in `server.ts`. Set for both
+      // builds — see `assetFileNames` below.
+      assetsDir: 'static',
       // For xlsx's UMD build.
       commonjsOptions: { transformMixedEsModules: true },
+      ...(isSsrBuild
+        ? {
+            // `build/server.js` — exactly where the Dockerfile's
+            // `CMD ["yarn","node","build/server.js"]` expects it, and what
+            // makes `server.ts`'s `path.resolve(__dirname, 'public')` point at
+            // the client output.
+            outDir: 'build',
+            ssr: serverEntry,
+            // `public/` is the *client* build's job. Copying it here too
+            // would scatter a second favicon.ico and images/ into `build/`.
+            copyPublicDir: false,
+          }
+        : {
+            outDir: 'build/public',
+            copyPublicDir: true,
+            // Both are consumed by `src/server/assets.ts`.
+            manifest: true,
+            ssrManifest: true,
+          }),
       rollupOptions: {
-        input: { client: clientEntry },
-        output: {
-          entryFileNames: 'static/[name].[hash].js',
-          chunkFileNames: 'static/[name].[hash].js',
-          assetFileNames: 'static/[name].[hash][extname]',
-          // Do NOT add `experimentalMinChunkSize`: Rollup would merge chunks
-          // out of the manifest and `assets.ts` could no longer find them.
-        },
+        input: isSsrBuild ? serverEntryPath : { client: clientEntry },
+        // Rollup asks this before any resolver runs, which is the only place
+        // that can stop Vite rewriting a bare specifier — see `keepExternal`.
+        ...(isSsrBuild ? { external: keepExternal } : {}),
+        output: isSsrBuild
+          ? {
+              // CJS, not Vite's ESM default for SSR builds: `package.json` has
+              // no `"type": "module"`, so Node parses `build/server.js` as
+              // CommonJS and an ESM bundle would crash on its first `import`.
+              // CJS also keeps `__dirname` alive — `server.ts`'s `PUBLIC_DIR`
+              // and `index.ts`'s manifest paths both need it — and keeps
+              // `source-map-support/register` working, leaving the Dockerfile
+              // `CMD` and the JetBrains run configs untouched.
+              format: 'cjs',
+              // Rollup's default, `'default'`, assumes every external is plain
+              // CommonJS whose `module.exports` *is* the default export, and
+              // emits a bare `require()` with no interop check. That is wrong
+              // for the many dependencies here that ship a Babel-style CJS
+              // build (`exports.default` plus `__esModule`): `@emotion/cache`
+              // came out as `baseEmotionCache is not a function`. `'auto'`
+              // emits the `__esModule` check instead — the same interop webpack
+              // applied, so the whole dep graph keeps behaving as it does today.
+              interop: 'auto',
+              entryFileNames: 'server.js',
+              // The one asset import in the graph (AuthLayout's
+              // background.png) is reachable from SSR too, so its *name* has
+              // to be computed the same way here as in the client build or the
+              // server-rendered `<img src>` points at a file that was never
+              // written. `build.ssrEmitAssets` stays at its default `false`,
+              // so this names a URL rather than emitting a second copy; the
+              // hash is content-derived, so the two agree.
+              assetFileNames: 'static/[name].[hash][extname]',
+              // Deliberately NOT `inlineDynamicImports`, despite today's
+              // `LimitChunkCountPlugin(1)` producing a single file. The two are
+              // not equivalent: webpack's one file still holds one *function*
+              // per module and runs it on first `__webpack_require__`, so a
+              // dynamic import stayed lazy. Rollup's inlining concatenates
+              // module bodies and hoists every external `require` to the top of
+              // the file, so `loadable(..., { ssr: false })` chunks — which the
+              // server must never execute — run at startup instead:
+              //
+              //     @editorjs/delimiter/dist/bundle.js:1
+              //     ReferenceError: window is not defined
+              //
+              // Splitting restores webpack's laziness. Nothing fetches these
+              // over HTTP, so their names only need to be stable and out of the
+              // way; `build/public/` is the only directory Express serves.
+              chunkFileNames: 'chunks/[name].[hash].js',
+            }
+          : {
+              entryFileNames: 'static/[name].[hash].js',
+              chunkFileNames: 'static/[name].[hash].js',
+              assetFileNames: 'static/[name].[hash][extname]',
+              // Do NOT add `experimentalMinChunkSize`: Rollup would merge
+              // chunks out of the manifest and `assets.ts` could no longer
+              // find them.
+            },
         // `CircularDependencyPlugin` runs with `failOnError: true` today,
         // which means real cycles exist in this codebase and are being
         // actively held back. Rollup only warns, so without this the guard is
