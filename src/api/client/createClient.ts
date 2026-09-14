@@ -2,6 +2,7 @@ import { ApolloClient, ApolloLink, split } from '@apollo/client';
 import { ErrorHandler, onError } from '@apollo/client/link/error';
 import { RetryLink } from '@apollo/client/link/retry';
 import { RefObject } from 'react';
+import { env } from '~/common';
 import { createCache } from './createCache';
 import { Impersonation } from './ImpersonationContext';
 import { delayLink } from './links/delay.link';
@@ -29,7 +30,7 @@ export const createClient = ({
   const client = new ApolloClient({
     clientAwareness: {
       name: 'cord-field',
-      version: process.env.RAZZLE_GIT_HASH,
+      version: env.RAZZLE_GIT_HASH,
     },
     ssrMode: !!ssr,
     cache: createCache(),

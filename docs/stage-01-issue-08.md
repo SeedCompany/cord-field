@@ -2,7 +2,7 @@
 title: 'Replace client `process.env` reads with an `env` accessor'
 stage: 1
 issue: 8
-status: open
+status: done
 type: chore
 depends_on: [stage-00-issue-01]
 blocks: [stage-03-issue-01]

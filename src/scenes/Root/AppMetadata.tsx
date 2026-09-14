@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { env } from '~/common';
 
 export const AppMetadata = () => (
   <Helmet titleTemplate="%s - CORD Field" defaultTitle="CORD Field">
@@ -10,7 +11,7 @@ export const AppMetadata = () => (
     <link href="https://use.typekit.net/qrd6jxb.css" rel="stylesheet" />
 
     {/* Search in browser bar */}
-    {process.env.RAZZLE_OPEN_SEARCH === 'true' && (
+    {env.RAZZLE_OPEN_SEARCH === 'true' && (
       <link
         type="application/opensearchdescription+xml"
         rel="search"

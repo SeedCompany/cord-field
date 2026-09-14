@@ -7,6 +7,14 @@ declare namespace NodeJS {
   }
 }
 
+/**
+ * The runtime env object that the server injects into the page per request.
+ * Read it via the `env` accessor in src/common/env.ts, not directly.
+ */
+interface Window {
+  env?: NodeJS.ProcessEnv;
+}
+
 declare module '*.avif' {
   const src: string;
   export default src;

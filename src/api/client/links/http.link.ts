@@ -1,9 +1,10 @@
 import { HttpLink } from '@apollo/client';
 import fetch from 'cross-fetch';
+import { env } from '~/common';
 import { dedupeFragmentsPrinter } from './dedupeFragmentsPrinter';
 import { SseLink } from './sse.link';
 
-const serverHost = process.env.RAZZLE_API_BASE_URL || '';
+const serverHost = env.RAZZLE_API_BASE_URL || '';
 
 export const createHttpLink = () =>
   new HttpLink({

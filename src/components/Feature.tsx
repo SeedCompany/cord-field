@@ -7,14 +7,14 @@ import {
   usePostHog,
 } from 'posthog-js/react';
 import { ReactNode, useCallback, useEffect, useRef } from 'react';
-import { ChildrenProp, StyleProps } from '~/common';
+import { ChildrenProp, env, StyleProps } from '~/common';
 
 export const useFeatureEnabled = (flag: string) => {
   const enabled = useFeatureFlagEnabled(flag);
   return (
     enabled === true ||
-    process.env[`RAZZLE_POSTHOG_FLAG_${flag}`] ||
-    process.env.RAZZLE_POSTHOG_ALL_FLAGS
+    env[`RAZZLE_POSTHOG_FLAG_${flag}`] ||
+    env.RAZZLE_POSTHOG_ALL_FLAGS
   );
 };
 
@@ -53,8 +53,8 @@ export function Feature({
     !(
       match === undefined ||
       variant === match ||
-      process.env[`RAZZLE_POSTHOG_FLAG_${flag}`] ||
-      process.env.RAZZLE_POSTHOG_ALL_FLAGS
+      env[`RAZZLE_POSTHOG_FLAG_${flag}`] ||
+      env.RAZZLE_POSTHOG_ALL_FLAGS
     )
   ) {
     return <>{fallback}</>;
