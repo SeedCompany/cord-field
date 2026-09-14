@@ -2,7 +2,7 @@
 title: 'Load dotenv without Razzle'
 stage: 1
 issue: 5
-status: open
+status: done
 type: chore
 blocks: [stage-04-issue-02]
 ---
