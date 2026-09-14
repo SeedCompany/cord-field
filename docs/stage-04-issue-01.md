@@ -2,7 +2,7 @@
 title: 'Cut scripts, CI and the Dockerfile over to Vite'
 stage: 4
 issue: 1
-status: open
+status: done
 type: chore
 depends_on: [stage-03-issue-02, stage-03-issue-03]
 ---
