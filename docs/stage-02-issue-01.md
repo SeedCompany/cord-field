@@ -2,7 +2,7 @@
 title: 'Add the Loadable module'
 stage: 2
 issue: 1
-status: open
+status: done
 type: feature
 ---
 
