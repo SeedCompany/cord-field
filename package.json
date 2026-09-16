@@ -137,8 +137,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
-    "@babel/helper-plugin-utils": "^7.22.5",
-    "@babel/types": "^7.23.0",
     "@emotion/babel-plugin": "^11.11.0",
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "^5.0.0",

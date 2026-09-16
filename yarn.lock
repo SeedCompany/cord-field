@@ -6184,9 +6184,7 @@ __metadata:
   dependencies:
     "@apollo/client": "npm:3.14.*"
     "@babel/core": "npm:^7.23.2"
-    "@babel/helper-plugin-utils": "npm:^7.22.5"
     "@babel/runtime": "npm:^7.23.2"
-    "@babel/types": "npm:^7.23.0"
     "@dagrejs/dagre": "npm:^1.1.2"
     "@date-io/core": "npm:^2.17.0"
     "@date-io/luxon": "npm:^2.17.0"
