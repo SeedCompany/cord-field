@@ -2,14 +2,14 @@ import { MockedProvider } from '@apollo/client/testing';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter } from 'react-router-dom';
-import { UserStatus } from '~/api/schema.graphql';
+import { UserStatus } from '~/api/schema.graphql.ts';
 import { SnackbarProvider } from '~/components/Snackbar';
 import { ThemeProvider } from '~/theme/ThemeProvider';
 import { CreateUser } from '../Create';
 import { EditUser } from '../Edit';
-import type { UserFormFragment } from './UserForm.graphql';
+import type { UserFormFragment } from './UserForm.graphql.ts';
 
-jest.mock('../../../components/Session', () => ({
+vi.mock('../../../components/Session', () => ({
   useSession: () => ({ session: undefined }),
 }));
 
