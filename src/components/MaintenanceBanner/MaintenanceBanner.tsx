@@ -31,8 +31,12 @@ const WINDOW = {
   zone: 'America/Chicago',
   /** Read-only begins. */
   start: '2026-09-17T17:00',
-  /** Read-only ends — the banner hides itself after this. */
-  end: '2026-09-17T21:00',
+  /**
+   * Read-only ends — the banner hides itself after this. Maintenance finished
+   * ahead of the scheduled 21:00, so this is the actual end; the notice is off
+   * from here without touching anything else.
+   */
+  end: '2026-09-17T19:30',
   /** How long before `start` the heads-up stops being dismissible. */
   lockInBefore: { hours: 1 },
   /**
