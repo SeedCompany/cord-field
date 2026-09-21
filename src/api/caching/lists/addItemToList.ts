@@ -72,7 +72,9 @@ export const addItemToList =
       { readField, storeFieldName, toReference }
     ) => {
       if (
-        !existing ||
+        // Nothing to add to if this variation was cached without items,
+        // e.g. from a query only selecting `total` or perms.
+        !existing?.items ||
         existing.items.some((ref) => readField('id', ref) === newItem.id)
       ) {
         return existing;
@@ -115,7 +117,9 @@ export const addItemToList =
 
       return {
         ...existing,
-        total: Number(existing.total) + 1,
+        ...(existing.total != null
+          ? { total: Number(existing.total) + 1 }
+          : {}),
         items: newList,
       };
     };
