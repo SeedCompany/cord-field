@@ -2,14 +2,16 @@ import MsgReader from '@freiraum/msgreader';
 import { fromBuffer as fileTypeFromBuffer } from 'file-type/browser';
 import { lookup } from 'mime-types';
 
-// file-type only inspects the file's signature bytes, not its full contents.
-// This matches file-type's own internal `minimumBytes` threshold for reliable
-// detection, so we never need to read more than this from disk/memory.
+// Matches file-type's own internal minimum for reliable signature detection.
 const FILE_TYPE_SNIFF_BYTES = 4100;
 
-// Outlook .msg files (and legacy pre-2007 .doc/.xls/.ppt) are OLE Compound
-// File Binary Format documents, which always start with this fixed signature.
+// Signature for OLE Compound File Binary Format (.msg, legacy .doc/.xls/.ppt).
 const OLE_SIGNATURE = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1];
+
+// Bounds how much memory the MsgReader check below can use. Real .msg/.doc/
+// .xls/.ppt files are well under this; anything bigger skips straight to the
+// file-type sniff (which still resolves OLE files as `application/x-cfb`).
+const MAX_OLE_PARSE_BYTES = 50 * 1024 * 1024; // 50 MiB
 
 export const getMimeType = async (file: File) => {
   const fromOS = file.type;
@@ -22,15 +24,9 @@ export const getMimeType = async (file: File) => {
     return fromFileName;
   }
 
-  // MsgReader has to walk the compound file's FAT/directory structure to
-  // tell an Outlook message apart from other OLE-based formats, which can
-  // require random access anywhere in the file - it can't be satisfied with
-  // a small slice like file-type's signature check below. To avoid reading
-  // arbitrarily large files fully into memory just to rule this out, we only
-  // pay that cost for files that start with the OLE signature, which is rare
-  // once name/OS-reported types are exhausted and is only ever used by these
-  // small, bounded legacy document formats.
-  if (await hasOleSignature(file)) {
+  // MsgReader needs the whole buffer to walk the compound file's directory
+  // structure - it can't work off a slice - so we gate it on size + signature.
+  if (file.size <= MAX_OLE_PARSE_BYTES && (await hasOleSignature(file))) {
     const buffer = await file.arrayBuffer();
     const isEmail = !new MsgReader(buffer).getFileData().error;
     if (isEmail) {
