@@ -24,7 +24,6 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { GtlReportDrawer } from '../EditForm/GtlReportDrawer';
 import { GoalsCard } from './GoalsCard';
-import { PrayerSummaryCard } from './PrayerSummaryCard';
 import {
   ChangeGtlReportCommunityImpactPromptDocument,
   CreateGtlReportCommunityImpactDocument,
@@ -34,6 +33,7 @@ import {
 } from './GtlReportDetail.graphql';
 import { MediaCard } from './MediaCard';
 import { PracticumCard } from './PracticumCard';
+import { PrayerSummaryCard } from './PrayerSummaryCard';
 import { ProgressExplanationCard } from './ProgressExplanationCard';
 import { ProseSection } from './ProseSection';
 

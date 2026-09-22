@@ -1,5 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { Card, CardContent, Chip, Skeleton, Stack, Typography } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Chip,
+  Skeleton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { GtlPrayerStepListDocument as PrayerList } from '../EditForm/Steps/Prayer/PrayerStep.graphql';
 
 /**
@@ -26,7 +33,7 @@ export const PrayerSummaryCard = ({
       ? data.engagement
       : undefined;
   const items = (engagement?.posts.items ?? []).filter(
-    (p) => p.report.value?.id === reportId,
+    (p) => p.report.value?.id === reportId
   );
 
   return (

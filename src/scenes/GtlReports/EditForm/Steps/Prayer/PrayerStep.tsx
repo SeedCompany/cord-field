@@ -19,8 +19,8 @@ import { IconButton } from '../../../../../components/IconButton';
 import { type GtlStepProps } from '../../stepTypes';
 import {
   AttachGtlPrayerToReportDocument as AttachToReport,
-  GtlPrayerStepListDocument as PrayerList,
   type GtlPrayerStepListQuery,
+  GtlPrayerStepListDocument as PrayerList,
 } from './PrayerStep.graphql';
 
 type PrayerPost = Extract<

@@ -94,6 +94,5 @@ export const WorkFlowEventList = ({
  * only the User arm carries a name.
  */
 const actorName = (
-  actor?: { __typename?: string; fullName?: string | null } | null,
-) =>
-  actor?.__typename === 'User' ? actor.fullName : 'an automated process';
+  actor?: { __typename?: string; fullName?: string | null } | null
+) => (actor?.__typename === 'User' ? actor.fullName : 'an automated process');
