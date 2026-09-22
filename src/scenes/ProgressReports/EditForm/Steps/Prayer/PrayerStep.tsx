@@ -6,13 +6,13 @@ import {
   Card,
   CardContent,
   Chip,
-  IconButton,
   Stack,
   Typography,
 } from '@mui/material';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { canEditAny } from '~/common';
 import { useDialog } from '~/components/Dialog';
+import { IconButton } from '~/components/IconButton';
 import { CreatePost } from '~/components/posts/CreatePost';
 import { EditPost } from '~/components/posts/EditPost';
 import { PostProvenance } from '~/components/posts/PostProvenance';
@@ -68,28 +68,17 @@ export const PrayerStep: StepComponent = ({ report }) => {
   const inThisReport = items.filter((p) => p.report.value?.id === report.id);
   const recentUnattached = items.filter((p) => !p.report.value).slice(0, 5);
 
-  const attach = (id: string, current: (typeof items)[number]) =>
+  // `updatePost` requires the unchanged fields alongside the one being set, so
+  // both directions pass the post's current values and differ only in `report`.
+  const setReport = (post: PrayerPost, reportId: string | null) =>
     attachToReport({
       variables: {
         input: {
-          id,
-          type: current.type,
-          shareability: current.shareability,
-          body: current.body.value ?? '',
-          report: report.id,
-        },
-      },
-    });
-
-  const detach = (id: string, current: (typeof items)[number]) =>
-    attachToReport({
-      variables: {
-        input: {
-          id,
-          type: current.type,
-          shareability: current.shareability,
-          body: current.body.value ?? '',
-          report: null,
+          id: post.id,
+          type: post.type,
+          shareability: post.shareability,
+          body: post.body.value ?? '',
+          report: reportId,
         },
       },
     });
@@ -137,7 +126,7 @@ export const PrayerStep: StepComponent = ({ report }) => {
               key={post.id}
               post={post}
               action={
-                <Button size="small" onClick={() => void detach(post.id, post)}>
+                <Button size="small" onClick={() => void setReport(post, null)}>
                   Remove
                 </Button>
               }
@@ -160,7 +149,7 @@ export const PrayerStep: StepComponent = ({ report }) => {
                   <Button
                     size="small"
                     variant="outlined"
-                    onClick={() => void attach(post.id, post)}
+                    onClick={() => void setReport(post, report.id)}
                   >
                     Include
                   </Button>
