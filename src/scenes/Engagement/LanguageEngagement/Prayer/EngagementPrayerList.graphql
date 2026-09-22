@@ -1,0 +1,13 @@
+query EngagementPrayerList($engagement: ID!, $input: PostListInput) {
+  engagement(id: $engagement) {
+    ... on LanguageEngagement {
+      id
+      # Filtered server-side to Prayer so paging is honest — the count and the
+      # slice both apply to prayer alone. Notes and stories on the same
+      # engagement stay out of this feed.
+      posts(input: $input) {
+        ...PostList
+      }
+    }
+  }
+}

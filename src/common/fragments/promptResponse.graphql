@@ -25,6 +25,15 @@ fragment promptResponse on PromptVariantResponse {
   responses {
     ...variantResponse
   }
+  # Meaningful only where a parent can hold several items and one needs to be
+  # singled out for an audience that wants exactly one -- today, choosing the
+  # community story that represents a report to investors. Harmless noise on
+  # the other three PromptVariantResponse kinds, which never set it.
+  featured {
+    canRead
+    canEdit
+    value
+  }
   canDelete
 }
 
