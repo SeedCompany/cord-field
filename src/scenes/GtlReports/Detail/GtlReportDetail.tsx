@@ -24,7 +24,7 @@ import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
 import { ButtonLink } from '../../../components/Routing';
 import { GtlReportDrawer } from '../EditForm/GtlReportDrawer';
 import { GoalsCard } from './GoalsCard';
-import { GtlPrayerCard } from './GtlPrayerCard';
+import { PrayerSummaryCard } from './PrayerSummaryCard';
 import {
   ChangeGtlReportCommunityImpactPromptDocument,
   CreateGtlReportCommunityImpactDocument,
@@ -130,7 +130,12 @@ export const GtlReportDetail = () => {
             updateResponseDoc={UpdateGtlReportCommunityImpactResponseDocument}
             editable={false}
           />
-          <GtlPrayerCard reportId={report.id} editable={false} />
+          {engagement && (
+            <PrayerSummaryCard
+              reportId={report.id}
+              engagementId={engagement.id}
+            />
+          )}
           <MediaCard
             reportId={report.id}
             media={report.media}

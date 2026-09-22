@@ -44,7 +44,8 @@ export const WorkflowCard = ({ report, ...rest }: WorkflowCardProps) => {
               alignItems: 'center',
             }}
           >
-            Updated by {lastWorkflowEvent.who.value?.fullName}{' '}
+            Updated by{' '}
+            {actorName(lastWorkflowEvent.who.value)}{' '}
             <RelativeDateTime date={lastWorkflowEvent.at} />
           </Typography>
         </CardActions>
@@ -52,3 +53,12 @@ export const WorkflowCard = ({ report, ...rest }: WorkflowCardProps) => {
     </Card>
   );
 };
+
+/**
+ * A workflow event can be executed by a SystemAgent as well as a person, and
+ * only the User arm carries a name.
+ */
+const actorName = (
+  actor?: { __typename?: string; fullName?: string | null } | null,
+) =>
+  actor?.__typename === 'User' ? actor.fullName : 'an automated process';

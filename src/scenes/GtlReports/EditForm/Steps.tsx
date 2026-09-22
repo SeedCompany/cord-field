@@ -1,5 +1,4 @@
 import { GoalsCard } from '../Detail/GoalsCard';
-import { GtlPrayerCard } from '../Detail/GtlPrayerCard';
 import {
   ChangeGtlReportCommunityImpactPromptDocument,
   CreateGtlReportCommunityImpactDocument,
@@ -9,6 +8,7 @@ import { MediaCard } from '../Detail/MediaCard';
 import { PracticumCard } from '../Detail/PracticumCard';
 import { ProgressExplanationCard } from '../Detail/ProgressExplanationCard';
 import { ProseSection } from '../Detail/ProseSection';
+import { PrayerStep } from './Steps/Prayer';
 import { type GroupedSteps, type GtlStepProps } from './stepTypes';
 import { SubmitStep } from './SubmitStep';
 
@@ -43,10 +43,6 @@ const CommunityImpactStep = ({ report }: GtlStepProps) => (
 );
 CommunityImpactStep.enableWhen = (report: GtlStepProps['report']) =>
   report.communityImpact.canRead;
-
-const PrayerStep = ({ report }: GtlStepProps) => (
-  <GtlPrayerCard reportId={report.id} />
-);
 
 const MediaStep = ({ report }: GtlStepProps) => (
   <MediaCard reportId={report.id} media={report.media} />

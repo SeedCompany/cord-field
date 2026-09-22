@@ -1,0 +1,43 @@
+query GtlPrayerStepList($engagement: ID!, $input: PostListInput) {
+  engagement(id: $engagement) {
+    ... on InternshipEngagement {
+      id
+      ...PostableId
+      posts(input: $input) {
+        canRead
+        canCreate
+        items {
+          id
+          type
+          shareability
+          effectiveShareability
+          body {
+            value
+          }
+          report {
+            canRead
+            value {
+              id
+              start
+              end
+            }
+          }
+          ...PostForm
+        }
+      }
+    }
+  }
+}
+
+mutation AttachGtlPrayerToReport($input: UpdatePost!) {
+  updatePost(input: $input) {
+    post {
+      id
+      report {
+        value {
+          id
+        }
+      }
+    }
+  }
+}
