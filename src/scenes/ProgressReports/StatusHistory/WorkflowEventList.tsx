@@ -70,7 +70,7 @@ export const WorkFlowEventList = ({
               },
             }}
           >
-            {event.who.value?.fullName} <RelativeDateTime date={event.at} />
+            {actorName(event.who.value)} <RelativeDateTime date={event.at} />
           </Typography>
           {showNotes && event.notes.value && (
             <Box
@@ -88,3 +88,11 @@ export const WorkFlowEventList = ({
     </Stack>
   );
 };
+
+/**
+ * A workflow event can be executed by a SystemAgent as well as a person, and
+ * only the User arm carries a name.
+ */
+const actorName = (
+  actor?: { __typename?: string; fullName?: string | null } | null
+) => (actor?.__typename === 'User' ? actor.fullName : 'an automated process');

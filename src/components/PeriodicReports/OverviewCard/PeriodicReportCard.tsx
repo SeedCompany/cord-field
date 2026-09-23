@@ -81,7 +81,7 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
         sx={props.sx}
       >
         <PeriodicReportCardContent to={link} icon={!disableIcon} type={type}>
-          {!disableIcon && type !== 'Progress' && (
+          {!disableIcon && type !== 'Progress' && type !== 'GTL' && (
             <HugeIcon
               icon={simpleSwitch(type, {
                 Narrative: AssignmentOutlined,

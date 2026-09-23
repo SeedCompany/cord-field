@@ -1,0 +1,317 @@
+query GtlReportDetail($id: ID!) {
+  periodicReport(id: $id) {
+    ...gtlReportDetail
+  }
+}
+
+fragment gtlReportDetail on GTLReport {
+  id
+  start
+  end
+  due
+  status {
+    canRead
+    value
+  }
+  parent {
+    id
+    ... on InternshipEngagement {
+      id
+      ...EngagementBreadcrumb
+      goalSummary {
+        goals {
+          ...gtlGoal
+        }
+      }
+      programProgress {
+        value
+      }
+      intern {
+        value {
+          id
+          fullName
+        }
+      }
+      project {
+        ...ProjectBreadcrumb
+        name {
+          value
+        }
+      }
+    }
+  }
+  transitions {
+    key
+    label
+    to
+    type
+    canExecute
+  }
+  goalsSet {
+    ...gtlGoal
+  }
+  goalProgress {
+    ...gtlGoalProgress
+  }
+  practicums {
+    ...gtlPracticum
+  }
+  media {
+    ...gtlMedia
+  }
+  communityImpact {
+    ...promptResponseList
+  }
+  progressExplanation {
+    status {
+      canRead
+      canEdit
+      value
+    }
+    context {
+      canRead
+      canEdit
+      value
+    }
+  }
+}
+
+fragment gtlGoal on GtlGoal {
+  id
+  goal {
+    value
+    canEdit
+  }
+  details {
+    value
+  }
+  targetDate {
+    value
+  }
+  measurement {
+    value
+  }
+  targetNumber {
+    value
+  }
+  targetDescription {
+    value
+  }
+  progressValue {
+    value
+  }
+  status {
+    value
+  }
+  percentComplete
+  scheduleStatus
+}
+
+fragment gtlGoalProgress on GtlGoalProgress {
+  id
+  goal {
+    id
+  }
+  status {
+    value
+  }
+  progressValue {
+    value
+  }
+  notes {
+    value
+  }
+  progressDate {
+    value
+  }
+}
+
+fragment gtlMedia on GtlReportMedia {
+  id
+  canDelete
+  caption {
+    canEdit
+    value
+  }
+  category {
+    canEdit
+    value
+  }
+  file {
+    value {
+      id
+      name
+      mimeType
+    }
+  }
+  media {
+    id
+    mimeType
+    url
+    ... on Image {
+      dimensions {
+        aspectRatio
+      }
+    }
+    ... on Video {
+      duration
+    }
+    ... on Audio {
+      duration
+    }
+  }
+}
+
+fragment gtlPracticum on GtlReportPracticum {
+  id
+  involvement {
+    value
+    canEdit
+  }
+  outcomes {
+    value
+    canEdit
+  }
+  mentor {
+    value {
+      id
+      fullName
+    }
+  }
+}
+
+mutation ExecuteGtlReportTransition($input: ExecuteGtlReportTransition!) {
+  executeGtlReportTransition(input: $input) {
+    ...gtlReportDetail
+  }
+}
+
+mutation CreateGtlReportPracticum($input: CreateGtlReportPracticum!) {
+  createGtlReportPracticum(input: $input) {
+    gtlReportPracticum {
+      ...gtlPracticum
+    }
+  }
+}
+
+mutation UpdateGtlReportPracticum($input: UpdateGtlReportPracticum!) {
+  updateGtlReportPracticum(input: $input) {
+    gtlReportPracticum {
+      ...gtlPracticum
+    }
+  }
+}
+
+mutation DeleteGtlReportPracticum($id: ID!) {
+  deleteGtlReportPracticum(id: $id) {
+    __typename
+  }
+}
+
+mutation ExplainGtlProgress($input: ExplainGtlProgress!) {
+  explainGtlProgress(input: $input) {
+    status {
+      value
+    }
+    context {
+      value
+    }
+  }
+}
+
+mutation CreateGtlReportCommunityImpact($input: ChoosePrompt!) {
+  createGtlReportCommunityImpact(input: $input) {
+    ...promptResponse
+    # Re-select the parent's list so the new response is linked into the
+    # cached GTLReport.communityImpact — without this it exists on the server but the
+    # chooser never sees it, and every further click creates another row.
+    parent {
+      ... on GTLReport {
+        id
+        communityImpact {
+          ...Pagination
+          items {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation ChangeGtlReportCommunityImpactPrompt($input: ChangePrompt!) {
+  changeGtlReportCommunityImpactPrompt(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation UpdateGtlReportCommunityImpactResponse(
+  $input: UpdatePromptVariantResponse!
+) {
+  updateGtlReportCommunityImpactResponse(input: $input) {
+    ...promptResponse
+  }
+}
+
+mutation CreateGtlGoal($input: CreateGtlGoal!) {
+  createGtlGoal(input: $input) {
+    gtlGoal {
+      ...gtlGoal
+    }
+  }
+}
+
+mutation UpdateGtlGoal($input: UpdateGtlGoal!) {
+  updateGtlGoal(input: $input) {
+    gtlGoal {
+      ...gtlGoal
+    }
+  }
+}
+
+mutation DeleteGtlGoal($id: ID!) {
+  deleteGtlGoal(id: $id) {
+    __typename
+  }
+}
+
+mutation ReportGtlGoalProgress($input: ReportGtlGoalProgress!) {
+  reportGtlGoalProgress(input: $input) {
+    progress {
+      ...gtlGoalProgress
+    }
+    gtlGoal {
+      ...gtlGoal
+    }
+  }
+}
+
+mutation UploadGtlReportMedia($input: UploadGtlReportMedia!) {
+  uploadGtlReportMedia(input: $input) {
+    id
+    ... on GTLReport {
+      id
+      media {
+        ...gtlMedia
+      }
+    }
+  }
+}
+
+mutation UpdateGtlReportMedia($input: UpdateGtlReportMedia!) {
+  updateGtlReportMedia(input: $input) {
+    ...gtlMedia
+  }
+}
+
+mutation DeleteGtlReportMedia($id: ID!) {
+  deleteGtlReportMedia(id: $id) {
+    id
+    ... on GTLReport {
+      id
+      media {
+        ...gtlMedia
+      }
+    }
+  }
+}

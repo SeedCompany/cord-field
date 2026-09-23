@@ -1,4 +1,5 @@
 import { DateRange, Edit } from '@mui/icons-material';
+import { TabContext, TabPanel } from '@mui/lab';
 import { Breadcrumbs, Chip, Grid, Tooltip, Typography } from '@mui/material';
 import { Many } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
@@ -10,6 +11,8 @@ import {
 import { canEditAny, labelFrom } from '~/common';
 import { DisplaySimpleProperty } from '~/components/DisplaySimpleProperty';
 import { Fab } from '~/components/Fab';
+import { Tab, TabList, TabsContainer } from '~/components/Tabs';
+import { useDetailTabs } from '~/hooks';
 import { DataButton } from '../../../components/DataButton';
 import { useDialog } from '../../../components/Dialog';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
@@ -34,6 +37,8 @@ import {
 import { EngagementWorkflowDialog } from '../EditEngagement/EngagementWorkflowDialog';
 import { EngagementQuery } from '../Engagement.graphql';
 import { EngagementDescription } from '../LanguageEngagement/Description';
+import { GrowthPlanTab } from './GrowthPlanTab';
+import { GtlReportsCard } from './GtlReportsCard';
 import { MentorCard } from './MentorCard';
 
 const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
@@ -57,6 +62,7 @@ const useStyles = makeStyles()(({ spacing, breakpoints, palette }) => ({
 }));
 
 export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
+  const [activeTab, setTab] = useDetailTabs(['overview', 'goals'], 'overview');
   const { classes } = useStyles();
 
   const [editState, show, editField] =
@@ -143,7 +149,9 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
               <Grid item>
                 <Grid item container spacing={3} alignItems="center">
                   <Grid item>
-                    <Typography variant="h4">Intern Engagement</Typography>
+                    <Typography variant="h4">
+                      Global Translation Leader Engagement
+                    </Typography>
                   </Grid>
 
                   <Grid item>
@@ -189,8 +197,8 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                 <Grid item>
                   <DataButton
                     secured={engagement.position}
-                    empty="Enter Intern Position"
-                    redacted="You do not have permission to view intern position"
+                    empty="Enter Position"
+                    redacted="You do not have permission to view position"
                     children={labelFrom(InternshipPositionLabels)}
                     onClick={() => show('position')}
                   />
@@ -222,63 +230,92 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
                   </Grid>
                 )}
               </Grid>
-              <Grid item>
-                <EngagementDescription engagement={engagement} />
-              </Grid>
-              <Grid item container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <FieldOverviewCard
-                    title="Growth Plan Complete Date"
-                    data={{
-                      value: engagement.completeDate.value ? (
-                        <FormattedDate date={engagement.completeDate.value} />
-                      ) : undefined,
-                    }}
-                    icon={PlantIcon}
-                    onClick={() => show('completeDate')}
-                    onButtonClick={() => show('completeDate')}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <FieldOverviewCard
-                    title="Disbursement Complete Date"
-                    data={{
-                      value: engagement.disbursementCompleteDate.value ? (
-                        <FormattedDate
-                          date={engagement.disbursementCompleteDate.value}
-                        />
-                      ) : undefined,
-                    }}
-                    icon={OptionsIcon}
-                    onClick={() => show('disbursementCompleteDate')}
-                    onButtonClick={() => show('disbursementCompleteDate')}
-                  />
-                </Grid>
-                <Grid item container spacing={3} alignItems="center">
-                  <Grid item xs={12}>
-                    <Typography variant="h4">Growth Plan</Typography>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <MethodologiesCard
-                    onClick={() => show('methodologies')}
-                    data={engagement.methodologies}
-                  />
-                </Grid>
-              </Grid>
-              <Grid item container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <CeremonyCard {...engagement.ceremony} />
-                </Grid>
-                <MentorCard
-                  data={engagement.mentor}
-                  wrap={(node) => (
-                    <Grid item xs={12} md={6}>
-                      {node}
-                    </Grid>
-                  )}
-                  onEdit={() => show('mentor')}
-                />
+              <Grid item xs={12}>
+                <TabsContainer>
+                  <TabContext value={activeTab}>
+                    <TabList onChange={(_, next) => setTab(next)}>
+                      <Tab label="Overview" value="overview" />
+                      <Tab label="Goals" value="goals" />
+                    </TabList>
+
+                    <TabPanel value="overview">
+                      <Grid container direction="column" spacing={3}>
+                        <Grid item>
+                          <EngagementDescription engagement={engagement} />
+                        </Grid>
+                        <Grid item container spacing={3}>
+                          <Grid item xs={12}>
+                            <GtlReportsCard engagement={engagement} />
+                          </Grid>
+                          <Grid item xs={12} md={6}>
+                            <FieldOverviewCard
+                              title="Growth Plan Complete Date"
+                              data={{
+                                value: engagement.completeDate.value ? (
+                                  <FormattedDate
+                                    date={engagement.completeDate.value}
+                                  />
+                                ) : undefined,
+                              }}
+                              icon={PlantIcon}
+                              onClick={() => show('completeDate')}
+                              onButtonClick={() => show('completeDate')}
+                            />
+                          </Grid>
+                          <Grid item xs={12} md={6}>
+                            <FieldOverviewCard
+                              title="Disbursement Complete Date"
+                              data={{
+                                value: engagement.disbursementCompleteDate
+                                  .value ? (
+                                  <FormattedDate
+                                    date={
+                                      engagement.disbursementCompleteDate.value
+                                    }
+                                  />
+                                ) : undefined,
+                              }}
+                              icon={OptionsIcon}
+                              onClick={() => show('disbursementCompleteDate')}
+                              onButtonClick={() =>
+                                show('disbursementCompleteDate')
+                              }
+                            />
+                          </Grid>
+                          <Grid item container spacing={3} alignItems="center">
+                            <Grid item xs={12}>
+                              <Typography variant="h4">Growth Plan</Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid item xs={12} md={6}>
+                            <MethodologiesCard
+                              onClick={() => show('methodologies')}
+                              data={engagement.methodologies}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid item container spacing={3}>
+                          <Grid item xs={12} md={6}>
+                            <CeremonyCard {...engagement.ceremony} />
+                          </Grid>
+                          <MentorCard
+                            data={engagement.mentor}
+                            wrap={(node) => (
+                              <Grid item xs={12} md={6}>
+                                {node}
+                              </Grid>
+                            )}
+                            onEdit={() => show('mentor')}
+                          />
+                        </Grid>
+                      </Grid>
+                    </TabPanel>
+
+                    <TabPanel value="goals">
+                      <GrowthPlanTab engagement={engagement} />
+                    </TabPanel>
+                  </TabContext>
+                </TabsContainer>
               </Grid>
             </Grid>
           </Grid>

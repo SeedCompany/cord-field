@@ -16,6 +16,7 @@ import { FormattedDateTime } from '../../Formatters';
 import { DeletePost } from '../DeletePost';
 import { EditPost } from '../EditPost';
 import { PostableIdFragment } from '../PostableId.graphql';
+import { PostProvenance } from '../PostProvenance';
 import { PostListItemCardFragment } from './PostListItemCard.graphql';
 import { PostListItemMenu } from './PostListItemMenu';
 
@@ -85,6 +86,9 @@ export const PostListItemCard = ({
                 <Typography variant="body2" color="textSecondary">
                   <FormattedDateTime date={post.createdAt} />
                 </Typography>
+              </Box>
+              <Box sx={{ pt: 1 }}>
+                <PostProvenance post={post} />
               </Box>
             </div>
             <Box

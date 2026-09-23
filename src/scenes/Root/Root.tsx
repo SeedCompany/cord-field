@@ -36,6 +36,9 @@ const Products = loadable(() => import('../Products'), {
 const ProgressReports = loadable(() => import('../ProgressReports'), {
   resolveComponent: (m) => m.ProgressReportRouter,
 });
+const GtlReports = loadable(() => import('../GtlReports'), {
+  resolveComponent: (m) => m.GtlReportRouter,
+});
 const Languages = loadable(() => import('../Languages'), {
   resolveComponent: (m) => m.Languages,
 });
@@ -83,6 +86,7 @@ export const Root = () => {
         <Route path="engagements/*" element={<Engagements />} />
         <Route path="products/*" element={<Products />} />
         <Route path="progress-reports/*" element={<ProgressReports />} />
+        <Route path="gtl-reports/*" element={<GtlReports />} />
         <Route path="languages/*" element={<Languages />} />
         <Route path="users/*" element={<Users />} />
         <Route path="search" element={<SearchResults />} />

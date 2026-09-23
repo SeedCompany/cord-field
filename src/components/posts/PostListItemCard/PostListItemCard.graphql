@@ -4,6 +4,26 @@ fragment PostListItemCard on Post {
   modifiedAt
   type
   shareability
+  # What reach actually applies right now. Differs from `shareability` while a
+  # post is awaiting moderation, so anything that reports how far something
+  # reaches should read this and not the request.
+  effectiveShareability
+  approvedShareability {
+    canRead
+    canEdit
+    value
+  }
+  # Set when this was submitted with a quarterly report. The period is what
+  # labels an item in a mixed feed — "FY26 Q4" against a plain date — so a list
+  # of report-attached and between-report prayer stays readable.
+  report {
+    canRead
+    value {
+      id
+      start
+      end
+    }
+  }
   body {
     canRead
     canEdit

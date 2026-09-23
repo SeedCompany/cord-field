@@ -137,7 +137,7 @@ export const ProjectOverview = () => {
     : undefined;
 
   const engagementTypeLabel =
-    isTranslation != null ? (isTranslation ? 'Language' : 'Intern') : null;
+    isTranslation != null ? (isTranslation ? 'Language' : 'GTL') : null;
 
   const populationTotal = engagements.data?.items.reduce(
     (total, item) =>
@@ -305,7 +305,7 @@ export const ProjectOverview = () => {
               loading={
                 !engagements.data || engagements.data.hasMore || !project
               }
-              label={isTranslation ? 'Population Total' : 'Total Interns'}
+              label={isTranslation ? 'Population Total' : 'Total GTLs'}
               value={formatNumber(
                 isTranslation ? populationTotal : engagements.data?.total
               )}

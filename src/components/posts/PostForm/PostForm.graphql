@@ -2,7 +2,69 @@ fragment PostForm on Post {
   id
   body {
     value
+    canRead
+    canEdit
   }
   type
   shareability
+  effectiveShareability
+  approvedShareability {
+    value
+    canEdit
+  }
+  finalBody {
+    value
+    canEdit
+  }
+  featured {
+    value
+    canEdit
+  }
+  report {
+    value {
+      id
+    }
+  }
+  creator {
+    value {
+      id
+    }
+  }
+}
+
+mutation ModeratePostReach($input: ModeratePost!) {
+  moderatePost(input: $input) {
+    posts {
+      id
+      approvedShareability {
+        value
+        canEdit
+      }
+      effectiveShareability
+    }
+  }
+}
+
+mutation UpdatePostFinalWording($input: UpdatePost!) {
+  updatePost(input: $input) {
+    post {
+      id
+      finalBody {
+        value
+        canEdit
+      }
+    }
+  }
+}
+
+mutation TogglePostFeatured($input: UpdatePost!) {
+  updatePost(input: $input) {
+    post {
+      id
+      featured {
+        value
+        canEdit
+      }
+    }
+  }
 }

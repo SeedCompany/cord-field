@@ -15,6 +15,9 @@ const ProgressReportsList = loadable(() => import('../ProgressReports'), {
 const NarrativeReportsList = loadable(() => import('../ProgressReports'), {
   resolveComponent: (m) => m.NarrativeReportListPage,
 });
+const GtlReportsList = loadable(() => import('../GtlReports/List'), {
+  resolveComponent: (m) => m.GtlReportListPage,
+});
 
 export const Engagements = () => (
   <Routes>
@@ -35,6 +38,7 @@ const EngagementDetail = () => (
         element={<OldProgressReportDetail />}
       />
       <Route path="reports/narrative" element={<NarrativeReportsList />} />
+      <Route path="reports/gtl" element={<GtlReportsList />} />
       {NotFoundRoute}
     </Routes>
   </ChangesetContext>

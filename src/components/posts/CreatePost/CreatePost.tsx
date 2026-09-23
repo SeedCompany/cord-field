@@ -8,13 +8,19 @@ import { CreatePostDocument } from './CreatePost.graphql';
 
 export type CreatePostProps = Except<
   PostFormProps<CreatePostInput>,
-  'onSubmit' | 'initialValues'
+  'onSubmit'
 > & {
   parent: PostableIdFragment;
+  /**
+   * Submit this post already attached to a quarterly report — used by the
+   * report editor's Prayer step, where composing here IS the attach action.
+   */
+  report?: string;
 };
 
 export const CreatePost = ({
   parent,
+  report,
   includeMembership = false,
   ...props
 }: CreatePostProps) => {
@@ -38,6 +44,7 @@ export const CreatePost = ({
               body: values.body,
               type: values.type,
               shareability: values.shareability,
+              report,
             },
           },
         });

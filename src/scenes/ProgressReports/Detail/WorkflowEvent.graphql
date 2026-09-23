@@ -16,7 +16,12 @@ fragment workflowEvent on ProgressReportWorkflowEvent {
     canEdit
     canRead
     value {
-      fullName
+      id
+      # `who` is an Actor interface now — a transition can be executed by a
+      # SystemAgent as well as a person, and only the User arm has a name.
+      ... on User {
+        fullName
+      }
     }
   }
 }

@@ -26,7 +26,10 @@ export const PeriodicReportsList = ({
   onRowClick?: (report: PeriodicReportFragment) => void;
   TableCardProps?: CardProps;
 } & StyleProps) => {
-  const reportTypeName = `${type === 'Progress' ? 'Quarterly' : type} Reports`;
+  // GTL reports are quarterly as well; only the engagement type differs.
+  const reportTypeName = `${
+    type === 'Progress' || type === 'GTL' ? 'Quarterly' : type
+  } Reports`;
 
   return (
     <Box

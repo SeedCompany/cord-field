@@ -1,6 +1,71 @@
 fragment InternshipEngagementDetail on InternshipEngagement {
   ...Id
   ...EngagementBreadcrumb
+  programProgress {
+    value
+  }
+  currentGtlReportDue {
+    value {
+      id
+      start
+      end
+      due
+      status {
+        value
+      }
+    }
+  }
+  nextGtlReportDue {
+    value {
+      id
+      start
+      end
+      due
+      status {
+        value
+      }
+    }
+  }
+  gtlReports {
+    total
+  }
+  goalSummary {
+    total
+    done
+    active
+    needsAttention
+    behindSchedule
+    percentComplete
+    goals {
+      id
+      goal {
+        value
+      }
+      details {
+        value
+      }
+      targetDate {
+        value
+      }
+      measurement {
+        value
+      }
+      targetNumber {
+        value
+      }
+      targetDescription {
+        value
+      }
+      progressValue {
+        value
+      }
+      status {
+        value
+      }
+      percentComplete
+      scheduleStatus
+    }
+  }
   createdAt
   status {
     value
