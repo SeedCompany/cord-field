@@ -44,7 +44,10 @@ export const WorkflowCard = ({ report, ...rest }: WorkflowCardProps) => {
               alignItems: 'center',
             }}
           >
-            Updated by {lastWorkflowEvent.who.value?.fullName}{' '}
+            Updated by{' '}
+            {lastWorkflowEvent.who.value?.__typename === 'SystemAgent'
+              ? lastWorkflowEvent.who.value.name
+              : lastWorkflowEvent.who.value?.fullName}{' '}
             <RelativeDateTime date={lastWorkflowEvent.at} />
           </Typography>
         </CardActions>
