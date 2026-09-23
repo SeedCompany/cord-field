@@ -5,6 +5,7 @@ import {
   ProgressReportStatusLabels as StatusLabels,
   ProgressReportStatusList as StatusList,
 } from '~/api/schema/enumLists';
+import { actorName } from '~/common';
 import { RelativeDateTime } from '~/components/Formatters';
 import { RichTextView } from '~/components/RichText';
 import { WorkflowEventFragment } from '../Detail/WorkflowEvent.graphql';
@@ -70,7 +71,7 @@ export const WorkFlowEventList = ({
               },
             }}
           >
-            {event.who.value?.fullName} <RelativeDateTime date={event.at} />
+            {actorName(event.who.value)} <RelativeDateTime date={event.at} />
           </Typography>
           {showNotes && event.notes.value && (
             <Box
