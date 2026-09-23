@@ -4,17 +4,17 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { FieldZoneDetail } from './FieldZoneDetail';
-import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql';
+import { FieldZoneDetailDocument } from './FieldZoneDetail.graphql.ts';
 
-jest.mock('./Tabs/Projects/FieldZoneProjectsPanel', () => ({
+vi.mock('./Tabs/Projects/FieldZoneProjectsPanel', () => ({
   FieldZoneProjectsPanel: () => <div data-testid="projects-panel" />,
 }));
 
-jest.mock('~/components/FieldZone', () => ({
+vi.mock('~/components/FieldZone', () => ({
   EditFieldZone: () => null,
 }));
 
-jest.mock('~/components/Error', () => ({
+vi.mock('~/components/Error', () => ({
   Error: () => null,
 }));
 

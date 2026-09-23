@@ -6,7 +6,7 @@ import {
   ProjectStep,
   ProjectStepLabels,
   ProjectStepList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { transitionTypeStyles } from '~/common/transitionTypeStyles';
 import { ButtonLink } from '~/components/Routing/ButtonLink';
@@ -20,8 +20,8 @@ import {
   SubmitError,
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
-import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql';
-import { TransitionProjectDocument } from './TransitionProject.graphql';
+import { ProjectOverviewFragment } from '../Overview/ProjectOverview.graphql.ts';
+import { TransitionProjectDocument } from './TransitionProject.graphql.ts';
 
 type UpdateProjectDialogProps = Except<
   DialogFormProps<SubmitAction & { project?: { step?: ProjectStep } }>,

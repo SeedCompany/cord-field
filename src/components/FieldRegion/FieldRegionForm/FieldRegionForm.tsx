@@ -1,12 +1,12 @@
 import { Merge } from 'type-fest';
-import { CreateFieldRegion, UpdateFieldRegion } from '~/api/schema.graphql';
+import { CreateFieldRegion, UpdateFieldRegion } from '~/api/schema.graphql.ts';
 import { DisplayFieldZoneFragment } from '~/common';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SecuredField, SubmitError, TextField } from '../../form';
 import { FieldZoneField } from '../../form/Lookup/FieldZone';
 import { UserField } from '../../form/Lookup/User/UserField';
-import { UserLookupItemFragment } from '../../form/Lookup/User/UserLookup.graphql';
-import { FieldRegionFormFragment } from './FieldRegionForm.graphql';
+import { UserLookupItemFragment } from '../../form/Lookup/User/UserLookup.graphql.ts';
+import { FieldRegionFormFragment } from './FieldRegionForm.graphql.ts';
 
 type FieldRegionMutation = UpdateFieldRegion | CreateFieldRegion;
 

@@ -1,17 +1,17 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList, invalidateProps } from '~/api';
-import { CreatePartnership as CreatePartnershipType } from '~/api/schema.graphql';
+import { CreatePartnership as CreatePartnershipType } from '~/api/schema.graphql.ts';
 import { callAll } from '~/common';
 import { PartnerLookupItem } from '../../../components/form/Lookup';
 import { updateOldPrimaryPartnership } from '../Edit';
 import { invalidateBudgetRecords } from '../InvalidateBudget';
-import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql';
+import { ProjectPartnershipsQuery } from '../List/PartnershipList.graphql.ts';
 import { PartnershipForm, PartnershipFormProps } from '../PartnershipForm';
 import {
   CreatePartnershipDocument,
   CreatePartnershipMutation,
-} from './CreatePartnership.graphql';
+} from './CreatePartnership.graphql.ts';
 
 export interface CreatePartnershipFormInput
   extends Pick<

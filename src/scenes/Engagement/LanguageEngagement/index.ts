@@ -1,2 +1,2 @@
 export * from './LanguageEngagementDetail';
-export * from './LanguageEngagementDetail.graphql';
+export * from './LanguageEngagementDetail.graphql.ts';

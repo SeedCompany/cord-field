@@ -4,7 +4,7 @@ import { useDialog } from '~/components/Dialog';
 import { UpdatePeriodicReportDialog } from '../../../../Projects/Reports/UpdatePeriodicReportDialog';
 import { ProgressReportCard } from '../../../Detail/ProgressReportCard';
 import { ProgressSummaryCard } from '../../../Detail/ProgressSummaryCard';
-import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql';
+import { ProgressReportEditFragment } from '../../ProgressReportEdit.graphql.ts';
 
 interface PnpFileAndSummaryParams extends StyleProps {
   report: ProgressReportEditFragment;

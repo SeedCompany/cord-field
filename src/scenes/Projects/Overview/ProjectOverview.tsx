@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Add,
   DateRange as DateRangeIcon,
@@ -22,7 +21,8 @@ import { Many } from '@seedcompany/common';
 import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { PartialDeep } from 'type-fest';
-import { ProjectStepLabels, ProjectTypeLabels } from '~/api/schema.graphql';
+import { useQuery } from '~/api';
+import { ProjectStepLabels, ProjectTypeLabels } from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
 import { BudgetOverviewCard } from '../../../components/BudgetOverviewCard';
@@ -42,9 +42,9 @@ import {
 } from '../../../components/Formatters';
 import { IconButton } from '../../../components/IconButton';
 import { InternshipEngagementListItemCard } from '../../../components/InternshipEngagementListItemCard';
-import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.graphql';
+import { InternshipEngagementListItemFragment } from '../../../components/InternshipEngagementListItemCard/InternshipEngagementListItem.graphql.ts';
 import { LanguageEngagementListItemCard } from '../../../components/LanguageEngagementListItemCard';
-import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.graphql';
+import { LanguageEngagementListItemFragment } from '../../../components/LanguageEngagementListItemCard/LanguageEngagementListItem.graphql.ts';
 import { List, useListQuery } from '../../../components/List';
 import { PartnershipSummary } from '../../../components/PartnershipSummary';
 import { PeriodicReportCard } from '../../../components/PeriodicReports';
@@ -58,7 +58,7 @@ import { CreateInternshipEngagement } from '../../Engagement/InternshipEngagemen
 import { CreateLanguageEngagement } from '../../Engagement/LanguageEngagement/Create/CreateLanguageEngagement';
 import { DeleteProject } from '../Delete';
 import { useProjectCurrentDirectory, useUploadProjectFiles } from '../Files';
-import { ProjectListQueryVariables } from '../List/ProjectList.graphql';
+import { ProjectListQueryVariables } from '../List/ProjectList.graphql.ts';
 import { ProjectFieldName, UpdateProjectDialog } from '../Update';
 import { ProjectWorkflowDialog } from '../Update/ProjectWorkflowDialog';
 import { useProjectId } from '../useProjectId';
@@ -67,7 +67,7 @@ import {
   ProjectEngagementListOverviewDocument as EngagementList,
   ProjectOverviewDocument,
   ProjectOverviewFragment,
-} from './ProjectOverview.graphql';
+} from './ProjectOverview.graphql.ts';
 import { ProjectPostList } from './ProjectPostList';
 
 type EngagementListItem =

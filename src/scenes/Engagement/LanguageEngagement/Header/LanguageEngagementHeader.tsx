@@ -3,7 +3,7 @@ import { Breadcrumbs, Grid, Tooltip, Typography } from '@mui/material';
 import { Many } from '@seedcompany/common';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
-import { EngagementStatusLabels } from '~/api/schema.graphql';
+import { EngagementStatusLabels } from '~/api/schema.graphql.ts';
 import { canEditAny, labelFrom } from '~/common';
 import { AIAssistanceChip } from '~/components/AIAssistanceChip/AIAssistanceChip';
 import { ToggleCommentsButton } from '~/components/Comments/ToggleCommentButton';
@@ -21,14 +21,14 @@ import { ProjectBreadcrumb } from '../../../../components/ProjectBreadcrumb';
 import { Redacted } from '../../../../components/Redacted';
 import { Link } from '../../../../components/Routing';
 import { DeleteEngagement } from '../../Delete';
-import { EngagementToDeleteFragment } from '../../Delete/DeleteEngagement.graphql';
+import { EngagementToDeleteFragment } from '../../Delete/DeleteEngagement.graphql.ts';
 import {
   EditableEngagementField,
   EditEngagementDialog,
   Engagement,
 } from '../../EditEngagement/EditEngagementDialog';
 import { EngagementWorkflowDialog } from '../../EditEngagement/EngagementWorkflowDialog';
-import { LanguageEngagementDetailFragment } from '../LanguageEngagementDetail.graphql';
+import { LanguageEngagementDetailFragment } from '../LanguageEngagementDetail.graphql.ts';
 
 const useStyles = makeStyles()(({ palette }) => ({
   nameRedacted: {

@@ -4,11 +4,11 @@ import { addItemToList } from '~/api';
 import { DialogForm, DialogFormProps } from '~/components/Dialog/DialogForm';
 import { SubmitError } from '~/components/form';
 import { UserField, UserLookupItem } from '~/components/form/Lookup/User';
-import { UserDataGridRowFragment } from '~/components/UserDataGrid/userDataGridRow.graphql';
+import { UserDataGridRowFragment } from '~/components/UserDataGrid/userDataGridRow.graphql.ts';
 import {
   AssignPersonToPartnerDocument,
   PartnerDetailPeopleFragment,
-} from './PartnerDetailsPeople.graphql';
+} from './PartnerDetailsPeople.graphql.ts';
 
 interface FormValues {
   user: UserLookupItem;

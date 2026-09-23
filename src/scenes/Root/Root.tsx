@@ -1,6 +1,6 @@
-import loadable from '@loadable/component';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes } from 'react-router-dom';
+import { loadable } from '~/components/Loadable';
 import { Error, NotFoundRoute } from '../../components/Error';
 import { useIdentifyInLogRocket, useSession } from '../../components/Session';
 import {

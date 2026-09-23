@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdatePeriodicReport as UpdatePeriodicReportInput } from '~/api/schema.graphql';
+import { UpdatePeriodicReport as UpdatePeriodicReportInput } from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
@@ -11,7 +11,7 @@ import {
   SubmitError,
   TextField,
 } from '../../../components/form';
-import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.graphql';
+import { PeriodicReportFragment } from '../../../components/PeriodicReports/PeriodicReport.graphql.ts';
 import { useUpdatePeriodicReport } from '../../../components/PeriodicReports/Upload/useUpdatePeriodicReport';
 
 type SkipPeriodicReportFormValues = Pick<

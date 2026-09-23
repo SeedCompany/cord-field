@@ -4,7 +4,7 @@ import {
   ProjectLookupItemFragment as Project,
   ProjectLookupDocument,
   TranslationProjectLookupDocument,
-} from './ProjectLookup.graphql';
+} from './ProjectLookup.graphql.ts';
 
 // translation and internship projects together
 export const ProjectField = LookupField.createFor<Project>({

@@ -1,14 +1,14 @@
 import { DialogContent, IconButtonProps } from '@mui/material';
 import { cmpBy } from '@seedcompany/common';
 import { ComponentType, useMemo } from 'react';
-import { PnpProblemSeverity as Severity } from '~/api/schema.graphql';
+import { PnpProblemSeverity as Severity } from '~/api/schema.graphql.ts';
 import { ChildrenProp } from '../../common';
 import { useDialog } from '../Dialog';
 import { ProblemTree, ProblemTreeProps } from './PnPExtractionProblems';
 import {
   PnpExtractionResultFragment,
   PnpExtractionResultFragment as Result,
-} from './pnpExtractionResult.graphql';
+} from './pnpExtractionResult.graphql.ts';
 import { PnPExtractionResultDialog } from './PnpExtractionResultDialog';
 import { PnPValidationIcon } from './PnpValidationIcon';
 

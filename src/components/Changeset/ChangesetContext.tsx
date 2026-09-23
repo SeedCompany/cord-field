@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
 import { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '~/api';
 import { ChildrenProp } from '~/common';
 import { inChangesetVar } from '../../api';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../../scenes/Projects/ChangeRequest/Update';
 import { useDialog } from '../Dialog';
 import { ChangesetBanner } from './ChangesetBanner';
-import { ChangesetDiffDocument } from './ChangesetDiff.graphql';
+import { ChangesetDiffDocument } from './ChangesetDiff.graphql.ts';
 import { ChangesetDiffProvider } from './ChangesetDiffContext';
 import { useChangesetAwareIdFromUrl } from './useChangesetAwareIdFromUrl';
 

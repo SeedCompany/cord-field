@@ -4,17 +4,17 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { FieldRegionDetail } from './FieldRegionDetail';
-import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql';
+import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql.ts';
 
-jest.mock('./Tabs/Projects/FieldRegionProjectsPanel', () => ({
+vi.mock('./Tabs/Projects/FieldRegionProjectsPanel', () => ({
   FieldRegionProjectsPanel: () => <div data-testid="projects-panel" />,
 }));
 
-jest.mock('~/components/FieldRegion', () => ({
+vi.mock('~/components/FieldRegion', () => ({
   EditFieldRegion: () => null,
 }));
 
-jest.mock('~/components/Error', () => ({
+vi.mock('~/components/Error', () => ({
   Error: () => null,
 }));
 

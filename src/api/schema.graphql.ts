@@ -1,9 +1,9 @@
 import type { IsUnknown, Primitive } from 'type-fest';
 import type { IsPlainObject } from 'type-fest/source/internal';
-import type { Scalars } from './schema/schema.graphql';
+import type { Scalars } from './schema/schema.graphql.ts';
 
 export * from './schema/enumLists';
-export * from './schema/schema.graphql';
+export * from './schema/schema.graphql.ts';
 
 /**
  * Any of the GQL scalar types that are not primitives.

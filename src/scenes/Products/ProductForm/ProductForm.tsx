@@ -11,15 +11,15 @@ import {
   UpdateDerivativeScriptureProduct,
   UpdateDirectScriptureProduct,
   UpdateOtherProduct,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   SubmitAction,
   SubmitButton,
   SubmitError,
 } from '../../../components/form';
 import { ProductTypes } from './constants';
-import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.graphql';
-import { ProductFormFragment } from './ProductForm.graphql';
+import { EditPartnershipsProducingMediumsInfoFragment } from './PartnershipsProducingMediums.graphql.ts';
+import { ProductFormFragment } from './ProductForm.graphql.ts';
 import { ProductFormFields } from './ProductFormFields';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({

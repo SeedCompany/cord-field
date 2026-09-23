@@ -1,1 +1,1 @@
-export * from './UploadEngagementFiles.graphql';
+export * from './UploadEngagementFiles.graphql.ts';

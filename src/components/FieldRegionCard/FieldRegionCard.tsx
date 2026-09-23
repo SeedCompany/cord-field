@@ -8,7 +8,7 @@ import {
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { FieldRegionCardFragment } from './FieldRegionCard.graphql';
+import { FieldRegionCardFragment } from './FieldRegionCard.graphql.ts';
 
 export interface FieldRegionCardProps {
   loading?: boolean;

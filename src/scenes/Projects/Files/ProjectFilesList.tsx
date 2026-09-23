@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import { CreateNewFolder, Publish } from '@mui/icons-material';
 import {
   Box,
@@ -20,6 +19,7 @@ import { useDropzone } from 'react-dropzone';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { useQuery } from '~/api';
 import { useResponsiveColumnVisibility } from '~/components/Grid';
 import { useDialog } from '../../../components/Dialog';
 import { Error } from '../../../components/Error';
@@ -49,7 +49,7 @@ import { CreateProjectDirectory } from './CreateProjectDirectory';
 import { DirectoryBreadcrumb } from './DirectoryBreadcrumb';
 import { FileRow as FileRowComponent } from './FileRow';
 import { NodePreviewLayer } from './NodePreviewLayer';
-import { ProjectDirectoryDocument } from './ProjectFiles.graphql';
+import { ProjectDirectoryDocument } from './ProjectFiles.graphql.ts';
 import { useProjectCurrentDirectory } from './useProjectCurrentDirectory';
 import { useUploadProjectFiles } from './useUploadProjectFiles';
 import { FileRowData as FileRow, isDirectory } from './util';

@@ -13,7 +13,7 @@ import {
   LanguageInitialState,
   LanguageToolbar,
 } from '~/components/LanguageDataGrid';
-import { LanguagesDocument } from './languages.graphql';
+import { LanguagesDocument } from './languages.graphql.ts';
 
 export const LanguageGrid = () => {
   const [dataGridProps] = useDataGridSource({

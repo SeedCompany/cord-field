@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { Box, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { useUploadFileAsync } from '~/components/files/hooks';
-import { UploadProgressReportMedia } from '../../../../../api/schema/schema.graphql';
+import { UploadProgressReportMedia } from '../../../../../api/schema/schema.graphql.ts';
 import { StepComponent } from '../step.types';
 import { VariantAccordion } from '../VariantAccordion';
 import { MediaInfoForm, MediaInfoFormProps } from './MediaInfoForm';
@@ -10,7 +10,7 @@ import {
   CreateMediaDocument,
   DeleteMediaDocument,
   UpdateMediaDocument,
-} from './MediaStep.graphql';
+} from './MediaStep.graphql.ts';
 
 export const MediaStep: StepComponent = ({ report }) => {
   const { mediaItems, latestVariantGroupId } = useMemo(() => {

@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:24.14.1-slim as node
+FROM public.ecr.aws/docker/library/node:24-slim as node
 
 RUN <<EOF
 set -e
@@ -35,7 +35,7 @@ ARG API_BASE_URL
 ENV RAZZLE_API_BASE_URL=$API_BASE_URL
 ARG MUI_X_LICENSE_KEY
 ENV MUI_X_LICENSE_KEY=$MUI_X_LICENSE_KEY
-RUN yarn gql-gen -e && yarn razzle build --noninteractive
+RUN yarn gql-gen -e && yarn build
 
 # Clear all downloaded libraries to reduce image size
 RUN yarn cache clean --all
@@ -48,7 +48,8 @@ ARG SEED_API_HOST
 ENV SEED_API_HOST=$SEED_API_HOST
 
 COPY --from=builder /app/.yarn ./.yarn
-COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/.pnp.* ./
+COPY --from=builder /app/package.json /app/yarn.lock /app/.yarnrc.yml ./
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/build ./build
 
 RUN corepack install
@@ -63,7 +64,13 @@ EXPOSE 80
 
 CMD ["yarn", "node", "build/server.js"]
 
+# Real `ENV`, not `echo >> .env`: nothing reads `/app/.env` at runtime —
+# `config/loadDotenv.cjs` is only invoked by the CLIs (codegen, vite), none of
+# which run in the container — so the previous `RUN echo …` left
+# `RAZZLE_GIT_HASH` undefined in production and `createClient` sent no version
+# in `clientAwareness`. `renderServerSideApp` reads these off `process.env`,
+# which is what `ENV` populates.
 ARG GIT_HASH
+ENV RAZZLE_GIT_HASH=$GIT_HASH
 ARG GIT_BRANCH
-RUN echo RAZZLE_GIT_HASH=$GIT_HASH >> .env
-RUN echo RAZZLE_GIT_BRANCH=$GIT_BRANCH >> .env
+ENV RAZZLE_GIT_BRANCH=$GIT_BRANCH

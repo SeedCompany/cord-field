@@ -2,13 +2,13 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreatePerson } from '~/api/schema.graphql';
+import { CreatePerson } from '~/api/schema.graphql.ts';
 import { ButtonLink } from '../../../components/Routing';
 import { UserForm, UserFormProps } from '../UserForm';
 import {
   CreatePersonDocument,
   CreatePersonMutation,
-} from './CreateUser.graphql';
+} from './CreateUser.graphql.ts';
 
 type SubmitResult = CreatePersonMutation['createPerson']['user'];
 export type CreateUserProps = Except<

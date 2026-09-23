@@ -6,11 +6,11 @@ import {
 } from '../../../components/DefinedFileCard';
 import { FileActionsContextProvider } from '../../../components/files/FileActions';
 import { PreviewIconButton } from '../../../components/files/FileActions/PreviewIconButton';
-import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql';
+import { UploadPeriodicReportFileDocument } from '../../../components/PeriodicReports/Upload/UpdatePeriodicReport.graphql.ts';
 import { PnPReextractIconButton } from '../../../components/PnpValidation/PnPReextractIconButton';
 import { PnpProgressValidation } from '../PnpValidation/PnpProgressValidation';
-import { ReextractPnpProgressDocument } from '../PnpValidation/ReextractProgress.graphql';
-import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
+import { ReextractPnpProgressDocument } from '../PnpValidation/ReextractProgress.graphql.ts';
+import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql.ts';
 
 interface Props
   extends Omit<

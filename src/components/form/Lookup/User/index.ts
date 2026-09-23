@@ -1,2 +1,2 @@
 export * from './UserField';
-export type { UserLookupItemFragment as UserLookupItem } from './UserLookup.graphql';
+export type { UserLookupItemFragment as UserLookupItem } from './UserLookup.graphql.ts';

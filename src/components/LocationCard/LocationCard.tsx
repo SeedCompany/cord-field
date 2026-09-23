@@ -5,13 +5,13 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { LocationTypeLabels } from '~/api/schema.graphql';
+import { LocationTypeLabels } from '~/api/schema.graphql.ts';
 import { extendSx, labelFrom, StyleProps } from '~/common';
 import { FormattedDateTime } from '../Formatters';
 import { ProgressButton } from '../ProgressButton';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { LocationCardFragment } from './LocationCard.graphql';
+import { LocationCardFragment } from './LocationCard.graphql.ts';
 
 export interface LocationCardProps {
   loading?: boolean;

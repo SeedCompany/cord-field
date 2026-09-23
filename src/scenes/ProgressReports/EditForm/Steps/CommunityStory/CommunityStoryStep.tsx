@@ -6,7 +6,7 @@ import {
   ChangeProgressReportCommunityStoryPromptDocument as ChangePrompt,
   CreateCommunityStoryDocument as CreateStory,
   UpdateCommunityStoryResponseDocument as UpdateResponse,
-} from './CommunityStoryStep.graphql';
+} from './CommunityStoryStep.graphql.ts';
 import { StoryFieldOperationsText, StoryPartnerText } from './Instructions';
 
 export const CommunityStoryStep: StepComponent = ({ report }) => {

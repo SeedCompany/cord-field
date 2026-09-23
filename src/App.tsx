@@ -1,6 +1,7 @@
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { LicenseInfo as MuiXLicense } from '@mui/x-license';
 import { isNotFalsy } from '@seedcompany/common';
+import { env } from '~/common';
 import { ApolloProvider, GqlSensitiveOperations } from './api';
 import { LuxonCalenderDateUtils } from './common/LuxonCalenderDateUtils';
 import { CommentsProvider } from './components/Comments/CommentsContext';
@@ -13,7 +14,7 @@ import { UploadProvider as FileUploadProvider } from './components/Upload';
 import { Root } from './scenes/Root';
 import { ThemeProvider } from './theme/ThemeProvider';
 
-const logRocketAppId = process.env.RAZZLE_LOG_ROCKET_APP_ID;
+const logRocketAppId = env.RAZZLE_LOG_ROCKET_APP_ID;
 if (logRocketAppId) {
   void Promise.all([import('logrocket'), import('logrocket-react')]).then(
     ([LogRocket, setupLogRocketReact]) => {

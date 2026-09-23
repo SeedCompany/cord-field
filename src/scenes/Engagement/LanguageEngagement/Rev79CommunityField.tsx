@@ -10,7 +10,7 @@ import {
 import { useRev79Communities } from '~/api/seed/useRev79Communities';
 import { useField } from '../../../components/form/useField';
 import { getHelperText, showError } from '../../../components/form/util';
-import { LanguageEngagementHeaderFragment } from './Header/LanguageEngagementHeader.graphql';
+import { LanguageEngagementHeaderFragment } from './Header/LanguageEngagementHeader.graphql.ts';
 
 interface Rev79CommunityFieldProps {
   name: string;

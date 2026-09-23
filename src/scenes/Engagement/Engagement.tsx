@@ -1,8 +1,8 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '~/api';
 import { useChangesetAwareIdFromUrl } from '../../components/Changeset';
 import { useComments } from '../../components/Comments/CommentsContext';
 import { NotFoundPage } from '../../components/Error';
-import { EngagementDocument } from './Engagement.graphql';
+import { EngagementDocument } from './Engagement.graphql.ts';
 import { EngagementDetailLoading } from './EngagementDetailLoading';
 import { InternshipEngagementDetail } from './InternshipEngagement';
 import { LanguageEngagementDetail } from './LanguageEngagement';

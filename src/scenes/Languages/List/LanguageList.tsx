@@ -5,7 +5,7 @@ import { LanguageColumns } from '~/components/LanguageDataGrid';
 import { EntityList as LanguagesList } from '~/components/List';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { LanguageGrid } from './LanguageGrid';
-import { LanguagesDocument } from './languages.graphql';
+import { LanguagesDocument } from './languages.graphql.ts';
 
 export const LanguageList = () => {
   const isMobile = useIsMobile();

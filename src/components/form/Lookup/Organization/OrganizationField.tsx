@@ -1,10 +1,10 @@
-import { CreateOrganization as CreateOrganizationInput } from '~/api/schema.graphql';
+import { CreateOrganization as CreateOrganizationInput } from '~/api/schema.graphql.ts';
 import { CreateOrganization } from '../../../../scenes/Organizations/Create';
 import { LookupField } from '../../index';
 import {
   OrganizationLookupDocument,
   OrganizationLookupItemFragment,
-} from './OrganizationLookup.graphql';
+} from './OrganizationLookup.graphql.ts';
 
 export const OrganizationField = LookupField.createFor<
   OrganizationLookupItemFragment,

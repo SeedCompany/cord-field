@@ -1,2 +1,2 @@
 export * from './ToolField';
-export type { ToolLookupItemFragment as ToolLookupItem } from './ToolLookup.graphql';
+export type { ToolLookupItemFragment as ToolLookupItem } from './ToolLookup.graphql.ts';

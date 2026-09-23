@@ -14,7 +14,7 @@ import {
   ProgressReportStatusList as Statuses,
   ProgressReportStatusLabels as StatusLabels,
 } from '~/api/schema/enumLists';
-import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql';
+import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql.ts';
 import { extendSx } from '~/common';
 
 type StatusStepperProps = {

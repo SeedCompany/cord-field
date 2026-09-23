@@ -1,12 +1,12 @@
 import { Box, Paper, PaperProps } from '@mui/material';
-import { CreateLanguage as CreateLanguageType } from '~/api/schema.graphql';
+import { CreateLanguage as CreateLanguageType } from '~/api/schema.graphql.ts';
 import { CreateLanguage } from '../../../../scenes/Languages/Create';
 import { LanguageFormValues } from '../../../../scenes/Languages/LanguageForm';
 import { LookupField } from '../../index';
 import {
   LanguageLookupItemFragment as Language,
   LanguageLookupDocument,
-} from './LanguageLookup.graphql';
+} from './LanguageLookup.graphql.ts';
 
 const ETH_COLUMN_WIDTH = 48; // includes right padding
 const ROLV_COLUMN_WIDTH = 72; // includes right padding

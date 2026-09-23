@@ -1,8 +1,8 @@
-import { useQuery } from '@apollo/client';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { uniqBy } from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useQuery } from '~/api';
 import { InputArg, PaginatedListInput, PaginatedListOutput } from '../../api';
 import { ListQueryResult } from './useListQuery';
 

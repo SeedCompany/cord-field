@@ -14,7 +14,7 @@ import { recalculateSensitivity } from '../LanguageEngagement/Create/recalculate
 import {
   DeleteEngagementDocument,
   EngagementToDeleteFragment,
-} from './DeleteEngagement.graphql';
+} from './DeleteEngagement.graphql.ts';
 
 interface DeleteEngagementProps extends IconButtonProps {
   project: ProjectIdFragment;

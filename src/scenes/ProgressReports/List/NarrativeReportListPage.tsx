@@ -1,11 +1,11 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '~/api';
 import { PeriodicReportsTable } from '~/components/PeriodicReports/PeriodicReportsTable';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { Error } from '../../../components/Error';
 import { PeriodicReportsList as PeriodicReportListLayout } from '../../../components/PeriodicReports';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
-import { ProgressReportsOfEngagementDocument as ReportsOfEngagement } from './ProgressReportsOfEngagement.graphql';
+import { ProgressReportsOfEngagementDocument as ReportsOfEngagement } from './ProgressReportsOfEngagement.graphql.ts';
 
 export const NarrativeReportListPage = () => {
   const { id: engagementId, changesetId } =

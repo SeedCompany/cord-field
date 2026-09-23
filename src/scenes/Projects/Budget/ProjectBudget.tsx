@@ -1,7 +1,7 @@
-import { useQuery } from '@apollo/client';
 import { Breadcrumbs, Grid, Skeleton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { makeStyles } from 'tss-react/mui';
+import { useQuery } from '~/api';
 import { Breadcrumb } from '../../../components/Breadcrumb';
 import { DefinedFileCard } from '../../../components/DefinedFileCard';
 import { Error } from '../../../components/Error';
@@ -13,7 +13,7 @@ import { useProjectId } from '../useProjectId';
 import {
   ProjectBudgetDocument,
   UpdateProjectBudgetUniversalTemplateDocument,
-} from './ProjectBudget.graphql';
+} from './ProjectBudget.graphql.ts';
 import { ProjectBudgetRecords } from './ProjectBudgetRecords';
 
 const useStyles = makeStyles()(({ breakpoints, spacing }) => ({

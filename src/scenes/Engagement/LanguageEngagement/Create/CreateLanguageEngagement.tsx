@@ -12,7 +12,7 @@ import {
   LanguageField,
   LanguageLookupItem,
 } from '../../../../components/form/Lookup';
-import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.graphql';
+import { CreateLanguageEngagementDocument } from './CreateLanguageEngagement.graphql.ts';
 import { invalidatePartnersEngagements } from './invalidatePartnersEngagements';
 import { recalculateSensitivity } from './recalculateSensitivity';
 

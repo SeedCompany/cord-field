@@ -1,8 +1,8 @@
-import { CreateTool } from '~/api/schema.graphql';
+import { CreateTool } from '~/api/schema.graphql.ts';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SecuredField, SubmitError, TextField } from '../../form';
 import { CheckboxField } from '../../form/CheckboxField';
-import { ToolFormFragment } from './ToolForm.graphql';
+import { ToolFormFragment } from './ToolForm.graphql.ts';
 
 export type ToolFormProps<R> = DialogFormProps<Required<CreateTool>, R> & {
   tool?: ToolFormFragment;

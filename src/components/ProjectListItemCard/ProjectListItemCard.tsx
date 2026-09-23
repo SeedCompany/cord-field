@@ -9,16 +9,19 @@ import {
   Typography,
 } from '@mui/material';
 import { PartialDeep } from 'type-fest';
-import { ProjectStatusLabels, ProjectTypeLabels } from '~/api/schema.graphql';
+import {
+  ProjectStatusLabels,
+  ProjectTypeLabels,
+} from '~/api/schema.graphql.ts';
 import { extendSx, labelFrom, StyleProps } from '~/common';
-import { ProjectListQueryVariables } from '../../scenes/Projects/List/ProjectList.graphql';
+import { ProjectListQueryVariables } from '../../scenes/Projects/List/ProjectList.graphql.ts';
 import { getProjectUrl } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { CardActionAreaLink } from '../Routing';
 import { Sensitivity } from '../Sensitivity';
 import { TogglePinButton } from '../TogglePinButton';
-import { ProjectListItemFragment } from './ProjectListItem.graphql';
+import { ProjectListItemFragment } from './ProjectListItem.graphql.ts';
 
 export interface ProjectListItemCardProps {
   project?: ProjectListItemFragment;

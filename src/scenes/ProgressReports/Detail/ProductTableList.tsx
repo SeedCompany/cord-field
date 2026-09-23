@@ -1,7 +1,7 @@
 import { Skeleton, Typography } from '@mui/material';
 import { entries, groupToMapBy } from '@seedcompany/common';
 import { ProductTable } from './ProductTable';
-import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql';
+import { ProgressOfProductForReportFragment } from './ProgressReportDetail.graphql.ts';
 
 interface ProductTableListProps {
   products?: readonly ProgressOfProductForReportFragment[];

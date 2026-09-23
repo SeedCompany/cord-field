@@ -4,7 +4,6 @@ import type {
   LogLevels,
   OutputData as RichTextData,
 } from '@editorjs/editorjs';
-import loadable from '@loadable/component';
 import {
   Box,
   ClickAwayListener,
@@ -35,6 +34,7 @@ import { extendSx, Nullable, StyleProps } from '~/common';
 import { FieldConfig, useField } from '../form';
 import { getHelperText, showError } from '../form/util';
 import { FormattedNumber } from '../Formatters';
+import { loadable } from '../Loadable';
 import { EditorJsTheme } from './EditorJsTheme';
 import type { ToolKey } from './editorJsTools';
 import { handleMsPasteFormatting } from './ms-word-helpers';
@@ -374,6 +374,9 @@ const savingSigil: RichTextData = { time: 0, blocks: [] };
 
 const Lib = loadable.lib(() => import('react-editor-js'), {
   ssr: false,
+  // Written by hand: the `loadableId` Babel plugin skips bare package
+  // specifiers, since they have no source path to key a manifest entry on.
+  loadableId: 'react-editor-js',
 });
 const Tools = loadable.lib(() => import('./editorJsTools'), {
   ssr: false,

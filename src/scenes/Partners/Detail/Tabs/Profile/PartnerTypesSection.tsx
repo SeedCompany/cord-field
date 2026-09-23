@@ -4,12 +4,12 @@ import { ReactNode } from 'react';
 import {
   FinancialReportingTypeLabels,
   PartnerTypeLabels,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { canEditAny, labelFrom, SecuredProp, StyleProps } from '~/common';
 import { ActionableSection } from '~/components/ActionableSection';
 import { IconButton } from '~/components/IconButton';
 import { Redacted, RedactedProps } from '~/components/Redacted';
-import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { PartnerDetailsFragment } from '../../PartnerDetail.graphql.ts';
 
 interface PartnerTypesSectionProps {
   partner?: PartnerDetailsFragment;

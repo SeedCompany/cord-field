@@ -12,7 +12,7 @@ import {
 import {
   CreateProgressReportNewsDocument as CreateNews,
   UpdateProgressReportNewsResponseDocument as UpdateResponse,
-} from './TeamNewsStep.graphql';
+} from './TeamNewsStep.graphql.ts';
 
 export const TeamNewsStep: StepComponent = ({ report }) => {
   const news = report.teamNews.items[0];

@@ -7,7 +7,7 @@ import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { FabLink } from '../../../components/Routing';
 import { ToolsUsedList } from '../../../components/ToolUsage';
 import { ProductList } from '../../Products/List/ProductList';
-import { EngagementQuery } from '../Engagement.graphql';
+import { EngagementQuery } from '../Engagement.graphql.ts';
 import { CeremonyForm } from './Ceremony';
 import { DatesForm } from './DatesForm';
 import { EngagementDescription } from './Description';

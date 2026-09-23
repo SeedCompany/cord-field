@@ -22,7 +22,7 @@ import { useHighlightedState } from './useHighlightedState';
 import {
   WorkflowStateFragment as State,
   WorkflowTransitionFragment as Transition,
-} from './workflow.graphql';
+} from './workflow.graphql.ts';
 
 import 'reactflow/dist/style.css';
 

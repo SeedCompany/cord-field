@@ -9,13 +9,13 @@ import {
 import {
   EngagementStatusLabels,
   InternshipPositionLabels,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { idForUrl } from '../Changeset';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDate } from '../Formatters';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { InternshipEngagementListItemFragment } from './InternshipEngagementListItem.graphql';
+import { InternshipEngagementListItemFragment } from './InternshipEngagementListItem.graphql.ts';
 
 export type InternshipEngagementListItemCardProps =
   InternshipEngagementListItemFragment;

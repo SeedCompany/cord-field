@@ -56,6 +56,3 @@ const OutlookMessage = ({ email }: { email: Email }) => (
     </Typography>
   </Box>
 );
-
-// eslint-disable-next-line import/no-default-export
-export default EmailPreview;

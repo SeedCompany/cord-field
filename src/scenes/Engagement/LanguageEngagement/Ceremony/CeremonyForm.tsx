@@ -2,12 +2,12 @@ import { useMutation } from '@apollo/client';
 import { isEqual, noop } from 'lodash';
 import { useMemo } from 'react';
 import { Form, FormSpy } from 'react-final-form';
-import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
+import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql.ts';
 import { DateField } from '../../../../components/form';
 import {
   CeremonyCardFragment,
   UpdateCeremonyDocument,
-} from '../../CeremonyCard/CeremonyCard.graphql';
+} from '../../CeremonyCard/CeremonyCard.graphql.ts';
 import { CeremonyPlanned } from '../../CeremonyCard/CeremonyPlanned';
 
 export const CeremonyForm = ({

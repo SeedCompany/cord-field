@@ -13,7 +13,7 @@ import {
   ProgressReportStatusList,
   ScheduleStatusLabels,
   ScheduleStatusList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { CalendarDate, extendSx } from '~/common';
 import {
   booleanColumn,
@@ -30,7 +30,7 @@ import { ExpansionCell } from './ExpansionCell';
 import {
   ProgressReportsDataGridRowFragment as ProgressReport,
   ProgressReportsDocument,
-} from './progressReportsDataGridRow.graphql';
+} from './progressReportsDataGridRow.graphql.ts';
 import { VariantResponseCell } from './VariantResponseCell';
 
 export type ProgressReportColumnMapShape = Record<

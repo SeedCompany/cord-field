@@ -2,7 +2,6 @@ import {
   type TypedDocumentNode as DocumentNode,
   MaybeMasked,
   Unmasked,
-  useQuery,
 } from '@apollo/client';
 import {
   FilterColumnsArgs,
@@ -30,6 +29,7 @@ import {
 import { get, merge, pick, set, uniqBy } from 'lodash';
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
 import type { Get, Paths } from 'type-fest';
+import { useQuery } from '~/api';
 import { useGridFilteredRowCount } from './useGridFilteredRowCount';
 import { ListInput, useViewState, ViewState } from './useViewState';
 

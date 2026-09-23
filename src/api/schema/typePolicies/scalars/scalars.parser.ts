@@ -1,4 +1,4 @@
-import { Scalars } from '../../schema.graphql';
+import { Scalars } from '../../schema.graphql.ts';
 
 export const Parsers: {
   [K in keyof Scalars]?: (val: any) => Scalars[K]['output'];

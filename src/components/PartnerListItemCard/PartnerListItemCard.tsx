@@ -1,10 +1,10 @@
 import { Card, CardContent, Skeleton, Stack, Typography } from '@mui/material';
 import { random } from 'lodash';
 import { PartialDeep } from 'type-fest';
-import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql';
+import { PartnersQueryVariables } from '../../scenes/Partners/List/PartnerList.graphql.ts';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
-import { PartnerListItemFragment } from './PartnerListItemCard.graphql';
+import { PartnerListItemFragment } from './PartnerListItemCard.graphql.ts';
 
 export interface PartnerListItemCardProps {
   partner?: PartnerListItemFragment;

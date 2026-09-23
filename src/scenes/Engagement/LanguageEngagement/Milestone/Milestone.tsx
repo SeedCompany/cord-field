@@ -11,13 +11,13 @@ import {
   LanguageMilestone,
   LanguageMilestoneLabels,
   LanguageMilestoneList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { SelectField } from '~/components/form';
 import { TriStateBooleanField } from '~/components/form/TriStateBooleanField';
 import { IconButton } from '../../../../components/IconButton';
-import { UpdateLanguageEngagementDocument } from '../../EditEngagement/EditEngagementDialog.graphql';
-import { EngagementMilestoneFragment } from './Milestone.graphql';
+import { UpdateLanguageEngagementDocument } from '../../EditEngagement/EditEngagementDialog.graphql.ts';
+import { EngagementMilestoneFragment } from './Milestone.graphql.ts';
 
 interface Props {
   engagement: EngagementMilestoneFragment;

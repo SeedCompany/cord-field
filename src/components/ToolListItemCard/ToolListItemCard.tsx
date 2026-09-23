@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { PartialDeep } from 'type-fest';
 import { StyleProps } from '~/common';
-import type { ToolListItemFragment } from '~/common/fragments/tool.graphql';
+import type { ToolListItemFragment } from '~/common/fragments/tool.graphql.ts';
 import { CardActionAreaLink } from '../Routing';
 
 export interface ToolListItemCardProps extends StyleProps {

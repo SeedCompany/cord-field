@@ -1,6 +1,6 @@
 import { PeopleJoinedIcon } from '../Icons';
 import { MemberListSummary, MemberSummaryItem } from '../MemberListSummary';
-import { PartnershipSummaryFragment } from './PartnershipSummary.graphql';
+import { PartnershipSummaryFragment } from './PartnershipSummary.graphql.ts';
 
 export interface PartnershipSummaryProps {
   partnerships?: PartnershipSummaryFragment;

@@ -2,7 +2,7 @@ import { FormControlLabel, FormLabel, Radio } from '@mui/material';
 // eslint-disable-next-line @seedcompany/no-restricted-imports
 import { useRadioGroup } from '@mui/material/RadioGroup';
 import { ReactNode } from 'react';
-import { Order } from '~/api/schema.graphql';
+import { Order } from '~/api/schema.graphql.ts';
 
 export interface SortOptionProps<T> {
   label: ReactNode;

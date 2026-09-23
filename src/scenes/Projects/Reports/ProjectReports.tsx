@@ -1,5 +1,5 @@
-import { useQuery } from '@apollo/client';
-import { ReportType } from '~/api/schema.graphql';
+import { useQuery } from '~/api';
+import { ReportType } from '~/api/schema.graphql.ts';
 import { Error } from '../../../components/Error';
 import { PeriodicReportsList } from '../../../components/PeriodicReports/PeriodicReportsList';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -7,7 +7,7 @@ import { useProjectId } from '../useProjectId';
 import {
   FinancialReportsDocument,
   NarrativeReportsDocument,
-} from './ProjectReports.graphql';
+} from './ProjectReports.graphql.ts';
 
 export const ProjectReports = ({ type }: { type: ReportType }) => {
   const { projectId, changesetId } = useProjectId();

@@ -1,4 +1,4 @@
-import { CreateOrganization } from '~/api/schema.graphql';
+import { CreateOrganization } from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,

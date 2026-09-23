@@ -3,9 +3,9 @@ import type { MockedResponse } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Form } from 'react-final-form';
 import { MarketingRegionField } from './MarketingRegionField';
-import { MarketingRegionLookupDocument } from './MarketingRegionLookup.graphql';
+import { MarketingRegionLookupDocument } from './MarketingRegionLookup.graphql.ts';
 
-jest.mock('../../../Session', () => ({
+vi.mock('../../../Session', () => ({
   useSession: () => ({ powers: [] }),
 }));
 

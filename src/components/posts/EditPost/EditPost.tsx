@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdatePost as UpdatePostInput } from '~/api/schema.graphql';
+import { UpdatePost as UpdatePostInput } from '~/api/schema.graphql.ts';
 import { PostForm, PostFormProps } from '../PostForm';
-import { UpdatePostDocument } from './EditPost.graphql';
+import { UpdatePostDocument } from './EditPost.graphql.ts';
 
 export type EditPostProps = Except<
   PostFormProps<UpdatePostInput>,

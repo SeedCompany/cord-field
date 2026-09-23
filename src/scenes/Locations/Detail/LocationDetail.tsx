@@ -1,10 +1,10 @@
-import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { Skeleton, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
-import { LocationTypeLabels } from '~/api/schema.graphql';
+import { useQuery } from '~/api';
+import { LocationTypeLabels } from '~/api/schema.graphql.ts';
 import { canEditAny, labelFrom } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import {
@@ -18,7 +18,7 @@ import { Redacted } from '../../../components/Redacted';
 import { Link } from '../../../components/Routing';
 import { StyledRemoteSvg } from '../../../components/StyledRemoteSvg';
 import { EditLocation } from '../Edit';
-import { LocationDocument } from './LocationDetail.graphql';
+import { LocationDocument } from './LocationDetail.graphql.ts';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {

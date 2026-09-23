@@ -11,7 +11,7 @@ import { useProjectId } from '../../Projects/useProjectId';
 import { CreatePartnership } from '../Create';
 import { EditPartnership } from '../Edit';
 import { PartnershipFormFragment } from '../PartnershipForm';
-import { ProjectPartnershipsDocument } from './PartnershipList.graphql';
+import { ProjectPartnershipsDocument } from './PartnershipList.graphql.ts';
 
 export const PartnershipList = () => {
   const { projectId, changesetId, projectUrl } = useProjectId();

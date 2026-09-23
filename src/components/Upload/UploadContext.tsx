@@ -13,7 +13,7 @@ import { ChildrenProp } from '~/common';
 import { initialState, uploadReducer } from './Reducer';
 import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
-import { RequestFileUploadDocument } from './Upload.graphql';
+import { RequestFileUploadDocument } from './Upload.graphql.ts';
 import { UploadItems } from './UploadItems';
 import { UploadManagerUIShell as UploadManager } from './UploadManagerUIShell';
 import { useUploadFile } from './useUploadFile';

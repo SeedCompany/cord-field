@@ -2,7 +2,7 @@ import {
   CreateProject,
   ProjectTypeLabels,
   ProjectTypeList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import {
   DialogForm,

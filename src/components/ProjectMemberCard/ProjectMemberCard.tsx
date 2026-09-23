@@ -6,13 +6,13 @@ import {
   Skeleton,
   Typography,
 } from '@mui/material';
-import { RoleLabels } from '~/api/schema.graphql';
+import { RoleLabels } from '~/api/schema.graphql.ts';
 import { labelsFrom } from '~/common';
 import { Avatar } from '../Avatar';
 import { FormattedDate, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
 import { Link } from '../Routing';
-import { ProjectMemberCardFragment } from './ProjectMember.graphql';
+import { ProjectMemberCardFragment } from './ProjectMember.graphql.ts';
 
 export interface ProjectMemberCardProps {
   projectMember?: ProjectMemberCardFragment;

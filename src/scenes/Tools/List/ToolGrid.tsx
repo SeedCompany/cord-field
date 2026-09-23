@@ -13,7 +13,7 @@ import {
   ToolInitialState,
   ToolToolbar,
 } from '~/components/ToolDataGrid';
-import { ToolsDocument } from './tools.graphql';
+import { ToolsDocument } from './tools.graphql.ts';
 
 export const ToolGrid = () => {
   const [dataGridProps] = useDataGridSource({

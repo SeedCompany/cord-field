@@ -9,7 +9,7 @@ import {
   FinancialReportingTypeList,
   PartnerTypeLabels,
   PartnerTypeList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   booleanColumn,
   dateColumn,
@@ -22,7 +22,7 @@ import {
   useFilterToggle,
 } from '../Grid';
 import { PartnerNameColumn } from '../Grid/Columns/PartnerNameColumn';
-import { PartnerDataGridRowFragment as Partner } from './partnerDataGridRow.graphql';
+import { PartnerDataGridRowFragment as Partner } from './partnerDataGridRow.graphql.ts';
 
 export const PartnerColumns: Array<GridColDef<Partner>> = [
   PartnerNameColumn({

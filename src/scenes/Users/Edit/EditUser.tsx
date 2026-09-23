@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdateUser as UpdateUserInput } from '~/api/schema.graphql';
+import { UpdateUser as UpdateUserInput } from '~/api/schema.graphql.ts';
 import { UserForm, UserFormProps } from '../UserForm';
-import { UpdateUserDocument } from './EditUser.graphql';
+import { UpdateUserDocument } from './EditUser.graphql.ts';
 
 export type EditUserProps = Except<
   UserFormProps<UpdateUserInput>,

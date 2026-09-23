@@ -1,10 +1,10 @@
 import { Merge } from 'type-fest';
-import { CreateFieldZone, UpdateFieldZone } from '~/api/schema.graphql';
+import { CreateFieldZone, UpdateFieldZone } from '~/api/schema.graphql.ts';
 import { DialogForm, DialogFormProps } from '../../Dialog/DialogForm';
 import { SecuredField, SubmitError, TextField } from '../../form';
 import { UserField } from '../../form/Lookup/User/UserField';
-import { UserLookupItemFragment } from '../../form/Lookup/User/UserLookup.graphql';
-import { FieldZoneFormFragment } from './FieldZoneForm.graphql';
+import { UserLookupItemFragment } from '../../form/Lookup/User/UserLookup.graphql.ts';
+import { FieldZoneFormFragment } from './FieldZoneForm.graphql.ts';
 
 type FieldZoneMutation = UpdateFieldZone | CreateFieldZone;
 

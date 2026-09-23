@@ -5,7 +5,7 @@ import { EntityList as PartnersList } from '~/components/List';
 import { PartnerColumns } from '~/components/PartnersDataGrid/PartnerColumns';
 import { renderPartnerRow } from '~/components/PartnersDataGrid/renderPartnerRow';
 import { PartnerGrid } from './PartnerGrid';
-import { PartnersDocument } from './PartnerList.graphql';
+import { PartnersDocument } from './PartnerList.graphql.ts';
 
 export const PartnerList = () => {
   const isMobile = useIsMobile();

@@ -1,5 +1,5 @@
 import { sortBy } from '@seedcompany/common';
-import { Sensitivity } from '~/api/schema.graphql';
+import { Sensitivity } from '~/api/schema.graphql.ts';
 
 export const highestSensitivity = (
   sensitivities: Sensitivity[],

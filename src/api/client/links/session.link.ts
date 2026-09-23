@@ -1,7 +1,7 @@
 import { ApolloClient, fromPromise } from '@apollo/client';
 import { ErrorLink } from '@apollo/client/link/error';
 import { GraphQLErrorExtensions } from 'graphql';
-import { SessionDocument } from '~/components/Session/session.graphql';
+import { SessionDocument } from '~/components/Session/session.graphql.ts';
 import { GQLOperations } from '../../operationsList';
 
 declare module '~/api/errorHandling/error.types' {

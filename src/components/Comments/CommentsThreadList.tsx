@@ -11,7 +11,7 @@ import { useListQuery } from '../List';
 import { ProgressButton } from '../ProgressButton';
 import { CreateComment } from './CommentForm/CreateComment';
 import { useCommentsContext } from './CommentsContext';
-import { CommentThreadsListDocument } from './CommentsThreadList.graphql';
+import { CommentThreadsListDocument } from './CommentsThreadList.graphql.ts';
 import { CommentThread } from './CommentThread';
 
 interface CommentThreadListProps {

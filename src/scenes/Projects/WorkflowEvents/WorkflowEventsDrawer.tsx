@@ -4,7 +4,7 @@ import { useSize } from 'ahooks';
 import { useEffect, useRef, useState } from 'react';
 import { extendSx } from '~/common';
 import { IconButton } from '~/components/IconButton';
-import { ProjectWorkflowEventFragment as WorkflowEvent } from './projectWorkflowEvent.graphql';
+import { ProjectWorkflowEventFragment as WorkflowEvent } from './projectWorkflowEvent.graphql.ts';
 import { WorkflowEventsList } from './WorkflowEventsList';
 
 type WorkflowEventsDrawerProps = DrawerProps & {

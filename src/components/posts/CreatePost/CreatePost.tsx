@@ -1,10 +1,10 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreatePost as CreatePostInput } from '~/api/schema.graphql';
-import { PostableIdFragment } from '../PostableId.graphql';
+import { CreatePost as CreatePostInput } from '~/api/schema.graphql.ts';
+import { PostableIdFragment } from '../PostableId.graphql.ts';
 import { PostForm, PostFormProps } from '../PostForm';
-import { CreatePostDocument } from './CreatePost.graphql';
+import { CreatePostDocument } from './CreatePost.graphql.ts';
 
 export type CreatePostProps = Except<
   PostFormProps<CreatePostInput>,

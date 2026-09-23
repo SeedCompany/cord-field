@@ -4,7 +4,7 @@ import { useIsMobile } from '~/common';
 import { EntityList as UsersList } from '~/components/List';
 import { UserColumns } from '~/components/UserDataGrid/UserColumns';
 import { UserGrid } from './UserGrid';
-import { UsersDocument } from './users.graphql';
+import { UsersDocument } from './users.graphql.ts';
 
 export const UserList = () => {
   const isMobile = useIsMobile();

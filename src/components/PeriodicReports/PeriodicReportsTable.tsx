@@ -29,7 +29,7 @@ import {
   PeriodicReportEditShape,
   PeriodicReportFileField,
 } from './fileField';
-import { PeriodicReportFragment } from './PeriodicReport.graphql';
+import { PeriodicReportFragment } from './PeriodicReport.graphql.ts';
 import {
   PeriodicReportFileFieldProvider,
   PeriodicReportRow,

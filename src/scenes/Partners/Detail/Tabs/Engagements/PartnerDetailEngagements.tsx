@@ -20,7 +20,7 @@ import {
 import { EntityList as PartnersEngagementsList } from '~/components/List';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { TabPanelContent } from '~/components/Tabs';
-import { PartnerDetailEngagementsDocument } from './PartnerDetailEngagements.graphql';
+import { PartnerDetailEngagementsDocument } from './PartnerDetailEngagements.graphql.ts';
 
 export const PartnerDetailEngagements = () => {
   const { partnerId = '' } = useParams();

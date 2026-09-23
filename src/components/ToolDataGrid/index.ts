@@ -1,2 +1,2 @@
 export * from './ToolColumns';
-export * from './toolDataGridRow.graphql';
+export * from './toolDataGridRow.graphql.ts';

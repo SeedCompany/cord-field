@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Box,
   Breadcrumbs,
@@ -9,6 +8,7 @@ import {
 } from '@mui/material';
 import { useToggle } from 'ahooks';
 import { Helmet } from 'react-helmet-async';
+import { useQuery } from '~/api';
 import { flexColumn } from '~/common';
 import { Breadcrumb } from '~/components/Breadcrumb';
 import { useChangesetAwareIdFromUrl } from '~/components/Changeset';
@@ -22,7 +22,7 @@ import { Error } from '../../../components/Error';
 import {
   ProgressReportDetailDocument,
   ProgressReportDetailFragment,
-} from '../Detail/ProgressReportDetail.graphql';
+} from '../Detail/ProgressReportDetail.graphql.ts';
 import { WorkFlowEventList } from './WorkflowEventList';
 
 export const StatusHistory = () => {

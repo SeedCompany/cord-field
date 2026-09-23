@@ -8,7 +8,7 @@ import {
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { Redacted } from '../Redacted';
 import { ButtonLink, CardActionAreaLink } from '../Routing';
-import { FieldZoneCardFragment } from './FieldZoneCard.graphql';
+import { FieldZoneCardFragment } from './FieldZoneCard.graphql.ts';
 
 export interface FieldZoneCardProps {
   loading?: boolean;

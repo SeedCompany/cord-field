@@ -1,6 +1,6 @@
 import { useGridMutation } from '../Grid';
-import { EngagementDataGridRowFragmentDoc as EngagementGridRow } from './engagementDataGridRow.graphql';
-import { UpdateLanguageEngagementGridDocument as UpdateLanguageEngagement } from './UpdateLanguageEngagementGrid.graphql';
+import { EngagementDataGridRowFragmentDoc as EngagementGridRow } from './engagementDataGridRow.graphql.ts';
+import { UpdateLanguageEngagementGridDocument as UpdateLanguageEngagement } from './UpdateLanguageEngagementGrid.graphql.ts';
 
 export const useProcessEngagementUpdate = () =>
   useGridMutation(EngagementGridRow, UpdateLanguageEngagement, (row) => {

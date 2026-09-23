@@ -1,7 +1,7 @@
 import { ChangeHistory } from '@mui/icons-material';
 import { FieldOverviewCard } from '../FieldOverviewCard';
 import { useNumberFormatter } from '../Formatters';
-import { ProjectChangeRequestSummaryFragment } from './ProjectChangeRequestSummary.graphql';
+import { ProjectChangeRequestSummaryFragment } from './ProjectChangeRequestSummary.graphql.ts';
 
 export interface PlanChangesSummaryProps {
   data?: ProjectChangeRequestSummaryFragment;

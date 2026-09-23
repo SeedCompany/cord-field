@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash';
-import { Order } from '~/api/schema.graphql';
+import { Order } from '~/api/schema.graphql.ts';
 import { Nullable } from '~/common';
 import { makeQueryHandler, StringParam, withTransform } from '~/hooks';
 import { SortValue } from './SortControl';

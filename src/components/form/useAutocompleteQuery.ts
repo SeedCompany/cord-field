@@ -1,9 +1,10 @@
-import { MaybeMasked, OperationVariables, useQuery } from '@apollo/client';
+import { MaybeMasked, OperationVariables } from '@apollo/client';
 import { QueryHookOptions } from '@apollo/client/react/types/types';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { AutocompleteProps } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 import { Merge } from 'type-fest';
+import { useQuery } from '~/api';
 import { isNetworkRequestInFlight } from '../../api';
 
 type AutocompleteQueryOptions<

@@ -11,7 +11,7 @@ import { styled } from '@mui/material/styles';
 import { Many, simpleSwitch } from '@seedcompany/common';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { ReportType } from '~/api/schema.graphql';
+import { ReportType } from '~/api/schema.graphql.ts';
 import { extendSx, gridTemplateAreas, SecuredProp, StyleProps } from '~/common';
 import {
   EditablePeriodicReportField,
@@ -29,7 +29,7 @@ import {
   CardActionAreaLinkProps,
 } from '../../Routing';
 import { DropOverlay } from '../../Upload/DropOverlay';
-import { PeriodicReportFragment } from '../PeriodicReport.graphql';
+import { PeriodicReportFragment } from '../PeriodicReport.graphql.ts';
 import { ReportLabel } from '../ReportLabel';
 import { ReportFileDropInfo } from './ReportFileDropInfo';
 import { ReportInfo } from './ReportInfo';

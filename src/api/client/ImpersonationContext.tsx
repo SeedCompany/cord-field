@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 import { ChildrenProp } from '~/common';
-import { Role } from '../schema/schema.graphql';
+import { Role } from '../schema/schema.graphql.ts';
 
 export interface Impersonation {
   readonly user?: string;

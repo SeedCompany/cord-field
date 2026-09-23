@@ -5,6 +5,7 @@
     "target": "esnext",
     "lib": ["esnext", "dom", "dom.iterable"],
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
     "allowJs": true,
@@ -24,5 +25,5 @@
     }
   },
   "include": ["src", "**/*", ".eslintrc.js"],
-  "exclude": ["**/*.stories.tsx", "build", "node_modules"]
+  "exclude": ["build", "node_modules"]
 }

@@ -3,13 +3,13 @@ import type { MockedResponse } from '@apollo/client/testing';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Form } from 'react-final-form';
 import { LanguageField } from './LanguageField';
-import { LanguageLookupDocument } from './LanguageLookup.graphql';
+import { LanguageLookupDocument } from './LanguageLookup.graphql.ts';
 
-jest.mock('../../../Session', () => ({
+vi.mock('../../../Session', () => ({
   useSession: () => ({ powers: [] }),
 }));
 
-jest.mock('../../../../scenes/Languages/Create', () => ({
+vi.mock('../../../../scenes/Languages/Create', () => ({
   CreateLanguage: () => null,
 }));
 

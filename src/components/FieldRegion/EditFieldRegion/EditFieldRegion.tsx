@@ -1,13 +1,13 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except, SetRequired } from 'type-fest';
-import { UpdateFieldRegion } from '~/api/schema.graphql';
+import { UpdateFieldRegion } from '~/api/schema.graphql.ts';
 import { DisplayFieldRegionFragment } from '~/common';
 import {
   FieldRegionForm,
   FieldRegionFormProps,
 } from '../FieldRegionForm/FieldRegionForm';
-import { UpdateFieldRegionDocument } from './EditFieldRegion.graphql';
+import { UpdateFieldRegionDocument } from './EditFieldRegion.graphql.ts';
 
 type SubmitResult = DisplayFieldRegionFragment;
 export type EditFieldRegionProps = Except<

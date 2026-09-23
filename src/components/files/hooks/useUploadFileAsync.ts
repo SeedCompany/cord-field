@@ -1,4 +1,4 @@
-import { CreateFileVersion } from '~/api/schema/schema.graphql';
+import { CreateFileVersion } from '~/api/schema/schema.graphql.ts';
 import { defer, Deferred } from '../../../common/defer';
 import { useUpload as useUploadContext } from '../../../components/Upload';
 

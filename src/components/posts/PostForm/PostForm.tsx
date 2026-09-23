@@ -5,7 +5,7 @@ import {
   PostShareabilityLabels,
   PostShareabilityList,
   PostTypeList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -18,7 +18,7 @@ import {
   TextField,
 } from '../../../components/form';
 import { minLength, required } from '../../form/validators';
-import { PostFormFragment } from './PostForm.graphql';
+import { PostFormFragment } from './PostForm.graphql.ts';
 
 export type PostFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing post to edit */

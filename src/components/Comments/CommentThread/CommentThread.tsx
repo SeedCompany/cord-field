@@ -15,8 +15,8 @@ import { ProgressButton } from '../../ProgressButton';
 import { CreateComment } from '../CommentForm/CreateComment';
 import { CommentItem } from '../CommentItem';
 import { useCommentsContext } from '../CommentsContext';
-import { CommentThreadFragment } from './commentThread.graphql';
-import { LoadMoreCommentsDocument } from './LoadMoreComments.graphql';
+import { CommentThreadFragment } from './commentThread.graphql.ts';
+import { LoadMoreCommentsDocument } from './LoadMoreComments.graphql.ts';
 
 interface CommentThreadProps {
   thread: CommentThreadFragment;

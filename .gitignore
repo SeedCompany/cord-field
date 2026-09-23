@@ -2,13 +2,13 @@
 
 # compiled output
 /build
+# keep to hide cache output for now and not overwhelm git
 /cache
 
 # Yarn / NPM
 .yarn/cache
 .yarn/unplugged
 .yarn/install-state.gz
-.pnp.*
 node_modules
 package-lock.json
 

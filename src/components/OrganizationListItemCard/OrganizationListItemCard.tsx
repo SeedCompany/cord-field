@@ -1,7 +1,7 @@
 import { Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import { random } from 'lodash';
 import { CardActionAreaLink } from '../Routing';
-import { OrganizationListItemFragment } from './OrganizationListItem.graphql';
+import { OrganizationListItemFragment } from './OrganizationListItem.graphql.ts';
 
 export interface OrganizationListItemCardProps {
   organization?: OrganizationListItemFragment;

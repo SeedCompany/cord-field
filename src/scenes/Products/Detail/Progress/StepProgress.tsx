@@ -6,8 +6,11 @@ import {
   Typography,
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
-import { ProductStepLabels, ProgressMeasurement } from '~/api/schema.graphql';
-import { StepProgressFragment } from './ProductProgress.graphql';
+import {
+  ProductStepLabels,
+  ProgressMeasurement,
+} from '~/api/schema.graphql.ts';
+import { StepProgressFragment } from './ProductProgress.graphql.ts';
 import { ProgressIcon } from './ProgressIcon';
 
 const useStyles = makeStyles()(({ spacing }) => ({

@@ -1,2 +1,2 @@
 export * from './LanguageColumns';
-export * from './languageDataGridRow.graphql';
+export * from './languageDataGridRow.graphql.ts';

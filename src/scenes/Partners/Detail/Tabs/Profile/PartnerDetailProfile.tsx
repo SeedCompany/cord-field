@@ -3,7 +3,7 @@ import { Many } from 'lodash';
 import { BooleanProperty } from '~/components/BooleanProperty';
 import { TabPanelContent } from '~/components/Tabs';
 import { EditablePartnerField } from '../../../Edit';
-import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { PartnerDetailsFragment } from '../../PartnerDetail.graphql.ts';
 import { PartnerContactSection } from './PartnerContactSection';
 import { PartnerLanguagesSection } from './PartnerLanguagesSection';
 import { PartnerLocationSection } from './PartnerLocationSection';

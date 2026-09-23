@@ -38,6 +38,3 @@ export const PdfPreview = ({ file }: PreviewerProps) => {
     </>
   );
 };
-
-// eslint-disable-next-line import/no-default-export
-export default PdfPreview;

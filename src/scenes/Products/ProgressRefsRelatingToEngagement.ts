@@ -11,7 +11,7 @@ import { IdFragment } from '~/common';
 import {
   ProgressRefsRelatingToEngagementFragmentDoc as ProgressRefsRelatingToEngagement,
   ProgressReportRefFragment as ProgressReport,
-} from './ProgressRefsRelatingToEngagement.graphql';
+} from './ProgressRefsRelatingToEngagement.graphql.ts';
 
 export const modifyProgressRelatingToEngagement =
   <Res>(

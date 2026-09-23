@@ -2,7 +2,7 @@ import { Skeleton } from '@mui/material';
 import { Nullable } from '~/common';
 import { Breadcrumb } from '../Breadcrumb';
 import { ReportLabel } from '../PeriodicReports/ReportLabel';
-import { ProgressReportBreadcrumbFragment } from './ProgressReportBreadcrumb.graphql';
+import { ProgressReportBreadcrumbFragment } from './ProgressReportBreadcrumb.graphql.ts';
 
 interface ProgressReportBreadcrumbProps {
   data?: Nullable<ProgressReportBreadcrumbFragment>;

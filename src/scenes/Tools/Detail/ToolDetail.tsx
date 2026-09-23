@@ -1,10 +1,10 @@
-import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { TabContext, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '~/api';
 import { canEditAny } from '~/common';
 import { useDialog } from '~/components/Dialog';
 import { Error } from '~/components/Error';
@@ -15,7 +15,7 @@ import { EditTool } from '~/components/Tool';
 import { useDetailTabs } from '~/hooks';
 import { ToolDetailProfile } from './Tabs/Profile/ToolDetailProfile';
 import { ToolDetailUsages, UsageTab } from './Tabs/Usages';
-import { ToolDetailDocument } from './ToolDetail.graphql';
+import { ToolDetailDocument } from './ToolDetail.graphql.ts';
 
 export const ToolDetail = () => {
   const { toolId = '' } = useParams();

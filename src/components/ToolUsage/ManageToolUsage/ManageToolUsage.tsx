@@ -11,13 +11,13 @@ import { ToolField, ToolLookupItem } from '../../form/Lookup';
 import {
   ToolLookupItemFragment,
   ToolLookupItemFragmentDoc,
-} from '../../form/Lookup/Tool/ToolLookup.graphql';
-import { CreateToolUsageDocument } from './CreateToolUsage.graphql';
-import { DeleteToolUsageDocument } from './DeleteToolUsage.graphql';
+} from '../../form/Lookup/Tool/ToolLookup.graphql.ts';
+import { CreateToolUsageDocument } from './CreateToolUsage.graphql.ts';
+import { DeleteToolUsageDocument } from './DeleteToolUsage.graphql.ts';
 import {
   ManageToolUsagesFragment,
   ToolUsageFormFragment,
-} from './ToolUsageForm.graphql';
+} from './ToolUsageForm.graphql.ts';
 
 interface CreateToolUsageFormValues {
   startDate?: CalendarDateOrISO | null;

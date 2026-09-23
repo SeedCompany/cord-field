@@ -1,6 +1,6 @@
 import { ToggleButton } from '@mui/material';
 import { entries, groupToMapBy, simpleSwitch } from '@seedcompany/common';
-import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
+import { UnspecifiedScripturePortion } from '~/api/schema.graphql.ts';
 import {
   getScriptureRangeDisplay,
   getUnspecifiedScriptureDisplay,

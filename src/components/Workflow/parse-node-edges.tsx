@@ -1,13 +1,13 @@
 import { uniqBy } from 'lodash';
 import { Edge, Node } from 'reactflow';
 import { LiteralUnion } from 'type-fest';
-import { WorkflowTransitionDynamicTo } from '~/api/schema/schema.graphql';
+import { WorkflowTransitionDynamicTo } from '~/api/schema/schema.graphql.ts';
 import { isTypename } from '~/common';
 import {
   WorkflowStateFragment as State,
   WorkflowTransitionFragment as Transition,
   WorkflowFragment as Workflow,
-} from './workflow.graphql';
+} from './workflow.graphql.ts';
 
 export type NodeTypes = LiteralUnion<'state' | 'transition', string>;
 

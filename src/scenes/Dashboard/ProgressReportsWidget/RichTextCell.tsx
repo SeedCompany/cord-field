@@ -8,7 +8,7 @@ import {
   Text,
 } from '../../../components/RichText';
 import { ExpansionCell } from './ExpansionCell';
-import { ProgressReportsDataGridRowFragment as ProgressReport } from './progressReportsDataGridRow.graphql';
+import { ProgressReportsDataGridRowFragment as ProgressReport } from './progressReportsDataGridRow.graphql.ts';
 
 type CellParams = RenderCellParams<ProgressReport, RichTextJson>;
 

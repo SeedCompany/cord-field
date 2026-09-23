@@ -15,5 +15,8 @@ export const plugin = tsMorphPlugin(({ schema, file }) => {
   generateDeletes(schema, file, typePolicies);
   generateIdLookupRedirects(schema, file, typePolicies);
 
-  file.fixMissingImports();
+  // `allowImportingTsExtensions` makes TS infer an extension-bearing style from
+  // the `.graphql.ts` import in `typePolicies.base.ts`; pin it back to
+  // extensionless so this generated file's other imports do not churn.
+  file.fixMissingImports({}, { importModuleSpecifierEnding: 'minimal' });
 });

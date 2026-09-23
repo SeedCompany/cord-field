@@ -3,7 +3,7 @@ import { Grid, Typography } from '@mui/material';
 import { Decorator, Mutator } from 'final-form';
 import { Form, FormProps } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
-import { RegisterUser } from '~/api/schema.graphql';
+import { RegisterUser } from '~/api/schema.graphql.ts';
 import {
   blurOnSubmit,
   EmailField,

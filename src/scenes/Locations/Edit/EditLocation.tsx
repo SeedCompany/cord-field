@@ -1,14 +1,14 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { UpdateLocation } from '~/api/schema.graphql';
+import { UpdateLocation } from '~/api/schema.graphql.ts';
 import { useUploadFileAsync } from '../../../components/files/hooks';
 import {
   LocationForm,
   LocationFormProps,
   LocationFormValues,
 } from '../LocationForm';
-import { UpdateLocationDocument } from './EditLocation.graphql';
+import { UpdateLocationDocument } from './EditLocation.graphql.ts';
 
 type FormProps = LocationFormProps<LocationFormValues<UpdateLocation>>;
 

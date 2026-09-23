@@ -1,6 +1,56 @@
 // @ts-check
 const fs = require('fs');
 
+// ESLint replaces a rule's config wholesale instead of merging it, so the
+// shared config's `no-restricted-syntax` entries have to be carried over by
+// hand. Read them from the plugin rather than copying them, so they can't drift.
+const seedcompany = /** @type {any} */ (require('@seedcompany/eslint-plugin'));
+/** @type {any[]} */
+const baseRestrictedSyntax =
+  seedcompany.configs.base.rules['no-restricted-syntax'].slice(1);
+
+/**
+ * `process.env` is only substituted at build time, so a read of it is frozen
+ * into the bundle. Runtime-configurable values have to go through the `env`
+ * accessor, which reads the per-request `window.env` in the browser.
+ * Build-time constants stay on `process.env` so bundlers can inline them as
+ * string literals and tree-shake the dead branches.
+ */
+const buildTimeEnvVars = ['NODE_ENV', 'MUI_X_LICENSE_KEY'];
+
+/** @type {import('eslint').Linter.ConfigOverride['rules']} */
+const noProcessEnvInClient = {
+  'no-restricted-syntax': [
+    'error',
+    ...baseRestrictedSyntax,
+    {
+      selector: [
+        "MemberExpression[object.object.name='process'][object.property.name='env']",
+        ...buildTimeEnvVars.map((name) => `:not([property.name='${name}'])`),
+      ].join(''),
+      message: [
+        "Use `env` from '~/common' instead, so the value stays configurable at runtime.",
+        `Only ${buildTimeEnvVars.join(
+          ' & '
+        )} are build-time constants and may read process.env.`,
+      ].join('\n'),
+    },
+  ],
+};
+
+// Node & toolchain code, which must read the real process.env.
+const serverSideFiles = [
+  './bin/**/*',
+  // Toolchain: reads the real env to configure the dev server's port and to
+  // inline build-time constants.
+  './vite.config.ts',
+  './src/server/**/*',
+  './src/index.ts',
+  './src/common/env.ts',
+  './src/api/schema/**/*.codegen.js',
+  './src/api/schema/client-schema.graphql-loader.ts',
+];
+
 const roots = fs
   .readdirSync('./src')
   .flatMap((item) => (fs.statSync(`./src/${item}`).isDirectory() ? item : []));
@@ -61,6 +111,24 @@ const restrictedImports = [
     message: 'Import functions directly to enable tree-shaking at build time',
   },
 
+  // Our useQuery defaults `ssr: false`, replacing the disableSsrByDefault babel plugin
+  {
+    path: '@apollo/client',
+    importNames: ['useQuery'],
+    message: 'Use `useQuery` from `~/api`, which defaults `ssr: false`.',
+    replacement: { path: '~/api' },
+  },
+
+  // @loadable/component is webpack-only; our wrapper replaces it.
+  {
+    pattern: '@loadable/component',
+    message: "Import `loadable` from '~/components/Loadable' instead",
+    replacement: ({ importName }) => ({
+      path: '~/components/Loadable',
+      importName: importName === 'default' ? 'loadable' : importName,
+    }),
+  },
+
   // Import css & keyframes straight from emotion (not any re-export from other libs)
   // This ensures their babel plugin works correctly.
   {
@@ -70,7 +138,8 @@ const restrictedImports = [
     message: "Import from '@emotion/react' instead",
   },
 
-  // Our babel import transforms don't work with these exports
+  // `@mui/material/styles` is these exports' canonical home; the
+  // `@mui/material` barrel only re-exports them.
   {
     path: '@mui/material',
     importNames: ['styled', 'useTheme'],
@@ -306,6 +375,8 @@ const config = {
 
     '@seedcompany/no-restricted-imports': ['error', ...restrictedImports],
 
+    ...noProcessEnvInClient,
+
     // TODO This needs to be turned on and errors fixed
     '@typescript-eslint/restrict-template-expressions': 'off',
   },
@@ -328,6 +399,22 @@ const config = {
       };
       return override;
     }),
+
+    // Node & toolchain code reads the real process.env, not the client accessor.
+    {
+      files: serverSideFiles,
+      rules: {
+        'no-restricted-syntax': ['error', ...baseRestrictedSyntax],
+      },
+    },
+
+    // Vite and Vitest load their config from a default export.
+    {
+      files: ['./vite.config.ts', './vitest.config.ts'],
+      rules: {
+        'import/no-default-export': 'off',
+      },
+    },
 
     // Toolchain is still commonjs
     {

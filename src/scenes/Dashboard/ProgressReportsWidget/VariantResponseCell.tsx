@@ -6,7 +6,7 @@ import {
   VariantResponseFragment as VariantResponse,
 } from '~/common/fragments';
 import { RoleIcon as BaseRoleIcon } from '../../../components/RoleIcon';
-import { ProgressReportsDataGridRowFragment as ProgressReport } from './progressReportsDataGridRow.graphql';
+import { ProgressReportsDataGridRowFragment as ProgressReport } from './progressReportsDataGridRow.graphql.ts';
 import { RichTextCell } from './RichTextCell';
 
 type CellParams = RenderCellParams<ProgressReport, VariantResponse>;

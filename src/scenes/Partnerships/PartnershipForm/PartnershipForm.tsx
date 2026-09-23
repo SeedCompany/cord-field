@@ -7,7 +7,7 @@ import {
   PartnershipAgreementStatusList,
   PartnerType,
   PeriodTypeList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom, Nullable } from '~/common';
 import {
   DialogForm,
@@ -27,7 +27,7 @@ import {
 } from '../../../components/form/Lookup';
 import { CreatePartnershipFormInput } from '../Create';
 import { EditPartnershipFormInput } from '../Edit';
-import { PartnershipFormFragment } from './PartnershipForm.graphql';
+import { PartnershipFormFragment } from './PartnershipForm.graphql.ts';
 
 type PartnershipFormValues = Partial<
   CreatePartnershipFormInput | EditPartnershipFormInput

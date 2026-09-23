@@ -1,2 +1,2 @@
 export * from './InternshipEngagementDetail';
-export * from './InternshipEngagement.graphql';
+export * from './InternshipEngagement.graphql.ts';

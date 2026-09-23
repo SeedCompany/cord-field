@@ -5,11 +5,11 @@ import { TreeItem2 as TreeItem } from '@mui/x-tree-view/TreeItem2';
 import { groupToMapBy } from '@seedcompany/common';
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx';
 import { memo } from 'react';
-import { PnpProblemSeverity as Severity } from '~/api/schema.graphql';
+import { PnpProblemSeverity as Severity } from '~/api/schema.graphql.ts';
 import { InlineCode } from '../Debug';
 import { FormattedNumber } from '../Formatters';
 import { Link } from '../Routing';
-import { PnpProblemFragment as Problem } from './pnpExtractionResult.graphql';
+import { PnpProblemFragment as Problem } from './pnpExtractionResult.graphql.ts';
 
 export interface ProblemTreeProps {
   problems: readonly Problem[];

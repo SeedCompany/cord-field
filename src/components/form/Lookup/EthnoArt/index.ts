@@ -1,2 +1,2 @@
 export * from './EthnoArtField';
-export type { EthnoArtLookupItemFragment as EthnoArtLookupItem } from './EthnoArtLookup.graphql';
+export type { EthnoArtLookupItemFragment as EthnoArtLookupItem } from './EthnoArtLookup.graphql.ts';

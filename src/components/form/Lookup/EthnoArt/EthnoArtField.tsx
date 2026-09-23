@@ -1,10 +1,10 @@
-import { CreateEthnoArt as CreateEthnoArtInput } from '~/api/schema.graphql';
+import { CreateEthnoArt as CreateEthnoArtInput } from '~/api/schema.graphql.ts';
 import { LookupField } from '../..';
 import { CreateEthnoArt } from '../../../../scenes/Engagement/LanguageEngagement/Product/Producibles/EthnoArt/CreateEthnoArt';
 import {
   EthnoArtLookupItemFragment as EthnoArt,
   EthnoArtLookupDocument,
-} from './EthnoArtLookup.graphql';
+} from './EthnoArtLookup.graphql.ts';
 
 export const EthnoArtField = LookupField.createFor<
   EthnoArt,

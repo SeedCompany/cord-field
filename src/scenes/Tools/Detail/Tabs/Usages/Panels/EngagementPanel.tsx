@@ -1,5 +1,5 @@
 import { DataGridPro as DataGrid } from '@mui/x-data-grid-pro';
-import { EngagementListInput } from '~/api/schema.graphql';
+import { EngagementListInput } from '~/api/schema.graphql.ts';
 import { useIsMobile } from '~/common';
 import {
   EngagementDataGridRowFragment as Engagement,
@@ -20,7 +20,7 @@ import {
 import { EntityList as ToolsEngagementsList } from '~/components/List';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { TabPanelContent } from '~/components/Tabs';
-import { EngagementListDocument } from '../../../../../Projects/List/EngagementList.graphql';
+import { EngagementListDocument } from '../../../../../Projects/List/EngagementList.graphql.ts';
 
 interface EngagementPanelProps {
   toolId: string;

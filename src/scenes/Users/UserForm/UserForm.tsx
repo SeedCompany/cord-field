@@ -5,7 +5,7 @@ import {
   RoleLabels,
   UserStatusLabels,
   UserStatusList,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import {
   DialogForm,
@@ -21,7 +21,7 @@ import {
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import { useSession } from '../../../components/Session';
-import { UserFormFragment } from './UserForm.graphql';
+import { UserFormFragment } from './UserForm.graphql.ts';
 
 export type UserFormProps<T, R = void> = DialogFormProps<T, R> & {
   /** The pre-existing user to edit */

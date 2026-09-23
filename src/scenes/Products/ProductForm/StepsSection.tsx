@@ -1,10 +1,10 @@
-import { useQuery } from '@apollo/client';
 import { ToggleButton } from '@mui/material';
 import { useEffect } from 'react';
-import { ProductStepLabels } from '~/api/schema.graphql';
+import { useQuery } from '~/api';
+import { ProductStepLabels } from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
-import { AvailableProductStepsDocument as AvailableSteps } from './ProductForm.graphql';
+import { AvailableProductStepsDocument as AvailableSteps } from './ProductForm.graphql.ts';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 

@@ -1,2 +1,2 @@
 export * from './ProjectColumns';
-export * from './projectDataGridRow.graphql';
+export * from './projectDataGridRow.graphql.ts';

@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
-import { CreateLocation as CreateLocationType } from '~/api/schema.graphql';
+import { CreateLocation as CreateLocationType } from '~/api/schema.graphql.ts';
 import { useUploadFileAsync } from '../../../components/files/hooks';
 import { ButtonLink } from '../../../components/Routing';
 import {
@@ -12,7 +12,7 @@ import {
 import {
   CreateLocationDocument,
   CreateLocationMutation,
-} from './CreateLocation.graphql';
+} from './CreateLocation.graphql.ts';
 
 type FormValues = LocationFormValues<CreateLocationType>;
 type SubmitResult = CreateLocationMutation['createLocation']['location'];

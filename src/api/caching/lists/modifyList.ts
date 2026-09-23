@@ -5,7 +5,7 @@ import type { EntityStore } from '@apollo/client/cache/inmemory/entityStore';
 import { mapValues, Nil } from '@seedcompany/common';
 import type { ConditionalKeys } from 'type-fest';
 import type { Entity, GqlTypeOf } from '../../schema';
-import type { Query } from '../../schema/schema.graphql';
+import type { Query } from '../../schema/schema.graphql.ts';
 import { typePolicies } from '../../schema/typePolicies';
 import { PaginatedListOutput, SortableListInput } from './types';
 

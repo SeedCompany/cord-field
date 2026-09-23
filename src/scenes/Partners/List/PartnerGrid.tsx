@@ -12,9 +12,9 @@ import {
   PartnerInitialState,
   PartnerToolbar,
 } from '~/components/PartnersDataGrid/PartnerColumns';
-import { PartnerDataGridRowFragment as Partner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql';
+import { PartnerDataGridRowFragment as Partner } from '~/components/PartnersDataGrid/partnerDataGridRow.graphql.ts';
 import { useProcessPartnerUpdate } from '~/components/PartnersDataGrid/useProcessPartnerUpdate';
-import { PartnersDocument } from './PartnerList.graphql';
+import { PartnersDocument } from './PartnerList.graphql.ts';
 
 export const PartnerGrid = () => {
   const [dataGridProps] = useDataGridSource({

@@ -12,10 +12,10 @@ import {
   ProgressReportStatusList as Statuses,
   ProgressReportStatusLabels as StatusLabels,
 } from '~/api/schema/enumLists';
-import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql';
+import { ProgressReportStatus as Status } from '~/api/schema/schema.graphql.ts';
 import { idForUrl } from '../../../components/Changeset';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
-import { ProgressReportListItemFragment as ProgressReport } from './ProgressReportListItem.graphql';
+import { ProgressReportListItemFragment as ProgressReport } from './ProgressReportListItem.graphql.ts';
 
 export const ProgressReportsTable = ({
   ...props

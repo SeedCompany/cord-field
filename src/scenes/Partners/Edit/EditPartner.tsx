@@ -16,14 +16,14 @@ import {
   PartnerTypeList,
   UpdateOrganization,
   UpdatePartner,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   DisplayFieldRegionFragment,
   DisplayLocationFragment,
   labelFrom,
 } from '~/common';
-import { LanguageLookupItemFragment } from '~/components/form/Lookup/Language/LanguageLookup.graphql';
-import { LanguageOfReportingLookupDocument } from '~/components/form/Lookup/Language/LanguageOfReportingLookup.graphql';
+import { LanguageLookupItemFragment } from '~/components/form/Lookup/Language/LanguageLookup.graphql.ts';
+import { LanguageOfReportingLookupDocument } from '~/components/form/Lookup/Language/LanguageOfReportingLookup.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
@@ -44,12 +44,12 @@ import {
   UserField,
   UserLookupItem,
 } from '../../../components/form/Lookup';
-import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql';
+import { PartnerDetailsFragment } from '../Detail/PartnerDetail.graphql.ts';
 import {
   AssignPersonToPartnerDocument,
   PartnerPeopleDocument,
-} from '../Detail/Tabs/People/PartnerDetailsPeople.graphql';
-import { UpdatePartnerDocument } from './UpdatePartner.graphql';
+} from '../Detail/Tabs/People/PartnerDetailsPeople.graphql.ts';
+import { UpdatePartnerDocument } from './UpdatePartner.graphql.ts';
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type PartnerFormValues = {

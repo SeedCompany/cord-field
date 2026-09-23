@@ -28,6 +28,3 @@ export const CsvPreview = ({ file }: PreviewerProps) => {
 
   return <SpreadsheetView data={csv} />;
 };
-
-// eslint-disable-next-line import/no-default-export
-export default CsvPreview;

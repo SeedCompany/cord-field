@@ -2,7 +2,7 @@ import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 import { createContext, ReactNode, useContext } from 'react';
 import { PaperTooltip } from '../PaperTooltip';
 import type { PeriodicReportFileField } from './fileField';
-import { PeriodicReportFragment } from './PeriodicReport.graphql';
+import { PeriodicReportFragment } from './PeriodicReport.graphql.ts';
 
 const PeriodicReportFileFieldContext =
   createContext<PeriodicReportFileField>('reportFile');

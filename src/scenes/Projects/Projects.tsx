@@ -1,6 +1,6 @@
-import loadable from '@loadable/component';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { splicePath } from '~/common';
+import { loadable } from '~/components/Loadable';
 import { ChangesetContext } from '../../components/Changeset';
 import { NotFoundRoute } from '../../components/Error';
 import { Navigate } from '../../components/Routing';
@@ -15,21 +15,15 @@ const ProjectBudget = loadable(() => import('./Budget'), {
 const Files = loadable(() => import('./Files'), {
   resolveComponent: (m) => m.Files,
 });
-const ProjectList = loadable(
-  () => import(/* webpackChunkName: "Project-List" */ './List'),
-  {
-    resolveComponent: (m) => m.ProjectList,
-  }
-);
+const ProjectList = loadable(() => import('./List'), {
+  resolveComponent: (m) => m.ProjectList,
+});
 const ProjectMembersList = loadable(() => import('./Members/List'), {
   resolveComponent: (m) => m.ProjectMembersList,
 });
-const ProjectOverview = loadable(
-  () => import(/* webpackChunkName: "Project-Overview" */ './Overview'),
-  {
-    resolveComponent: (m) => m.ProjectOverview,
-  }
-);
+const ProjectOverview = loadable(() => import('./Overview'), {
+  resolveComponent: (m) => m.ProjectOverview,
+});
 const Reports = loadable(() => import('./Reports'), {
   resolveComponent: (m) => m.ProjectReports,
 });

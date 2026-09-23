@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { ToolForm, ToolFormProps } from '../ToolForm/ToolForm';
-import { ToolFormFragment } from '../ToolForm/ToolForm.graphql';
-import { CreateToolDocument } from './CreateTool.graphql';
+import { ToolFormFragment } from '../ToolForm/ToolForm.graphql.ts';
+import { CreateToolDocument } from './CreateTool.graphql.ts';
 
 export type CreateToolProps = Except<
   ToolFormProps<ToolFormFragment>,

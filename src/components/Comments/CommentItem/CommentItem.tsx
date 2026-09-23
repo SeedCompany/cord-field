@@ -8,10 +8,10 @@ import { RelativeDateTime } from '../../Formatters';
 import { RichTextView } from '../../RichText';
 import { Link } from '../../Routing';
 import { UpdateComment } from '../CommentForm/UpdateComment';
-import { CommentThreadFragment } from '../CommentThread/commentThread.graphql';
-import { CommentFragment } from './comment.graphql';
+import { CommentThreadFragment } from '../CommentThread/commentThread.graphql.ts';
+import { CommentFragment } from './comment.graphql.ts';
 import { CommentItemMenu } from './CommentItemMenu';
-import { DeleteCommentDocument } from './DeleteComment.graphql';
+import { DeleteCommentDocument } from './DeleteComment.graphql.ts';
 
 export interface CommentProps {
   comment: CommentFragment;

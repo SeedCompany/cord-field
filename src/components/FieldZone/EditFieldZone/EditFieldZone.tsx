@@ -1,13 +1,13 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { Except, SetRequired } from 'type-fest';
-import { UpdateFieldZone } from '~/api/schema.graphql';
+import { UpdateFieldZone } from '~/api/schema.graphql.ts';
 import { DisplayFieldZoneFragment } from '~/common';
 import {
   FieldZoneForm,
   FieldZoneFormProps,
 } from '../FieldZoneForm/FieldZoneForm';
-import { UpdateFieldZoneDocument } from './EditFieldZone.graphql';
+import { UpdateFieldZoneDocument } from './EditFieldZone.graphql.ts';
 
 type SubmitResult = DisplayFieldZoneFragment;
 export type EditFieldZoneProps = Except<

@@ -2,7 +2,7 @@ import { DialogContent, Stack, Typography } from '@mui/material';
 import { StyleProps } from '~/common';
 import { PreviewIconButton } from '~/components/files/FileActions/PreviewIconButton';
 import { PnPValidation } from '~/components/PnpValidation/PnpValidation';
-import { EngagementPlanningSpreadsheetFragment } from './PlanningSpreadsheet.graphql';
+import { EngagementPlanningSpreadsheetFragment } from './PlanningSpreadsheet.graphql.ts';
 
 interface PlanningSpreadsheetHeaderProps extends StyleProps {
   engagement: EngagementPlanningSpreadsheetFragment;

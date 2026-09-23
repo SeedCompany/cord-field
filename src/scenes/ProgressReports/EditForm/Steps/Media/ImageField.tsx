@@ -15,11 +15,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useId, useState } from 'react';
-import { Sensitivity } from '~/api/schema.graphql';
+import { Sensitivity } from '~/api/schema.graphql.ts';
 import { extendSx, square, StyleProps } from '~/common';
 import { DropzoneField, useSubmitButton } from '~/components/form';
 import { SensitivityIcon } from '../../../../../components/Sensitivity';
-import { VisualMediaFragment as VisualMedia } from './progressReportMedia.graphql';
+import { VisualMediaFragment as VisualMedia } from './progressReportMedia.graphql.ts';
 
 export interface ImageFieldProps extends StyleProps {
   name: string;

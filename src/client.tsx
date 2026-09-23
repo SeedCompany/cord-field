@@ -1,5 +1,4 @@
 import { CacheProvider } from '@emotion/react';
-import { loadableReady } from '@loadable/component';
 import { isNotFalsy } from '@seedcompany/common';
 import Cookies from 'js-cookie';
 import { Settings, Zone } from 'luxon';
@@ -11,7 +10,8 @@ import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { TssCacheProvider } from 'tss-react';
-import { basePathOfUrl } from '~/common';
+import { basePathOfUrl, env } from '~/common';
+import { loadableReady } from '~/components/Loadable';
 import { GqlSensitiveOperations } from './api';
 import { ImpersonationProvider } from './api/client/ImpersonationContext';
 import { App } from './App';
@@ -61,8 +61,8 @@ const emotionCacheMui = createMuiEmotionCache();
 const emotionCacheTss = createTssEmotionCache();
 
 const postHogClient = (() => {
-  const host = process.env.RAZZLE_POSTHOG_HOST;
-  const token = process.env.RAZZLE_POSTHOG_KEY;
+  const host = env.RAZZLE_POSTHOG_HOST;
+  const token = env.RAZZLE_POSTHOG_KEY;
   if (!(host && token)) {
     return undefined;
   }
@@ -93,10 +93,7 @@ const postHogClient = (() => {
 })();
 
 const clientOnlyProviders = [
-  <BrowserRouter
-    key="router"
-    basename={basePathOfUrl(process.env.PUBLIC_URL)}
-  />,
+  <BrowserRouter key="router" basename={basePathOfUrl(env.PUBLIC_URL)} />,
   <HelmetProvider key="helmet" children={[]} />,
   <DndProvider key="dnd" backend={HTML5Backend} />,
   <CacheProvider key="emotion-mui" value={emotionCacheMui} />,

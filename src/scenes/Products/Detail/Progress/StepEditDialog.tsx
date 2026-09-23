@@ -2,7 +2,10 @@ import { useMutation } from '@apollo/client';
 import { Alert } from '@mui/material';
 import { useMemo } from 'react';
 import { Except } from 'type-fest';
-import { ProductStepLabels, ProgressMeasurement } from '~/api/schema.graphql';
+import {
+  ProductStepLabels,
+  ProgressMeasurement,
+} from '~/api/schema.graphql.ts';
 import {
   DialogForm,
   DialogFormProps,
@@ -17,7 +20,7 @@ import {
   ProductProgressFragment,
   StepProgressFragment,
   UpdateStepProgressDocument,
-} from './ProductProgress.graphql';
+} from './ProductProgress.graphql.ts';
 
 export interface StepFormValues {
   completed?: number | boolean | null;

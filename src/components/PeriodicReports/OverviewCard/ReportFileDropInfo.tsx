@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { SecuredPeriodicReportFragment } from '../PeriodicReport.graphql';
+import { SecuredPeriodicReportFragment } from '../PeriodicReport.graphql.ts';
 import { ReportLabel } from '../ReportLabel';
 
 export const ReportFileDropInfo = ({

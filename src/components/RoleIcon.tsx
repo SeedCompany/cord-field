@@ -1,7 +1,7 @@
 import { Grading, Translate } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material';
 import { ComponentType, forwardRef } from 'react';
-import { Role } from '../api/schema.graphql';
+import { Role } from '../api/schema.graphql.ts';
 import { extendSx } from '../common';
 import { PeopleJoinedIcon } from './Icons';
 import { ProjectManagerIcon } from './Icons/ProjectManagerIcon';

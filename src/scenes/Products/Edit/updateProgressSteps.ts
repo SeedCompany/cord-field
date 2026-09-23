@@ -2,15 +2,15 @@ import { ApolloCache, FetchResult } from '@apollo/client';
 import { isNotNil, sortBy } from '@seedcompany/common';
 import { difference, uniqBy } from 'lodash';
 import { readFragment } from '~/api';
-import { ProductProgress, StepProgress } from '~/api/schema.graphql';
+import { ProductProgress, StepProgress } from '~/api/schema.graphql.ts';
 import { IdFragment } from '~/common';
-import { ProductFormFragment } from '../ProductForm/ProductForm.graphql';
+import { ProductFormFragment } from '../ProductForm/ProductForm.graphql.ts';
 import {
   modifyProgressRelatingToEngagement,
   progressRelatingToEngagement,
 } from '../ProgressRefsRelatingToEngagement';
-import { CurrentProgressOfProductFragmentDoc as CurrentProgressOfProduct } from './CurrentProgessOfProduct.graphql';
-import { UpdateProductResultFragment } from './EditProduct.graphql';
+import { CurrentProgressOfProductFragmentDoc as CurrentProgressOfProduct } from './CurrentProgessOfProduct.graphql.ts';
+import { UpdateProductResultFragment } from './EditProduct.graphql.ts';
 
 export const updateProgressSteps =
   (engagement: IdFragment, product: ProductFormFragment) =>

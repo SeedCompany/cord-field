@@ -13,7 +13,7 @@ import {
   InternshipProgramLabels,
   UpdateInternshipEngagement,
   UpdateLanguageEngagement,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import {
   asDate,
   DisplayLocationFragment,
@@ -40,14 +40,14 @@ import {
   LocationField,
   UserField,
 } from '../../../components/form/Lookup';
-import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
-import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql';
-import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql';
+import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql.ts';
+import { InternshipEngagementDetailFragment as InternshipEngagement } from '../InternshipEngagement/InternshipEngagement.graphql.ts';
+import { LanguageEngagementDetailFragment as LanguageEngagement } from '../LanguageEngagement/LanguageEngagementDetail.graphql.ts';
 import { Rev79CommunityField } from '../LanguageEngagement/Rev79CommunityField';
 import {
   UpdateInternshipEngagementDocument,
   UpdateLanguageEngagementDocument,
-} from './EditEngagementDialog.graphql';
+} from './EditEngagementDialog.graphql.ts';
 
 export type Engagement = InternshipEngagement | LanguageEngagement;
 

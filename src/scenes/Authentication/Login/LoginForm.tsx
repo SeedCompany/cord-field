@@ -4,7 +4,7 @@ import { sample } from 'lodash';
 import { useState } from 'react';
 import { Form, FormProps } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
-import { LoginInput } from '~/api/schema.graphql';
+import { LoginInput } from '~/api/schema.graphql.ts';
 import {
   blurOnSubmit,
   EmailField,

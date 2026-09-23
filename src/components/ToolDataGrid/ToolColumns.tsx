@@ -12,7 +12,7 @@ import {
   Toolbar,
 } from '../Grid';
 import { Link } from '../Routing';
-import { ToolDataGridRowFragment as Tool } from './toolDataGridRow.graphql';
+import { ToolDataGridRowFragment as Tool } from './toolDataGridRow.graphql.ts';
 
 export const ToolColumns: Array<GridColDef<Tool>> = [
   {

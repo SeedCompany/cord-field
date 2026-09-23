@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { PartnerDetailsFragment } from '../../PartnerDetail.graphql';
+import { PartnerDetailsFragment } from '../../PartnerDetail.graphql.ts';
 import { PartnerLanguagesSection } from './PartnerLanguagesSection';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -41,14 +41,14 @@ const makePartner = (
 describe('PartnerLanguagesSection', () => {
   it('renders the section title', () => {
     render(
-      <PartnerLanguagesSection partner={makePartner()} onEdit={jest.fn()} />
+      <PartnerLanguagesSection partner={makePartner()} onEdit={vi.fn()} />
     );
     expect(screen.getByText('Languages')).toBeInTheDocument();
   });
 
   it('renders all three field labels', () => {
     render(
-      <PartnerLanguagesSection partner={makePartner()} onEdit={jest.fn()} />
+      <PartnerLanguagesSection partner={makePartner()} onEdit={vi.fn()} />
     );
     expect(screen.getByText('Language of Reporting')).toBeInTheDocument();
     expect(
@@ -59,7 +59,7 @@ describe('PartnerLanguagesSection', () => {
 
   it('shows "None" for each empty field', () => {
     render(
-      <PartnerLanguagesSection partner={makePartner()} onEdit={jest.fn()} />
+      <PartnerLanguagesSection partner={makePartner()} onEdit={vi.fn()} />
     );
     expect(screen.getAllByText('None')).toHaveLength(3);
   });
@@ -72,7 +72,7 @@ describe('PartnerLanguagesSection', () => {
         value: makeLang('French'),
       },
     });
-    render(<PartnerLanguagesSection partner={partner} onEdit={jest.fn()} />);
+    render(<PartnerLanguagesSection partner={partner} onEdit={vi.fn()} />);
     expect(screen.getByText('French')).toBeInTheDocument();
   });
 
@@ -84,7 +84,7 @@ describe('PartnerLanguagesSection', () => {
         value: makeLang('Spanish'),
       },
     });
-    render(<PartnerLanguagesSection partner={partner} onEdit={jest.fn()} />);
+    render(<PartnerLanguagesSection partner={partner} onEdit={vi.fn()} />);
     expect(screen.getByText('Spanish')).toBeInTheDocument();
   });
 
@@ -96,13 +96,13 @@ describe('PartnerLanguagesSection', () => {
         value: [makeLang('German'), makeLang('Arabic')],
       },
     });
-    render(<PartnerLanguagesSection partner={partner} onEdit={jest.fn()} />);
+    render(<PartnerLanguagesSection partner={partner} onEdit={vi.fn()} />);
     expect(screen.getByText('German')).toBeInTheDocument();
     expect(screen.getByText('Arabic')).toBeInTheDocument();
   });
 
   it('calls onEdit when the edit button is clicked', async () => {
-    const onEdit = jest.fn();
+    const onEdit = vi.fn();
     const partner = makePartner({
       languageOfReporting: { canRead: true, canEdit: true, value: null },
     });
@@ -121,7 +121,7 @@ describe('PartnerLanguagesSection', () => {
       },
       languagesOfConsulting: { canRead: true, canEdit: false, value: [] },
     });
-    render(<PartnerLanguagesSection partner={partner} onEdit={jest.fn()} />);
+    render(<PartnerLanguagesSection partner={partner} onEdit={vi.fn()} />);
     expect(screen.getByRole('button')).toBeDisabled();
   });
 });

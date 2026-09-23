@@ -1,10 +1,11 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import { entries, mapEntries } from '@seedcompany/common';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { useQuery } from '~/api';
 import {
   callAll,
   getFullBookRange,
@@ -20,7 +21,7 @@ import {
   ProductFormProps,
   ProductFormValues,
 } from '../ProductForm';
-import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql';
+import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql.ts';
 import { ProductLoadError } from '../ProductLoadError';
 import {
   DeleteProductDocument,
@@ -28,7 +29,7 @@ import {
   UpdateDerivativeScriptureProductDocument,
   UpdateDirectScriptureProductDocument,
   UpdateOtherProductDocument,
-} from './EditProduct.graphql';
+} from './EditProduct.graphql.ts';
 import {
   deleteProductProgress,
   updateProgressSteps,

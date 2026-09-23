@@ -1,2 +1,2 @@
 export * from './ProjectChangeRequestListItem';
-export * from './ProjectChangeRequestListItem.graphql';
+export * from './ProjectChangeRequestListItem.graphql.ts';

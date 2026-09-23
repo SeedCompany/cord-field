@@ -1,7 +1,7 @@
 import { GppGood, GppMaybe, Shield } from '@mui/icons-material';
 import { SvgIcon, SvgIconProps, Tooltip } from '@mui/material';
 import { forwardRef } from 'react';
-import { Sensitivity as SensitivityType } from '~/api/schema.graphql';
+import { Sensitivity as SensitivityType } from '~/api/schema.graphql.ts';
 import { SvgSkeleton } from '../Icons/SvgSkeleton';
 
 export interface SensitivityIconProps extends SvgIconProps {

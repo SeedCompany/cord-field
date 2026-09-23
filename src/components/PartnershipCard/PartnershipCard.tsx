@@ -10,12 +10,12 @@ import {
 import {
   FinancialReportingTypeLabels,
   PartnershipAgreementStatusLabels,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
-import { PartnershipCardFragment } from './PartnershipCard.graphql';
+import { PartnershipCardFragment } from './PartnershipCard.graphql.ts';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
 export interface PartnershipCardProps {

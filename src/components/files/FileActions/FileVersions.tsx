@@ -1,4 +1,3 @@
-import { useQuery } from '@apollo/client';
 import {
   Box,
   Button,
@@ -11,12 +10,13 @@ import {
   Skeleton,
 } from '@mui/material';
 import { Fragment } from 'react';
+import { useQuery } from '~/api';
 import { FileActionItem, PermittedActions } from '../FileActions';
 import {
   FileVersionItem_FileVersion_Fragment as FileVersion,
   FileVersionItem,
 } from '../FileVersionItem';
-import { FileVersionsDocument } from './FileActions.graphql';
+import { FileVersionsDocument } from './FileActions.graphql.ts';
 
 type FileVersionsProps = DialogProps & {
   file: FileActionItem | undefined;

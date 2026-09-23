@@ -1,6 +1,6 @@
 import { ApolloCache, MutationUpdaterFunction } from '@apollo/client';
 import { highestSensitivity, IdFragment } from '~/common';
-import { TranslationProjectSensitivityFragmentDoc } from './CreateLanguageEngagement.graphql';
+import { TranslationProjectSensitivityFragmentDoc } from './CreateLanguageEngagement.graphql.ts';
 
 export const recalculateSensitivity =
   <Res>(

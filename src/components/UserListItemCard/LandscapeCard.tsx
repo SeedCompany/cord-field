@@ -1,11 +1,11 @@
 import { Card, CardContent, Skeleton, Typography } from '@mui/material';
 import { PartialDeep } from 'type-fest';
 import { square } from '~/common';
-import { UsersQueryVariables } from '../../scenes/Users/List/users.graphql';
+import { UsersQueryVariables } from '../../scenes/Users/List/users.graphql.ts';
 import { Avatar } from '../Avatar';
 import { CardActionAreaLink } from '../Routing';
 import { TogglePinButton } from '../TogglePinButton';
-import { UserListItemFragment } from './UserListItem.graphql';
+import { UserListItemFragment } from './UserListItem.graphql.ts';
 
 interface UserListItemCardLandscapeProps {
   user?: UserListItemFragment;

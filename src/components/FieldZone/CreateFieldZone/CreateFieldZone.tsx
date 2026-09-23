@@ -1,12 +1,12 @@
 import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
-import { type CreateFieldZone as CreateFieldZoneType } from '~/api/schema.graphql';
+import { type CreateFieldZone as CreateFieldZoneType } from '~/api/schema.graphql.ts';
 import { DisplayFieldZoneFragment } from '~/common';
 import {
   FieldZoneForm,
   FieldZoneFormProps,
 } from '../FieldZoneForm/FieldZoneForm';
-import { CreateFieldZoneDocument } from './CreateFieldZone.graphql';
+import { CreateFieldZoneDocument } from './CreateFieldZone.graphql.ts';
 
 type SubmitResult = DisplayFieldZoneFragment;
 

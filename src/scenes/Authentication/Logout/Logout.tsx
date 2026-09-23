@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { AuthWaiting } from '../AuthWaiting';
-import { LogoutDocument } from './logout.graphql';
+import { LogoutDocument } from './logout.graphql.ts';
 
 export const Logout = () => {
   const navigate = useNavigate();

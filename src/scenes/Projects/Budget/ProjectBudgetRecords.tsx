@@ -27,7 +27,7 @@ import {
   CalculateNewTotalAndRollupFragmentDoc as CalculateNewTotalAndRollup,
   ProjectBudgetQuery,
   UpdateProjectBudgetRecordDocument as UpdateRecord,
-} from './ProjectBudget.graphql';
+} from './ProjectBudget.graphql.ts';
 
 interface ProjectBudgetRecordsProps {
   budget: ProjectBudgetQuery['project']['budget'] | undefined;

@@ -1,11 +1,11 @@
-import { useQuery } from '@apollo/client';
 import { Badge, SvgIcon, SvgIconProps, Tooltip } from '@mui/material';
 import { forwardRef } from 'react';
 import { Except } from 'type-fest';
+import { useQuery } from '~/api';
 import { Feature } from '../Feature';
 import { IconButton, IconButtonProps } from '../IconButton';
 import { useCommentsContext } from './CommentsContext';
-import { ThreadCountDocument } from './ThreadCount.graphql';
+import { ThreadCountDocument } from './ThreadCount.graphql.ts';
 
 export type ToggleCommentsButtonProps = Except<IconButtonProps, 'children'>;
 

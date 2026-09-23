@@ -191,7 +191,7 @@ describe('MaintenanceBanner', () => {
     });
 
     it('shares the dismissal across layers', () => {
-      jest.useFakeTimers();
+      vi.useFakeTimers();
       at(start.toMillis() - 3 * day);
       const { rerender } = render(inProvider(bothLayers));
 
@@ -207,9 +207,9 @@ describe('MaintenanceBanner', () => {
           </div>
         )
       );
-      act(() => void jest.advanceTimersByTime(1000)); // let the collapse finish
+      act(() => void vi.advanceTimersByTime(1000)); // let the collapse finish
       expect(screen.getByTestId('shell')).toBeEmptyDOMElement();
-      jest.useRealTimers();
+      vi.useRealTimers();
     });
   });
 });

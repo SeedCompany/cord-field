@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
 import { Grid, Typography } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import { useQuery } from '~/api';
 import {
   idForUrl,
   useChangesetAwareIdFromUrl,
@@ -9,7 +9,7 @@ import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import { ResponsiveDivider } from '../../../components/ResponsiveDivider';
 import { Link } from '../../../components/Routing';
 import { ProductLoadError } from '../ProductLoadError';
-import { ProductDetailDocument } from './ProductDetail.graphql';
+import { ProductDetailDocument } from './ProductDetail.graphql.ts';
 import { ProductDetailHeader } from './ProductDetailHeader';
 import { ProductInfo } from './ProductInfo';
 import { StepsList } from './Progress';

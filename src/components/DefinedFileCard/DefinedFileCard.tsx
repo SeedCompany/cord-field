@@ -16,7 +16,7 @@ import {
 import { DateTime } from 'luxon';
 import { forwardRef, ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CreateDefinedFileVersion } from '~/api/schema.graphql';
+import { CreateDefinedFileVersion } from '~/api/schema.graphql.ts';
 import { extendSx, SecuredProp, StyleProps } from '~/common';
 import {
   FileActionsPopup as ActionsMenu,
@@ -24,7 +24,7 @@ import {
   getPermittedFileActions,
   useFileActions,
 } from '../files/FileActions';
-import { FileNodeInfo_File_Fragment as FileNode } from '../files/files.graphql';
+import { FileNodeInfo_File_Fragment as FileNode } from '../files/files.graphql.ts';
 import { HandleUploadCompletedFunction, useUploadFiles } from '../files/hooks';
 import { FormattedDateTime } from '../Formatters';
 import { HugeIcon, ReportIcon } from '../Icons';

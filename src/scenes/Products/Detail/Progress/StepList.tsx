@@ -1,10 +1,10 @@
 import { Grid, Typography } from '@mui/material';
-import { ProgressMeasurement } from '~/api/schema.graphql';
+import { ProgressMeasurement } from '~/api/schema.graphql.ts';
 import { useDialog } from '../../../../components/Dialog';
 import {
   ProductProgressFragment as ProductProgress,
   StepProgressFragment as StepProgress,
-} from './ProductProgress.graphql';
+} from './ProductProgress.graphql.ts';
 import { StepEditDialog } from './StepEditDialog';
 import { StepProgress as StepProgressCard } from './StepProgress';
 

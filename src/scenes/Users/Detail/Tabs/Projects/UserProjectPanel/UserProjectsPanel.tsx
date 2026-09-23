@@ -1,6 +1,6 @@
 import { DataGridPro as DataGrid, GridColDef } from '@mui/x-data-grid-pro';
 import { useParams } from 'react-router-dom';
-import { RoleLabels, RoleList } from '~/api/schema.graphql';
+import { RoleLabels, RoleList } from '~/api/schema.graphql.ts';
 import { useIsMobile } from '~/common';
 import {
   DefaultDataGridStyles,
@@ -25,7 +25,7 @@ import { TabPanelContent } from '~/components/Tabs';
 import {
   UserProjectDataGridRowFragment as UserProject,
   UserProjectsDocument,
-} from './UserProjectList.graphql';
+} from './UserProjectList.graphql.ts';
 
 export const UserProjectsPanel = () => {
   const { userId = '' } = useParams();

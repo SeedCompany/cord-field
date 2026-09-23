@@ -6,7 +6,7 @@ import { ButtonLink } from '../../../components/Routing';
 import {
   CreatePartnerDocument,
   CreatePartnerMutation,
-} from './CreatePartner.graphql';
+} from './CreatePartner.graphql.ts';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
 type SubmitResult = CreatePartnerMutation['createPartner']['partner'];

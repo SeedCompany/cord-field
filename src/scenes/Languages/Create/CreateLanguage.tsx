@@ -2,11 +2,11 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
-import { CreateLanguage as CreateLanguageType } from '~/api/schema.graphql';
+import { CreateLanguage as CreateLanguageType } from '~/api/schema.graphql.ts';
 import { CalendarDate } from '~/common';
 import { ButtonLink } from '../../../components/Routing';
 import { LanguageForm, LanguageFormProps } from '../LanguageForm';
-import { CreateLanguageDocument } from './CreateLanguage.graphql';
+import { CreateLanguageDocument } from './CreateLanguage.graphql.ts';
 
 export type CreateLanguageProps = Except<
   LanguageFormProps<CreateLanguageType>,

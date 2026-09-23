@@ -9,8 +9,9 @@ const generateHash = (doc: DocumentNode) =>
   sha256(dedupeFragmentsPrinter(doc, print));
 
 /*
- * Adapted from https://github.com/sindresorhus/crypto-hash
- * I couldn't get it to import/bundle with razzle/webpack v4
+ * Adapted from https://github.com/sindresorhus/crypto-hash, which would not
+ * bundle here. Inlined rather than depended on, so the browser and server
+ * hashes are visibly the same algorithm.
  */
 
 const sha256Browser = async (data: string) => {

@@ -2,7 +2,7 @@ import { isTypename } from '~/common';
 import {
   FileNodeInfo_Directory_Fragment as Directory,
   FileNodeInfo_File_Fragment,
-} from '../../../components/files/files.graphql';
+} from '../../../components/files/files.graphql.ts';
 
 export type { Directory };
 

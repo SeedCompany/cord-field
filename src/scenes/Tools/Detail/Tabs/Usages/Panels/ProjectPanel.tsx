@@ -1,5 +1,5 @@
 import { DataGridPro as DataGrid } from '@mui/x-data-grid-pro';
-import { ProjectListInput } from '~/api/schema.graphql';
+import { ProjectListInput } from '~/api/schema.graphql.ts';
 import { useIsMobile } from '~/common';
 import {
   DefaultDataGridStyles,
@@ -18,7 +18,7 @@ import {
 } from '~/components/ProjectDataGrid';
 import { SensitivityIcon } from '~/components/Sensitivity';
 import { TabPanelContent } from '~/components/Tabs';
-import { ProjectListDocument } from '../../../../../Projects/List/ProjectList.graphql';
+import { ProjectListDocument } from '../../../../../Projects/List/ProjectList.graphql.ts';
 
 interface ProjectPanelProps {
   toolId: string;

@@ -5,7 +5,7 @@ import { NodeTypes } from './parse-node-edges';
 import {
   WorkflowStateFragment as State,
   WorkflowTransitionFragment as Transition,
-} from './workflow.graphql';
+} from './workflow.graphql.ts';
 
 type Node = N<State | Transition, NodeTypes>;
 type Edge = E<Transition>;

@@ -1,2 +1,2 @@
 export * from './FundingAccountField';
-export type { FundingAccountLookupItemFragment as FundingAccountLookupItem } from './FundingAccountField.graphql';
+export type { FundingAccountLookupItemFragment as FundingAccountLookupItem } from './FundingAccountField.graphql.ts';

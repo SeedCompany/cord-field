@@ -1,10 +1,10 @@
-import { useQuery } from '@apollo/client';
 import { Edit } from '@mui/icons-material';
 import { TabContext, TabPanel } from '@mui/lab';
 import { Box, Skeleton, Tooltip, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '~/api';
 import { canEditAny } from '~/common';
 import { useDialog } from '~/components/Dialog';
 import {
@@ -18,7 +18,7 @@ import { useDetailTabs } from '~/hooks';
 import { Error } from '../../../components/Error';
 import { IconButton } from '../../../components/IconButton';
 import { Redacted } from '../../../components/Redacted';
-import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql';
+import { FieldRegionDetailDocument } from './FieldRegionDetail.graphql.ts';
 import { FieldRegionProjectsPanel } from './Tabs/Projects/FieldRegionProjectsPanel';
 
 export const FieldRegionDetail = () => {

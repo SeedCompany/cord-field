@@ -1,11 +1,11 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Breadcrumbs, Skeleton, Typography } from '@mui/material';
 import { entries, mapEntries } from '@seedcompany/common';
 import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
-import { addItemToList, handleFormError } from '~/api';
+import { addItemToList, handleFormError, useQuery } from '~/api';
 import { callAll, getFullBookRange } from '~/common';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
@@ -15,7 +15,7 @@ import {
   ProductFormProps,
   ProductFormValues,
 } from '../ProductForm';
-import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql';
+import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql.ts';
 import { addProductProgress } from './addProductProgress';
 import {
   CreateDerivativeScriptureProductDocument as CreateDerivativeScriptureProduct,
@@ -23,7 +23,7 @@ import {
   CreateOtherProductDocument as CreateOtherProduct,
   CreateProductResultFragment,
   ProductInfoForCreateDocument,
-} from './CreateProduct.graphql';
+} from './CreateProduct.graphql.ts';
 
 const useStyles = makeStyles()(({ spacing }) => ({
   root: {

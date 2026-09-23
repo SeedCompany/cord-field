@@ -1,7 +1,7 @@
 import { List, ListItem, Typography } from '@mui/material';
-import { ProductMedium, ProductMediumLabels } from '~/api/schema.graphql';
+import { ProductMedium, ProductMediumLabels } from '~/api/schema.graphql.ts';
 import { AutocompleteField } from '../../../components/form';
-import { PartnershipForLabelFragment } from '../Detail/ProductDetail.graphql';
+import { PartnershipForLabelFragment } from '../Detail/ProductDetail.graphql.ts';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 

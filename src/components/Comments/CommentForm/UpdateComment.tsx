@@ -1,8 +1,8 @@
 import { useMutation } from '@apollo/client';
 import { useMemo } from 'react';
-import { CommentFragment } from '../CommentItem/comment.graphql';
+import { CommentFragment } from '../CommentItem/comment.graphql.ts';
 import { CommentForm, CommentFormProps } from './CommentForm';
-import { UpdateCommentDocument } from './UpdateComment.graphql';
+import { UpdateCommentDocument } from './UpdateComment.graphql.ts';
 
 export interface UpdateCommentProps
   extends Omit<CommentFormProps, 'onSubmit' | 'initialValues'> {

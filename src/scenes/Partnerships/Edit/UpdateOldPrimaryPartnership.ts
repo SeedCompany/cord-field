@@ -1,8 +1,8 @@
 import { ApolloCache, MutationUpdaterFunction, Unmasked } from '@apollo/client';
 import { readFragment } from '~/api';
-import { Partnership } from '~/api/schema.graphql';
+import { Partnership } from '~/api/schema.graphql.ts';
 import { IdFragment } from '~/common';
-import { ProjectOldPrimaryPartnershipsFragmentDoc } from './projectOldPrimaryPartnerships.graphql';
+import { ProjectOldPrimaryPartnershipsFragmentDoc } from './projectOldPrimaryPartnerships.graphql.ts';
 
 export const updateOldPrimaryPartnership =
   <R>(

@@ -8,13 +8,13 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { ProjectChangeRequestTypeLabels } from '~/api/schema.graphql';
+import { ProjectChangeRequestTypeLabels } from '~/api/schema.graphql.ts';
 import { labelsFrom } from '~/common';
 import { useProjectId } from '../../scenes/Projects/useProjectId';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateTime } from '../Formatters';
 import { useNavigate } from '../Routing';
-import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.graphql';
+import { ProjectChangeRequestListItemFragment as ChangeRequest } from './ProjectChangeRequestListItem.graphql.ts';
 
 export interface ProjectChangeRequestListItemProps {
   data?: ChangeRequest;

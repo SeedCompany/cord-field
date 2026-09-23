@@ -1,18 +1,19 @@
-import { ApolloCache, useQuery } from '@apollo/client';
+import { ApolloCache } from '@apollo/client';
 import { useAsyncEffect } from 'ahooks';
 import { pickBy } from 'lodash';
 import { PostHog } from 'posthog-js';
 import { usePostHog } from 'posthog-js/react';
 import { createContext, useContext } from 'react';
-import { SessionOutput } from '~/api/schema.graphql';
-import { ChildrenProp } from '~/common';
-import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
-import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
+import { useQuery } from '~/api';
+import { SessionOutput } from '~/api/schema.graphql.ts';
+import { ChildrenProp, env } from '~/common';
+import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql.ts';
+import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql.ts';
 import {
   FeaturesFragment as BetaFeatures,
   LoggedInUserFragment,
   SessionDocument,
-} from './session.graphql';
+} from './session.graphql.ts';
 
 const useSessionQuery = () =>
   useQuery(SessionDocument, {
@@ -88,7 +89,7 @@ export const useIdentifyInLogRocket = () => {
       Roles: user.roles.value,
     });
 
-    if (process.env.RAZZLE_LOG_ROCKET_APP_ID) {
+    if (env.RAZZLE_LOG_ROCKET_APP_ID) {
       const LogRocket = await import('logrocket');
       LogRocket.default.identify(
         user.id,

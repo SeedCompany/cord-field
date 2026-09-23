@@ -2,7 +2,7 @@ import { ToggleButton } from '@mui/material';
 import {
   ProgressMeasurement,
   ProgressMeasurementLabels,
-} from '~/api/schema.graphql';
+} from '~/api/schema.graphql.ts';
 import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
 import { SectionProps } from './ProductFormFields';

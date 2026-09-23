@@ -1,6 +1,6 @@
 import { ToggleButton, Typography } from '@mui/material';
 import { entries } from '@seedcompany/common';
-import { ProductApproachLabels } from '~/api/schema.graphql';
+import { ProductApproachLabels } from '~/api/schema.graphql.ts';
 import {
   ApproachMethodologies,
   displayMethodology,
