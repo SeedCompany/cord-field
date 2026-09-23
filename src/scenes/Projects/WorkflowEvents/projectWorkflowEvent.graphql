@@ -8,6 +8,10 @@ fragment projectWorkflowEvent on ProjectWorkflowEvent {
         id
         fullName
       }
+      ... on SystemAgent {
+        id
+        name
+      }
     }
   }
   transition {
