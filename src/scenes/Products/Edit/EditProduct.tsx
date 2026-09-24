@@ -218,6 +218,7 @@ export const EditProduct = () => {
               ...input,
               title,
               description,
+              scriptureReferences: parsedScriptureReferences,
             },
           },
         });
