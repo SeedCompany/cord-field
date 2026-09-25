@@ -1,4 +1,5 @@
 import { Card, CardActions, CardProps, Typography } from '@mui/material';
+import { actorName } from '~/common';
 import { RelativeDateTime } from '~/components/Formatters';
 import { ButtonLink } from '~/components/Routing';
 import { ProgressReportDetailFragment } from './ProgressReportDetail.graphql';
@@ -44,7 +45,7 @@ export const WorkflowCard = ({ report, ...rest }: WorkflowCardProps) => {
               alignItems: 'center',
             }}
           >
-            Updated by {lastWorkflowEvent.who.value?.fullName}{' '}
+            Updated by {actorName(lastWorkflowEvent.who.value)}{' '}
             <RelativeDateTime date={lastWorkflowEvent.at} />
           </Typography>
         </CardActions>

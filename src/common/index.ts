@@ -1,3 +1,4 @@
+export * from './actorName';
 export * from './approach';
 export * from './array-helpers';
 export * from './biblejs';

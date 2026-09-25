@@ -49,7 +49,12 @@ export const removeItemFromList =
     }
 
     const modifier: ListModifier = (existing, { readField }) => {
-      if (!existing?.items.some((ref) => readField('id', ref) === item.id)) {
+      if (
+        // Nothing to remove from if this variation was cached without items,
+        // e.g. from a query only selecting `total` or perms.
+        !existing?.items ||
+        !existing.items.some((ref) => readField('id', ref) === item.id)
+      ) {
         return existing;
       }
 
@@ -59,7 +64,9 @@ export const removeItemFromList =
 
       return {
         ...existing,
-        total: Number(existing.total) - 1,
+        ...(existing.total != null
+          ? { total: Number(existing.total) - 1 }
+          : {}),
         items: newList,
       };
     };

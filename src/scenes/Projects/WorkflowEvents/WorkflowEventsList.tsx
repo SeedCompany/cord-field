@@ -2,7 +2,7 @@ import { ChevronRight } from '@mui/icons-material';
 import { Box, Divider, List, ListProps, Typography } from '@mui/material';
 import { forwardRef } from 'react';
 import { ProjectStepLabels, ProjectStepList } from '~/api/schema/enumLists';
-import { extendSx } from '~/common';
+import { actorName, extendSx } from '~/common';
 import { RelativeDateTime } from '~/components/Formatters';
 import { Link } from '~/components/Routing';
 import { TextChip } from '~/components/TextChip';
@@ -67,10 +67,13 @@ export const WorkflowEventsList = forwardRef<any, WorkflowEventsListProps>(
                 mr: fullWidth ? 1 : 0,
               }}
             >
-              {event.who.value?.__typename === 'User' && (
+              {/* Only users have a profile to link to; agents render as text */}
+              {event.who.value?.__typename === 'User' ? (
                 <Link to={`/users/${event.who.value.id}`} color="inherit">
-                  {event.who.value.fullName}
+                  {actorName(event.who.value)}
                 </Link>
+              ) : (
+                actorName(event.who.value)
               )}
               <Typography variant="subtitle2" color="text.secondary" noWrap>
                 <RelativeDateTime date={event.at} />

@@ -20,7 +20,12 @@ export type ListIdentifier<OwningObj extends Entity> =
   | ListFieldKeys<Query>
   | ObjectWithField<OwningObj>;
 
-export type ListModifier = Modifier<PaginatedListOutput<Reference> | Nil>;
+// Partial because the cache only holds the fields queries have selected.
+// A list field could have been written by a query that only asked for
+// `total` or `canRead`, leaving `items` undefined.
+export type ListModifier = Modifier<
+  Partial<PaginatedListOutput<Reference>> | Nil
+>;
 
 export interface ModifyListOptions<OwningObj extends Entity, Args> {
   cache: ApolloCache<unknown>;
