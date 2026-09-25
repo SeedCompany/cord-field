@@ -42,6 +42,8 @@ export const useStyles = makeStyles()(({ spacing, typography, palette }) => ({
 
 export type DefaultAccordionProps<K extends ProductKey> = {
   name: K;
+  /** The form field that holds this section's errors, if not `name` */
+  errorName?: string;
   openedSection: ProductKey | undefined;
   onOpen: (name: K | undefined) => void;
   title?: ReactNode | ((isOpen: boolean) => ReactNode);
@@ -52,6 +54,7 @@ export type DefaultAccordionProps<K extends ProductKey> = {
 
 export const DefaultAccordion = <K extends ProductKey>({
   name,
+  errorName,
   submitErrors,
   dirtyFieldsSinceLastSubmit,
   errors,
@@ -64,9 +67,13 @@ export const DefaultAccordion = <K extends ProductKey>({
   AccordionProps,
 }: DefaultAccordionProps<K>) => {
   const { classes, cx } = useStyles();
-  const fullName = useFieldName(name);
+  const fullName = useFieldName(errorName ?? name);
   const isError = !!get(errors, fullName);
-  const isTouched = !!get(touched, fullName);
+  // Touched is keyed by the full field name, such as `a.b.c`
+  const isTouched = Object.entries(touched ?? {}).some(
+    ([field, fieldTouched]) =>
+      fieldTouched && (field === fullName || field.startsWith(`${fullName}.`))
+  );
   const isSubmitError = !!get(submitErrors, fullName);
   const isDirtySinceLastSubmit = !!get(dirtyFieldsSinceLastSubmit, fullName);
   const hasAnyError = (isSubmitError && !isDirtySinceLastSubmit) || isError;

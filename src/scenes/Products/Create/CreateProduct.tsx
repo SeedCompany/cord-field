@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 import { addItemToList, handleFormError } from '~/api';
-import { callAll, getFullBookRange } from '~/common';
+import { callAll } from '~/common';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
 import { ProjectBreadcrumb } from '../../../components/ProjectBreadcrumb';
@@ -16,6 +16,11 @@ import {
   ProductFormValues,
 } from '../ProductForm';
 import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql';
+import {
+  emptyScriptureBooks,
+  toScriptureReferences,
+  toUnspecifiedScripture,
+} from '../ProductForm/scriptureBooks';
 import { addProductProgress } from './addProductProgress';
 import {
   CreateDerivativeScriptureProductDocument as CreateDerivativeScriptureProduct,
@@ -85,7 +90,7 @@ export const CreateProduct = () => {
   const initialValues = useMemo(() => {
     const values: ProductFormValues = {
       title: '',
-      bookSelection: 'full',
+      scriptureBooks: emptyScriptureBooks(),
       producingMediums: mapEntries(
         engagement?.partnershipsProducingMediums.items ?? [],
         (pair) => [pair.medium, pair.partnership ?? undefined]
@@ -104,20 +109,14 @@ export const CreateProduct = () => {
       const {
         productType,
         produces,
-        scriptureReferences,
-        unspecifiedScripture,
-        book,
-        bookSelection,
+        scriptureBooks,
         title,
         description,
         producingMediums,
         ...inputs
       } = submitted;
 
-      const parsedScriptureReferences =
-        bookSelection === 'full' && book
-          ? [getFullBookRange(book)]
-          : scriptureReferences ?? [];
+      const scriptureInput = toScriptureReferences(scriptureBooks);
 
       if (productType === 'Other') {
         const { data } = await createOtherProduct({
@@ -126,6 +125,7 @@ export const CreateProduct = () => {
               engagement: engagementId,
               title: title || '',
               description,
+              scriptureReferences: scriptureInput,
               ...inputs,
             },
           },
@@ -136,16 +136,11 @@ export const CreateProduct = () => {
           variables: {
             input: {
               engagement: engagementId,
-              scriptureReferences: parsedScriptureReferences,
+              scriptureReferences: scriptureInput,
               unspecifiedScripture:
-                parsedScriptureReferences.length > 0 ||
-                !unspecifiedScripture?.totalVerses ||
-                !book
+                scriptureInput.length > 0
                   ? null
-                  : {
-                      book,
-                      ...unspecifiedScripture,
-                    },
+                  : toUnspecifiedScripture(scriptureBooks),
               ...inputs,
             },
           },
@@ -158,7 +153,7 @@ export const CreateProduct = () => {
               engagement: engagementId,
               ...inputs,
               produces: produces!.id,
-              scriptureReferencesOverride: parsedScriptureReferences,
+              scriptureReferencesOverride: scriptureInput,
             },
           },
         });
