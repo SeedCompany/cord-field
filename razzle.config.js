@@ -177,6 +177,17 @@ const modifyJestConfig = (opts) => {
   config.moduleNameMapper['~/(.+)'] = '<rootDir>/src/$1';
   config.snapshotSerializers = ['@emotion/jest/serializer'];
 
+  // Playwright's specs share jest's `*.spec.ts` naming but import
+  // `@playwright/test`, which throws on require outside the Playwright
+  // runner ("Playwright Test did not expect test() to be called here").
+  // Without this, `yarn test` collects all 45 of them and reports failed
+  // suites for tests it was never meant to run. They have their own
+  // runner: `yarn test:e2e`.
+  config.testPathIgnorePatterns = [
+    ...(config.testPathIgnorePatterns ?? []),
+    '<rootDir>/tests/e2e/',
+  ];
+
   return config;
 };
 
