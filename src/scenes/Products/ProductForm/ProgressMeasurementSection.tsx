@@ -5,6 +5,7 @@ import {
 } from '~/api/schema.graphql';
 import { labelFrom } from '~/common';
 import { EnumField } from '../../../components/form';
+import { ProductTypes } from './constants';
 import { SectionProps } from './ProductFormFields';
 import { SecuredAccordion } from './SecuredAccordion';
 
@@ -14,13 +15,15 @@ const measurementOptions: ProgressMeasurement[] = [
   'Boolean',
 ];
 
+const measurableTypes: ProductTypes[] = ['Other', 'EthnoArt'];
+
 export const ProgressMeasurementSection = ({
   values,
   accordionState,
 }: SectionProps) => {
   const { progressStepMeasurement, productType } = values;
 
-  if (productType !== 'Other') {
+  if (!productType || !measurableTypes.includes(productType)) {
     return null;
   }
 

@@ -68,7 +68,7 @@ const decorators: Array<Decorator<ProductFormValues>> = [
           return product.progressStepMeasurement ?? undefined;
         }
         if (productType === 'EthnoArt') {
-          return 'Number';
+          return product.progressStepMeasurement ?? 'Number';
         }
         return 'Percent';
       },
