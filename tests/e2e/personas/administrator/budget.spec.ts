@@ -1,7 +1,7 @@
 import { join } from 'node:path';
+import { API_BASE } from '../../support/graphql';
 import { expect, test } from '../../support/test';
 
-const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
 const FIXTURES = join(__dirname, '../../fixtures');
 
 /**

@@ -1,19 +1,5 @@
+import { API_BASE, waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
-
-const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
-
-const waitForOperation = (
-  page: import('@playwright/test').Page,
-  name: string
-) =>
-  page.waitForResponse(async (res) => {
-    if (!res.url().includes(`/graphql/${name}`)) return false;
-    const body = await res.json().catch(() => null);
-    return !(
-      body?.errors?.length === 1 &&
-      body.errors[0]?.message === 'PersistedQueryNotFound'
-    );
-  });
 
 /**
  * Round 3 of the comprehensive-coverage push: a throwaway Project's Team

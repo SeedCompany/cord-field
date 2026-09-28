@@ -1,51 +1,10 @@
 import { Page } from '@playwright/test';
+import { waitForOperation } from '../../support/graphql';
+import {
+  createThrowawayProject,
+  deleteThrowawayProject,
+} from '../../support/projects';
 import { expect, test } from '../../support/test';
-
-const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
-
-const waitForOperation = (page: Page, name: string) =>
-  page.waitForResponse(async (res) => {
-    if (!res.url().includes(`/graphql/${name}`)) return false;
-    const body = await res.json().catch(() => null);
-    return !(
-      body?.errors?.length === 1 &&
-      body.errors[0]?.message === 'PersistedQueryNotFound'
-    );
-  });
-
-const createThrowawayProject = async (page: Page, name: string) => {
-  await page.goto('/projects');
-  const createItemButton = page.getByRole('button', {
-    name: 'Create New Item',
-  });
-  if (!(await createItemButton.isVisible())) {
-    await page.getByRole('button', { name: 'Open navigation menu' }).click();
-    await expect(createItemButton).toBeVisible();
-  }
-  await createItemButton.click();
-  await page.getByRole('menuitem', { name: 'Project', exact: true }).click();
-
-  const dialog = page.getByRole('dialog');
-  await dialog.getByLabel('Name').fill(name);
-  const [response] = await Promise.all([
-    waitForOperation(page, 'CreateProject'),
-    dialog.getByRole('button', { name: 'Submit' }).click(),
-  ]);
-  const projectId = (await response.json())?.data?.createProject?.project?.id;
-  expect(projectId, 'failed to create the throwaway project').toBeTruthy();
-  return projectId as string;
-};
-
-const deleteThrowawayProject = (page: Page, projectId: string) =>
-  page.request.post(`${API_BASE}/graphql/PlaywrightDeleteProject`, {
-    data: {
-      operationName: 'PlaywrightDeleteProject',
-      query:
-        'mutation PlaywrightDeleteProject($id: ID!) { deleteProject(id: $id) { __typename } }',
-      variables: { id: projectId },
-    },
-  });
-
 // The rich-text comment body is an EditorJS contenteditable div, not a plain
 // input/textarea — `.fill()` sets a value programmatically, which EditorJS's
 // own internal DOM/state management doesn't observe. A real click + typed

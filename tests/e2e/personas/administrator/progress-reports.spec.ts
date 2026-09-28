@@ -1,3 +1,4 @@
+import { API_BASE } from '../../support/graphql';
 import { expect, test } from '../../support/test';
 
 /**
@@ -14,8 +15,6 @@ import { expect, test } from '../../support/test';
  * check (loads without error) rather than a claim of Postgres coverage.
  * Track RPT-1 as a backend code fact, not a UI assertion.
  */
-const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
-
 test.describe('progress reports (administrator)', () => {
   test("a project's reports tab loads without error", async ({ page }) => {
     // Not "click the first project in the list" — with `fullyParallel`

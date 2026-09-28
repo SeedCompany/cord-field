@@ -1,6 +1,5 @@
+import { API_BASE } from '../../support/graphql';
 import { expect, test } from '../../support/test';
-
-const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
 
 /**
  * Same shape as field-regions.spec.ts: FieldZones has no list route

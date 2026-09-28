@@ -1,15 +1,5 @@
-import { Page } from '@playwright/test';
+import { waitForOperation } from '../support/graphql';
 import { expect, test } from '../support/test';
-
-const waitForOperation = (page: Page, name: string) =>
-  page.waitForResponse(async (res) => {
-    if (!res.url().includes(`/graphql/${name}`)) return false;
-    const body = await res.json().catch(() => null);
-    return !(
-      body?.errors?.length === 1 &&
-      body.errors[0]?.message === 'PersistedQueryNotFound'
-    );
-  });
 
 /**
  * Round 11 (depth): before this round, exactly one test in the suite asserted

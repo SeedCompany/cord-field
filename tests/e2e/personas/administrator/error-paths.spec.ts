@@ -1,22 +1,5 @@
-import { Page } from '@playwright/test';
+import { gql, waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
-
-const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
-
-const waitForOperation = (page: Page, name: string) =>
-  page.waitForResponse(async (res) => {
-    if (!res.url().includes(`/graphql/${name}`)) return false;
-    const body = await res.json().catch(() => null);
-    return !(
-      body?.errors?.length === 1 &&
-      body.errors[0]?.message === 'PersistedQueryNotFound'
-    );
-  });
-
-const gql = (page: Page, query: string) =>
-  page.request
-    .post(`${API_BASE}/graphql`, { data: { query } })
-    .then((res) => res.json());
 
 /**
  * Round 11 (depth): server-side validation errors surfaced through real

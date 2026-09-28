@@ -1,17 +1,6 @@
 import { Page } from '@playwright/test';
+import { API_BASE, waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
-
-const API_BASE = process.env.RAZZLE_API_BASE_URL ?? 'http://localhost:3000';
-
-const waitForOperation = (page: Page, name: string) =>
-  page.waitForResponse(async (res) => {
-    if (!res.url().includes(`/graphql/${name}`)) return false;
-    const body = await res.json().catch(() => null);
-    return !(
-      body?.errors?.length === 1 &&
-      body.errors[0]?.message === 'PersistedQueryNotFound'
-    );
-  });
 
 // This app's `TabList` (`components/Tabs/TabList.tsx`) collapses into a
 // `TextField select` on mobile viewports instead of rendering `role="tab"`
