@@ -38,13 +38,17 @@ const initialMock = (items = [makeRegion()]): MockedResponse => ({
   },
 });
 
-const setup = (mocks: readonly MockedResponse[] = [initialMock()]) => {
+const setup = (
+  mocks: readonly MockedResponse[] = [initialMock()],
+  initialValues?: object
+) => {
   render(
     <MockedProvider mocks={mocks}>
       <Form
         onSubmit={() => {
           // noop
         }}
+        initialValues={initialValues}
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
@@ -88,6 +92,35 @@ describe('MarketingRegionField', () => {
     fireEvent.focus(input);
     await waitFor(() => {
       expect(screen.getByText('Africa Region')).toBeInTheDocument();
+      expect(screen.getByText('Asia Region')).toBeInTheDocument();
+    });
+  });
+
+  // The complaint from the field: a location/region field that already has a
+  // value shows nothing on focus, because `input` starts equal to the
+  // selected item's label and the popup only opened for an empty or
+  // changed input.
+  it('prepopulates on focus even when a value is already selected', async () => {
+    const selected = makeRegion();
+    const input = setup(
+      [
+        initialMock([
+          selected,
+          makeRegion({
+            id: 'region-2',
+            name: {
+              __typename: 'SecuredString',
+              canRead: true,
+              canEdit: false,
+              value: 'Asia Region',
+            },
+          }),
+        ]),
+      ],
+      { marketingRegion: selected }
+    );
+    fireEvent.focus(input);
+    await waitFor(() => {
       expect(screen.getByText('Asia Region')).toBeInTheDocument();
     });
   });
