@@ -1,3 +1,4 @@
+import { waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
 
 /**
@@ -29,14 +30,7 @@ test.describe('project lifecycle (administrator)', () => {
     await createDialog.getByLabel('Name').fill(name);
 
     const [createResponse] = await Promise.all([
-      page.waitForResponse(async (res) => {
-        if (!res.url().includes('/graphql/CreateProject')) return false;
-        const body = await res.json().catch(() => null);
-        return !(
-          body?.errors?.length === 1 &&
-          body.errors[0]?.message === 'PersistedQueryNotFound'
-        );
-      }),
+      waitForOperation(page, 'CreateProject'),
       createDialog.getByRole('button', { name: 'Submit' }).click(),
     ]);
     const createBody = await createResponse.json();
@@ -93,14 +87,7 @@ test.describe('project lifecycle (administrator)', () => {
     }
 
     const [transitionResponse] = await Promise.all([
-      page.waitForResponse(async (res) => {
-        if (!res.url().includes('/graphql/TransitionProject')) return false;
-        const body = await res.json().catch(() => null);
-        return !(
-          body?.errors?.length === 1 &&
-          body.errors[0]?.message === 'PersistedQueryNotFound'
-        );
-      }),
+      waitForOperation(page, 'TransitionProject'),
       // exact — the dialog also lists real per-transition buttons like
       // "Submit for Concept Approval" that substring-match "Submit".
       workflowDialog

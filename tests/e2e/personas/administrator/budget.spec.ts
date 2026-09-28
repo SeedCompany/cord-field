@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { API_BASE } from '../../support/graphql';
+import { API_BASE, waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
 
 const FIXTURES = join(__dirname, '../../fixtures');
@@ -57,17 +57,7 @@ test.describe('project budget (administrator)', () => {
       'input[name="defined_file_version_uploader"]'
     );
     const [uploadResponse] = await Promise.all([
-      page.waitForResponse(async (res) => {
-        if (
-          !res.url().includes('/graphql/UpdateProjectBudgetUniversalTemplate')
-        )
-          return false;
-        const body = await res.json().catch(() => null);
-        return !(
-          body?.errors?.length === 1 &&
-          body.errors[0]?.message === 'PersistedQueryNotFound'
-        );
-      }),
+      waitForOperation(page, 'UpdateProjectBudgetUniversalTemplate'),
       uploadInput.setInputFiles(join(FIXTURES, 'tiny.txt')),
     ]);
     expect(

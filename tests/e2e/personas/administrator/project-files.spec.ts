@@ -190,17 +190,7 @@ test.describe('project files (administrator)', () => {
     let moveBody: { errors?: unknown } | null = null;
     try {
       const [moveResponse] = await Promise.all([
-        page.waitForResponse(
-          async (res) => {
-            if (!res.url().includes('/graphql/MoveFileNode')) return false;
-            const body = await res.json().catch(() => null);
-            return !(
-              body?.errors?.length === 1 &&
-              body.errors[0]?.message === 'PersistedQueryNotFound'
-            );
-          },
-          { timeout: 10_000 }
-        ),
+        waitForOperation(page, 'MoveFileNode', { timeout: 10_000 }),
         fileRow.dragTo(targetFolderRow, { timeout: 10_000 }),
       ]);
       moveBody = await moveResponse.json();

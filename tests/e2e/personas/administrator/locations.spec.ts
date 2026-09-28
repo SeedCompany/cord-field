@@ -1,4 +1,4 @@
-import { API_BASE } from '../../support/graphql';
+import { API_BASE, waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
 
 /**
@@ -63,18 +63,8 @@ test.describe('locations (administrator)', () => {
       await dialog.getByLabel('Location Name').fill(name);
       await dialog.getByLabel('ISO Alpha-3 Country Code').fill(isoAlpha3);
 
-      // Skip past Apollo's automatic-persisted-queries cold-cache-miss
-      // retry (a benign `PersistedQueryNotFound`, then an automatic
-      // full-query resend) to the real response.
       const [response] = await Promise.all([
-        page.waitForResponse(async (res) => {
-          if (!res.url().includes('/graphql/CreateLocation')) return false;
-          const body = await res.json().catch(() => null);
-          return !(
-            body?.errors?.length === 1 &&
-            body.errors[0]?.message === 'PersistedQueryNotFound'
-          );
-        }),
+        waitForOperation(page, 'CreateLocation'),
         dialog.getByRole('button', { name: 'Submit' }).click(),
       ]);
       return await response.json();

@@ -1,3 +1,4 @@
+import { waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
 
 /**
@@ -21,14 +22,7 @@ test.describe('search (administrator)', () => {
     await searchField.fill('scared-31171d');
 
     const [response] = await Promise.all([
-      page.waitForResponse(async (res) => {
-        if (!res.url().includes('/graphql/Search')) return false;
-        const body = await res.json().catch(() => null);
-        return !(
-          body?.errors?.length === 1 &&
-          body.errors[0]?.message === 'PersistedQueryNotFound'
-        );
-      }),
+      waitForOperation(page, 'Search'),
       page.waitForURL(/\/search\?q=/u),
       searchField.press('Enter'),
     ]);
