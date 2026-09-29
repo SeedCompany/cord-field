@@ -287,6 +287,7 @@ test.describe('reference-entity lookups (administrator)', () => {
    */
   test("creating a new Field Zone from a throwaway FieldRegion's edit dialog", async ({
     page,
+    cleanup,
   }) => {
     const suffix = Date.now().toString(36);
     // `name` filters are exact-match, and Round 8's edit test renames the
@@ -344,6 +345,12 @@ test.describe('reference-entity lookups (administrator)', () => {
       `mutation { createFieldRegion(input:{name:"Playwright CFZ Region ${suffix}", fieldZone:"${existingZoneId}", director:"${seedDirector.id}"}) { fieldRegion { id } } }`
     );
     const regionId = createResp?.data?.createFieldRegion?.fieldRegion?.id;
+    cleanup.add('throwaway field region', () =>
+      gql(
+        page,
+        `mutation { deleteFieldRegion(id: "${regionId}") { __typename } }`
+      )
+    );
     expect(
       regionId,
       `failed to create the throwaway field region: ${JSON.stringify(
@@ -392,6 +399,12 @@ test.describe('reference-entity lookups (administrator)', () => {
     ]);
     const createZoneBody = await createZoneResponse.json();
     const newZoneId = createZoneBody?.data?.createFieldZone?.fieldZone?.id;
+    cleanup.add('throwaway field zone', () =>
+      gql(
+        page,
+        `mutation { deleteFieldZone(id: "${newZoneId}") { __typename } }`
+      )
+    );
     expect(
       newZoneId,
       `failed to create the field zone: ${JSON.stringify(createZoneBody)}`
@@ -403,15 +416,6 @@ test.describe('reference-entity lookups (administrator)', () => {
     // `UpdateFieldRegion` (already covered elsewhere).
     await expect(page.getByRole('dialog')).toHaveCount(1);
     await dialog.getByRole('button', { name: 'Cancel' }).click();
-
-    await gql(
-      page,
-      `mutation { deleteFieldZone(id: "${newZoneId}") { __typename } }`
-    );
-    await gql(
-      page,
-      `mutation { deleteFieldRegion(id: "${regionId}") { __typename } }`
-    );
   });
 
   test('CompletionDescriptionLookup fires when a new Product has its methodology set', async ({

@@ -26,7 +26,43 @@ const coverageFilePath = (workerIndex: number) =>
 
 const GRAPHQL_OPERATION_URL = /\/graphql\/([^/?]+)/u;
 
-export const test = base.extend<{ trackGraphqlCoverage: void }>({
+export interface Cleanup {
+  /**
+   * Register teardown for something this test created. Runs after the test in
+   * reverse order of registration, and — unlike a trailing `await delete...()`
+   * at the end of the test body — runs even when the test fails partway.
+   */
+  add: (label: string, fn: () => Promise<unknown>) => void;
+}
+
+export const test = base.extend<{
+  trackGraphqlCoverage: void;
+  cleanup: Cleanup;
+}>({
+  /**
+   * Teardown that survives failure.
+   *
+   * Every spec used to clean up with trailing statements in the test body, so
+   * any earlier failing assertion skipped them — which is how throwaway
+   * partners, projects, locations and languages piled up in the dev database
+   * and then broke the specs that depend on list ordering or look fixtures up
+   * by name. Playwright runs fixture teardown regardless of test outcome.
+   */
+  // eslint-disable-next-line no-empty-pattern
+  cleanup: async ({}, use) => {
+    const tasks: Array<{ label: string; fn: () => Promise<unknown> }> = [];
+    await use({ add: (label, fn) => tasks.push({ label, fn }) });
+    // Reverse order: later-created things may reference earlier ones. One
+    // failure must not skip the rest, so each is caught individually.
+    for (const task of tasks.reverse()) {
+      try {
+        await task.fn();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(`[cleanup] "${task.label}" failed: ${String(e)}`);
+      }
+    }
+  },
   trackGraphqlCoverage: [
     // eslint-disable-next-line no-empty-pattern
     async ({ page }, use, testInfo) => {

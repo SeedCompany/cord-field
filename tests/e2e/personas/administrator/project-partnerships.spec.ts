@@ -26,10 +26,13 @@ test.describe('project partnerships (administrator)', () => {
    * via research before writing this. The Partner itself is never
    * mutated, only the Partnership join record.
    */
-  test('add, update, and remove a partnership', async ({ page }) => {
+  test('add, update, and remove a partnership', async ({ page, cleanup }) => {
     const projectId = await createThrowawayProject(
       page,
       `Playwright Partnership ${Date.now().toString(36)}`
+    );
+    cleanup.add('throwaway project', () =>
+      deleteThrowawayProject(page, projectId)
     );
 
     await page.goto(`/projects/${projectId}/partnerships`);
@@ -90,7 +93,5 @@ test.describe('project partnerships (administrator)', () => {
       (await deleteResponse.json())?.errors,
       'expected deleting the partnership to succeed'
     ).toBeFalsy();
-
-    await deleteThrowawayProject(page, projectId);
   });
 });

@@ -68,6 +68,7 @@ test.describe('desktop-only grid membership (administrator)', () => {
    */
   test('AddLocationToLanguage is UI-reachable but blocked — location-node relationships are not yet migrated to Postgres', async ({
     page,
+    cleanup,
   }) => {
     const suffix = Date.now().toString(36);
     const langResp = await gql(
@@ -76,6 +77,12 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const languageId = langResp?.data?.createLanguage?.language?.id;
     expect(languageId, 'failed to create the throwaway language').toBeTruthy();
+    cleanup.add('throwaway language', () =>
+      gql(
+        page,
+        `mutation { deleteLanguage(id: "${languageId}") { __typename } }`
+      )
+    );
 
     const locResp = await gql(
       page,
@@ -83,6 +90,12 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const locationId = locResp?.data?.createLocation?.location?.id;
     expect(locationId, 'failed to create the throwaway location').toBeTruthy();
+    cleanup.add('throwaway location', () =>
+      gql(
+        page,
+        `mutation { deleteLocation(id: "${locationId}") { __typename } }`
+      )
+    );
 
     await page.goto(`/languages/${languageId}`);
     await page.getByRole('tab', { name: 'Locations' }).click();
@@ -116,19 +129,11 @@ test.describe('desktop-only grid membership (administrator)', () => {
         addBody
       )}`
     ).toContain('NotImplemented');
-
-    await gql(
-      page,
-      `mutation { deleteLanguage(id: "${languageId}") { __typename } }`
-    );
-    await gql(
-      page,
-      `mutation { deleteLocation(id: "${locationId}") { __typename } }`
-    );
   });
 
   test('AssignPersonToPartner / RemovePersonFromPartner via the Partner People grid', async ({
     page,
+    cleanup,
   }) => {
     const suffix = Date.now().toString(36);
     const orgResp = await gql(
@@ -137,6 +142,12 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const orgId = orgResp?.data?.createOrganization?.organization?.id;
     expect(orgId, 'failed to create the throwaway organization').toBeTruthy();
+    cleanup.add('throwaway organization', () =>
+      gql(
+        page,
+        `mutation { deleteOrganization(id: "${orgId}") { __typename } }`
+      )
+    );
 
     const partnerResp = await gql(
       page,
@@ -144,6 +155,9 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const partnerId = partnerResp?.data?.createPartner?.partner?.id;
     expect(partnerId, 'failed to create the throwaway partner').toBeTruthy();
+    cleanup.add('throwaway partner', () =>
+      gql(page, `mutation { deletePartner(id: "${partnerId}") { __typename } }`)
+    );
 
     const personResp = await gql(
       page,
@@ -151,6 +165,9 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const userId = personResp?.data?.createPerson?.user?.id;
     expect(userId, 'failed to create the throwaway person').toBeTruthy();
+    cleanup.add('throwaway user', () =>
+      gql(page, `mutation { deleteUser(id: "${userId}") { __typename } }`)
+    );
 
     await page.goto(`/partners/${partnerId}`);
     await page.getByRole('tab', { name: 'People' }).click();
@@ -197,16 +214,11 @@ test.describe('desktop-only grid membership (administrator)', () => {
       (await removeResponse.json())?.errors,
       'expected RemovePersonFromPartner to succeed'
     ).toBeFalsy();
-
-    await gql(page, `mutation { deleteUser(id: "${userId}") { __typename } }`);
-    await gql(
-      page,
-      `mutation { deletePartner(id: "${partnerId}") { __typename } }`
-    );
   });
 
   test('AssignOrganizationToUser / RemoveOrganizationFromUser via the User Partners grid', async ({
     page,
+    cleanup,
   }) => {
     const suffix = Date.now().toString(36);
     const personResp = await gql(
@@ -215,6 +227,9 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const userId = personResp?.data?.createPerson?.user?.id;
     expect(userId, 'failed to create the throwaway user').toBeTruthy();
+    cleanup.add('throwaway user', () =>
+      gql(page, `mutation { deleteUser(id: "${userId}") { __typename } }`)
+    );
 
     const orgResp = await gql(
       page,
@@ -222,6 +237,12 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const orgId = orgResp?.data?.createOrganization?.organization?.id;
     expect(orgId, 'failed to create the throwaway organization').toBeTruthy();
+    cleanup.add('throwaway organization', () =>
+      gql(
+        page,
+        `mutation { deleteOrganization(id: "${orgId}") { __typename } }`
+      )
+    );
 
     const partnerResp = await gql(
       page,
@@ -229,6 +250,9 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const partnerId = partnerResp?.data?.createPartner?.partner?.id;
     expect(partnerId, 'failed to create the throwaway partner').toBeTruthy();
+    cleanup.add('throwaway partner', () =>
+      gql(page, `mutation { deletePartner(id: "${partnerId}") { __typename } }`)
+    );
 
     await page.goto(`/users/${userId}`);
     await page.getByRole('tab', { name: 'Partners' }).click();
@@ -269,12 +293,6 @@ test.describe('desktop-only grid membership (administrator)', () => {
       (await removeResponse.json())?.errors,
       'expected RemoveOrganizationFromUser to succeed'
     ).toBeFalsy();
-
-    await gql(page, `mutation { deleteUser(id: "${userId}") { __typename } }`);
-    await gql(
-      page,
-      `mutation { deletePartner(id: "${partnerId}") { __typename } }`
-    );
   });
 
   /**
@@ -288,6 +306,7 @@ test.describe('desktop-only grid membership (administrator)', () => {
    */
   test('UpdatePartnerGrid via the Start Date cell on the Partners list', async ({
     page,
+    cleanup,
   }) => {
     const suffix = Date.now().toString(36);
     const orgResp = await gql(
@@ -296,6 +315,12 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const orgId = orgResp?.data?.createOrganization?.organization?.id;
     expect(orgId, 'failed to create the throwaway organization').toBeTruthy();
+    cleanup.add('throwaway organization', () =>
+      gql(
+        page,
+        `mutation { deleteOrganization(id: "${orgId}") { __typename } }`
+      )
+    );
 
     const partnerResp = await gql(
       page,
@@ -303,6 +328,9 @@ test.describe('desktop-only grid membership (administrator)', () => {
     );
     const partnerId = partnerResp?.data?.createPartner?.partner?.id;
     expect(partnerId, 'failed to create the throwaway partner').toBeTruthy();
+    cleanup.add('throwaway partner', () =>
+      gql(page, `mutation { deletePartner(id: "${partnerId}") { __typename } }`)
+    );
 
     await page.goto('/partners');
     // Scope by the full org-name prefix plus suffix, not the bare suffix —
@@ -329,10 +357,5 @@ test.describe('desktop-only grid membership (administrator)', () => {
       (await updateResponse.json())?.errors,
       'expected UpdatePartnerGrid to succeed'
     ).toBeFalsy();
-
-    await gql(
-      page,
-      `mutation { deletePartner(id: "${partnerId}") { __typename } }`
-    );
   });
 });
