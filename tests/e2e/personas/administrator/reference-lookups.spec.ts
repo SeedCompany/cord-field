@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { findSeededPartnerId } from '../../support/fixtures';
 import { gql, waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
 
@@ -32,21 +33,9 @@ test.describe('reference-entity lookups (administrator)', () => {
   test('the Partner edit dialogs fire FieldRegionLookup, LocationLookup, and LanguageOfReportingLookup', async ({
     page,
   }) => {
-    const lookupRes = await gql(
-      page,
-      'query { partners(input:{count:2}) { items { id organization { value { name { value } } } } } }'
-    );
-    const partners = lookupRes?.data?.partners?.items ?? [];
-    const partner = partners.find(
-      (p: { organization: { value: { name: { value: string } } } }) =>
-        p.organization.value.name.value.startsWith('Trantow')
-    );
-    expect(
-      partner?.id,
-      'expected the seeded fixture partner to exist'
-    ).toBeTruthy();
+    const partnerId = await findSeededPartnerId(page);
 
-    await page.goto(`/partners/${partner.id}`);
+    await page.goto(`/partners/${partnerId}`);
     await expect(page.getByRole('combobox')).toBeVisible();
 
     // The section's edit `IconButton` only wraps a `<Tooltip title="Edit">`
@@ -307,31 +296,52 @@ test.describe('reference-entity lookups (administrator)', () => {
     // earlier Projects-tab test in this file.
     const seedLookup = await gql(
       page,
-      'query { fieldZones { items { id name { value } } } fieldRegions { items { director { value { id fullName realLastName { value } } } } } }'
+      'query { fieldZones { items { id name { value } director { value { id fullName realLastName { value } roles { value } } } } } }'
     );
     interface DirectorValue {
       id: string;
       fullName: string;
       realLastName: { value: string };
+      roles: { value: string[] };
     }
-    const zones = seedLookup?.data?.fieldZones?.items ?? [];
+    interface ZoneItem {
+      id: string;
+      name: { value: string };
+      director: { value: DirectorValue | null };
+    }
+    const zones: ZoneItem[] = seedLookup?.data?.fieldZones?.items ?? [];
     const existingZoneId = (
-      zones.find((z: { name: { value: string } }) =>
+      zones.find((z) =>
         z.name.value.startsWith('Playwright Seed Field Zone')
       ) ?? zones[0]
     )?.id;
-    const director = seedLookup?.data?.fieldRegions?.items?.find(
-      (r: { director: { value: DirectorValue | null } }) => r.director.value
-    )?.director.value;
+    // This test creates a FieldRegion *and* a FieldZone, and the API validates
+    // a different role for each: createFieldRegion demands RegionalDirector,
+    // createFieldZone demands FieldOperationsDirector (field-zone.service.ts /
+    // field-region.service.ts). Borrowing a FieldRegion's director covered
+    // only the first and made the zone create fail with "User does not have
+    // the Field Operations Director role" — so require both roles up front.
+    const director = zones
+      .map((z) => z.director.value)
+      .find(
+        (d) =>
+          d?.roles.value.includes('RegionalDirector') &&
+          d.roles.value.includes('FieldOperationsDirector')
+      );
     expect(
       existingZoneId,
       'expected the seeded field zone to exist'
     ).toBeTruthy();
-    expect(director?.id, 'expected an existing director to reuse').toBeTruthy();
+    expect(
+      director?.id,
+      'expected a director holding both RegionalDirector and FieldOperationsDirector'
+    ).toBeTruthy();
+    // Narrowed once here rather than asserting at each of the three use sites.
+    const seedDirector = director!;
 
     const createResp = await gql(
       page,
-      `mutation { createFieldRegion(input:{name:"Playwright CFZ Region ${suffix}", fieldZone:"${existingZoneId}", director:"${director.id}"}) { fieldRegion { id } } }`
+      `mutation { createFieldRegion(input:{name:"Playwright CFZ Region ${suffix}", fieldZone:"${existingZoneId}", director:"${seedDirector.id}"}) { fieldRegion { id } } }`
     );
     const regionId = createResp?.data?.createFieldRegion?.fieldRegion?.id;
     expect(
@@ -366,9 +376,11 @@ test.describe('reference-entity lookups (administrator)', () => {
     await expect(zoneDialog.getByLabel('Field Zone Name')).toHaveValue(
       zoneName
     );
-    await zoneDialog.getByLabel('Director').fill(director.realLastName.value);
+    await zoneDialog
+      .getByLabel('Director')
+      .fill(seedDirector.realLastName.value);
     const zoneDirectorOption = page.getByRole('option', {
-      name: director.fullName,
+      name: seedDirector.fullName,
       exact: true,
     });
     await expect(zoneDirectorOption).toBeVisible();

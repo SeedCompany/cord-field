@@ -100,12 +100,22 @@ test.describe('entity CRUD misc (administrator)', () => {
     const lookupRes = await page.request.post(`${API_BASE}/graphql`, {
       data: {
         query:
-          'query { fieldRegions { items { id } } fieldZones { items { id } } }',
+          'query { fieldRegions { items { id name { value } } } fieldZones { items { id name { value } } } }',
       },
     });
     const lookupBody = await lookupRes.json();
-    const fieldRegionId = lookupBody?.data?.fieldRegions?.items?.[0]?.id;
-    const fieldZoneId = lookupBody?.data?.fieldZones?.items?.[0]?.id;
+    const region = lookupBody?.data?.fieldRegions?.items?.[0];
+    const zone = lookupBody?.data?.fieldZones?.items?.[0];
+    const fieldRegionId = region?.id;
+    const fieldZoneId = zone?.id;
+    // These are real pre-existing records, not throwaways this test owns, so
+    // capture their names and put them back in the `finally` below. Without
+    // that restore each run permanently renamed whatever sorted first to
+    // "Playwright Seed Field Region <suffix>" — which is how three genuine
+    // seeded field regions ended up carrying fake "Seed" names, and how the
+    // specs that look fixtures up by name started missing them.
+    const originalRegionName: string | undefined = region?.name?.value;
+    const originalZoneName: string | undefined = zone?.name?.value;
     expect(
       fieldRegionId,
       'expected the seeded fixture field region to exist'
@@ -115,37 +125,58 @@ test.describe('entity CRUD misc (administrator)', () => {
       'expected the seeded fixture field zone to exist'
     ).toBeTruthy();
 
-    await page.goto(`/field-regions/${fieldRegionId}`);
-    await page.getByRole('button', { name: 'edit region' }).click();
-    const regionDialog = page.getByRole('dialog');
-    await expect(regionDialog.getByText('Edit Field Region')).toBeVisible();
-    await regionDialog
-      .getByLabel('Field Region Name')
-      .fill(`Playwright Seed Field Region ${suffix}`);
-    const [regionResponse] = await Promise.all([
-      waitForOperation(page, 'UpdateFieldRegion'),
-      regionDialog.getByRole('button', { name: 'Submit' }).click(),
-    ]);
-    expect(
-      (await regionResponse.json())?.errors,
-      'expected editing the field region to succeed'
-    ).toBeFalsy();
+    const restoreName = async (
+      mutation: 'updateFieldRegion' | 'updateFieldZone',
+      id: string,
+      name: string | undefined
+    ) => {
+      if (!name) return;
+      await page.request.post(`${API_BASE}/graphql`, {
+        data: {
+          query: `mutation { ${mutation}(input:{id:"${id}", name:"${name.replace(
+            /"/gu,
+            '\\"'
+          )}"}) { __typename } }`,
+        },
+      });
+    };
 
-    await page.goto(`/field-zones/${fieldZoneId}`);
-    await page.getByRole('button', { name: 'edit zone' }).click();
-    const zoneDialog = page.getByRole('dialog');
-    await expect(zoneDialog.getByText('Edit Field Zone')).toBeVisible();
-    await zoneDialog
-      .getByLabel('Field Zone Name')
-      .fill(`Playwright Seed Field Zone ${suffix}`);
-    const [zoneResponse] = await Promise.all([
-      waitForOperation(page, 'UpdateFieldZone'),
-      zoneDialog.getByRole('button', { name: 'Submit' }).click(),
-    ]);
-    expect(
-      (await zoneResponse.json())?.errors,
-      'expected editing the field zone to succeed'
-    ).toBeFalsy();
+    try {
+      await page.goto(`/field-regions/${fieldRegionId}`);
+      await page.getByRole('button', { name: 'edit region' }).click();
+      const regionDialog = page.getByRole('dialog');
+      await expect(regionDialog.getByText('Edit Field Region')).toBeVisible();
+      await regionDialog
+        .getByLabel('Field Region Name')
+        .fill(`Playwright Edited Region ${suffix}`);
+      const [regionResponse] = await Promise.all([
+        waitForOperation(page, 'UpdateFieldRegion'),
+        regionDialog.getByRole('button', { name: 'Submit' }).click(),
+      ]);
+      expect(
+        (await regionResponse.json())?.errors,
+        'expected editing the field region to succeed'
+      ).toBeFalsy();
+
+      await page.goto(`/field-zones/${fieldZoneId}`);
+      await page.getByRole('button', { name: 'edit zone' }).click();
+      const zoneDialog = page.getByRole('dialog');
+      await expect(zoneDialog.getByText('Edit Field Zone')).toBeVisible();
+      await zoneDialog
+        .getByLabel('Field Zone Name')
+        .fill(`Playwright Edited Zone ${suffix}`);
+      const [zoneResponse] = await Promise.all([
+        waitForOperation(page, 'UpdateFieldZone'),
+        zoneDialog.getByRole('button', { name: 'Submit' }).click(),
+      ]);
+      expect(
+        (await zoneResponse.json())?.errors,
+        'expected editing the field zone to succeed'
+      ).toBeFalsy();
+    } finally {
+      await restoreName('updateFieldRegion', fieldRegionId, originalRegionName);
+      await restoreName('updateFieldZone', fieldZoneId, originalZoneName);
+    }
   });
 
   test('create and edit a throwaway Location', async ({ page }) => {

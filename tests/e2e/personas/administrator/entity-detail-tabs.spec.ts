@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { findSeededPartnerId } from '../../support/fixtures';
 import { API_BASE, waitForOperation } from '../../support/graphql';
 import { expect, test } from '../../support/test';
 
@@ -81,23 +82,9 @@ test.describe('entity detail tabs (administrator)', () => {
   test("the seeded partner's People, Projects, Engagements, and Notes tabs load", async ({
     page,
   }) => {
-    const lookupRes = await page.request.post(`${API_BASE}/graphql`, {
-      data: {
-        query:
-          'query { partners(input:{count:2}) { items { id organization { value { name { value } } } } } }',
-      },
-    });
-    const partners = (await lookupRes.json())?.data?.partners?.items ?? [];
-    const partner = partners.find(
-      (p: { organization: { value: { name: { value: string } } } }) =>
-        p.organization.value.name.value.startsWith('Trantow')
-    );
-    expect(
-      partner?.id,
-      'expected the seeded fixture partner to exist'
-    ).toBeTruthy();
+    const partnerId = await findSeededPartnerId(page);
 
-    await page.goto(`/partners/${partner.id}`);
+    await page.goto(`/partners/${partnerId}`);
     await expect(page.getByRole('combobox')).toBeVisible();
 
     const [peopleResponse] = await Promise.all([
