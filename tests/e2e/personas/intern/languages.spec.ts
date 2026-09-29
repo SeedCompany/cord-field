@@ -20,7 +20,10 @@ test.describe('languages (intern)', () => {
     const main = page.getByRole('main');
     const totalRows = main.getByText(/Total Rows/u);
     await expect(totalRows).toBeVisible();
-    await expect(totalRows).toContainText('0');
+    // Exact, not `toContainText('0')` — that's a substring match, so it also
+    // passed for "Total Rows: 10", "20", "100", "1,024". The assertion
+    // advertised as the boundary check was doing no work.
+    await expect(totalRows).toHaveText(/Total Rows:\s*0$/u);
     await expect(main.getByRole('link')).toHaveCount(0);
   });
 });
