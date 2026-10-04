@@ -15,10 +15,12 @@ import '@emotion/jest';
 // without this.
 import { TextDecoder, TextEncoder } from 'util';
 
+// Node's `util.TextEncoder`/`TextDecoder` are runtime-compatible with the DOM
+// lib globals jsdom expects, but their TS types don't line up exactly — cast
+// rather than widen the global type.
 if (typeof global.TextEncoder === 'undefined') {
-  global.TextEncoder = TextEncoder;
+  global.TextEncoder = TextEncoder as unknown as typeof global.TextEncoder;
 }
 if (typeof global.TextDecoder === 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   global.TextDecoder = TextDecoder as unknown as typeof global.TextDecoder;
 }
