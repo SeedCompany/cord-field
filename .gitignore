@@ -41,5 +41,9 @@ Thumbs.db
 /schema.graphql
 *.generated.ts
 *.graphql.ts
+# Exception: hand-authored stand-in for codegen output until the backend
+# schema for `loginWithAuth0` lands (see the file's own header comment).
+# Delete this line along with the file once real codegen replaces it.
+!src/scenes/Authentication/Callback/callback.graphql.ts
 
 bin/dist

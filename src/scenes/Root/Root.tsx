@@ -1,11 +1,12 @@
 import loadable from '@loadable/component';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Error, NotFoundRoute } from '../../components/Error';
 import { useIdentifyInLogRocket, useSession } from '../../components/Session';
 import {
   AuthLayout,
   AuthWaiting,
+  Callback,
   ForgotPassword,
   Login,
   Logout,
@@ -66,8 +67,17 @@ export const Root = () => {
   useOldChromeWarning();
   useIdentifyInLogRocket();
   const { sessionLoading } = useSession();
+  const location = useLocation();
 
-  const routes = sessionLoading ? (
+  // /callback must render regardless of sessionLoading — it's reached right
+  // after the Auth0 redirect, before the Cord session cookie exists, so the
+  // Session query is expected to still be in flight (or resolve to no
+  // session) at that point. Otherwise this gate would swap out the entire
+  // route tree and the callback exchange would never get a chance to run.
+  const blockOnSessionLoading =
+    sessionLoading && location.pathname !== '/callback';
+
+  const routes = blockOnSessionLoading ? (
     <AuthLayout>
       <AuthWaiting />
     </AuthLayout>
@@ -96,6 +106,7 @@ export const Root = () => {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
+        <Route path="callback" element={<Callback />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password/:token" element={<ResetPassword />} />
       </Route>

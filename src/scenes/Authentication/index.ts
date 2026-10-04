@@ -1,5 +1,6 @@
 export * from './AuthLayout';
 export * from './AuthWaiting';
+export * from './Callback';
 export * from './ChangePassword';
 export * from './ForgotPassword';
 export * from './Login/Login';
