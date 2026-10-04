@@ -13,6 +13,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { TssCacheProvider } from 'tss-react';
 import { basePathOfUrl } from '~/common';
 import { GqlSensitiveOperations } from './api';
+import { Auth0ProviderWithNavigate } from './api/client/Auth0ProviderWithNavigate';
 import { ImpersonationProvider } from './api/client/ImpersonationContext';
 import { App } from './App';
 import { Nest } from './components/Nest';
@@ -97,6 +98,11 @@ const clientOnlyProviders = [
     key="router"
     basename={basePathOfUrl(process.env.PUBLIC_URL)}
   />,
+  // Needs Router context (above) for useNavigate in onRedirectCallback.
+  // Client-only — never added to the SSR-shared provider tree in
+  // renderServerSideApp.tsx, since Auth0Provider has no server-rendering story
+  // and @auth0/auth0-react's default (no-provider) context is an inert stub.
+  <Auth0ProviderWithNavigate key="auth0" />,
   <HelmetProvider key="helmet" children={[]} />,
   <DndProvider key="dnd" backend={HTML5Backend} />,
   <CacheProvider key="emotion-mui" value={emotionCacheMui} />,
