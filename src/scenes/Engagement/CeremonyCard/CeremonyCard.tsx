@@ -12,7 +12,7 @@ import {
 import { useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
-import { canEditAny } from '~/common';
+import { canEditAny, isDateBefore, SecuredDateRangeFragment } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { DateField, SubmitError } from '../../../components/form';
@@ -50,11 +50,18 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
   },
 }));
 
-type CeremonyCardProps = Partial<CeremonyCardFragment>;
+type CeremonyCardProps = Partial<CeremonyCardFragment> & {
+  /**
+   * The engagement's date range, used to warn about ceremony dates that fall
+   * outside it. Omitted while loading.
+   */
+  engagementDateRange?: SecuredDateRangeFragment;
+};
 
 export const CeremonyCard = ({
   canRead,
   value: ceremony,
+  engagementDateRange,
 }: CeremonyCardProps) => {
   const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
@@ -174,10 +181,27 @@ export const CeremonyCard = ({
         {...dialogState}
         initialValues={initialValues}
         onSubmit={async (input) => {
+          if (
+            input.estimatedDate &&
+            isDateBefore(input.estimatedDate, engagementDateRange?.value.start)
+          ) {
+            throw new Error(
+              `Estimated date cannot precede project's start date`
+            );
+          }
+
+          if (
+            input.actualDate &&
+            isDateBefore(input.actualDate, engagementDateRange?.value.start)
+          ) {
+            throw new Error(`Actual date cannot precede project start date`);
+          }
+
           await updateCeremony({ variables: { input } });
         }}
         errorHandlers={{
-          Default: `Failed to update ${type?.toLowerCase()}`,
+          Default: (e) =>
+            e.message || `Failed to update ${type?.toLowerCase()}`,
         }}
       >
         <SubmitError />

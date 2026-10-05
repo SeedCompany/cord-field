@@ -268,7 +268,10 @@ export const InternshipEngagementDetail = ({ engagement }: EngagementQuery) => {
               </Grid>
               <Grid item container spacing={3}>
                 <Grid item xs={12} md={6}>
-                  <CeremonyCard {...engagement.ceremony} />
+                  <CeremonyCard
+                    {...engagement.ceremony}
+                    engagementDateRange={engagement.dateRange}
+                  />
                 </Grid>
                 <MentorCard
                   data={engagement.mentor}
