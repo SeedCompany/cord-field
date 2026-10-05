@@ -7,11 +7,8 @@ import {
   AuthLayout,
   AuthWaiting,
   Callback,
-  ForgotPassword,
   Login,
   Logout,
-  Register,
-  ResetPassword,
 } from '../Authentication';
 import { Home } from '../Home';
 import { AppMetadata } from './AppMetadata';
@@ -103,12 +100,9 @@ export const Root = () => {
         {NotFoundRoute}
       </Route>
       <Route key="auth" element={<AuthLayout />}>
-        <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
         <Route path="callback" element={<Callback />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password/:token" element={<ResetPassword />} />
       </Route>
     </Routes>
   );
