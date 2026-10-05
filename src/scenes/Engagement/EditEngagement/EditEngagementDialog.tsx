@@ -18,6 +18,8 @@ import {
   asDate,
   DisplayLocationFragment,
   ExtractStrict,
+  isDateAfter,
+  isDateBefore,
   labelFrom,
   MethodologyToApproach,
 } from '~/common';
@@ -310,6 +312,26 @@ export const EditEngagementDialog = ({
         }
       }}
       onSubmit={async (values, form) => {
+        // validate updates for complete date.
+        if (
+          isDateBefore(values.completeDate, engagement.dateRange.value.start)
+        ) {
+          throw new Error(`Date cannot precede project's start date`);
+        }
+
+        if (isDateAfter(values.completeDate, engagement.dateRange.value.end)) {
+          throw new Error(`Date cannot exceed project's end date`);
+        }
+
+        // validate updates for disbursement complete date.
+        if (
+          isDateBefore(
+            values.disbursementCompleteDate,
+            engagement.dateRange.value.start
+          )
+        ) {
+          throw new Error(`Date cannot precede project's start date`);
+        }
         await updateEngagement({
           variables: {
             input: {
