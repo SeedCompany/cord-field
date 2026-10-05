@@ -32,7 +32,7 @@ export const GtlReportsCard = ({
 }) => {
   const current = engagement.currentGtlReportDue.value;
   const next = engagement.nextGtlReportDue.value;
-  const progress = engagement.programProgress.value;
+  const progress = engagement.programProgress;
 
   return (
     <Card sx={{ width: 1 }}>

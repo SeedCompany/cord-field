@@ -31,7 +31,7 @@ export const ProgressExplanationCard = ({
   editable = true,
 }: {
   reportId: string;
-  explanation: GtlReportDetailFragment['progressExplanation'];
+  explanation: NonNullable<GtlReportDetailFragment['progressExplanation']>;
   editable?: boolean;
 }) => {
   const [explain] = useMutation(ExplainGtlProgressDocument);

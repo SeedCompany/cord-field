@@ -5,8 +5,8 @@ import { labelFrom, type RichTextJson } from '~/common';
 import { Form } from '../../../components/form';
 import { RichTextField } from '../../../components/RichText';
 import {
-  ExecuteGtlReportTransitionDocument,
   type GtlReportDetailFragment,
+  TransitionGtlReportDocument,
 } from '../Detail/GtlReportDetail.graphql';
 
 /**
@@ -23,9 +23,7 @@ import {
  * of overwriting one field.
  */
 export const SubmitStep = ({ report }: { report: GtlReportDetailFragment }) => {
-  const [execute, { loading }] = useMutation(
-    ExecuteGtlReportTransitionDocument
-  );
+  const [execute, { loading }] = useMutation(TransitionGtlReportDocument);
 
   return (
     <Card>
@@ -43,7 +41,7 @@ export const SubmitStep = ({ report }: { report: GtlReportDetailFragment }) => {
           .
         </Typography>
 
-        {report.transitions.length === 0 ? (
+        {report.status.transitions.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
             There is nothing further to do with this report.
           </Typography>
@@ -63,12 +61,13 @@ export const SubmitStep = ({ report }: { report: GtlReportDetailFragment }) => {
                   flexWrap="wrap"
                   sx={{ mt: 2 }}
                 >
-                  {report.transitions.map((t) => (
+                  {report.status.transitions.map((t) => (
                     <Button
                       key={t.key}
                       variant={t.type === 'Approve' ? 'contained' : 'outlined'}
                       color={t.type === 'Reject' ? 'error' : 'primary'}
-                      disabled={!t.canExecute || loading}
+                      disabled={t.disabled || loading}
+                      title={t.disabledReason ?? undefined}
                       onClick={() =>
                         void execute({
                           variables: {

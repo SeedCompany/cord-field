@@ -4,9 +4,7 @@ query GtlReportsOfEngagement($engagementId: ID!) {
     ... on InternshipEngagement {
       id
       ...EngagementBreadcrumb
-      programProgress {
-        value
-      }
+      programProgress
       project {
         ...ProjectBreadcrumb
       }

@@ -4,7 +4,6 @@ import {
   CreateGtlReportCommunityImpactDocument,
   UpdateGtlReportCommunityImpactResponseDocument,
 } from '../Detail/GtlReportDetail.graphql';
-import { MediaCard } from '../Detail/MediaCard';
 import { PracticumCard } from '../Detail/PracticumCard';
 import { ProgressExplanationCard } from '../Detail/ProgressExplanationCard';
 import { ProseSection } from '../Detail/ProseSection';
@@ -44,20 +43,17 @@ const CommunityImpactStep = ({ report }: GtlStepProps) => (
 CommunityImpactStep.enableWhen = (report: GtlStepProps['report']) =>
   report.communityImpact.canRead;
 
-const MediaStep = ({ report }: GtlStepProps) => (
-  <MediaCard reportId={report.id} media={report.media} />
-);
-
-const ExplanationStep = ({ report }: GtlStepProps) => (
-  <ProgressExplanationCard
-    reportId={report.id}
-    explanation={report.progressExplanation}
-  />
-);
+const ExplanationStep = ({ report }: GtlStepProps) =>
+  report.progressExplanation ? (
+    <ProgressExplanationCard
+      reportId={report.id}
+      explanation={report.progressExplanation}
+    />
+  ) : null;
 // Field Operations only — the API decides, and the step disappears entirely
 // rather than rendering an empty card for everyone else.
 ExplanationStep.enableWhen = (report: GtlStepProps['report']) =>
-  report.progressExplanation.status.canRead;
+  report.progressExplanation?.status.canRead ?? false;
 
 export const GtlSteps: GroupedSteps = {
   'The Quarter': [
@@ -67,7 +63,6 @@ export const GtlSteps: GroupedSteps = {
   'Investor Connection': [
     ['Community Impact', CommunityImpactStep],
     ['Prayer', PrayerStep],
-    ['Photos & Video', MediaStep],
   ],
   'Field Operations': [['Explanation of Progress', ExplanationStep]],
   'Final Details': [['Submit Report', SubmitStep]],

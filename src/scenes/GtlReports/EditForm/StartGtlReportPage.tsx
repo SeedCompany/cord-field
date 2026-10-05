@@ -2,8 +2,8 @@ import { useMutation } from '@apollo/client';
 import { Box, Button, Typography } from '@mui/material';
 import { ReportLabel } from '../../../components/PeriodicReports/ReportLabel';
 import {
-  ExecuteGtlReportTransitionDocument,
   type GtlReportDetailFragment,
+  TransitionGtlReportDocument,
 } from '../Detail/GtlReportDetail.graphql';
 
 /**
@@ -17,10 +17,8 @@ export const StartGtlReportPage = ({
 }: {
   report: GtlReportDetailFragment;
 }) => {
-  const [execute, { loading }] = useMutation(
-    ExecuteGtlReportTransitionDocument
-  );
-  const start = report.transitions.find((t) => t.label === 'Start');
+  const [execute, { loading }] = useMutation(TransitionGtlReportDocument);
+  const start = report.status.transitions.find((t) => t.label === 'Start');
 
   return (
     <Box
@@ -47,7 +45,8 @@ export const StartGtlReportPage = ({
         <Button
           variant="contained"
           size="large"
-          disabled={!start.canExecute || loading}
+          disabled={start.disabled || loading}
+          title={start.disabledReason ?? undefined}
           onClick={() =>
             void execute({
               variables: {

@@ -1,9 +1,7 @@
 fragment InternshipEngagementDetail on InternshipEngagement {
   ...Id
   ...EngagementBreadcrumb
-  programProgress {
-    value
-  }
+  programProgress
   currentGtlReportDue {
     value {
       id

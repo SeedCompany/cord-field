@@ -31,7 +31,6 @@ import {
   type GtlReportDetailFragment,
   UpdateGtlReportCommunityImpactResponseDocument,
 } from './GtlReportDetail.graphql';
-import { MediaCard } from './MediaCard';
 import { PracticumCard } from './PracticumCard';
 import { PrayerSummaryCard } from './PrayerSummaryCard';
 import { ProgressExplanationCard } from './ProgressExplanationCard';
@@ -136,16 +135,13 @@ export const GtlReportDetail = () => {
               engagementId={engagement.id}
             />
           )}
-          <MediaCard
-            reportId={report.id}
-            media={report.media}
-            editable={false}
-          />
-          <ProgressExplanationCard
-            reportId={report.id}
-            explanation={report.progressExplanation}
-            editable={false}
-          />
+          {report.progressExplanation && (
+            <ProgressExplanationCard
+              reportId={report.id}
+              explanation={report.progressExplanation}
+              editable={false}
+            />
+          )}
         </Stack>
       )}
 
@@ -164,7 +160,7 @@ const HeaderCard = ({
     { __typename?: 'InternshipEngagement' }
   > | null;
 }) => {
-  const progress = engagement?.programProgress.value ?? null;
+  const progress = engagement?.programProgress ?? null;
 
   return (
     <Card>
@@ -212,20 +208,21 @@ const HeaderCard = ({
           </ButtonLink>
         </Stack>
 
-        {report.transitions.length > 0 && (
+        {report.status.transitions.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />
             {/* Links, not actions. Executing from here would silently drop the
                 report's "additional comments" — the wizard's submit step owns
                 both halves, so there is one place a report moves from. */}
             <Stack direction="row" spacing={1} flexWrap="wrap">
-              {report.transitions.map((t) => (
+              {report.status.transitions.map((t) => (
                 <ButtonLink
                   key={t.key}
                   size="small"
                   variant={t.type === 'Approve' ? 'contained' : 'outlined'}
                   color={t.type === 'Reject' ? 'error' : 'primary'}
-                  disabled={!t.canExecute}
+                  disabled={t.disabled}
+                  title={t.disabledReason ?? undefined}
                   to={`/gtl-reports/${report.id}/edit?step=submit-report`}
                 >
                   {t.label}
