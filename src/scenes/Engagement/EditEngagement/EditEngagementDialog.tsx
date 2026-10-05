@@ -3,6 +3,7 @@ import { isNotFalsy, Many, many, mapKeys } from '@seedcompany/common';
 import { setIn } from 'final-form';
 import { pick, startCase } from 'lodash';
 import { ComponentType, useMemo } from 'react';
+import { useFormState } from 'react-final-form';
 import { Except, Merge } from 'type-fest';
 import { invalidateProps } from '~/api';
 import {
@@ -80,6 +81,31 @@ interface EngagementFieldProps {
   engagement: Engagement;
 }
 
+const DisbursementCompleteDateField = ({
+  props,
+  engagement,
+}: EngagementFieldProps) => {
+  const disbursementDateWarningText = `Date is after the project's end date. Confirm it's correct before saving.`;
+  const { values } = useFormState<EngagementFormValues>({
+    subscription: { values: true },
+  });
+
+  return (
+    <DateField
+      {...props}
+      label="Disbursement Complete Date"
+      warningText={
+        isDateAfter(
+          values.disbursementCompleteDate,
+          engagement.dateRange.value.end
+        )
+          ? disbursementDateWarningText
+          : undefined
+      }
+    />
+  );
+};
+
 const fieldMapping: Record<
   EditableEngagementField,
   ComponentType<EngagementFieldProps>
@@ -110,8 +136,8 @@ const fieldMapping: Record<
       }
     />
   ),
-  disbursementCompleteDate: ({ props }) => (
-    <DateField {...props} label="Disbursement Complete Date" />
+  disbursementCompleteDate: (fieldProps) => (
+    <DisbursementCompleteDateField {...fieldProps} />
   ),
   methodologies: ({ props }) => (
     <EnumField
