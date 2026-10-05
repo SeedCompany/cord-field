@@ -1,8 +1,0 @@
-mutation Register($input: RegisterUser!) {
-  register(input: $input) {
-    user {
-      ...LoggedInUser
-    }
-    powers
-  }
-}

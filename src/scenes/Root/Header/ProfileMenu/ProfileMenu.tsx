@@ -2,13 +2,10 @@ import { Box, Divider, Menu, Typography } from '@mui/material';
 import type { MenuProps } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import type { UIEvent } from 'react';
-import { useContext } from 'react';
-import { ImpersonationContext } from '~/api/client/ImpersonationContext';
 import { MenuItemLink } from '~/components/Routing';
 import { useSession } from '~/components/Session';
 import { NotificationList } from '../../Notifications';
 import type { UseNotifications } from '../../Notifications';
-import { ChangePasswordMenuItem } from './ChangePasswordMenuItem';
 import { ImpersonationMenuItem } from './ImpersonationDialog';
 import { ToggleUploadManagerMenuItem } from './ToggleUploadManagerMenuItem';
 
@@ -20,7 +17,6 @@ export interface ProfileMenuProps extends Partial<MenuProps> {
 export const ProfileMenu = ({ notifications, ...props }: ProfileMenuProps) => {
   const { spacing } = useTheme();
   const { session } = useSession();
-  const impersonation = useContext(ImpersonationContext);
 
   const userId = session?.id;
 
@@ -66,9 +62,6 @@ export const ProfileMenu = ({ notifications, ...props }: ProfileMenuProps) => {
       )}
       {userId && (
         <MenuItemLink to={`/users/${userId}`}>View Profile</MenuItemLink>
-      )}
-      {!impersonation.enabled && (
-        <ChangePasswordMenuItem onClick={handleCloseMenu} />
       )}
       <ToggleUploadManagerMenuItem onClick={handleCloseMenu} />
       <ImpersonationMenuItem onClick={handleCloseMenu} />
