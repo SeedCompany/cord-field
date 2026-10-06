@@ -35,7 +35,7 @@ ARG API_BASE_URL
 ENV RAZZLE_API_BASE_URL=$API_BASE_URL
 ARG MUI_X_LICENSE_KEY
 ENV MUI_X_LICENSE_KEY=$MUI_X_LICENSE_KEY
-RUN yarn gql-gen -e && yarn razzle build --noninteractive
+RUN yarn gql-gen -e && yarn build:bundle
 
 # Clear all downloaded libraries to reduce image size
 RUN yarn cache clean --all
