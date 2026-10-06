@@ -8224,6 +8224,7 @@ __metadata:
     "@typescript-eslint/types": "npm:^5.62.0"
     ahooks: "npm:^3.7.8"
     aws-sdk: "npm:2.1372.0"
+    babel-jest: "npm:^26.6.3"
     babel-loader: "npm:^8.3.0"
     babel-plugin-transform-imports: "npm:^2.0.0"
     babel-plugin-transform-rename-import: "npm:^2.3.0"
@@ -8259,6 +8260,7 @@ __metadata:
     html-webpack-plugin: "npm:^4.0.0"
     http-proxy-middleware: "npm:^2.0.6"
     husky: "npm:^9.1.7"
+    jest: "npm:^26.6.3"
     jest-express: "npm:^1.12.0"
     js-cookie: "npm:^3.0.5"
     lint-staged: "npm:^16.2.6"
@@ -13644,7 +13646,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^26.4.2":
+"jest@npm:^26.4.2, jest@npm:^26.6.3":
   version: 26.6.3
   resolution: "jest@npm:26.6.3"
   dependencies:
