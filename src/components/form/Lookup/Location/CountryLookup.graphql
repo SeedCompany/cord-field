@@ -1,0 +1,7 @@
+query CountryLookup($query: String!) {
+  search: locations(input: { filter: { name: $query, type: [Country] } }) {
+    items {
+      ...DisplayLocation
+    }
+  }
+}

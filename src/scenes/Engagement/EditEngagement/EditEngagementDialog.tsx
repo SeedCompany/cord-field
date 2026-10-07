@@ -36,8 +36,8 @@ import {
 } from '../../../components/form';
 import { AutocompleteField } from '../../../components/form/AutocompleteField';
 import {
+  CountryField,
   getLookupId,
-  LocationField,
   UserField,
 } from '../../../components/form/Lookup';
 import { UserLookupItemFragment } from '../../../components/form/Lookup/User/UserLookup.graphql';
@@ -145,7 +145,7 @@ const fieldMapping: Record<
     );
   },
   countryOfOrigin: ({ props }) => (
-    <LocationField {...props} label="Country of Origin" />
+    <CountryField {...props} label="Country of Origin" />
   ),
   mentor: ({ props }) => <UserField {...props} label="Mentor" />,
   firstScripture: ({ props }) => (
