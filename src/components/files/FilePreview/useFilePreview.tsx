@@ -18,6 +18,10 @@ export const useFilePreview = <X extends {} = Blob>(
     try {
       return parser ? await parser(raw) : (raw as any as X);
     } catch (e) {
+      // Previewers throw their own user-facing message; keep it.
+      if (e instanceof Error && e.message) {
+        throw e;
+      }
       console.error(e);
       throw new Error('Could not parse file');
     }
