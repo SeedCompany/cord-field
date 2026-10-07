@@ -14,6 +14,7 @@ import { EngagementDescription } from './Description';
 import { LanguageEngagementHeader } from './Header';
 import { LanguageEngagementMilestone } from './Milestone/Milestone';
 import { PlanningSpreadsheet } from './PlanningSpreadsheet';
+import { EngagementPrayerList } from './Prayer';
 
 const useStyles = makeStyles()(({ spacing, breakpoints }) => ({
   root: {
@@ -121,6 +122,9 @@ export const LanguageEngagementDetail = ({ engagement }: EngagementQuery) => {
             </Grid>
             <Grid item>
               <EngagementDescription engagement={engagement} />
+            </Grid>
+            <Grid item container direction="column">
+              <EngagementPrayerList engagement={engagement} />
             </Grid>
             <Grid item container spacing={2} alignItems="center">
               <Grid item component={Typography} variant="h3" paragraph>

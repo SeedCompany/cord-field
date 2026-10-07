@@ -1,0 +1,25 @@
+mutation CreateProgressReportNextQuarterPlans($input: ChoosePrompt!) {
+  createProgressReportNextQuarterPlans(input: $input) {
+    ...promptResponse
+    # Re-fetch the list so the new item joins the cached one, same as Team News.
+    parent {
+      ... on ProgressReport {
+        id
+        nextQuarterPlans {
+          ...Pagination
+          items {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateProgressReportNextQuarterPlansResponse(
+  $input: UpdatePromptVariantResponse!
+) {
+  updateProgressReportNextQuarterPlansResponse(input: $input) {
+    ...promptResponse
+  }
+}

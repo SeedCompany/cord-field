@@ -15,10 +15,16 @@ mutation DeleteMedia($deleteProgressReportMediaId: ID!) {
   }
 }
 
+mutation ReuseMedia($input: ReuseProgressReportMedia!) {
+  reuseProgressReportMedia(input: $input) {
+    ...mediaStep
+  }
+}
+
 fragment mediaStep on ProgressReport {
   id
   sensitivity
-  media(input: { sort: "createdAt", order: ASC }) {
+  media(input: { sort: "createdAt", order: ASC, count: 100 }) {
     items {
       ...progressReportMedia
     }

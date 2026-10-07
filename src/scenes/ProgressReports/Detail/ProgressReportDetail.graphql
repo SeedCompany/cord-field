@@ -8,6 +8,13 @@ fragment ProgressReportDetail on ProgressReport {
   ...PeriodicReport
   parent {
     ...EngagementBreadcrumb
+    ... on LanguageEngagement {
+      posts(input: { count: 25, filter: { types: [Prayer] } }) {
+        items {
+          ...ProgressReportPrayerSummary
+        }
+      }
+    }
   }
   status {
     value
@@ -27,11 +34,52 @@ fragment ProgressReportDetail on ProgressReport {
   communityStories {
     ...promptResponseList
   }
+  otherActivities {
+    ...promptResponseList
+  }
+  nextQuarterPlans {
+    ...promptResponseList
+  }
+  media(input: { count: 100, sort: "createdAt", order: ASC }) {
+    items {
+      ...ProgressReportMediaSummary
+    }
+  }
   varianceExplanation {
     ...varianceExplanation
   }
   workflowEvents {
     ...workflowEvent
+  }
+}
+
+fragment ProgressReportPrayerSummary on Post {
+  id
+  body {
+    value
+  }
+  effectiveShareability
+  featured {
+    value
+  }
+  report {
+    value {
+      id
+    }
+  }
+}
+
+fragment ProgressReportMediaSummary on ProgressReportMedia {
+  id
+  variantGroup
+  variant {
+    key
+  }
+  media {
+    __typename
+    ... on Image {
+      url
+    }
   }
 }
 

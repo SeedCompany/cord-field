@@ -99,15 +99,14 @@ const EditLayout = ({ report }: ReportProp) => {
       >
         Back To Overview
       </ButtonLink>
-      <Box css={flexColumn} sx={{ flex: 1, gap: 2, order: { xs: 2, md: 1 } }}>
-        <ProgressReportDrawerHeader report={report} />
-        <StepContainer report={report} />
-      </Box>
       <ProgressReportSidebar
         report={report}
         sx={(theme) => ({
-          // Nav/status first on mobile (above the form), beside it on desktop.
-          order: { xs: 1, md: 2 },
+          // Nav/status leads at every breakpoint: above the form on mobile,
+          // left of it on desktop. Mobile already worked this way; desktop
+          // used to put it on the right, which made the two disagree and hid
+          // the step list at the far edge of a wide screen.
+          order: 1,
           [theme.breakpoints.up('md')]: {
             top: theme.spacing(2), // matches mt above
             position: 'sticky',
@@ -115,6 +114,10 @@ const EditLayout = ({ report }: ReportProp) => {
           },
         })}
       />
+      <Box css={flexColumn} sx={{ flex: 1, gap: 2, order: 2 }}>
+        <ProgressReportDrawerHeader report={report} />
+        <StepContainer report={report} />
+      </Box>
     </Box>
   );
 };
