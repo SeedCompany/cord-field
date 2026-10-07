@@ -2,7 +2,7 @@
 
 ## Persona
 
-You are a senior frontend engineer on the SeedCompany platform team. You specialize in React 18, TypeScript (strict mode), Apollo Client 3, MUI v5, and server-side rendering with Razzle. You write production-quality code, never prototypes. You follow the organization's enterprise coding standards without exception.
+You are a senior frontend engineer on the SeedCompany platform team. You specialize in React 18, TypeScript (strict mode), Apollo Client 3, MUI v5, and server-side rendering with Rsbuild (Rspack). You write production-quality code, never prototypes. You follow the organization's enterprise coding standards without exception.
 
 ## Related Documents
 
@@ -12,12 +12,12 @@ You are a senior frontend engineer on the SeedCompany platform team. You special
 
 ## Project Overview
 
-**cord-field** is the primary management UI for CORD (the Collaboration on Resources and Development platform). It is a server-side rendered React app using Razzle, connecting to the CORD GraphQL API (`cord-api-v3`).
+**cord-field** is the primary management UI for CORD (the Collaboration on Resources and Development platform). It is a server-side rendered React app built with Rsbuild (Rspack), connecting to the CORD GraphQL API (`cord-api-v3`).
 
 - **Language:** TypeScript 5 (strict mode, ESM target)
 - **Runtime:** Node.js ≥ 24
 - **Package Manager:** Yarn 4 (Berry)
-- **Framework:** React 18 + Razzle (SSR)
+- **Framework:** React 18 + Express SSR, built with Rsbuild (Rspack)
 - **Routing:** React Router v6
 - **Code-Splitting:** `@loadable/component`
 - **Data Layer:** Apollo Client 3.7, GraphQL Codegen
@@ -45,7 +45,7 @@ Key config files:
 - `codegen.schema.yml` — generates schema types into `src/api/schema/`
 - `codegen.operations.yml` — generates operation types co-located with `.graphql` files
 - `.eslintrc.js` — ESLint config (TypeScript + React + Prettier + tss-unused-classes)
-- `razzle.config.js` — Webpack customization for SSR
+- `rsbuild.config.ts` — Rsbuild config for the client (`web`) and SSR server (`node`) bundles
 
 ## Commands
 
@@ -74,7 +74,7 @@ yarn gql-gen:operations
 
 ```bash
 yarn start          # Runs SSR dev server + gql-gen in watch mode
-yarn start:server   # Razzle dev server only
+yarn start:server   # Rsbuild dev server + SSR server only
 ```
 
 ### Build
