@@ -1,0 +1,12 @@
+fragment notificationProjectTransition on ProjectTransitionNotification {
+  workflowEvent {
+    id
+    to
+    project {
+      id
+      name {
+        value
+      }
+    }
+  }
+}
