@@ -34,10 +34,6 @@ export const ScriptureReferencesSection = ({
   const { scriptureReferences, book, bookSelection, unspecifiedScripture } =
     values;
 
-  if (values.productType === 'Other') {
-    return null;
-  }
-
   return (
     <DefaultAccordion
       {...accordionState}
