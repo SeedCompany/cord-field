@@ -4254,7 +4254,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@seedcompany/common@npm:^1.2.1":
+"@seedcompany/common@npm:1.2.1":
   version: 1.2.1
   resolution: "@seedcompany/common@npm:1.2.1"
   dependencies:
@@ -4301,6 +4301,16 @@ __metadata:
     react-dom:
       optional: true
   checksum: 10c0/ac1af2f51dc065f26d576b2118a009ec6b980ec74a21326721ee5bf33669cdcf5884d6487dec1518bdb05f036e7e6c7fa4c2602c316c3ea4c5cbebdbad3826dd
+  languageName: node
+  linkType: hard
+
+"@seedcompany/scripture@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@seedcompany/scripture@npm:1.0.0"
+  dependencies:
+    "@seedcompany/common": "npm:^1.0.0"
+    type-fest: "npm:^5.0.1"
+  checksum: 10c0/597b1a228fddbcfd937c6a5936a8a554aa6768e681791aa8786753a0ec85dc6ec2f3551eed303b44157ac7e517f6de2d1411ba4594813c9e79fd5cf3870c6d31
   languageName: node
   linkType: hard
 
@@ -8187,6 +8197,7 @@ __metadata:
     "@react-editor-js/server": "npm:^2.1.0"
     "@seedcompany/common": "npm:^1.2.1"
     "@seedcompany/eslint-plugin": "npm:^3.4.1"
+    "@seedcompany/scripture": "npm:^1.0.0"
     "@testing-library/dom": "npm:^8.20.1"
     "@testing-library/jest-dom": "npm:^5.17.0"
     "@testing-library/react": "npm:^13.4.0"
