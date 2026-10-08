@@ -5,12 +5,7 @@ import { useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
-import {
-  callAll,
-  getFullBookRange,
-  isFullBookRange,
-  removeScriptureTypename,
-} from '~/common';
+import { callAll, removeScriptureTypename } from '~/common';
 import { handleFormError, removeItemFromList } from '../../../api';
 import { useChangesetAwareIdFromUrl } from '../../../components/Changeset';
 import { EngagementBreadcrumb } from '../../../components/EngagementBreadcrumb';
@@ -21,6 +16,11 @@ import {
   ProductFormValues,
 } from '../ProductForm';
 import { UpdatePartnershipsProducingMediumsDocument } from '../ProductForm/PartnershipsProducingMediums.graphql';
+import {
+  toScriptureBooks,
+  toScriptureReferences,
+  toUnspecifiedScripture,
+} from '../ProductForm/scriptureBooks';
 import { ProductLoadError } from '../ProductLoadError';
 import {
   DeleteProductDocument,
@@ -100,38 +100,17 @@ export const EditProduct = () => {
         ? product.unspecifiedScripture.value
         : null;
 
-    const book =
-      (product.__typename === 'DirectScriptureProduct'
-        ? product.unspecifiedScripture.value?.book
-        : undefined) ?? scriptureReferences[0]?.start.book;
-
-    const versesOnly = !!(
-      product.__typename === 'DirectScriptureProduct' &&
-      product.unspecifiedScripture.value
-    );
-    const bookSelection = versesOnly
-      ? 'partialUnknown'
-      : scriptureReferences.length > 0 && book
-      ? isFullBookRange(scriptureReferences[0], book)
-        ? 'full'
-        : 'partialKnown'
-      : 'full';
-
     const values: ProductFormValues = {
       mediums: mediums.value,
       methodology: methodology.value,
       steps: product.steps.value,
       describeCompletion: product.describeCompletion.value,
-      scriptureReferences: scriptureReferences,
-      book: book,
-      bookSelection: bookSelection,
+      scriptureBooks: toScriptureBooks(
+        scriptureReferences,
+        unspecifiedScripture
+      ),
       progressStepMeasurement: progressStepMeasurement.value,
       progressTarget: progressTarget.value,
-      unspecifiedScripture: unspecifiedScripture
-        ? {
-            totalVerses: unspecifiedScripture.totalVerses,
-          }
-        : undefined,
       title: '',
       ...(product.__typename === 'DirectScriptureProduct'
         ? {
@@ -194,22 +173,14 @@ export const EditProduct = () => {
       const {
         productType,
         produces,
-        scriptureReferences,
-        book,
+        scriptureBooks,
         title,
         description,
-        bookSelection,
-        unspecifiedScripture,
         producingMediums,
         ...input
       } = data;
 
-      const parsedScriptureReferences =
-        bookSelection === 'partialUnknown'
-          ? []
-          : bookSelection === 'full' && book
-          ? [getFullBookRange(book)]
-          : scriptureReferences;
+      const scriptureInput = toScriptureReferences(scriptureBooks);
       if (productType === 'Other') {
         await updateOtherProduct({
           variables: {
@@ -218,7 +189,7 @@ export const EditProduct = () => {
               ...input,
               title,
               description,
-              scriptureReferences: parsedScriptureReferences,
+              scriptureReferences: scriptureInput,
             },
           },
         });
@@ -228,16 +199,8 @@ export const EditProduct = () => {
             input: {
               id: product.id,
               ...input,
-              scriptureReferences: parsedScriptureReferences,
-              unspecifiedScripture:
-                bookSelection !== 'partialUnknown' ||
-                !book ||
-                !unspecifiedScripture?.totalVerses
-                  ? null
-                  : {
-                      book,
-                      ...unspecifiedScripture,
-                    },
+              scriptureReferences: scriptureInput,
+              unspecifiedScripture: toUnspecifiedScripture(scriptureBooks),
             },
           },
         });
@@ -248,7 +211,7 @@ export const EditProduct = () => {
               id: product.id,
               ...input,
               produces: produces!.id,
-              scriptureReferencesOverride: parsedScriptureReferences,
+              scriptureReferencesOverride: scriptureInput,
             },
           },
         });
