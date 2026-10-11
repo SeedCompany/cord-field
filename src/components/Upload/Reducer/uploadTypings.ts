@@ -10,6 +10,7 @@ export interface FileInput {
   file: File;
   fileName: string;
   callback?: UploadCallback;
+  error?: Error;
 }
 
 export interface UploadFile {
