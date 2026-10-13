@@ -7,6 +7,7 @@ import {
   OrganizationField,
   OrganizationLookupItem,
 } from '../../../components/form/Lookup/Organization';
+import { DeferredCreateOrganization } from './draftOrganization';
 
 export interface PartnerFormValues {
   orgLookup: OrganizationLookupItem;
@@ -23,6 +24,7 @@ export const CreatePartnerForm = <R extends any>(
       name="orgLookup"
       label="Organization"
       placeholder="Enter organization name"
+      CreateDialogForm={DeferredCreateOrganization}
       required
     />
   </DialogForm>

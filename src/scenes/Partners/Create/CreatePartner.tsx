@@ -3,11 +3,13 @@ import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
+import { CreateOrganizationDocument } from '../../Organizations/Create/CreateOrganization.graphql';
 import {
   CreatePartnerDocument,
   CreatePartnerMutation,
 } from './CreatePartner.graphql';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
+import { isDraftOrganization } from './draftOrganization';
 
 type SubmitResult = CreatePartnerMutation['createPartner']['partner'];
 type CreatePartnerProps = Except<
@@ -22,7 +24,15 @@ export const CreatePartner = (props: CreatePartnerProps) => {
       outputToItem: (data) => data.createPartner.partner,
     }),
   });
+  const [createOrganization] = useMutation(CreateOrganizationDocument);
   const { enqueueSnackbar } = useSnackbar();
+
+  async function createOrgFromDraft(name: string) {
+    const { data } = await createOrganization({
+      variables: { input: { name } },
+    });
+    return data!.createOrganization.organization.id;
+  }
 
   return (
     <CreatePartnerForm<SubmitResult>
@@ -40,7 +50,10 @@ export const CreatePartner = (props: CreatePartnerProps) => {
         )
       }
       {...props}
-      onSubmit={async ({ orgLookup: { id: organization } }) => {
+      onSubmit={async ({ orgLookup }) => {
+        const organization = isDraftOrganization(orgLookup)
+          ? await createOrgFromDraft(orgLookup.name.value ?? '')
+          : orgLookup.id;
         const { data } = await createPartner({
           variables: {
             input: {
