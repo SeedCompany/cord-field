@@ -57,7 +57,7 @@ export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
         progress={spinner && sb.submitting}
         ref={ref}
       >
-        {Children.count(children) ? children : 'Submit'}
+        {Children.count(children) ? children : 'Save'}
       </ProgressButton>
     );
   }

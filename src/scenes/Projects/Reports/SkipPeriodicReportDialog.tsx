@@ -46,6 +46,7 @@ export const SkipPeriodicReportDialog = ({
       title={`${
         report.skippedReason.value ? 'Edit Skip Reason' : 'Skip Report'
       }`}
+      submitLabel={report.skippedReason.value ? 'Save' : 'Skip'}
       initialValues={initialValues}
       sendIfClean="unskip"
       onSubmit={async ({ skippedReason, submitAction }) => {

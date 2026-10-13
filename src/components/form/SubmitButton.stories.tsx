@@ -25,7 +25,7 @@ export const Styles = () => (
             'contained'
           )}
         >
-          {text('Label', 'Submit')}
+          {text('Label', 'Save')}
         </SB>
       </form>
     )}

@@ -46,7 +46,7 @@ export const UpdateComment = ({
       }}
       initialValues={initialValues}
       sendIfClean
-      submitLabel="Update"
+      submitLabel="Save"
     />
   );
 };
