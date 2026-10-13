@@ -4,7 +4,7 @@ import type { Options as DocxOptions } from 'docx-preview';
 import { useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { PreviewerProps } from '../FilePreview';
-import { useFilePreview } from '../useFilePreview';
+import { FilePreviewError, useFilePreview } from '../useFilePreview';
 import type { LegacyWordDocument } from './legacyWord';
 import { LegacyWordView } from './LegacyWordView';
 
@@ -37,7 +37,7 @@ const parseWord = async (blob: Blob): Promise<WordContent> => {
   const data = await blob.arrayBuffer();
   const format = sniffFormat(new Uint8Array(data).subarray(0, 8));
   if (!format) {
-    throw new Error("This isn't a Word, RTF or Word 97 file");
+    throw new FilePreviewError("This isn't a Word, RTF or Word 97 file");
   }
   try {
     switch (format) {
@@ -57,7 +57,7 @@ const parseWord = async (blob: Blob): Promise<WordContent> => {
     }
   } catch (e) {
     console.error(e);
-    throw new Error('Could not read document file');
+    throw new FilePreviewError('Could not read document file');
   }
 };
 

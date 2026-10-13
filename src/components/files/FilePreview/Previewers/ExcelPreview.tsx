@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
 import { PreviewerProps } from '../FilePreview';
-import { useFilePreview } from '../useFilePreview';
+import { FilePreviewError, useFilePreview } from '../useFilePreview';
 import {
   jsonToTableRows,
   SheetData,
@@ -88,7 +88,7 @@ async function extractExcelData(file: Blob): Promise<SheetData[]> {
     };
   });
   if (data.length === 0) {
-    throw new Error('Could not read spreadsheet data');
+    throw new FilePreviewError('Could not read spreadsheet data');
   }
   return data;
 }

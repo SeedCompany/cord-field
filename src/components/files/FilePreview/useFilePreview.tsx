@@ -3,6 +3,9 @@ import { useCallback } from 'react';
 import useSWR from 'swr';
 import { NonDirectoryActionItem } from '../FileActions';
 
+/** A parse failure whose message is written for the user, so it's shown as is. */
+export class FilePreviewError extends Error {}
+
 export const useFilePreview = <X extends {} = Blob>(
   file: NonDirectoryActionItem,
   parser?: (data: Blob) => MaybeAsync<X>
@@ -18,8 +21,7 @@ export const useFilePreview = <X extends {} = Blob>(
     try {
       return parser ? await parser(raw) : (raw as any as X);
     } catch (e) {
-      // Previewers throw their own user-facing message; keep it.
-      if (e instanceof Error && e.message) {
+      if (e instanceof FilePreviewError) {
         throw e;
       }
       console.error(e);

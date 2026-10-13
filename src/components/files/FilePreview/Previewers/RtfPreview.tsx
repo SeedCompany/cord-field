@@ -1,7 +1,7 @@
 import * as rtfToHTML from '@iarna/rtf-to-html';
 import parse from 'html-react-parser';
 import { PreviewerProps } from '../FilePreview';
-import { useFilePreview } from '../useFilePreview';
+import { FilePreviewError, useFilePreview } from '../useFilePreview';
 
 export const RtfPreview = ({ file }: PreviewerProps) => {
   const html = useFilePreview(file, async (blob) => {
@@ -9,7 +9,7 @@ export const RtfPreview = ({ file }: PreviewerProps) => {
       return await parseRtf(await blob.text());
     } catch (e) {
       console.error(e);
-      throw new Error('Could not read document file');
+      throw new FilePreviewError('Could not read document file');
     }
   });
 
