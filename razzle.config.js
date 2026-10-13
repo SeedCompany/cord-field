@@ -6,6 +6,10 @@ const { TsconfigPathsPlugin } = require('tsconfig-paths-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const DynamicPublicPathPlugin = require('webpack-dynamic-public-path');
 
+// docx-preview only declares an `exports` map, which webpack 4 cannot read,
+// so point straight at its ESM build.
+const docxPreviewEsm = require.resolve('docx-preview').replace(/\.js$/, '.mjs');
+
 const modifyWebpackOptions = ({
   options: { webpackOptions: options },
   env,
@@ -23,6 +27,7 @@ const modifyWebpackOptions = ({
   options.babelRule.include.push(
     require.resolve('@seedcompany/common').replace('.cjs', '.js'),
     require.resolve('@editorjs/editorjs').replace('.umd.js', '.mjs'),
+    docxPreviewEsm,
     (path) =>
       path.includes('/@mui-') ||
       path.includes('reactflow') ||
@@ -42,6 +47,7 @@ const modifyWebpackConfig = (opts) => {
   config.resolve.plugins.push(new TsconfigPathsPlugin());
 
   config.resolve.alias['@seedcompany/common'] = '@seedcompany/common/index.js';
+  config.resolve.alias['docx-preview'] = docxPreviewEsm;
 
   const define = (key, value) => {
     opts.options.webpackOptions.definePluginOptions[key] = value;

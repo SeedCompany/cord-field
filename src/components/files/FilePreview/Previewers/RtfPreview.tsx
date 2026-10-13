@@ -1,22 +1,24 @@
 import * as rtfToHTML from '@iarna/rtf-to-html';
 import parse from 'html-react-parser';
 import { PreviewerProps } from '../FilePreview';
-import { useFilePreview } from '../useFilePreview';
+import { FilePreviewError, useFilePreview } from '../useFilePreview';
 
 export const RtfPreview = ({ file }: PreviewerProps) => {
   const html = useFilePreview(file, async (blob) => {
-    const rtfStr = await blob.text();
     try {
-      const htmlStr = await parseRtlToHtml(rtfStr, rtfOptions);
-      return parse(htmlStr);
+      return await parseRtf(await blob.text());
     } catch (e) {
       console.error(e);
-      throw new Error('Could not read document file');
+      throw new FilePreviewError('Could not read document file');
     }
   });
 
   return <div style={{ width: '80ch' }}>{html}</div>;
 };
+
+/** RTF text to React nodes. Shared with the Word previewer for mis-tagged files. */
+export const parseRtf = async (rtfStr: string) =>
+  parse(await parseRtlToHtml(rtfStr, rtfOptions));
 
 // eslint-disable-next-line import/no-default-export
 export default RtfPreview;

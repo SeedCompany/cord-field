@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useIsMobile } from '~/common';
 import { NonDirectoryActionItem } from '../FileActions';
 import { getFileComponents } from '../fileTypes';
 import { PreviewError } from './PreviewError';
@@ -21,11 +22,17 @@ export interface PreviewerProps {
 interface FilePreviewProps extends DialogProps, Pick<PreviewerProps, 'file'> {}
 
 export const FilePreview = ({ file, ...props }: FilePreviewProps) => {
+  const isMobile = useIsMobile();
   const handleClose = () => {
     props.onClose?.({}, 'backdropClick');
   };
   return (
-    <Dialog {...props} maxWidth={false} aria-labelledby="dialog-file-preview">
+    <Dialog
+      {...props}
+      maxWidth={false}
+      fullScreen={isMobile}
+      aria-labelledby="dialog-file-preview"
+    >
       <DialogTitle id="dialog-file-preview">{file.name}</DialogTitle>
       <DialogContent>
         <Previewer file={file} onClose={handleClose} />
