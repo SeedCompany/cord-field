@@ -1,4 +1,5 @@
 import BufferReader from 'word-extractor/lib/buffer-reader';
+import type OleCompoundDoc from 'word-extractor/lib/ole-compound-doc';
 import WordOleExtractor from 'word-extractor/lib/word-ole-extractor';
 
 /** A table cell is a list of paragraphs. */
@@ -27,6 +28,13 @@ export const parseLegacyWord = async (
   data: ArrayBuffer
 ): Promise<LegacyWordDocument> => {
   const extractor = new WordOleExtractor();
+  // `extract` fetches each OLE stream through these two methods. The library's
+  // own versions go through Node's `stream` module; reading the sector chain
+  // directly avoids that polyfill in the browser. See `readStream` for the
+  // other browser difference this works around.
+  extractor.documentStream = async (document, streamName) =>
+    await readStream(document, streamName);
+  extractor.streamBuffer = async (buffer) => buffer as Buffer;
   const document = await extractor.extract(new BufferReader(Buffer.from(data)));
   // The library's getters fold cell and row marks into tabs and newlines,
   // which makes tables unrecoverable. Its piece table still has the marks,
@@ -47,6 +55,25 @@ export const parseLegacyWord = async (
         document.getEndnotes({ filterUnicode: false })
     ),
   };
+};
+
+const readStream = async (document: OleCompoundDoc, name: string) => {
+  const { streams } = document._rootStorage._dirEntry;
+  // The library decodes entry names as UTF-16 from an odd byte count. Node's
+  // Buffer drops the odd byte; webpack's browser polyfill decodes it as a
+  // trailing NUL, so in the browser every stream is named "WordDocument\0".
+  // That is why .doc previews failed in the browser while passing in Node.
+  const entry = streams[name] ?? streams[`${name}\0`];
+  if (!entry) {
+    throw new Error(`Missing ${name} stream`);
+  }
+  const isShort = entry.size < document._header.shortStreamMax;
+  const table = isShort ? document._SSAT : document._SAT;
+  const secIds = table.getSecIdChain(entry.secId);
+  const sectors = isShort
+    ? await document._readShortSectors(secIds)
+    : await document._readSectors(secIds);
+  return sectors.slice(0, entry.size);
 };
 
 /**
