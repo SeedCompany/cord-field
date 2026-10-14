@@ -6,8 +6,7 @@ import { usePostHog } from 'posthog-js/react';
 import { createContext, useContext } from 'react';
 import { SessionOutput } from '~/api/schema.graphql';
 import { ChildrenProp } from '~/common';
-import { LoginMutation } from '../../scenes/Authentication/Login/Login.graphql';
-import { RegisterMutation } from '../../scenes/Authentication/Register/register.graphql';
+import { LoginWithAuth0Mutation } from '../../scenes/Authentication/Callback/callback.graphql';
 import {
   FeaturesFragment as BetaFeatures,
   LoggedInUserFragment,
@@ -40,7 +39,7 @@ export const useSession = () => {
   return { session, sessionLoading, impersonator, powers, betaFeatures };
 };
 
-export const updateSessionCache = <T extends LoginMutation | RegisterMutation>(
+export const updateSessionCache = <T extends LoginWithAuth0Mutation>(
   cache: ApolloCache<T>,
   sessionData: { user: LoggedInUserFragment; powers?: SessionOutput['powers'] }
 ) => {

@@ -1,0 +1,8 @@
+mutation LoginWithAuth0($input: LoginWithAuth0Input!) {
+  loginWithAuth0(input: $input) {
+    user {
+      ...LoggedInUser
+    }
+    powers
+  }
+}

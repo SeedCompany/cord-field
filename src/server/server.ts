@@ -116,7 +116,22 @@ export const create = async () => {
       .mutate({
         mutation: LogoutDocument,
       })
-      .then(() => res.redirect('login'))
+      .then(() => {
+        const domain = process.env.RAZZLE_AUTH0_DOMAIN;
+        const clientId = process.env.RAZZLE_AUTH0_CLIENT_ID;
+        // Fall back to the plain redirect if Auth0 isn't configured yet in
+        // this environment (e.g. local dev before the Auth0 application
+        // exists), so this route isn't broken in the meantime.
+        if (!domain || !clientId) {
+          res.redirect('login');
+          return;
+        }
+        const origin = `${req.protocol}://${req.get('host')}${BASE_PATH}`;
+        const returnTo = encodeURIComponent(`${origin}/login`);
+        res.redirect(
+          `https://${domain}/v2/logout?client_id=${clientId}&returnTo=${returnTo}`
+        );
+      })
       .catch((e) => next(e));
   });
 
