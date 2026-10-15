@@ -38,9 +38,9 @@ import {
   TextField,
 } from '../../../components/form';
 import {
+  CountryField,
   FieldRegionField,
   LanguageField,
-  LocationField,
   UserField,
   UserLookupItem,
 } from '../../../components/form/Lookup';
@@ -137,7 +137,7 @@ const fieldMapping = {
     />
   ),
   'partner.countries': ({ props }) => (
-    <LocationField {...props} label="Countries" multiple variant="outlined" />
+    <CountryField {...props} label="Countries" multiple variant="outlined" />
   ),
   'partner.languageOfReporting': ({ props }) => (
     <LanguageField
