@@ -14,3 +14,20 @@ mutation CreatePartner($input: CreatePartner!) {
     }
   }
 }
+
+mutation CreatePartnerWithOrganization($input: CreatePartnerWithOrganization!) {
+  createPartnerWithOrganization(input: $input) {
+    partner {
+      id
+      organization {
+        value {
+          name {
+            value
+          }
+        }
+      }
+      ...PartnerListItem
+      ...PartnerLookupItem
+    }
+  }
+}
