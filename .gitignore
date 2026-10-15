@@ -41,5 +41,3 @@ Thumbs.db
 /schema.graphql
 *.generated.ts
 *.graphql.ts
-
-bin/dist
