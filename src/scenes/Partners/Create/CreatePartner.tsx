@@ -2,10 +2,12 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
+import { isDraftOrganization } from '../../../components/form/Lookup/Organization';
 import { ButtonLink } from '../../../components/Routing';
 import {
   CreatePartnerDocument,
   CreatePartnerMutation,
+  CreatePartnerWithOrganizationDocument,
 } from './CreatePartner.graphql';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
@@ -22,6 +24,15 @@ export const CreatePartner = (props: CreatePartnerProps) => {
       outputToItem: (data) => data.createPartner.partner,
     }),
   });
+  const [createPartnerWithOrganization] = useMutation(
+    CreatePartnerWithOrganizationDocument,
+    {
+      update: addItemToList({
+        listId: 'partners',
+        outputToItem: (data) => data.createPartnerWithOrganization.partner,
+      }),
+    }
+  );
   const { enqueueSnackbar } = useSnackbar();
 
   return (
@@ -40,11 +51,22 @@ export const CreatePartner = (props: CreatePartnerProps) => {
         )
       }
       {...props}
-      onSubmit={async ({ orgLookup: { id: organization } }) => {
+      onSubmit={async ({ orgLookup }) => {
+        if (isDraftOrganization(orgLookup)) {
+          const { data } = await createPartnerWithOrganization({
+            variables: {
+              input: {
+                organization: { name: orgLookup.name.value ?? '' },
+                partner: {},
+              },
+            },
+          });
+          return data!.createPartnerWithOrganization.partner;
+        }
         const { data } = await createPartner({
           variables: {
             input: {
-              organization,
+              organization: orgLookup.id,
             },
           },
         });
