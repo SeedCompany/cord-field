@@ -4,6 +4,7 @@ import {
 } from '../../../components/Dialog/DialogForm';
 import { SubmitError } from '../../../components/form';
 import {
+  DraftOrganization,
   OrganizationField,
   OrganizationLookupItem,
 } from '../../../components/form/Lookup/Organization';
@@ -23,6 +24,7 @@ export const CreatePartnerForm = <R extends any>(
       name="orgLookup"
       label="Organization"
       placeholder="Enter organization name"
+      CreateDialogForm={DraftOrganization}
       required
     />
   </DialogForm>
