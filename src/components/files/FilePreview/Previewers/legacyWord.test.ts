@@ -50,4 +50,33 @@ describe('blocksFromText', () => {
       { type: 'paragraph', text: 'Gone kept' },
     ]);
   });
+
+  it('splits rows whose row end was read as an empty cell', () => {
+    // Header and first row ran together; the row end between them is the
+    // empty third cell. The second row's end was found.
+    expect(
+      blocksFromText('A\x07B\x07\x07a1\x07b1\x07\nc1\x07d1\x07\n')
+    ).toEqual([
+      {
+        type: 'table',
+        rows: [
+          [['A'], ['B']],
+          [['a1'], ['b1']],
+          [['c1'], ['d1']],
+        ],
+      },
+    ]);
+  });
+
+  it('keeps a wide row whole when a row end would fall on a filled cell', () => {
+    expect(blocksFromText('A\x07B\x07C\x07D\x07E\x07\nf\x07g\x07\n')).toEqual([
+      {
+        type: 'table',
+        rows: [
+          [['A'], ['B'], ['C'], ['D'], ['E']],
+          [['f'], ['g']],
+        ],
+      },
+    ]);
+  });
 });

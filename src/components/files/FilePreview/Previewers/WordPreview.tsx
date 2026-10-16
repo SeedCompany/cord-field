@@ -135,6 +135,10 @@ const deskStyles = (theme: { palette: { mode: string } }) => ({
     fontFamily: '"Times New Roman", Times, serif',
     fontSize: '12pt',
     lineHeight: 1.3,
+    // Word wraps fill-in lines ("Name: ____Jane____________") and long URLs
+    // at the margin; without this they'd push the page, and its tables,
+    // wider than the sheet.
+    overflowWrap: 'anywhere',
   },
 });
 

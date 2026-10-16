@@ -97,7 +97,7 @@ export const blocksFromText = (text: string): LegacyWordBlock[] => {
 
   const endTable = () => {
     if (rows.length > 0) {
-      blocks.push({ type: 'table', rows });
+      blocks.push({ type: 'table', rows: splitRunOnRows(rows) });
       rows = [];
     }
   };
@@ -152,6 +152,39 @@ export const blocksFromText = (text: string): LegacyWordBlock[] => {
   }
   endBodyParagraphs();
   return blocks.map(cleanBlock);
+};
+
+/**
+ * The library finds a row's end from a paragraph property it doesn't always
+ * reach, and a missed one is left as a plain cell mark. That row then runs
+ * on into the next, with one extra empty cell where the row ended: a 7-wide
+ * table's header and next row read as 15 cells, the 8th empty.
+ *
+ * A row is split back apart when it's a whole number of (width + 1) cells
+ * longer than another of the table's widths and every cell where a row would
+ * have ended is empty. Widths under 2 aren't tried: in a one-column table
+ * any row with an empty middle cell would match.
+ */
+const splitRunOnRows = (rows: LegacyWordCell[][]): LegacyWordCell[][] => {
+  const widths = [...new Set(rows.map((cells) => cells.length))]
+    .filter((width) => width >= 2)
+    .sort((a, b) => a - b);
+  return rows.flatMap((cells) => {
+    const width = widths.find(
+      (w) =>
+        w < cells.length &&
+        (cells.length - w) % (w + 1) === 0 &&
+        cells.every(
+          (cell, i) => i % (w + 1) !== w || cell.every((text) => text === '')
+        )
+    );
+    if (!width) {
+      return [cells];
+    }
+    return Array.from({ length: (cells.length + 1) / (width + 1) }, (_, n) =>
+      cells.slice(n * (width + 1), n * (width + 1) + width)
+    );
+  });
 };
 
 /**
