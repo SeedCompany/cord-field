@@ -7,6 +7,11 @@ import {
   Typography,
 } from '@mui/material';
 import { mapEntries } from '@seedcompany/common';
+import {
+  labelOfVerseRange,
+  splitRangeByBook,
+  Verse,
+} from '@seedcompany/scripture';
 import { ReactNode } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import { ProductMediumLabels, ProductStepLabels } from '~/api/schema.graphql';
@@ -106,11 +111,13 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
         value={
           product && product.scriptureReferences.value.length > 0 ? (
             <List disablePadding>
-              {product.scriptureReferences.value.map((ref, i) => (
-                <ListItem key={i} disableGutters>
-                  {ref.label}
-                </ListItem>
-              ))}
+              {scriptureLabelsByBook(product.scriptureReferences.value).map(
+                (label, i) => (
+                  <ListItem key={i} disableGutters>
+                    {label}
+                  </ListItem>
+                )
+              )}
             </List>
           ) : null
         }
@@ -142,6 +149,20 @@ export const ProductInfo = ({ product }: { product?: Product }) => {
     </>
   );
 };
+
+/**
+ * Labels the goal's scripture with one label per book.
+ *
+ * The API merges ranges that touch, so a range can cross books. The edit
+ * form shows one entry per book, and this matches it.
+ */
+function scriptureLabelsByBook(
+  scriptureReferences: Product['scriptureReferences']['value']
+) {
+  return scriptureReferences
+    .flatMap((ref) => splitRangeByBook(Verse.fromRef(ref.start).to(ref.end)))
+    .map((range) => labelOfVerseRange(range));
+}
 
 const infoWrapper = (node: ReactNode) => (
   <Grid item md={12}>

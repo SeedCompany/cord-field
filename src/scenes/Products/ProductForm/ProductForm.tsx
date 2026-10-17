@@ -1,4 +1,4 @@
-import { Decorator } from 'final-form';
+import { Decorator, getIn } from 'final-form';
 import onFieldChange from 'final-form-calculate';
 import { Form, FormProps } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
@@ -56,6 +56,12 @@ export type ProductFormProps = FormProps<ProductFormValues> & {
   engagement: EditPartnershipsProducingMediumsInfoFragment;
 };
 
+// Strips a scripture book entry's field suffix (e.g. `.book`, `.bookSelection`)
+// to get the entry name, such as `scriptureBooks.book1`.
+function scriptureBookEntryName(field: string, suffix: string) {
+  return field.replace(new RegExp(`\\.${suffix}$`), '');
+}
+
 const decorators: Array<Decorator<ProductFormValues>> = [
   onFieldChange({
     field: 'productType',
@@ -75,23 +81,37 @@ const decorators: Array<Decorator<ProductFormValues>> = [
     },
   }),
   onFieldChange({
-    field: 'book',
-    updates: (book, field, allValues, prevValues) =>
+    field: /^scriptureBooks\.[^.]+\.book$/,
+    updates: (book, field, allValues, prevValues) => {
+      const entryName = scriptureBookEntryName(field, 'book');
+      const entryExists = !!getIn(allValues ?? {}, entryName);
+      const prevBook = getIn(prevValues ?? {}, field);
       // Clear scripture if book is cleared or a different book is selected
-      !(book && !prevValues?.book)
+      return entryExists && !(book && !prevBook)
         ? {
-            bookSelection: 'full',
-            scriptureReferences: null,
-            unspecifiedScripture: null,
+            [`${entryName}.bookSelection`]: 'full',
+            [`${entryName}.scriptureReferences`]: null,
+            [`${entryName}.totalVerses`]: null,
           }
-        : {},
+        : {};
+    },
   }),
   onFieldChange({
-    field: 'bookSelection',
-    updates: (selection) => ({
-      ...(selection !== 'partialKnown' ? { scriptureReferences: null } : {}),
-      ...(selection !== 'partialUnknown' ? { unspecifiedScripture: null } : {}),
-    }),
+    field: /^scriptureBooks\.[^.]+\.bookSelection$/,
+    updates: (selection, field, allValues) => {
+      const entryName = scriptureBookEntryName(field, 'bookSelection');
+      if (!getIn(allValues ?? {}, entryName)) {
+        return {};
+      }
+      return {
+        ...(selection !== 'partialKnown'
+          ? { [`${entryName}.scriptureReferences`]: null }
+          : {}),
+        ...(selection !== 'partialUnknown'
+          ? { [`${entryName}.totalVerses`]: null }
+          : {}),
+      };
+    },
   }),
 ];
 

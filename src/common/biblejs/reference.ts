@@ -1,4 +1,4 @@
-import { isEqual, sum } from 'lodash';
+import { Book, mapRange, Verse } from '@seedcompany/scripture';
 import { UnspecifiedScripturePortion } from '~/api/schema.graphql';
 import { ScriptureFragment } from '../fragments';
 import { Nullable } from '../types';
@@ -19,11 +19,8 @@ export type RawScriptureRange = Range<Nullable<ScriptureReference>>;
 
 export type ScriptureRange = Range<Required<ScriptureReference>>;
 
-export const getBookTotalVerses = (bookName: string) => {
-  const bookIndex = bookIndexFromName(bookName);
-  const book = books[bookIndex];
-  return book ? sum(book.chapters) : null;
-};
+export const getBookTotalVerses = (bookName: string) =>
+  Book.namedMaybe(bookName)?.totalVerses ?? null;
 
 export const parseScriptureRange = (
   bookName: string,
@@ -209,41 +206,6 @@ export class ScriptureError extends Error {
   }
 }
 
-/**
- * Takes in a scripture range array and a book to match, outputs a new array with the matching ranges.
- * This assumes each scripture range object is only contained to one book.
- * @param bookToMatch The book to match
- * @param scriptureReferenceArr Array of scripture references, can be undefined
- */
-export const matchingScriptureRanges = (
-  bookToMatch: string,
-  scriptureReferenceArr: Nullable<readonly ScriptureRange[]>
-) =>
-  (scriptureReferenceArr ?? []).filter(
-    ({ start: { book } }: ScriptureRange) => book === bookToMatch
-  );
-
-/**
- * Takes in a scripture range arr and a book, outputs the shortened display string of this range.
- * Assumes all ranges in array are of the same book
- * e.g. "Luke 1:2-4 + 1 more" or "Job (Full Book)".
- * @param scriptureReferenceArr
- * @param book
- */
-export const getScriptureRangeDisplay = (
-  scriptureReferenceArr: readonly ScriptureRange[],
-  book: string
-) => {
-  const count = scriptureReferenceArr.length;
-  if (!count) return book;
-  const isFullBook = isEqual(scriptureReferenceArr[0], getFullBookRange(book));
-  return isFullBook
-    ? `${book} (Full Book)`
-    : `${book} ${formatScriptureRange(scriptureReferenceArr[0]!)} ${
-        count > 1 ? `+ ${count - 1} more` : ''
-      }`;
-};
-
 export const getUnspecifiedScriptureDisplay = (
   unspecifiedScripture: UnspecifiedScripturePortion
 ) => {
@@ -253,28 +215,20 @@ export const getUnspecifiedScriptureDisplay = (
   return `${book} (${totalVerses} / ${validTotalVerses} verses)`;
 };
 
-export const getFullBookRange = (book: string): ScriptureRange => {
-  const bookObject = books.find((bookObj) => bookObj.names.includes(book));
-  const lastChapter = bookObject ? bookObject.chapters.length : 1;
-  const lastVerse = bookObject ? bookObject.chapters[lastChapter - 1]! : 1;
-  return {
-    start: {
-      book,
-      chapter: 1,
-      verse: 1,
-    },
-    end: {
-      book,
-      chapter: lastChapter,
-      verse: lastVerse,
-    },
-  };
-};
+export const getFullBookRange = (book: string): ScriptureRange =>
+  mapRange(Book.named(book).full, (verse) => verse.reference);
 
 export const isFullBookRange = (
   scriptureRange: ScriptureRange | undefined,
   book: string
-) => isEqual(scriptureRange, getFullBookRange(book));
+) => {
+  if (!scriptureRange) return false;
+  const fullBook = Book.named(book).full;
+  return (
+    +Verse.fromRef(scriptureRange.start) === +fullBook.start &&
+    +Verse.fromRef(scriptureRange.end) === +fullBook.end
+  );
+};
 
 export const removeScriptureTypename = (
   scriptureReferences: readonly ScriptureFragment[]
