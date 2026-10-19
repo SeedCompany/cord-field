@@ -10,9 +10,14 @@ import {
   Typography,
 } from '@mui/material';
 import { useMemo } from 'react';
+import { useFormState } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
 import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
-import { canEditAny } from '~/common';
+import {
+  canEditAny,
+  isDateAfter,
+  SecuredDateRangeFragment,
+} from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { DateField, SubmitError } from '../../../components/form';
@@ -50,11 +55,64 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
   },
 }));
 
-type CeremonyCardProps = Partial<CeremonyCardFragment>;
+const endDateWarningText = `Date is after the project's end date. Confirm it's correct before saving.`;
+
+const EstimatedDateField = ({
+  engagementEndDate,
+}: {
+  engagementEndDate: SecuredDateRangeFragment['value']['end'] | undefined;
+}) => {
+  const { values } = useFormState<UpdateCeremonyInput>({
+    subscription: { values: true },
+  });
+
+  return (
+    <DateField
+      name="estimatedDate"
+      label="Estimated Date"
+      warningText={
+        isDateAfter(values.estimatedDate, engagementEndDate)
+          ? endDateWarningText
+          : undefined
+      }
+    />
+  );
+};
+
+const ActualDateField = ({
+  engagementEndDate,
+}: {
+  engagementEndDate: SecuredDateRangeFragment['value']['end'] | undefined;
+}) => {
+  const { values } = useFormState<UpdateCeremonyInput>({
+    subscription: { values: true },
+  });
+
+  return (
+    <DateField
+      name="actualDate"
+      label="Actual Date"
+      warningText={
+        isDateAfter(values.actualDate, engagementEndDate)
+          ? endDateWarningText
+          : undefined
+      }
+    />
+  );
+};
+
+type CeremonyCardProps = Partial<CeremonyCardFragment> & {
+  /**
+   * The engagement's date range, used to warn about ceremony dates that fall
+   * outside it. Omitted while loading.
+   */
+  engagementDateRange?: SecuredDateRangeFragment;
+};
 
 export const CeremonyCard = ({
   canRead,
   value: ceremony,
+  engagementDateRange,
 }: CeremonyCardProps) => {
   const { id, type, planned, estimatedDate, actualDate } = ceremony || {};
   const loading = canRead == null;
@@ -181,8 +239,10 @@ export const CeremonyCard = ({
         }}
       >
         <SubmitError />
-        <DateField name="estimatedDate" label="Estimated Date" />
-        <DateField name="actualDate" label="Actual Date" />
+        <EstimatedDateField
+          engagementEndDate={engagementDateRange?.value.end}
+        />
+        <ActualDateField engagementEndDate={engagementDateRange?.value.end} />
       </DialogForm>
     </div>
   );
