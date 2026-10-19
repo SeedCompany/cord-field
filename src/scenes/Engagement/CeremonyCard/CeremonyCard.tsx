@@ -13,11 +13,7 @@ import { useMemo } from 'react';
 import { useFormState } from 'react-final-form';
 import { makeStyles } from 'tss-react/mui';
 import { UpdateCeremony as UpdateCeremonyInput } from '~/api/schema.graphql';
-import {
-  canEditAny,
-  isDateAfter,
-  SecuredDateRangeFragment,
-} from '~/common';
+import { canEditAny, isDateAfter, SecuredDateRangeFragment } from '~/common';
 import { useDialog } from '../../../components/Dialog';
 import { DialogForm } from '../../../components/Dialog/DialogForm';
 import { DateField, SubmitError } from '../../../components/form';
@@ -55,7 +51,7 @@ const useStyles = makeStyles()(({ spacing, typography }) => ({
   },
 }));
 
-const endDateWarningText = `Date is after the project's end date. Confirm it's correct before saving.`;
+const endDateWarningText = `After the project end date. Check before saving.`;
 
 const EstimatedDateField = ({
   engagementEndDate,

@@ -84,7 +84,7 @@ const DisbursementCompleteDateField = ({
   props,
   engagement,
 }: EngagementFieldProps) => {
-  const disbursementDateWarningText = `Date is after the project's end date. Confirm it's correct before saving.`;
+  const disbursementDateWarningText = `After the project end date. Check before saving.`;
   const { values } = useFormState<EngagementFormValues>({
     subscription: { values: true },
   });
