@@ -6,7 +6,7 @@
     "start:server": "rsbuild dev --no-env --config-loader jiti",
     "start:gql-gen": "run-p \"gql-gen:* --watch\"",
     "build": "yarn gql-gen && yarn build:bundle",
-    "build:bundle": "rsbuild build --no-env --config-loader jiti",
+    "build:bundle": "NODE_ENV=production rsbuild build --no-env --config-loader jiti",
     "clean": "rimraf -g -v build cache 'src/**/*.generated.ts' 'src/{common,components,scenes}/**/*.graphql.ts' schema.graphql",
     "test": "jest --env=jsdom",
     "lint": "yarn lint:check --fix",
