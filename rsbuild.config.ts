@@ -103,6 +103,13 @@ export default defineConfig(({ env, command }) => {
     ...(isDevServer ? {} : { __DEV__: 'false' }),
   };
 
+  // Both bundles must agree on asset URLs, since the server renders them too
+  const assetDistPath = {
+    image: 'static/media',
+    svg: 'static/media',
+    font: 'static/media',
+  };
+
   const webEnvironment: RsbuildConfig = {
     source: {
       entry: { client: './src/client.tsx' },
@@ -120,9 +127,7 @@ export default defineConfig(({ env, command }) => {
         root: 'build/public',
         jsAsync: 'static/js',
         cssAsync: 'static/css',
-        image: 'static/media',
-        svg: 'static/media',
-        font: 'static/media',
+        ...assetDistPath,
       },
       filename: isDevServer
         ? { js: '[name].js', css: '[name].css' }
@@ -174,9 +179,9 @@ export default defineConfig(({ env, command }) => {
       // CommonJS, like Razzle. The server relies on `__dirname` & `require`.
       module: false,
       minify: true,
-      distPath: { root: 'build', js: '', jsAsync: '' },
+      distPath: { root: 'build', js: '', jsAsync: '', ...assetDistPath },
+      // Only JS is unhashed, so asset names still match the web bundle
       filename: { js: '[name].js' },
-      filenameHash: false,
       externals: [externalizeNodeModules],
       emitAssets: false,
     },
