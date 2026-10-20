@@ -1,6 +1,9 @@
 const { loadEnvFiles } = require('./config/loadEnvFiles.cjs');
 
-// Same env setup that `razzle test` did
+// Same env setup that `razzle test` did.
+// Jest only defaults NODE_ENV when unset, and CI sets it to development.
+process.env.BABEL_ENV = 'test';
+process.env.NODE_ENV = 'test';
 process.env.PUBLIC_URL = '';
 loadEnvFiles('test');
 
