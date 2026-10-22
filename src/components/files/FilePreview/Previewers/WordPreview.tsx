@@ -5,6 +5,10 @@ import { useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { PreviewerProps } from '../FilePreview';
 import { FilePreviewError, useFilePreview } from '../useFilePreview';
+import {
+  applyNumberingStartOverrides,
+  clearAutoCellShading,
+} from './docxFixups';
 import type { LegacyWordDocument } from './legacyWord';
 import { LegacyWordView } from './LegacyWordView';
 
@@ -43,7 +47,10 @@ const parseWord = async (blob: Blob): Promise<WordContent> => {
     switch (format) {
       case 'docx': {
         const doc = await parseAsync(data, docxOptions);
-        return { kind: 'docx', nodes: await renderDocument(doc, docxOptions) };
+        applyNumberingStartOverrides(doc);
+        const nodes = await renderDocument(doc, docxOptions);
+        clearAutoCellShading(nodes);
+        return { kind: 'docx', nodes };
       }
       case 'doc': {
         const { parseLegacyWord } = await import('./legacyWord');
