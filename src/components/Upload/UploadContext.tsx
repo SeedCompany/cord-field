@@ -92,20 +92,38 @@ export const UploadProvider = ({ children }: ChildrenProp) => {
 
   const handleFileAdded = useCallback(
     async (file: Types.UploadFile) => {
-      const { data } = await requestFileUpload();
-      const { id, url } = data?.requestFileUpload ?? { id: '', url: '' };
-      if (id && url) {
+      // ai edge-case Every exit path here has to record an error. A file left
+      // flagged `uploading` without one still counts against the concurrency
+      // cap in the scheduler below, so failures would silently eat slots until
+      // the queue stalls.
+      const failUpload = () =>
         dispatch({
-          type: actions.FILE_UPLOAD_REQUEST_SUCCEEDED,
+          type: actions.FILE_UPLOAD_ERROR_OCCURRED,
           queueId: file.queueId,
-          uploadId: id,
+          error: new Error('Failed to start upload'),
         });
-        const updatedFile = {
-          ...file,
-          uploadId: id,
-        };
-        uploadFile(updatedFile, url);
+
+      let upload;
+      try {
+        const { data } = await requestFileUpload();
+        upload = data?.requestFileUpload;
+      } catch (e) {
+        failUpload();
+        console.error(e);
+        return;
       }
+
+      if (!upload?.id || !upload.url) {
+        failUpload();
+        return;
+      }
+
+      dispatch({
+        type: actions.FILE_UPLOAD_REQUEST_SUCCEEDED,
+        queueId: file.queueId,
+        uploadId: upload.id,
+      });
+      uploadFile({ ...file, uploadId: upload.id }, upload.url);
     },
     [requestFileUpload, uploadFile]
   );
