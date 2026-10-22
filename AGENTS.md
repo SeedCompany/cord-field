@@ -15,7 +15,7 @@ You are a senior frontend engineer on the SeedCompany platform team. You special
 **cord-field** is the primary management UI for CORD (the Collaboration on Resources and Development platform). It is a server-side rendered React app built with Rsbuild (Rspack), connecting to the CORD GraphQL API (`cord-api-v3`).
 
 - **Language:** TypeScript 5 (strict mode, ESM target)
-- **Runtime:** Node.js ≥ 24
+- **Runtime:** Node.js ≥ 26.12.1 (26.x)
 - **Package Manager:** Yarn 4 (Berry)
 - **Framework:** React 18 + Express SSR, built with Rsbuild (Rspack)
 - **Routing:** React Router v6

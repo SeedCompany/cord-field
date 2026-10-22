@@ -10,7 +10,7 @@ const fixture = () => {
   return buffer.buffer.slice(
     buffer.byteOffset,
     buffer.byteOffset + buffer.byteLength
-  ) as ArrayBuffer;
+  );
 };
 
 describe('parseLegacyWord', () => {
