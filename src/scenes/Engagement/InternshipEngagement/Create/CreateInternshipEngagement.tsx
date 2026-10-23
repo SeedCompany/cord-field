@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import { Except } from 'type-fest';
 import { addItemToList } from '~/api';
 import { ProjectIdFragment } from '~/common/fragments';
-import { callAll } from '../../../../common';
+import { callAll, Nullable } from '../../../../common';
 import {
   DialogForm,
   DialogFormProps,
@@ -22,6 +22,15 @@ type CreateInternshipEngagementProps = Except<
 > & {
   project: ProjectIdFragment;
 };
+
+// Strings are the free solo "Create" option
+const lacksInternRole = (person: UserLookupItem | string) =>
+  typeof person !== 'string' && !person.roles.value.includes('Intern');
+
+const requireInternRole = (intern: Nullable<UserLookupItem>) =>
+  intern && lacksInternRole(intern)
+    ? 'This person must have the Intern role'
+    : undefined;
 
 export const CreateInternshipEngagement = ({
   project,
@@ -58,7 +67,16 @@ export const CreateInternshipEngagement = ({
         name="intern"
         label="Intern"
         placeholder="Enter person's name"
+        helperText="Only people with the Intern role can be selected"
         required
+        multiple={false}
+        getOptionDisabled={lacksInternRole}
+        validate={requireInternRole}
+        getInitialValues={(name) => ({
+          realFirstName: name,
+          displayFirstName: name,
+          roles: ['Intern'],
+        })}
       />
     </DialogForm>
   );
