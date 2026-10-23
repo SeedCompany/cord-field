@@ -4,24 +4,28 @@ import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
 import { ButtonLink } from '../../../components/Routing';
 import {
-  CreatePartnerDocument,
-  CreatePartnerMutation,
+  CreatePartnerWithOrganizationDocument,
+  CreatePartnerWithOrganizationMutation,
 } from './CreatePartner.graphql';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
-type SubmitResult = CreatePartnerMutation['createPartner']['partner'];
+type SubmitResult =
+  CreatePartnerWithOrganizationMutation['createPartnerWithOrganization']['partner'];
 type CreatePartnerProps = Except<
   CreatePartnerFormProps<SubmitResult>,
   'onSubmit'
 >;
 
 export const CreatePartner = (props: CreatePartnerProps) => {
-  const [createPartner] = useMutation(CreatePartnerDocument, {
-    update: addItemToList({
-      listId: 'partners',
-      outputToItem: (data) => data.createPartner.partner,
-    }),
-  });
+  const [createPartnerWithOrganization] = useMutation(
+    CreatePartnerWithOrganizationDocument,
+    {
+      update: addItemToList({
+        listId: 'partners',
+        outputToItem: (data) => data.createPartnerWithOrganization.partner,
+      }),
+    }
+  );
   const { enqueueSnackbar } = useSnackbar();
 
   return (
@@ -40,15 +44,11 @@ export const CreatePartner = (props: CreatePartnerProps) => {
         )
       }
       {...props}
-      onSubmit={async ({ orgLookup: { id: organization } }) => {
-        const { data } = await createPartner({
-          variables: {
-            input: {
-              organization,
-            },
-          },
+      onSubmit={async ({ organization }) => {
+        const { data } = await createPartnerWithOrganization({
+          variables: { input: { organization, partner: {} } },
         });
-        return data!.createPartner.partner;
+        return data!.createPartnerWithOrganization.partner;
       }}
     />
   );

@@ -1,5 +1,5 @@
-mutation CreatePartner($input: CreatePartner!) {
-  createPartner(input: $input) {
+mutation CreatePartnerWithOrganization($input: CreatePartnerWithOrganization!) {
+  createPartnerWithOrganization(input: $input) {
     partner {
       id
       organization {
