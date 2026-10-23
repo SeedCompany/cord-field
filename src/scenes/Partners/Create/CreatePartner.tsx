@@ -2,28 +2,21 @@ import { useMutation } from '@apollo/client';
 import { useSnackbar } from 'notistack';
 import { Except } from 'type-fest';
 import { addItemToList } from '../../../api';
-import { isDraftOrganization } from '../../../components/form/Lookup/Organization';
 import { ButtonLink } from '../../../components/Routing';
 import {
-  CreatePartnerDocument,
-  CreatePartnerMutation,
   CreatePartnerWithOrganizationDocument,
+  CreatePartnerWithOrganizationMutation,
 } from './CreatePartner.graphql';
 import { CreatePartnerForm, CreatePartnerFormProps } from './CreatePartnerForm';
 
-type SubmitResult = CreatePartnerMutation['createPartner']['partner'];
+type SubmitResult =
+  CreatePartnerWithOrganizationMutation['createPartnerWithOrganization']['partner'];
 type CreatePartnerProps = Except<
   CreatePartnerFormProps<SubmitResult>,
   'onSubmit'
 >;
 
 export const CreatePartner = (props: CreatePartnerProps) => {
-  const [createPartner] = useMutation(CreatePartnerDocument, {
-    update: addItemToList({
-      listId: 'partners',
-      outputToItem: (data) => data.createPartner.partner,
-    }),
-  });
   const [createPartnerWithOrganization] = useMutation(
     CreatePartnerWithOrganizationDocument,
     {
@@ -51,26 +44,11 @@ export const CreatePartner = (props: CreatePartnerProps) => {
         )
       }
       {...props}
-      onSubmit={async ({ orgLookup }) => {
-        if (isDraftOrganization(orgLookup)) {
-          const { data } = await createPartnerWithOrganization({
-            variables: {
-              input: {
-                organization: { name: orgLookup.name.value ?? '' },
-                partner: {},
-              },
-            },
-          });
-          return data!.createPartnerWithOrganization.partner;
-        }
-        const { data } = await createPartner({
-          variables: {
-            input: {
-              organization: orgLookup.id,
-            },
-          },
+      onSubmit={async ({ organization }) => {
+        const { data } = await createPartnerWithOrganization({
+          variables: { input: { organization, partner: {} } },
         });
-        return data!.createPartner.partner;
+        return data!.createPartnerWithOrganization.partner;
       }}
     />
   );

@@ -1,16 +1,12 @@
+import { CreateOrganization } from '~/api/schema.graphql';
 import {
   DialogForm,
   DialogFormProps,
 } from '../../../components/Dialog/DialogForm';
-import { SubmitError } from '../../../components/form';
-import {
-  DraftOrganization,
-  OrganizationField,
-  OrganizationLookupItem,
-} from '../../../components/form/Lookup/Organization';
+import { SubmitError, TextField } from '../../../components/form';
 
 export interface PartnerFormValues {
-  orgLookup: OrganizationLookupItem;
+  organization: Pick<CreateOrganization, 'name'>;
 }
 
 export type CreatePartnerFormProps<R> = DialogFormProps<PartnerFormValues, R>;
@@ -18,13 +14,22 @@ export type CreatePartnerFormProps<R> = DialogFormProps<PartnerFormValues, R>;
 export const CreatePartnerForm = <R extends any>(
   props: CreatePartnerFormProps<R>
 ) => (
-  <DialogForm {...props} title="Create Partner">
+  <DialogForm
+    title="Create Partner"
+    errorHandlers={{
+      // The API reports a taken organization name on `name`
+      Duplicate: (e, next) =>
+        e.field === 'name'
+          ? { organization: { name: 'Already in use' } }
+          : next(e),
+    }}
+    {...props}
+  >
     <SubmitError />
-    <OrganizationField
-      name="orgLookup"
-      label="Organization"
+    <TextField
+      name="organization.name"
+      label="Organization Name"
       placeholder="Enter organization name"
-      CreateDialogForm={DraftOrganization}
       required
     />
   </DialogForm>

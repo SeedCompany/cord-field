@@ -1,20 +1,3 @@
-mutation CreatePartner($input: CreatePartner!) {
-  createPartner(input: $input) {
-    partner {
-      id
-      organization {
-        value {
-          name {
-            value
-          }
-        }
-      }
-      ...PartnerListItem
-      ...PartnerLookupItem
-    }
-  }
-}
-
 mutation CreatePartnerWithOrganization($input: CreatePartnerWithOrganization!) {
   createPartnerWithOrganization(input: $input) {
     partner {
