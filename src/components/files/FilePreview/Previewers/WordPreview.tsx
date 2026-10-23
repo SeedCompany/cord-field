@@ -5,6 +5,11 @@ import { useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { PreviewerProps } from '../FilePreview';
 import { FilePreviewError, useFilePreview } from '../useFilePreview';
+import {
+  applyNumberingStartOverrides,
+  clearAutoCellShading,
+  formatNumbersLikeText,
+} from './docxFixups';
 import type { LegacyWordDocument } from './legacyWord';
 import { LegacyWordView } from './LegacyWordView';
 
@@ -43,7 +48,11 @@ const parseWord = async (blob: Blob): Promise<WordContent> => {
     switch (format) {
       case 'docx': {
         const doc = await parseAsync(data, docxOptions);
-        return { kind: 'docx', nodes: await renderDocument(doc, docxOptions) };
+        applyNumberingStartOverrides(doc);
+        const nodes = await renderDocument(doc, docxOptions);
+        clearAutoCellShading(nodes);
+        formatNumbersLikeText(nodes);
+        return { kind: 'docx', nodes };
       }
       case 'doc': {
         const { parseLegacyWord } = await import('./legacyWord');
@@ -135,6 +144,10 @@ const deskStyles = (theme: { palette: { mode: string } }) => ({
     fontFamily: '"Times New Roman", Times, serif',
     fontSize: '12pt',
     lineHeight: 1.3,
+    // Word wraps fill-in lines ("Name: ____Jane____________") and long URLs
+    // at the margin; without this they'd push the page, and its tables,
+    // wider than the sheet.
+    overflowWrap: 'anywhere',
   },
 });
 

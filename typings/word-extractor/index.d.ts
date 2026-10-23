@@ -8,8 +8,32 @@ declare module 'word-extractor/lib/buffer-reader' {
   export = BufferReader;
 }
 
+declare module 'word-extractor/lib/ole-compound-doc' {
+  interface DirectoryEntry {
+    size: number;
+    secId: number;
+  }
+  interface AllocationTable {
+    getSecIdChain: (secId: number) => number[];
+  }
+
+  /** Internals used to read a stream's sectors without the Node `stream` module. */
+  class OleCompoundDoc {
+    constructor(reader: import('word-extractor/lib/buffer-reader'));
+    read(): Promise<this>;
+    _header: { shortStreamMax: number };
+    _SAT: AllocationTable;
+    _SSAT: AllocationTable;
+    _rootStorage: { _dirEntry: { streams: Record<string, DirectoryEntry> } };
+    _readSectors(secIds: number[]): Promise<Buffer>;
+    _readShortSectors(secIds: number[]): Promise<Buffer>;
+  }
+  export = OleCompoundDoc;
+}
+
 declare module 'word-extractor/lib/word-ole-extractor' {
   import type BufferReader from 'word-extractor/lib/buffer-reader';
+  import type OleCompoundDoc from 'word-extractor/lib/ole-compound-doc';
 
   interface TextOptions {
     filterUnicode?: boolean;
@@ -27,13 +51,29 @@ declare module 'word-extractor/lib/word-ole-extractor' {
 
   class WordOleExtractor {
     /**
-     * Internal piece table, populated by `extract`. Text still carries Word's
+     * Internal piece table, populated by `extract`: each run of text, with
+     * where it sits in the file and in the text. Text still carries Word's
      * control characters, which the public getters fold away.
      */
-    _pieces: Array<{ text: string }>;
+    _pieces: Array<{
+      text: string;
+      startCp: number;
+      endCp: number;
+      startFilePos: number;
+      endFilePos: number;
+      /** Bytes per character: 1 for 8-bit pieces, 2 for Unicode. */
+      bpc: number;
+    }>;
     /** Internal character counts for each document part, populated by `extract`. */
     _boundaries: { ccpText: number };
     extract(reader: BufferReader): Promise<ExtractedDocument>;
+    /** How `extract` fetches a named stream; overridable per instance. */
+    documentStream(
+      document: OleCompoundDoc,
+      streamName: string
+    ): Promise<unknown>;
+    /** How `extract` drains a stream into a buffer; overridable per instance. */
+    streamBuffer(stream: unknown): Promise<Buffer>;
   }
   export = WordOleExtractor;
 }
