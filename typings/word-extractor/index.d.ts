@@ -51,10 +51,19 @@ declare module 'word-extractor/lib/word-ole-extractor' {
 
   class WordOleExtractor {
     /**
-     * Internal piece table, populated by `extract`. Text still carries Word's
+     * Internal piece table, populated by `extract`: each run of text, with
+     * where it sits in the file and in the text. Text still carries Word's
      * control characters, which the public getters fold away.
      */
-    _pieces: Array<{ text: string }>;
+    _pieces: Array<{
+      text: string;
+      startCp: number;
+      endCp: number;
+      startFilePos: number;
+      endFilePos: number;
+      /** Bytes per character: 1 for 8-bit pieces, 2 for Unicode. */
+      bpc: number;
+    }>;
     /** Internal character counts for each document part, populated by `extract`. */
     _boundaries: { ccpText: number };
     extract(reader: BufferReader): Promise<ExtractedDocument>;

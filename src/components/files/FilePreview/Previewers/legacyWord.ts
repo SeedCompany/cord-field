@@ -31,9 +31,17 @@ export const parseLegacyWord = async (
   // `extract` fetches each OLE stream through these two methods. The library's
   // own versions go through Node's `stream` module; reading the sector chain
   // directly avoids that polyfill in the browser. See `readStream` for the
-  // other browser difference this works around.
-  extractor.documentStream = async (document, streamName) =>
-    await readStream(document, streamName);
+  // other browser difference this works around. The streams are kept, since
+  // `markOverflowRowEnds` reads two of them again.
+  let container: OleCompoundDoc | undefined;
+  const streams: Partial<Record<'wordDocument' | 'table', Buffer>> = {};
+  extractor.documentStream = async (document, streamName) => {
+    container = document;
+    const buffer = await readStream(document, streamName);
+    // `extract` only ever asks for 'WordDocument' and '0Table' or '1Table'
+    streams[streamName === 'WordDocument' ? 'wordDocument' : 'table'] = buffer;
+    return buffer;
+  };
   extractor.streamBuffer = async (buffer) => buffer as Buffer;
   const document = await extractor.extract(new BufferReader(Buffer.from(data)));
   // The library's getters fold cell and row marks into tabs and newlines,
@@ -43,8 +51,21 @@ export const parseLegacyWord = async (
     .map((piece) => piece.text)
     .join('')
     .slice(0, extractor._boundaries.ccpText);
+  const { wordDocument, table } = streams;
+  const body =
+    container && wordDocument && table
+      ? markOverflowRowEnds(
+          raw,
+          {
+            wordDocument,
+            table,
+            data: await readOptionalStream(container, 'Data'),
+          },
+          extractor._pieces
+        )
+      : raw;
   return {
-    pages: raw.split('\f').map(blocksFromText),
+    pages: body.split('\f').map(blocksFromText),
     header: distinctLines(
       document.getHeaders({ filterUnicode: false, includeFooters: false })
     ),
@@ -57,13 +78,17 @@ export const parseLegacyWord = async (
   };
 };
 
-const readStream = async (document: OleCompoundDoc, name: string) => {
+const streamEntry = (document: OleCompoundDoc, name: string) => {
   const { streams } = document._rootStorage._dirEntry;
   // The library decodes entry names as UTF-16 from an odd byte count. Node's
   // Buffer drops the odd byte; webpack's browser polyfill decodes it as a
   // trailing NUL, so in the browser every stream is named "WordDocument\0".
   // That is why .doc previews failed in the browser while passing in Node.
-  const entry = streams[name] ?? streams[`${name}\0`];
+  return streams[name] ?? streams[`${name}\0`];
+};
+
+const readStream = async (document: OleCompoundDoc, name: string) => {
+  const entry = streamEntry(document, name);
   if (!entry) {
     throw new Error(`Missing ${name} stream`);
   }
@@ -76,9 +101,14 @@ const readStream = async (document: OleCompoundDoc, name: string) => {
   return sectors.slice(0, entry.size);
 };
 
+/** Reads a stream that only some files have. */
+const readOptionalStream = async (document: OleCompoundDoc, name: string) =>
+  streamEntry(document, name) ? await readStream(document, name) : undefined;
+
 /**
  * Builds blocks from the body text, in which `\r` ends a paragraph, `\x07`
- * ends a table cell and `\n` ends a table row (the library's own marker).
+ * ends a table cell and `\n` ends a table row (the library's marker, which
+ * `markOverflowRowEnds` adds for the rows it misses).
  *
  * One ambiguity can't be resolved from the text alone: paragraphs that end
  * just before a row's first cell could be that cell's earlier paragraphs or
@@ -97,7 +127,7 @@ export const blocksFromText = (text: string): LegacyWordBlock[] => {
 
   const endTable = () => {
     if (rows.length > 0) {
-      blocks.push({ type: 'table', rows: splitRunOnRows(rows) });
+      blocks.push({ type: 'table', rows });
       rows = [];
     }
   };
@@ -154,37 +184,180 @@ export const blocksFromText = (text: string): LegacyWordBlock[] => {
   return blocks.map(cleanBlock);
 };
 
+/** The streams of a .doc file that hold paragraph properties. */
+export interface WordStreams {
+  /** The file information block and the property pages. */
+  wordDocument: Buffer;
+  /** The index of property pages, among other tables. */
+  table: Buffer;
+  /** Properties too large for their page. Not every file has this stream. */
+  data?: Buffer;
+}
+
+/** A piece table entry: where a run of text sits in the file and in the text. */
+interface Piece {
+  startCp: number;
+  startFilePos: number;
+  endFilePos: number;
+  /** Bytes per character: 1 for 8-bit pieces, 2 for Unicode. */
+  bpc: number;
+}
+
+// Paragraph properties are a list of modifiers: a 2-byte code, then an operand.
+/** The properties are stored in the Data stream (sprmPHugePapx). */
+const overflowCode = 0x6646;
+/** The paragraph is a row's end mark (sprmPFTtp). */
+const rowEndCode = 0x2417;
+
 /**
- * The library finds a row's end from a paragraph property it doesn't always
- * reach, and a missed one is left as a plain cell mark. That row then runs
- * on into the next, with one extra empty cell where the row ended: a 7-wide
- * table's header and next row read as 15 cells, the 8th empty.
+ * Marks the row ends the library misses, which leave a row running on into
+ * the next with an extra empty cell between them.
  *
- * A row is split back apart when it's a whole number of (width + 1) cells
- * longer than another of the table's widths and every cell where a row would
- * have ended is empty. Widths under 2 aren't tried: in a one-column table
- * any row with an empty middle cell would match.
+ * A row's end is a cell mark whose paragraph has the row-end property. The
+ * library reads each paragraph's properties from the property pages, but when
+ * they don't fit on the page (a 7-column row with borders and shading needs
+ * about 500 bytes), Word stores only a pointer there and the properties in
+ * the Data stream. The library doesn't follow the pointer, so this does.
  */
-const splitRunOnRows = (rows: LegacyWordCell[][]): LegacyWordCell[][] => {
-  const widths = [...new Set(rows.map((cells) => cells.length))]
-    .filter((width) => width >= 2)
-    .sort((a, b) => a - b);
-  return rows.flatMap((cells) => {
-    const width = widths.find(
-      (w) =>
-        w < cells.length &&
-        (cells.length - w) % (w + 1) === 0 &&
-        cells.every(
-          (cell, i) => i % (w + 1) !== w || cell.every((text) => text === '')
-        )
+export const markOverflowRowEnds = (
+  text: string,
+  streams: WordStreams,
+  pieces: Piece[]
+) => {
+  const { data } = streams;
+  if (!data) {
+    return text;
+  }
+  const rowEnds: number[] = [];
+  for (const paragraph of paragraphProperties(streams)) {
+    const pointer = modifiers(paragraph.properties).find(
+      (modifier) => modifier.code === overflowCode
     );
-    if (!width) {
-      return [cells];
+    if (!pointer || pointer.operand.length < 4) {
+      continue;
     }
-    return Array.from({ length: (cells.length + 1) / (width + 1) }, (_, n) =>
-      cells.slice(n * (width + 1), n * (width + 1) + width)
-    );
-  });
+    const offset = pointer.operand.readUInt32LE(0);
+    if (offset + 2 > data.length) {
+      continue;
+    }
+    const size = data.readUInt16LE(offset);
+    const stored = data.slice(offset + 2, offset + 2 + size);
+    if (!modifiers(stored).some((modifier) => modifier.code === rowEndCode)) {
+      continue;
+    }
+    const start = characterPosition(pieces, paragraph.start);
+    const end = characterPosition(pieces, paragraph.end);
+    if (start === undefined || end === undefined) {
+      continue;
+    }
+    for (const [i, char] of text.slice(start, end).split('').entries()) {
+      if (char === '\x07') {
+        rowEnds.push(start + i);
+      }
+    }
+  }
+  let marked = '';
+  let last = 0;
+  for (const cp of rowEnds.sort((a, b) => a - b)) {
+    marked += text.slice(last, cp) + '\n';
+    last = cp + 1;
+  }
+  return marked + text.slice(last);
+};
+
+/** Every paragraph's file position range and property modifiers. */
+const paragraphProperties = ({ wordDocument, table }: WordStreams) => {
+  const result: Array<{ start: number; end: number; properties: Buffer }> = [];
+  // The file information block says where the index of property pages is
+  const indexOffset = wordDocument.readUInt32LE(0x0102);
+  const indexSize = wordDocument.readUInt32LE(0x0106);
+  const index = table.slice(indexOffset, indexOffset + indexSize);
+  // The index is pageCount + 1 file positions, then a number for each page
+  const pageCount = Math.floor((indexSize - 4) / 8);
+  const pageNumbers = Array.from({ length: pageCount }, (_, i) =>
+    index.readUInt32LE((pageCount + 1) * 4 + i * 4)
+  );
+  for (const pageNumber of pageNumbers) {
+    const page = wordDocument.slice(pageNumber * 512, (pageNumber + 1) * 512);
+    if (page.length < 512) {
+      continue;
+    }
+    // A page is count + 1 file positions, a 13-byte entry per paragraph, the
+    // property blocks, and the count in its last byte.
+    const count = page.readUInt8(511);
+    const paragraphs = Array.from({ length: count }, (_, j) => ({
+      start: page.readUInt32LE(j * 4),
+      end: page.readUInt32LE((j + 1) * 4),
+      // An entry starts with the block's offset in words; 0 means defaults
+      wordOffset: page.readUInt8((count + 1) * 4 + j * 13),
+    }));
+    for (const { start, end, wordOffset } of paragraphs) {
+      if (wordOffset === 0) {
+        continue;
+      }
+      const at = wordOffset * 2;
+      // The block's size is in words, less a byte, unless that is 0: then the
+      // next byte holds it, in words exactly.
+      const halfSize = page.readUInt8(at);
+      const block =
+        halfSize !== 0
+          ? page.slice(at + 1, at + 1 + 2 * halfSize - 1)
+          : page.slice(at + 2, at + 2 + 2 * page.readUInt8(at + 1));
+      // The block starts with the style index; the modifiers follow
+      result.push({ start, end, properties: block.slice(2) });
+    }
+  }
+  return result;
+};
+
+/** Splits a property block into its modifiers. */
+const modifiers = (block: Buffer) => {
+  const result: Array<{ code: number; operand: Buffer }> = [];
+  let offset = 0;
+  while (offset + 2 <= block.length) {
+    const code = block.readUInt16LE(offset);
+    offset += 2;
+    const size = operandSize(code, block.slice(offset));
+    result.push({ code, operand: block.slice(offset, offset + size) });
+    offset += size;
+  }
+  return result;
+};
+
+/** The operand's size is in the code's top three bits, unless it's variable. */
+const operandSize = (code: number, operand: Buffer) => {
+  switch (code >> 13) {
+    case 0:
+    case 1:
+      return 1;
+    case 2:
+    case 4:
+    case 5:
+      return 2;
+    case 3:
+      return 4;
+    case 7:
+      return 3;
+    default: {
+      // Variable: the first byte is the size, except for table definitions
+      // (sprmTDefTable and its Word 6 form), where the first two bytes are.
+      const isTableDefinition = code === 0xd608 || code === 0xd606;
+      const [low = 0, high = 0] = operand;
+      return (isTableDefinition ? low + (high << 8) : low) + 1;
+    }
+  }
+};
+
+/** Where a file position falls in the text, through the piece table. */
+const characterPosition = (pieces: Piece[], filePosition: number) => {
+  const piece = pieces.find(
+    (candidate) =>
+      filePosition >= candidate.startFilePos &&
+      filePosition <= candidate.endFilePos
+  );
+  return (
+    piece && piece.startCp + (filePosition - piece.startFilePos) / piece.bpc
+  );
 };
 
 /**
