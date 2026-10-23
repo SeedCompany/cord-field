@@ -170,9 +170,13 @@ export function LookupField<
 
   // Only open the popup if focused and
   // (searching for an item or have initial options).
+  // Note the initial-options case is deliberately not restricted to an empty
+  // input: on a field that already has a value, `input` starts out as that
+  // value's label, and requiring emptiness meant a populated field never
+  // offered its list. Fields without initial options are unaffected — they
+  // still only open once there's a search to run.
   const open =
-    !!meta.active &&
-    ((input && input !== selectedText) || (!input && !!initial));
+    !!meta.active && ((input && input !== selectedText) || !!initial);
 
   // Augment results with currently selected items to indicate that
   // they are still valid (and to prevent MUI warning)
