@@ -45,6 +45,13 @@ export type DateFieldProps = Except<
     errorMessages?: Record<DateError, string>;
     // Disable replacing helper text with format while text input is focused
     disableFormatHelperText?: boolean;
+    /**
+     * A non-blocking warning to show as the field's helper text.
+     *
+     * @remarks
+     * A real error still takes precedence.
+     */
+    warningText?: string;
   };
 
 export const DateField = ({
@@ -55,6 +62,7 @@ export const DateField = ({
   disableFormatHelperText,
   placeholder,
   variant,
+  warningText,
   ...props
 }: DateFieldProps) => {
   const i10nCtx = useLocalization();
@@ -113,6 +121,9 @@ export const DateField = ({
     helperTextProp,
     hasError
   );
+
+  const hasWarning = !hasError && Boolean(warningText);
+  const displayHelperText = hasWarning ? warningText : helperText;
 
   const allowFormClose = useContext(AllowFormCloseContext);
 
@@ -177,12 +188,28 @@ export const DateField = ({
             placeholder: placeholder ?? params.inputProps?.placeholder,
           }}
           name={input.name}
-          helperText={helperText}
+          helperText={displayHelperText}
           error={hasError}
           autoFocus={props.autoFocus}
           // not applying focused prop here because the field is readonly
           // until some kind of setup is complete. Not going to mess with it.
           // field still "auto focuses" after this setup is complete.
+          color={hasWarning ? 'warning' : undefined}
+          sx={
+            hasWarning
+              ? {
+                  '& .MuiFilledInput-root:before': {
+                    borderBottomColor: 'warning.main',
+                  },
+                  '& .MuiFilledInput-root:hover:not(.Mui-disabled):before': {
+                    borderBottomColor: 'warning.dark',
+                  },
+                  '& .MuiFormHelperText-root': {
+                    color: 'warning.main',
+                  },
+                }
+              : undefined
+          }
         />
       )}
     />
