@@ -62,3 +62,69 @@ export const clearAutoCellShading = (nodes: Node[]) => {
     }
   }
 };
+
+const markerProperties = [
+  'font-family',
+  'font-size',
+  'font-weight',
+  'font-style',
+  'color',
+];
+
+/**
+ * Word formats a list number like the paragraph mark, which carries the
+ * paragraph style's run formatting. docx-preview puts all run formatting on
+ * the `span`s and draws the number as a `::before` on the bare `p`, so the
+ * number inherits the app's own font and color instead and looks out of
+ * place. For every `… span` rule the renderer emitted, add the same typography
+ * for `…:before`, ahead of the numbering rules so a level's own font still wins.
+ */
+export const formatNumbersLikeText = (nodes: Node[]) => {
+  const numberingIndex = nodes.findIndex(
+    (node) =>
+      node.nodeType === Node.COMMENT_NODE &&
+      (node.textContent ?? '').includes('numbering styles')
+  );
+  if (numberingIndex < 0) {
+    return;
+  }
+  const companions = nodes
+    .slice(0, numberingIndex)
+    .filter((node): node is HTMLStyleElement => node.nodeName === 'STYLE')
+    .flatMap((style) => companionRules(style.textContent));
+  if (companions.length === 0) {
+    return;
+  }
+  const style = document.createElement('style');
+  style.textContent = companions.join('\n');
+  nodes.splice(numberingIndex, 0, style);
+};
+
+const companionRules = (css: string) =>
+  css.split('}').flatMap((rule) => {
+    const [selectors, body] = rule.split('{');
+    if (!selectors || !body) {
+      return [];
+    }
+    const targets = selectors
+      .split(',')
+      .map((selector) => selector.trim())
+      .filter((selector) => selector.endsWith(' span'))
+      .map((selector) => {
+        const parent = selector.slice(0, -' span'.length);
+        // The number is a `::before` of the `p`: a `.docx span` default
+        // becomes `.docx p:before`, a `p.docx_x span` just `p.docx_x:before`.
+        return /(^|\s)p(\.[\w-]+)*$/.test(parent)
+          ? `${parent}:before`
+          : `${parent} p:before`;
+      });
+    const declarations = body
+      .split(';')
+      .map((declaration) => declaration.trim())
+      .filter((declaration) =>
+        markerProperties.includes(declaration.split(':')[0]!.trim())
+      );
+    return targets.length && declarations.length
+      ? [`${targets.join(', ')} { ${declarations.join('; ')}; }`]
+      : [];
+  });

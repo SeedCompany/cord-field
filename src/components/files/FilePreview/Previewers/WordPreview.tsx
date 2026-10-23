@@ -8,6 +8,7 @@ import { FilePreviewError, useFilePreview } from '../useFilePreview';
 import {
   applyNumberingStartOverrides,
   clearAutoCellShading,
+  formatNumbersLikeText,
 } from './docxFixups';
 import type { LegacyWordDocument } from './legacyWord';
 import { LegacyWordView } from './LegacyWordView';
@@ -50,6 +51,7 @@ const parseWord = async (blob: Blob): Promise<WordContent> => {
         applyNumberingStartOverrides(doc);
         const nodes = await renderDocument(doc, docxOptions);
         clearAutoCellShading(nodes);
+        formatNumbersLikeText(nodes);
         return { kind: 'docx', nodes };
       }
       case 'doc': {
