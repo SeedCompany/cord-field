@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:24.14.1-slim as node
+FROM public.ecr.aws/docker/library/node:26-slim as node
 
 RUN <<EOF
 set -e
@@ -12,6 +12,8 @@ apt-get install -y --no-install-recommends ca-certificates wget curl
 apt-get clean -q -y
 rm -rf /var/lib/apt/lists/*
 
+# Corepack is no longer bundled with Node 26
+npm install -g corepack@latest
 corepack enable
 
 EOF
