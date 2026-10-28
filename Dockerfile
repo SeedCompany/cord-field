@@ -13,7 +13,7 @@ apt-get clean -q -y
 rm -rf /var/lib/apt/lists/*
 
 # Corepack is no longer bundled with Node 26
-npm install -g corepack@0.36.0
+npm install -g corepack@latest
 corepack enable
 
 EOF
