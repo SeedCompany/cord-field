@@ -134,7 +134,7 @@ it('creates the engagement and closes, even when the cached language has an item
 
   fireEvent.click(await screen.findByText('English'));
 
-  fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+  fireEvent.click(screen.getByRole('button', { name: /save/i }));
 
   await waitFor(() => {
     expect(onClose).toHaveBeenCalledWith('success', expect.anything());

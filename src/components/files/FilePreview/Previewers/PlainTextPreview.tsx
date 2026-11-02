@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { PreviewerProps } from '../FilePreview';
-import { useFilePreview } from '../useFilePreview';
+import { FilePreviewError, useFilePreview } from '../useFilePreview';
 
 // https://modernfontstacks.com/#monospace-code
 const MonospaceCode =
@@ -29,7 +29,7 @@ export const PlainTextPreview = ({ file }: PreviewerProps) => {
       ));
     } catch (e) {
       console.error(e);
-      throw new Error('Could not read document file');
+      throw new FilePreviewError('Could not read document file');
     }
   });
 

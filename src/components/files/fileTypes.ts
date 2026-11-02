@@ -65,12 +65,19 @@ const fileTypes = mapKeys.fromList<FileType, string>(
       Icon: SpreadsheetIcon,
       Previewer: Previewer.Excel,
     })),
-    {
-      mimeType:
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ...[
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+      'application/vnd.ms-word.document.macroenabled.12',
+      'application/vnd.ms-word.document.macroEnabled.12',
+      'application/vnd.ms-word.template.macroenabled.12',
+      'application/vnd.ms-word.template.macroEnabled.12',
+    ].map((mimeType) => ({
+      mimeType,
       Icon: DocumentIcon,
       Previewer: Previewer.Word,
-    },
+    })),
     {
       mimeType: 'text/css',
       Icon: OtherIcon,
@@ -211,7 +218,6 @@ const fileTypes = mapKeys.fromList<FileType, string>(
       Icon: SpreadsheetIcon,
     })),
     ...[
-      'application/msword',
       'application/postscript',
       'application/vnd.oasis.opendocument.text',
       'application/vnd.oasis.opendocument.text-master',
@@ -223,7 +229,6 @@ const fileTypes = mapKeys.fromList<FileType, string>(
       'application/x-ms-wmd',
       'application/x-mswrite',
       'application/x-tex',
-      'openxmlformats-officedocument.wordprocessingml.template',
       'text/richtext',
       'text/sgml',
     ].map((mimeType) => ({

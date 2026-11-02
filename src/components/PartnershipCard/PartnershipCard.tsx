@@ -15,6 +15,7 @@ import { labelFrom } from '~/common';
 import { DisplaySimpleProperty } from '../DisplaySimpleProperty';
 import { FormattedDateRange, FormattedDateTime } from '../Formatters';
 import { Redacted } from '../Redacted';
+import { Link } from '../Routing';
 import { PartnershipCardFragment } from './PartnershipCard.graphql';
 import { PartnershipPrimaryIcon } from './PartnershipPrimaryIcon';
 
@@ -27,7 +28,8 @@ export const PartnershipCard = ({
   partnership,
   onEdit,
 }: PartnershipCardProps) => {
-  const name = partnership?.partner.value?.organization.value?.name.value;
+  const partner = partnership?.partner.value;
+  const name = partner?.organization.value?.name.value;
   return (
     <Card
       sx={{
@@ -39,7 +41,15 @@ export const PartnershipCard = ({
           <Grid item container direction="row" alignItems="flex-start">
             <Typography variant="h4">
               {partnership ? (
-                name ?? (
+                partner && name ? (
+                  <Link
+                    color="inherit"
+                    to={`/partners/${partner.id}`}
+                    underline="hover"
+                  >
+                    {name}
+                  </Link>
+                ) : (
                   <Redacted
                     info="You don't have permission to view this partner's name"
                     width="100%"

@@ -1,6 +1,6 @@
 {
   "presets": [
-    ["razzle/babel", {
+    ["babel-preset-razzle", {
       "preset-react": {
         "runtime": "automatic",
         "importSource": "@emotion/react"

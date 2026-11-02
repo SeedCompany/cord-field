@@ -126,6 +126,7 @@ export const CreateProduct = () => {
               engagement: engagementId,
               title: title || '',
               description,
+              scriptureReferences: parsedScriptureReferences,
               ...inputs,
             },
           },

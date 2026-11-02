@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:24.14.1-slim as node
+FROM public.ecr.aws/docker/library/node:26-slim as node
 
 RUN <<EOF
 set -e
@@ -12,6 +12,8 @@ apt-get install -y --no-install-recommends ca-certificates wget curl
 apt-get clean -q -y
 rm -rf /var/lib/apt/lists/*
 
+# Corepack is no longer bundled with Node 26
+npm install -g corepack@latest
 corepack enable
 
 EOF
@@ -35,7 +37,7 @@ ARG API_BASE_URL
 ENV RAZZLE_API_BASE_URL=$API_BASE_URL
 ARG MUI_X_LICENSE_KEY
 ENV MUI_X_LICENSE_KEY=$MUI_X_LICENSE_KEY
-RUN yarn gql-gen -e && yarn razzle build --noninteractive
+RUN yarn gql-gen -e && yarn build:bundle
 
 # Clear all downloaded libraries to reduce image size
 RUN yarn cache clean --all

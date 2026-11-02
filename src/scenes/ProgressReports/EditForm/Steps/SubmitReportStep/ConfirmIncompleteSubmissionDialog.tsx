@@ -32,6 +32,8 @@ export const ConfirmIncompleteSubmissionDialog = (
             Submit <em>incomplete</em> report?
           </>
         }
+        // "Submit" is the report workflow's own verb here, not a save
+        submitLabel="Submit"
         SubmitProps={{ color: 'primary' }}
         sendIfClean
         {...props}

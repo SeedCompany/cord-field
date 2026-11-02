@@ -25,7 +25,12 @@ export const UploadFilesForm = (
   };
 
   return (
-    <DialogForm title="Upload Files" {...props} onSubmit={onSubmit}>
+    <DialogForm
+      title="Upload Files"
+      submitLabel="Upload"
+      {...props}
+      onSubmit={onSubmit}
+    >
       <SubmitError />
       <DropzoneField multiple={multiple} name="files" />
     </DialogForm>
