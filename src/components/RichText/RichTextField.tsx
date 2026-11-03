@@ -358,7 +358,7 @@ const isEditorEmpty = (ref: RefObject<HTMLElement>) =>
   // If not the default block, then assume there are more actions the remaining block could take.
   !!ref.current.querySelector('.codex-editor .ce-block .ce-paragraph');
 
-const isDataEmpty = (value: Nullable<RichTextData>) =>
+export const isDataEmpty = (value: Nullable<RichTextData>) =>
   !value || value.blocks.length === 0;
 
 const isRichTextEqual = (

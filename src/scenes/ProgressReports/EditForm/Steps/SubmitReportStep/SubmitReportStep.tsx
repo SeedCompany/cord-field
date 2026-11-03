@@ -18,6 +18,7 @@ import {
   useExecuteTransition,
 } from '../../Steps/SubmitReportStep/useExecuteTransition';
 import { ConfirmIncompleteSubmissionDialog } from './ConfirmIncompleteSubmissionDialog';
+import { PreviousNotesPanel } from './PreviousNotesPanel';
 import { ProgressReportStatusFragment } from './ProgressReportStatus.graphql';
 
 export const SubmitReportStep: StepComponent = ({ report }) => {
@@ -89,10 +90,11 @@ export const SubmitReportStep: StepComponent = ({ report }) => {
           <Typography variant="h3" paragraph>
             Submit Report
           </Typography>
+          <PreviousNotesPanel events={report.workflowEvents} />
           <RichTextField
             name="notes"
-            label="Final Notes"
-            placeholder="Optional: Audience - internal - Share additional information related to the team or language engagement not covered in the Quarterly Report with Seed Co team members"
+            label="Note for this Status"
+            placeholder="Optional: Audience - internal - This note is tied to the status change you're about to make, not the report as a whole. Share additional information related to the team or language engagement not covered in the Quarterly Report with Seed Co team members"
           />
           <Typography align="center" paragraph>
             To complete this report, please choose the next action
