@@ -107,6 +107,9 @@ const ProjectFilesListWrapped = () => {
     noClick: true,
     noKeyboard: true,
     disabled: !directoryId,
+    // Chrome's newer file picker API fails silently on some machines; the
+    // plain file input doesn't.
+    useFsAccessApi: false,
   });
 
   const isNotRootDirectory = directoryId !== rootDirectoryId;

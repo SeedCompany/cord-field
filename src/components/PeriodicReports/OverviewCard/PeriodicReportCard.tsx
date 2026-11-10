@@ -69,6 +69,9 @@ const PeriodicReportCardInContext = (props: PeriodicReportCardProps) => {
       editField(['reportFile', 'receivedDate']);
     },
     noClick: true,
+    // Chrome's newer file picker API fails silently on some machines; the
+    // plain file input doesn't.
+    useFsAccessApi: false,
   });
   const link = `reports/${type.toLowerCase()}`;
 

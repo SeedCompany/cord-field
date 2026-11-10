@@ -149,6 +149,9 @@ export const DefinedFileCard = forwardRef<any, DefinedFileCardProps>(
       multiple: false,
       noClick: !!file,
       noKeyboard: !!file,
+      // Chrome's newer file picker API fails silently on some machines; the
+      // plain file input doesn't.
+      useFsAccessApi: false,
     });
 
     const { modifiedAt, name, modifiedBy } = file ?? {

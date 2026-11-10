@@ -92,6 +92,9 @@ export function DropzoneField({
     multiple,
     onDrop,
     accept: accept,
+    // Chrome's newer file picker API fails silently on some machines; the
+    // plain file input doesn't.
+    useFsAccessApi: false,
   });
 
   return (
