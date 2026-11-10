@@ -41,7 +41,7 @@ export const ToolColumns: Array<GridColDef<Tool>> = [
     width: 130,
     valueGetter: (_, row) =>
       row.containerSummary.reduce((sum, c) => sum + c.total, 0),
-    sortable: false,
+    sortable: true,
     filterable: false,
   },
   {
