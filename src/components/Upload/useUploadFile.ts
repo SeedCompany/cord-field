@@ -36,6 +36,12 @@ export const useUploadFile = (
     [setUploadError, dispatch]
   );
 
+  // This does a single whole-file PUT to a presigned URL - there's no chunking
+  // or resume support. A failed/interrupted upload always restarts from byte
+  // zero. Adding real resumable upload would need backend support (e.g. S3
+  // multipart, with requestFileUpload returning per-part URLs or an upload
+  // session id) that doesn't exist today; track that as a separate,
+  // backend-coordinated follow-up rather than working around it here.
   const uploadFile = useCallback(
     (upload: Types.UploadFile, url: string) => {
       void putToS3({

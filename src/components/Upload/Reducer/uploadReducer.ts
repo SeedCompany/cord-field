@@ -14,10 +14,11 @@ export const uploadReducer = (
         }, -1) + 1;
       const newFiles = action.files.reduce(
         (files: Types.UploadFile[], fileInput, index: number) => {
-          const { callback, file, fileName } = fileInput;
+          const { callback, error, file, fileName } = fileInput;
           const queueId = nextQueueId + index;
           const newFile = {
             ...(callback ? { callback } : null),
+            ...(error ? { error } : null),
             file,
             fileName,
             percentCompleted: 0,

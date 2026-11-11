@@ -14,6 +14,11 @@ import { initialState, uploadReducer } from './Reducer';
 import * as actions from './Reducer/uploadActions';
 import * as Types from './Reducer/uploadTypings';
 import { RequestFileUploadDocument } from './Upload.graphql';
+import {
+  MAX_CONCURRENT_UPLOADS,
+  MAX_UPLOAD_FILE_SIZE_BYTES,
+  MAX_UPLOAD_FILE_SIZE_LABEL,
+} from './uploadConstants';
 import { UploadItems } from './UploadItems';
 import { UploadManagerUIShell as UploadManager } from './UploadManagerUIShell';
 import { useUploadFile } from './useUploadFile';
@@ -46,9 +51,23 @@ export const UploadProvider = ({ children }: ChildrenProp) => {
 
   const addFilesToUploadQueue = useCallback(
     (files: Types.FileInput[]) => {
+      // Reject oversized files here, before they ever reach the GraphQL
+      // requestFileUpload call or mime-type sniffing, by tagging them with
+      // an error up front. They still show up in the upload manager for
+      // visibility, but the queue-processing effect below skips them.
+      const validatedFiles = files.map((fileInput) =>
+        fileInput.file.size > MAX_UPLOAD_FILE_SIZE_BYTES
+          ? {
+              ...fileInput,
+              error: new Error(
+                `"${fileInput.fileName}" is too large to upload (max ${MAX_UPLOAD_FILE_SIZE_LABEL})`
+              ),
+            }
+          : fileInput
+      );
       dispatch({
         type: actions.FILES_SUBMITTED,
-        files,
+        files: validatedFiles,
       });
       setManagerOpen(true);
     },
@@ -73,29 +92,60 @@ export const UploadProvider = ({ children }: ChildrenProp) => {
 
   const handleFileAdded = useCallback(
     async (file: Types.UploadFile) => {
-      const { data } = await requestFileUpload();
-      const { id, url } = data?.requestFileUpload ?? { id: '', url: '' };
-      if (id && url) {
+      // ai edge-case Every exit path here has to record an error. A file left
+      // flagged `uploading` without one still counts against the concurrency
+      // cap in the scheduler below, so failures would silently eat slots until
+      // the queue stalls.
+      const failUpload = () =>
         dispatch({
-          type: actions.FILE_UPLOAD_REQUEST_SUCCEEDED,
+          type: actions.FILE_UPLOAD_ERROR_OCCURRED,
           queueId: file.queueId,
-          uploadId: id,
+          error: new Error('Failed to start upload'),
         });
-        const updatedFile = {
-          ...file,
-          uploadId: id,
-        };
-        uploadFile(updatedFile, url);
+
+      let upload;
+      try {
+        const { data } = await requestFileUpload();
+        upload = data?.requestFileUpload;
+      } catch (e) {
+        failUpload();
+        console.error(e);
+        return;
       }
+
+      if (!upload?.id || !upload.url) {
+        failUpload();
+        return;
+      }
+
+      dispatch({
+        type: actions.FILE_UPLOAD_REQUEST_SUCCEEDED,
+        queueId: file.queueId,
+        uploadId: upload.id,
+      });
+      uploadFile({ ...file, uploadId: upload.id }, upload.url);
     },
     [requestFileUpload, uploadFile]
   );
 
   useEffect(() => {
+    // Errored files stay flagged `uploading: true` (see FILE_UPLOAD_ERROR_OCCURRED
+    // in uploadReducer.ts) so they're never picked back up as "not started" below,
+    // but they're no longer actually in flight, so they must not count against
+    // the concurrency cap - otherwise a run of failures would permanently occupy
+    // slots and stall the rest of the queue.
+    const activeCount = submittedFiles.filter(
+      (file) => file.uploading && !file.completedAt && !file.error
+    ).length;
+    const availableSlots = MAX_CONCURRENT_UPLOADS - activeCount;
+    if (availableSlots <= 0) {
+      return;
+    }
+
     const filesNotStarted = submittedFiles.filter(
-      (file) => !file.uploading && !file.completedAt
+      (file) => !file.uploading && !file.completedAt && !file.error
     );
-    for (const file of filesNotStarted) {
+    for (const file of filesNotStarted.slice(0, availableSlots)) {
       setUploadingStatus(file.queueId, true);
       void handleFileAdded(file);
     }
