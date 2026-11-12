@@ -26,6 +26,7 @@ import {
   SecuredField,
   SubmitError,
   TextField,
+  YearField,
 } from '../../../components/form';
 import {
   LocationField,
@@ -47,6 +48,7 @@ export type EditableProjectField = ExtractStrict<
   | 'departmentId'
   | 'mouRange'
   | 'estimatedSubmission'
+  | 'initialFiscalYearAllocation'
   | 'fieldRegion'
   | 'primaryLocation'
   | 'sensitivity'
@@ -82,6 +84,9 @@ const fieldMapping: Record<
   ),
   estimatedSubmission: ({ props }) => (
     <DateField {...props} label="Estimated Submission Date" />
+  ),
+  initialFiscalYearAllocation: ({ props }) => (
+    <YearField {...props} label="Initial Fiscal Year Allocation" />
   ),
   sensitivity: ({ props }) => (
     <EnumField {...props} label="Sensitivity" options={SensitivityList} />
@@ -149,6 +154,7 @@ export const UpdateProjectDialog = ({
       mouStart: project.mouRange.value.start,
       mouEnd: project.mouRange.value.end,
       estimatedSubmission: project.estimatedSubmission.value,
+      initialFiscalYearAllocation: project.initialFiscalYearAllocation.value,
       sensitivity: project.sensitivity,
       marketingLocation: project.marketingLocation.value,
       marketingRegionOverride:
@@ -177,6 +183,7 @@ export const UpdateProjectDialog = ({
     project.mouRange.value.start,
     project.mouRange.value.end,
     project.estimatedSubmission.value,
+    project.initialFiscalYearAllocation.value,
     project.sensitivity,
     project.marketingLocation.value,
     project.marketingRegion.value,

@@ -47,6 +47,7 @@ const makeProject = (
       value: { start: null, end: null },
     },
     estimatedSubmission: { canRead: true, canEdit: true, value: null },
+    initialFiscalYearAllocation: { canRead: true, canEdit: true, value: null },
     sensitivity: 'Low',
     marketingLocation: { canRead: true, canEdit: true, value: null },
     marketingRegion: {

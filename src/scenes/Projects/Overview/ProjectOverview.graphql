@@ -61,6 +61,11 @@ fragment ProjectOverview on Project {
     canEdit
     value
   }
+  initialFiscalYearAllocation {
+    canRead
+    canEdit
+    value
+  }
   step {
     canRead
     canEdit

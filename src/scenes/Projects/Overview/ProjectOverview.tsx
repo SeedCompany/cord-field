@@ -415,6 +415,25 @@ export const ProjectOverview = () => {
                 </Grid>
               </Tooltip>
             )}
+            {/* Multiplication projects don't track this; API keeps it null there */}
+            {project && project.type !== 'MultiplicationTranslation' && (
+              <Tooltip
+                title="Fiscal year the initial allocation was applied"
+                placement="top"
+              >
+                <Grid item>
+                  <DataButton
+                    label="Initial FY Allocation"
+                    startIcon={<EventIcon color="info" />}
+                    empty="None"
+                    secured={project.initialFiscalYearAllocation}
+                    redacted="You do not have permission to view initial fiscal year allocation"
+                    children={(year) => `FY${year}`}
+                    onClick={() => editField(['initialFiscalYearAllocation'])}
+                  />
+                </Grid>
+              </Tooltip>
+            )}
           </Grid>
           <Grid container spacing={1} alignItems="center">
             <Grid item>
