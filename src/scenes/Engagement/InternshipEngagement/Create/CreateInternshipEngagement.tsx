@@ -72,11 +72,16 @@ export const CreateInternshipEngagement = ({
         multiple={false}
         getOptionDisabled={lacksInternRole}
         validate={requireInternRole}
-        getInitialValues={(name) => ({
-          realFirstName: name,
-          displayFirstName: name,
-          roles: ['Intern'],
-        })}
+        getInitialValues={(name) => {
+          const [firstName = '', ...lastName] = name.split(' ');
+          return {
+            realFirstName: firstName,
+            realLastName: lastName.join(' '),
+            displayFirstName: firstName,
+            displayLastName: lastName.join(' '),
+            roles: ['Intern'],
+          };
+        }}
       />
     </DialogForm>
   );
