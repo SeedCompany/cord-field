@@ -170,6 +170,9 @@ export const FileActionsMenu = (props: FileActionsMenuProps) => {
           },
     multiple: false,
     noDrag: true,
+    // Chrome's newer file picker API fails silently on some machines; the
+    // plain file input doesn't.
+    useFsAccessApi: false,
     onDropAccepted:
       'onVersionAccepted' in props
         ? props.onVersionAccepted

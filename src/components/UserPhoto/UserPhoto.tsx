@@ -54,6 +54,9 @@ export const UserPhoto = ({ user, size, ...rest }: UserPhotoProps) => {
     accept: ACCEPTED_IMAGE_TYPES,
     noClick: false,
     noKeyboard: false,
+    // Chrome's newer file picker API fails silently on some machines; the
+    // plain file input doesn't.
+    useFsAccessApi: false,
   });
 
   return (

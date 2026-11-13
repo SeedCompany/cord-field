@@ -105,6 +105,9 @@ export const ProjectOverview = () => {
     onDrop: handleDrop,
     noClick: true,
     disabled: !directoryId,
+    // Chrome's newer file picker API fails silently on some machines; the
+    // plain file input doesn't.
+    useFsAccessApi: false,
   });
 
   const [createEngagementState, createEngagement] = useDialog();
